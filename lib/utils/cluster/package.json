@@ -1,0 +1,27 @@
+{
+  "name": "cf-abacus-cluster",
+  "description": "Convenient Node process cluster setup, which monitors and restarts child processes as needed.",
+  "readme": "README.md",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint && mocha",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "cf-abacus-debug": "file:../debug",
+    "cf-abacus-events": "file:../events",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "cf-abacus-eslint": "file:../../../tools/eslint",
+    "cf-abacus-mocha": "file:../../../tools/mocha",
+    "proxyquire": "^1.5.0"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  },
+  "repository": {}
+}

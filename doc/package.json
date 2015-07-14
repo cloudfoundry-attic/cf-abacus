@@ -1,0 +1,20 @@
+{
+  "name": "cf-abacus-doc",
+  "description": "The project documentation",
+  "readme": "README.md",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "doc": "cat api.md | mddoc >Abacus-API.html",
+    "test": "true",
+    "lint": "true"
+  },
+  "dependencies": {
+    "cf-abacus-mddoc": "file:../tools/mddoc"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  },
+  "repository": {}
+}

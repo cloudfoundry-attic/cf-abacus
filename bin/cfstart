@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Start all the Abacus apps on Cloud Foundry
+etc/apps | awk '{ printf "cf start %s\n", $1 }' | bash -xe
+

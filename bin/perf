@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Run the performance tests
+(cd node_modules/cf-abacus-perf-test && npm run perf $1 $2)
+

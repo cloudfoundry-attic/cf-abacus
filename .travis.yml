@@ -1,0 +1,14 @@
+language: node_js
+
+node_js:
+  - "0.12"
+  - "iojs"
+
+notifications:
+  irc:
+    use_notice: true
+    on_success: change
+    on_failure: change
+    channels:
+      - chat.freenode.net#cf-abacus
+

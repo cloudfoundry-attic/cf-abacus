@@ -1,0 +1,47 @@
+{
+  "name": "cf-abacus-usage-aggregator",
+  "description": "Usage aggregator service",
+  "readme": "README.md",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "launch webappstart 4 9200",
+    "webappstart": "webapp start",
+    "stop": "webapp stop",
+    "test": "eslint && mocha",
+    "lint": "eslint",
+    "cfpush": "../../../tools/packapp/packapp && cf push"
+  },
+  "dependencies": {
+    "cf-abacus-batch": "file:../../utils/batch",
+    "cf-abacus-breaker": "file:../../utils/breaker",
+    "cf-abacus-cluster": "file:../../utils/cluster",
+    "cf-abacus-dbclient": "file:../../utils/dbclient",
+    "cf-abacus-debug": "file:../../utils/debug",
+    "cf-abacus-lock": "file:../../utils/lock",
+    "cf-abacus-request": "file:../../utils/request",
+    "cf-abacus-retry": "file:../../utils/retry",
+    "cf-abacus-router": "file:../../utils/router",
+    "cf-abacus-seqid": "file:../../utils/seqid",
+    "cf-abacus-transform": "file:../../utils/transform",
+    "cf-abacus-urienv": "file:../../utils/urienv",
+    "cf-abacus-webapp": "file:../../utils/webapp",
+    "cf-abacus-yieldable": "file:../../utils/yieldable",
+    "cf-abacus-instance-launcher": "file:../launcher",
+    "cf-abacus-aggregation-db": "file:../db",
+    "cf-abacus-service-config": "file:../../config/service",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "cf-abacus-eslint": "file:../../../tools/eslint",
+    "cf-abacus-mocha": "file:../../../tools/mocha",
+    "cf-abacus-packapp": "file:../../../tools/packapp",
+    "proxyquire": "^1.5.0"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  },
+  "repository": {}
+}

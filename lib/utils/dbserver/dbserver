@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+'use strict';
+
+// Run our PouchDB server
+require('cf-abacus-es6runner')();
+require('./index.js').runCLI();
+

@@ -1,0 +1,30 @@
+{
+  "name": "cf-abacus-instance-launcher",
+  "description": "Launch multiple instances of an application",
+  "readme": "README.md",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "bin": {
+    "launch": "./launch"
+  },
+  "scripts": {
+    "test": "eslint && mocha",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "cf-abacus-debug": "file:../../utils/debug",
+    "cf-abacus-es6runner": "file:../../utils/es6runner",
+    "cf-abacus-vcapenv": "file:../../utils/vcapenv",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "cf-abacus-eslint": "file:../../../tools/eslint",
+    "cf-abacus-mocha": "file:../../../tools/mocha"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  },
+  "repository": {}
+}

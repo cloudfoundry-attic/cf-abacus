@@ -1,0 +1,36 @@
+{
+  "name": "cf-abacus-webapp",
+  "description": "Setup of Express in a Node cluster, a convenient starting point for Webapps",
+  "readme": "README.md",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "bin": {
+    "webapp": "./webapp"
+  },
+  "scripts": {
+    "test": "eslint && mocha",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "cf-abacus-cluster": "file:../cluster",
+    "cf-abacus-debug": "file:../debug",
+    "cf-abacus-es6runner": "file:../es6runner",
+    "cf-abacus-express": "file:../express",
+    "cf-abacus-hystrix": "file:../hystrix",
+    "cf-abacus-perf": "file:../perf",
+    "cf-abacus-vcapenv": "file:../vcapenv",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "cf-abacus-eslint": "file:../../../tools/eslint",
+    "cf-abacus-mocha": "file:../../../tools/mocha",
+    "cf-abacus-request": "file:../request",
+    "proxyquire": "^1.5.0"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  },
+  "repository": {}
+}

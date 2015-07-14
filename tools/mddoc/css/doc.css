@@ -1,0 +1,15 @@
+body {
+  margin: 10px;
+}
+@media print {
+    .language-json, .language-js, .language-sh {
+        font-family: "Monaco", monospace;
+        font-size: 8px;
+    }
+}
+@media screen {
+    .language-json, .language-js, .language-sh {
+        font-family: "Monaco", monospace;
+        font-size: 10px;
+    }
+}

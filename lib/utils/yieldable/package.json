@@ -1,0 +1,26 @@
+{
+  "name": "cf-abacus-yieldable",
+  "description": "Small utility that converts Node callback based functions to generators that are yieldable from co flow functions",
+  "readme": "README.md",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint && mocha",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "co": "^3.0.6",
+    "thunkify": "^2.1.2",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "cf-abacus-eslint": "file:../../../tools/eslint",
+    "cf-abacus-mocha": "file:../../../tools/mocha"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  },
+  "repository": {}
+}

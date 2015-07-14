@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+'use strict';
+
+// Print the versions of OS, Node and Npm
+require('./versions.js').runCLI();
+

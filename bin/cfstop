@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Stop all the Abacus apps on Cloud Foundry
+etc/apps | awk '{ printf "cf stop %s\n", $1 }' | bash -xe
+

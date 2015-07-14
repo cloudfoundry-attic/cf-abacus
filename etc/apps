@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Print the names and paths of the Abacus apps
+cat <<EOF
+cf-abacus-dbserver lib/utils/dbserver
+cf-abacus-provisioning-stub lib/stubs/provisioning
+cf-abacus-account-stub lib/stubs/account
+cf-abacus-usage-collector lib/metering/collector
+cf-abacus-usage-meter lib/metering/meter
+cf-abacus-usage-accumulator lib/aggregation/accumulator
+cf-abacus-usage-aggregator lib/aggregation/aggregator
+cf-abacus-usage-reporting lib/aggregation/reporting
+EOF
+

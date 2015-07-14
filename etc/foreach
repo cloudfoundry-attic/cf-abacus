@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+'use strict';
+
+// Run a command on a selection of modules
+require('./foreach.js').runCLI();
+

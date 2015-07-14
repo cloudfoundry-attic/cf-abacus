@@ -1,0 +1,26 @@
+{
+  "name": "cf-abacus-events",
+  "description": "Small utility functions to help work with Node events",
+  "readme": "README.md",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint && mocha",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "underscore": "^1.8.3",
+    "emit-stream": "^0.1.2",
+    "through": "^2.3.4"
+  },
+  "devDependencies": {
+    "cf-abacus-eslint": "file:../../../tools/eslint",
+    "cf-abacus-mocha": "file:../../../tools/mocha"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  },
+  "repository": {}
+}

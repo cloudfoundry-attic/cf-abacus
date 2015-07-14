@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+'use strict';
+
+require('cf-abacus-es6runner')();
+require('./ping.js');
+

@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+'use strict';
+
+// Test a module using Jest
+require('./index.js').runCLI();
+

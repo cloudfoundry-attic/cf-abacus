@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Push all the Abacus apps to Cloud Foundry
+etc/apps | awk '{ printf "(cd %s && npm run cfpush)\n", $2 }' | bash -xe
+

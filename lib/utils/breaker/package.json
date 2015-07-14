@@ -1,0 +1,26 @@
+{
+  "name": "cf-abacus-breaker",
+  "description": "Simple auto-reclosing circuit breaker for Node-style calls, inspired by the Akka breaker",
+  "readme": "README.md",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint && mocha",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "cf-abacus-perf": "file:../perf",
+    "cf-abacus-debug": "file:../debug",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "cf-abacus-eslint": "file:../../../tools/eslint",
+    "cf-abacus-mocha": "file:../../../tools/mocha"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  },
+  "repository": {}
+}

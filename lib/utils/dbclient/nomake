@@ -1,0 +1,5 @@
+#!/usr/bin/env node
+'use strict';
+
+// Stub for make, do nothing
+

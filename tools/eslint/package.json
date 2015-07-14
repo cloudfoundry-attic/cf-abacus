@@ -1,0 +1,23 @@
+{
+  "name": "cf-abacus-eslint",
+  "description": "ESLint configured with our coding style guidelines",
+  "readme": "README.md",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "bin": {
+    "eslint": "./eslint"
+  },
+  "scripts": {
+    "lint": "eslint -c .eslintrc .",
+    "test": "eslint -c .eslintrc ."
+  },
+  "dependencies": {
+    "eslint": "^0.18.0",
+    "esprima-fb": "^14001.1.0-dev-harmony-fb"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "repository": {}
+}

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Stop all the Abacus services
+etc/apps | awk '{ printf "(cd node_modules/%s && npm stop &)\n", $1 }' | bash -e
+

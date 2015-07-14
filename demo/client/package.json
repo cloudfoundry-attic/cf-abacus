@@ -1,0 +1,25 @@
+{
+  "name": "cf-abacus-demo-client",
+  "description": "Demo program that submits usage and gets a usage report",
+  "readme": "README.md",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "demo": "mocha",
+    "test": "eslint",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "cf-abacus-request": "file:../../lib/utils/request"
+  },
+  "devDependencies": {
+    "cf-abacus-eslint": "file:../../tools/eslint",
+    "cf-abacus-mocha": "file:../../tools/mocha"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  },
+  "repository": {}
+}

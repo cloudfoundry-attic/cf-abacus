@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+'use strict';
+
+// Convert Markdown to HTML
+require('./index.js').runCLI();
+

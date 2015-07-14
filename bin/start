@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Start all the Abacus services
+etc/apps | awk '{ printf "(sleep 1 && cd node_modules/%s && npm start &)\n", $1 }' | bash -e
+
