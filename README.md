@@ -12,7 +12,7 @@ Abacus provides usage metering and aggregation for [Cloud Foundry (CF)](https://
 
 Abacus provides a REST API allowing Cloud service providers to submit usage data, and a REST API allowing usage dashboards, and billing systems to retrieve usage reports.
 
-Abacus is implemented in Node.js and the different micro-services can run as CF apps
+Abacus is implemented in Node.js and the different micro-services can run as CF apps.
 
 The Abacus REST API is described in [doc/api.md](doc/api.md).
 
