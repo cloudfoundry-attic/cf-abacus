@@ -8,9 +8,11 @@ The Abacus Cloud service usage metering and aggregation project.
 Overview
 ---
 
-Abacus provides usage metering and aggregation for [Cloud Foundry](https://www.cloudfoundry.org) services. It is implemented as a set of REST Web services that collect usage data, apply metering formulas and aggregate usage at several levels within a Cloud Foundry organization.
+Abacus provides usage metering and aggregation for [Cloud Foundry (CF)](https://www.cloudfoundry.org) services. It is implemented as a set of REST micro-services that collect usage data, apply metering formulas, and aggregate usage at several levels within a Cloud Foundry organization.
 
-Abacus provides a REST API allowing Cloud service providers to submit usage data, and a REST API allowing usage dashboards and billing systems to retrieve usage reports.
+Abacus provides a REST API allowing Cloud service providers to submit usage data, and a REST API allowing usage dashboards, and billing systems to retrieve usage reports.
+
+Abacus is implemented in Node.js and the different micro-services can run as CF apps
 
 The Abacus REST API is described in [doc/api.md](doc/api.md).
 
@@ -83,7 +85,7 @@ Running the demo
 
 The Abacus demo runs a simple test program that simulates the submission of usage by a Cloud service provider, then gets a daily report for the usage aggregated within a Cloud Foundry organization.
 
-The demo data is stored in a small in-memory [PouchDB](http://pouchdb.com) test database so the demo is self contained and you don't need to set up a real CouchDB database just to run it.
+The demo data is stored in a small in-memory [PouchDB](http://pouchdb.com) test database so the demo is self-contained and you don't need to set up a real CouchDB database just to run it.
 
 Once the Abacus apps are running on your Cloud Foundry deployment, do this:
 
