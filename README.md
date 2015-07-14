@@ -3,7 +3,7 @@ CF-Abacus
 
 The Abacus Cloud service usage metering and aggregation project.
 
-[![Build Status](https://travis-ci.org/jsdelfino/temp.svg)](https://travis-ci.org/jsdelfino/temp)
+[![Build Status](https://travis-ci.org/jsdelfino/cf-abacus.svg)](https://travis-ci.org/jsdelfino/cf-abacus)
 
 Overview
 ---
