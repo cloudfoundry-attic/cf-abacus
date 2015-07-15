@@ -29,8 +29,7 @@
     "cf-abacus-eslint": "file:../../../tools/eslint",
     "cf-abacus-mocha": "file:../../../tools/mocha",
     "cf-abacus-packapp": "file:../../../tools/packapp",
-    "cf-abacus-request": "file:../request",
-    "proxyquire": "^1.5.0"
+    "cf-abacus-request": "file:../request"
   },
   "engines": {
     "node": ">=0.10.0",

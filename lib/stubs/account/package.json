@@ -19,11 +19,11 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "cf-abacus-cluster": "file:../../utils/cluster",
     "cf-abacus-eslint": "file:../../../tools/eslint",
     "cf-abacus-mocha": "file:../../../tools/mocha",
     "cf-abacus-packapp": "file:../../../tools/packapp",
-    "cf-abacus-request": "file:../../utils/request",
-    "proxyquire": "^1.5.0"
+    "cf-abacus-request": "file:../../utils/request"
   },
   "engines": {
     "node": ">=0.10.0",

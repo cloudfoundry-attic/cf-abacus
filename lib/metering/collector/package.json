@@ -30,10 +30,10 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "cf-abacus-cluster": "file:../../utils/cluster",
     "cf-abacus-eslint": "file:../../../tools/eslint",
     "cf-abacus-mocha": "file:../../../tools/mocha",
-    "cf-abacus-packapp": "file:../../../tools/packapp",
-    "proxyquire": "^1.5.0"
+    "cf-abacus-packapp": "file:../../../tools/packapp"
   },
   "engines": {
     "node": ">=0.10.0",

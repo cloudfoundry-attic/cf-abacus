@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "etc/versions && npm install && npm test",
+    "build": "etc/versions && npm install npm@2.11.3 && node_modules/.bin/npm install && npm test",
     "start": "bin/start",
     "stop": "bin/stop",
     "demo": "bin/demo",
@@ -13,8 +13,8 @@
     "cfstart": "bin/cfstart",
     "cfstop": "bin/cfstop",
     "doc": "cat README.md | mddoc >Abacus-README.html",
-    "cachedinstall": "npm --cache-min 9999999 install",
-    "reinstall": "npm run uninstall && npm install",
+    "cachedinstall": "npm --cache-min 9999999 install npm@2.11.3 && node_modules/.bin/npm --cache-min 9999999 install",
+    "reinstall": "npm run uninstall && npm install npm@2.11.3 && node_modules/.bin/npm install",
     "uninstall": "rm -rf node_modules",
     "lint": "etc/foreach cf-abacus npm run lint",
     "test": "etc/foreach cf-abacus npm test",
@@ -68,7 +68,6 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "proxyquire": "^1.5.0"
   },
   "engines": {
     "node": ">=0.10.0",

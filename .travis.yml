@@ -1,8 +1,13 @@
 language: node_js
 
+install: echo "install"
+
+script: npm run build
+
 node_js:
   - "0.12"
   - "iojs"
+  - "0.10"
 
 notifications:
   irc:
@@ -11,4 +16,3 @@ notifications:
     on_failure: change
     channels:
       - chat.freenode.net#cf-abacus
-

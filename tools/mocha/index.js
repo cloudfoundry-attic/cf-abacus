@@ -9,7 +9,7 @@ var smap = require('source-map');
 var textcov = require('./textcov.js');
 var istanbul = require('istanbul-harmony');
 var Mocha = require('mocha');
-var harmonize = require('harmonize');
+var cp = require('child_process');
 
 // Return true if a file belongs to the current module or a subdirectory of
 // that module
@@ -46,6 +46,7 @@ var transformer = function(sources, maps) {
             };
         }
         catch(e) {
+            console.log(e);
             // Transpile ES6 code to ES5
             var babel = require('babel-core');
             require('babel-core/polyfill');
@@ -108,9 +109,18 @@ var remap = function(coverage, maps) {
     return coverage;
 };
 
+// An implementation of harmonize that works with Node 0.10, 0.12 and io.js
+var harmonize = function() {
+    if (typeof Proxy !== 'undefined') return;
+    var node = cp.spawn(process.argv[0], ['--harmony', '--harmony-proxies', '--harmony_arrow_functions'].concat(process.argv.slice(1)), { stdio: 'inherit' });
+    node.on('close', function(code) { process.exit(code); });
+    process.once('uncaughtException', function(e) {});
+    throw 'harmony';
+};
+
 // Run Mocha with Babel and Istanbul
 var runCLI = function() {
-    // Make sure we run with --harmony
+    // Make sure we run with --harmony and the harmony features we need
     harmonize();
 
     process.stdout.write('Testing...\n');
