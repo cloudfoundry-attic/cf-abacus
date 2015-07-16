@@ -165,6 +165,11 @@ etc/ - Misc build scripts
 
 ```
 
+People
+---
+
+[List of all contributors](https://github.com/jsdelfino/cf-abacus/graphs/contributors)
+
 License
 ---
 
