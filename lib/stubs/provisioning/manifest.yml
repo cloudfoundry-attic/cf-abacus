@@ -1,7 +1,6 @@
 applications:
 - name: cf-abacus-provisioning-stub
   host: cf-abacus-provisioning-stub
-  buildpack: https://github.com/cloudfoundry/buildpack-nodejs.git
   path: app.zip
   instances: 2
   memory: 512M

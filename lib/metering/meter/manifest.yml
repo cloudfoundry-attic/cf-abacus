@@ -1,7 +1,6 @@
 applications:
 - name: cf-abacus-usage-meter
   host: cf-abacus-usage-meter
-  buildpack: https://github.com/cloudfoundry/buildpack-nodejs.git
   path: app.zip
   instances: 2
   memory: 512M

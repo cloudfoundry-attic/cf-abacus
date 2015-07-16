@@ -1,7 +1,6 @@
 applications:
 - name: cf-abacus-dbserver
   host: cf-abacus-dbserver
-  buildpack: https://github.com/cloudfoundry/buildpack-nodejs.git
   path: app.zip
   instances: 1
   memory: 1G

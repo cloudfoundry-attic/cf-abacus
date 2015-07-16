@@ -1,7 +1,6 @@
 applications:
 - name: cf-abacus-usage-accumulator
   host: cf-abacus-usage-accumulator
-  buildpack: https://github.com/cloudfoundry/buildpack-nodejs.git
   path: app.zip
   instances: 4
   memory: 512M

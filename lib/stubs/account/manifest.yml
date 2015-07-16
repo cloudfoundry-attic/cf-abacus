@@ -1,7 +1,6 @@
 applications:
 - name: cf-abacus-account-stub
   host: cf-abacus-account-stub
-  buildpack: https://github.com/cloudfoundry/buildpack-nodejs.git
   path: app.zip
   instances: 2
   memory: 512M
