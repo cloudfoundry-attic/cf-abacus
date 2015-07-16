@@ -1,6 +1,0 @@
-#!/usr/bin/env node
-'use strict';
-
-// Stub for python, used to skip the node-gyp build
-process.stdout.write('2.7.6\n');
-

@@ -6,7 +6,6 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "preinstall": "./preinstall",
     "test": "eslint && mocha",
     "lint": "eslint"
   },

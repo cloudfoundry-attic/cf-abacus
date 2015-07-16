@@ -6,12 +6,10 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "preinstall": "./preinstall",
     "start": "./dbserver start",
     "stop": "./dbserver stop",
     "test": "eslint && mocha",
     "lint": "eslint",
-    "foo": "foo",
     "cfpush": "../../../tools/packapp/packapp && cf push"
   },
   "dependencies": {
