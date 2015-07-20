@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 'use strict';
 
-// Test a module using Jest
+// Test a module using Babel, Istanbul and Mocha
 require('./index.js').runCLI();
 
