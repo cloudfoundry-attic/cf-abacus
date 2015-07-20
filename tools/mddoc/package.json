@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-mddoc",
   "description": "Simple Mardown to HTML doc generator",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

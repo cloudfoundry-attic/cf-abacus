@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-hystrix",
   "description": "Express middleware that serves a stream of Hystrix stats",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

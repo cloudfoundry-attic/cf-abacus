@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-usage-collector",
   "description": "Usage collector service",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

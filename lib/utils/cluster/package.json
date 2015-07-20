@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-cluster",
   "description": "Convenient Node process cluster setup, which monitors and restarts child processes as needed.",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

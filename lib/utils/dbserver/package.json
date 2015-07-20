@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-dbserver",
   "description": "Test CouchDB server app built using PouchDB and Express",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

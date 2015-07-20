@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-retry",
   "description": "Tiny wrapper around the Node retry module providing call retries with exponential backoff",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

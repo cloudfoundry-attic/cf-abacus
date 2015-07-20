@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-mocha",
   "description": "Painless testing and code coverage with Babel, Mocha and Istanbul",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-demo-client",
   "description": "Demo program that submits usage and gets a usage report",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

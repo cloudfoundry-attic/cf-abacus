@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-request",
   "description": "Small wrapper around the popular request module, with logging and Express-like URI templates",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

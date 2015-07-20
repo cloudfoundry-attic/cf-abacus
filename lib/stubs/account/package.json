@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-account-stub",
   "description": "Stub for an account management service.",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-router",
   "description": "Small Express router that runs request handlers written as ES6 generators using Node co",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-yieldable",
   "description": "Small utility that converts Node callback based functions to generators that are yieldable from co flow functions",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

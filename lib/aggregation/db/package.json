@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-aggregation-db",
   "description": "Naming and partitioning scheme for the aggregation dbs",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-metering-db",
   "description": "Naming and partitioning scheme for the metering dbs",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

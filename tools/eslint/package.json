@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-eslint",
   "description": "ESLint configured with our coding style guidelines",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

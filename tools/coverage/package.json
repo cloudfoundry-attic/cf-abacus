@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-coverage",
   "description": "Report overall code coverage from Istanbul coverage files",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

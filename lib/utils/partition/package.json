@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-partition",
   "description": "Small utility that distributes operations on time-based versions of keys over a set of partitions",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-webapp",
   "description": "Setup of Express in a Node cluster, a convenient starting point for Webapps",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

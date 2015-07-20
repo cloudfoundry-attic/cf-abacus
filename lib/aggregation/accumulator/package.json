@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-usage-accumulator",
   "description": "Usage accumulator service",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,

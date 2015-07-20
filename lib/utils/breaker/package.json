@@ -1,6 +1,7 @@
 {
   "name": "cf-abacus-breaker",
   "description": "Simple auto-reclosing circuit breaker for Node-style calls, inspired by the Akka breaker",
+  "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
