@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "etc/versions && etc/npm2 install && npm test",
+    "build": "etc/versions && etc/npm2 install && npm test && npm run coverage",
     "start": "bin/start",
     "stop": "bin/stop",
     "demo": "bin/demo",
@@ -19,6 +19,7 @@
     "lint": "etc/foreach cf-abacus npm run lint",
     "test": "etc/foreach cf-abacus npm test",
     "coverage": "coverage",
+    "coveralls": "cat .coverage/lcov.info | coveralls",
     "perf": "bin/perf"
   },
   "dependencies": {
@@ -70,6 +71,7 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "coveralls": "^2.11.3"
   },
   "engines": {
     "node": ">=0.10.0",
