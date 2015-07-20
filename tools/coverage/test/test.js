@@ -31,7 +31,7 @@ describe('cf-abacus-coverage', () => {
             expect(code).to.equal(0);
 
             // Expect reporter.addAll to be called with some report types
-            expect(reporters[0].addAll.args[0][0]).to.deep.equal(['lcov', 'json']);
+            expect(reporters[0].addAll.args[0][0]).to.deep.equal(['lcovonly', 'json']);
 
             // Expect reporter.write to be called with a collector
             const collector = reporters[0].write.args[0][0];
