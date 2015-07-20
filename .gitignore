@@ -23,3 +23,4 @@ config.json
 .local
 .pack
 .coverage
+.coveralls.yml
