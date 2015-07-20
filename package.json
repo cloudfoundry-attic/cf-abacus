@@ -18,9 +18,11 @@
     "reinstall": "rm -rf node_modules && npm install",
     "lint": "etc/foreach cf-abacus npm run lint",
     "test": "etc/foreach cf-abacus npm test",
+    "coverage": "coverage",
     "perf": "bin/perf"
   },
   "dependencies": {
+    "cf-abacus-coverage": "file:tools/coverage",
     "cf-abacus-eslint": "file:tools/eslint",
     "cf-abacus-mddoc": "file:tools/mddoc",
     "cf-abacus-mocha": "file:tools/mocha",
