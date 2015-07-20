@@ -24,10 +24,10 @@ var nextpos = function(pos, c) {
 };
 
 // Return source code annotated with colors or markup indicating code coverage
-var annotatedSource = function(source, coveredSpans, uncoveredSpans, colorify) {
+var annotatedSource = function(source, coveredSpans, uncoveredSpans, colors) {
     // Use colors or markup tags to mark the covered code, uncovered code and
     // non-code text sections.
-    var marks = colorify ?
+    var marks = colors ?
         // Uncovered code is underlined red, covered code is green, non-code
         // text is blue
         {
@@ -63,28 +63,43 @@ var annotatedSource = function(source, coveredSpans, uncoveredSpans, colorify) {
     return _.reduce(source.split(''), markedSource, { source: [marks.text.start], length: source.length, pos: { line: 1, column: 0 }, mark: marks.text }).source.join('');
 };
 
+// Return true if a file belongs to the current module or a subdirectory of
+// that module
+var inThisModule = function(cov) {
+    var rel = path.relative(process.cwd(), cov.path);
+    return /^[^\/]*\.js$/.test(rel) || /^[^\/]*\/[^\/]*\.js$/.test(rel);
+};
+
+// Compute line and statement coverage percentages
+var percentages = function(cov) {
+    var lcov = _.values(cov.l);
+    var scov = _.values(cov.s);
+    return { l: _.filter(lcov, _.identity).length / (lcov.length || 1) * 100, s: _.filter(scov, _.identity).length / (scov.length || 1) * 100 };
+};
+
+// Colorify the report on a tty or when the command line says --colors,
+// or when env variable COVERAGE_COLORS is configured
+var colors = _.memoize(function() {
+    var enabled = function(c) { return c !== undefined && c !== '0' && c !== 'false' && c !== 'disabled' && c !== 'no'; };
+    return tty.isatty(process.stdout) || _.contains(process.argv, '--colors') || enabled(process.env.COVERAGE_COLORS);
+});
+
 // Print code coverage from a list of Istanbul coverage objects and the
 // corresponding sources
 var printCoverage = function(coverage, sources) {
-    _.map(_.values(coverage), function(cov) {
+    _.map(_.filter(_.values(coverage), inThisModule), function(cov) {
         var file = path.relative(process.cwd(), cov.path);
 
-        // Compute the coverage percentage
-        var scov = _.values(cov.s);
-        var bcov = _.flatten(_.values(cov.b));
-        var percent = (_.filter(scov, _.identity).length + _.filter(bcov, _.identity).length) / (scov.length + bcov.length) * 100;
+        // Compute the coverage percentages
+        var percent = percentages(cov);
+        var fullcov = percent.l === 100 && percent.s === 100;
 
-        // Colorify the report on a tty or when the command line says --colors,
-        // or when env variable COVERAGE_COLORS is configured
-        var enabled = function(c) { return c !== undefined && c !== '0' && c !== 'false' && c !== 'disabled' && c !== 'no'; };
-        var colorify = tty.isatty(process.stdout) || _.contains(process.argv, '--colors') || enabled(process.env.COVERAGE_COLORS);
-
-        // Print summaries in green for 100% coverage and red under 100%
-        var color = colorify ? percent === 100 ? '\u001b[32m' : '\u001b[31m' : '';
-        var reset = colorify ? '\u001b[0m' : '';
+        // Print code coverage in green for 100% coverage and red under 100%
+        var color = colors() ? fullcov ? '\u001b[32m' : '\u001b[31m' : '';
+        var reset = colors() ? '\u001b[0m' : '';
 
         // Under 100% coverage, print the annotated source
-        if(percent !== 100) {
+        if(!fullcov) {
             process.stdout.write(util.format('%sSource %s%s\n', color, file, reset));
 
             // Convert the Istanbul coverage statement and branch maps to lists
@@ -96,12 +111,12 @@ var printCoverage = function(coverage, sources) {
             var uncoveredSpans = _.map(_.filter(spans, function(s) { return s[0] === 0; }), function(s) { return s[1]; });
 
             // Print the annotated source
-            process.stdout.write(annotatedSource(sources[cov.path], coveredSpans, uncoveredSpans, colorify));
+            process.stdout.write(annotatedSource(sources[cov.path], coveredSpans, uncoveredSpans, colors()));
             process.stdout.write('\n');
         }
 
-        // Print line coverage percentage
-        process.stdout.write(util.format('%sCoverage %d\% %s%s\n', color, percent.toFixed(2), file, reset));
+        // Print line and statement coverage percentages
+        process.stdout.write(util.format('%sCoverage lines %d\% statements %d\% %s%s\n', color, percent.l.toFixed(2), percent.s.toFixed(2), file, reset));
     });
 };
 

@@ -10,6 +10,9 @@ var textcov = require('./textcov.js');
 var istanbul = require('istanbul-harmony');
 var Mocha = require('mocha');
 var cp = require('child_process');
+var fs = require('fs');
+
+/* eslint no-process-exit: 1 */
 
 // Return true if a file belongs to the current module or a subdirectory of
 // that module
@@ -46,7 +49,6 @@ var transformer = function(sources, maps) {
             };
         }
         catch(e) {
-            console.log(e);
             // Transpile ES6 code to ES5
             var babel = require('babel-core');
             require('babel-core/polyfill');
@@ -69,7 +71,7 @@ var transformer = function(sources, maps) {
     var instrumenter = new istanbul.Instrumenter({ coverageVariable: '__coverage', preserveComments: true });
     var noinstrument = process.env.NO_ISTANBUL;
     var instrument = function(code, file) {
-        if(noinstrument === undefined && inThisModule(file) && !inTestDir(file)) {
+        if(!noinstrument && inAbacusModule(file) && !inTestDir(file)) {
             process.stdout.write(util.format('Running Istanbul instrumentation on %s\n', path.relative(process.cwd(), file)));
             return instrumenter.instrumentSync(code, file);
         }
@@ -145,18 +147,38 @@ var runCLI = function() {
 
     // Run the test with Mocha
     mocha.run(function(failures) {
+        var t1 = Date.now();
+
+        // Print the test execution time
+        var time = function() {
+            process.stdout.write(util.format('\nRun time %dms\n', t1 - t0));
+        };
+
+        if(!global.__coverage) {
+            time();
+            process.exit(failures);
+        }
+
         // Remap the generated source coverage maps using the collected source
         // maps
         remap(global.__coverage, maps);
 
-        // Print a detailed source coverage text report
-        textcov(global.__coverage, sources);
+        // Write the JSON and LCOV coverage reports
+        var collector = new istanbul.Collector();
+        collector.add(global.__coverage);
+        var coverage = collector.getFinalCoverage();
+        var reporter = new istanbul.Reporter(undefined, '.coverage');
+        reporter.addAll(['lcovonly']);
+        reporter.write(collector, false, function() {
+            fs.writeFileSync('.coverage/coverage.json', JSON.stringify(coverage));
 
-        // Print the test execution time
-        process.stdout.write(util.format('\nRun time %dms\n', Date.now() - t0));
+            // Print a detailed source coverage text report and the test
+            // execution time
+            textcov(coverage, sources);
+            time();
 
-        /* eslint no-process-exit: 1 */
-        process.exit(failures);
+            process.exit(failures);
+        });
     });
 };
 
