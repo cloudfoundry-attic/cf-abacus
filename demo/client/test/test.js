@@ -18,7 +18,7 @@ const delta = parseInt(process.argv[2]) || parseInt(process.argv[3]) || 0;
 
 describe('cf-abacus-demo-client', () => {
     it('submits usage for a sample storage service and retrieves an aggregated usage report', (done) => {
-        this.timeout(60000);
+        this.timeout(30000);
 
         // Test usage to be submitted by the client
         const usage = [
@@ -64,22 +64,38 @@ describe('cf-abacus-demo-client', () => {
         };
 
         // Get usage report for the test organization
+        let gets = 0;
         const get = (done) => {
             request.get(reporting + '/v1/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/usage/2015-06-30', {}, (err, val) => {
                 expect(err).to.equal(undefined);
                 expect(val.statusCode).to.equal(200);
 
                 // Compare the usage report we got with the expected report
-                expect(omit(val.body, [ 'id', 'start', 'end' ])).to.deep.equal(report);
-                console.log('\n', util.inspect(val.body, { depth: 10 }), '\n');
-                done();
+                try {
+                    expect(omit(val.body, [ 'id', 'start', 'end' ])).to.deep.equal(report);
+                    console.log('\n', util.inspect(val.body, { depth: 10 }), '\n');
+                    done();
+                }
+                catch(e) {
+                    // If the comparison fails we'll be called again to retry
+                    // after 1 second, but give up after 20 seconds as if we're
+                    // still not getting the expected report then something
+                    // must have failed in the processing of that usage
+                    if(++gets === 20) {
+                        console.log('        All submitted usage still not processed\n');
+                        throw e;
+                    }
+                    console.log('        Waiting for all submitted usage to be processed');
+                }
             });
         };
 
-        // Wait for the expected usage report
+        // Wait for the expected usage report, get a report every second until
+        // we get the expected values indicating that all submitted usage has
+        // been processed
         const wait = (done) => {
             console.log('\n        Retrieving usage report');
-            setTimeout(() => get(done), 1000);
+            const i = setInterval(() => get(() => done(clearInterval(i))), 1000);
         };
 
         // Run the above steps
