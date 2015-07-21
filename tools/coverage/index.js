@@ -114,9 +114,9 @@ var runCLI = function() {
         if(err) fail(util.format('Couldn\'t collect coverage files', err));
 
         // Combine all the individual reports and write overall coverage
-        // reports in LCOV and JSON formats
+        // reports in LCOV, HTML and JSON formats
         var reporter = new istanbul.Reporter(undefined, '.coverage');
-        reporter.addAll(['lcovonly', 'json']);
+        reporter.addAll([process.version >= 'v0.12' ? 'lcov' : 'lcovonly', 'json']);
         reporter.write(collector, false, function(err) {
             if(err) fail(util.format('Couldn\'t write coverage reports', err, '\n'));
 
