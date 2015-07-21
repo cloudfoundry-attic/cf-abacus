@@ -1,7 +1,7 @@
 dbserver
 ===
 
-A test CouchDB server app built using Express and PouchDB.
+A test CouchDB-compatible server app built using Express and PouchDB.
 
 Usage
 ---

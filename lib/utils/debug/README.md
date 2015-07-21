@@ -1,7 +1,8 @@
 debug
 ===
 
-Tiny debug log utility, based of the popular Node [debug](https://github.com/visionmedia/debug) module.
+Tiny debug log utility, based off the popular Node [debug](https://github.com/visionmedia/debug)
+module.
 
 Usage
 ---

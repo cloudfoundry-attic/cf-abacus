@@ -1,6 +1,6 @@
 {
   "name": "cf-abacus-throttle",
-  "description": "Small utility that throttles a function to a maximum number of concurrent executions",
+  "description": "Small utility that throttles calls to a function to a maximum number of concurrent calls",
   "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",

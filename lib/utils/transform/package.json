@@ -1,6 +1,6 @@
 {
   "name": "cf-abacus-transform",
-  "description": "Simple async map, reduce, filter functions with callbacks",
+  "description": "Simple async map, reduce, and filter data transformation functions with callbacks",
   "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",

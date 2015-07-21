@@ -1,6 +1,6 @@
 {
   "name": "cf-abacus-price-config",
-  "description": "price configuration details",
+  "description": "Service pricing configuration",
   "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",

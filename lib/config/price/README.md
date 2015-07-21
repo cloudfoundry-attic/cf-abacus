@@ -1,7 +1,7 @@
 price-config
 ===
 
-Provides access to price configuration.
+Provides access to service pricing configuration.
 
 Usage
 ---

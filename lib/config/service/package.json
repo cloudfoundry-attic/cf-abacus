@@ -1,6 +1,6 @@
 {
   "name": "cf-abacus-service-config",
-  "description": "Service configuration details",
+  "description": "Service metering and aggregation configuration",
   "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",

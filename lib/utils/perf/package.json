@@ -1,6 +1,6 @@
 {
   "name": "cf-abacus-perf",
-  "description": "Small utility that computes real time function call performance and reliability metrics.",
+  "description": "Utility that collects real time function call performance and reliability metrics",
   "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",

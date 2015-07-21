@@ -1,7 +1,7 @@
 service-config
 ===
 
-Provides access to service configuration.
+Provides access to service metering and aggregation configuration.
 
 Usage
 ---

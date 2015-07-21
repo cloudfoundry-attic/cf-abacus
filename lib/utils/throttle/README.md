@@ -1,7 +1,8 @@
-retry
+throttle
 ===
 
-Small utility that throttles a function to a maximum number of concurrent executions.
+Small utility that throttles calls to a function to a maximum number of
+concurrent calls.
 
 Usage
 ---

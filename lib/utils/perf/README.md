@@ -1,7 +1,7 @@
 perf
 ===
 
-Small utility that computes real time function call performance and reliability metrics
+Utility that collects real time function call performance and reliability metrics.
 
 Usage
 ---

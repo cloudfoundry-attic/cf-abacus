@@ -1,7 +1,7 @@
 cf-abacus-packapp
 ===
 
-Package an app and its local npm dependencies for deployment to Cloud Foundry
+Package an app and its local npm dependencies for deployment to Cloud Foundry.
 
 Usage
 ---
