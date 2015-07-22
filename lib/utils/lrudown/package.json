@@ -1,0 +1,30 @@
+{
+  "name": "cf-abacus-lrudown",
+  "description": "A Leveldown adapter for the popular Node LRU module",
+  "license": "Apache-2.0",
+  "readme": "README.md",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint && mocha",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "abstract-leveldown": "^2.4.0",
+    "cf-abacus-debug": "file:../debug",
+    "lru-cache": "^2.6.5",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "cf-abacus-eslint": "file:../../../tools/eslint",
+    "cf-abacus-mocha": "file:../../../tools/mocha",
+    "levelup": "~0.18.4",
+    "pouchdb": "3.6.0"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  },
+  "repository": {}
+}
