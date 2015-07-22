@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "cf-abacus-dbclient": "file:../../utils/dbclient",
+    "cf-abacus-lrudown": "file:../../utils/lrudown",
     "cf-abacus-partition": "file:../../utils/partition"
   },
   "devDependencies": {
