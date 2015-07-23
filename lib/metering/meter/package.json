@@ -22,6 +22,7 @@
     "cf-abacus-router": "file:../../utils/router",
     "cf-abacus-request": "file:../../utils/request",
     "cf-abacus-seqid": "file:../../utils/seqid",
+    "cf-abacus-throttle": "file:../../utils/throttle",
     "cf-abacus-urienv": "file:../../utils/urienv",
     "cf-abacus-webapp": "file:../../utils/webapp",
     "cf-abacus-yieldable": "file:../../utils/yieldable",
