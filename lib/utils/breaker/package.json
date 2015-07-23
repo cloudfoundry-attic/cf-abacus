@@ -13,6 +13,7 @@
   "dependencies": {
     "cf-abacus-perf": "file:../perf",
     "cf-abacus-debug": "file:../debug",
+    "cf-abacus-yieldable": "file:../yieldable",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
