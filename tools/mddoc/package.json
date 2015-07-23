@@ -10,15 +10,18 @@
     "mddoc": "./mddoc"
   },
   "scripts": {
-    "test": "eslint",
+    "test": "eslint && mocha",
     "lint": "eslint"
   },
   "dependencies": {
     "bootstrap": "^3.3.5",
+    "event-stream": "^3.3.1",
     "highlight.js": "^8.6.0",
     "hogan.js": "^3.0.2",
     "html-inline": "^1.1.1",
-    "markdown-it": "^4.2.2"
+    "markdown-it": "^4.2.2",
+    "request": "^2.37.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "cf-abacus-eslint": "file:../eslint",
