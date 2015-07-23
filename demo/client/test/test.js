@@ -18,22 +18,26 @@ const delta = parseInt(process.argv[2]) || parseInt(process.argv[3]) || 0;
 
 describe('cf-abacus-demo-client', () => {
     it('submits usage for a sample storage service and retrieves an aggregated usage report', (done) => {
-        this.timeout(30000);
+        // Configure the test timeout
+        const timeout = 20000;
+        this.timeout(timeout + 2000);
 
         // Test usage to be submitted by the client
+        const start = 1435629365220 + delta;
+        const end = 1435629465220 + delta;
         const usage = [
             { message: 'Submitting 10 GB, 1000 light API calls, 100 heavy API calls',
-                usage :{ service_instances: [{ service_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87', usage: [{ start: 1435629365220 + delta, end: 1435629465220 + delta,
+                usage :{ service_instances: [{ service_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87', usage: [{ start: start, end: end,
                     region: 'eu-gb', organization_guid: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27', space_guid: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a', plan_id: 'plan_123', resources:
                 [{ unit: 'BYTE', quantity: 1073741824 }, { unit: 'LIGHT_API_CALL', quantity: 1000 }, { unit: 'HEAVY_API_CALL', quantity: 100 }] }] }] }
             },
             { message: 'Submitting 10 GB, 1000 light API calls, 100 heavy API calls',
-                usage :{ service_instances: [{ service_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87', usage: [{ start: 1435629365221 + delta, end: 1435629465221 + delta,
+                usage :{ service_instances: [{ service_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87', usage: [{ start: start + 1, end: end + 1,
                     region: 'eu-gb', organization_guid: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27', space_guid: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a', plan_id: 'plan_123', resources:
                 [{ unit: 'BYTE', quantity: 1073741824 }, { unit: 'LIGHT_API_CALL', quantity: 1000 }, { unit: 'HEAVY_API_CALL', quantity: 100 }] }] }] }
             },
             { message: 'Submitting 10 GB, 1000 light API calls, 100 heavy API calls',
-                usage :{ service_instances: [{ service_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87', usage: [{ start: 1435629365222 + delta, end: 1435629465222 + delta,
+                usage :{ service_instances: [{ service_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87', usage: [{ start: start + 2, end: end + 2,
                     region: 'eu-gb', organization_guid: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27', space_guid: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a', plan_id: 'plan_123', resources:
                 [{ unit: 'BYTE', quantity: 1073741824 }, { unit: 'LIGHT_API_CALL', quantity: 1000 }, { unit: 'HEAVY_API_CALL', quantity: 100 }] }] }] }
             }];
@@ -47,11 +51,11 @@ describe('cf-abacus-demo-client', () => {
             [{ unit: 'STORAGE_PER_MONTH', quantity: 1 }, { unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH', quantity: 3 }, { unit: 'HEAVY_API_CALLS_PER_MONTH', quantity: 300 }] }] }] }] };
 
         // Submit usage for storage service with 10 GB, 1000 light API calls, and 100 heavy API calls
-        let cbs = 0;
+        let posts = 0;
         const post = (u, done) => {
-            console.log('        %s', u.message);
+            console.log(u.message);
 
-            const cb = () => { if(++cbs === usage.length) done(); };
+            const cb = () => { if(++posts === usage.length) done(); };
 
             request.post(collector + '/v1/metering/services/storage/usage', { body: u.usage }, (err, val) => {
                 expect(err).to.equal(undefined);
@@ -63,14 +67,31 @@ describe('cf-abacus-demo-client', () => {
             });
         };
 
-        // Get usage report for the test organization
+        // Print the number of usage docs already processed given a get report
+        // response, determined from the aggregated usage quantity found in the
+        // report for our test service
+        const processed = (val) => {
+            try {
+                return val.body.services[0].aggregated_usage[1].quantity;
+            }
+            catch(e) {
+                // The response doesn't contain a valid report
+                return 0;
+            }
+        };
+
+        // Format a date like expected by the reporting service
+        const day = (d) => util.format('%d-%d-%d', d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+
+        // Get a usage report for the test organization
         let gets = 0;
         const get = (done) => {
-            request.get(reporting + '/v1/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/usage/2015-06-30', {}, (err, val) => {
+            request.get(reporting + '/v1/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/usage/:day', { day: day(new Date(start)) }, (err, val) => {
                 expect(err).to.equal(undefined);
                 expect(val.statusCode).to.equal(200);
 
                 // Compare the usage report we got with the expected report
+                console.log('Processed %d usage docs', processed(val));
                 try {
                     expect(omit(val.body, [ 'id', 'start', 'end' ])).to.deep.equal(report);
                     console.log('\n', util.inspect(val.body, { depth: 10 }), '\n');
@@ -78,24 +99,23 @@ describe('cf-abacus-demo-client', () => {
                 }
                 catch(e) {
                     // If the comparison fails we'll be called again to retry
-                    // after 1 second, but give up after 20 seconds as if we're
+                    // after 1 second, give up after the configured timeout
                     // still not getting the expected report then something
                     // must have failed in the processing of that usage
-                    if(++gets === 20) {
-                        console.log('        All submitted usage still not processed\n');
+                    if(++gets === timeout / 250) {
+                        console.log('All submitted usage still not processed\n');
                         throw e;
                     }
-                    console.log('        Waiting for all submitted usage to be processed');
                 }
             });
         };
 
-        // Wait for the expected usage report, get a report every second until
+        // Wait for the expected usage report, get a report every 250 msec until
         // we get the expected values indicating that all submitted usage has
         // been processed
         const wait = (done) => {
-            console.log('\n        Retrieving usage report');
-            const i = setInterval(() => get(() => done(clearInterval(i))), 1000);
+            console.log('\nRetrieving usage report');
+            const i = setInterval(() => get(() => done(clearInterval(i))), 250);
         };
 
         // Run the above steps
