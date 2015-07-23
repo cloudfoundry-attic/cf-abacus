@@ -8,6 +8,13 @@ body {
     }
 }
 @media screen {
+    body {
+        max-width: 800px;
+        margin: auto;
+    }
+    img {
+        max-width: 800px;
+    }
     .language-json, .language-js, .language-sh {
         font-family: "Monaco", monospace;
         font-size: 10px;
