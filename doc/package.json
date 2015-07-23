@@ -6,7 +6,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "doc": "cat api.md | mddoc >Abacus-API.html",
+    "doc": "cat api.md | mddoc >api.html",
     "test": "true",
     "lint": "true"
   },

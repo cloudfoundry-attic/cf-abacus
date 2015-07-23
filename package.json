@@ -13,7 +13,7 @@
     "cfpush": "bin/cfpush",
     "cfstart": "bin/cfstart",
     "cfstop": "bin/cfstop",
-    "doc": "cat README.md | mddoc >Abacus-README.html",
+    "doc": "cat README.md | mddoc >README.html",
     "cachedinstall": "npm --cache-min 9999999 install",
     "uninstall": "rm -rf node_modules",
     "reinstall": "rm -rf node_modules && npm install",
