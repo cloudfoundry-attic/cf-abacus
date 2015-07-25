@@ -18,6 +18,7 @@
     "uninstall": "rm -rf node_modules",
     "reinstall": "rm -rf node_modules && npm install",
     "lint": "etc/foreach cf-abacus npm run lint",
+    "hint": "etc/foreach cf-abacus jshint *.js test/*.js",
     "test": "etc/foreach cf-abacus npm test",
     "coverage": "coverage",
     "coveralls": "cat .coverage/lcov.info | coveralls",
@@ -72,7 +73,8 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "coveralls": "^2.11.3"
+    "coveralls": "^2.11.3",
+    "jshint": "^2.8.0"
   },
   "engines": {
     "node": ">=0.10.0",

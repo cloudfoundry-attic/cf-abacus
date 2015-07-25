@@ -63,7 +63,7 @@ var exec = throttle(function(cmd, cwd, cb) {
         process.stdout.write('\n');
 
         // Call back when done
-        cb(code != 0 ? code : undefined, true);
+        cb(code !== 0 ? code : undefined, true);
     });
 }, process.env.THROTTLE ? parseInt(process.env.THROTTLE) : os.cpus().length);
 

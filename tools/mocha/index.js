@@ -13,6 +13,8 @@ var cp = require('child_process');
 var fs = require('fs');
 
 /* eslint no-process-exit: 1 */
+/* eslint no-eval: 1 */
+/* jshint evil: true */
 
 // Return true if a file belongs to the current module or a subdirectory of
 // that module
@@ -40,7 +42,6 @@ var transformer = function(sources, maps) {
     // Babel if ES6 is not natively supported
     var transpile = (function() {
         try {
-            /* eslint no-eval: 1 */
             eval('let f = x => x * 2;');
             // ES6 is natively supported, no need to transpile
             return function(code, file) {
