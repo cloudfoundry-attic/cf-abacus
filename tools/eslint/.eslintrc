@@ -1,5 +1,5 @@
 ---
-parser: esprima-fb
+parser: babel-eslint
 
 env:
   browser: true
@@ -18,7 +18,7 @@ rules:
   # ERRORS
   space-before-blocks: 2
   indent: [2, 4, indentSwitchCase: true]
-  strict: 2
+  strict: 0
   no-comma-dangle: 2
   no-unused-expressions: 2
   block-scoped-var: 2
@@ -49,7 +49,7 @@ rules:
 
   # WARNINGS
   max-len: [1, 190]
-  # We use this for functions reference each other
+  # We use this for functions that reference each other
   no-use-before-define: 1
 
   # WISHLIST.
