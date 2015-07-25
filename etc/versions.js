@@ -12,7 +12,10 @@ var runCLI = function() {
     process.stdout.write(util.format('Node %s\n', process.version));
     cp.exec('npm --version', function(err, v) {
         var npmv = function(v) { process.stdout.write(util.format('Npm %s\n', v.trim())); };
-        v && v.trim() >= '2' ? npmv(v) : cp.exec('./node_modules/.bin/npm --version', function(err, lv) { npmv(v || lv); });
+        if(!err && v && v.trim() >= '2')
+            npmv(v);
+        else
+            cp.exec('./node_modules/.bin/npm --version', function(err, lv) { return err || npmv(v || lv); });
     });
 };
 

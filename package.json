@@ -70,6 +70,7 @@
     "cf-abacus-perf-test": "file:test/perf",
     "cf-abacus-demo-client": "file:demo/client",
     "cf-abacus-doc": "file:doc",
+    "cf-abacus-etc": "file:etc",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

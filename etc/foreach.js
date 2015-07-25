@@ -15,6 +15,8 @@ var rest = _.rest;
 var initial = _.initial;
 var last = _.last;
 
+/* eslint no-process-exit: 1 */
+
 // The directories containing the modules to build
 var builddirs = ['node_modules'];
 
@@ -51,13 +53,13 @@ var exec = throttle(function(cmd, cwd, cb) {
     process.stdout.write(util.format('> %s: %s\n', cwd, cmd));
     var ex = cp.exec(cmd, { cwd: cwd, env: buildenv });
     ex.data = [];
-    ex.stdout.on('data', function (data) {
+    ex.stdout.on('data', function(data) {
         ex.data.push({ s: process.stdout, data: data });
     });
-    ex.stderr.on('data', function (data) {
+    ex.stderr.on('data', function(data) {
         ex.data.push({ s: process.stderr, data: data });
     });
-    ex.on('close', function (code) {
+    ex.on('close', function(code) {
         process.stdout.write(util.format('< %s: %s\n', cwd, cmd));
         _.map(ex.data, function(d) { d.s.write(d.data); });
         process.stdout.write('\n');
@@ -75,6 +77,7 @@ var runCLI = function() {
     // Look for modules in the configured build directories
     map(builddirs, function(dir) {
         fs.readdir(dir, function(err, files) {
+            if(err) return;
             map(filter(filter(filter(map(files, function(file) {
                 return path.join(dir, file);
             }), function(file) {
@@ -82,7 +85,7 @@ var runCLI = function() {
             }), function(subdir) {
                 return fs.existsSync(path.join(subdir, 'package.json'));
             }), function(subdir) {
-                return rx.test(require(path.join(process.cwd(), path.join(subdir, 'package.json'))).name)
+                return rx.test(require(path.join(process.cwd(), path.join(subdir, 'package.json'))).name);
             }), function(file) {
                 // Run the given command on each module
                 exec(rest(process.argv, 3).join(' '), file, function(err, val) {
