@@ -13,6 +13,14 @@ const coverage = require('..');
 /* eslint handle-callback-err: 1 */
 
 describe('cf-abacus-coverage', () => {
+    let exit;
+    beforeEach(() => {
+        exit = process.exit;
+    });
+    afterEach(() => {
+        process.exit = exit;
+    });
+
     it('reports overall code coverage', (done) => {
 
         // Spy on the Istanbul coverage reporter
