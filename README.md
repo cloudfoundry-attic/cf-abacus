@@ -57,6 +57,9 @@ The following steps assume a local Cloud Foundry deployment created using [Bosh-
 ```sh
 cd cf-abacus
 
+# This installs all the Node.js module dependencies
+npm install
+
 # Point the CF CLI to your local Cloud Foundry deployment
 cf api --skip-ssl-validation https://api.10.244.0.34.xip.io
 cf login -o <your organization> -s <your space>
