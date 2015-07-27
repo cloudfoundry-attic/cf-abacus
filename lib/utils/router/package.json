@@ -12,11 +12,13 @@
   },
   "dependencies": {
     "cf-abacus-debug": "file:../debug",
+    "cf-abacus-transform": "file:../transform",
     "cf-abacus-yieldable": "file:../yieldable",
     "express": "^4.9.4",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "cf-abacus-batch": "file:../batch",
     "cf-abacus-eslint": "file:../../../tools/eslint",
     "cf-abacus-mocha": "file:../../../tools/mocha",
     "cf-abacus-request": "file:../request",
