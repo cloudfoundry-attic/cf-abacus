@@ -4,7 +4,7 @@ applications:
   path: app.zip
   instances: 2
   memory: 512M
-  disk_quota: 1G
+  disk_quota: 512M
   env:
     NODE_MODULES_CACHE: false
 
