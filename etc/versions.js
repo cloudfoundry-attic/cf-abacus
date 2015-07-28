@@ -2,6 +2,9 @@
 
 // Print the versions of OS, Node and Npm
 
+// Implemented in ES5 for now
+/* eslint no-var: 0 */
+
 var os = require('os');
 var util = require('util');
 var cp = require('child_process');

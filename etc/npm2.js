@@ -2,6 +2,9 @@
 
 // Run npm 2.x, install it if needed
 
+// Implemented in ES5 for now
+/* eslint no-var: 0 */
+
 var cp = require('child_process');
 var util = require('util');
 

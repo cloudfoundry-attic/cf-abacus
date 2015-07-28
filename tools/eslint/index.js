@@ -2,6 +2,9 @@
 
 // Lint a module using ESLint
 
+// Implemented in ES5 for now
+/* eslint no-var: 0 */
+
 var path = require('path');
 var cli = require('eslint').cli;
 

@@ -2,6 +2,9 @@
 
 // Test a module using Babel, Istanbul and Mocha
 
+// Implemented in ES5 for now
+/* eslint no-var: 0 */
+
 var _ = require('underscore');
 var path = require('path');
 var util = require('util');

@@ -4,6 +4,9 @@
 // code coverage right in the console where I run my tests instead of having
 // go open a fancy HTML report in my Web browser each time.
 
+// Implemented in ES5 for now
+/* eslint no-var: 0 */
+
 var _ = require('underscore');
 var tty = require('tty');
 var path = require('path');

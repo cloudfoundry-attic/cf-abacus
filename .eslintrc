@@ -48,6 +48,7 @@ rules:
   camelcase: [2, {properties: "never"}]
   no-eval: 2
   #require-yield: 2
+  no-var: 2
 
   # WARNINGS
   max-len: [1, 190]

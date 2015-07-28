@@ -2,6 +2,9 @@
 
 // Run a build command on a selection of modules
 
+// Implemented in ES5 for now
+/* eslint no-var: 0 */
+
 var _ = require('underscore');
 var fs = require('fs');
 var path = require('path');

@@ -2,6 +2,9 @@
 
 // Convert Markdown to HTML
 
+// Implemented in ES5 for now
+/* eslint no-var: 0 */
+
 var _ = require('underscore');
 var hljs = require('highlight.js');
 var hogan = require('hogan.js');

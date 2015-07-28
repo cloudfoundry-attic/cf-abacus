@@ -2,6 +2,9 @@
 
 // Report overall code coverage from Istanbul coverage files.
 
+// Implemented in ES5 for now
+/* eslint no-var: 0 */
+
 var _ = require('underscore');
 var path = require('path');
 var fs = require('fs');
