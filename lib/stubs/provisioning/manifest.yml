@@ -5,6 +5,4 @@ applications:
   instances: 2
   memory: 512M
   disk_quota: 512M
-  env:
-    NODE_MODULES_CACHE: false
 

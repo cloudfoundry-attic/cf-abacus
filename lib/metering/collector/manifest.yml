@@ -6,7 +6,6 @@ applications:
   memory: 512M
   disk_quota: 512M
   env:
-    NODE_MODULES_CACHE: false
     COUCHDB: cf-abacus-dbserver
     METER: cf-abacus-usage-meter
     PROVISIONING: cf-abacus-provisioning-stub
