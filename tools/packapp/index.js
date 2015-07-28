@@ -48,14 +48,14 @@ var repackage = function(root, cb) {
 };
 
 // Produce the packaged app zip
-var zip = function(cb) {
+var zip = function(ignore, cb) {
     fs.unlink(path.join('app.zip'), function(err) {
         if(err) noop();
 
         // We're using the system zip command here, may be better to use a
         // Javascript zip library instead
-        var files = '-type f -not -regex ".*\\/app\\.zip" -not -regex "\\./\\.pack/package\\.json" -not -regex ".*/node_modules.*" -not -regex ".*/\\.git"';
-        var ex = cp.exec('(find . .pack/lib/* ' + files + ' | zip -q -@ app.zip) && ' + '(zip -q -j app.zip .pack/package.json)', { cwd: process.cwd() });
+        var files = '-type f -not -regex "\\./\\.pack/package\\.json" -not -regex ".*/\\.git"';
+        var ex = cp.exec('(find . .pack/lib/* ' + files + ' | zip -q -x@' + ignore + ' -@ app.zip) && ' + '(zip -q -j app.zip .pack/package.json)', { cwd: process.cwd() });
         ex.stdout.on('data', function(data) { process.stdout.write(data); });
         ex.stderr.on('data', function(data) { process.stderr.write(data); });
         ex.on('close', function(code) { cb(code); });
@@ -83,7 +83,7 @@ var runCLI = function() {
             }
 
             // Produce the packaged app zip
-            zip(function(err) {
+            zip(path.join(root, '.gitignore'), function(err) {
                 if(err) {
                     console.log('Couldn\'t produce app.zip -', err);
                     process.exit(1);
