@@ -16,7 +16,9 @@
   "dependencies": {
     "cf-abacus-debug": "file:../debug",
     "cf-abacus-es6runner": "file:../es6runner",
+    "cf-abacus-lrudown": "file:../lrudown",
     "cf-abacus-transform": "file:../transform",
+    "levelup": "~0.18.4",
     "request": "^2.37.0",
     "underscore": "^1.8.3"
   },
