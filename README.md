@@ -171,7 +171,7 @@ etc/ - Misc build scripts
 People
 ---
 
-[List of all contributors](https://github.com/jsdelfino/cf-abacus/graphs/contributors)
+[List of all contributors](https://github.com/cloudfoundry-incubator/cf-abacus/graphs/contributors)
 
 License
 ---
