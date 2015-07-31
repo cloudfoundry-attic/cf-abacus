@@ -2,5 +2,5 @@
 'use strict';
 
 // Run a command on a selection of modules
-require('./foreach.js').runCLI();
+require('./src/foreach.js').runCLI();
 

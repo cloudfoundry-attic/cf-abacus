@@ -5,15 +5,18 @@
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "start": "webapp start 9088",
     "stop": "webapp stop",
+    "babel": "babel",
     "test": "eslint && mocha",
     "lint": "eslint",
     "cfpush": "../../../tools/packapp/packapp && cf push"
   },
   "dependencies": {
+    "babel-runtime": "^5.8.19",
+    "cf-abacus-aggregation-db": "file:../db",
     "cf-abacus-batch": "file:../../utils/batch",
     "cf-abacus-breaker": "file:../../utils/breaker",
     "cf-abacus-cluster": "file:../../utils/cluster",
@@ -27,11 +30,11 @@
     "cf-abacus-urienv": "file:../../utils/urienv",
     "cf-abacus-webapp": "file:../../utils/webapp",
     "cf-abacus-yieldable": "file:../../utils/yieldable",
-    "cf-abacus-aggregation-db": "file:../db",
     "graphql": "^0.1.2",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "cf-abacus-babel": "file:../../../tools/babel",
     "cf-abacus-eslint": "file:../../../tools/eslint",
     "cf-abacus-mocha": "file:../../../tools/mocha",
     "cf-abacus-packapp": "file:../../../tools/packapp"

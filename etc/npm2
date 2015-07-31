@@ -2,5 +2,5 @@
 'use strict';
 
 // Run npm 2.x, install it if needed
-require('./npm2.js').runCLI();
+require('./src/npm2.js').runCLI();
 

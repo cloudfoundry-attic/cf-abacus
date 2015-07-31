@@ -5,8 +5,9 @@
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
+    "babel": "babel",
     "test": "eslint && mocha",
     "lint": "eslint"
   },
@@ -17,6 +18,7 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "cf-abacus-babel": "file:../../../tools/babel",
     "cf-abacus-eslint": "file:../../../tools/eslint",
     "cf-abacus-mocha": "file:../../../tools/mocha",
     "levelup": "~0.18.4",

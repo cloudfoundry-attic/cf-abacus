@@ -1,0 +1,29 @@
+{
+  "name": "cf-abacus-babel",
+  "description": "Babel configuration for Abacus",
+  "license": "Apache-2.0",
+  "readme": "README.md",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "bin": {
+    "babel": "./babel"
+  },
+  "scripts": {
+    "babel": "true",
+    "test": "eslint",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "babel": "^5.8.19",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "cf-abacus-eslint": "../eslint"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  },
+  "repository": {}
+}

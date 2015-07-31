@@ -6,7 +6,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "etc/versions && etc/npm2 install && npm test && npm run coverage",
+    "build": "etc/versions && etc/npm2 install && npm run babel && npm test && npm run coverage",
     "start": "bin/start",
     "stop": "bin/stop",
     "demo": "bin/demo",
@@ -17,6 +17,7 @@
     "cachedinstall": "npm --cache-min 9999999 install",
     "uninstall": "rm -rf node_modules",
     "reinstall": "rm -rf node_modules && npm install",
+    "babel": "etc/foreach cf-abacus npm run babel",
     "lint": "etc/foreach cf-abacus npm run lint",
     "hint": "etc/foreach cf-abacus jshint *.js test/*.js",
     "test": "etc/foreach cf-abacus npm test",
@@ -25,12 +26,8 @@
     "perf": "bin/perf"
   },
   "dependencies": {
-    "cf-abacus-coverage": "file:tools/coverage",
-    "cf-abacus-eslint": "file:tools/eslint",
-    "cf-abacus-mddoc": "file:tools/mddoc",
-    "cf-abacus-mocha": "file:tools/mocha",
-    "cf-abacus-packapp": "file:tools/packapp",
     "cf-abacus-service-config": "file:lib/config/service",
+    "cf-abacus-price-config": "file:lib/config/price",
     "cf-abacus-usage-accumulator": "file:lib/aggregation/accumulator",
     "cf-abacus-usage-aggregator": "file:lib/aggregation/aggregator",
     "cf-abacus-instance-launcher": "file:lib/aggregation/launcher",
@@ -49,11 +46,11 @@
     "cf-abacus-dbclient": "file:lib/utils/dbclient",
     "cf-abacus-dbserver": "file:lib/utils/dbserver",
     "cf-abacus-debug": "file:lib/utils/debug",
-    "cf-abacus-es6runner": "file:lib/utils/es6runner",
     "cf-abacus-events": "file:lib/utils/events",
     "cf-abacus-express": "file:lib/utils/express",
     "cf-abacus-hystrix": "file:lib/utils/hystrix",
     "cf-abacus-lock": "file:lib/utils/lock",
+    "cf-abacus-lrudown": "file:lib/utils/lrudown",
     "cf-abacus-partition": "file:lib/utils/partition",
     "cf-abacus-perf": "file:lib/utils/perf",
     "cf-abacus-request": "file:lib/utils/request",
@@ -74,8 +71,16 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "cf-abacus-babel": "file:tools/babel",
+    "cf-abacus-coverage": "file:tools/coverage",
+    "cf-abacus-eslint": "file:tools/eslint",
+    "cf-abacus-mddoc": "file:tools/mddoc",
+    "cf-abacus-mocha": "file:tools/mocha",
+    "cf-abacus-packapp": "file:tools/packapp",
     "coveralls": "^2.11.3",
-    "jshint": "^2.8.0"
+    "jshint": "^2.8.0",
+    "levelup": "~0.18.4",
+    "pouchdb": "3.6.0"
   },
   "engines": {
     "node": ">=0.10.0",

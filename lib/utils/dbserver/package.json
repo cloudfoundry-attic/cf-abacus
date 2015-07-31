@@ -5,10 +5,11 @@
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "start": "./dbserver start",
     "stop": "./dbserver stop",
+    "babel": "babel",
     "test": "eslint && mocha",
     "lint": "eslint",
     "cfpush": "../../../tools/packapp/packapp && cf push"
@@ -16,7 +17,6 @@
   "dependencies": {
     "cf-abacus-cluster": "file:../cluster",
     "cf-abacus-debug": "file:../debug",
-    "cf-abacus-es6runner": "file:../es6runner",
     "cf-abacus-webapp": "file:../webapp",
     "express": "^4.9.4",
     "express-pouchdb": "^0.14.2",
@@ -25,6 +25,7 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "cf-abacus-babel": "file:../../../tools/babel",
     "cf-abacus-eslint": "file:../../../tools/eslint",
     "cf-abacus-mocha": "file:../../../tools/mocha",
     "cf-abacus-packapp": "file:../../../tools/packapp",

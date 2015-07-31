@@ -2,6 +2,5 @@
 'use strict';
 
 // Run our webapp shell
-require('cf-abacus-es6runner')();
-require('./index.js').runCLI();
+require('./lib/index.js').runCLI();
 

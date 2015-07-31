@@ -5,13 +5,14 @@
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
-  "main": "index.js",
+  "main": "src/index.js",
   "bin": {
     "eslint": "./eslint"
   },
   "scripts": {
-    "lint": "eslint -c .eslintrc .",
-    "test": "eslint -c .eslintrc ."
+    "babel": "true",
+    "lint": "eslint -c .eslintrc src",
+    "test": "eslint -c .eslintrc src"
   },
   "dependencies": {
     "babel-eslint": "^3.1.26",

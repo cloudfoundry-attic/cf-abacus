@@ -5,11 +5,12 @@
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
-  "main": "index.js",
+  "main": "lib/index.js",
   "bin": {
     "packapp": "./packapp"
   },
   "scripts": {
+    "babel": "babel",
     "test": "eslint",
     "lint": "eslint"
   },
@@ -17,6 +18,7 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "cf-abacus-babel": "file:../babel",
     "cf-abacus-eslint": "file:../eslint",
     "cf-abacus-mocha": "file:../mocha"
   },

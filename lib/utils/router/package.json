@@ -5,12 +5,14 @@
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
+    "babel": "babel",
     "test": "eslint && mocha",
     "lint": "eslint"
   },
   "dependencies": {
+    "babel-runtime": "^5.8.19",
     "cf-abacus-debug": "file:../debug",
     "cf-abacus-transform": "file:../transform",
     "cf-abacus-yieldable": "file:../yieldable",
@@ -18,6 +20,7 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "cf-abacus-babel": "file:../../../tools/babel",
     "cf-abacus-batch": "file:../batch",
     "cf-abacus-eslint": "file:../../../tools/eslint",
     "cf-abacus-mocha": "file:../../../tools/mocha",

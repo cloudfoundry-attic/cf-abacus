@@ -2,5 +2,5 @@
 'use strict';
 
 // Report overall code coverage from Istanbul coverage files.
-require('./index.js').runCLI();
+require('./lib/index.js').runCLI();
 

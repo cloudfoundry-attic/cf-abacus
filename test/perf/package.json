@@ -5,9 +5,10 @@
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "perf": "mocha",
+    "babel": "babel",
     "test": "eslint",
     "lint": "eslint"
   },
@@ -16,6 +17,7 @@
     "cf-abacus-debug": "file:../../lib/utils/debug"
   },
   "devDependencies": {
+    "cf-abacus-babel": "file:../../tools/babel",
     "cf-abacus-eslint": "file:../../tools/eslint",
     "cf-abacus-mocha": "file:../../tools/mocha"
   },

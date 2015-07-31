@@ -1,8 +1,5 @@
 #!/usr/bin/env node
 'use strict';
 
-// enable es6 
-require('cf-abacus-es6runner')();
-
-require('./index.js').runCLI();
+require('./lib/index.js').runCLI();
 

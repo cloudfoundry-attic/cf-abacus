@@ -2,5 +2,5 @@
 'use strict';
 
 // Print the versions of OS, Node and Npm
-require('./versions.js').runCLI();
+require('./src/versions.js').runCLI();
 

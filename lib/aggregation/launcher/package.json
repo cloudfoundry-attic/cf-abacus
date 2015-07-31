@@ -5,21 +5,22 @@
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
-  "main": "index.js",
+  "main": "lib/index.js",
   "bin": {
     "launch": "./launch"
   },
   "scripts": {
+    "babel": "babel",
     "test": "eslint && mocha",
     "lint": "eslint"
   },
   "dependencies": {
     "cf-abacus-debug": "file:../../utils/debug",
-    "cf-abacus-es6runner": "file:../../utils/es6runner",
     "cf-abacus-vcapenv": "file:../../utils/vcapenv",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "cf-abacus-babel": "file:../../../tools/babel",
     "cf-abacus-eslint": "file:../../../tools/eslint",
     "cf-abacus-mocha": "file:../../../tools/mocha"
   },

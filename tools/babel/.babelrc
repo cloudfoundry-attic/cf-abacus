@@ -1,0 +1,7 @@
+{
+    "compact": true,
+    "optional": "runtime",
+    "nonStandard": true,
+    "auxiliaryCommentBefore": "istanbul ignore next",
+    "sourceMaps": "inline"
+}

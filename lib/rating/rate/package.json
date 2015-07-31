@@ -5,29 +5,32 @@
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "start": "webapp start 9410",
     "stop": "webapp stop",
+    "babel": "babel",
     "test": "eslint && mocha",
     "lint": "eslint"
   },
   "dependencies": {
+    "babel-runtime": "^5.8.19",
+    "cf-abacus-aggregation-db": "file:../../aggregation/db",
     "cf-abacus-batch": "file:../../utils/batch",
-    "cf-abacus-breaker": "file:../../utils/breaker", 
+    "cf-abacus-breaker": "file:../../utils/breaker",
     "cf-abacus-dbclient": "file:../../utils/dbclient",
     "cf-abacus-debug": "file:../../utils/debug",
+    "cf-abacus-price-config": "file:../../config/price",
     "cf-abacus-retry": "file:../../utils/retry",
     "cf-abacus-router": "file:../../utils/router",
+    "cf-abacus-service-config": "file:../../config/service",
     "cf-abacus-urienv": "file:../../utils/urienv",
     "cf-abacus-webapp": "file:../../utils/webapp",
     "cf-abacus-yieldable": "file:../../utils/yieldable",
-    "cf-abacus-service-config": "file:../../config/service",
-    "cf-abacus-price-config": "file:../../config/price",
-    "cf-abacus-aggregation-db": "file:../../aggregation/db",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "cf-abacus-babel": "file:../../../tools/babel",
     "cf-abacus-cluster": "file:../../utils/cluster",
     "cf-abacus-request": "file:../../utils/request",
     "cf-abacus-eslint": "file:../../../tools/eslint",
@@ -37,6 +40,5 @@
     "node": ">=0.10.0",
     "npm": ">=2.0.0"
   },
-  "repository": {
-  }
+  "repository": {}
 }

@@ -2,5 +2,5 @@
 'use strict';
 
 // Lint a module using ESLint
-require('./index.js').runCLI();
+require('./src/index.js').runCLI();
 
