@@ -25,9 +25,14 @@ var mkdirs = function(pubdir, cb) {
     });
 };
 
+// Return the version of a local dependency
+var version = function(file) {
+    return JSON.parse(fs.readFileSync(path.resolve(process.cwd(), file.substr(5), 'package.json')).toString()).version;
+};
+
 // Convert local dependencies to public versioned dependencies
 var publicize = function(deps) {
-    return object(map(pairs(deps), function(dep) { return /^abacus-/.test(dep[0]) ? [dep[0], '^0.0.1'] : dep; }));
+    return object(map(pairs(deps), function(dep) { return /^file:/.test(dep[1]) ? [dep[0], '^' + version(dep[1])] : dep; }));
 };
 
 // Pack a module
