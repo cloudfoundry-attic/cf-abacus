@@ -16,22 +16,21 @@ Abacus is implemented in Node.js and the different micro-services can run as CF 
 
 The Abacus REST API is described in [doc/api.md](doc/api.md).
 
-Installing
+Building
 ---
 
-Abacus can be installed using Npm >= 2.10.1.
+Abacus requires Npm >= 2.10.1 and Node.js >= 0.10.36 or io.js >= 2.3.0.
 
 ```sh
 cd cf-abacus
 
-# This installs all the Node.js module dependencies
-npm install
+# This bootstraps the build environment, runs Babel on the Javascript sources,
+# installs the Node.js dependencies and runs the tests
+npm run build
 ```
 
 Testing
 ---
-
-Abacus runs on Node.js >= 0.12.1, io.js >= 2.3.0, and can also run on Node 0.10.36-0.10.39 using Babel.
 
 ```sh
 cd cf-abacus
@@ -57,14 +56,11 @@ The following steps assume a local Cloud Foundry deployment created using [Bosh-
 ```sh
 cd cf-abacus
 
-# This installs all the Node.js module dependencies
-npm install
-
 # Point the CF CLI to your local Cloud Foundry deployment
 cf api --skip-ssl-validation https://api.10.244.0.34.xip.io
 cf login -o <your organization> -s <your space>
 
-# This simply runs cf push on all the Abacus apps to deploy them to Cloud Foundry
+# This runs cf push on all the Abacus apps to deploy them to Cloud Foundry
 npm run cfpush
 
 # Check the state of the Abacus apps
@@ -75,12 +71,12 @@ Getting apps in org <your organization> / space <your space>...
 OK
 
 name                          requested state   instances   memory   disk   urls   
-cf-abacus-usage-collector     started           2/2         512M     1G     cf-abacus-usage-collector.10.244.0.34.xip.io   
-cf-abacus-usage-meter         started           2/2         512M     1G     cf-abacus-usage-meter.10.244.0.34.xip.io 
-cf-abacus-usage-accumulator   started           4/4         512M     1G     cf-abacus-usage-accumulator.10.244.0.34.xip.io   
-cf-abacus-usage-aggregator    started           4/4         512M     1G     cf-abacus-usage-aggregator.10.244.0.34.xip.io   
-cf-abacus-usage-reporting     started           2/2         512M     1G     cf-abacus-usage-reporting.10.244.0.34.xip.io   
-cf-abacus-dbserver            started           1/1         1G       1G     cf-abacus-dbserver.10.244.0.34.xip.io   
+abacus-usage-collector     started           2/2         512M     1G     abacus-usage-collector.10.244.0.34.xip.io   
+abacus-usage-meter         started           2/2         512M     1G     abacus-usage-meter.10.244.0.34.xip.io 
+abacus-usage-accumulator   started           4/4         512M     1G     abacus-usage-accumulator.10.244.0.34.xip.io   
+abacus-usage-aggregator    started           4/4         512M     1G     abacus-usage-aggregator.10.244.0.34.xip.io   
+abacus-usage-reporting     started           2/2         512M     1G     abacus-usage-reporting.10.244.0.34.xip.io   
+abacus-dbserver            started           1/1         1G       1G     abacus-dbserver.10.244.0.34.xip.io   
 ```
 
 Running the demo
