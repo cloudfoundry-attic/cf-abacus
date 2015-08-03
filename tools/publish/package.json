@@ -28,7 +28,7 @@
     "publish": "./publish"
   },
   "scripts": {
-    "babel": "babel",
+    "babel": "true",
     "test": "eslint",
     "lint": "eslint",
     "pub": "npm install && ./publish"
@@ -37,7 +37,6 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "abacus-babel": "file:../babel",
     "abacus-eslint": "file:../eslint",
     "abacus-mocha": "file:../mocha"
   },

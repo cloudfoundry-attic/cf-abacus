@@ -1,10 +1,14 @@
 'use strict';
 
 // Test a simple sum module using Mocha
-const sum = require('../tested/sum.js');
 
-describe('abacus-mocha', () => {
-    it('runs tests', (done) => {
+// Implemented in ES5 for now
+/* eslint no-var: 0 */
+
+var sum = require('../tested/sum.js');
+
+describe('abacus-mocha', function() {
+    it('runs tests', function(done) {
 
         // Test support for Chai expect assertions
         expect(sum.straight(1, 1)).to.equal(2);

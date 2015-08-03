@@ -94,6 +94,17 @@ var remap = function(coverage, maps) {
     return coverage;
 };
 
+// Return the directory containing the test target sources
+var target = function() {
+    try {
+        fs.lstatSync('lib');
+        return 'lib';
+    }
+    catch (e) {
+        return 'src';
+    }
+};
+
 // Run Mocha with Babel and Istanbul
 var runCLI = function() {
     process.stdout.write('Testing...\n');
@@ -101,7 +112,7 @@ var runCLI = function() {
 
     // Declare test to Mocha
     var mocha = new Mocha(process.env.MOCHA_COLORS ? { useColors: true, timeout: 20000 } : {});
-    mocha.addFile('lib/test/test.js');
+    mocha.addFile(target() + '/test/test.js');
 
     // Install Chai expect and Sinon spy and stub as globals
     global.chai = require('chai');

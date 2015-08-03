@@ -2,5 +2,5 @@
 'use strict';
 
 // Test a module using Istanbul and Mocha
-require('./lib/index.js').runCLI();
+require('./src/index.js').runCLI();
 

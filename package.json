@@ -33,7 +33,7 @@
     "tools/"
   ],
   "scripts": {
-    "bootstrap": "etc/npm2 install etc && npm2 install tools/babel && npm2 install tools/publish",
+    "bootstrap": "etc/npm2 i etc && npm2 i tools/babel && npm2 i tools/eslint && npm2 i tools/mocha && npm2 i tools/publish",
     "babel": "foreach abacus :path npm run babel",
     "build": "etc/versions && npm run bootstrap && npm run babel && npm2 install && npm test",
     "clean": "git clean -df",
