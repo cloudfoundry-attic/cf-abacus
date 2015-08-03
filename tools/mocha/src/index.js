@@ -32,10 +32,10 @@ var inTestDir = function(file) {
     return /^lib\/test\//.test(rel);
 };
 
-// Return true if a file belongs to a cf-abacus module or a subdirectory
+// Return true if a file belongs to a abacus module or a subdirectory
 // of that module
 var inAbacusModule = function(file) {
-    return inThisModule(file) || /\/cf-abacus-[^\/]*\/lib\/[^\/]*\.js$/.test(file) || /\/cf-abacus-[^\/]*\/lib\/[^\/]*\/[^\/]*\.js$/.test(file);
+    return inThisModule(file) || /\/abacus-[^\/]*\/lib\/[^\/]*\.js$/.test(file) || /\/abacus-[^\/]*\/lib\/[^\/]*\/[^\/]*\.js$/.test(file);
 };
 
 // Return a transform function that transforms a file and records the original

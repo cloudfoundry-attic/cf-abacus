@@ -1,4 +1,4 @@
-cf-abacus-eslint
+abacus-eslint
 ===
 
 ESLint configured with our coding style guidelines.

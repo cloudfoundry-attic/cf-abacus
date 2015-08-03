@@ -1,12 +1,12 @@
 applications:
-- name: cf-abacus-usage-collector
-  host: cf-abacus-usage-collector
+- name: abacus-usage-collector
+  host: abacus-usage-collector
   path: app.zip
   instances: 2
   memory: 512M
   disk_quota: 512M
   env:
-    COUCHDB: cf-abacus-dbserver
-    METER: cf-abacus-usage-meter
-    PROVISIONING: cf-abacus-provisioning-stub
+    COUCHDB: abacus-dbserver
+    METER: abacus-usage-meter
+    PROVISIONING: abacus-provisioning-stub
 

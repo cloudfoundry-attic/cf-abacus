@@ -3,7 +3,7 @@
 // Test a simple sum module using Mocha
 const sum = require('../tested/sum.js');
 
-describe('cf-abacus-mocha', () => {
+describe('abacus-mocha', () => {
     it('runs tests', (done) => {
 
         // Test support for Chai expect assertions

@@ -1,10 +1,30 @@
 {
-  "name": "cf-abacus-mddoc",
+  "name": "abacus-mddoc",
   "description": "Simple Mardown to HTML doc generator",
   "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "mddoc",
+    "css/",
+    "html/",
+    "lib/",
+    "src/"
+  ],
   "main": "lib/index.js",
   "bin": {
     "mddoc": "./mddoc"
@@ -12,7 +32,8 @@
   "scripts": {
     "babel": "babel",
     "test": "eslint && mocha",
-    "lint": "eslint"
+    "lint": "eslint",
+    "pub": "publish"
   },
   "dependencies": {
     "bootstrap": "^3.3.5",
@@ -25,13 +46,13 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "cf-abacus-babel": "file:../babel",
-    "cf-abacus-eslint": "file:../eslint",
-    "cf-abacus-mocha": "file:../mocha"
+    "abacus-babel": "file:../babel",
+    "abacus-eslint": "file:../eslint",
+    "abacus-mocha": "file:../mocha",
+    "abacus-publish": "file:../publish"
   },
   "engines": {
     "node": ">=0.10.0",
     "npm": ">=2.0.0"
-  },
-  "repository": {}
+  }
 }

@@ -1,4 +1,4 @@
-cf-abacus-babel
+abacus-babel
 ===
 
 Babel configuration for the Abacus project

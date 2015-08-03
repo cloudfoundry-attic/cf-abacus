@@ -1,10 +1,28 @@
 {
-  "name": "cf-abacus-eslint",
+  "name": "abacus-eslint",
   "description": "ESLint configured with our coding style guidelines",
   "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".eslintrc",
+    "eslint",
+    ".npmrc",
+    "src/"
+  ],
   "main": "src/index.js",
   "bin": {
     "eslint": "./eslint"
@@ -12,14 +30,17 @@
   "scripts": {
     "babel": "true",
     "lint": "eslint -c .eslintrc src",
-    "test": "eslint -c .eslintrc src"
+    "test": "eslint -c .eslintrc src",
+    "pub": "publish"
   },
   "dependencies": {
     "babel-eslint": "^3.1.26",
     "eslint": "^0.24.1"
   },
+  "devDependencies": {
+    "abacus-publish": "file:../publish"
+  },
   "engines": {
     "node": ">=0.10.0"
-  },
-  "repository": {}
+  }
 }

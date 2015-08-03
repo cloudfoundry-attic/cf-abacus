@@ -1,28 +1,46 @@
 {
-  "name": "cf-abacus-demo-client",
+  "name": "abacus-demo-client",
   "description": "Demo program that submits usage and gets a usage report",
   "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "lib/",
+    "src/"
+  ],
   "main": "lib/index.js",
   "scripts": {
     "demo": "mocha",
     "babel": "babel",
     "test": "eslint",
-    "lint": "eslint"
+    "lint": "eslint",
+    "pub": "publish"
   },
   "dependencies": {
-    "cf-abacus-request": "file:../../lib/utils/request"
+    "abacus-mocha": "file:../../tools/mocha",
+    "abacus-request": "file:../../lib/utils/request"
   },
   "devDependencies": {
-    "cf-abacus-babel": "file:../../tools/babel",
-    "cf-abacus-eslint": "file:../../tools/eslint",
-    "cf-abacus-mocha": "file:../../tools/mocha"
+    "abacus-babel": "file:../../tools/babel",
+    "abacus-eslint": "file:../../tools/eslint",
+    "abacus-publish": "file:../../tools/publish"
   },
   "engines": {
     "node": ">=0.10.0",
     "npm": ">=2.0.0"
-  },
-  "repository": {}
+  }
 }

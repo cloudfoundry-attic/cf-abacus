@@ -1,15 +1,33 @@
 {
-  "name": "cf-abacus-yieldable",
+  "name": "abacus-yieldable",
   "description": "Small utility that converts Node callback based functions to generators that are yieldable from co flow functions",
   "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "lib/",
+    "src/"
+  ],
   "main": "lib/index.js",
   "scripts": {
     "babel": "babel",
     "test": "eslint && mocha",
-    "lint": "eslint"
+    "lint": "eslint",
+    "pub": "publish"
   },
   "dependencies": {
     "babel-runtime": "^5.8.19",
@@ -18,13 +36,13 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "cf-abacus-babel": "file:../../../tools/babel",
-    "cf-abacus-eslint": "file:../../../tools/eslint",
-    "cf-abacus-mocha": "file:../../../tools/mocha"
+    "abacus-babel": "file:../../../tools/babel",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-publish": "file:../../../tools/publish"
   },
   "engines": {
     "node": ">=0.10.0",
     "npm": ">=2.0.0"
-  },
-  "repository": {}
+  }
 }

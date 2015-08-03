@@ -12,7 +12,7 @@ const coverage = require('..');
 
 /* eslint handle-callback-err: 1 */
 
-describe('cf-abacus-coverage', () => {
+describe('abacus-coverage', () => {
     let exit;
     beforeEach(() => {
         exit = process.exit;

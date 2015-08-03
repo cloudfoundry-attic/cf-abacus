@@ -1,11 +1,11 @@
 applications:
-- name: cf-abacus-usage-reporting
-  host: cf-abacus-usage-reporting
+- name: abacus-usage-reporting
+  host: abacus-usage-reporting
   path: app.zip
   instances: 2
   memory: 512M
   disk_quota: 512M
   env:
-    COUCHDB: cf-abacus-dbserver
-    ACCOUNT: cf-abacus-account-stub
+    COUCHDB: abacus-dbserver
+    ACCOUNT: abacus-account-stub
 

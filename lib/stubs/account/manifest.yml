@@ -1,6 +1,6 @@
 applications:
-- name: cf-abacus-account-stub
-  host: cf-abacus-account-stub
+- name: abacus-account-stub
+  host: abacus-account-stub
   path: app.zip
   instances: 2
   memory: 512M

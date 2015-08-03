@@ -1,10 +1,28 @@
 {
-  "name": "cf-abacus-express",
+  "name": "abacus-express",
   "description": "Convenient setup of Express with a selection of Express middleware",
   "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "express",
+    "lib/",
+    "src/"
+  ],
   "main": "lib/index.js",
   "bin": {
     "express": "./express"
@@ -12,11 +30,12 @@
   "scripts": {
     "babel": "babel",
     "test": "eslint && mocha",
-    "lint": "eslint"
+    "lint": "eslint",
+    "pub": "publish"
   },
   "dependencies": {
-    "cf-abacus-debug": "file:../debug",
-    "cf-abacus-events": "file:../events",
+    "abacus-debug": "file:../debug",
+    "abacus-events": "file:../events",
     "body-parser": "^1.4.3",
     "compression": "^1.0.8",
     "express": "^4.9.4",
@@ -27,14 +46,14 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "cf-abacus-babel": "file:../../../tools/babel",
-    "cf-abacus-eslint": "file:../../../tools/eslint",
-    "cf-abacus-mocha": "file:../../../tools/mocha",
-    "cf-abacus-request": "file:../request"
+    "abacus-babel": "file:../../../tools/babel",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-request": "file:../request",
+    "abacus-publish": "file:../../../tools/publish"
   },
   "engines": {
     "node": ">=0.10.0",
     "npm": ">=2.0.0"
-  },
-  "repository": {}
+  }
 }

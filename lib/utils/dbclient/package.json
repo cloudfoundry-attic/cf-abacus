@@ -1,33 +1,51 @@
 {
-  "name": "cf-abacus-dbclient",
+  "name": "abacus-dbclient",
   "description": "Small utility that provides a subset of the PouchDB API over a set of DB partitions",
   "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "lib/",
+    "src/"
+  ],
   "main": "lib/index.js",
   "scripts": {
     "babel": "babel",
     "test": "eslint && mocha",
-    "lint": "eslint"
+    "lint": "eslint",
+    "pub": "publish"
   },
   "dependencies": {
-    "cf-abacus-debug": "file:../debug",
-    "cf-abacus-partition": "file:../partition",
-    "cf-abacus-transform": "file:../transform",
+    "abacus-debug": "file:../debug",
+    "abacus-partition": "file:../partition",
+    "abacus-transform": "file:../transform",
     "memdown": "^1.0.0",
     "pouchdb": "3.6.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "cf-abacus-babel": "file:../../../tools/babel",
-    "cf-abacus-batch": "file:../batch",
-    "cf-abacus-eslint": "file:../../../tools/eslint",
-    "cf-abacus-mocha": "file:../../../tools/mocha"
+    "abacus-babel": "file:../../../tools/babel",
+    "abacus-batch": "file:../batch",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-publish": "file:../../../tools/publish"
   },
   "engines": {
     "node": ">=0.10.0",
     "npm": ">=2.0.0"
-  },
-  "repository": {}
+  }
 }

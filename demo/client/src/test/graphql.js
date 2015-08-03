@@ -2,10 +2,10 @@
 
 // Test usage GraphQL query client
 
-const request = require('cf-abacus-request');
+const request = require('abacus-request');
 
 // Accept a host as parameter
-const host = process.argv[2] ? 'https://cf-abacus-usage-reporting.' + process.argv[2] : 'http://localhost:9088';
+const host = process.argv[2] ? 'https://abacus-usage-reporting.' + process.argv[2] : 'http://localhost:9088';
 
 // Run a usage GraphQL query
 // const query = '{ organization(organization_guid: "org_456", date: "2015-01-06") { id, organization_guid, services { id, aggregated_usage { unit, quantity}}}}';

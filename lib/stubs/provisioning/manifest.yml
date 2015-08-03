@@ -1,6 +1,6 @@
 applications:
-- name: cf-abacus-provisioning-stub
-  host: cf-abacus-provisioning-stub
+- name: abacus-provisioning-stub
+  host: abacus-provisioning-stub
   path: app.zip
   instances: 2
   memory: 512M

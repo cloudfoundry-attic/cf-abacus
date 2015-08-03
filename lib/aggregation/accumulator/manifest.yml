@@ -1,11 +1,11 @@
 applications:
-- name: cf-abacus-usage-accumulator
-  host: cf-abacus-usage-accumulator
+- name: abacus-usage-accumulator
+  host: abacus-usage-accumulator
   path: app.zip
   instances: 4
   memory: 512M
   disk_quota: 512M
   env:
-    AGGREGATOR: cf-abacus-usage-aggregator
-    COUCHDB: cf-abacus-dbserver
+    AGGREGATOR: abacus-usage-aggregator
+    COUCHDB: abacus-dbserver
 

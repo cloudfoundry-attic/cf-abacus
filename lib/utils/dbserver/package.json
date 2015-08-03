@@ -1,23 +1,46 @@
 {
-  "name": "cf-abacus-dbserver",
+  "name": "abacus-dbserver",
   "description": "Test CouchDB server app built using PouchDB and Express",
   "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "dbserver",
+    "manifest.yml",
+    "lib/",
+    "src/"
+  ],
   "main": "lib/index.js",
+  "bin": {
+    "dbserver": "./dbserver"
+  },
   "scripts": {
     "start": "./dbserver start",
     "stop": "./dbserver stop",
     "babel": "babel",
     "test": "eslint && mocha",
     "lint": "eslint",
+    "pub": "publish",
     "cfpush": "../../../tools/packapp/packapp && cf push"
   },
   "dependencies": {
-    "cf-abacus-cluster": "file:../cluster",
-    "cf-abacus-debug": "file:../debug",
-    "cf-abacus-webapp": "file:../webapp",
+    "abacus-cluster": "file:../cluster",
+    "abacus-debug": "file:../debug",
+    "abacus-webapp": "file:../webapp",
     "express": "^4.9.4",
     "express-pouchdb": "^0.14.2",
     "memdown": "^1.0.0",
@@ -25,15 +48,15 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "cf-abacus-babel": "file:../../../tools/babel",
-    "cf-abacus-eslint": "file:../../../tools/eslint",
-    "cf-abacus-mocha": "file:../../../tools/mocha",
-    "cf-abacus-packapp": "file:../../../tools/packapp",
-    "cf-abacus-request": "file:../request"
+    "abacus-babel": "file:../../../tools/babel",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-packapp": "file:../../../tools/packapp",
+    "abacus-publish": "file:../../../tools/publish",
+    "abacus-request": "file:../request"
   },
   "engines": {
     "node": ">=0.10.0",
     "npm": ">=2.0.0"
-  },
-  "repository": {}
+  }
 }

@@ -1,6 +1,6 @@
 applications:
-- name: cf-abacus-dbserver
-  host: cf-abacus-dbserver
+- name: abacus-dbserver
+  host: abacus-dbserver
   path: app.zip
   instances: 1
   memory: 1G

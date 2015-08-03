@@ -5,18 +5,18 @@
 
 const _ = require('underscore');
 
-const request = require('cf-abacus-request');
+const request = require('abacus-request');
 const util = require('util');
 
 const map = _.map;
 const omit = _.omit;
 
 // Take host and time delta parameters
-const collector = process.argv[2] && isNaN(process.argv[2]) ? 'https://cf-abacus-usage-collector.' + process.argv[2] : 'http://localhost:9080';
-const reporting = process.argv[2] && isNaN(process.argv[2]) ? 'https://cf-abacus-usage-reporting.' + process.argv[2] : 'http://localhost:9088';
+const collector = process.argv[2] && isNaN(process.argv[2]) ? 'https://abacus-usage-collector.' + process.argv[2] : 'http://localhost:9080';
+const reporting = process.argv[2] && isNaN(process.argv[2]) ? 'https://abacus-usage-reporting.' + process.argv[2] : 'http://localhost:9088';
 const delta = parseInt(process.argv[2]) || parseInt(process.argv[3]) || 0;
 
-describe('cf-abacus-demo-client', () => {
+describe('abacus-demo-client', () => {
     it('submits usage for a sample storage service and retrieves an aggregated usage report', function(done) {
         // Configure the test timeout
         const timeout = 20000;

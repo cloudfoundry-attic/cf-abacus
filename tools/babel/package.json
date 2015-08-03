@@ -1,10 +1,28 @@
 {
-  "name": "cf-abacus-babel",
+  "name": "abacus-babel",
   "description": "Babel configuration for Abacus",
   "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".babelrc",
+    ".npmrc",
+    "babel",
+    "src/"
+  ],
   "main": "index.js",
   "bin": {
     "babel": "./babel"
@@ -12,18 +30,19 @@
   "scripts": {
     "babel": "true",
     "test": "eslint",
-    "lint": "eslint"
+    "lint": "eslint",
+    "pub": "publish"
   },
   "dependencies": {
     "babel": "^5.8.19",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "cf-abacus-eslint": "../eslint"
+    "abacus-eslint": "file:../eslint",
+    "abacus-publish": "file:../publish"
   },
   "engines": {
     "node": ">=0.10.0",
     "npm": ">=2.0.0"
-  },
-  "repository": {}
+  }
 }

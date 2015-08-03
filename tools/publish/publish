@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+'use strict';
+
+// Publish a module to the npm registry.
+require('./src/index.js').runCLI();
+

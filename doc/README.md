@@ -1,4 +1,4 @@
-cf-abacus-doc
+abacus-doc
 ===
 
 The Abacus documentation.

@@ -1,4 +1,4 @@
-cf-abacus-coverage
+abacus-coverage
 ===
 
 Report overall code coverage from Istanbul coverage files.

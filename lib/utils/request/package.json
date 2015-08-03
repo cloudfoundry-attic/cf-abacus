@@ -1,10 +1,28 @@
 {
-  "name": "cf-abacus-request",
+  "name": "abacus-request",
   "description": "Small wrapper around the popular request module, with logging and Express-like URI templates",
   "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "ping",
+    "lib/",
+    "src/"
+  ],
   "main": "lib/index.js",
   "bin": {
     "ping": "./ping"
@@ -12,25 +30,26 @@
   "scripts": {
     "babel": "babel",
     "test": "eslint && mocha",
-    "lint": "eslint"
+    "lint": "eslint",
+    "pub": "publish"
   },
   "dependencies": {
-    "cf-abacus-debug": "file:../debug",
-    "cf-abacus-lrudown": "file:../lrudown",
-    "cf-abacus-transform": "file:../transform",
+    "abacus-debug": "file:../debug",
+    "abacus-lrudown": "file:../lrudown",
+    "abacus-transform": "file:../transform",
     "levelup": "~0.18.4",
     "request": "^2.37.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "cf-abacus-babel": "file:../../../tools/babel",
-    "cf-abacus-batch": "file:../batch",
-    "cf-abacus-eslint": "file:../../../tools/eslint",
-    "cf-abacus-mocha": "file:../../../tools/mocha"
+    "abacus-babel": "file:../../../tools/babel",
+    "abacus-batch": "file:../batch",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-publish": "file:../../../tools/publish"
   },
   "engines": {
     "node": ">=0.10.0",
     "npm": ">=2.0.0"
-  },
-  "repository": {}
+  }
 }

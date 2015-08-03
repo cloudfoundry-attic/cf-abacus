@@ -6,7 +6,6 @@
 /* eslint no-var: 0 */
 
 var _ = require('underscore');
-var fs = require('fs');
 var path = require('path');
 var util = require('util');
 var cp = require('child_process');
@@ -17,11 +16,9 @@ var filter = _.filter;
 var rest = _.rest;
 var initial = _.initial;
 var last = _.last;
+var pairs = _.pairs;
 
 /* eslint no-process-exit: 1 */
-
-// The directories containing the modules to build
-var builddirs = ['node_modules'];
 
 // The env of the build commands
 var buildenv = _.extend(process.env, { TERM: 'color', DEBUG_COLORS: 'true', COVERAGE_COLORS: 'true', FORCE_COLOR: 'true', MOCHA_COLORS: 'true' });
@@ -77,24 +74,19 @@ var runCLI = function() {
     // Use the given regular expression to filter modules
     var rx = new RegExp(process.argv[2]);
 
-    // Look for modules in the configured build directories
-    map(builddirs, function(dir) {
-        fs.readdir(dir, function(err, files) {
-            if(err) return;
-            map(filter(filter(filter(map(files, function(file) {
-                return path.join(dir, file);
-            }), function(file) {
-                return fs.lstatSync(file).isDirectory();
-            }), function(subdir) {
-                return fs.existsSync(path.join(subdir, 'package.json'));
-            }), function(subdir) {
-                return rx.test(require(path.join(process.cwd(), path.join(subdir, 'package.json'))).name);
-            }), function(file) {
-                // Run the given command on each module
-                exec(rest(process.argv, 3).join(' '), file, function(err, val) {
-                    if(err) process.exit(err);
-                });
-            });
+    // Look for modules in the dependencies and devDependencies of the current
+    // module
+    var mod = require(path.join(process.cwd(), 'package.json'));
+    map(filter(pairs(mod.dependencies).concat(pairs(mod.devDependencies)), function(dep) {
+        return rx.test(dep[0]) && /^file:/.test(dep[1]);
+    }), function(dep) {
+        var resolve = function(s) {
+            return s.replace(/\:name/, dep[0]).replace(/:path/, dep[1].split(':')[1]);
+        };
+
+        // Run the given command on each module
+        exec(resolve(rest(process.argv, 4).join(' ')), resolve(process.argv[3]), function(err, val) {
+            if(err) process.exit(err);
         });
     });
 };

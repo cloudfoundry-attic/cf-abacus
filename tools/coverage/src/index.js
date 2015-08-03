@@ -29,7 +29,7 @@ var memoize = _.memoize;
 // Return the path of the Abacus module dir containing a file
 var moddir = function(file) {
     if(file === '.' || file === '/') return undefined;
-    if(/cf-abacus.*/.test(path.basename(file))) return file;
+    if(/abacus.*/.test(path.basename(file))) return file;
     return moddir(path.dirname(file));
 };
 

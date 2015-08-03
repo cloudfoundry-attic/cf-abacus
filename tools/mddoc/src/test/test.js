@@ -18,7 +18,7 @@ request.get = spy(() => {
 
 const mddoc = require('..');
 
-describe('cf-abacus-mddoc', () => {
+describe('abacus-mddoc', () => {
     it('converts Markdown to HTML', (done) => {
         // Simulate Markdown from stdin
         const stdin = new stream.Readable();

@@ -1,12 +1,37 @@
 {
-  "name": "cf-abacus-etc",
+  "name": "abacus-etc",
   "description": "Misc build scripts",
   "license": "Apache-2.0",
   "readme": "README.md",
   "version": "0.0.1",
   "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "apps",
+    "cfapi",
+    "foreach",
+    "npm2",
+    "secgroup",
+    "versions",
+    "lib/",
+    "src/"
+  ],
   "main": "src/index.js",
   "bin": {
+    "apps": "./apps",
+    "cfapi": "./cfapi",
     "foreach": "./foreach",
     "npm2": "./npm2",
     "versions": "./versions"
@@ -14,17 +39,18 @@
   "scripts": {
     "babel": "true",
     "test": "eslint",
-    "lint": "eslint"
+    "lint": "eslint",
+    "pub": "publish"
   },
   "dependencies": {
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "cf-abacus-eslint": "file:../tools/eslint"
+    "abacus-eslint": "file:../tools/eslint",
+    "abacus-publish": "file:../tools/publish"
   },
   "engines": {
     "node": ">=0.10.0",
     "npm": ">=2.0.0"
-  },
-  "repository": {}
+  }
 }

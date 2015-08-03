@@ -12,8 +12,8 @@
 
 const _ = require('underscore');
 
-const request = require('cf-abacus-request');
-const throttle = require('cf-abacus-throttle');
+const request = require('abacus-request');
+const throttle = require('abacus-throttle');
 const util = require('util');
 
 const map = _.map;
@@ -21,7 +21,7 @@ const range = _.range;
 const omit = _.omit;
 
 // Setup the debug log
-const debug = require('cf-abacus-debug')('cf-abacus-test-perf');
+const debug = require('abacus-debug')('abacus-test-perf');
 
 // Take number of usage submissions as first parameter
 const submissions = parseInt(process.argv[2]) || 1;
@@ -29,7 +29,7 @@ const submissions = parseInt(process.argv[2]) || 1;
 // Take a delta time as second parameter
 const delta = parseInt(process.argv[3]) || 0;
 
-describe('cf-abacus-test-perf', () => {
+describe('abacus-test-perf', () => {
     it.only('measures the performance of concurrent usage submissions', function(done) {
         // Configure the test timeout based on the number of submissions, with
         // a minimum of 20 secs

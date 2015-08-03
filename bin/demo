@@ -1,5 +1,5 @@
 #!/bin/bash
 
 # Run the demo app
-(cd node_modules/cf-abacus-demo-client && npm run demo $1 $2)
+(cd node_modules/abacus-demo-client && npm run demo $1 $2)
 

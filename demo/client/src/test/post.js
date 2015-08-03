@@ -3,12 +3,12 @@
 // Test usage poster
 
 const _ = require('underscore');
-const request = require('cf-abacus-request');
+const request = require('abacus-request');
 
 const map = _.map;
 
 // Take host and time delta parameters
-const host = process.argv[2] && isNaN(process.argv[2]) ? 'https://cf-abacus-usage-collector.' + process.argv[2] : 'http://localhost:9080';
+const host = process.argv[2] && isNaN(process.argv[2]) ? 'https://abacus-usage-collector.' + process.argv[2] : 'http://localhost:9080';
 const delta = parseInt(process.argv[2]) || parseInt(process.argv[3]) || 0;
 
 // Post usage for a service
