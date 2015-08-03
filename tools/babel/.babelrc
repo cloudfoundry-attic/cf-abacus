@@ -1,5 +1,5 @@
 {
-    "compact": true,
+    "compact": false,
     "optional": "runtime",
     "nonStandard": true,
     "auxiliaryCommentBefore": "istanbul ignore next",
