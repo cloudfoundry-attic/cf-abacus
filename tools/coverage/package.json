@@ -3,7 +3,7 @@
   "description": "Report overall code coverage from Istanbul coverage files",
   "license": "Apache-2.0",
   "readme": "README.md",
-  "version": "0.0.1",
+  "version": "0.0.1-dev.1",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",
   "bugs": {
