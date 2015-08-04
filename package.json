@@ -33,7 +33,7 @@
     "tools/"
   ],
   "scripts": {
-    "bootstrap": "etc/npm2 i etc && npm2 i tools/babel && npm2 i tools/eslint && npm2 i tools/mocha && npm2 i tools/publish",
+    "bootstrap": "etc/npm2 i etc && npm2 i tools/babel && npm2 i tools/eslint && npm2 i tools/mocha && npm2 i tools/publish && npm2 i tools/cfpack",
     "babel": "foreach abacus :path npm run babel",
     "build": "etc/versions && npm run bootstrap && npm run babel && npm2 install && npm test",
     "clean": "git clean -df",
@@ -99,11 +99,11 @@
   },
   "devDependencies": {
     "abacus-babel": "file:tools/babel",
+    "abacus-cfpack": "file:tools/cfpack",
     "abacus-coverage": "file:tools/coverage",
     "abacus-eslint": "file:tools/eslint",
     "abacus-mddoc": "file:tools/mddoc",
     "abacus-mocha": "file:tools/mocha",
-    "abacus-packapp": "file:tools/packapp",
     "abacus-publish": "file:tools/publish",
     "coveralls": "^2.11.3",
     "jshint": "^2.8.0",

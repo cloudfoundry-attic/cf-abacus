@@ -15,7 +15,7 @@ log*
 *.out
 *.crt
 *.key
-**/.pack/**
+**/.cfpack/**
 .publish/**
 **/.publish/**
 .coverage/**

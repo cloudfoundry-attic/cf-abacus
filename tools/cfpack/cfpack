@@ -2,5 +2,5 @@
 'use strict';
 
 // Package an app for deployment to Cloud Foundry
-require('./lib/index.js').runCLI();
+require('./src/index.js').runCLI();
 

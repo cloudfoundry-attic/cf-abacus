@@ -1,7 +1,7 @@
 applications:
 - name: abacus-usage-meter
   host: abacus-usage-meter
-  path: app.zip
+  path: .cfpack/app.zip
   instances: 2
   memory: 512M
   disk_quota: 512M

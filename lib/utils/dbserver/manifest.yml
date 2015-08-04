@@ -1,7 +1,7 @@
 applications:
 - name: abacus-dbserver
   host: abacus-dbserver
-  path: app.zip
+  path: .cfpack/app.zip
   instances: 1
   memory: 1G
   disk_quota: 512M

@@ -31,7 +31,7 @@
     "test": "eslint && mocha",
     "lint": "eslint",
     "pub": "publish",
-    "cfpush": "../../../tools/packapp/packapp && cf push"
+    "cfpush": "cfpack && cf push"
   },
   "dependencies": {
     "babel-runtime": "^5.8.19",
@@ -42,10 +42,10 @@
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
+    "abacus-cfpack": "file:../../../tools/cfpack",
     "abacus-cluster": "file:../../utils/cluster",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-packapp": "file:../../../tools/packapp",
     "abacus-publish": "file:../../../tools/publish",
     "abacus-request": "file:../../utils/request"
   },

@@ -1,7 +1,7 @@
 applications:
 - name: abacus-usage-accumulator
   host: abacus-usage-accumulator
-  path: app.zip
+  path: .cfpack/app.zip
   instances: 4
   memory: 512M
   disk_quota: 512M
