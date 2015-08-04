@@ -20,10 +20,9 @@
   "files": [
     ".npmrc",
     "publish",
-    "lib/",
     "src/"
   ],
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "bin": {
     "publish": "./publish"
   },

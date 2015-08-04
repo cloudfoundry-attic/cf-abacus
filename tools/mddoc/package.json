@@ -22,15 +22,14 @@
     "mddoc",
     "css/",
     "html/",
-    "lib/",
     "src/"
   ],
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "bin": {
     "mddoc": "./mddoc"
   },
   "scripts": {
-    "babel": "babel",
+    "babel": "true",
     "test": "eslint && mocha",
     "lint": "eslint",
     "pub": "publish"
@@ -46,7 +45,6 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "abacus-babel": "file:../babel",
     "abacus-eslint": "file:../eslint",
     "abacus-mocha": "file:../mocha",
     "abacus-publish": "file:../publish"
