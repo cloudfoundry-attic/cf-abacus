@@ -2,5 +2,5 @@
 'use strict';
 
 // Convert Markdown to HTML
-require('./index.js').runCLI();
+require('./src/index.js').runCLI();
 
