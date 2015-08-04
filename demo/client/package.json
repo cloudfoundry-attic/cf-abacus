@@ -1,11 +1,10 @@
 {
   "name": "abacus-demo-client",
-  "description": "Demo program that submits usage and gets a usage report",
+  "description": "Demo client that submits usage and gets a usage report",
   "license": "Apache-2.0",
-  "readme": "README.md",
   "version": "0.0.1-dev.1",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/demo/client",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },

@@ -1,10 +1,8 @@
-lock
+abacus-lock
 ===
 
-A mini wrapper around the Node lock module that makes it a bit easier to use.
+Async lock with callback.
 
-Usage
----
-
-TODO document usage
+Implemented as a mini wrapper around the lock module making it a bit easier to
+use with a more natural async with callback interface.
 

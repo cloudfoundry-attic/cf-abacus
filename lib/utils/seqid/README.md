@@ -1,11 +1,6 @@
-seqid
+abacus-seqid
 ===
 
 A function that returns sequential time-based ids. The ids are formed from
-the current time, app index, cluster worker id, and a counter
-
-Usage
----
-
-See the module test for how to use it.
+the current time, app index, cluster worker id, and a counter.
 

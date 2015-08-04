@@ -1,10 +1,6 @@
 abacus-publish
 ===
 
-Publish a module to the npm registry.
-
-Usage
----
-
-TODO document usage
+Npm publish build script that converts local dependencies to the corresponding
+public npm dependencies.
 

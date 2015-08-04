@@ -2,10 +2,9 @@
   "name": "abacus-instance-launcher",
   "description": "Launch multiple instances of an application",
   "license": "Apache-2.0",
-  "readme": "README.md",
   "version": "0.0.1-dev.1",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/aggregation/launcher",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },

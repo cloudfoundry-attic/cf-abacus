@@ -1,11 +1,8 @@
-hystrix
+abacus-hystrix
 ===
 
-Express middleware that serves a stream of Hystrix stats.
+Express middleware that serves Hystrix perf stats.
 
-Usage
----
-
-This module provides an Express middleware that can serve a stream function call
-stats in the format expected by the Netflix Hystrix dashboard.
+This module provides an Express middleware that serves a stream of function
+call stats in the format expected by the Netflix Hystrix dashboard.
 

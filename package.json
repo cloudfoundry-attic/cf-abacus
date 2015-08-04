@@ -2,7 +2,6 @@
   "name": "cf-abacus",
   "description": "CF Abacus usage metering and aggregation service",
   "license": "Apache-2.0",
-  "readme": "README.md",
   "version": "0.0.1-dev.1",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",

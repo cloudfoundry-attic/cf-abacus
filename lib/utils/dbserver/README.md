@@ -1,10 +1,5 @@
-dbserver
+abacus-dbserver
 ===
 
-A test CouchDB-compatible server app built using Express and PouchDB.
-
-Usage
----
-
-TODO describe usage.
+Mini CouchDB-compatible server built using PouchDB and Express.
 

@@ -1,10 +1,5 @@
-metering-schemas
+abacus-metering-schemas
 ===
 
-The JSON schemas we use to validate usage data.
-
-Usage
----
-
-TODO document usage
+JSON schemas for usage data.
 

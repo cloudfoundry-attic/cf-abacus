@@ -1,5 +1,5 @@
 abacus-doc
 ===
 
-The Abacus documentation.
+The Abacus project documentation.
 

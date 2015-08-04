@@ -1,11 +1,10 @@
 {
   "name": "abacus-express",
-  "description": "Convenient setup of Express with a selection of Express middleware",
+  "description": "Setup Express with a selection of useful Express middleware",
   "license": "Apache-2.0",
-  "readme": "README.md",
   "version": "0.0.1-dev.1",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/express",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },

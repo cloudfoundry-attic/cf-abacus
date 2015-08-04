@@ -1,11 +1,10 @@
 {
   "name": "abacus-perf",
-  "description": "Utility that collects real time function call performance and reliability metrics",
+  "description": "Collect real time function call perf and reliability metrics",
   "license": "Apache-2.0",
-  "readme": "README.md",
   "version": "0.0.1-dev.1",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/perf",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },

@@ -1,11 +1,10 @@
 {
   "name": "abacus-events",
-  "description": "Small utility functions to help work with Node events",
+  "description": "Iterate over a stream of Node events",
   "license": "Apache-2.0",
-  "readme": "README.md",
   "version": "0.0.1-dev.1",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/events",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },

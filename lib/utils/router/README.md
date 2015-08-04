@@ -1,12 +1,8 @@
-router
+abacus-router
 ===
 
-Small Express router that runs request handlers written as ES6 generators using
-Node co.
+Express router for route handlers written as ES6 generators.
 
-Usage
----
-
-This module allows you to write Express request handlers as Javascript ES6
-generators.
+Uses the co module to schedule and control the execution of your ES6 generator
+route handlers similar to Koajs, but for Express.
 

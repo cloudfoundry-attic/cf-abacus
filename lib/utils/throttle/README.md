@@ -1,11 +1,5 @@
 throttle
 ===
 
-Small utility that throttles calls to a function to a maximum number of
-concurrent calls.
-
-Usage
----
-
-TBD
+Throttle async function calls to a max number of concurrent calls.
 

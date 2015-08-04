@@ -1,10 +1,5 @@
 abacus-babel
 ===
 
-Babel configuration for the Abacus project
-
-Usage
----
-
-TODO document usage
+Babel ES6 to ES5 configuration and build script. 
 

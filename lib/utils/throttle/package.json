@@ -1,11 +1,10 @@
 {
   "name": "abacus-throttle",
-  "description": "Small utility that throttles calls to a function to a maximum number of concurrent calls",
+  "description": "Throttle async function calls to a max number of concurrent calls",
   "license": "Apache-2.0",
-  "readme": "README.md",
   "version": "0.0.1-dev.1",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/throttle",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },

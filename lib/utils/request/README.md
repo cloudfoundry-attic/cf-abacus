@@ -1,12 +1,8 @@
-request
+abacus-request
 ===
 
-Small wrapper around the popular Node [request](https://github.com/mikeal/request)
-module, with logging and Express-like URI templates.
+Wrapper around the popular [request](https://github.com/mikeal/request) module.
 
-Usage
----
-
-This module can be used pretty much as the original Node request module. On top
-of that it supports Express-like route templates in the URI parameter.
+Can be used pretty much like the original request module with added support for
+batching, caching, logging, and URI templates.
 

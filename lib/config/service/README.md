@@ -1,10 +1,5 @@
-service-config
+abacus-service-config
 ===
 
-Provides access to service metering and aggregation configuration.
-
-Usage
----
-
-Look at the module tests to understand how to use it.
+Service usage metering and aggregation configuration.
 

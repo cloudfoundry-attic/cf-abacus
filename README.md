@@ -1,7 +1,7 @@
 CF-Abacus
 ===
 
-The Abacus Cloud service usage metering and aggregation project.
+The Abacus usage metering and aggregation service.
 
 [![Build Status](https://travis-ci.org/cloudfoundry-incubator/cf-abacus.svg)](https://travis-ci.org/cloudfoundry-incubator/cf-abacus) [![Coverage Status](https://coveralls.io/repos/cloudfoundry-incubator/cf-abacus/badge.svg?branch=master&service=github)](https://coveralls.io/github/cloudfoundry-incubator/cf-abacus?branch=master)
 

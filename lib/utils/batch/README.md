@@ -1,10 +1,7 @@
-batch
+abacus-batch
 ===
 
-Simple function wrapper that batches Node-style calls.
-
-Usage
----
+Batching for async function calls.
 
 This module provides a simple way to implement function call batching. Batching
 is achieved by wrapping a function in logic that records calls in a batch for

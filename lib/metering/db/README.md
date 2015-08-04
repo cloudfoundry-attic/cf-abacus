@@ -1,10 +1,5 @@
-metering-db
+abacus-metering-db
 ===
 
-Naming and partitioning scheme for the metering dbs.
-
-Usage
----
-
-TODO document usage
+Naming and partitioning scheme for the usage metering DBs.
 

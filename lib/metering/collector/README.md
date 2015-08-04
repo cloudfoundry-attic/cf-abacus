@@ -1,11 +1,6 @@
-usage-collector
+abacus-usage-collector
 ===
 
-Usage collector service, responsible for receiving usage data batches submitted
-by service providers and storing them in the submitted usage db.
-
-Usage
----
-
-TODO document usage
+Usage collector service, responsible for receiving batches of usage data
+submitted by service providers and validating and storing them.
 
