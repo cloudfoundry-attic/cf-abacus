@@ -6,13 +6,15 @@
 // TODO Use Hystrix metrics for internal performance measurements
 
 // Scenarios:
-// - Concurrent single usage submissions for a service instance
-// - Concurrent single usage submissions for multiple service instances
-// - Concurrent individual usage submissions for multiple organizations
+// - Concurrently submit a usage doc for a service instance
+// - Concurrently submit a usage doc for multiple service instances
+// - Concurrently submit a usage doc for multiple organizations
 // - TODO add service and space variations
-// - TODO add multiple usage submissions
+// - TODO submit batch of usage docs in each submission
 
 const _ = require('underscore');
+
+const commander = require('commander');
 
 const request = require('abacus-request');
 const throttle = require('abacus-throttle');
@@ -25,23 +27,30 @@ const omit = _.omit;
 // Setup the debug log
 const debug = require('abacus-debug')('abacus-test-perf');
 
-// Take number of usage submissions as first parameter
-const submissions = parseInt(process.argv[2]) || 1;
+commander.option('-o, --orgs <n>', 'Number of organizations', parseInt);
+commander.option('-i, --instances <n>', 'Number of service instances', parseInt);
+commander.option('-u, --usagedocs <n>', 'Number of usage docs', parseInt);
+commander.option('-d, --delta <d>', 'Usage time window shift in milli-seconds', parseInt);
 
-// Take a delta time as second parameter
-const delta = parseInt(process.argv[3]) || 0;
+commander.parse(process.argv);
 
-// Take number of organizations as third parameter
-const orgs = parseInt(process.argv[4]) || 1;
+// Number of organizations
+const orgs = commander.orgs || 1;
 
-// Take number of service instances as fourth parameter
-const serviceInstances = parseInt(process.argv[5]) || 1;
+// Number of service instances
+const serviceInstances = commander.instances || 1;
+
+// Number of usage docs
+const usage = commander.usagedocs || 1;
+
+// Usage time window shift in milli-seconds
+const delta = commander.delta || 0;
 
 describe('abacus-test-perf', () => {
     it.only('measures the performance of concurrent usage submissions', function(done) {
-        // Configure the test timeout based on the number of submissions, with
+        // Configure the test timeout based on the number of usage docs, with
         // a minimum of 20 secs
-        const timeout = Math.max(20000, 100 * orgs * serviceInstances * submissions);
+        const timeout = Math.max(20000, 100 * orgs * serviceInstances * usage);
         this.timeout(timeout + 2000);
 
         // Return a usage with unique start and end time based on a number
@@ -50,7 +59,7 @@ describe('abacus-test-perf', () => {
         const siid = (si) => ['0b39fa70-a65f-4183-bae8-385633ca5c87', si + 1].join('-');
         const orgid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27', o + 1].join('-');
 
-        const usage = (o, si, i) => ({ service_instances: [{ service_instance_id: siid(si), usage: [{ start: start + i,
+        const usageTemplate = (o, si, i) => ({ service_instances: [{ service_instance_id: siid(si), usage: [{ start: start + i,
             end: end + i, region: 'eu-gb', organization_guid: orgid(o), space_guid: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
             plan_id: 'plan_123', resources: [{ unit: 'BYTE', quantity: 1073741824 }, { unit: 'LIGHT_API_CALL', quantity: 1000 }, { unit: 'HEAVY_API_CALL', quantity: 100 }] }] }]
         });
@@ -69,11 +78,11 @@ describe('abacus-test-perf', () => {
 
         // Post one usage doc, throttled to 1000 concurrent requests
         const post = throttle((o, si, i, cb) => {
-            debug('Submission org%d si%d sub%d', o + 1, si + 1, i + 1);
-            request.post('http://localhost:9080/v1/metering/services/storage/usage', { body: usage(o, si, i) }, (err, val) => {
+            debug('Submitting org%d instance%d usage%d', o + 1, si + 1, i + 1);
+            request.post('http://localhost:9080/v1/metering/services/storage/usage', { body: usageTemplate(o, si, i) }, (err, val) => {
                 expect(err).to.equal(undefined);
                 expect(val.statusCode).to.equal(201);
-                debug('Completed submission org%d si%d sub%d', o + 1, si + 1, i + 1);
+                debug('Completed submission org%d instance%d usage%d', o + 1, si + 1, i + 1);
                 cb(err, val);
             });
         });
@@ -81,8 +90,8 @@ describe('abacus-test-perf', () => {
         // Post the requested number of usage docs
         let posts = 0;
         const submit = (done) => {
-            const cb = () => { if(++posts === orgs * serviceInstances * submissions) done(); };
-            map(range(orgs), (o) => map(range(serviceInstances), (si) => map(range(submissions), (i) => post(o, si, i, cb))));
+            const cb = () => { if(++posts === orgs * serviceInstances * usage) done(); };
+            map(range(orgs), (o) => map(range(serviceInstances), (si) => map(range(usage), (i) => post(o, si, i, cb))));
         };
 
         // Print the number of usage docs already processed given a get report
@@ -111,7 +120,7 @@ describe('abacus-test-perf', () => {
                 // Compare the usage report we got with the expected report
                 console.log('Processed %d usage docs for org%d', processed(val), o + 1);
                 try {
-                    expect(omit(val.body, [ 'id', 'start', 'end' ])).to.deep.equal(report(o, serviceInstances, submissions));
+                    expect(omit(val.body, [ 'id', 'start', 'end' ])).to.deep.equal(report(o, serviceInstances, usage));
                     console.log('\n', util.inspect(val.body, { depth: 10 }), '\n');
                     done();
                 }
@@ -129,7 +138,7 @@ describe('abacus-test-perf', () => {
         // values indicating that all submitted usage has been processed
         let verified = 0;
         const wait = (done) => {
-            console.log('\nRetrieving usage report');
+            console.log('\nRetrieving usage reports');
             const cb = () => { if(++verified === orgs) done(); };
             map(range(orgs), (o) => { const i = setInterval(() => get(o, () => cb(clearInterval(i))), 250); });
         };
