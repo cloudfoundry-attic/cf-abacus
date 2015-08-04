@@ -70,7 +70,7 @@ cf apps
 Getting apps in org <your organization> / space <your space>...
 OK
 
-name                          requested state   instances   memory   disk   urls   
+name                       requested state   instances   memory   disk   urls   
 abacus-usage-collector     started           2/2         512M     1G     abacus-usage-collector.10.244.0.34.xip.io   
 abacus-usage-meter         started           2/2         512M     1G     abacus-usage-meter.10.244.0.34.xip.io 
 abacus-usage-accumulator   started           4/4         512M     1G     abacus-usage-accumulator.10.244.0.34.xip.io   
