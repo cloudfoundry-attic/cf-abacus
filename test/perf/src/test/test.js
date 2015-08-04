@@ -56,10 +56,10 @@ describe('abacus-test-perf', () => {
         // Return a usage with unique start and end time based on a number
         const start = 1435629365220 + delta;
         const end = 1435629465220 + delta;
-        const siid = (si) => ['0b39fa70-a65f-4183-bae8-385633ca5c87', si + 1].join('-');
+        const siid = (o, si) => ['0b39fa70-a65f-4183-bae8-385633ca5c87', o + 1, si + 1].join('-');
         const orgid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27', o + 1].join('-');
 
-        const usageTemplate = (o, si, i) => ({ service_instances: [{ service_instance_id: siid(si), usage: [{ start: start + i,
+        const usageTemplate = (o, si, i) => ({ service_instances: [{ service_instance_id: siid(o, si), usage: [{ start: start + i,
             end: end + i, region: 'eu-gb', organization_guid: orgid(o), space_guid: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
             plan_id: 'plan_123', resources: [{ unit: 'BYTE', quantity: 1073741824 }, { unit: 'LIGHT_API_CALL', quantity: 1000 }, { unit: 'HEAVY_API_CALL', quantity: 100 }] }] }]
         });
