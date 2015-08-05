@@ -17,7 +17,7 @@ globals:
 rules:
   # ERRORS
   space-before-blocks: 2
-  indent: [2, 4, indentSwitchCase: true]
+  indent: [2, 2, indentSwitchCase: true]
   strict: 0
   no-comma-dangle: 2
   no-unused-expressions: 2
@@ -49,9 +49,9 @@ rules:
   no-eval: 2
   #require-yield: 2
   no-var: 2
+  max-len: [2, 80]
 
   # WARNINGS
-  max-len: [1, 190]
   # We use this for functions that reference each other
   no-use-before-define: 1
 
