@@ -24,9 +24,9 @@ var noop = _.noop;
 var mkdirs = function(root, cb) {
   // Create .cfpack directory
   fs.mkdir('.cfpack', function(err) {
-    if (err) noop();
+    if(err) noop();
     fs.unlink('.cfpack/lib', function(err) {
-      if (err) noop();
+      if(err) noop();
       fs.symlink(path.join(root, 'lib'), '.cfpack/lib', cb);
     });
   });
@@ -35,8 +35,8 @@ var mkdirs = function(root, cb) {
 // Adjust a file: dependency to our packed app structure, by converting
 // relative path from the module to a relative path to our package root
 var local = function(root, d) {
-  return !/file:/.test(d[1]) ? d : [d[0], path.join('file:.cfpack',
-    path.relative(root, path.resolve(d[1].substr(5))))];
+  return !/file:/.test(d[1]) ? d : [d[0], path.join(
+    'file:.cfpack', path.relative(root, path.resolve(d[1].substr(5))))];
 };
 
 // Adjust local dependencies to our packed app structure and write new
@@ -49,14 +49,14 @@ var repackage = function(root, cb) {
   }, {
     devDependencies: object(map(pairs(mod.devDependencies), loc))
   });
-  fs.writeFile(path.join('.cfpack', 'package.json'), JSON.stringify(rmod,
-    undefined, 2), cb);
+  fs.writeFile(path.join('.cfpack', 'package.json'),
+    JSON.stringify(rmod, undefined, 2), cb);
 };
 
 // Produce the packaged app zip
 var zip = function(ignore, cb) {
   fs.unlink(path.resolve('.cfpack', 'app.zip'), function(err) {
-    if (err) noop();
+    if(err) noop();
 
     // We're using the system zip command here, may be better to use a
     // Javascript zip library instead
@@ -81,11 +81,11 @@ var zip = function(ignore, cb) {
 
 // Return the Abacus root directory
 var rootDir = function(dir) {
-  if (dir === '/') return dir;
+  if(dir === '/') return dir;
   try {
-    if (JSON.parse(fs.readFileSync(
+    if(JSON.parse(fs.readFileSync(
       path.resolve(dir, 'package.json')).toString()).name === 'cf-abacus')
-      return dir;
+        return dir;
     return rootDir(path.resolve(dir, '..'));
   }
   catch (e) {
@@ -101,21 +101,21 @@ var runCLI = function() {
 
   // Create the directories we need
   mkdirs(root, function(err) {
-    if (err) {
+    if(err) {
       console.log('Couldn\'t setup cfpack layout -', err);
       process.exit(1);
     }
 
     // Generate the repackaged package.json
     repackage(root, function(err) {
-      if (err) {
+      if(err) {
         console.log('Couldn\'t write package.json -', err);
         process.exit(1);
       }
 
       // Produce the packaged app zip
       zip(path.join(root, '.gitignore'), function(err) {
-        if (err) {
+        if(err) {
           console.log('Couldn\'t produce .cfpack/app.zip -', err);
           process.exit(1);
         }
@@ -126,3 +126,4 @@ var runCLI = function() {
 
 // Export our CLI
 module.exports.runCLI = runCLI;
+

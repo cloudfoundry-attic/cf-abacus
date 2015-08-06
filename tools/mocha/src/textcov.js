@@ -12,6 +12,8 @@ var tty = require('tty');
 var path = require('path');
 var util = require('util');
 
+var contains = _.contains;
+
 // Return true if a position is inside the given coverage spans
 var inside = function(pos, spans) {
   return _.reduce(spans, function(i, span) {
@@ -79,15 +81,15 @@ var annotatedSource = function(source, coveredSpans, uncoveredSpans, colors) {
   // Return an array of characters representing the source document marked
   // with marks indicating covered code, uncovered code and text sections
   var markedSource = function(accum, c) {
-    if (accum.length === 0) return _.extend(accum, {
-      source: accum.source.concat([marks.end])
-    });
+    if(accum.length === 0) return _.extend(accum, {
+        source: accum.source.concat([marks.end])
+      });
 
     // Determine if we are inside a covered code, uncovered code or text
     // section, and the corresponding mark
     var mark = c === '\n' ? marks.none : inside(accum.pos, uncoveredSpans) ?
       marks.uncovered : inside(accum.pos, coveredSpans) ? marks.covered :
-      marks.text;
+        marks.text;
 
     return {
       source: accum.source.concat(mark !== accum.mark ? [accum.mark.end,
@@ -114,8 +116,8 @@ var annotatedSource = function(source, coveredSpans, uncoveredSpans, colors) {
 // that module
 var inThisModule = function(cov) {
   var rel = path.relative(process.cwd(), cov.path);
-  return /^lib\/[^\/]*\.js$/.test(rel) || /^lib\/[^\/]*\/[^\/]*\.js$/.test(
-    rel);
+  return /^lib\/[^\/]*\.js$/.test(rel) ||
+    /^lib\/[^\/]*\/[^\/]*\.js$/.test(rel);
 };
 
 // Compute line and statement coverage percentages
@@ -135,8 +137,8 @@ var colors = _.memoize(function() {
     return c !== undefined && c !== '0' && c !== 'false' && c !==
       'disabled' && c !== 'no';
   };
-  return tty.isatty(process.stdout) || _.contains(process.argv, '--colors') ||
-    enabled(process.env.COVERAGE_COLORS);
+  return tty.isatty(process.stdout) ||
+    contains(process.argv, '--colors') || enabled(process.env.COVERAGE_COLORS);
 });
 
 // Print code coverage from a list of Istanbul coverage objects and the
@@ -154,15 +156,14 @@ var printCoverage = function(coverage, sources) {
     var reset = colors() ? '\u001b[0m' : '';
 
     // Under 100% coverage, print the annotated source
-    if (!fullcov) {
-      process.stdout.write(util.format('%sSource %s%s\n', color, file,
-        reset));
+    if(!fullcov) {
+      process.stdout.write(util.format('%sSource %s%s\n', color, file, reset));
 
       // Convert the Istanbul coverage statement and branch maps to lists
       // of covered and uncovered source spans
       var statements = _.zip(_.values(cov.s), _.values(cov.statementMap));
-      var branches = _.zip(_.flatten(_.values(cov.b)), _.flatten(_.map(_.values(
-        cov.branchMap), function(b) {
+      var branches = _.zip(_.flatten(_.values(cov.b)),
+        _.flatten(_.map(_.values(cov.branchMap), function(b) {
         return b.locations;
       })));
       var spans = _.union(statements, branches);
@@ -185,10 +186,11 @@ var printCoverage = function(coverage, sources) {
 
     // Print line and statement coverage percentages
     process.stdout.write(util.format(
-      '%sCoverage lines %d\% statements %d\% %s%s\n', color, percent.l
-      .toFixed(2), percent.s.toFixed(2), file, reset));
+      '%sCoverage lines %d\% statements %d\% %s%s\n',
+      color, percent.l.toFixed(2), percent.s.toFixed(2), file, reset));
   });
 };
 
 // Export our print function
 module.exports = printCoverage;
+

@@ -29,84 +29,87 @@ describe('abacus-demo-client', () => {
       const start = 1435629365220 + delta;
       const end = 1435629465220 + delta;
       const usage = [
-      {
-        message: 'Submitting 10 GB, 1000 light API calls, 100 heavy API calls',
-        usage: {
-          service_instances: [{
-            service_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
-            usage: [{
-              start: start,
-              end: end,
-              region: 'eu-gb',
-              organization_guid: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-              space_guid: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-              plan_id: 'plan_123',
-              resources: [{
-                unit: 'BYTE',
-                quantity: 1073741824
-              }, {
-                unit: 'LIGHT_API_CALL',
-                quantity: 1000
-              }, {
-                unit: 'HEAVY_API_CALL',
-                quantity: 100
+        {
+          message:
+            'Submitting 10 GB, 1000 light API calls, 100 heavy API calls',
+          usage: {
+            service_instances: [{
+              service_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
+              usage: [{
+                start: start,
+                end: end,
+                region: 'eu-gb',
+                organization_guid: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+                space_guid: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
+                plan_id: 'plan_123',
+                resources: [{
+                  unit: 'BYTE',
+                  quantity: 1073741824
+                }, {
+                  unit: 'LIGHT_API_CALL',
+                  quantity: 1000
+                }, {
+                  unit: 'HEAVY_API_CALL',
+                  quantity: 100
+                }]
               }]
             }]
-          }]
-        }
-      },
-      {
-        message: 'Submitting 10 GB, 1000 light API calls, 100 heavy API calls',
-        usage: {
-          service_instances: [{
-            service_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
-            usage: [{
-              start: start + 1,
-              end: end + 1,
-              region: 'eu-gb',
-              organization_guid: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-              space_guid: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-              plan_id: 'plan_123',
-              resources: [{
-                unit: 'BYTE',
-                quantity: 1073741824
-              }, {
-                unit: 'LIGHT_API_CALL',
-                quantity: 1000
-              }, {
-                unit: 'HEAVY_API_CALL',
-                quantity: 100
+          }
+        },
+        {
+          message:
+            'Submitting 10 GB, 1000 light API calls, 100 heavy API calls',
+          usage: {
+            service_instances: [{
+              service_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
+              usage: [{
+                start: start + 1,
+                end: end + 1,
+                region: 'eu-gb',
+                organization_guid: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+                space_guid: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
+                plan_id: 'plan_123',
+                resources: [{
+                  unit: 'BYTE',
+                  quantity: 1073741824
+                }, {
+                  unit: 'LIGHT_API_CALL',
+                  quantity: 1000
+                }, {
+                  unit: 'HEAVY_API_CALL',
+                  quantity: 100
+                }]
               }]
             }]
-          }]
-        }
-      },
-      {
-        message: 'Submitting 10 GB, 1000 light API calls, 100 heavy API calls',
-        usage: {
-          service_instances: [{
-            service_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
-            usage: [{
-              start: start + 2,
-              end: end + 2,
-              region: 'eu-gb',
-              organization_guid: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-              space_guid: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-              plan_id: 'plan_123',
-              resources: [{
-                unit: 'BYTE',
-                quantity: 1073741824
-              }, {
-                unit: 'LIGHT_API_CALL',
-                quantity: 1000
-              }, {
-                unit: 'HEAVY_API_CALL',
-                quantity: 100
+          }
+        },
+        {
+          message:
+            'Submitting 10 GB, 1000 light API calls, 100 heavy API calls',
+          usage: {
+            service_instances: [{
+              service_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
+              usage: [{
+                start: start + 2,
+                end: end + 2,
+                region: 'eu-gb',
+                organization_guid: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+                space_guid: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
+                plan_id: 'plan_123',
+                resources: [{
+                  unit: 'BYTE',
+                  quantity: 1073741824
+                }, {
+                  unit: 'LIGHT_API_CALL',
+                  quantity: 1000
+                }, {
+                  unit: 'HEAVY_API_CALL',
+                  quantity: 100
+                }]
               }]
             }]
-          }]
-        }
-      }];
+          }
+        }];
 
       // Expected usage report for the test organization
       const report = {
@@ -165,7 +168,7 @@ describe('abacus-demo-client', () => {
         console.log(u.message);
 
         const cb = () => {
-          if (++posts === usage.length) done();
+          if(++posts === usage.length) done();
         };
 
         request.post(collector + '/v1/metering/services/storage/usage', {
@@ -195,7 +198,7 @@ describe('abacus-demo-client', () => {
 
       // Format a date like expected by the reporting service
       const day = (d) => util.format('%d-%d-%d', d.getUTCFullYear(),
-          d.getUTCMonth() + 1, d.getUTCDate());
+        d.getUTCMonth() + 1, d.getUTCDate());
 
       // Get a usage report for the test organization
       let gets = 0;
@@ -210,8 +213,8 @@ describe('abacus-demo-client', () => {
             // Compare the usage report we got with the expected report
             console.log('Processed %d usage docs', processed(val));
             try {
-              expect(omit(val.body, ['id', 'start', 'end'])).to.deep.equal(
-                report);
+              expect(omit(val.body,
+                ['id', 'start', 'end'])).to.deep.equal(report);
               console.log('\n', util.inspect(val.body, {
                 depth: 10
               }), '\n');
@@ -222,9 +225,8 @@ describe('abacus-demo-client', () => {
               // after 1 second, give up after the configured timeout
               // still not getting the expected report then something
               // must have failed in the processing of that usage
-              if (++gets === timeout / 250) {
-                console.log(
-                  'All submitted usage still not processed\n');
+              if(++gets === timeout / 250) {
+                console.log('All submitted usage still not processed\n');
                 throw e;
               }
             }
@@ -236,11 +238,11 @@ describe('abacus-demo-client', () => {
       // been processed
       const wait = (done) => {
         console.log('\nRetrieving usage report');
-        const i = setInterval(() => get(() => done(clearInterval(i))),
-          250);
+        const i = setInterval(() => get(() => done(clearInterval(i))), 250);
       };
 
       // Run the above steps
       map(usage, (u) => post(u, () => wait(done)));
     });
 });
+

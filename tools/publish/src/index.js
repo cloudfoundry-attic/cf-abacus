@@ -29,8 +29,8 @@ var mkdirs = function(pubdir, cb) {
 
 // Return the version of a local dependency
 var version = function(file) {
-  return JSON.parse(fs.readFileSync(path.resolve(process.cwd(), file.substr(5),
-    'package.json')).toString()).version;
+  return JSON.parse(fs.readFileSync(path.resolve(
+    process.cwd(), file.substr(5), 'package.json')).toString()).version;
 };
 
 // Convert local dependencies to public versioned dependencies
@@ -98,7 +98,7 @@ var runCLI = function() {
   // Create the directories we need
   var pubdir = path.resolve(process.cwd(), '.publish');
   mkdirs(pubdir, function(err) {
-    if (err) {
+    if(err) {
       console.log('Couldn\'t setup publish layout -', err);
       process.exit(1);
     }
@@ -106,21 +106,21 @@ var runCLI = function() {
     // Pack the module
     var mod = require(path.join(process.cwd(), 'package.json'));
     pack(mod.name, mod.version, pubdir, function(code, tgz) {
-      if (code) {
+      if(code) {
         console.log('Couldn\'t pack module -', code);
         process.exit(code);
       }
 
       // Convert the module's package.json
       repackage(mod, pubdir, function(err, pkg) {
-        if (err) {
+        if(err) {
           console.log('Couldn\'t repackage package.json -', err);
           process.exit(1);
         }
 
         // Publish the module
         publish(tgz, pubdir, function(err) {
-          if (err) {
+          if(err) {
             console.log('Couldn\'t publish module -', err);
             process.exit(1);
           }
@@ -132,3 +132,4 @@ var runCLI = function() {
 
 // Export our CLI
 module.exports.runCLI = runCLI;
+

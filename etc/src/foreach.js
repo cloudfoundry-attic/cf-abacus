@@ -35,7 +35,7 @@ var throttle = function(fn, max) {
   var queue = [];
 
   var run = function(callargs) {
-    if (running === max) return queue.push(callargs);
+    if(running === max) return queue.push(callargs);
 
     running = running + 1;
     var cb = last(callargs);
@@ -43,7 +43,7 @@ var throttle = function(fn, max) {
       cb(err, val);
 
       running = running - 1;
-      if (queue.length) {
+      if(queue.length) {
         var next = queue.shift();
         process.nextTick(function() {
           run(next);
@@ -102,18 +102,19 @@ var runCLI = function() {
     function(dep) {
       return rx.test(dep[0]) && /^file:/.test(dep[1]);
     }), function(dep) {
-    var resolve = function(s) {
-      return s.replace(/\:name/, dep[0]).replace(/:path/, dep[1].split(
-        ':')[1]);
-    };
+      var resolve = function(s) {
+        return s.replace(/\:name/, dep[0])
+          .replace(/:path/, dep[1].split(':')[1]);
+      };
 
-    // Run the given command on each module
-    exec(resolve(rest(process.argv, 4).join(' ')), resolve(process.argv[3]),
-      function(err, val) {
-        if (err) process.exit(err);
-      });
-  });
+      // Run the given command on each module
+      exec(resolve(rest(process.argv, 4).join(' ')),
+        resolve(process.argv[3]), function(err, val) {
+          if(err) process.exit(err);
+        });
+    });
 };
 
 // Export our CLI
 module.exports.runCLI = runCLI;
+

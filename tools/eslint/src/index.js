@@ -13,8 +13,8 @@ var cli = require('eslint').cli;
 
 // Run the ESLint CLI
 var runCLI = function() {
-  var xc = cli.execute([process.argv[0], process.argv[1], '-c', path.resolve(
-    __dirname, '../.eslintrc'), 'src']);
+  var xc = cli.execute([process.argv[0], process.argv[1],
+    '-c', path.resolve(__dirname, '../.eslintrc'), 'src']);
 
   // Wait for the stdout buffer to drain and return the exit code from ESLint
   process.on('exit', function() {
@@ -24,3 +24,4 @@ var runCLI = function() {
 
 // Export our module function
 module.exports.runCLI = runCLI;
+

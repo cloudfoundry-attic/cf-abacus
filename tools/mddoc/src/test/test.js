@@ -25,10 +25,8 @@ describe('abacus-mddoc', function() {
   it('converts Markdown to HTML', function(done) {
     // Simulate Markdown from stdin
     var stdin = new stream.Readable();
-    stdin.push(
-      '# Title\ntext\n![test png](https://example.org/test.png)\n!' +
-      '[test svg](https://example.org/test.svg)'
-    );
+    stdin.push('# Title\ntext\n![test png](https://example.org/test.png)\n!' +
+      '[test svg](https://example.org/test.svg)');
     stdin.push(null);
 
     // Capture stdout and check the generated HTML
@@ -52,14 +50,12 @@ describe('abacus-mddoc', function() {
 
       // Expect external images
       expect(request.get.args.length).to.equal(2);
-      expect(request.get.args[0][0]).to.equal(
-        'https://example.org/test.png');
-      expect(request.get.args[1][0]).to.equal(
-        'https://example.org/test.svg');
-      expect(html).to.match(new RegExp(util.format(
-        '"data:image/png;base64,%s"', img64)));
-      expect(html).to.match(new RegExp(util.format(
-        '"data:image/svg\\+xml;base64,%s"', img64)));
+      expect(request.get.args[0][0]).to.equal('https://example.org/test.png');
+      expect(request.get.args[1][0]).to.equal('https://example.org/test.svg');
+      expect(html).to.match(
+        new RegExp(util.format('"data:image/png;base64,%s"', img64)));
+      expect(html).to.match(
+        new RegExp(util.format('"data:image/svg\\+xml;base64,%s"', img64)));
 
       // Include our css
       done();
@@ -69,3 +65,4 @@ describe('abacus-mddoc', function() {
     mddoc.runCLI(stdin, stdout);
   });
 });
+

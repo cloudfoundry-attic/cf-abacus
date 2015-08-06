@@ -47,8 +47,9 @@ request.post(host + '/v1/metering/services/:service_id/usage', {
   body: batch
 }, (err, val) => {
   console.log('Response', err ? err : val.statusCode);
-  if (!err) {
+  if(!err) {
     console.log(val.headers.location);
     map(val.body, (loc) => console.log('  %s', loc));
   }
 });
+

@@ -18,8 +18,8 @@ var cond = function(x, y) {
 // Again here, only one of the branches is covered
 /* eslint no-else-return: 1 */
 var ifelse = function(x, y) {
-  if (x === 0) return y;
-  else if (x === 1) return 1 + y;
+  if(x === 0) return y;
+  else if(x === 1) return 1 + y;
   else return x + y;
 };
 
@@ -33,3 +33,4 @@ module.exports.straight = straight;
 module.exports.cond = cond;
 module.exports.ifelse = ifelse;
 module.exports.blah = blah;
+

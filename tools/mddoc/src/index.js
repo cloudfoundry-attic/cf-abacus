@@ -33,7 +33,7 @@ var runCLI = function(stdin, stdout) {
     typographer: true,
     quotes: '“”‘’',
     highlight: function(str, lang) {
-      if (lang && hljs.getLanguage(lang))
+      if(lang && hljs.getLanguage(lang))
         try {
           return hljs.highlight(lang, str).value;
         }
@@ -45,7 +45,7 @@ var runCLI = function(stdin, stdout) {
   // Read HTML Hogan template
   fs.readFile(path.resolve(__dirname, '../html/index.html'), function(err,
     template) {
-    if (err) {
+    if(err) {
       process.stderr.write(util.format(
         'Couldn\'t read HTML template %s\n', err));
       return;
@@ -60,8 +60,7 @@ var runCLI = function(stdin, stdout) {
     sin.on('end', function() {
       // Render markdown input and merge into HTML template
       var html = hogan.compile(template.toString()).render({
-        __dirname: path.relative(process.cwd(), path.resolve(
-          __dirname, '..')),
+        __dirname: path.relative(process.cwd(), path.resolve(__dirname, '..')),
         markdown: md.render(input.join())
       });
 
@@ -73,21 +72,21 @@ var runCLI = function(stdin, stdout) {
         file) {
         // Get external resources using the request module
         var r = /.*\/(.*):\/(.*)/.exec(file);
-        return r ? request.get(r.slice(1, 3).join('://')) : fscrs(
-          file);
+        return r ? request.get(r.slice(1, 3).join('://')) : fscrs(file);
       });
       s.pipe(inliner({
-          basedir: process.cwd()
-        })).
+        basedir: process.cwd()
+      })).
         // Fix the svg content types
-      pipe(es.replace(/"data:image\/svg.*;base64,/,
-          '"data:image/svg+xml;base64,')).
+        pipe(es.replace(
+          /"data:image\/svg.*;base64,/, '"data:image/svg+xml;base64,')).
         // Adjust the links to other markdown files
-      pipe(es.replace(/\.md"/, '.html"')).
+        pipe(es.replace(/\.md"/, '.html"')).
         // Write the final doc out
-      pipe(sout);
+        pipe(sout);
     });
   });
 };
 
 module.exports.runCLI = runCLI;
+

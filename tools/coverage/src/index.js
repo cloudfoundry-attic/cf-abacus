@@ -23,13 +23,14 @@ var flatten = _.flatten;
 var reduce = _.reduce;
 var identity = _.identity;
 var memoize = _.memoize;
+var contains = _.contains;
 
 /* eslint no-process-exit: 1 */
 
 // Return the path of the Abacus module dir containing a file
 var moddir = function(file) {
-  if (file === '.' || file === '/') return undefined;
-  if (/abacus.*/.test(path.basename(file))) return file;
+  if(file === '.' || file === '/') return undefined;
+  if(/abacus.*/.test(path.basename(file))) return file;
   return moddir(path.dirname(file));
 };
 
@@ -44,13 +45,13 @@ var sources = function(root, cov) {
 
     // Determine the path to the module source directory
     var sdir = root.dependencies[mod] || root.devDependencies[mod];
-    if (!sdir)
+    if(!sdir)
       return [file[0], file[1]];
 
     // Return a covered object with a relative path to the original source
     // of the covered file
-    var lib = path.join(sdir, file[0].substr(mdir.length + 1)).split(
-      ':').reverse()[0].split('/');
+    var lib = path.join(sdir, file[0].substr(mdir.length + 1))
+      .split(':').reverse()[0].split('/');
     var l = lib.lastIndexOf('lib');
     var src = lib.slice(0, l).concat(['src']).concat(lib.slice(l + 1))
       .join('/');
@@ -66,19 +67,18 @@ var sources = function(root, cov) {
 // Return a list of all the individual json coverage files for our modules
 var covfiles = function(cb) {
   fs.readdir('node_modules', function(err, files) {
-    cb(undefined, filter([path.join('.coverage', 'coverage.json')].concat(
-      err ? [] :
-      map(files, function(file) {
-        return path.join('node_modules', file, '.coverage',
-          'coverage.json');
-      })), fs.existsSync));
+    cb(undefined,
+      filter([path.join('.coverage', 'coverage.json')]
+        .concat(err ? [] : map(files, function(file) {
+          return path.join('node_modules', file, '.coverage', 'coverage.json');
+        })), fs.existsSync));
   });
 };
 
 // Return a coverage collector loaded with all the given files
 var collect = function(root, cb) {
   covfiles(function(err, files) {
-    if (err) cb(err);
+    if(err) cb(err);
     var collector = new istanbul.Collector();
     map(files, function(file) {
       collector.add(sources(root, JSON.parse(fs.readFileSync(file))));
@@ -126,8 +126,8 @@ var percentages = function(coverage) {
   // Return the coverage percentages
   return {
     l: t.l.covered / (t.l.total || 1) * 100,
-    s: (t.s.covered + /*t.b.covered*/ 0) / (t.s.total + /*t.b.total*/ 0 || 1) *
-      100
+    s: (t.s.covered + /*t.b.covered*/ 0) /
+      (t.s.total + /*t.b.total*/ 0 || 1) * 100
   };
 };
 
@@ -138,8 +138,8 @@ var colors = memoize(function() {
     return c !== undefined && c !== '0' && c !== 'false' && c !==
       'disabled' && c !== 'no';
   };
-  return tty.isatty(process.stdout) || _.contains(process.argv, '--colors') ||
-    enabled(process.env.COVERAGE_COLORS);
+  return tty.isatty(process.stdout) ||
+    contains(process.argv, '--colors') || enabled(process.env.COVERAGE_COLORS);
 });
 
 // Report a failure and exit
@@ -155,15 +155,14 @@ var runCLI = function() {
 
   // Collect all the individual json coverage reports for our modules
   collect(root, function(err, collector) {
-    if (err) fail(util.format('Couldn\'t collect coverage files', err));
+    if(err) fail(util.format('Couldn\'t collect coverage files', err));
 
     // Combine all the individual reports and write overall coverage
     // reports in LCOV and JSON formats
     var reporter = new istanbul.Reporter(undefined, '.coverage');
     reporter.addAll(['lcovonly', 'json']);
     reporter.write(collector, false, function(err) {
-      if (err) fail(util.format('Couldn\'t write coverage reports',
-        err, '\n'));
+      if(err) fail(util.format('Couldn\'t write coverage reports', err, '\n'));
 
       // Compute and report overall line and statement coverage
       var percent = percentages(collector.getFinalCoverage());
@@ -185,3 +184,4 @@ var runCLI = function() {
 
 // Export our public functions
 module.exports.runCLI = runCLI;
+

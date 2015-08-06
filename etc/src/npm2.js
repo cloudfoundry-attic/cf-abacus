@@ -22,14 +22,14 @@ var run = function(cmd, cb) {
 // Command line interface
 var runCLI = function() {
   cp.exec('npm --version', function(err, v) {
-    if (err) {
+    if(err) {
       process.stderr.out(util.format('Couldn\'t run npm -', err, '\n'));
       process.exit(1);
     }
-    if (v && v.trim() >= '2') return run('npm');
+    if(v && v.trim() >= '2') return run('npm');
     var lnpm = 'node_modules/.bin/npm';
     cp.exec(lnpm + ' --version', function(err, v) {
-      if (!err && v && v.trim() >= '2') return run(lnpm);
+      if(!err && v && v.trim() >= '2') return run(lnpm);
       cp.spawn('npm', ['install', 'npm@2.10.1'], {
         stdio: 'inherit'
       }).on('close', function(code) {
@@ -41,3 +41,4 @@ var runCLI = function() {
 
 // Export our CLI
 module.exports.runCLI = runCLI;
+
