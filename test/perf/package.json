@@ -32,14 +32,15 @@
   "dependencies": {
     "abacus-mocha": "file:../../tools/mocha",
     "abacus-request": "file:../../lib/utils/request",
-    "abacus-debug": "file:../../lib/utils/debug"
+    "abacus-throttle": "file:../../lib/utils/throttle",
+    "abacus-debug": "file:../../lib/utils/debug",
+    "underscore": "^1.8.3",
+    "commander": "2.8.1"
   },
   "devDependencies": {
     "abacus-babel": "file:../../tools/babel",
     "abacus-eslint": "file:../../tools/eslint",
-    "abacus-publish": "file:../../tools/publish",
-    "underscore": "^1.8.3",
-    "commander": "2.8.1"
+    "abacus-publish": "file:../../tools/publish"
   },
   "engines": {
     "node": ">=0.10.0",
