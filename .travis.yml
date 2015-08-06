@@ -1,19 +1,17 @@
 language: node_js
-
 install: echo "install"
-
 script: npm run build
 after_script: npm run coveralls
-
 node_js:
-  - "0.12"
-  - "iojs"
-  - "0.10"
-
+- '0.12'
+- iojs
+- '0.10'
 notifications:
   irc:
     use_notice: true
     on_success: change
     on_failure: change
     channels:
-      - chat.freenode.net#cf-abacus
+    - chat.freenode.net#cf-abacus
+  slack:
+    secure: ZanKYSBhluB1KMzd003+7PiASbgKKwNKl3Ucc4B3wuFWdpdNp/K4/AxPnjGTIRvFtyMtvHf+392bURxBWQMypyW+FMQXGOnJD+bVrVhzxAVc10smkT59NcemWry4gwHQlPF22MB+EoYqnsqXLFltMalEzRC+sjiXED7ZguUD7SJquRmydIlBHkU8hqbGwLg78oNS9WarhvikjsrKchNfSLe3pOMCspgpNQ4KAY+KdrUB4hAqlaul+WdUz3ivaazQZXtV4Rq9i9ADHh7WgyF1SYSWrqAQXuiM5KnwaD/m3lL01F9wxfK/NbuPH6gYg1XZhxhGBw4uT+udWZ3YFQy/G3YRu8URx1er+evI8JMhjjO+BIO1K3geEQ1Kmu1FdCeuhtbWVo0fokLkQGISVc0llgjIC1PR8NMMtDHTvUiK44F8GRONnT9tmKTyJBfRCwD23NV6oWPH2LL6uCya4CmveaKSz1G3IjulGGCdxCkIMjraw/J7fkg8INc9lhEl8Uim7pIJkDjuNp8zf4AGOTUpX1O9RMMvQkWqmpkf4Gug/JFcMAiX1WEQ6/5M3Q3HBLW3fe2DEp1H+A9RakA/QMGIytFm9oAnUGhad20wmvPlAaWxY+UpLHH/VNx7X5k/DhygSKnORuHLuR821LXCuLROEh5dtxdZckxXWFJH11xXhlw=
