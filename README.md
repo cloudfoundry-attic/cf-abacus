@@ -1,6 +1,8 @@
 CF-Abacus
 ===
 
+[![Join the chat at https://gitter.im/cloudfoundry-incubator/cf-abacus](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/cloudfoundry-incubator/cf-abacus?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 The Abacus usage metering and aggregation service.
 
 [![Build Status](https://travis-ci.org/cloudfoundry-incubator/cf-abacus.svg)](https://travis-ci.org/cloudfoundry-incubator/cf-abacus) [![Coverage Status](https://coveralls.io/repos/cloudfoundry-incubator/cf-abacus/badge.svg?branch=master&service=github)](https://coveralls.io/github/cloudfoundry-incubator/cf-abacus?branch=master)
