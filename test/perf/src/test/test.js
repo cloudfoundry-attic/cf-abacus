@@ -210,8 +210,8 @@ describe('abacus-test-perf', () => {
           }
           catch (e) {
             // If the comparison fails we'll be called again to retry
-            // after 1 second, but give up after the computed timeout
-            if(++gets === timeout / 250)
+            // after 250 msec, but give up after the computed timeout
+            if(++gets === timeout * Math.max(1, orgs / 4) / 250)
               throw e;
           }
         });
