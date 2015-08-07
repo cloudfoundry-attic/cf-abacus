@@ -31,7 +31,8 @@
   },
   "dependencies": {
     "abacus-mocha": "file:../../tools/mocha",
-    "abacus-request": "file:../../lib/utils/request"
+    "abacus-request": "file:../../lib/utils/request",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-babel": "file:../../tools/babel",
