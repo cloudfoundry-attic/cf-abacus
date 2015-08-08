@@ -51,7 +51,7 @@ const usage = commander.usagedocs || 1;
 const delta = commander.delta || 0;
 
 describe('abacus-test-perf', () => {
-  it('measures the performance of concurrent usage submissions', (done) => {
+  it('measures performance of concurrent usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs, with
     // a minimum of 20 secs
     const timeout = Math.max(20000,
