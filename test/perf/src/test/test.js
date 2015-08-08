@@ -54,18 +54,17 @@ describe('abacus-test-perf', () => {
   it('measures the performance of concurrent usage submissions', (done) => {
     // Configure the test timeout based on the number of usage docs, with
     // a minimum of 20 secs
-    const timeout = Math.max(20000, 100 * orgs * serviceInstances *
-      usage);
+    const timeout = Math.max(20000,
+      100 * orgs * serviceInstances * usage);
     this.timeout(timeout + 2000);
 
     // Return a usage with unique start and end time based on a number
     const start = 1435629365220 + delta;
     const end = 1435629465220 + delta;
-    const siid = (o, si) => ['0b39fa70-a65f-4183-bae8-385633ca5c87', o +
-      1, si + 1
-      ].join('-');
-    const orgid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27', o + 1]
-        .join('-');
+    const siid = (o, si) => ['0b39fa70-a65f-4183-bae8-385633ca5c87',
+      o + 1, si + 1].join('-');
+    const orgid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+      o + 1].join('-');
 
     const usageTemplate = (o, si, i) => ({
         service_instances: [{
@@ -146,17 +145,16 @@ describe('abacus-test-perf', () => {
 
     // Post one usage doc, throttled to 1000 concurrent requests
     const post = throttle((o, si, i, cb) => {
-      debug('Submitting org%d instance%d usage%d', o + 1, si + 1, i +
-        1);
-      request.post('http://localhost:9080/v1/metering/services/storage/usage', {
-        body: usageTemplate(o, si, i)
-      }, (err, val) => {
-        expect(err).to.equal(undefined);
-        expect(val.statusCode).to.equal(201);
-        debug('Completed submission org%d instance%d usage%d',
-          o + 1, si + 1, i + 1);
-        cb(err, val);
-      });
+      debug('Submitting org%d instance%d usage%d',
+        o + 1, si + 1, i + 1);
+      request.post('http://localhost:9080/v1/metering/services/storage/usage',
+        { body: usageTemplate(o, si, i) }, (err, val) => {
+          expect(err).to.equal(undefined);
+          expect(val.statusCode).to.equal(201);
+          debug('Completed submission org%d instance%d usage%d',
+            o + 1, si + 1, i + 1);
+          cb(err, val);
+        });
     });
 
     // Post the requested number of usage docs
@@ -165,9 +163,8 @@ describe('abacus-test-perf', () => {
       const cb = () => {
         if(++posts === orgs * serviceInstances * usage) done();
       };
-      map(range(orgs), (o) => map(
-        range(serviceInstances), (si) => map(
-          range(usage), (i) => post(o, si, i, cb))));
+      map(range(orgs), (o) => map(range(serviceInstances), (si) =>
+        map(range(usage), (i) => post(o, si, i, cb))));
     };
 
     // Print the number of usage docs already processed given a get report
@@ -184,35 +181,31 @@ describe('abacus-test-perf', () => {
     };
 
     // Format a date like expected by the reporting service
-    const day = (d) => util.format(
-      '%d-%d-%d', d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+    const day = (d) => util.format('%d-%d-%d',
+      d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
 
     // Get a usage report for the test organization
     let gets = 0;
     const get = (o, done) => {
       request.get('http://localhost:9088' + '/v1/organizations/' +
-        orgid(o) + '/usage/:day', {
-          day: day(new Date(start))
-        }, (err, val) => {
+        orgid(o) + '/usage/:day', { day: day(new Date(start)) },
+        (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(200);
 
           // Compare the usage report we got with the expected report
-          console.log(
-            'Processed %d usage docs for org%d', processed(val), o + 1);
+          console.log('Processed %d usage docs for org%d',
+            processed(val), o + 1);
           try {
-            expect(omit(val.body, ['id', 'start', 'end']))
-              .to.deep.equal(report(o, serviceInstances, usage));
-            console.log('\n', util.inspect(val.body, {
-              depth: 10
-            }), '\n');
+            expect(omit(val.body, ['id', 'start', 'end'])).to.deep.
+              equal(report(o, serviceInstances, usage));
+            console.log('\n', util.inspect(val.body, { depth: 10 }), '\n');
             done();
           }
           catch (e) {
             // If the comparison fails we'll be called again to retry
             // after 250 msec, but give up after the computed timeout
-            if(++gets === timeout * Math.max(1, orgs / 4) / 250)
-              throw e;
+            if(++gets === timeout * Math.max(1, orgs / 4) / 250) throw e;
           }
         });
     };
@@ -223,9 +216,8 @@ describe('abacus-test-perf', () => {
     let verified = 0;
     const wait = (done) => {
       console.log('\nRetrieving usage reports');
-      const cb = () => {
-        if(++verified === orgs) done();
-      };
+      const cb = () => { if(++verified === orgs) done(); };
+
       map(range(orgs), (o) => {
         const i = setInterval(() => get(o, () => cb(clearInterval(i))), 250);
       });
