@@ -16,6 +16,7 @@ const _ = require('underscore');
 
 const commander = require('commander');
 
+const batch = require('abacus-batch');
 const request = require('abacus-request');
 const throttle = require('abacus-throttle');
 const util = require('util');
@@ -24,8 +25,10 @@ const map = _.map;
 const range = _.range;
 const omit = _.omit;
 
+const brequest = batch(request);
+
 // Setup the debug log
-const debug = require('abacus-debug')('abacus-test-perf');
+const debug = require('abacus-debug')('abacus-perf-test');
 
 commander.option(
   '-o, --orgs <n>', 'Number of organizations', parseInt);
@@ -50,7 +53,7 @@ const usage = commander.usagedocs || 1;
 // Usage time window shift in milli-seconds
 const delta = commander.delta || 0;
 
-describe('abacus-test-perf', () => {
+describe('abacus-perf-test', () => {
   it('measures performance of concurrent usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs, with
     // a minimum of 20 secs
@@ -147,7 +150,7 @@ describe('abacus-test-perf', () => {
     const post = throttle((o, si, i, cb) => {
       debug('Submitting org%d instance%d usage%d',
         o + 1, si + 1, i + 1);
-      request.post('http://localhost:9080/v1/metering/services/storage/usage',
+      brequest.post('http://localhost:9080/v1/metering/services/storage/usage',
         { body: usageTemplate(o, si, i) }, (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);
@@ -187,7 +190,7 @@ describe('abacus-test-perf', () => {
     // Get a usage report for the test organization
     let gets = 0;
     const get = (o, done) => {
-      request.get('http://localhost:9088' + '/v1/organizations/' +
+      brequest.get('http://localhost:9088' + '/v1/organizations/' +
         orgid(o) + '/usage/:day', { day: day(new Date(start)) },
         (err, val) => {
           expect(err).to.equal(undefined);

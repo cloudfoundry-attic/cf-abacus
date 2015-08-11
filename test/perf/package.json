@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "abacus-mocha": "file:../../tools/mocha",
+    "abacus-batch": "file:../../lib/utils/batch",
     "abacus-request": "file:../../lib/utils/request",
     "abacus-throttle": "file:../../lib/utils/throttle",
     "abacus-debug": "file:../../lib/utils/debug",
