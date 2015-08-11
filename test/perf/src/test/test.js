@@ -166,8 +166,8 @@ describe('abacus-perf-test', () => {
       const cb = () => {
         if(++posts === orgs * serviceInstances * usage) done();
       };
-      map(range(orgs), (o) => map(range(serviceInstances), (si) =>
-        map(range(usage), (i) => post(o, si, i, cb))));
+      map(range(usage), (u) => map(range(serviceInstances), (si) =>
+        map(range(orgs), (o) => post(o, si, u, cb))));
     };
 
     // Print the number of usage docs already processed given a get report
