@@ -197,9 +197,12 @@ describe('abacus-demo-client', () => {
       };
 
       // Format a date like expected by the reporting service
-      const numFmt = (num, mask) => (mask + num).slice(-Math.max(mask.length, (num + "").length));
-      const day = (d) => util.format('%s-%s-%s', numFmt(d.getUTCFullYear(), "0000"),
-        numFmt(d.getUTCMonth() + 1, "00"), numFmt(d.getUTCDate(), "00"));
+      const numFmt = (num, mask) => (mask + num).slice(-Math.max(mask.length,
+        (num + '').length));
+      const day = (d) => util.format('%s-%s-%s',
+        numFmt(d.getUTCFullYear(), '0000'),
+        numFmt(d.getUTCMonth() + 1, '00'),
+        numFmt(d.getUTCDate(), '00'));
 
       // Get a usage report for the test organization
       let gets = 0;
