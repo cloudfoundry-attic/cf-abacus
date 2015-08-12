@@ -50,11 +50,11 @@ var sources = function(root, cov) {
 
     // Return a covered object with a relative path to the original source
     // of the covered file
-    var lib = path.join(sdir, file[0].substr(mdir.length + 1))
-      .split(':').reverse()[0].split('/');
+    var lib = path.join(sdir,
+      file[0].substr(mdir.length + 1)).split(':').reverse()[0].split('/');
     var l = lib.lastIndexOf('lib');
-    var src = lib.slice(0, l).concat(['src']).concat(lib.slice(l + 1))
-      .join('/');
+    var src =
+      lib.slice(0, l).concat(['src']).concat(lib.slice(l + 1)).join('/');
     return [src, extend(clone(file[1]), {
       path: src
     })];

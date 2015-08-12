@@ -51,7 +51,7 @@ describe('abacus-coverage', function() {
 
       // Expect the collector to contain our main index file
       var files = collector.files();
-      expect(files[0]).to.equal('lib/index.js');
+      expect(files[0]).to.equal('tools/coverage/src/index.js');
 
       done();
     };
