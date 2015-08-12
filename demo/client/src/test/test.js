@@ -125,6 +125,19 @@ describe('abacus-demo-client', () => {
           }, {
             unit: 'HEAVY_API_CALLS_PER_MONTH',
             quantity: 300
+          }],
+          plans: [{
+            id: 'plan_123',
+            aggregated_usage: [{
+              unit: 'STORAGE_PER_MONTH',
+              quantity: 1
+            }, {
+              unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
+              quantity: 3
+            }, {
+              unit: 'HEAVY_API_CALLS_PER_MONTH',
+              quantity: 300
+            }]
           }]
         }],
         spaces: [{
@@ -140,6 +153,19 @@ describe('abacus-demo-client', () => {
             }, {
               unit: 'HEAVY_API_CALLS_PER_MONTH',
               quantity: 300
+            }],
+            plans: [{
+              id: 'plan_123',
+              aggregated_usage: [{
+                unit: 'STORAGE_PER_MONTH',
+                quantity: 1
+              }, {
+                unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
+                quantity: 3
+              }, {
+                unit: 'HEAVY_API_CALLS_PER_MONTH',
+                quantity: 300
+              }]
             }]
           }],
           consumers: [{
@@ -155,6 +181,19 @@ describe('abacus-demo-client', () => {
               }, {
                 unit: 'HEAVY_API_CALLS_PER_MONTH',
                 quantity: 300
+              }],
+              plans: [{
+                id: 'plan_123',
+                aggregated_usage: [{
+                  unit: 'STORAGE_PER_MONTH',
+                  quantity: 1
+                }, {
+                  unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
+                  quantity: 3
+                }, {
+                  unit: 'HEAVY_API_CALLS_PER_MONTH',
+                  quantity: 300
+                }]
               }]
             }]
           }]
