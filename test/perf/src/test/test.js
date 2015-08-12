@@ -108,7 +108,21 @@ describe('abacus-perf-test', () => {
             {
               unit: 'HEAVY_API_CALLS_PER_MONTH',
               quantity: 100 * nsi * n
-            }]
+            }],
+          plans: [{
+            id: 'plan_123',
+            aggregated_usage: [{
+              unit: 'STORAGE_PER_MONTH',
+              quantity: 1 * nsi
+            }, {
+              unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
+              quantity: 1 * nsi * n
+            },
+              {
+                unit: 'HEAVY_API_CALLS_PER_MONTH',
+                quantity: 100 * nsi * n
+              }]
+          }]
         }],
         spaces: [{
           id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
@@ -124,7 +138,21 @@ describe('abacus-perf-test', () => {
               {
                 unit: 'HEAVY_API_CALLS_PER_MONTH',
                 quantity: 100 * nsi * n
-              }]
+              }],
+            plans: [{
+              id: 'plan_123',
+              aggregated_usage: [{
+                unit: 'STORAGE_PER_MONTH',
+                quantity: 1 * nsi
+              }, {
+                unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
+                quantity: 1 * nsi * n
+              },
+                {
+                  unit: 'HEAVY_API_CALLS_PER_MONTH',
+                  quantity: 100 * nsi * n
+                }]
+            }]
           }],
           consumers: [{
             id: 'all',
@@ -140,7 +168,21 @@ describe('abacus-perf-test', () => {
                 {
                   unit: 'HEAVY_API_CALLS_PER_MONTH',
                   quantity: 100 * nsi * n
-                }]
+                }],
+              plans: [{
+                id: 'plan_123',
+                aggregated_usage: [{
+                  unit: 'STORAGE_PER_MONTH',
+                  quantity: 1 * nsi
+                }, {
+                  unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
+                  quantity: 1 * nsi * n
+                },
+                  {
+                    unit: 'HEAVY_API_CALLS_PER_MONTH',
+                    quantity: 100 * nsi * n
+                  }]
+              }]
             }]
           }]
         }]
