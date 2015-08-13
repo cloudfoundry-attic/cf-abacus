@@ -60,6 +60,18 @@ cd cf-abacus
 cf api --skip-ssl-validation https://api.10.244.0.34.xip.io
 cf login -o <your organization> -s <your space>
 
+# Create security group
+cat > abacus_group.json <<EOF
+[
+  {
+    "destination": "10.0.0.0-10.255.255.255",
+    "protocol": "all"
+  }
+]
+EOF
+cf create-security-group abacus abacus_group.json
+cf bind-security-group abacus <your organization> <your space>
+
 # This runs cf push on all the Abacus apps to deploy them to Cloud Foundry
 npm run cfpush
 
