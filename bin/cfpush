@@ -1,5 +1,16 @@
 #!/bin/bash
 
-# Push all the Abacus apps to Cloud Foundry
-etc/apps | awk '{ printf "(cd %s && npm run cfpush)\n", $2 }' | bash -xe
+APPS_FILE=etc/apps
+if [ -n "$1" ]
+  then APPS_FILE=$1
+fi
 
+echo "Using apps list $APPS_FILE"
+
+# Push all the Abacus apps to Cloud Foundry
+$APPS_FILE | awk '{ if (NF==3) { \
+                      printf "(cd %s && npm run cfpush -- -i %s)\n", $2, $3 \
+                    } else { \
+                      printf "(cd %s && npm run cfpush)\n", $2 \
+                    } \
+                  }' | bash -xe
