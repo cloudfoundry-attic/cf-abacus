@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Print the names and paths of the Abacus apps
+# Print the names, paths and instance count of the Abacus apps
 cat <<EOF
 abacus-dbserver lib/utils/dbserver 1
 abacus-provisioning-stub lib/stubs/provisioning 1
