@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Print the names, paths and instance count of the Abacus apps
+cat <<EOF
+abacus-dbserver lib/utils/dbserver
+abacus-provisioning-stub lib/stubs/provisioning
+abacus-account-stub lib/stubs/account
+abacus-usage-collector lib/metering/collector
+abacus-usage-meter lib/metering/meter
+abacus-usage-accumulator lib/aggregation/accumulator
+abacus-usage-aggregator lib/aggregation/aggregator
+abacus-usage-reporting lib/aggregation/reporting
+EOF
