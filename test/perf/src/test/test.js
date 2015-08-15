@@ -1,15 +1,15 @@
 'use strict';
 
-// Simulate a service provider submitting usage for a service, check the
+// Simulate a service provider submitting usage for a resource, check the
 // usage report for those submissions and measure the performance.
 
 // TODO Use Hystrix metrics for internal performance measurements
 
 // Scenarios:
-// - Concurrently submit a usage doc for a service instance
-// - Concurrently submit a usage doc for multiple service instances
+// - Concurrently submit a usage doc for a resource instance
+// - Concurrently submit a usage doc for multiple resource instances
 // - Concurrently submit a usage doc for multiple organizations
-// - TODO add service and space variations
+// - TODO add resource and space variations
 // - TODO submit batch of usage docs in each submission
 
 const _ = require('underscore');
@@ -33,7 +33,7 @@ const debug = require('abacus-debug')('abacus-perf-test');
 commander.option(
   '-o, --orgs <n>', 'Number of organizations', parseInt);
 commander.option(
-  '-i, --instances <n>', 'Number of service instances', parseInt);
+  '-i, --instances <n>', 'Number of resource instances', parseInt);
 commander.option(
   '-u, --usagedocs <n>', 'Number of usage docs', parseInt);
 commander.option(
@@ -44,8 +44,8 @@ commander.parse(process.argv);
 // Number of organizations
 const orgs = commander.orgs || 1;
 
-// Number of service instances
-const serviceInstances = commander.instances || 1;
+// Number of resource instances
+const resourceInstances = commander.instances || 1;
 
 // Number of usage docs
 const usage = commander.usagedocs || 1;
@@ -58,129 +58,128 @@ describe('abacus-perf-test', () => {
     // Configure the test timeout based on the number of usage docs, with
     // a minimum of 20 secs
     const timeout = Math.max(20000,
-      100 * orgs * serviceInstances * usage);
+      100 * orgs * resourceInstances * usage);
     this.timeout(timeout + 2000);
 
     // Return a usage with unique start and end time based on a number
     const start = 1435629365220 + delta;
     const end = 1435629465220 + delta;
-    const siid = (o, si) => ['0b39fa70-a65f-4183-bae8-385633ca5c87',
-      o + 1, si + 1].join('-');
+    const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87',
+      o + 1, ri + 1].join('-');
     const orgid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
       o + 1].join('-');
 
-    const usageTemplate = (o, si, i) => ({
-        service_instances: [{
-          service_instance_id: siid(o, si),
-          usage: [{
-            start: start + i,
-            end: end + i,
-            region: 'eu-gb',
-            organization_guid: orgid(o),
-            space_guid: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-            plan_id: 'plan_123',
-            resources: [{
-              unit: 'BYTE',
-              quantity: 1073741824
-            }, {
-              unit: 'LIGHT_API_CALL',
-              quantity: 1000
-            }, {
-              unit: 'HEAVY_API_CALL',
-              quantity: 100
-            }]
+    const usageTemplate = (o, ri, i) => ({
+        usage: [{
+          start: start + i,
+          end: end + i,
+          region: 'eu-gb',
+          organization_id: orgid(o),
+          space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
+          resource_id: 'storage',
+          plan_id: 'plan_123',
+          resource_instance_id: riid(o, ri),
+          metrics: [{
+            unit: 'BYTE',
+            quantity: 1073741824
+          }, {
+            unit: 'LIGHT_API_CALL',
+            quantity: 1000
+          }, {
+            unit: 'HEAVY_API_CALL',
+            quantity: 100
           }]
         }]
     });
 
     // Return the expected usage report for the test organization
-    const report = (o, nsi, n) => ({
-        organization_guid: orgid(o),
-        services: [{
+    const report = (o, nri, n) => ({
+        organization_id: orgid(o),
+        resources: [{
           id: 'storage',
           aggregated_usage: [{
             unit: 'STORAGE_PER_MONTH',
-            quantity: 1 * nsi
+            quantity: 1 * nri
           }, {
             unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-            quantity: 1 * nsi * n
+            quantity: 1 * nri * n
           },
             {
               unit: 'HEAVY_API_CALLS_PER_MONTH',
-              quantity: 100 * nsi * n
+              quantity: 100 * nri * n
             }],
           plans: [{
             id: 'plan_123',
             aggregated_usage: [{
               unit: 'STORAGE_PER_MONTH',
-              quantity: 1 * nsi
+              quantity: 1 * nri
             }, {
               unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-              quantity: 1 * nsi * n
+              quantity: 1 * nri * n
             },
               {
                 unit: 'HEAVY_API_CALLS_PER_MONTH',
-                quantity: 100 * nsi * n
+                quantity: 100 * nri * n
               }]
           }]
         }],
         spaces: [{
           id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-          services: [{
+          resources: [{
             id: 'storage',
             aggregated_usage: [{
               unit: 'STORAGE_PER_MONTH',
-              quantity: 1 * nsi
+              quantity: 1 * nri
             }, {
               unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-              quantity: 1 * nsi * n
+              quantity: 1 * nri * n
             },
               {
                 unit: 'HEAVY_API_CALLS_PER_MONTH',
-                quantity: 100 * nsi * n
+                quantity: 100 * nri * n
               }],
             plans: [{
               id: 'plan_123',
               aggregated_usage: [{
                 unit: 'STORAGE_PER_MONTH',
-                quantity: 1 * nsi
+                quantity: 1 * nri
               }, {
                 unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-                quantity: 1 * nsi * n
+                quantity: 1 * nri * n
               },
                 {
                   unit: 'HEAVY_API_CALLS_PER_MONTH',
-                  quantity: 100 * nsi * n
+                  quantity: 100 * nri * n
                 }]
             }]
           }],
           consumers: [{
             id: 'all',
-            services: [{
+            resources: [{
               id: 'storage',
               aggregated_usage: [{
                 unit: 'STORAGE_PER_MONTH',
-                quantity: 1 * nsi
+                quantity: 1 * nri
               }, {
                 unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-                quantity: 1 * nsi * n
+                quantity: 1 * nri * n
               },
                 {
                   unit: 'HEAVY_API_CALLS_PER_MONTH',
-                  quantity: 100 * nsi * n
+                  quantity: 100 * nri * n
                 }],
               plans: [{
                 id: 'plan_123',
                 aggregated_usage: [{
                   unit: 'STORAGE_PER_MONTH',
-                  quantity: 1 * nsi
+                  quantity: 1 * nri
                 }, {
                   unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-                  quantity: 1 * nsi * n
+                  quantity: 1 * nri * n
                 },
                   {
                     unit: 'HEAVY_API_CALLS_PER_MONTH',
-                    quantity: 100 * nsi * n
+                    quantity: 100 * nri * n
                   }]
               }]
             }]
@@ -189,15 +188,15 @@ describe('abacus-perf-test', () => {
     });
 
     // Post one usage doc, throttled to 1000 concurrent requests
-    const post = throttle((o, si, i, cb) => {
+    const post = throttle((o, ri, i, cb) => {
       debug('Submitting org%d instance%d usage%d',
-        o + 1, si + 1, i + 1);
-      brequest.post('http://localhost:9080/v1/metering/services/storage/usage',
-        { body: usageTemplate(o, si, i) }, (err, val) => {
+        o + 1, ri + 1, i + 1);
+      brequest.post('http://localhost:9080/v1/metering/resource/usage',
+        { body: usageTemplate(o, ri, i) }, (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);
           debug('Completed submission org%d instance%d usage%d',
-            o + 1, si + 1, i + 1);
+            o + 1, ri + 1, i + 1);
           cb(err, val);
         });
     });
@@ -206,18 +205,18 @@ describe('abacus-perf-test', () => {
     let posts = 0;
     const submit = (done) => {
       const cb = () => {
-        if(++posts === orgs * serviceInstances * usage) done();
+        if(++posts === orgs * resourceInstances * usage) done();
       };
-      map(range(usage), (u) => map(range(serviceInstances), (si) =>
-        map(range(orgs), (o) => post(o, si, u, cb))));
+      map(range(usage), (u) => map(range(resourceInstances), (ri) =>
+        map(range(orgs), (o) => post(o, ri, u, cb))));
     };
 
     // Print the number of usage docs already processed given a get report
     // response, determined from the aggregated usage quantity found in the
-    // report for our test service
+    // report for our test resource
     const processed = (val) => {
       try {
-        return val.body.services[0].aggregated_usage[1].quantity;
+        return val.body.resources[0].aggregated_usage[1].quantity;
       }
       catch (e) {
         // The response doesn't contain a valid report
@@ -243,7 +242,7 @@ describe('abacus-perf-test', () => {
             processed(val), o + 1);
           try {
             expect(omit(val.body, ['id', 'start', 'end'])).to.deep.
-              equal(report(o, serviceInstances, usage));
+              equal(report(o, resourceInstances, usage));
             console.log('\n', util.inspect(val.body, { depth: 10 }), '\n');
             done();
           }

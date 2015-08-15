@@ -1,75 +1,70 @@
-Abacus Metering REST API
+Abacus Metering and Aggregation REST API
 ===
 
-The Abacus Metering REST API is used by service providers and runtimes to submit usage data, usage dashboards to retrieve real time usage reports and usage summaries, and billing systems to retrieve the aggregated and rated usage data needed for billing. 
+The Abacus Usage Metering and Aggregation REST API is used by Cloud resource providers to submit usage data, usage dashboards to retrieve real time usage reports and usage summaries, and billing systems to retrieve the aggregated and rated usage data needed for billing. Cloud resources include services and application runtimes for example.
 
-This API reference is organized by REST resource type. Each resource type has a JSON representation and one or more methods.
+Usage data is exchanged with Abacus in the form of usage documents. Each document type has a JSON representation and one or more methods.
 
-Resource types
+Document types
 ---
 
-Service usage
+Resource usage
 
-Service instance usage
-
-Runtime usage
+Resource configuration
 
 Usage summary
 
 Usage report
 
-Service definition
-
-Service usage
+Resource usage
 ---
 
-The _service usage_ API is used by service providers to submit service usage data to Abacus.
+The _resource usage_ API is used by Cloud resource providers to submit usage for instances of Cloud resources, including service instances and application runtimes.
 
-Usage can be submitted for a given service by POSTing batches of usage data assembled in _service usage_ JSON documents.
+Usage can be submitted by POSTing _resource usage_ documents to Abacus.
 
-Once a batch of usage has been submitted it can be retrieved using GET.
+A _resource usage document_ contains usage data for one or more Cloud resources.
+
+Once a _resource usage_ document has been submitted it can be retrieved using GET.
 
 ### Method: insert
-_HTTP request_: POST /v1/metering/services/:service\_id/usage, with an optional ?region=:region parameter, and a _service usage_ JSON document.
+_HTTP request_: POST /v1/metering/resource/usage with a _resource usage_ document.
 
-_Description_: Creates a batch of usage resources for the specified service.
+_Description_: Records the _resource usage_ document and processes the Cloud resource usage data it contains.
 
-_HTTP response_: 201 to indicate success with the new resource URL in a Location header, 400 to report an invalid request, 500 to report a server error.
+_HTTP response_: 201 to indicate success with the URL of the _resource usage_ document in a Location header, 400 to report an invalid request, 500 to report a server error.
 
 ### Method: get
-_HTTP request_: GET /v1/metering/services/:service\_id/usage/:usage\_batch\_id
+_HTTP request_: GET /v1/metering/resource/usage/:usage\_document\_id
 
-_Description_: Retrieves a batch of usage resources for the specified service and usage id.
+_Description_: Retrieves a previously submitted _resource usage_ document.
 
-_HTTP response_: 200 to indicate success with a _service usage_ JSON document, 404 if the usage is not found, 500 to report a server error.
+_HTTP response_: 200 to indicate success with the requested _resource usage_ document, 404 if the usage is not found, 500 to report a server error.
 
-### JSON Resource representation:
+### JSON representation:
 ```json
 {
-  "service_instances":[
+  "usage": [
     {
-      "service_instance_id":"d98b5916-3c77-44b9-ac12-04d61c7a4eae",
-      "usage":[
+      "start": 1396421450000,
+      "end": 1396421451000,
+      "organization_id": "54257f98-83f0-4eca-ae04-9ea35277a538",
+      "space_id": "d98b5916-3c77-44b9-ac12-04456df23eae",
+      "consumer": {
+        "type": "cloud-foundry-application",
+        "value": "d98b5916-3c77-44b9-ac12-045678edabae"
+      },
+      "resource_id": "sample-resource",
+      "plan_id": "sample-plan",
+      "resource_instance_id": "d98b5916-3c77-44b9-ac12-04d61c7a4eae",
+      "metrics": [
         {
-          "start":1396421450000,
-          "end":1396421451000,
-          "organization_guid":"54257f98-83f0-4eca-ae04-9ea35277a538",
-          "space_guid":"d98b5916-3c77-44b9-ac12-04456df23eae",
-          "plan_id": "sample-plan",
-          "consumer":{
-            "type":"cloud-foundry-application",
-            "value":"d98b5916-3c77-44b9-ac12-045678edabae"
-          },
-          "resources":[
-            {
-              "unit":"GIGABYTE",
-              "quantity":10
-            },
-            {
-              "unit":"API_CALL",
-              "quantity":10
-            }
-          ]
+          "unit": "GIGABYTE",
+          "quantity": 10
+        },
+        {
+          "unit": "API_CALL",
+          "quantity": 10
         }
       ]
     }
@@ -80,147 +75,155 @@ _HTTP response_: 200 to indicate success with a _service usage_ JSON document, 4
 ### JSON Schema:
 ```json
 {
-  "title": "Service Usage",
-  "description": "Usage data for a service",
-  "required": ["service_instances"],
   "type": "object",
+  "required": [
+    "usage"
+  ],
   "properties": {
-    "service_instances": {
+    "usage": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["service_instance_id", "usage"],
+        "required": [
+          "start",
+          "end",
+          "organization_id",
+          "space_id",
+          "resource_id",
+          "plan_id",
+          "resource_instance_id",
+          "metrics"
+        ],
         "properties": {
-            "service_instance_id": {
-              "type": "string"
-            },
-            "usage": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "type": "object",
-                "required": ["start", "end", "plan_id",
-                    "organization_guid", "space_guid", "resources"],
-                "properties": {
-                    "start": {
-                      "type": "integer",
-                      "format": "utc-millisec"
-                    },
-                    "end": {
-                      "type": "integer",
-                      "format": "utc-millisec"
-                    },
-                    "plan_id": {
-                      "type": "string"
-                    },
-                    "region": {
-                      "type": "string"
-                    },
-                    "organization_guid": {
-                      "type": "string"
-                    },
-                    "space_guid": {
-                      "type": "string"
-                    },
-                    "consumer": {
-                      "type": "object",
-                      "required": ["type", "value"],
-                      "properties": {
-                        "type": {
-                          "enum": ["cloud_foundry_application", "external"],
-                          "default": "cloud_foundry_application"
-                        },
-                        "value": {
-                          "type": "string"
-                        }
-                      },
-                      "additionalProperties": false
-                    },
-                    "resources": {
-                      "type": "array",
-                      "minItems": 1,
-                      "items": {
-                        "type": "object",
-                        "required": ["unit", "quantity"],
-                        "properties": {
-                          "name": {
-                            "type": "string"
-                          },
-                          "unit": {
-                            "type": "string"
-                          },
-                          "quantity": {
-                            "type": "number"
-                          }
-                        },
-                        "additionalProperties": false
-                      },
-                      "additionalItems": false
-                    }
-                },
-                "additionalProperties": false
+          "start": {
+            "type": "integer",
+            "format": "utc-millisec"
+          },
+          "end": {
+            "type": "integer",
+            "format": "utc-millisec"
+          },
+          "region": {
+            "type": "string"
+          },
+          "organization_id": {
+            "type": "string"
+          },
+          "space_id": {
+            "type": "string"
+          },
+          "consumer": {
+            "type": "object",
+            "required": [
+              "value"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "cloud_foundry_application",
+                  "external"
+                ],
+                "default": "cloud_foundry_application"
               },
-              "additionalItems": false
-            }
+              "value": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "resource_id": {
+            "type": "string"
+          },
+          "plan_id": {
+            "type": "string"
+          },
+          "resource_instance_id": {
+            "type": "string"
+          },
+          "metrics": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "unit",
+                "quantity"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": false
+            },
+            "additionalItems": false
+          }
         },
         "additionalProperties": false
       },
       "additionalItems": false
     }
   },
-  "additionalProperties": false
+  "additionalProperties": false,
+  "title": "Resource Usage",
+  "description": "Usage data for resource instances"
 }
 ```
 
-Service instance usage
+Cloud resource definitions
 ---
 
-The _service instance usage_ API is used by service providers to submit service usage data to Abacus.
+Cloud resource definition documents are used to configure the types of metrics, units, metering, aggregation and rating formulas used by Abacus to meter and rate usage for each type of Cloud resource.
 
-Usage can be submitted for a given service instance by POSTing batches of usage data assembled in _service instance usage_ JSON documents.
+Cloud resource definition documents are currently provided as JSON configuration files, but a simple REST API could also be defined for them.
 
-Once a batch of usage has been submitted it can be retrieved using GET.
-
-### Method: insert
-_HTTP request_: POST /v1/metering/service\_instances/:service\_instance\_id/usage, with an optional ?region=:region parameter, and a _service instance usage_ JSON document.
-
-_Description_: Creates a batch of usage resources for the specified service instance.
-
-_HTTP response_: 201 to indicate success with the new resource URL in a Location header, 400 to report an invalid request, 500 to report a server error.
-
-### Method: get
-_HTTP request_: GET /v1/metering/service\_instances/:service\_instance\_id/usage/:usage\_id
-
-_Description_: Retrieves a batch of usage resources for the specified service instance and usage id.
-
-_HTTP response_: 200 to indicate success with a _service instance usage_ JSON document, 404 if the usage is not found, 500 to report a server error.
-
-### JSON Resource representation:
+### JSON representation:
 ```json
 {
-  "service_id":"d98b5916-3c77-44b9-ac12-04d61c7a4eae",
-  "usage":[
+  "id":"8e9f8a35-dc03-4192-8bba-a77ae60222eb",
+  "metrics": [
     {
-      "start":1396421450000,
-      "end":1396421451000,
-      "organization_guid":"54257f98-83f0-4eca-ae04-9ea35277a538",
-      "space_guid":"d98b5916-3c77-44b9-ac12-04d61c7123df",
-      "plan_id": "sample-plan",
-      "consumer":{
-        "type":"cloud-foundry-application",
-        "value":"d98b5916-3c77-44b9-ac12-046780abc45e"
-      },
-      "resources":[
+      "name": "Storage",
+      "units": [
         {
-          "unit":"GIGABYTE",
-          "quantity":10
-        },
-        {
-          "unit":"API_CALL",
-          "quantity":10
+          "name": "GIGABYTE",
+          "quantityType": "CURRENT"
         }
       ]
+    },
+    {
+      "name": "ApiCalls",
+      "units": [
+        {
+          "name": "API_CALL",
+          "quantityType": "DELTA"
+        }
+      ]
+    }
+  ],
+  "aggregations": [
+    {
+      "id": "GB_PER_MONTH",
+      "unit": "GIGABYTE",
+      "aggregationGroup": {
+        "name": "monthly"
+      },
+      "meter": "AVG({GIGABYTE})"
+    },
+    {
+      "id": "API_CALLS_PER_MONTH",
+      "unit": "API_CALL",
+      "aggregationGroup": {
+        "name": "monthly"
+      },
+      "meter": "SUM({API_CALL})"
     }
   ]
 }
@@ -229,230 +232,113 @@ _HTTP response_: 200 to indicate success with a _service instance usage_ JSON do
 ### JSON Schema:
 ```json
 {
-  "title": "Service Instance Usage",
-  "description": "Usage data for a service instance",
   "type": "object",
-  "required": ["service_id", "usage"],
+  "required": [
+    "id",
+    "metrics",
+    "aggregations"
+  ],
   "properties": {
-    "service_id": {
+    "id": {
       "type": "string"
     },
-    "usage": {
+    "metrics": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["start", "end", "plan_id",
-            "organization_guid", "space_guid", "resources"],
+        "required": [
+          "units"
+        ],
         "properties": {
-            "start": {
-              "type": "integer",
-              "format": "utc-millisec"
-            },
-            "end": {
-              "type": "integer",
-              "format": "utc-millisec"
-            },
-            "plan_id": {
-              "type": "string"
-            },
-            "region": {
-              "type": "string"
-            },
-            "organization_guid": {
-              "type": "string"
-            },
-            "space_guid": {
-              "type": "string"
-            },
-            "consumer": {
+          "name": {
+            "type": "string"
+          },
+          "units": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
               "type": "object",
-              "required": ["type", "value"],
+              "required": [
+                "name",
+                "quantityType"
+              ],
               "properties": {
-                "type": {
-                  "enum": ["cloud_foundry_application", "external"],
-                  "default": "cloud_foundry_application"
-                },
-                "value": {
+                "name": {
                   "type": "string"
+                },
+                "quantityType": {
+                  "enum": [
+                    "DELTA",
+                    "CURRENT"
+                  ]
                 }
               },
               "additionalProperties": false
             },
-            "resources": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "type": "object",
-                "required": ["unit", "quantity"],
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "unit": {
-                    "type": "string"
-                  },
-                  "quantity": {
-                    "type": "number"
-                  }
-                },
-                "additionalProperties": false
-              },
-              "additionalItems": false
-            }
+            "additionalItems": false
+          }
         },
         "additionalProperties": false
       },
       "additionalItems": false
     },
-    "additionalProperties": false
-  }
-}
-```
-
-
-Runtime usage
----
-
-The _runtime usage_  API is used to submit runtime usage data to Abacus.
-
-Usage can be submitted for a given runtime by POSTing batches of usage data assembled in _runtime usage_ JSON documents.
-
-Once a batch of usage has been submitted it can be retrieved using GET.
-
-### Method: insert
-_HTTP request_: POST /v1/runtimes/:runtime\_id/usage, with an optional ?region=:region parameter, and a _runtime usage_ JSON document.
-
-_Description_: Creates a batch of usage resources for the specified runtime.
-
-_HTTP response_: 201 to indicate success with the new resource URL in a Location header, 400 to report an invalid request, 500 to report a server error.
-
-### Method: get
-_HTTP request_: GET /v1/runtimes/:runtime\_id/usage/:usage\_usage\_id
-
-_Description_: Retrieves a batch of usage resources for the specified runtime and usage id.
-
-_HTTP response_: 200 to indicate success with a _runtime usage_ JSON document, 404 if the usage is not found, 500 to report a server error.
-
-### JSON Resource representation:
-```json
-{
-  "usage": [
-    {
-      "start": 1423686058000,
-      "end": 1423686115000,
-      "organization_guid": "ba0c4b54-013c-4fca-af31-6bfb9abd3e5f",
-      "space_guid": "900f5c68-0910-4faf-84ed-24c0b805a9dd",
-      "plan_id": "sample-plan",
-      "consumer": {
-        "type": "cloud_foundry_application",
-        "value": "d3f3f7d1-fb9d-42cf-8a32-22437cba031a"
+    "aggregations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "unit",
+          "meter"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "aggregationGroup": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "enum": [
+                  "daily",
+                  "monthly"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "meter": {},
+          "accumulate": {},
+          "aggregate": {},
+          "rate": {}
+        },
+        "additionalProperties": false
       },
-      "resources": [
-        {
-          "unit": "INSTANCE",
-          "quantity": 1
-        },
-        {
-          "unit": "GIGABYTE",
-          "quantity": 0.5
-        },
-        {
-          "unit": "HOUR",
-          "quantity": 0.02
-        }
-      ]
+      "additionalItems": false
     }
-  ]
+  },
+  "additionalProperties": false,
+  "title": "Resource Definition",
+  "description": "Defines the metrics, units, metering, accumulation" +
+    "aggregation and rating formulas used to meter a particular resource"
 }
 ```
 
-### JSON Schema:
-```json
-{
-  "title": "Runtime Usage",
-  "description": "Usage data for a runtime",
-  "type": "object",
-  "required": ["usage"],
-  "properties": {
-    "usage": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "object",
-        "required": ["start", "end", "plan_id",
-            "organization_guid", "space_guid", "resources"],
-        "properties": {
-            "start": {
-              "type": "integer",
-              "format": "utc-millisec"
-            },
-            "end": {
-              "type": "integer",
-              "format": "utc-millisec"
-            },
-            "plan_id": {
-              "type": "string"
-            },
-            "region": {
-              "type": "string"
-            },
-            "organization_guid": {
-              "type": "string"
-            },
-            "space_guid": {
-              "type": "string"
-            },
-            "consumer": {
-              "type": "object",
-              "required": ["value"],
-              "properties": {
-                "type": {
-                  "enum": ["cloud_foundry_application"],
-                  "default": "cloud_foundry_application"
-                },
-                "value": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": false
-            },
-            "resources": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "type": "object",
-                "required": ["unit", "quantity"],
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "unit": {
-                    "type": "string"
-                  },
-                  "quantity": {
-                    "type": "number"
-                  }
-                },
-                "additionalProperties": false
-              },
-              "additionalItems": false
-            }
-        },
-        "additionalProperties": false
-      },
-      "additionalItems": false
-    },
-    "additionalProperties": false
-  }
-}
-```
-
+_TODO Update the following APIs_
+---
 
 Usage summary
 ---
 
-The _usage summary_ API is used to retrieve usage summaries from Abacus.
+The _usage summary_ API is used to retrieve usage summary documents from Abacus.
 
 ### Method: get
 _HTTP request_: GET /v1/accounts/:account\_id/usage\_summary
@@ -464,38 +350,42 @@ _HTTP response_: 200 to indicate success with a _usage summary_ JSON document, 4
 ### Method: get
 _HTTP request_: GET /v1/organizations/:organization\_id/usage\_summary
 
-_Description_: Retrieves a usage report for the specified organization.
+_Description_: Retrieves a usage summary for the specified organization.
 
 _HTTP response_: 200 to indicate success with a _usage summary_ JSON document, 404 if the usage is not found, 500 to report a server error.
 
 ### Method: get
 _HTTP request_: GET /v1/organizations/:organization\_ids\_array/usage\_summary
 
-_Description_: Retrieves a usage report for the specified organizations.
+_Description_: Retrieves a usage summary for the specified organizations.
 
 _HTTP response_: 200 to indicate success with a _usage summary_ JSON document, 404 if the usage is not found, 500 to report a server error.
 
-### JSON Resource representation:
+### JSON representation:
 ```json
 {
-  "summary": [
+  "summary":[
     {
-      "billable_usage": {
+      "billable_usage":
+      {
         "services_cost": 847.8870967741937,
-        "support": {
+        "support":
+        {
           "type": "",
           "cost": 0
         },
-        "subscription": {
+        "subscription":
+        {
           "cost": 0
         },
         "runtime_cost": 0
       },
-      "organizations": [
+      "organizations":[
         {
           "region": "us-south",
           "id": "2b5ab364-b02f-4119-86f8-9e0b95143c77",
-          "billable_usage": {
+          "billable_usage":
+          {
             "services_cost": 939.8551612903225,
             "runtime_usage": 1906.025,
             "runtime_cost": 132.37175,
@@ -535,7 +425,7 @@ _HTTP response_: 200 to indicate success with a _usage summary_ JSON document, 4
 Usage report
 ---
 
-The _usage report_ API is used to retrieve usage reports from Abacus.
+The _usage report_ API is used to retrieve usage report documents from Abacus.
 
 ### Method: get
 _HTTP request_: GET /v1/accounts/:account\_id/usage/:month
@@ -558,7 +448,7 @@ _Description_: Retrieves a usage report for a list of organizations for the give
 
 _HTTP response_: 200 to indicate success with a _usage report_ JSON document, 404 if the usage is not found, 500 to report a server error.
 
-### JSON Resource representation:
+### JSON representation:
 ```json
 {
   "summary": {
@@ -759,142 +649,6 @@ _HTTP response_: 200 to indicate success with a _usage report_ JSON document, 40
     "runtimes": []
   },
   "currency_code": "USD"
-}
-```
-
-Service definition
----
-
-Service definitions are used to configure Abacus with the types of resources, units, metering, aggregation and rating formulas that should be used to meter and rate usage for a particular service.
-
-Service definitions are currently provided as JSON configuration files, but a simple REST API could also be defined for them.
-
-### JSON Resource representation:
-```json
-{
-  "id": "Service-8e9f8a35-dc03-4192-8bba-a77ae60222eb",
-  "resources": [
-    {
-      "name": "Storage",
-      "units": [
-        {
-          "name": "GIGABYTE",
-          "quantityType": "CURRENT"
-        }
-      ]
-    },
-    {
-      "name": "ApiCalls",
-      "units": [
-        {
-          "name": "API_CALL",
-          "quantityType": "DELTA"
-        }
-      ]
-    }
-  ],
-  "aggregations": [
-    {
-      "id": "GB_PER_MONTH",
-      "unit": "GIGABYTE",
-      "aggregationGroup": {
-        "name": "monthly"
-      },
-      "formula": "AVG({GIGABYTE})"
-    },
-    {
-      "id": "API_CALLS_PER_MONTH",
-      "unit": "API_CALL",
-      "aggregationGroup": {
-        "name": "monthly"
-      },
-      "formula": "SUM({API_CALL})"
-    }
-  ]
-}
-```
-
-### JSON Schema:
-```json
-{
-  "title": "Service Definition",
-  "description": "Defines the resources, units, metering, aggregation and rating formulas used to meter a particular service",
-  "type": "object",
-  "required": ["id", "resources", "aggregations"],
-  "properties": {
-    "id": {
-      "type": "string"
-    },
-    "resources": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "object",
-        "required": ["units"],
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "units" : {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "type": "object",
-              "required": ["name", "quantityType"],
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "quantityType": {
-                  "enum" : [ "DELTA", "CURRENT"]
-                }
-              },
-              "additionalProperties": false
-            },
-            "additionalItems": false
-          }
-        },
-        "additionalProperties": false
-      },
-      "additionalItems": false
-    },
-    "aggregations": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["id", "unit", "formula"],
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "unit": {
-            "type": "string"
-          },
-          "aggregationGroup": {
-            "type": "object",
-            "required": ["name"],
-            "properties": {
-              "name": {
-                "enum": ["daily", "monthly"]
-              },
-              "additionalProperties": false
-            }
-          },
-          "formula": {
-          },
-          "accumulate": {
-          },
-          "aggregate": {
-          },
-          "rate": {
-          }
-        },
-        "additionalProperties": false
-      },
-      "additionalItems": false
-    }
-  },
-  "additionalProperties":  false
 }
 ```
 

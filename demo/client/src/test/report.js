@@ -9,8 +9,8 @@ const host = process.argv[2] ? 'https://abacus-usage-reporting.' +
   process.argv[2] : 'http://localhost:9088';
 
 // Get a usage report
-request.get(host + '/v1/organizations/:organization_guid/usage/:day', {
-  organization_guid: 'org_456',
+request.get(host + '/v1/organizations/:organization_id/usage/:day', {
+  organization_id: 'org_456',
   day: '2015-01-06'
 }, (err, val) => {
   if(err)

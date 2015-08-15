@@ -1,10 +1,10 @@
 {
-  "name": "abacus-service-config",
-  "description": "Service usage metering and aggregation configuration",
+  "name": "abacus-usage-schemas",
+  "description": "JSON schemas for usage data",
   "license": "Apache-2.0",
   "version": "0.0.1-dev.2",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/config/service",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/metering/schemas",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -29,14 +29,13 @@
     "pub": "publish"
   },
   "dependencies": {
+    "abacus-schema": "file:../../utils/schema"
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
-    "abacus-metering-schemas": "file:../../metering/schemas",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-publish": "file:../../../tools/publish",
-    "underscore": "^1.8.3"
+    "abacus-publish": "file:../../../tools/publish"
   },
   "engines": {
     "node": ">=0.10.0",

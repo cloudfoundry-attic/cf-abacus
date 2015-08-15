@@ -1,5 +1,5 @@
 abacus-price-config
 ===
 
-Service pricing configuration.
+Resource pricing configuration.
 

@@ -1,6 +1,6 @@
 'use strict';
 
-// Simulate a test service provider that submits usage for a service and
+// Simulate a test service provider that submits usage for a resource and
 // verifies the submission by retrieving a usage report.
 
 const _ = require('underscore');
@@ -19,7 +19,7 @@ const reporting = process.argv[2] && isNaN(process.argv[2]) ?
 const delta = parseInt(process.argv[2]) || parseInt(process.argv[3]) || 0;
 
 describe('abacus-demo-client', () => {
-  it('submits usage for a sample storage service and retrieves an aggregated ' +
+  it('submits usage for a sample resource and retrieves an aggregated ' +
     'usage report', function(done) {
       // Configure the test timeout
       const timeout = 20000;
@@ -33,25 +33,24 @@ describe('abacus-demo-client', () => {
           message:
             'Submitting 10 GB, 1000 light API calls, 100 heavy API calls',
           usage: {
-            service_instances: [{
-              service_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
-              usage: [{
-                start: start,
-                end: end,
-                region: 'eu-gb',
-                organization_guid: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-                space_guid: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-                plan_id: 'plan_123',
-                resources: [{
-                  unit: 'BYTE',
-                  quantity: 1073741824
-                }, {
-                  unit: 'LIGHT_API_CALL',
-                  quantity: 1000
-                }, {
-                  unit: 'HEAVY_API_CALL',
-                  quantity: 100
-                }]
+            usage: [{
+              start: start,
+              end: end,
+              region: 'eu-gb',
+              organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+              space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
+              resource_id: 'storage',
+              plan_id: 'plan_123',
+              resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
+              metrics: [{
+                unit: 'BYTE',
+                quantity: 1073741824
+              }, {
+                unit: 'LIGHT_API_CALL',
+                quantity: 1000
+              }, {
+                unit: 'HEAVY_API_CALL',
+                quantity: 100
               }]
             }]
           }
@@ -60,25 +59,24 @@ describe('abacus-demo-client', () => {
           message:
             'Submitting 10 GB, 1000 light API calls, 100 heavy API calls',
           usage: {
-            service_instances: [{
-              service_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
-              usage: [{
-                start: start + 1,
-                end: end + 1,
-                region: 'eu-gb',
-                organization_guid: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-                space_guid: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-                plan_id: 'plan_123',
-                resources: [{
-                  unit: 'BYTE',
-                  quantity: 1073741824
-                }, {
-                  unit: 'LIGHT_API_CALL',
-                  quantity: 1000
-                }, {
-                  unit: 'HEAVY_API_CALL',
-                  quantity: 100
-                }]
+            usage: [{
+              start: start + 1,
+              end: end + 1,
+              region: 'eu-gb',
+              organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+              space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
+              resource_id: 'storage',
+              plan_id: 'plan_123',
+              resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
+              metrics: [{
+                unit: 'BYTE',
+                quantity: 1073741824
+              }, {
+                unit: 'LIGHT_API_CALL',
+                quantity: 1000
+              }, {
+                unit: 'HEAVY_API_CALL',
+                quantity: 100
               }]
             }]
           }
@@ -87,25 +85,24 @@ describe('abacus-demo-client', () => {
           message:
             'Submitting 10 GB, 1000 light API calls, 100 heavy API calls',
           usage: {
-            service_instances: [{
-              service_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
-              usage: [{
-                start: start + 2,
-                end: end + 2,
-                region: 'eu-gb',
-                organization_guid: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-                space_guid: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-                plan_id: 'plan_123',
-                resources: [{
-                  unit: 'BYTE',
-                  quantity: 1073741824
-                }, {
-                  unit: 'LIGHT_API_CALL',
-                  quantity: 1000
-                }, {
-                  unit: 'HEAVY_API_CALL',
-                  quantity: 100
-                }]
+            usage: [{
+              start: start + 2,
+              end: end + 2,
+              region: 'eu-gb',
+              organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+              space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
+              resource_id: 'storage',
+              plan_id: 'plan_123',
+              resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
+              metrics: [{
+                unit: 'BYTE',
+                quantity: 1073741824
+              }, {
+                unit: 'LIGHT_API_CALL',
+                quantity: 1000
+              }, {
+                unit: 'HEAVY_API_CALL',
+                quantity: 100
               }]
             }]
           }
@@ -113,8 +110,8 @@ describe('abacus-demo-client', () => {
 
       // Expected usage report for the test organization
       const report = {
-        organization_guid: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-        services: [{
+        organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+        resources: [{
           id: 'storage',
           aggregated_usage: [{
             unit: 'STORAGE_PER_MONTH',
@@ -142,7 +139,7 @@ describe('abacus-demo-client', () => {
         }],
         spaces: [{
           id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-          services: [{
+          resources: [{
             id: 'storage',
             aggregated_usage: [{
               unit: 'STORAGE_PER_MONTH',
@@ -170,7 +167,7 @@ describe('abacus-demo-client', () => {
           }],
           consumers: [{
             id: 'all',
-            services: [{
+            resources: [{
               id: 'storage',
               aggregated_usage: [{
                 unit: 'STORAGE_PER_MONTH',
@@ -200,7 +197,7 @@ describe('abacus-demo-client', () => {
         }]
       };
 
-      // Submit usage for storage service with 10 GB, 1000 light API calls,
+      // Submit usage for sample resource with 10 GB, 1000 light API calls,
       // and 100 heavy API calls
       let posts = 0;
       const post = (u, done) => {
@@ -210,7 +207,7 @@ describe('abacus-demo-client', () => {
           if(++posts === usage.length) done();
         };
 
-        request.post(collector + '/v1/metering/services/storage/usage', {
+        request.post(collector + '/v1/metering/resource/usage', {
           body: u.usage
         }, (err, val) => {
           expect(err).to.equal(undefined);
@@ -224,10 +221,10 @@ describe('abacus-demo-client', () => {
 
       // Print the number of usage docs already processed given a get report
       // response, determined from the aggregated usage quantity found in the
-      // report for our test service
+      // report for our test resource
       const processed = (val) => {
         try {
-          return val.body.services[0].aggregated_usage[1].quantity;
+          return val.body.resources[0].aggregated_usage[1].quantity;
         }
         catch (e) {
           // The response doesn't contain a valid report
