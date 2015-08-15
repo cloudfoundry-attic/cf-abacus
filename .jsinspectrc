@@ -1,0 +1,6 @@
+{
+  "threshold": 20,
+  "identifiers": true,
+  "ignore": "/node_modules/|/test/|.*/.*/lib",
+  "suppress": 100
+}

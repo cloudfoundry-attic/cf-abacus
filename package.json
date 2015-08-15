@@ -19,6 +19,7 @@
   "files": [
     ".eslintrc",
     ".jshintrc",
+    ".jsinspectrc",
     ".npmrc",
     ".travis.yml",
     "LICENSE",
@@ -41,6 +42,7 @@
     "hint": "foreach abacus :path jshint src",
     "test": "foreach abacus node_modules/:name npm test && coverage",
     "coveralls": "cat .coverage/lcov.info | coveralls",
+    "dupcode": "jsinspect",
     "doc": "cat README.md | mddoc >README.html",
     "start": "bin/start",
     "stop": "bin/stop",
@@ -106,6 +108,7 @@
     "abacus-publish": "file:tools/publish",
     "coveralls": "^2.11.3",
     "jshint": "^2.8.0",
+    "jsinspect": "^0.6.1",
     "levelup": "~0.18.4",
     "pouchdb": "3.6.0"
   },
