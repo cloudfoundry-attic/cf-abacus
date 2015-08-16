@@ -15,12 +15,17 @@ var util = require('util');
 var stream = require('stream');
 var es = require('event-stream');
 var request = require('request');
+var commander = require('commander');
 
 var wrap = _.wrap;
 
 /* eslint no-empty: 1 */
 
 var runCLI = function(stdin, stdout) {
+  // Parse command line options
+  commander
+    .parse(process.argv);
+
   var sin = stdin || process.stdin;
   var sout = stdout || process.stdout;
 

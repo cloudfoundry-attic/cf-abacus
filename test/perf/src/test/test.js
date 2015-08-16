@@ -24,22 +24,24 @@ const util = require('util');
 const map = _.map;
 const range = _.range;
 const omit = _.omit;
+const clone = _.clone;
 
 const brequest = batch(request);
 
 // Setup the debug log
 const debug = require('abacus-debug')('abacus-perf-test');
 
-commander.option(
-  '-o, --orgs <n>', 'Number of organizations', parseInt);
-commander.option(
-  '-i, --instances <n>', 'Number of resource instances', parseInt);
-commander.option(
-  '-u, --usagedocs <n>', 'Number of usage docs', parseInt);
-commander.option(
-  '-d, --delta <d>', 'Usage time window shift in milli-seconds', parseInt);
-
-commander.parse(process.argv);
+// Parse command line options
+const argv = clone(process.argv);
+argv.splice(1, 1, 'perf');
+commander
+  .option('-o, --orgs <n>', 'Number of organizations', parseInt)
+  .option('-i, --instances <n>', 'Number of resource instances', parseInt)
+  .option('-u, --usagedocs <n>', 'Number of usage docs', parseInt)
+  .option('-d, --delta <d>',
+    'Usage time window shift in milli-seconds', parseInt)
+  .allowUnknownOption(true)
+  .parse(argv);
 
 // Number of organizations
 const orgs = commander.orgs || 1;

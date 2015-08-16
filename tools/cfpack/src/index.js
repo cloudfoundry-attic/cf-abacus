@@ -9,6 +9,7 @@ var _ = require('underscore');
 var fs = require('fs');
 var path = require('path');
 var cp = require('child_process');
+var commander = require('commander');
 
 var map = _.map;
 var pairs = _.pairs;
@@ -95,26 +96,31 @@ var rootDir = function(dir) {
 
 // Package an app for deployment to Cloud Foundry
 var runCLI = function() {
-  // Accept root directory of local dependencies as a parameter, default
-  // to the Abacus root directory
-  var root = process.argv[2] || rootDir(process.cwd());
+  // Parse command line options
+  commander
+    // Accept root directory of local dependencies as a parameter, default
+    // to the Abacus root directory
+    .option(
+      '-r, --root <dir>', 'root local dependencies directory',
+      rootDir(process.cwd()))
+    .parse(process.argv);
 
   // Create the directories we need
-  mkdirs(root, function(err) {
+  mkdirs(commander.root, function(err) {
     if(err) {
       console.log('Couldn\'t setup cfpack layout -', err);
       process.exit(1);
     }
 
     // Generate the repackaged package.json
-    repackage(root, function(err) {
+    repackage(commander.root, function(err) {
       if(err) {
         console.log('Couldn\'t write package.json -', err);
         process.exit(1);
       }
 
       // Produce the packaged app zip
-      zip(path.join(root, '.gitignore'), function(err) {
+      zip(path.join(commander.root, '.gitignore'), function(err) {
         if(err) {
           console.log('Couldn\'t produce .cfpack/app.zip -', err);
           process.exit(1);

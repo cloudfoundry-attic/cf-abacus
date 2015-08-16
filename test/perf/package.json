@@ -23,7 +23,7 @@
   ],
   "main": "lib/index.js",
   "scripts": {
-    "perf": "mocha",
+    "perf": "mocha --command",
     "babel": "babel",
     "test": "eslint",
     "lint": "eslint",

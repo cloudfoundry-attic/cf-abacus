@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 'use strict';
 
-require('./lib/ping.js');
+require('./lib/ping.js').runCLI();
 

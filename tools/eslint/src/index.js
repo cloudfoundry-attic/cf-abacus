@@ -7,12 +7,17 @@
 
 var path = require('path');
 var cli = require('eslint').cli;
+var commander = require('commander');
 
 // We use process.exit() intentionally here
 /* eslint no-process-exit: 1 */
 
 // Run the ESLint CLI
 var runCLI = function() {
+  // Parse command line options
+  commander
+    .parse(process.argv);
+
   var xc = cli.execute([process.argv[0], process.argv[1],
     '-c', path.resolve(__dirname, '../.eslintrc'), 'src']);
 

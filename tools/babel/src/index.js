@@ -7,14 +7,23 @@
 
 var cp = require('child_process');
 var path = require('path');
+var commander = require('commander');
 
 /* eslint no-process-exit: 1 */
 
 var runCLI = function() {
+  // Parse command line options
+  commander
+    .arguments('<dir>')
+    .action(function(dir) {
+      commander.dir = dir;
+    })
+    .parse(process.argv);
+
   var args = [
     '--babelrc', path.resolve(__dirname, '../.babelrc'),
     '--out-dir', 'lib', 'src'
-  ].concat(process.argv.slice(2));
+  ].concat(commander.dir ? [commander.dir] : []);
   var babel = cp.spawn(path.resolve(
     __dirname, '../node_modules/.bin/babel'), args, {
       stdio: 'inherit'

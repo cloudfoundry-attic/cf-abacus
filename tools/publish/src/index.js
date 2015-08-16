@@ -9,6 +9,7 @@ var _ = require('underscore');
 var fs = require('fs');
 var path = require('path');
 var cp = require('child_process');
+var commander = require('commander');
 
 var map = _.map;
 var pairs = _.pairs;
@@ -94,6 +95,9 @@ var publish = function(tgz, pubdir, cb) {
 
 // Publish a module to npm
 var runCLI = function() {
+  // Parse command line options
+  commander
+    .parse(process.argv);
 
   // Create the directories we need
   var pubdir = path.resolve(process.cwd(), '.publish');

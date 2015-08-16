@@ -32,6 +32,7 @@
     "pub": "npm install && ./publish"
   },
   "dependencies": {
+    "commander": "^2.8.1",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

@@ -36,6 +36,7 @@
     "abacus-debug": "file:../debug",
     "abacus-events": "file:../events",
     "body-parser": "^1.4.3",
+    "commander": "^2.8.1",
     "compression": "^1.0.8",
     "express": "^4.9.4",
     "method-override": "^2.0.2",

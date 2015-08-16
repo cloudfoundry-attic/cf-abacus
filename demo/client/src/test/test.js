@@ -7,16 +7,37 @@ const _ = require('underscore');
 
 const request = require('abacus-request');
 const util = require('util');
+const commander = require('commander');
 
 const map = _.map;
 const omit = _.omit;
+const clone = _.clone;
 
-// Take host and time delta parameters
-const collector = process.argv[2] && isNaN(process.argv[2]) ?
-  'https://abacus-usage-collector.' + process.argv[2] : 'http://localhost:9080';
-const reporting = process.argv[2] && isNaN(process.argv[2]) ?
-  'https://abacus-usage-reporting.' + process.argv[2] : 'http://localhost:9088';
-const delta = parseInt(process.argv[2]) || parseInt(process.argv[3]) || 0;
+// Parse command line options
+const argv = clone(process.argv);
+argv.splice(1, 1, 'demo');
+commander
+  .option('-c, --collector <uri>',
+    'Usage collector URL or domain name [http://localhost:9080]',
+    'http://localhost:9080')
+  .option('-r, --reporting <uri>',
+    'Usage reporting URL or domain name [http://localhost:9088]',
+    'http://localhost:9088')
+  .option(
+    '-d, --delta <d>', 'Usage time window shift in milli-seconds', parseInt)
+  .allowUnknownOption(true)
+  .parse(argv);
+
+// Collector service URL
+const collector = /:/.test(commander.collector) ? commander.collector :
+  'https://abacus-usage-collector.' + commander.collector;
+
+// Reporting service URL
+const reporting = /:/.test(commander.reporting) ? commander.reporting :
+  'https://abacus-usage-reporting.' + commander.reporting;
+
+// Usage time window shift in milli-seconds
+const delta = commander.delta || 0;
 
 describe('abacus-demo-client', () => {
   it('submits usage for a sample resource and retrieves an aggregated ' +

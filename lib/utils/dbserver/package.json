@@ -40,6 +40,7 @@
     "abacus-cluster": "file:../cluster",
     "abacus-debug": "file:../debug",
     "abacus-webapp": "file:../webapp",
+    "commander": "^2.8.1",
     "express": "^4.9.4",
     "express-pouchdb": "^0.14.2",
     "memdown": "^1.0.0",
