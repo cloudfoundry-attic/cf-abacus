@@ -5,6 +5,8 @@
 // Implemented in ES5 for now
 /* eslint no-var: 0 */
 
+/* eslint no-else-return: 0 */
+
 // Return the sum of two numbers
 var straight = function(x, y) {
   return x + y;
@@ -16,7 +18,6 @@ var cond = function(x, y) {
 };
 
 // Again here, only one of the branches is covered
-/* eslint no-else-return: 1 */
 var ifelse = function(x, y) {
   if(x === 0) return y;
   else if(x === 1) return 1 + y;

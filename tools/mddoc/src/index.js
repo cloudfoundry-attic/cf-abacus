@@ -37,8 +37,9 @@ var runCLI = function(stdin, stdout) {
         try {
           return hljs.highlight(lang, str).value;
         }
-        catch (e) {}
-      return '';
+        catch (e) {
+          return '';
+        }
     }
   });
 

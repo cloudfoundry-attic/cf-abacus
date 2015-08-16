@@ -13,7 +13,7 @@ var bind = _.bind;
 
 var coverage = require('..');
 
-/* eslint handle-callback-err: 1 */
+/* eslint handle-callback-err: 0 */
 
 describe('abacus-coverage', function() {
   var exit;
