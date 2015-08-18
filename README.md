@@ -24,8 +24,8 @@ Abacus requires Npm >= 2.10.1 and Node.js >= 0.10.36 or io.js >= 2.3.0.
 ```sh
 cd cf-abacus
 
-# This bootstraps the build environment, runs Babel on the Javascript sources,
-# installs the Node.js dependencies and runs the tests
+# Bootstrap the build environment, run Babel on the Javascript sources,
+# install the Node.js module dependencies and run the tests
 npm run build
 ```
 
@@ -35,10 +35,10 @@ Testing
 ```sh
 cd cf-abacus
 
-# This runs eslint on all the modules
+# Run eslint on the Abacus modules
 npm run lint
 
-# This runs all the tests
+# Run the tests
 npm test
 ```
 
@@ -60,8 +60,8 @@ cd cf-abacus
 cf api --skip-ssl-validation https://api.10.244.0.34.xip.io
 cf login -o <your organization> -s <your space>
 
-# Create security group
-cat > abacus_group.json <<EOF
+# Create a CF security group for the Abacus apps
+cat >abacus_group.json <<EOF
 [
   {
     "destination": "10.0.0.0-10.255.255.255",
@@ -72,7 +72,7 @@ EOF
 cf create-security-group abacus abacus_group.json
 cf bind-security-group abacus <your organization> <your space>
 
-# This runs cf push on all the Abacus apps to deploy them to Cloud Foundry
+# Run cf push on the Abacus apps to deploy them to Cloud Foundry
 npm run cfpush
 
 # Check the state of the Abacus apps
@@ -83,12 +83,12 @@ Getting apps in org <your organization> / space <your space>...
 OK
 
 name                       requested state   instances   memory   disk   urls   
-abacus-usage-collector     started           2/2         512M     1G     abacus-usage-collector.10.244.0.34.xip.io   
-abacus-usage-meter         started           2/2         512M     1G     abacus-usage-meter.10.244.0.34.xip.io 
-abacus-usage-accumulator   started           4/4         512M     1G     abacus-usage-accumulator.10.244.0.34.xip.io   
-abacus-usage-aggregator    started           4/4         512M     1G     abacus-usage-aggregator.10.244.0.34.xip.io   
-abacus-usage-reporting     started           2/2         512M     1G     abacus-usage-reporting.10.244.0.34.xip.io   
-abacus-dbserver            started           1/1         1G       1G     abacus-dbserver.10.244.0.34.xip.io   
+abacus-usage-collector     started           1/1         512M     512M   abacus-usage-collector.10.244.0.34.xip.io   
+abacus-usage-meter         started           1/1         512M     512M   abacus-usage-meter.10.244.0.34.xip.io 
+abacus-usage-accumulator   started           1/1         512M     512M   abacus-usage-accumulator.10.244.0.34.xip.io   
+abacus-usage-aggregator    started           1/1         512M     512M   abacus-usage-aggregator.10.244.0.34.xip.io   
+abacus-usage-reporting     started           1/1         512M     512M   abacus-usage-reporting.10.244.0.34.xip.io   
+abacus-dbserver            started           1/1         1G       512M   abacus-dbserver.10.244.0.34.xip.io   
 ```
 
 Running the demo
@@ -104,7 +104,9 @@ Once the Abacus apps are running on your Cloud Foundry deployment, do this:
 cd cf-abacus
 
 # Run the demo script
-npm run demo 10.244.0.34.xip.io
+npm run demo \
+  --collector https://abacus-usage-collector.10.244.0.34.xip.io \
+  --reporting https://abacus-usage-reporting.10.244.0.34.xip.io
 
 # You should see usage being submitted and a usage report for the demo organization
 
@@ -143,7 +145,7 @@ demo/ - Demo apps
 
     client - demo program that posts usage and gets a report
 
-doc/ - Abacus API documentation
+doc/ - API documentation
 
 lib/ - Abacus modules
 
@@ -168,9 +170,11 @@ lib/ - Abacus modules
 
     stubs/ - Test stubs for provisioning and account services
 
-test - End to end tests
+test/ - End to end tests
 
     perf/ - Performance tests
+
+tools/ - Build tools
 
 etc/ - Misc build scripts
 
