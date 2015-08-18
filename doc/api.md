@@ -208,7 +208,7 @@ Cloud resource definition documents are currently provided as JSON configuration
       ]
     }
   ],
-  "aggregations": [
+  "transforms": [
     {
       "id": "GB_PER_MONTH",
       "unit": "GIGABYTE",
@@ -236,7 +236,7 @@ Cloud resource definition documents are currently provided as JSON configuration
   "required": [
     "id",
     "metrics",
-    "aggregations"
+    "transforms"
   ],
   "properties": {
     "id": {
@@ -283,7 +283,7 @@ Cloud resource definition documents are currently provided as JSON configuration
       },
       "additionalItems": false
     },
-    "aggregations": {
+    "transforms": {
       "type": "array",
       "minItems": 1,
       "items": {
