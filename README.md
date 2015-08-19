@@ -104,7 +104,7 @@ Once the Abacus apps are running on your Cloud Foundry deployment, do this:
 cd cf-abacus
 
 # Run the demo script
-npm run demo \
+npm run demo -- \
   --collector https://abacus-usage-collector.10.244.0.34.xip.io \
   --reporting https://abacus-usage-reporting.10.244.0.34.xip.io
 
