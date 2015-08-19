@@ -18,13 +18,13 @@ const argv = clone(process.argv);
 argv.splice(1, 1, 'demo');
 commander
   .option('-c, --collector <uri>',
-    'Usage collector URL or domain name [http://localhost:9080]',
+    'usage collector URL or domain name [http://localhost:9080]',
     'http://localhost:9080')
   .option('-r, --reporting <uri>',
-    'Usage reporting URL or domain name [http://localhost:9088]',
+    'usage reporting URL or domain name [http://localhost:9088]',
     'http://localhost:9088')
   .option(
-    '-d, --delta <d>', 'Usage time window shift in milli-seconds', parseInt)
+    '-d, --delta <d>', 'usage time window shift in milli-seconds', parseInt)
   .allowUnknownOption(true)
   .parse(argv);
 
