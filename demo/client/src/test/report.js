@@ -3,13 +3,21 @@
 // Test usage report client
 
 const request = require('abacus-request');
+const commander = require('commander');
 
-// Accept a host as parameter
-const host = process.argv[2] ? 'https://abacus-usage-reporting.' +
-  process.argv[2] : 'http://localhost:9088';
+// Parse command line options
+commander
+  .option('-r, --reporting <uri>',
+    'Usage reporting URL or domain name [http://localhost:9088]',
+    'http://localhost:9088')
+  .parse(process.argv);
+
+// Reporting service URL
+const reporting = /:/.test(commander.reporting) ? commander.reporting :
+  'https://abacus-usage-reporting.' + commander.reporting;
 
 // Get a usage report
-request.get(host + '/v1/organizations/:organization_id/usage/:day', {
+request.get(reporting + '/v1/organizations/:organization_id/usage/:day', {
   organization_id: 'org_456',
   day: '2015-01-06'
 }, (err, val) => {

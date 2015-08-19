@@ -8,7 +8,6 @@
 /* eslint no-var: 0 */
 
 var _ = require('underscore');
-var tty = require('tty');
 var path = require('path');
 var util = require('util');
 
@@ -17,7 +16,6 @@ var extend = _.extend;
 var values = _.values;
 var filter = _.filter;
 var identity = _.identity;
-var memoize = _.memoize;
 var map = _.map;
 var zip = _.zip;
 var flatten = _.flatten;
@@ -44,10 +42,10 @@ var nextpos = function(pos, c) {
 };
 
 // Return source code annotated with colors or markup indicating code coverage
-var annotatedSource = function(source, coveredSpans, uncoveredSpans, colors) {
+var annotatedSource = function(source, coveredSpans, uncoveredSpans, opt) {
   // Use colors or markup tags to mark the covered code, uncovered code and
   // non-code text sections.
-  var marks = colors ?
+  var marks = opt.color ?
     // Uncovered code is underlined red, covered code is green, non-code
     // text is blue
     {
@@ -138,11 +136,6 @@ var percentages = function(cov) {
   };
 };
 
-// Colorify the report on a tty or when requested on the command line
-var colors = memoize(function(opt) {
-  return tty.isatty(process.stdout) || opt.color;
-});
-
 // Print code coverage from a list of Istanbul coverage objects and the
 // corresponding sources
 var printCoverage = function(coverage, sources, opt) {
@@ -154,8 +147,8 @@ var printCoverage = function(coverage, sources, opt) {
     var fullcov = percent.l === 100 && percent.s === 100;
 
     // Print code coverage in green for 100% coverage and red under 100%
-    var color = colors(opt) ? fullcov ? '\u001b[32m' : '\u001b[31m' : '';
-    var reset = colors(opt) ? '\u001b[0m' : '';
+    var color = opt.color ? fullcov ? '\u001b[32m' : '\u001b[31m' : '';
+    var reset = opt.color ? '\u001b[0m' : '';
 
     // Under 100% coverage, print the annotated source
     if(!fullcov) {
@@ -182,7 +175,7 @@ var printCoverage = function(coverage, sources, opt) {
 
       // Print the annotated source
       process.stdout.write(annotatedSource(sources[cov.path],
-        coveredSpans, uncoveredSpans, colors(opt)));
+        coveredSpans, uncoveredSpans, opt));
       process.stdout.write('\n');
     }
 

@@ -14,11 +14,13 @@ var textcov = require('./textcov.js');
 var istanbul = require('istanbul');
 var Mocha = require('mocha');
 var fs = require('fs');
+var tty = require('tty');
 var commander = require('commander');
 
 var map = _.map;
 var values = _.values;
 var contains = _.contains;
+var memoize = _.memoize;
 
 /* eslint no-process-exit: 1 */
 /* eslint no-eval: 1 */
@@ -132,6 +134,11 @@ var target = function() {
   }
 };
 
+// Colorify the report on a tty or when requested on the command line
+var colorify = memoize(function(opt) {
+  return tty.isatty(process.stdout) || opt.color;
+});
+
 // Run Mocha with Istanbul
 var runCLI = function() {
   process.stdout.write('Testing...\n');
@@ -158,7 +165,7 @@ var runCLI = function() {
   // Configure Mocha
   var mocha = new Mocha({
     timeout: 20000,
-    useColors: commander.color
+    useColors: colorify(commander)
   });
 
   // Install Chai expect and Sinon spy and stub as globals
@@ -207,7 +214,7 @@ var runCLI = function() {
       // Print a detailed source coverage text report and the test
       // execution time
       textcov(coverage, sources, {
-        color: commander.color
+        color: colorify(commander)
       });
       time();
 

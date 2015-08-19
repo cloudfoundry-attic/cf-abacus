@@ -35,11 +35,11 @@ const debug = require('abacus-debug')('abacus-perf-test');
 const argv = clone(process.argv);
 argv.splice(1, 1, 'perf');
 commander
-  .option('-o, --orgs <n>', 'Number of organizations', parseInt)
-  .option('-i, --instances <n>', 'Number of resource instances', parseInt)
-  .option('-u, --usagedocs <n>', 'Number of usage docs', parseInt)
+  .option('-o, --orgs <n>', 'number of organizations', parseInt)
+  .option('-i, --instances <n>', 'number of resource instances', parseInt)
+  .option('-u, --usagedocs <n>', 'number of usage docs', parseInt)
   .option('-d, --delta <d>',
-    'Usage time window shift in milli-seconds', parseInt)
+    'usage time window shift in milli-seconds', parseInt)
   .allowUnknownOption(true)
   .parse(argv);
 

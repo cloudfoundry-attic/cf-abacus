@@ -4,13 +4,25 @@
 
 const _ = require('underscore');
 const request = require('abacus-request');
+const commander = require('commander');
 
 const map = _.map;
 
-// Take host and time delta parameters
-const host = process.argv[2] && isNaN(process.argv[2]) ?
-  'https://abacus-usage-collector.' + process.argv[2] : 'http://localhost:9080';
-const delta = parseInt(process.argv[2]) || parseInt(process.argv[3]) || 0;
+// Parse command line options
+commander
+  .option('-c, --collector <uri>',
+    'Usage collector URL or domain name [http://localhost:9080]',
+    'http://localhost:9080')
+  .option(
+    '-d, --delta <d>', 'Usage time window shift in milli-seconds', parseInt)
+  .parse(process.argv);
+
+// Collector service URL
+const collector = /:/.test(commander.collector) ? commander.collector :
+  'https://abacus-usage-collector.' + commander.collector;
+
+// Usage time window shift in milli-seconds
+const delta = commander.delta || 0;
 
 // Post usage for a resource
 const batch = {
@@ -40,7 +52,7 @@ const batch = {
   }]
 };
 
-request.post(host + '/v1/metering/resource/usage', {
+request.post(collector + '/v1/metering/resource/usage', {
   rejectUnauthorized: false,
   body: batch
 }, (err, val) => {

@@ -131,9 +131,9 @@ var percentages = function(coverage) {
   };
 };
 
-// Colorify the report on a tty or when the command line says --colors
-var colors = memoize(function(opt) {
-  return tty.isatty(process.stdout) || opt.colors !== 'false';
+// Colorify the report on a tty or when requested on the command line
+var colorify = memoize(function(opt) {
+  return tty.isatty(process.stdout) || opt.color;
 });
 
 // Report a failure and exit
@@ -147,7 +147,7 @@ var runCLI = function() {
   // Parse command line options
   commander
     .option(
-        '-c, --colors <value>', 'colorify output (true|false) [true]', 'true')
+        '--no-color', 'do not colorify output')
     .parse(process.argv);
 
   // Load the root package.json from the current directory
@@ -170,9 +170,9 @@ var runCLI = function() {
 
       // Print overall code coverage percentages in green for 100%
       // coverage and red under 100%
-      var color = colors(commander) ? fullcov ?
+      var color = colorify(commander) ? fullcov ?
         '\u001b[32m' : '\u001b[31m' : '';
-      var reset = colors(commander) ? '\u001b[0m' : '';
+      var reset = colorify(commander) ? '\u001b[0m' : '';
       process.stdout.write(util.format(
         '\n%sOverall coverage lines %d\% statements %d\%%s\n\n',
         color, percent.l.toFixed(2), percent.s.toFixed(2), reset));

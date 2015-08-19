@@ -10,10 +10,10 @@ var path = require('path');
 var util = require('util');
 var cp = require('child_process');
 var os = require('os');
+var commander = require('commander');
 
 var map = _.map;
 var filter = _.filter;
-var rest = _.rest;
 var initial = _.initial;
 var last = _.last;
 var pairs = _.pairs;
@@ -92,8 +92,19 @@ var exec = throttle(function(cmd, cwd, cb) {
 
 // Execute a build command for each Abacus module
 var runCLI = function() {
+  // Parse command line options
+  commander
+    .arguments('<regexp> <dir> <cmd> [args...]')
+    .action(function(regexp, dir, cmd, args) {
+      commander.regexp = regexp;
+      commander.dir = dir;
+      commander.cmd = cmd;
+      commander.args = args;
+    })
+    .parse(process.argv);
+
   // Use the given regular expression to filter modules
-  var rx = new RegExp(process.argv[2]);
+  var rx = new RegExp(commander.regexp);
 
   // Look for modules in the dependencies and devDependencies of the current
   // module
@@ -108,8 +119,8 @@ var runCLI = function() {
       };
 
       // Run the given command on each module
-      exec(resolve(rest(process.argv, 4).join(' ')),
-        resolve(process.argv[3]), function(err, val) {
+      exec(resolve([commander.cmd].concat(commander.args).join(' ')),
+        resolve(commander.dir), function(err, val) {
           if(err) process.exit(err);
         });
     });
