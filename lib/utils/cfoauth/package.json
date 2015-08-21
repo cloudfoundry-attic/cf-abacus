@@ -9,6 +9,15 @@
     "type": "git",
     "url": "https://github.com/piotrprzybylski/cf-abacus.git"
   },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "lib/",
+    "src/"
+  ],
   "main": "lib/index.js",
   "scripts": {
     "babel": "babel",

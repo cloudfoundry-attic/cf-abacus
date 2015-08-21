@@ -70,6 +70,7 @@
     "abacus-provisioning-stub": "file:lib/stubs/provisioning",
     "abacus-batch": "file:lib/utils/batch",
     "abacus-breaker": "file:lib/utils/breaker",
+    "abacus-cfoauth": "file:lib/utils/cfoauth",
     "abacus-cluster": "file:lib/utils/cluster",
     "abacus-dbclient": "file:lib/utils/dbclient",
     "abacus-dbserver": "file:lib/utils/dbserver",
