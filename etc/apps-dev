@@ -10,4 +10,5 @@ abacus-usage-meter lib/metering/meter
 abacus-usage-accumulator lib/aggregation/accumulator
 abacus-usage-aggregator lib/aggregation/aggregator
 abacus-usage-reporting lib/aggregation/reporting
+abacus-usage-rate lib/aggregation/rate
 EOF

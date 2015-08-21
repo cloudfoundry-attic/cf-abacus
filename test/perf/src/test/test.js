@@ -97,91 +97,118 @@ describe('abacus-perf-test', () => {
     // Return the expected usage report for the test organization
     const report = (o, nri, n) => ({
         organization_id: orgid(o),
+        cost: 0,
         resources: [{
           id: 'storage',
+          cost: 0 * nri * n,
           aggregated_usage: [{
             unit: 'STORAGE_PER_MONTH',
-            quantity: 1 * nri
+            quantity: 1 * nri,
+            cost: 0 * nri * n
           }, {
             unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-            quantity: 1 * nri * n
+            quantity: 1 * nri * n,
+            cost: 0 * nri * n
           },
             {
               unit: 'HEAVY_API_CALLS_PER_MONTH',
-              quantity: 100 * nri * n
+              quantity: 100 * nri * n,
+              cost: 0 * nri * n
             }],
           plans: [{
             id: 'plan_123',
+            cost: 0 * nri * n,
             aggregated_usage: [{
               unit: 'STORAGE_PER_MONTH',
-              quantity: 1 * nri
+              quantity: 1 * nri,
+              cost: 0 * nri * n
             }, {
               unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-              quantity: 1 * nri * n
+              quantity: 1 * nri * n,
+              cost: 0 * nri * n
             },
               {
                 unit: 'HEAVY_API_CALLS_PER_MONTH',
-                quantity: 100 * nri * n
+                quantity: 100 * nri * n,
+                cost: 0 * nri * n
               }]
           }]
         }],
         spaces: [{
           id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
+          cost: 0 * nri * n,
           resources: [{
             id: 'storage',
+            cost: 0 * nri * n,
             aggregated_usage: [{
               unit: 'STORAGE_PER_MONTH',
-              quantity: 1 * nri
+              quantity: 1 * nri,
+              cost: 0 * nri * n
             }, {
               unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-              quantity: 1 * nri * n
+              quantity: 1 * nri * n,
+              cost: 0 * nri * n
             },
               {
                 unit: 'HEAVY_API_CALLS_PER_MONTH',
-                quantity: 100 * nri * n
+                quantity: 100 * nri * n,
+                cost: 0 * nri * n
               }],
             plans: [{
               id: 'plan_123',
+              cost: 0 * nri * n,
               aggregated_usage: [{
                 unit: 'STORAGE_PER_MONTH',
-                quantity: 1 * nri
+                quantity: 1 * nri,
+                cost: 0 * nri * n
               }, {
                 unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-                quantity: 1 * nri * n
+                quantity: 1 * nri * n,
+                cost: 0 * nri * n
               },
                 {
                   unit: 'HEAVY_API_CALLS_PER_MONTH',
-                  quantity: 100 * nri * n
+                  quantity: 100 * nri * n,
+                  cost: 0 * nri * n
                 }]
             }]
           }],
           consumers: [{
             id: 'all',
+            cost: 0 * nri * n,
             resources: [{
               id: 'storage',
+              cost: 0 * nri * n,
               aggregated_usage: [{
                 unit: 'STORAGE_PER_MONTH',
-                quantity: 1 * nri
+                quantity: 1 * nri,
+                cost: 0 * nri * n
               }, {
                 unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-                quantity: 1 * nri * n
+                quantity: 1 * nri * n,
+                cost: 0 * nri * n
               },
                 {
                   unit: 'HEAVY_API_CALLS_PER_MONTH',
-                  quantity: 100 * nri * n
+                  quantity: 100 * nri * n,
+                  cost: 0 * nri * n
                 }],
               plans: [{
                 id: 'plan_123',
+                cost: 0 * nri * n,
                 aggregated_usage: [{
                   unit: 'STORAGE_PER_MONTH',
-                  quantity: 1 * nri
+                  quantity: 1 * nri,
+                  cost: 0 * nri * n
                 }, {
                   unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-                  quantity: 1 * nri * n
+                  quantity: 1 * nri * n,
+                  cost: 0 * nri * n
                 },
                   {
                     unit: 'HEAVY_API_CALLS_PER_MONTH',
-                    quantity: 100 * nri * n
+                    quantity: 100 * nri * n,
+                    cost: 0 * nri * n
                   }]
               }]
             }]

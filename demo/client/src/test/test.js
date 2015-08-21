@@ -132,85 +132,112 @@ describe('abacus-demo-client', () => {
       // Expected usage report for the test organization
       const report = {
         organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+        cost: 0,
         resources: [{
           id: 'storage',
+          cost: 0,
           aggregated_usage: [{
             unit: 'STORAGE_PER_MONTH',
-            quantity: 1
+            quantity: 1,
+            cost: 0
           }, {
             unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-            quantity: 3
+            quantity: 3,
+            cost: 0
           }, {
             unit: 'HEAVY_API_CALLS_PER_MONTH',
-            quantity: 300
+            quantity: 300,
+            cost: 0
           }],
           plans: [{
             id: 'plan_123',
+            cost: 0,
             aggregated_usage: [{
               unit: 'STORAGE_PER_MONTH',
-              quantity: 1
+              quantity: 1,
+              cost: 0
             }, {
               unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-              quantity: 3
+              quantity: 3,
+              cost: 0
             }, {
               unit: 'HEAVY_API_CALLS_PER_MONTH',
-              quantity: 300
+              quantity: 300,
+              cost: 0
             }]
           }]
         }],
         spaces: [{
           id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
+          cost: 0,
           resources: [{
             id: 'storage',
+            cost: 0,
             aggregated_usage: [{
               unit: 'STORAGE_PER_MONTH',
-              quantity: 1
+              quantity: 1,
+              cost: 0
             }, {
               unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-              quantity: 3
+              quantity: 3,
+              cost: 0
             }, {
               unit: 'HEAVY_API_CALLS_PER_MONTH',
-              quantity: 300
+              quantity: 300,
+              cost: 0
             }],
             plans: [{
               id: 'plan_123',
+              cost: 0,
               aggregated_usage: [{
                 unit: 'STORAGE_PER_MONTH',
-                quantity: 1
+                quantity: 1,
+                cost: 0
               }, {
                 unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-                quantity: 3
+                quantity: 3,
+                cost: 0
               }, {
                 unit: 'HEAVY_API_CALLS_PER_MONTH',
-                quantity: 300
+                quantity: 300,
+                cost: 0
               }]
             }]
           }],
           consumers: [{
             id: 'all',
+            cost: 0,
             resources: [{
               id: 'storage',
+              cost: 0,
               aggregated_usage: [{
                 unit: 'STORAGE_PER_MONTH',
-                quantity: 1
+                quantity: 1,
+                cost: 0
               }, {
                 unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-                quantity: 3
+                quantity: 3,
+                cost: 0
               }, {
                 unit: 'HEAVY_API_CALLS_PER_MONTH',
-                quantity: 300
+                quantity: 300,
+                cost: 0
               }],
               plans: [{
                 id: 'plan_123',
+                cost: 0,
                 aggregated_usage: [{
                   unit: 'STORAGE_PER_MONTH',
-                  quantity: 1
+                  quantity: 1,
+                  cost: 0
                 }, {
                   unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-                  quantity: 3
+                  quantity: 3,
+                  cost: 0
                 }, {
                   unit: 'HEAVY_API_CALLS_PER_MONTH',
-                  quantity: 300
+                  quantity: 300,
+                  cost: 0
                 }]
               }]
             }]
