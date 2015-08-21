@@ -1,0 +1,50 @@
+{
+  "name": "abacus-cfoauth",
+  "description": "Simplify getting OAuth token using client credentials",
+  "license": "Apache-2.0",
+  "version": "0.0.1-dev.1",
+  "private": true,
+  "readme": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/piotrprzybylski/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "lib/",
+    "src/"
+  ],
+  "main": "lib/index.js",
+  "scripts": {
+    "babel": "babel",
+    "test": "eslint && mocha",
+    "lint": "eslint",
+    "pub": "publish"
+  },
+  "dependencies": {
+    "abacus-debug": "^0.0.1-dev",
+    "abacus-express": "^0.0.1-dev",
+    "abacus-request": "^0.0.1-dev",
+    "abacus-retry": "^0.0.1-dev",
+    "abacus-router": "^0.0.1-dev",
+    "abacus-yieldable": "^0.0.1-dev",
+    "babel-runtime": "^5.8.19",
+    "underscore": "^1.8.3",
+    "chai": "^3.0.0",
+    "co": "^3.0.6"
+  },
+  "devDependencies": {
+    "abacus-babel": "file:../../../tools/babel",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-publish": "file:../../../tools/publish"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  }
+}
