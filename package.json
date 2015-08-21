@@ -93,6 +93,7 @@
     "abacus-webapp": "file:lib/utils/webapp",
     "abacus-yieldable": "file:lib/utils/yieldable",
     "abacus-perf-test": "file:test/perf",
+    "abacus-usage-accumulator-itest": "file:test/aggregation/accumulator",
     "abacus-demo-client": "file:demo/client",
     "abacus-doc": "file:doc",
     "abacus-etc": "file:etc",
