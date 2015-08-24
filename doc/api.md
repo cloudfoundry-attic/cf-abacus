@@ -182,7 +182,7 @@ Cloud resource definitions
 
 Cloud resource definition documents are used to configure the types of metrics, units, metering, aggregation and rating formulas used by Abacus to meter and rate usage for each type of Cloud resource.
 
-Cloud resource definition documents are currently provided as JSON configuration files, but a simple REST API could also be defined for them.
+Cloud resource definition documents are currently provided as [JSON configuration files](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/config/resource/src/resources), but a simple REST API could also be defined for them.
 
 ### JSON representation:
 ```json
