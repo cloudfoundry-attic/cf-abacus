@@ -1,5 +1,5 @@
-abacus-schema
+abacus-types
 ===
 
-JSON schema validator.
+Data schema definition and validation utilities.
 

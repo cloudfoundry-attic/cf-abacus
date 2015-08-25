@@ -1,6 +1,6 @@
 {
   "name": "abacus-schema",
-  "description": "JSON schema validator",
+  "description": "Data schema definition and validation utilities",
   "license": "Apache-2.0",
   "version": "0.0.1-dev.2",
   "private": true,
@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "abacus-debug": "file:../debug",
+    "graphql": "^0.1.2",
     "is-my-json-valid": "^2.12.0"
   },
   "devDependencies": {
