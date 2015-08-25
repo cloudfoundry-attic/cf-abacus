@@ -29,7 +29,8 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-schema": "file:../../utils/schema"
+    "abacus-schema": "file:../../utils/schema",
+    "abacus-resource-config": "file:../resource"
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
