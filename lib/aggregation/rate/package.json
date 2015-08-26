@@ -46,6 +46,7 @@
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-yieldable": "file:../../utils/yieldable",
+    "abacus-transform": "file:../../utils/transform",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
