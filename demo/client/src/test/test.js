@@ -134,7 +134,7 @@ describe('abacus-demo-client', () => {
         organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
         cost: 0,
         resources: [{
-          id: 'storage',
+          resource_id: 'storage',
           cost: 0,
           aggregated_usage: [{
             unit: 'STORAGE_PER_MONTH',
@@ -150,7 +150,7 @@ describe('abacus-demo-client', () => {
             cost: 0
           }],
           plans: [{
-            id: 'plan_123',
+            plan_id: 'plan_123',
             cost: 0,
             aggregated_usage: [{
               unit: 'STORAGE_PER_MONTH',
@@ -168,10 +168,10 @@ describe('abacus-demo-client', () => {
           }]
         }],
         spaces: [{
-          id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
+          space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
           cost: 0,
           resources: [{
-            id: 'storage',
+            resource_id: 'storage',
             cost: 0,
             aggregated_usage: [{
               unit: 'STORAGE_PER_MONTH',
@@ -187,7 +187,7 @@ describe('abacus-demo-client', () => {
               cost: 0
             }],
             plans: [{
-              id: 'plan_123',
+              plan_id: 'plan_123',
               cost: 0,
               aggregated_usage: [{
                 unit: 'STORAGE_PER_MONTH',
@@ -205,10 +205,10 @@ describe('abacus-demo-client', () => {
             }]
           }],
           consumers: [{
-            id: 'ALL',
+            consumer_id: 'ALL',
             cost: 0,
             resources: [{
-              id: 'storage',
+              resource_id: 'storage',
               cost: 0,
               aggregated_usage: [{
                 unit: 'STORAGE_PER_MONTH',
@@ -224,7 +224,7 @@ describe('abacus-demo-client', () => {
                 cost: 0
               }],
               plans: [{
-                id: 'plan_123',
+                plan_id: 'plan_123',
                 cost: 0,
                 aggregated_usage: [{
                   unit: 'STORAGE_PER_MONTH',
