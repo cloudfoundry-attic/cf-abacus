@@ -185,6 +185,39 @@ People
 
 [List of all contributors](https://github.com/cloudfoundry-incubator/cf-abacus/graphs/contributors)
 
+Development
+---
+
+The Abacus project has a tree structure that can be seen above. It is a module consisting of submodules. These submodules are located under the `lib` directory. When developing locally you often need to make changes to one submodule only, build and run the tests, rather than rebuilding all submodules.
+
+Let's take the metering collector module as an example. First you have to build all modules:
+
+```
+cd cf-abacus
+npm run build
+```
+
+Then you have to install your submodule's dependencies
+
+```
+cd cf-abacus/lib/metering/collector
+npm install
+```
+
+At this point your dev cycle boils down to:
+
+```
+cd cf-abacus/lib/metering/collector
+npm run babel && npm run lint && npm test
+```
+
+If you want to run the collector app you can run:
+
+```
+cd cf-abacus/lib/metering/collector
+npm start
+```
+
 License
 ---
 
