@@ -205,7 +205,7 @@ describe('abacus-demo-client', () => {
             }]
           }],
           consumers: [{
-            id: 'all',
+            id: 'ALL',
             cost: 0,
             resources: [{
               id: 'storage',

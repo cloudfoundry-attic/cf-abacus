@@ -33,8 +33,8 @@ const batch = {
     organization_id: 'org_456',
     space_id: 'space_567',
     consumer: {
-      type: 'external',
-      value: '123'
+      type: 'EXTERNAL',
+      consumer_id: '123'
     },
     resource_id: 'storage',
     plan_id: 'plan_123',

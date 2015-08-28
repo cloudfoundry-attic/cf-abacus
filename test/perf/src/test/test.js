@@ -99,7 +99,7 @@ describe('abacus-perf-test', () => {
         organization_id: orgid(o),
         cost: 0,
         resources: [{
-          id: 'storage',
+          resource_id: 'storage',
           cost: 0 * nri * n,
           aggregated_usage: [{
             unit: 'STORAGE_PER_MONTH',
@@ -116,7 +116,7 @@ describe('abacus-perf-test', () => {
               cost: 0 * nri * n
             }],
           plans: [{
-            id: 'plan_123',
+            plan_id: 'plan_123',
             cost: 0 * nri * n,
             aggregated_usage: [{
               unit: 'STORAGE_PER_MONTH',
@@ -135,10 +135,10 @@ describe('abacus-perf-test', () => {
           }]
         }],
         spaces: [{
-          id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
+          space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
           cost: 0 * nri * n,
           resources: [{
-            id: 'storage',
+            resource_id: 'storage',
             cost: 0 * nri * n,
             aggregated_usage: [{
               unit: 'STORAGE_PER_MONTH',
@@ -155,7 +155,7 @@ describe('abacus-perf-test', () => {
                 cost: 0 * nri * n
               }],
             plans: [{
-              id: 'plan_123',
+              plan_id: 'plan_123',
               cost: 0 * nri * n,
               aggregated_usage: [{
                 unit: 'STORAGE_PER_MONTH',
@@ -174,10 +174,10 @@ describe('abacus-perf-test', () => {
             }]
           }],
           consumers: [{
-            id: 'all',
+            consumer_id: 'ALL',
             cost: 0 * nri * n,
             resources: [{
-              id: 'storage',
+              resource_id: 'storage',
               cost: 0 * nri * n,
               aggregated_usage: [{
                 unit: 'STORAGE_PER_MONTH',
@@ -194,7 +194,7 @@ describe('abacus-perf-test', () => {
                   cost: 0 * nri * n
                 }],
               plans: [{
-                id: 'plan_123',
+                plan_id: 'plan_123',
                 cost: 0 * nri * n,
                 aggregated_usage: [{
                   unit: 'STORAGE_PER_MONTH',

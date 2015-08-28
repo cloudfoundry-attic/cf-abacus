@@ -29,14 +29,15 @@
     "pub": "publish"
   },
   "dependencies": {
+    "abacus-eval": "file:../../utils/eval",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish",
-    "abacus-usage-schemas": "file:../../config/schemas",
-    "underscore": "^1.8.3"
+    "abacus-usage-schemas": "file:../../config/schemas"
   },
   "engines": {
     "node": ">=0.10.0",

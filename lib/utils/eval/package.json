@@ -1,10 +1,10 @@
 {
-  "name": "abacus-usage-schemas",
-  "description": "JSON schemas for usage data",
+  "name": "abacus-eval",
+  "description": "Evaluate a Javascript expression",
   "license": "Apache-2.0",
   "version": "0.0.1-dev.2",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/metering/schemas",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/eval",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -29,9 +29,8 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-schema": "file:../../utils/schema",
-    "abacus-resource-config": "file:../resource",
-    "underscore": "^1.8.3"
+    "abacus-debug": "file:../debug",
+    "babel-core": "^5.8.19"
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
