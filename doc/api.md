@@ -42,7 +42,7 @@ _Description_: Retrieves a previously submitted _resource usage_ document.
 _HTTP response_: 200 to indicate success with the requested _resource usage_ document, 404 if the usage is not found, 500 to report a server error.
 
 ### JSON representation:
-```json
+```js
 {
   "usage": [
     {
@@ -73,7 +73,7 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
 ```
 
 ### JSON Schema:
-```json
+```js
 {
   "type": "object",
   "required": [
@@ -169,8 +169,7 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
     }
   },
   "additionalProperties": false,
-  "title": "Resource Usage",
-  "description": "Usage data for resource instances"
+  "title": "Resource Usage"
 }
 ```
 
@@ -182,7 +181,7 @@ Cloud resource definition documents are used to configure the types of measureme
 Cloud resource definition documents are currently provided as [JSON configuration files](../lib/config/resource/src/resources). A REST API will also be defined to allow resource providers to submit resource definition documents for the resources they provide.
 
 ### JSON representation:
-```json
+```js
 {
   "resource_id": "storage-service",
   "measures": [
@@ -201,7 +200,7 @@ Cloud resource definition documents are currently provided as [JSON configuratio
       "unit": "GIGABYTE",
       "meter": "(m) => m.storage / 1073741824",
       "accumulate": "(a, qty) => Math.max(a, qty)",
-      "rate": "(price, qty) => price ? price * qty : 0"
+      "rate": "(p, qty) => p ? p * qty : 0"
     },
     {
       "name": "thousand_api_calls",
@@ -216,7 +215,7 @@ Cloud resource definition documents are currently provided as [JSON configuratio
 ```
 
 ### JSON Schema:
-```json
+```js
 {
   "type": "object",
   "required": [
@@ -284,10 +283,7 @@ Cloud resource definition documents are currently provided as [JSON configuratio
     }
   },
   "additionalProperties": false,
-  "title": "Resource Definition",
-  "description": "Defines the measures, metrics, units, and metering, " +
-    "accumulation, aggregation and rating functions used to meter a " +
-    "particular resource"
+  "title": "Resource Definition"
 }
 ```
 
@@ -304,7 +300,7 @@ _Description_: Retrieves a usage report document containing a summary of the Clo
 _HTTP response_: 200 to indicate success with a _usage summary report_ JSON document, 404 if the usage is not found, 500 to report a server error.
 
 ### JSON representation:
-```json
+```js
 {
   "organization_id": "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
   "start": 1435622400000,
@@ -465,7 +461,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
 ```
 
 ### JSON Schema:
-```json
+```js
 {
   "type": "object",
   "properties": {
@@ -675,9 +671,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
     "spaces"
   ],
   "additionalProperties": false,
-  "title": "Usage Summary Report",
-  "description": "Reports a summary of aggregated usage for an organization " +
-  "on a specified date"
+  "title": "Usage Summary Report"
 }
 ```
 
