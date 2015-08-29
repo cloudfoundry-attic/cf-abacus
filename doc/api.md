@@ -42,7 +42,7 @@ _Description_: Retrieves a previously submitted _resource usage_ document.
 _HTTP response_: 200 to indicate success with the requested _resource usage_ document, 404 if the usage is not found, 500 to report a server error.
 
 ### JSON representation:
-```js
+```json
 {
   "usage": [
     {
@@ -73,7 +73,7 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
 ```
 
 ### JSON Schema:
-```js
+```json
 {
   "type": "object",
   "required": [
@@ -181,7 +181,7 @@ Cloud resource definition documents are used to configure the types of measureme
 Cloud resource definition documents are currently provided as [JSON configuration files](../lib/config/resource/src/resources). A REST API will also be defined to allow resource providers to submit resource definition documents for the resources they provide.
 
 ### JSON representation:
-```js
+```json
 {
   "resource_id": "storage-service",
   "measures": [
@@ -215,7 +215,7 @@ Cloud resource definition documents are currently provided as [JSON configuratio
 ```
 
 ### JSON Schema:
-```js
+```json
 {
   "type": "object",
   "required": [
@@ -300,7 +300,7 @@ _Description_: Retrieves a usage report document containing a summary of the Clo
 _HTTP response_: 200 to indicate success with a _usage summary report_ JSON document, 404 if the usage is not found, 500 to report a server error.
 
 ### JSON representation:
-```js
+```json
 {
   "organization_id": "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
   "start": 1435622400000,
@@ -461,7 +461,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
 ```
 
 ### JSON Schema:
-```js
+```json
 {
   "type": "object",
   "properties": {
