@@ -63,14 +63,14 @@ describe('abacus-demo-client', () => {
               resource_id: 'storage',
               plan_id: 'plan_123',
               resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
-              metrics: [{
-                unit: 'BYTE',
+              measured_usage: [{
+                measure: 'storage',
                 quantity: 1073741824
               }, {
-                unit: 'LIGHT_API_CALL',
+                measure: 'light_api_calls',
                 quantity: 1000
               }, {
-                unit: 'HEAVY_API_CALL',
+                measure: 'heavy_api_calls',
                 quantity: 100
               }]
             }]
@@ -89,14 +89,14 @@ describe('abacus-demo-client', () => {
               resource_id: 'storage',
               plan_id: 'plan_123',
               resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
-              metrics: [{
-                unit: 'BYTE',
+              measured_usage: [{
+                measure: 'storage',
                 quantity: 1073741824
               }, {
-                unit: 'LIGHT_API_CALL',
+                measure: 'light_api_calls',
                 quantity: 1000
               }, {
-                unit: 'HEAVY_API_CALL',
+                measure: 'heavy_api_calls',
                 quantity: 100
               }]
             }]
@@ -115,14 +115,14 @@ describe('abacus-demo-client', () => {
               resource_id: 'storage',
               plan_id: 'plan_123',
               resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
-              metrics: [{
-                unit: 'BYTE',
+              measured_usage: [{
+                measure: 'storage',
                 quantity: 1073741824
               }, {
-                unit: 'LIGHT_API_CALL',
+                measure: 'light_api_calls',
                 quantity: 1000
               }, {
-                unit: 'HEAVY_API_CALL',
+                measure: 'heavy_api_calls',
                 quantity: 100
               }]
             }]
@@ -137,15 +137,15 @@ describe('abacus-demo-client', () => {
           resource_id: 'storage',
           cost: 0,
           aggregated_usage: [{
-            unit: 'STORAGE_PER_MONTH',
+            metric: 'storage',
             quantity: 1,
             cost: 0
           }, {
-            unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
+            metric: 'thousand_light_api_calls',
             quantity: 3,
             cost: 0
           }, {
-            unit: 'HEAVY_API_CALLS_PER_MONTH',
+            metric: 'heavy_api_calls',
             quantity: 300,
             cost: 0
           }],
@@ -153,15 +153,15 @@ describe('abacus-demo-client', () => {
             plan_id: 'plan_123',
             cost: 0,
             aggregated_usage: [{
-              unit: 'STORAGE_PER_MONTH',
+              metric: 'storage',
               quantity: 1,
               cost: 0
             }, {
-              unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
+              metric: 'thousand_light_api_calls',
               quantity: 3,
               cost: 0
             }, {
-              unit: 'HEAVY_API_CALLS_PER_MONTH',
+              metric: 'heavy_api_calls',
               quantity: 300,
               cost: 0
             }]
@@ -174,15 +174,15 @@ describe('abacus-demo-client', () => {
             resource_id: 'storage',
             cost: 0,
             aggregated_usage: [{
-              unit: 'STORAGE_PER_MONTH',
+              metric: 'storage',
               quantity: 1,
               cost: 0
             }, {
-              unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
+              metric: 'thousand_light_api_calls',
               quantity: 3,
               cost: 0
             }, {
-              unit: 'HEAVY_API_CALLS_PER_MONTH',
+              metric: 'heavy_api_calls',
               quantity: 300,
               cost: 0
             }],
@@ -190,15 +190,15 @@ describe('abacus-demo-client', () => {
               plan_id: 'plan_123',
               cost: 0,
               aggregated_usage: [{
-                unit: 'STORAGE_PER_MONTH',
+                metric: 'storage',
                 quantity: 1,
                 cost: 0
               }, {
-                unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
+                metric: 'thousand_light_api_calls',
                 quantity: 3,
                 cost: 0
               }, {
-                unit: 'HEAVY_API_CALLS_PER_MONTH',
+                metric: 'heavy_api_calls',
                 quantity: 300,
                 cost: 0
               }]
@@ -211,15 +211,15 @@ describe('abacus-demo-client', () => {
               resource_id: 'storage',
               cost: 0,
               aggregated_usage: [{
-                unit: 'STORAGE_PER_MONTH',
+                metric: 'storage',
                 quantity: 1,
                 cost: 0
               }, {
-                unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
+                metric: 'thousand_light_api_calls',
                 quantity: 3,
                 cost: 0
               }, {
-                unit: 'HEAVY_API_CALLS_PER_MONTH',
+                metric: 'heavy_api_calls',
                 quantity: 300,
                 cost: 0
               }],
@@ -227,15 +227,15 @@ describe('abacus-demo-client', () => {
                 plan_id: 'plan_123',
                 cost: 0,
                 aggregated_usage: [{
-                  unit: 'STORAGE_PER_MONTH',
+                  metric: 'storage',
                   quantity: 1,
                   cost: 0
                 }, {
-                  unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
+                  metric: 'thousand_light_api_calls',
                   quantity: 3,
                   cost: 0
                 }, {
-                  unit: 'HEAVY_API_CALLS_PER_MONTH',
+                  metric: 'heavy_api_calls',
                   quantity: 300,
                   cost: 0
                 }]

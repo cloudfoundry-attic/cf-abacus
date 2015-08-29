@@ -81,14 +81,14 @@ describe('abacus-perf-test', () => {
           resource_id: 'storage',
           plan_id: 'plan_123',
           resource_instance_id: riid(o, ri),
-          metrics: [{
-            unit: 'BYTE',
+          measured_usage: [{
+            measure: 'storage',
             quantity: 1073741824
           }, {
-            unit: 'LIGHT_API_CALL',
+            measure: 'light_api_calls',
             quantity: 1000
           }, {
-            unit: 'HEAVY_API_CALL',
+            measure: 'heavy_api_calls',
             quantity: 100
           }]
         }]
@@ -102,16 +102,16 @@ describe('abacus-perf-test', () => {
           resource_id: 'storage',
           cost: 0 * nri * n,
           aggregated_usage: [{
-            unit: 'STORAGE_PER_MONTH',
-            quantity: 1 * nri,
-            cost: 0 * nri * n
-          }, {
-            unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-            quantity: 1 * nri * n,
-            cost: 0 * nri * n
-          },
+              metric: 'storage',
+              quantity: 1 * nri,
+              cost: 0 * nri * n
+            }, {
+              metric: 'thousand_light_api_calls',
+              quantity: 1 * nri * n,
+              cost: 0 * nri * n
+            },
             {
-              unit: 'HEAVY_API_CALLS_PER_MONTH',
+              metric: 'heavy_api_calls',
               quantity: 100 * nri * n,
               cost: 0 * nri * n
             }],
@@ -119,16 +119,16 @@ describe('abacus-perf-test', () => {
             plan_id: 'plan_123',
             cost: 0 * nri * n,
             aggregated_usage: [{
-              unit: 'STORAGE_PER_MONTH',
-              quantity: 1 * nri,
-              cost: 0 * nri * n
-            }, {
-              unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-              quantity: 1 * nri * n,
-              cost: 0 * nri * n
-            },
+                metric: 'storage',
+                quantity: 1 * nri,
+                cost: 0 * nri * n
+              }, {
+                metric: 'thousand_light_api_calls',
+                quantity: 1 * nri * n,
+                cost: 0 * nri * n
+              },
               {
-                unit: 'HEAVY_API_CALLS_PER_MONTH',
+                metric: 'heavy_api_calls',
                 quantity: 100 * nri * n,
                 cost: 0 * nri * n
               }]
@@ -141,16 +141,16 @@ describe('abacus-perf-test', () => {
             resource_id: 'storage',
             cost: 0 * nri * n,
             aggregated_usage: [{
-              unit: 'STORAGE_PER_MONTH',
-              quantity: 1 * nri,
-              cost: 0 * nri * n
-            }, {
-              unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-              quantity: 1 * nri * n,
-              cost: 0 * nri * n
-            },
+                metric: 'storage',
+                quantity: 1 * nri,
+                cost: 0 * nri * n
+              }, {
+                metric: 'thousand_light_api_calls',
+                quantity: 1 * nri * n,
+                cost: 0 * nri * n
+              },
               {
-                unit: 'HEAVY_API_CALLS_PER_MONTH',
+                metric: 'heavy_api_calls',
                 quantity: 100 * nri * n,
                 cost: 0 * nri * n
               }],
@@ -158,16 +158,16 @@ describe('abacus-perf-test', () => {
               plan_id: 'plan_123',
               cost: 0 * nri * n,
               aggregated_usage: [{
-                unit: 'STORAGE_PER_MONTH',
-                quantity: 1 * nri,
-                cost: 0 * nri * n
-              }, {
-                unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-                quantity: 1 * nri * n,
-                cost: 0 * nri * n
-              },
+                  metric: 'storage',
+                  quantity: 1 * nri,
+                  cost: 0 * nri * n
+                }, {
+                  metric: 'thousand_light_api_calls',
+                  quantity: 1 * nri * n,
+                  cost: 0 * nri * n
+                },
                 {
-                  unit: 'HEAVY_API_CALLS_PER_MONTH',
+                  metric: 'heavy_api_calls',
                   quantity: 100 * nri * n,
                   cost: 0 * nri * n
                 }]
@@ -180,16 +180,16 @@ describe('abacus-perf-test', () => {
               resource_id: 'storage',
               cost: 0 * nri * n,
               aggregated_usage: [{
-                unit: 'STORAGE_PER_MONTH',
-                quantity: 1 * nri,
-                cost: 0 * nri * n
-              }, {
-                unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-                quantity: 1 * nri * n,
-                cost: 0 * nri * n
-              },
+                  metric: 'storage',
+                  quantity: 1 * nri,
+                  cost: 0 * nri * n
+                }, {
+                  metric: 'thousand_light_api_calls',
+                  quantity: 1 * nri * n,
+                  cost: 0 * nri * n
+                },
                 {
-                  unit: 'HEAVY_API_CALLS_PER_MONTH',
+                  metric: 'heavy_api_calls',
                   quantity: 100 * nri * n,
                   cost: 0 * nri * n
                 }],
@@ -197,16 +197,16 @@ describe('abacus-perf-test', () => {
                 plan_id: 'plan_123',
                 cost: 0 * nri * n,
                 aggregated_usage: [{
-                  unit: 'STORAGE_PER_MONTH',
-                  quantity: 1 * nri,
-                  cost: 0 * nri * n
-                }, {
-                  unit: 'THOUSAND_LIGHT_API_CALLS_PER_MONTH',
-                  quantity: 1 * nri * n,
-                  cost: 0 * nri * n
-                },
+                    metric: 'storage',
+                    quantity: 1 * nri,
+                    cost: 0 * nri * n
+                  }, {
+                    metric: 'thousand_light_api_calls',
+                    quantity: 1 * nri * n,
+                    cost: 0 * nri * n
+                  },
                   {
-                    unit: 'HEAVY_API_CALLS_PER_MONTH',
+                    metric: 'heavy_api_calls',
                     quantity: 100 * nri * n,
                     cost: 0 * nri * n
                   }]
