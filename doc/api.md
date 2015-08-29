@@ -1,9 +1,9 @@
 Abacus Metering and Aggregation REST API
 ===
 
-The Abacus Usage Metering and Aggregation REST API is used by Cloud resource providers to submit usage data, usage dashboards to retrieve real time usage reports and usage summaries, and billing systems to retrieve the aggregated and rated usage data needed for billing. Cloud resources include services and application runtimes for example.
+The Abacus Usage Metering and Aggregation REST API is used by Cloud resource providers to submit usage data, usage dashboards to retrieve real time usage reports, and billing systems to retrieve the aggregated and rated usage data needed for billing. Cloud resources include services and application runtimes or containers for example.
 
-Usage data is exchanged with Abacus in the form of usage documents. Each document type has a JSON representation and one or more methods.
+Usage data is exchanged with Abacus in the form of usage documents. Each document type has a JSON representation and one or more REST methods.
 
 Document types
 ---
@@ -12,18 +12,18 @@ Resource usage
 
 Resource configuration
 
-Usage summary
+Usage summary report
 
-Usage report
+Detailed usage report
 
 Resource usage
 ---
 
-The _resource usage_ API is used by Cloud resource providers to submit usage for instances of Cloud resources, including service instances and application runtimes.
+The _resource usage_ API is used by Cloud resource providers to submit usage for instances of Cloud resources, including service instances and application runtimes or containers.
 
 Usage can be submitted by POSTing _resource usage_ documents to Abacus.
 
-A _resource usage document_ contains usage data for one or more Cloud resources.
+A _resource usage document_ contains usage measurements for one or more Cloud resources.
 
 Once a _resource usage_ document has been submitted it can be retrieved using GET.
 
@@ -51,19 +51,19 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
       "organization_id": "54257f98-83f0-4eca-ae04-9ea35277a538",
       "space_id": "d98b5916-3c77-44b9-ac12-04456df23eae",
       "consumer": {
-        "type": "cloud-foundry-application",
-        "value": "d98b5916-3c77-44b9-ac12-045678edabae"
+        "type": "CF_APP",
+        "consumer_id": "d98b5916-3c77-44b9-ac12-045678edabae"
       },
-      "resource_id": "sample-resource",
-      "plan_id": "sample-plan",
+      "resource_id": "storage-service",
+      "plan_id": "basic-plan",
       "resource_instance_id": "d98b5916-3c77-44b9-ac12-04d61c7a4eae",
-      "metrics": [
+      "measured_usage": [
         {
-          "unit": "GIGABYTE",
+          "measure": "storage",
           "quantity": 10
         },
         {
-          "unit": "API_CALL",
+          "measure": "api_calls",
           "quantity": 10
         }
       ]
@@ -93,7 +93,7 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
           "resource_id",
           "plan_id",
           "resource_instance_id",
-          "metrics"
+          "measured_usage"
         ],
         "properties": {
           "start": {
@@ -116,17 +116,17 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
           "consumer": {
             "type": "object",
             "required": [
-              "value"
+              "type", "consumer_id"
             ],
             "properties": {
               "type": {
                 "enum": [
-                  "cloud_foundry_application",
-                  "external"
+                  "CF_APP",
+                  "EXTERNAL"
                 ],
-                "default": "cloud_foundry_application"
+                "default": "CF_APP"
               },
-              "value": {
+              "consumer_id": {
                 "type": "string"
               }
             },
@@ -141,20 +141,17 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
           "resource_instance_id": {
             "type": "string"
           },
-          "metrics": {
+          "measured_usage": {
             "type": "array",
             "minItems": 1,
             "items": {
               "type": "object",
               "required": [
-                "unit",
+                "measure",
                 "quantity"
               ],
               "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "unit": {
+                "measure": {
                   "type": "string"
                 },
                 "quantity": {
@@ -180,50 +177,39 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
 Cloud resource definitions
 ---
 
-Cloud resource definition documents are used to configure the types of metrics, units, metering, aggregation and rating formulas used by Abacus to meter and rate usage for each type of Cloud resource.
+Cloud resource definition documents are used to configure the types of measurements, metrics, units, and metering, aggregation and rating formulas used by Abacus to meter and rate usage for each type of Cloud resource.
 
-Cloud resource definition documents are currently provided as [JSON configuration files](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/config/resource/src/resources), but a simple REST API could also be defined for them.
+Cloud resource definition documents are currently provided as [JSON configuration files](../lib/config/resource/src/resources). A REST API will also be defined to allow resource providers to submit resource definition documents for the resources they provide.
 
 ### JSON representation:
 ```json
 {
-  "id":"8e9f8a35-dc03-4192-8bba-a77ae60222eb",
-  "metrics": [
+  "resource_id": "storage-service",
+  "measures": [
     {
-      "name": "Storage",
-      "units": [
-        {
-          "name": "GIGABYTE",
-          "quantityType": "CURRENT"
-        }
-      ]
+      "name": "storage",
+      "unit": "BYTE"
     },
     {
-      "name": "ApiCalls",
-      "units": [
-        {
-          "name": "API_CALL",
-          "quantityType": "DELTA"
-        }
-      ]
+      "name": "api_calls",
+      "units": "CALL"
     }
   ],
-  "transforms": [
+  "metrics": [
     {
-      "id": "GB_PER_MONTH",
+      "name": "storage",
       "unit": "GIGABYTE",
-      "aggregationGroup": {
-        "name": "monthly"
-      },
-      "meter": "AVG({GIGABYTE})"
+      "meter": "(m) => m.storage / 1073741824",
+      "accumulate": "(a, qty) => Math.max(a, qty)",
+      "rate": "(price, qty) => price ? price * qty : 0"
     },
     {
-      "id": "API_CALLS_PER_MONTH",
-      "unit": "API_CALL",
-      "aggregationGroup": {
-        "name": "monthly"
-      },
-      "meter": "SUM({API_CALL})"
+      "name": "thousand_api_calls",
+      "unit": "THOUSAND_CALLS",
+      "meter": "(m) => m.light_api_calls / 1000",
+      "accumulate": "(a, qty) => a ? a + qty : qty",
+      "aggregate": "(a, qty) => a ? a + qty : qty",
+      "rate": "(p, qty) => p ? p * qty : 0"
     }
   ]
 }
@@ -234,13 +220,34 @@ Cloud resource definition documents are currently provided as [JSON configuratio
 {
   "type": "object",
   "required": [
-    "id",
-    "metrics",
-    "transforms"
+    "resource_id",
+    "measures",
+    "metrics"
   ],
   "properties": {
-    "id": {
+    "resource_id": {
       "type": "string"
+    },
+    "measures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "unit"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "additionalItems": false
     },
     "metrics": {
       "type": "array",
@@ -248,77 +255,28 @@ Cloud resource definition documents are currently provided as [JSON configuratio
       "items": {
         "type": "object",
         "required": [
-          "units"
+          "name",
+          "unit",
         ],
         "properties": {
           "name": {
             "type": "string"
           },
-          "units": {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "type": "object",
-              "required": [
-                "name",
-                "quantityType"
-              ],
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "quantityType": {
-                  "enum": [
-                    "DELTA",
-                    "CURRENT"
-                  ]
-                }
-              },
-              "additionalProperties": false
-            },
-            "additionalItems": false
-          }
-        },
-        "additionalProperties": false
-      },
-      "additionalItems": false
-    },
-    "transforms": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "object",
-        "required": [
-          "id",
-          "unit",
-          "meter"
-        ],
-        "properties": {
-          "id": {
-            "type": "string"
-          },
           "unit": {
             "type": "string"
           },
-          "aggregationGroup": {
-            "type": "object",
-            "required": [
-              "name"
-            ],
-            "properties": {
-              "name": {
-                "enum": [
-                  "daily",
-                  "monthly"
-                ]
-              }
-            },
-            "additionalProperties": false
+          "meter": {
+            "type": "string"
           },
-          "meter": {},
-          "accumulate": {},
-          "aggregate": {},
-          "rate": {}
+          "accumulate": {
+            "type": "string"
+          },
+          "aggregate": {
+            "type": "string"
+          },
+          "rate": {
+            "type": "string"
+          }
         },
         "additionalProperties": false
       },
@@ -327,328 +285,408 @@ Cloud resource definition documents are currently provided as [JSON configuratio
   },
   "additionalProperties": false,
   "title": "Resource Definition",
-  "description": "Defines the metrics, units, metering, accumulation" +
-    "aggregation and rating formulas used to meter a particular resource"
+  "description": "Defines the measures, metrics, units, and metering, " +
+    "accumulation, aggregation and rating functions used to meter a " +
+    "particular resource"
 }
 ```
 
-_TODO Update the following APIs_
+Usage summary report
 ---
 
-Usage summary
----
-
-The _usage summary_ API is used to retrieve usage summary documents from Abacus.
+The _usage summary report_ API is used to retrieve usage summary report documents from Abacus.
 
 ### Method: get
-_HTTP request_: GET /v1/accounts/:account\_id/usage\_summary
+_HTTP request_: GET /v1/organizations/:organization_id/usage/:date
 
-_Description_: Retrieves a usage summary for the specified account. An account is defined by Abacus as a collection of organizations managed by a single billing entity.
+_Description_: Retrieves a usage report document containing a summary of the Cloud resource usage incurred by the specified organization on the specified date.
 
-_HTTP response_: 200 to indicate success with a _usage summary_ JSON document, 404 if the usage is not found, 500 to report a server error.
-
-### Method: get
-_HTTP request_: GET /v1/organizations/:organization\_id/usage\_summary
-
-_Description_: Retrieves a usage summary for the specified organization.
-
-_HTTP response_: 200 to indicate success with a _usage summary_ JSON document, 404 if the usage is not found, 500 to report a server error.
-
-### Method: get
-_HTTP request_: GET /v1/organizations/:organization\_ids\_array/usage\_summary
-
-_Description_: Retrieves a usage summary for the specified organizations.
-
-_HTTP response_: 200 to indicate success with a _usage summary_ JSON document, 404 if the usage is not found, 500 to report a server error.
+_HTTP response_: 200 to indicate success with a _usage summary report_ JSON document, 404 if the usage is not found, 500 to report a server error.
 
 ### JSON representation:
 ```json
 {
-  "summary":[
+  "organization_id": "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+  "start": 1435622400000,
+  "end": 1435708799999,
+  "cost": 0,
+  "id": "k-a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27-t-0001435622400000",
+  "spaces": [
     {
-      "billable_usage":
-      {
-        "services_cost": 847.8870967741937,
-        "support":
+      "space_id": "aaeae239-f3f8-483c-9dd0-de5d41c38b6a",
+      "cost": 0,
+      "consumers": [
         {
-          "type": "",
-          "cost": 0
-        },
-        "subscription":
-        {
-          "cost": 0
-        },
-        "runtime_cost": 0
-      },
-      "organizations":[
-        {
-          "region": "us-south",
-          "id": "2b5ab364-b02f-4119-86f8-9e0b95143c77",
-          "billable_usage":
-          {
-            "services_cost": 939.8551612903225,
-            "runtime_usage": 1906.025,
-            "runtime_cost": 132.37175,
-            "applications": 9,
-            "service_instances": 12
-          },
-          "name": "sampleorg",
-          "non_billable_usage": {
-            "services_cost": 0,
-            "runtime_usage": 0,
-            "runtime_cost": 0,
-            "applications": 0,
-            "service_instances": 0
-          },
-          "currency_code": "USD"
+          "consumer_id": "d98b5916-3c77-44b9-ac12-045678edabae",
+          "cost": 0,
+          "resources": [
+            {
+              "resource_id": "storage-service",
+              "cost": 0,
+              "aggregated_usage": [
+                {
+                  "metric": "storage",
+                  "quantity": 1,
+                  "cost": 0
+                },
+                {
+                  "metric": "thousand_light_api_calls",
+                  "quantity": 3,
+                  "cost": 0
+                },
+                {
+                  "metric": "heavy_api_calls",
+                  "quantity": 300,
+                  "cost": 0
+                }
+              ],
+              "plans": [
+                {
+                  "plan_id": "basic-plan",
+                  "cost": 0,
+                  "aggregated_usage": [
+                    {
+                      "metric": "storage",
+                      "quantity": 1,
+                      "cost": 0
+                    },
+                    {
+                      "metric": "thousand_light_api_calls",
+                      "quantity": 3,
+                      "cost": 0
+                    },
+                    {
+                      "metric": "heavy_api_calls",
+                      "quantity": 300,
+                      "cost": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ],
-      "month": "2014-10",
-      "non_billable_usage": {
-        "services_cost": 0,
-        "support": {
-          "type": "",
-          "cost": 0
-        },
-        "subscription": {
-          "cost": 0
-        },
-        "runtime_cost": 0
-      }
+      "resources": [
+        {
+          "resource_id": "storage-service",
+          "cost": 0,
+          "aggregated_usage": [
+            {
+              "metric": "storage",
+              "quantity": 1,
+              "cost": 0
+            },
+            {
+              "metric": "thousand_light_api_calls",
+              "quantity": 3,
+              "cost": 0
+            },
+            {
+              "metric": "heavy_api_calls",
+              "quantity": 300,
+              "cost": 0
+            }
+          ],
+          "plans": [
+            {
+              "plan_id": "basic-plan",
+              "cost": 0,
+              "aggregated_usage": [
+                {
+                  "metric": "storage",
+                  "quantity": 1,
+                  "cost": 0
+                },
+                {
+                  "metric": "thousand_light_api_calls",
+                  "quantity": 3,
+                  "cost": 0
+                },
+                {
+                  "metric": "heavy_api_calls",
+                  "quantity": 300,
+                  "cost": 0
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
-  "id": "40df7d7e841701cbb8f4dafa8b9ed16c",
-  "currency_code": "USD"
+  "resources": [
+    {
+      "resource_id": "storage-service",
+      "cost": 0,
+      "aggregated_usage": [
+        {
+          "metric": "storage",
+          "quantity": 1,
+          "cost": 0
+        },
+        {
+          "metric": "thousand_light_api_calls",
+          "quantity": 3,
+          "cost": 0
+        },
+        {
+          "metric": "heavy_api_calls",
+          "quantity": 300,
+          "cost": 0
+        }
+      ],
+      "plans": [
+        {
+          "plan_id": "basic-plan",
+          "cost": 0,
+          "aggregated_usage": [
+            {
+              "metric": "storage",
+              "quantity": 1,
+              "cost": 0
+            },
+            {
+              "metric": "thousand_light_api_calls",
+              "quantity": 3,
+              "cost": 0
+            },
+            {
+              "metric": "heavy_api_calls",
+              "quantity": 300,
+              "cost": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
 ```
 
-Usage report
----
-
-The _usage report_ API is used to retrieve usage report documents from Abacus.
-
-### Method: get
-_HTTP request_: GET /v1/accounts/:account\_id/usage/:month
-
-_Description_: Retrieves a usage report for an account for the given month. An account is defined by Abacus as a collection of organizations managed by a single billing entity.
-
-_HTTP response_: 200 to indicate success with a _usage report_ JSON document, 404 if the usage is not found, 500 to report a server error.
-
-### Method: get
-_HTTP request_: GET /v1/organizations/:organization\_id/usage/:month
-
-_Description_: Retrieves a usage report for an organization for the given month.
-
-_HTTP response_: 200 to indicate success with a _usage report_ JSON document, 404 if the usage is not found, 500 to report a server error.
-
-### Method: get
-_HTTP request_: GET /v1/organizations/:organization\_ids\_array/usage/:month
-
-_Description_: Retrieves a usage report for a list of organizations for the given month.
-
-_HTTP response_: 200 to indicate success with a _usage report_ JSON document, 404 if the usage is not found, 500 to report a server error.
-
-### JSON representation:
+### JSON Schema:
 ```json
 {
-  "summary": {
-    "billable_usage": {
-      "services_cost": 14093.262857142858,
-      "support": {
-        "type": "",
-        "cost": 0
-      },
-      "subscription": {
-        "cost": 0
-      },
-      "runtime_cost": 345.48493984375006
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
     },
-    "organizations": [
-      {
-        "region": "us-south",
-        "id": "2b5ab364-b02f-4119-86f8-9e0b95143c77",
-        "billable_usage": {
-          "services_cost": 11132.985676980104,
-          "runtime_usage": 5165.218626111111,
-          "runtime_cost": 361.56530382777777,
-          "applications": 24,
-          "service_instances": 36
+    "organization_id": {
+      "type": "string"
+    },
+    "start": {
+      "type": "integer",
+      "format": "utc-millisec"
+    },
+    "end": {
+      "type": "integer",
+      "format": "utc-millisec"
+    },
+    "resources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "resource_id": {
+            "type": "string"
+          },
+          "aggregated_usage": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "metric": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "type": "number"
+                },
+                "cost": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "metric",
+                "quantity",
+                "cost"
+              ],
+              "additionalProperties": false
+            },
+            "additionalItems": false
+          }
         },
-        "name": "sampleorg",
-        "non_billable_usage": {
-          "services_cost": 0,
-          "runtime_usage": 0,
-          "runtime_cost": 0,
-          "applications": 0,
-          "service_instances": 0
-        }
-      }
-    ],
-    "non_billable_usage": {
-      "services_cost": 0,
-      "support": {
-        "type": "",
-        "cost": 0
-      },
-      "subscription": {
-        "cost": 0
-      },
-      "runtime_cost": 0
-    }
-  },
-  "id": "40df7d7e841701cbb8f4dafa8b9ed16c",
-  "billable_usage": {
-    "services": [
-      {
-        "id": "cloudant",
-        "plans": [
-          {
-            "id": "cloudant-shared",
-            "name": "cloudant-shared",
-            "usage": [
-              {
-                "unit": "HEAVY_API_CALL",
-                "quantity": 1861,
-                "cost": 0,
-                "unitId": "HEAVY_API_CALLS_PER_MONTH"
-              },
-              {
-                "unit": "LIGHT_API_CALL",
-                "quantity": 0,
-                "cost": 0,
-                "unitId": "LIGHT_API_CALLS_PER_MONTH"
-              },
-              {
-                "unit": "GIGABYTE",
-                "quantity": 9.545204777270555,
-                "cost": 0,
-                "unitId": "STORAGE_PER_MONTH"
-              }
-            ]
-          }
+        "required": [
+          "resource_id",
+          "aggregated_usage"
         ],
-        "name": "cloudantNoSQLDB"
-      }
-    ],
-    "runtimes": [
-      {
-        "id": "sdk-for-nodejs",
-        "plans": [
-          {
-            "id": "04082014.ibm.node.default",
-            "name": "04082014.ibm.node.default",
-            "usage": [
-              {
-                "unit": "GB-HOURS",
-                "quantity": 506.03352006944453,
-                "cost": 9.172346404861116,
-                "unitId": "GB_HOURS_PER_MONTH"
-              }
-            ]
-          }
-        ],
-        "name": "sdk-for-nodejs"
-      }
-    ]
-  },
-  "organizations": [
-    {
-      "region": "eu-gb",
-      "id": "2946051b-f24a-440a-859c-6cff77fe32d9",
-      "billable_usage": {
-        "spaces": [
-          {
-            "id": "a9008905-ebab-47b9-b646-52aceb89d79d",
-            "services": [
-              {
-                "id": "46e77ec4-9a61-46b8-9955-2eef91559a22",
-                "name": "sqldb",
-                "instances": [
-                  {
-                    "id": "ce1a031c-6522-48bc-a68d-57a01e80aae2",
-                    "name": "SQL Database-bo",
-                    "usage": [
-                      {
-                        "unit": "GIGABYTE",
-                        "applicationId": null,
-                        "quantity": 0.0003662109375,
-                        "cost": 0,
-                        "unitId": "STORAGE_PER_MONTH"
-                      }
-                    ],
-                    "plan_id": "another-plan"
-                  }
-                ]
-              },
-              {
-                "id": "cloudant",
-                "instances": [
-                  {
-                    "id": "f4aec91b-13b7-4b7b-a9ab-dc9cc9d33f2b",
-                    "name": "Cloudant NoSQL DB-js",
-                    "usage": [
-                      {
-                        "unit": "HEAVY_API_CALL",
-                        "applicationId": null,
-                        "quantity": 298,
-                        "cost": 0.15,
-                        "unitId": "HEAVY_API_CALLS_PER_MONTH"
+        "additionalProperties": false
+      },
+      "additionalItems": false
+    },
+    "spaces": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "space_id": {
+            "type": "string"
+          },
+          "resources": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "resource_id": {
+                  "type": "string"
+                },
+                "aggregated_usage": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "metric": {
+                        "type": "string"
                       },
-                      {
-                        "unit": "LIGHT_API_CALL",
-                        "applicationId": null,
-                        "quantity": 0,
-                        "cost": 0,
-                        "unitId": "LIGHT_API_CALLS_PER_MONTH"
+                      "quantity": {
+                        "type": "number"
                       },
-                      {
-                        "unit": "GIGABYTE",
-                        "applicationId": null,
-                        "quantity": 0,
-                        "cost": 0,
-                        "unitId": "STORAGE_PER_MONTH"
+                      "cost": {
+                        "type": "number"
                       }
-                    ],
-                    "plan_id": "database-plan"
-                  }
-                ]
-              },
-            ],
-            "name": "MQA-LON",
-            "applications": [
-              {
-                "id": "b407363e-1ea4-4ef3-a7e4-ee25ff85a0dd",
-                "name": "ratingruntimesample",
-                "usage": [
-                  {
-                    "unit": "GB-HOURS",
-                    "buildpack": "e1120997-dcfe-4055-a6c9-9b23e33df1f2",
-                    "runtime": {
-                      "id": "e1120997-dcfe-4055-a6c9-9b23e33df1f2",
-                      "name": "liberty-for-java_v1-8-20141118-1610"
                     },
-                    "quantity": 227.2774475,
-                    "cost": 15.909421325,
-                    "unitId": "GB_HOURS_PER_MONTH"
-                  }
-                ]
-              }
-            ]
+                    "required": [
+                      "metric",
+                      "quantity",
+                      "cost"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "additionalItems": false
+                }
+              },
+              "required": [
+                "resource_id",
+                "aggregated_usage"
+              ],
+              "additionalProperties": false
+            },
+            "additionalItems": false
+          },
+          "consumers": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "consumer": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "enum": [
+                        "CF_APP",
+                        "EXTERNAL"
+                      ],
+                      "default": "CF_APP"
+                    },
+                    "consumer_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "consumer_id"
+                  ],
+                  "additionalProperties": false
+                },
+                "resources": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "resource_id": {
+                        "type": "string"
+                      },
+                      "aggregated_usage": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "metric": {
+                              "type": "string"
+                            },
+                            "quantity": {
+                              "type": "number"
+                            },
+                            "cost": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "metric",
+                            "quantity",
+                            "cost"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "additionalItems": false
+                      }
+                    },
+                    "required": [
+                      "resource_id",
+                      "aggregated_usage"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "additionalItems": false
+                }
+              },
+              "required": [
+                "consumer",
+                "resources"
+              ],
+              "additionalProperties": false
+            },
+            "additionalItems": false
           }
-        ]
+        },
+        "required": [
+          "space_id",
+          "resources",
+          "consumers"
+        ],
+        "additionalProperties": false
       },
-      "name": "sampleorg",
-      "non_billable_usage": {
-        "spaces": []
-      },
-      "currency_code": "USD"
+      "additionalItems": false
     }
-  ],
-  "non_billable_usage": {
-    "services": [],
-    "runtimes": []
   },
-  "currency_code": "USD"
+  "required": [
+    "id",
+    "organization_id",
+    "start",
+    "end",
+    "resources",
+    "spaces"
+  ],
+  "additionalProperties": false,
+  "title": "Usage Summary Report",
+  "description": "Reports a summary of aggregated usage for an organization " +
+  "on a specified date"
 }
 ```
+
+Detailed usage report
+---
+
+### TODO
+
+Document how to get detailed usage reports with GraphQL.
+...
+
 
