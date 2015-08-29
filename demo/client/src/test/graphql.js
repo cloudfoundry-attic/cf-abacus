@@ -17,26 +17,37 @@ const reporting = /:/.test(commander.reporting) ? commander.reporting :
   'https://abacus-usage-reporting.' + commander.reporting;
 
 // Run a usage GraphQL query
+//
+// Examples:
+//
 // const query = '{ organization(organization_id: "org_456", date:
-//   "2015-01-06") { id, organization_id, resources { id, aggregated_usage {
-//   unit, quantity}}}}';
+//   "2015-01-06") { organization_id, resources { resource_id,
+//   aggregated_usage { metric, quantity }}}}';
+//
 // const query = '{ organization(organization_id: "org_456", date:
-//    "2015-01-06") { id, organization_id, spaces { id, resources { id,
-//    aggregated_usage { unit, quantity}}}}}';
+//   "2015-01-06") { organization_id, spaces { space_id, resources {
+//   resource_id, aggregated_usage { metric, quantity }}}}}';
+//
 // const query = '{ organization(organization_id: "org_456", date:
-//   "2015-01-06") { id, organization_id, spaces { id, consumers { id,
-//   resources { id, aggregated_usage { unit, quantity}}}}}}';
+//   "2015-01-06") { organization_id, spaces { space_id, consumers {
+//   consumer_id, resources { resource_id, aggregated_usage {
+//   metric, quantity }}}}}}';
+//
 // const query = '{ organization(organization_id: "org_456", date:
-//   "2015-01-06") { id, organization_id, spaces { id, consumers { id }}}}';
+//   "2015-01-06") { organization_id, spaces { space_id, consumers {
+//   consumer_id }}}}';
+//
 // const query = '{ organization(organization_id: "org_456", date:
-//   "2015-01-06") { id, organization_id, resources { id, aggregated_usage {
-//   unit, quantity}}}}';
+//   "2015-01-06") { organization_id, resources { resource_id,
+//   aggregated_usage { metric, quantity }}}}';
+//
 // const query = '{ organizations(organization_ids: ["org_456", "org_789"],
-//   date: "2015-01-06") { id, organization_id, resources { id,
-//   aggregated_usage { unit, quantity}}}}';
+//   date: "2015-01-06") { organization_id, resources { resource_id,
+//   aggregated_usage { metric, quantity}}}}';
 
-const query = '{ account(account_id: "1234", date: "2015-01-06") { id, ' +
-  'organization_id, resources { id, aggregated_usage { unit, quantity}}}}';
+const query = '{ account(account_id: "1234", date: "2015-01-06") { ' +
+  'organization_id, resources { resource_id, aggregated_usage { ' +
+  'metric, quantity }}}}';
 
 request.get(reporting + '/v1/metering/aggregated/usage/graph/:query', {
   query: query

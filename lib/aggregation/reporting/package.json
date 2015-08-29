@@ -43,13 +43,13 @@
     "abacus-request": "file:../../utils/request",
     "abacus-retry": "file:../../utils/retry",
     "abacus-router": "file:../../utils/router",
+    "abacus-schema": "file:../../utils/schema",
     "abacus-throttle": "file:../../utils/throttle",
     "abacus-transform": "file:../../utils/transform",
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-usage-schemas": "file:../../config/schemas",
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-yieldable": "file:../../utils/yieldable",
-    "graphql": "^0.1.2",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
