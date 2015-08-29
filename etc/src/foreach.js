@@ -17,6 +17,7 @@ var filter = _.filter;
 var initial = _.initial;
 var last = _.last;
 var pairs = _.pairs;
+var findIndex = _.findIndex;
 
 /* eslint no-process-exit: 1 */
 
@@ -102,6 +103,14 @@ var runCLI = function() {
       commander.args = args;
     })
     .parse(process.argv);
+
+  // Running an npm command with program options requires '--'
+  // before the program options
+  var oidx = findIndex(commander.args, function(arg) {
+    return /^-/.test(arg) && !/^--/.test(arg);
+  });
+  if (commander.cmd === 'npm' && oidx >= 0)
+    commander.args.splice(oidx, 0, '--');
 
   // Use the given regular expression to filter modules
   var rx = new RegExp(commander.regexp);
