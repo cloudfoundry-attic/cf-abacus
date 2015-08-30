@@ -54,8 +54,8 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
         "type": "CF_APP",
         "consumer_id": "d98b5916-3c77-44b9-ac12-045678edabae"
       },
-      "resource_id": "storage-service",
-      "plan_id": "basic-plan",
+      "resource_id": "object-storage",
+      "plan_id": "basic",
       "resource_instance_id": "d98b5916-3c77-44b9-ac12-04d61c7a4eae",
       "measured_usage": [
         {
@@ -183,7 +183,7 @@ Cloud resource definition documents are currently provided as [JSON configuratio
 ### JSON representation:
 ```json
 {
-  "resource_id": "storage-service",
+  "resource_id": "object-storage",
   "measures": [
     {
       "name": "storage",
@@ -305,56 +305,56 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
   "organization_id": "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
   "start": 1435622400000,
   "end": 1435708799999,
-  "cost": 0,
+  "cost": 46.09,
   "id": "k-a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27-t-0001435622400000",
   "spaces": [
     {
       "space_id": "aaeae239-f3f8-483c-9dd0-de5d41c38b6a",
-      "cost": 0,
+      "cost": 46.09,
       "consumers": [
         {
           "consumer_id": "d98b5916-3c77-44b9-ac12-045678edabae",
-          "cost": 0,
+          "cost": 46.09,
           "resources": [
             {
-              "resource_id": "storage-service",
-              "cost": 0,
+              "resource_id": "object-storage",
+              "cost": 46.09,
               "aggregated_usage": [
                 {
                   "metric": "storage",
                   "quantity": 1,
-                  "cost": 0
+                  "cost": 1
                 },
                 {
                   "metric": "thousand_light_api_calls",
                   "quantity": 3,
-                  "cost": 0
+                  "cost": 0.09
                 },
                 {
                   "metric": "heavy_api_calls",
                   "quantity": 300,
-                  "cost": 0
+                  "cost": 45
                 }
               ],
               "plans": [
                 {
-                  "plan_id": "basic-plan",
-                  "cost": 0,
+                  "plan_id": "basic",
+                  "cost": 46.09,
                   "aggregated_usage": [
                     {
                       "metric": "storage",
                       "quantity": 1,
-                      "cost": 0
+                      "cost": 1
                     },
                     {
                       "metric": "thousand_light_api_calls",
                       "quantity": 3,
-                      "cost": 0
+                      "cost": 0.09
                     },
                     {
                       "metric": "heavy_api_calls",
                       "quantity": 300,
-                      "cost": 0
+                      "cost": 45
                     }
                   ]
                 }
@@ -365,44 +365,44 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
       ],
       "resources": [
         {
-          "resource_id": "storage-service",
-          "cost": 0,
+          "resource_id": "object-storage",
+          "cost": 46.09,
           "aggregated_usage": [
             {
               "metric": "storage",
               "quantity": 1,
-              "cost": 0
+              "cost": 1
             },
             {
               "metric": "thousand_light_api_calls",
               "quantity": 3,
-              "cost": 0
+              "cost": 0.09
             },
             {
               "metric": "heavy_api_calls",
               "quantity": 300,
-              "cost": 0
+              "cost": 45
             }
           ],
           "plans": [
             {
-              "plan_id": "basic-plan",
-              "cost": 0,
+              "plan_id": "basic",
+              "cost": 46.09,
               "aggregated_usage": [
                 {
                   "metric": "storage",
                   "quantity": 1,
-                  "cost": 0
+                  "cost": 1
                 },
                 {
                   "metric": "thousand_light_api_calls",
                   "quantity": 3,
-                  "cost": 0
+                  "cost": 0.09
                 },
                 {
                   "metric": "heavy_api_calls",
                   "quantity": 300,
-                  "cost": 0
+                  "cost": 45
                 }
               ]
             }
@@ -413,44 +413,44 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
   ],
   "resources": [
     {
-      "resource_id": "storage-service",
-      "cost": 0,
+      "resource_id": "object-storage",
+      "cost": 46.09,
       "aggregated_usage": [
         {
           "metric": "storage",
           "quantity": 1,
-          "cost": 0
+          "cost": 1
         },
         {
           "metric": "thousand_light_api_calls",
           "quantity": 3,
-          "cost": 0
+          "cost": 0.09
         },
         {
           "metric": "heavy_api_calls",
           "quantity": 300,
-          "cost": 0
+          "cost": 45
         }
       ],
       "plans": [
         {
-          "plan_id": "basic-plan",
-          "cost": 0,
+          "plan_id": "basic",
+          "cost": 46.09,
           "aggregated_usage": [
             {
               "metric": "storage",
               "quantity": 1,
-              "cost": 0
+              "cost": 1
             },
             {
               "metric": "thousand_light_api_calls",
               "quantity": 3,
-              "cost": 0
+              "cost": 0.09
             },
             {
               "metric": "heavy_api_calls",
               "quantity": 300,
-              "cost": 0
+              "cost": 45
             }
           ]
         }

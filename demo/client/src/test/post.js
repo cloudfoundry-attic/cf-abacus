@@ -30,24 +30,24 @@ const batch = {
     start: 1420502400000 + delta,
     end: 1420502401000 + delta,
     region: 'us',
-    organization_id: 'org_456',
-    space_id: 'space_567',
+    organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+    space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
     consumer: {
       type: 'EXTERNAL',
-      consumer_id: '123'
+      consumer_id: 'bbeae239-f3f8-483c-9dd0-de6781c38bab'
     },
-    resource_id: 'storage',
-    plan_id: 'plan_123',
-    resource_instance_id: '123',
-    metrics: [{
-      unit: 'BYTE',
+    resource_id: 'object-storage',
+    plan_id: 'basic',
+    resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
+    measured_usage: [{
+      measure: 'storage',
       quantity: 1073741824
     }, {
-      unit: 'LIGHT_API_CALL',
-      quantity: 10
+      measure: 'light_api_calls',
+      quantity: 1000
     }, {
-      unit: 'HEAVY_API_CALL',
-      quantity: 20
+      measure: 'heavy_api_calls',
+      quantity: 100
     }]
   }]
 };

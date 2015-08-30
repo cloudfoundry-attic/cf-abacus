@@ -20,30 +20,35 @@ const reporting = /:/.test(commander.reporting) ? commander.reporting :
 //
 // Examples:
 //
-// const query = '{ organization(organization_id: "org_456", date:
-//   "2015-01-06") { organization_id, resources { resource_id,
-//   aggregated_usage { metric, quantity }}}}';
+// const query = '{ organization(organization_id:
+//  "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", date: "2015-01-06") {
+//  organization_id, resources { resource_id, aggregated_usage {
+//  metric, quantity }}}}';
 //
-// const query = '{ organization(organization_id: "org_456", date:
-//   "2015-01-06") { organization_id, spaces { space_id, resources {
-//   resource_id, aggregated_usage { metric, quantity }}}}}';
+// const query = '{ organization(organization_id:
+//   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", date: "2015-01-06") {
+//   organization_id, spaces { space_id, resources { resource_id,
+//   aggregated_usage { metric, quantity }}}}}';
 //
-// const query = '{ organization(organization_id: "org_456", date:
-//   "2015-01-06") { organization_id, spaces { space_id, consumers {
-//   consumer_id, resources { resource_id, aggregated_usage {
-//   metric, quantity }}}}}}';
+// const query = '{ organization(organization_id:
+//   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", date: "2015-01-06") {
+//   organization_id, spaces { space_id, consumers { consumer_id,
+//   resources { resource_id, aggregated_usage { metric, quantity }}}}}}';
 //
-// const query = '{ organization(organization_id: "org_456", date:
-//   "2015-01-06") { organization_id, spaces { space_id, consumers {
-//   consumer_id }}}}';
+// const query = '{ organization(organization_id:
+//   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", date: "2015-01-06") {
+//   organization_id, spaces { space_id, consumers { consumer_id }}}}';
 //
-// const query = '{ organization(organization_id: "org_456", date:
-//   "2015-01-06") { organization_id, resources { resource_id,
-//   aggregated_usage { metric, quantity }}}}';
+// const query = '{ organization(organization_id:
+//   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", date: "2015-01-06") {
+//   organization_id, resources { resource_id, aggregated_usage {
+//   metric, quantity }}}}';
 //
-// const query = '{ organizations(organization_ids: ["org_456", "org_789"],
-//   date: "2015-01-06") { organization_id, resources { resource_id,
-//   aggregated_usage { metric, quantity}}}}';
+// const query = '{ organizations(organization_ids: [
+//   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+//   "b3d7fe4d-3cb1-4cc3-a831-ffe98e20cf28"], date: "2015-01-06") {
+//   organization_id, resources { resource_id, aggregated_usage {
+//   metric, quantity}}}}';
 
 const query = '{ account(account_id: "1234", date: "2015-01-06") { ' +
   'organization_id, resources { resource_id, aggregated_usage { ' +

@@ -78,8 +78,8 @@ describe('abacus-perf-test', () => {
           region: 'eu-gb',
           organization_id: orgid(o),
           space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-          resource_id: 'storage',
-          plan_id: 'plan_123',
+          resource_id: 'object-storage',
+          plan_id: 'basic',
           resource_instance_id: riid(o, ri),
           measured_usage: [{
             measure: 'storage',
@@ -94,121 +94,128 @@ describe('abacus-perf-test', () => {
         }]
     });
 
+    // Compute the test costs
+    const storageCost = (nri, n) => 1.00 * nri;
+    const lightCost = (nri, n) => 0.03 * nri * n;
+    const heavyCost = (nri, n) => 0.15 * 100 * nri * n;
+    const totalCost = (nri, n) =>
+      storageCost(nri, n) + lightCost(nri, n) + heavyCost(nri, n);
+
     // Return the expected usage report for the test organization
     const report = (o, nri, n) => ({
         organization_id: orgid(o),
-        cost: 0,
+        cost: totalCost(nri, n),
         resources: [{
-          resource_id: 'storage',
-          cost: 0 * nri * n,
+          resource_id: 'object-storage',
+          cost: totalCost(nri, n),
           aggregated_usage: [{
               metric: 'storage',
               quantity: 1 * nri,
-              cost: 0 * nri * n
+              cost: storageCost(nri, n)
             }, {
               metric: 'thousand_light_api_calls',
               quantity: 1 * nri * n,
-              cost: 0 * nri * n
+              cost: lightCost(nri, n)
             },
             {
               metric: 'heavy_api_calls',
               quantity: 100 * nri * n,
-              cost: 0 * nri * n
+              cost: heavyCost(nri, n)
             }],
           plans: [{
-            plan_id: 'plan_123',
-            cost: 0 * nri * n,
+            plan_id: 'basic',
+            cost: totalCost(nri, n),
             aggregated_usage: [{
                 metric: 'storage',
                 quantity: 1 * nri,
-                cost: 0 * nri * n
+                cost: storageCost(nri, n)
               }, {
                 metric: 'thousand_light_api_calls',
                 quantity: 1 * nri * n,
-                cost: 0 * nri * n
+                cost: lightCost(nri, n)
               },
               {
                 metric: 'heavy_api_calls',
                 quantity: 100 * nri * n,
-                cost: 0 * nri * n
+                cost: heavyCost(nri, n)
               }]
           }]
         }],
         spaces: [{
           space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-          cost: 0 * nri * n,
+          cost: totalCost(nri, n),
           resources: [{
-            resource_id: 'storage',
-            cost: 0 * nri * n,
+            resource_id: 'object-storage',
+            cost: totalCost(nri, n),
             aggregated_usage: [{
                 metric: 'storage',
                 quantity: 1 * nri,
-                cost: 0 * nri * n
+                cost: storageCost(nri, n)
               }, {
                 metric: 'thousand_light_api_calls',
                 quantity: 1 * nri * n,
-                cost: 0 * nri * n
+                cost: lightCost(nri, n)
               },
               {
                 metric: 'heavy_api_calls',
                 quantity: 100 * nri * n,
-                cost: 0 * nri * n
+                cost: heavyCost(nri, n)
               }],
             plans: [{
-              plan_id: 'plan_123',
-              cost: 0 * nri * n,
+              plan_id: 'basic',
+              cost: totalCost(nri, n),
               aggregated_usage: [{
                   metric: 'storage',
                   quantity: 1 * nri,
-                  cost: 0 * nri * n
+                  cost: storageCost(nri, n)
                 }, {
                   metric: 'thousand_light_api_calls',
                   quantity: 1 * nri * n,
-                  cost: 0 * nri * n
+                  cost: lightCost(nri, n)
                 },
                 {
                   metric: 'heavy_api_calls',
                   quantity: 100 * nri * n,
-                  cost: 0 * nri * n
+                  cost: heavyCost(nri, n)
                 }]
             }]
           }],
           consumers: [{
             consumer_id: 'ALL',
-            cost: 0 * nri * n,
+            cost: totalCost(nri, n),
             resources: [{
-              resource_id: 'storage',
-              cost: 0 * nri * n,
+              resource_id: 'object-storage',
+              cost: totalCost(nri, n),
               aggregated_usage: [{
                   metric: 'storage',
                   quantity: 1 * nri,
-                  cost: 0 * nri * n
+                  cost: storageCost(nri, n)
                 }, {
                   metric: 'thousand_light_api_calls',
                   quantity: 1 * nri * n,
-                  cost: 0 * nri * n
+                  cost: lightCost(nri, n)
                 },
                 {
                   metric: 'heavy_api_calls',
                   quantity: 100 * nri * n,
-                  cost: 0 * nri * n
+                  cost: heavyCost(nri, n)
                 }],
               plans: [{
-                plan_id: 'plan_123',
-                cost: 0 * nri * n,
+                plan_id: 'basic',
+                cost: totalCost(nri, n),
                 aggregated_usage: [{
                     metric: 'storage',
                     quantity: 1 * nri,
-                    cost: 0 * nri * n
+                    cost: storageCost(nri, n)
                   }, {
                     metric: 'thousand_light_api_calls',
                     quantity: 1 * nri * n,
-                    cost: 0 * nri * n
+                    cost: lightCost(nri, n)
                   },
                   {
                     metric: 'heavy_api_calls',
                     quantity: 100 * nri * n,
-                    cost: 0 * nri * n
+                    cost: heavyCost(nri, n)
                   }]
               }]
             }]

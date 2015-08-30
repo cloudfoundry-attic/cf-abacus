@@ -18,7 +18,7 @@ const reporting = /:/.test(commander.reporting) ? commander.reporting :
 
 // Get a usage report
 request.get(reporting + '/v1/organizations/:organization_id/usage/:day', {
-  organization_id: 'org_456',
+  organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
   day: '2015-01-06'
 }, (err, val) => {
   if(err)
