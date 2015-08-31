@@ -26,17 +26,15 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-debug": "^0.0.1-dev",
-    "abacus-request": "^0.0.1-dev",
-    "abacus-retry": "^0.0.1-dev",
+    "abacus-debug": "file:../debug",
+    "abacus-request": "file:../request",
+    "abacus-retry": "file:../retry",
     "underscore": "^1.8.3",
-    "chai": "^3.0.0",
-    "co": "^3.0.6",
     "jsonwebtoken": "^5.0.5"
   },
   "devDependencies": {
     "babel-runtime": "^5.8.19",
-    "abacus-express": "^0.0.1-dev",
+    "abacus-express": "file:../express",
     "abacus-babel": "file:../../../tools/babel",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
