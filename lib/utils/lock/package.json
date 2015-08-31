@@ -2,7 +2,7 @@
   "name": "abacus-lock",
   "description": "Async lock with callback",
   "license": "Apache-2.0",
-  "version": "0.0.1-dev.2",
+  "version": "0.0.1-dev.3",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/lock",
   "bugs": {

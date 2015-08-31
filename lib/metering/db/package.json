@@ -2,7 +2,7 @@
   "name": "abacus-metering-db",
   "description": "Naming and partitioning scheme for the usage metering DBs",
   "license": "Apache-2.0",
-  "version": "0.0.1-dev.2",
+  "version": "0.0.1-dev.3",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/metering/db",
   "bugs": {
