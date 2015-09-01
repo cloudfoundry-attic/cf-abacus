@@ -5,6 +5,7 @@ env:
   browser: true
   node: true
   jasmine: true
+  mocha: true
 
 globals:
   __DEV__: true
