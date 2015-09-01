@@ -32,8 +32,12 @@
   "dependencies": {
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-batch": "file:../../../lib/utils/batch",
-    "abacus-request": "file:../../../lib/utils/request",
     "abacus-throttle": "file:../../../lib/utils/throttle",
+    "abacus-request": "file:../../../lib/utils/request",
+    "abacus-router": "file:../../../lib/utils/router",
+    "abacus-express": "file:../../../lib/utils/express",
+    "abacus-dbserver": "file:../../../lib/utils/dbserver",
+    "abacus-usage-accumulator": "file:../../../lib/aggregation/accumulator",
     "abacus-debug": "file:../../../lib/utils/debug",
     "underscore": "^1.8.3",
     "commander": "2.8.1"
