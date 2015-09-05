@@ -305,56 +305,59 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
   "organization_id": "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
   "start": 1435622400000,
   "end": 1435708799999,
-  "cost": 46.09,
+  "charge": 46.09,
   "id": "k-a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27-t-0001435622400000",
   "spaces": [
     {
       "space_id": "aaeae239-f3f8-483c-9dd0-de5d41c38b6a",
-      "cost": 46.09,
+      "charge": 46.09,
       "consumers": [
         {
           "consumer_id": "d98b5916-3c77-44b9-ac12-045678edabae",
-          "cost": 46.09,
+          "charge": 46.09,
           "resources": [
             {
               "resource_id": "object-storage",
-              "cost": 46.09,
+              "charge": 46.09,
               "aggregated_usage": [
                 {
                   "metric": "storage",
                   "quantity": 1,
-                  "cost": 1
+                  "charge": 1
                 },
                 {
                   "metric": "thousand_light_api_calls",
                   "quantity": 3,
-                  "cost": 0.09
+                  "charge": 0.09
                 },
                 {
                   "metric": "heavy_api_calls",
                   "quantity": 300,
-                  "cost": 45
+                  "charge": 45
                 }
               ],
               "plans": [
                 {
                   "plan_id": "basic",
-                  "cost": 46.09,
+                  "charge": 46.09,
                   "aggregated_usage": [
                     {
                       "metric": "storage",
                       "quantity": 1,
-                      "cost": 1
+                      "cost": 1,
+                      "charge": 1
                     },
                     {
                       "metric": "thousand_light_api_calls",
                       "quantity": 3,
-                      "cost": 0.09
+                      "cost": 0.09,
+                      "charge": 0.09
                     },
                     {
                       "metric": "heavy_api_calls",
                       "quantity": 300,
-                      "cost": 45
+                      "cost": 45,
+                      "charge": 45
                     }
                   ]
                 }
@@ -366,43 +369,46 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
       "resources": [
         {
           "resource_id": "object-storage",
-          "cost": 46.09,
+          "charge": 46.09,
           "aggregated_usage": [
             {
               "metric": "storage",
               "quantity": 1,
-              "cost": 1
+              "charge": 1
             },
             {
               "metric": "thousand_light_api_calls",
               "quantity": 3,
-              "cost": 0.09
+              "charge": 0.09
             },
             {
               "metric": "heavy_api_calls",
               "quantity": 300,
-              "cost": 45
+              "charge": 45
             }
           ],
           "plans": [
             {
               "plan_id": "basic",
-              "cost": 46.09,
+              "charge": 46.09,
               "aggregated_usage": [
                 {
                   "metric": "storage",
                   "quantity": 1,
-                  "cost": 1
+                  "cost": 1,
+                  "charge": 1
                 },
                 {
                   "metric": "thousand_light_api_calls",
                   "quantity": 3,
-                  "cost": 0.09
+                  "cost": 0.09,
+                  "charge": 0.09
                 },
                 {
                   "metric": "heavy_api_calls",
                   "quantity": 300,
-                  "cost": 45
+                  "cost": 45,
+                  "charge": 45
                 }
               ]
             }
@@ -414,43 +420,46 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
   "resources": [
     {
       "resource_id": "object-storage",
-      "cost": 46.09,
+      "charge": 46.09,
       "aggregated_usage": [
         {
           "metric": "storage",
           "quantity": 1,
-          "cost": 1
+          "charge": 1
         },
         {
           "metric": "thousand_light_api_calls",
           "quantity": 3,
-          "cost": 0.09
+          "charge": 0.09
         },
         {
           "metric": "heavy_api_calls",
           "quantity": 300,
-          "cost": 45
+          "charge": 45
         }
       ],
       "plans": [
         {
           "plan_id": "basic",
-          "cost": 46.09,
+          "charge": 46.09,
           "aggregated_usage": [
             {
               "metric": "storage",
               "quantity": 1,
-              "cost": 1
+              "cost": 1,
+              "charge": 1
             },
             {
               "metric": "thousand_light_api_calls",
               "quantity": 3,
-              "cost": 0.09
+              "cost": 0.09,
+              "charge": 0.09
             },
             {
               "metric": "heavy_api_calls",
               "quantity": 300,
-              "cost": 45
+              "cost": 45,
+              "charge": 45
             }
           ]
         }
@@ -463,6 +472,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
 ### JSON Schema:
 ```json
 {
+  "title": "organizationReport",
   "type": "object",
   "properties": {
     "id": {
@@ -479,19 +489,27 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
       "type": "integer",
       "format": "utc-millisec"
     },
+    "charge": {
+      "type": "number"
+    },
     "resources": {
       "type": "array",
       "minItems": 1,
       "items": {
+        "title": "resource",
         "type": "object",
         "properties": {
           "resource_id": {
             "type": "string"
           },
+          "charge": {
+            "type": "number"
+          },
           "aggregated_usage": {
             "type": "array",
             "minItems": 1,
             "items": {
+              "title": "rmetric",
               "type": "object",
               "properties": {
                 "metric": {
@@ -500,50 +518,37 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                 "quantity": {
                   "type": "number"
                 },
-                "cost": {
+                "charge": {
                   "type": "number"
                 }
               },
               "required": [
                 "metric",
                 "quantity",
-                "cost"
+                "charge"
               ],
               "additionalProperties": false
             },
             "additionalItems": false
-          }
-        },
-        "required": [
-          "resource_id",
-          "aggregated_usage"
-        ],
-        "additionalProperties": false
-      },
-      "additionalItems": false
-    },
-    "spaces": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "object",
-        "properties": {
-          "space_id": {
-            "type": "string"
           },
-          "resources": {
+          "plans": {
             "type": "array",
             "minItems": 1,
             "items": {
+              "title": "plan",
               "type": "object",
               "properties": {
-                "resource_id": {
+                "plan_id": {
                   "type": "string"
+                },
+                "charge": {
+                  "type": "number"
                 },
                 "aggregated_usage": {
                   "type": "array",
                   "minItems": 1,
                   "items": {
+                    "title": "pmetric",
                     "type": "object",
                     "properties": {
                       "metric": {
@@ -554,12 +559,142 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                       },
                       "cost": {
                         "type": "number"
+                      },
+                      "charge": {
+                        "type": "number"
                       }
                     },
                     "required": [
                       "metric",
                       "quantity",
-                      "cost"
+                      "cost",
+                      "charge"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "additionalItems": false
+                }
+              },
+              "required": [
+                "plan_id",
+                "charge",
+                "aggregated_usage"
+              ],
+              "additionalProperties": false
+            },
+            "additionalItems": false
+          }
+        },
+        "required": [
+          "resource_id",
+          "charge",
+          "aggregated_usage",
+          "plans"
+        ],
+        "additionalProperties": false
+      },
+      "additionalItems": false
+    },
+    "spaces": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "title": "space",
+        "type": "object",
+        "properties": {
+          "space_id": {
+            "type": "string"
+          },
+          "charge": {
+            "type": "number"
+          },
+          "resources": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "title": "resource",
+              "type": "object",
+              "properties": {
+                "resource_id": {
+                  "type": "string"
+                },
+                "charge": {
+                  "type": "number"
+                },
+                "aggregated_usage": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "title": "rmetric",
+                    "type": "object",
+                    "properties": {
+                      "metric": {
+                        "type": "string"
+                      },
+                      "quantity": {
+                        "type": "number"
+                      },
+                      "charge": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "metric",
+                      "quantity",
+                      "charge"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "additionalItems": false
+                },
+                "plans": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "title": "plan",
+                    "type": "object",
+                    "properties": {
+                      "plan_id": {
+                        "type": "string"
+                      },
+                      "charge": {
+                        "type": "number"
+                      },
+                      "aggregated_usage": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                          "title": "pmetric",
+                          "type": "object",
+                          "properties": {
+                            "metric": {
+                              "type": "string"
+                            },
+                            "quantity": {
+                              "type": "number"
+                            },
+                            "cost": {
+                              "type": "number"
+                            },
+                            "charge": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "metric",
+                            "quantity",
+                            "cost",
+                            "charge"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "additionalItems": false
+                      }
+                    },
+                    "required": [
+                      "plan_id",
+                      "charge",
+                      "aggregated_usage"
                     ],
                     "additionalProperties": false
                   },
@@ -568,7 +703,9 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
               },
               "required": [
                 "resource_id",
-                "aggregated_usage"
+                "charge",
+                "aggregated_usage",
+                "plans"
               ],
               "additionalProperties": false
             },
@@ -578,12 +715,15 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
             "type": "array",
             "minItems": 1,
             "items": {
+              "title": "consumer",
               "type": "object",
               "properties": {
                 "consumer": {
+                  "title": "consumer",
                   "type": "object",
                   "properties": {
                     "type": {
+                      "title": "consumerType",
                       "enum": [
                         "CF_APP",
                         "EXTERNAL"
@@ -599,19 +739,27 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                   ],
                   "additionalProperties": false
                 },
+                "charge": {
+                  "type": "number"
+                },
                 "resources": {
                   "type": "array",
                   "minItems": 1,
                   "items": {
+                    "title": "resource",
                     "type": "object",
                     "properties": {
                       "resource_id": {
                         "type": "string"
                       },
+                      "charge": {
+                        "type": "number"
+                      },
                       "aggregated_usage": {
                         "type": "array",
                         "minItems": 1,
                         "items": {
+                          "title": "rmetric",
                           "type": "object",
                           "properties": {
                             "metric": {
@@ -620,14 +768,67 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                             "quantity": {
                               "type": "number"
                             },
-                            "cost": {
+                            "charge": {
                               "type": "number"
                             }
                           },
                           "required": [
                             "metric",
                             "quantity",
-                            "cost"
+                            "charge"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "additionalItems": false
+                      },
+                      "plans": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                          "title": "plan",
+                          "type": "object",
+                          "properties": {
+                            "plan_id": {
+                              "type": "string"
+                            },
+                            "charge": {
+                              "type": "number"
+                            },
+                            "aggregated_usage": {
+                              "type": "array",
+                              "minItems": 1,
+                              "items": {
+                                "title": "pmetric",
+                                "type": "object",
+                                "properties": {
+                                  "metric": {
+                                    "type": "string"
+                                  },
+                                  "quantity": {
+                                    "type": "number"
+                                  },
+                                  "cost": {
+                                    "type": "number"
+                                  },
+                                  "charge": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "metric",
+                                  "quantity",
+                                  "cost",
+                                  "charge"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "additionalItems": false
+                            }
+                          },
+                          "required": [
+                            "plan_id",
+                            "charge",
+                            "aggregated_usage"
                           ],
                           "additionalProperties": false
                         },
@@ -636,7 +837,9 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                     },
                     "required": [
                       "resource_id",
-                      "aggregated_usage"
+                      "charge",
+                      "aggregated_usage",
+                      "plans"
                     ],
                     "additionalProperties": false
                   },
@@ -645,6 +848,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
               },
               "required": [
                 "consumer",
+                "charge",
                 "resources"
               ],
               "additionalProperties": false
@@ -654,6 +858,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
         },
         "required": [
           "space_id",
+          "charge",
           "resources",
           "consumers"
         ],
@@ -667,11 +872,11 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
     "organization_id",
     "start",
     "end",
+    "charge",
     "resources",
     "spaces"
   ],
-  "additionalProperties": false,
-  "title": "Usage Summary Report"
+  "additionalProperties": false
 }
 ```
 
