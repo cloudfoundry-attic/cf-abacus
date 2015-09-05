@@ -144,112 +144,121 @@ describe('abacus-demo-client', () => {
       // Expected usage report for the test organization
       const report = {
         organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-        cost: 46.09,
+        charge: 46.09,
         resources: [{
           resource_id: 'object-storage',
-          cost: 46.09,
+          charge: 46.09,
           aggregated_usage: [{
             metric: 'storage',
             quantity: 1,
-            cost: 1
+            charge: 1
           }, {
             metric: 'thousand_light_api_calls',
             quantity: 3,
-            cost: 0.09
+            charge: 0.09
           }, {
             metric: 'heavy_api_calls',
             quantity: 300,
-            cost: 45
+            charge: 45
           }],
           plans: [{
             plan_id: 'basic',
-            cost: 46.09,
+            charge: 46.09,
             aggregated_usage: [{
               metric: 'storage',
               quantity: 1,
-              cost: 1
+              cost: 1,
+              charge: 1
             }, {
               metric: 'thousand_light_api_calls',
               quantity: 3,
-              cost: 0.09
+              cost: 0.09,
+              charge: 0.09
             }, {
               metric: 'heavy_api_calls',
               quantity: 300,
-              cost: 45
+              cost: 45,
+              charge: 45
             }]
           }]
         }],
         spaces: [{
           space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-          cost: 46.09,
+          charge: 46.09,
           resources: [{
             resource_id: 'object-storage',
-            cost: 46.09,
+            charge: 46.09,
             aggregated_usage: [{
               metric: 'storage',
               quantity: 1,
-              cost: 1
+              charge: 1
             }, {
               metric: 'thousand_light_api_calls',
               quantity: 3,
-              cost: 0.09
+              charge: 0.09
             }, {
               metric: 'heavy_api_calls',
               quantity: 300,
-              cost: 45
+              charge: 45
             }],
             plans: [{
               plan_id: 'basic',
-              cost: 46.09,
+              charge: 46.09,
               aggregated_usage: [{
                 metric: 'storage',
                 quantity: 1,
-                cost: 1
+                cost: 1,
+                charge: 1
               }, {
                 metric: 'thousand_light_api_calls',
                 quantity: 3,
-                cost: 0.09
+                cost: 0.09,
+                charge: 0.09
               }, {
                 metric: 'heavy_api_calls',
                 quantity: 300,
-                cost: 45
+                cost: 45,
+                charge: 45
               }]
             }]
           }],
           consumers: [{
             consumer_id: 'bbeae239-f3f8-483c-9dd0-de6781c38bab',
-            cost: 46.09,
+            charge: 46.09,
             resources: [{
               resource_id: 'object-storage',
-              cost: 46.09,
+              charge: 46.09,
               aggregated_usage: [{
                 metric: 'storage',
                 quantity: 1,
-                cost: 1
+                charge: 1
               }, {
                 metric: 'thousand_light_api_calls',
                 quantity: 3,
-                cost: 0.09
+                charge: 0.09
               }, {
                 metric: 'heavy_api_calls',
                 quantity: 300,
-                cost: 45
+                charge: 45
               }],
               plans: [{
                 plan_id: 'basic',
-                cost: 46.09,
+                charge: 46.09,
                 aggregated_usage: [{
                   metric: 'storage',
                   quantity: 1,
-                  cost: 1
+                  cost: 1,
+                  charge: 1
                 }, {
                   metric: 'thousand_light_api_calls',
                   quantity: 3,
-                  cost: 0.09
+                  cost: 0.09,
+                  charge: 0.09
                 }, {
                   metric: 'heavy_api_calls',
                   quantity: 300,
-                  cost: 45
+                  cost: 45,
+                  charge: 45
                 }]
               }]
             }]

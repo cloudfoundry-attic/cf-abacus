@@ -42,6 +42,7 @@
     "abacus-debug": "file:../../utils/debug",
     "abacus-request": "file:../../utils/request",
     "abacus-retry": "file:../../utils/retry",
+    "abacus-resource-config": "file:../../config/resource",
     "abacus-router": "file:../../utils/router",
     "abacus-schema": "file:../../utils/schema",
     "abacus-throttle": "file:../../utils/throttle",
