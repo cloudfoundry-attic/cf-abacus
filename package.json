@@ -97,6 +97,7 @@
     "abacus-yieldable": "file:lib/utils/yieldable",
     "abacus-perf-test": "file:test/perf",
     "abacus-usage-collector-itest": "file:test/metering/collector",
+    "abacus-usage-meter-itest": "file:test/metering/meter",
     "abacus-usage-accumulator-itest": "file:test/aggregation/accumulator",
     "abacus-usage-aggregator-itest": "file:test/aggregation/aggregator",
     "abacus-demo-client": "file:demo/client",
