@@ -74,6 +74,10 @@ var transformer = function(sources, maps) {
 
   // Return the configured transform function
   return function(code, file) {
+    // Skip files that contain /istanbul ignore file/
+    if(/istanbul ignore file/.test(code))
+      return code;
+
     // Save the original source of each instrumented file
     sources[file] = fs.readFileSync(src(file)).toString();
 
