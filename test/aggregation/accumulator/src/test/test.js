@@ -13,6 +13,7 @@ const express = require('abacus-express');
 
 const map = _.map;
 const range = _.range;
+const extend = _.extend;
 const clone = _.clone;
 const omit = _.omit;
 
@@ -109,64 +110,53 @@ describe('abacus-usage-accumulator-itest', () => {
 
     const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
       o + 1].join('-');
+    const rid = (o) => o % 2 === 0 ? 'us-south' : 'eu-gb';
+    const sid = (o, ri) => ['aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
+      o + 1].join('-');
+    const cid = (o, ri) => ['bbeae239-f3f8-483c-9dd0-de6781c38bab',
+      o + 1].join('-');
+    const pid = (ri, u) => 'basic';
+
     const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87',
       o + 1, ri + 1].join('-');
+
     const uid = (o, ri, u) => [start, o + 1, ri + 1, u + 1].join('-');
-    const bid = (o, ri, u) => [start, u + 1].join('-');
+    const bid = (u) => [start, u + 1].join('-');
 
     // Return a usage with unique start and end time based on a number
-    const usageTemplate = (o, ri, u) => ({
-        id: uid(o, ri, u),
-        usage_id: uid(o, ri, u),
-        usage_batch_id: bid(o, ri, u),
-        metered_usage_id: uid(o, ri, u),
-        resource_id: 'object-storage',
-        resource_instance_id: riid(o, ri),
-        start: start + u,
-        end: end + u,
-        plan_id: 'plan_123',
-        region: 'us-south',
-        organization_id: oid(o),
-        space_id: 'space_123',
-        consumer: { type: 'external', value: '123' },
-        measured_usage: [
-          { measure: 'storage', quantity: 1073741824 },
-          { measure: 'light_api_calls', quantity: 10 },
-          { measure: 'heavy_api_calls', quantity: 20 }
-        ],
-        metered_usage: [
-          { metric: 'storage', quantity: 1 },
-          { metric: 'thousand_light_api_calls', quantity: 0.01 },
-          { metric: 'heavy_api_calls', quantity: 20 }
-        ]
-    });
-
-    const accumulatedTemplate = (o, ri, u) => ({
-      usage_id: uid(o, ri, u),
+    const meteredTemplate = (o, ri, u) => ({
+      id: uid(o, ri, u),
       usage_batch_id: bid(o, ri, u),
-      metered_usage_id: uid(o, ri, u),
-      resource_id: 'object-storage',
-      resource_instance_id: riid(o, ri),
       start: start + u,
       end: end + u,
-      plan_id: 'plan_123',
-      region: 'us-south',
+      region: rid(o),
       organization_id: oid(o),
-      space_id: 'space_123',
-      consumer: { type: 'external', value: '123' },
+      space_id: sid(o, ri),
+      resource_id: 'object-storage',
+      resource_instance_id: riid(o, ri),
+      plan_id: pid(ri, u),
+      consumer: { type: 'EXTERNAL', consumer_id: cid(o, ri) },
       measured_usage: [
         { measure: 'storage', quantity: 1073741824 },
-        { measure: 'light_api_calls', quantity: 10 },
-        { measure: 'heavy_api_calls', quantity: 20 }
+        { measure: 'light_api_calls', quantity: 1000 },
+        { measure: 'heavy_api_calls', quantity: 100 }
       ],
-      accumulated_usage: [
-        { delta: u === 0 ? 1 : 0, metric: 'storage', quantity: 1 },
-        { delta: '0.01', metric: 'thousand_light_api_calls',
-          quantity: (0.01 * (u + 1)).toFixed(2)
-        },
-        { delta: 20, metric: 'heavy_api_calls', quantity: 20 * (u + 1) }
+      metered_usage: [
+        { metric: 'storage', quantity: 1 },
+        { metric: 'thousand_light_api_calls', quantity: 1 },
+        { metric: 'heavy_api_calls', quantity: 100 }
       ]
     });
+
+    const accumulatedTemplate = (o, ri, u) => extend(
+      omit(meteredTemplate(o, ri, u), ['id', 'metered_usage']), {
+        accumulated_usage: [
+          { delta: u === 0 ? 1 : 0, metric: 'storage', quantity: 1 },
+          { delta: 1, metric: 'thousand_light_api_calls', quantity: u + 1 },
+          { delta: 100, metric: 'heavy_api_calls', quantity: 100 * (u + 1) }
+        ]
+      }
+    );
 
     // Post a metered usage doc, throttled to default concurrent requests
     const post = throttle((o, ri, u, cb) => {
@@ -174,13 +164,13 @@ describe('abacus-usage-accumulator-itest', () => {
         o + 1, ri + 1, u + 1);
 
       brequest.post('http://localhost::p/v1/metering/metered/usage',
-        { p: 9100, body: usageTemplate(o, ri, u) }, (err, val) => {
+        { p: 9100, body: meteredTemplate(o, ri, u) }, (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);
           expect(val.headers.location).to.not.equal(undefined);
 
           debug('Accumulated metered usage for org%d instance%d' +
-            'usage%d, verifying it...', o + 1, ri + 1, u + 1);
+            ' usage%d, verifying it...', o + 1, ri + 1, u + 1);
 
           brequest.get(val.headers.location, undefined, (err, val) => {
             debug('Verify accumulated usage for org%d instance%d usage%d',
@@ -189,23 +179,8 @@ describe('abacus-usage-accumulator-itest', () => {
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(200);
 
-            // Removing accumulated usage from comparision, as thousand light
-            // api calls has problem with fractions
-            expect(omit(val.body, ['id', 'processed_usage_id',
-              'accumulated_usage'])).to.deep.equal(omit(accumulatedTemplate(o,
-              ri, u), 'accumulated_usage'));
-
-            // Verify reformatted accumulated usage
-            expect(map(val.body.accumulated_usage, (u) => {
-              // Warning: mutating usage to get delta and quantity in a
-              // comparable format
-              if (u.metric === 'thousand_light_api_calls') {
-                u.delta = u.delta.toFixed(2);
-                u.quantity = u.quantity.toFixed(2);
-              }
-
-              return u;
-            })).to.deep.equal(accumulatedTemplate(o, ri, u).accumulated_usage);
+            expect(omit(val.body, ['id', 'processed_usage_id'])).to.deep
+              .equal(accumulatedTemplate(o, ri, u));
 
             debug('Verified accumulated usage for org%d instance%d usage%d',
               o + 1, ri + 1, u + 1);
@@ -251,7 +226,7 @@ describe('abacus-usage-accumulator-itest', () => {
         // Failed to ping usage accumulator before timing out
         if (err) throw err;
 
-        // Submit metered usage and Verify
+        // Submit metered usage and verify
         submit(() => {
           const i = setInterval(() =>
             verifyAggregator(() => done(clearInterval(i))), 250);

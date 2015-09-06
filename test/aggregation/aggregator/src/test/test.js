@@ -59,32 +59,13 @@ const eod = (t) => {
     d.getUTCDate() + 1) - 1;
 };
 
-// Format an object properties using a format function
-const format = (o, f) => {
-  map(o, (v, k) => { o[k] = f(k, v); });
-  return o;
-};
-
-// Aggregated usage format function
-const formatAggregated = (k, v) => {
-  if (k === 'aggregated_usage') return map(v, (u) => {
-    // Warning: mutating usage to get quantity in a
-    // comparable format
-    if (u.metric === 'thousand_light_api_calls')
-      u.quantity = u.quantity.toFixed(2);
-    return u;
-  });
-  if(typeof v === 'object') return format(v, formatAggregated);
-  return v;
-};
-
 // Module directory
 const moduleDir = (module) => {
   const path = require.resolve(module);
   return path.substr(0, path.indexOf(module + '/') + module.length);
 };
 
-describe('abacus-usage-accumulator-itest', () => {
+describe('abacus-usage-aggregator-itest', () => {
   before(() => {
     const start = (module) => {
       const c = cp.spawn('npm', ['run', 'start'],
@@ -100,7 +81,7 @@ describe('abacus-usage-accumulator-itest', () => {
     // Start local database server
     start('abacus-dbserver');
 
-    // Start usage accumulator
+    // Start usage aggregator
     start('abacus-usage-aggregator');
   });
 
@@ -110,7 +91,7 @@ describe('abacus-usage-accumulator-itest', () => {
         { cwd: moduleDir(module), env: clone(process.env) });
     };
 
-    // Stop usage accumulator
+    // Stop usage aggregator
     stop('abacus-usage-aggregator');
 
     // Stop local database server
@@ -127,7 +108,7 @@ describe('abacus-usage-accumulator-itest', () => {
     // Setup rate spy
     const rate = spy((req, res, next) => { res.status(201).send(); });
 
-    // Start usage rate stub with the aggregator spy
+    // Start usage rate stub with the rate spy
     const app = express();
     const routes = router();
     routes.post('/v1/rating/usage', rate);
@@ -141,10 +122,11 @@ describe('abacus-usage-accumulator-itest', () => {
 
     const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
       o + 1].join('-');
+    const rid = (o) => o % 2 === 0 ? 'us-south' : 'eu-gb';
     const sid = (o, ri) => ['aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
       o + 1].join('-');
     const cid = (o, ri) => ['bbeae239-f3f8-483c-9dd0-de6781c38bab',
-      o + 1].join['-'];
+      o + 1].join('-');
     const pid = (ri, u) => 'basic';
 
     const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87',
@@ -155,29 +137,26 @@ describe('abacus-usage-accumulator-itest', () => {
 
     // Accumulated usage for given org, resource instance and usage #s
     const accumulatedTemplate = (o, ri, u) => ({
-      usage_id: uid(o, ri, u),
-      usage_batch_id: bid(u),
-      metered_usage_id: uid(o, ri, u),
-      resource_id: 'object-storage',
-      resource_instance_id: riid(o, ri),
+      id: uid(o, ri, u),
+      usage_batch_id: bid(o, ri, u),
       start: start + u,
       end: end + u,
-      plan_id: pid(ri, u),
-      region: 'us-south',
+      region: rid(o),
       organization_id: oid(o),
       space_id: sid(o, ri),
-      consumer: { type: 'external', value: cid(o, ri) },
+      resource_id: 'object-storage',
+      resource_instance_id: riid(o, ri),
+      plan_id: pid(ri, u),
+      consumer: { type: 'EXTERNAL', consumer_id: cid(o, ri) },
       measured_usage: [
         { measure: 'storage', quantity: 1073741824 },
-        { measure: 'light_api_calls', quantity: 10 },
-        { measure: 'heavy_api_calls', quantity: 20 }
+        { measure: 'light_api_calls', quantity: 1000 },
+        { measure: 'heavy_api_calls', quantity: 100 }
       ],
       accumulated_usage: [
         { delta: u === 0 ? 1 : 0, metric: 'storage', quantity: 1 },
-        { delta: 0.01, metric: 'thousand_light_api_calls',
-          quantity: 0.01 * (u + 1)
-        },
-        { delta: 20, metric: 'heavy_api_calls', quantity: 20 * (u + 1) }
+        { delta: 1, metric: 'thousand_light_api_calls', quantity: u + 1 },
+        { delta: 100, metric: 'heavy_api_calls', quantity: 100 * (u + 1) }
       ]
     });
 
@@ -187,9 +166,9 @@ describe('abacus-usage-accumulator-itest', () => {
         quantity: ri < resourceInstances && u === 0 ?
         ri + 1 : resourceInstances },
       { metric: 'thousand_light_api_calls',
-        quantity: (0.01 * (ri + 1 + u * resourceInstances)).toFixed(2) },
+        quantity: ri + 1 + u * resourceInstances },
       { metric: 'heavy_api_calls',
-        quantity: 20 * (ri + 1 + u * resourceInstances) }
+        quantity: 100 * (ri + 1 + u * resourceInstances) }
     ];
 
     // Plan aggregated usage
@@ -200,6 +179,7 @@ describe('abacus-usage-accumulator-itest', () => {
 
     // Aggregated usage for a given org, resource instance, usage #s
     const aggregatedTemplate = (o, ri, u) => ({
+      accumulated_usage_id: uid(o, ri, u),
       organization_id: oid(o),
       start: day(end + u),
       end: eod(end + u),
@@ -216,6 +196,7 @@ describe('abacus-usage-accumulator-itest', () => {
           plans: paggregated(o, ri, u)
         }],
         consumers: [{
+          consumer_id: cid(o, ri),
           resources: [{
             resource_id: 'object-storage',
             aggregated_usage: aggregated(o, ri, u),
@@ -237,7 +218,7 @@ describe('abacus-usage-accumulator-itest', () => {
           expect(val.headers.location).to.not.equal(undefined);
 
           debug('Aggregated accumulated usage for org%d instance%d' +
-            'usage%d, verifying it...', o + 1, ri + 1, u + 1);
+            ' usage%d, verifying it...', o + 1, ri + 1, u + 1);
 
           brequest.get(val.headers.location, undefined, (err, val) => {
             debug('Verify aggregated usage for org%d instance%d usage%d',
@@ -246,9 +227,7 @@ describe('abacus-usage-accumulator-itest', () => {
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(200);
 
-            // Format aggregated usage before doing a comparision, as thousand
-            // light api calls has problem with fractions
-            expect(format(omit(val.body, ['id']), formatAggregated)).to.deep
+            expect(omit(val.body, ['id'])).to.deep
               .equal(aggregatedTemplate(o, ri, u));
 
             debug('Verified aggregated usage for org%d instance%d usage%d',
@@ -295,7 +274,7 @@ describe('abacus-usage-accumulator-itest', () => {
         // Failed to ping usage aggregator before timing out
         if (err) throw err;
 
-        // Submit accumulated usage and Verify
+        // Submit accumulated usage and verify
         submit(() => {
           const i = setInterval(() =>
             verifyRating(() => done(clearInterval(i))), 250);

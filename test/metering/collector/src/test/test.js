@@ -52,7 +52,7 @@ const moduleDir = (module) => {
   return path.substr(0, path.indexOf(module + '/') + module.length);
 };
 
-describe('abacus-usage-accumulator-itest', () => {
+describe('abacus-usage-collector-itest', () => {
   before(() => {
     const start = (module) => {
       const c = cp.spawn('npm', ['run', 'start'],
@@ -71,7 +71,7 @@ describe('abacus-usage-accumulator-itest', () => {
     // Start provisioning service
     start('abacus-provisioning-stub');
 
-    // Start usage accumulator
+    // Start usage collector
     start('abacus-usage-collector');
   });
 
@@ -81,7 +81,7 @@ describe('abacus-usage-accumulator-itest', () => {
         { cwd: moduleDir(module), env: clone(process.env) });
     };
 
-    // Stop usage accumulator
+    // Stop usage collector
     stop('abacus-usage-collector');
 
     // Stop provisioning service
@@ -126,7 +126,7 @@ describe('abacus-usage-accumulator-itest', () => {
       o + 1, ri + 1].join('-');
 
     // Measured usage for a given org, resource instance and usage #s
-    const usageTemplate = (o, ri, u) => ({
+    const measuredTemplate = (o, ri, u) => ({
         usage: [{
           start: start + u,
           end: end + u,
@@ -165,7 +165,7 @@ describe('abacus-usage-accumulator-itest', () => {
       debug('Submit measured usage for org%d instance%d usage%d',
         o + 1, ri + 1, u + 1);
 
-      const usage = usageTemplate(o, ri, u);
+      const usage = measuredTemplate(o, ri, u);
 
       request.post('http://localhost::p/v1/metering/resource/usage',
         { p: 9080, body: usage }, (err, val) => {
