@@ -130,14 +130,16 @@ describe('abacus-usage-meter-itest', () => {
       region: rid(o),
       organization_id: oid(o),
       space_id: sid(o, ri),
-      resource_id: 'object-storage',
+      resource_id: 'test-resource',
       resource_instance_id: riid(o, ri),
       plan_id: pid(ri, u),
       consumer: { type: 'EXTERNAL', consumer_id: cid(o, ri) },
       measured_usage: [
         { measure: 'storage', quantity: 1073741824 },
         { measure: 'light_api_calls', quantity: 1000 },
-        { measure: 'heavy_api_calls', quantity: 100 }
+        { measure: 'heavy_api_calls', quantity: 100 },
+        { measure: 'instance_memory', quantity: 3 },
+        { measure: 'running_instances', quantity: 2 }
       ]
     });
 
@@ -146,7 +148,8 @@ describe('abacus-usage-meter-itest', () => {
       metered_usage: [
         { metric: 'storage', quantity: 1 },
         { metric: 'thousand_light_api_calls', quantity: 1 },
-        { metric: 'heavy_api_calls', quantity: 100 }
+        { metric: 'heavy_api_calls', quantity: 100 },
+        { metric: 'memory', quantity: { consuming: 6, since: start + u }},
       ]
     });
 

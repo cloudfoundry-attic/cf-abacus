@@ -132,7 +132,7 @@ describe('abacus-usage-accumulator-itest', () => {
       region: rid(o),
       organization_id: oid(o),
       space_id: sid(o, ri),
-      resource_id: 'object-storage',
+      resource_id: 'test-resource',
       resource_instance_id: riid(o, ri),
       plan_id: pid(ri, u),
       consumer: { type: 'EXTERNAL', consumer_id: cid(o, ri) },
@@ -151,9 +151,30 @@ describe('abacus-usage-accumulator-itest', () => {
     const accumulatedTemplate = (o, ri, u) => extend(
       omit(meteredTemplate(o, ri, u), ['id', 'metered_usage']), {
         accumulated_usage: [
-          { delta: u === 0 ? 1 : 0, metric: 'storage', quantity: 1 },
-          { delta: 1, metric: 'thousand_light_api_calls', quantity: u + 1 },
-          { delta: 100, metric: 'heavy_api_calls', quantity: 100 * (u + 1) }
+          {
+            metric: 'storage', quantity: u === 0 ? {
+              current: 1
+            } : {
+              previous: 1,
+              current: 1
+            }
+          },
+          {
+            metric: 'thousand_light_api_calls', quantity: u === 0 ? {
+              current: u + 1
+            } : {
+              previous: u,
+              current: u + 1
+            }
+          },
+          {
+            metric: 'heavy_api_calls', quantity: u === 0 ? {
+              current: 100 * (u + 1)
+            } : {
+              previous: 100 * u,
+              current: 100 * (u + 1)
+            }
+          }
         ]
       }
     );
