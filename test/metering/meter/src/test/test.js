@@ -149,7 +149,7 @@ describe('abacus-usage-meter-itest', () => {
         { metric: 'storage', quantity: 1 },
         { metric: 'thousand_light_api_calls', quantity: 1 },
         { metric: 'heavy_api_calls', quantity: 100 },
-        { metric: 'memory', quantity: { consuming: 6, since: start + u }},
+        { metric: 'memory', quantity: { consuming: 6, since: start + u }}
       ]
     });
 
