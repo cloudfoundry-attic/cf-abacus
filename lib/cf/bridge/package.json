@@ -1,0 +1,59 @@
+{
+  "name": "abacus-cf-bridge",
+  "description": "CF App Usage reporter",
+  "license": "Apache-2.0",
+  "version": "0.0.1-dev.2",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/cf/bridge",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "manifest.yml",
+    "lib/",
+    "src/"
+  ],
+  "main": "lib/index.js",
+  "scripts": {
+    "start": "webapp start --port 9400",
+    "webappstart": "webapp start",
+    "stop": "webapp stop",
+    "babel": "babel",
+    "test": "eslint && mocha",
+    "lint": "eslint",
+    "pub": "publish",
+    "cfpush": "cfpack && cf push"
+  },
+  "dependencies": {
+    "abacus-batch": "file:../../utils/batch",
+    "abacus-cluster": "file:../../utils/cluster",
+    "abacus-debug": "file:../../utils/debug",
+    "abacus-request": "file:../../utils/request",
+    "abacus-router": "file:../../utils/router",
+    "abacus-throttle": "file:../../utils/throttle",
+    "abacus-urienv": "file:../../utils/urienv",
+    "abacus-webapp": "file:../../utils/webapp",
+    "babel-runtime": "^5.8.19",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "abacus-babel": "file:../../../tools/babel",
+    "abacus-cfpack": "file:../../../tools/cfpack",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-publish": "file:../../../tools/publish"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  }
+}
