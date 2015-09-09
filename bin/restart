@@ -7,6 +7,7 @@ fi
 
 echo "Using apps list $APPS_FILE"
 
-# Start all the Abacus services
+# Restart all the Abacus services
+$APPS_FILE | awk '{ printf "(sleep 1 && cd node_modules/%s && npm stop &)\n", $1 }' | bash -e
 $APPS_FILE | awk '{ printf "(sleep 1 && cd node_modules/%s && npm start &)\n", $1 }' | bash -e
 

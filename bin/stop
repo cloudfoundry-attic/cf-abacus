@@ -1,5 +1,11 @@
 #!/bin/bash
+APPS_FILE=etc/apps
+if [ -n "$1" ]
+  then APPS_FILE=$1
+fi
+
+echo "Using apps list $APPS_FILE"
 
 # Stop all the Abacus services
-etc/apps | awk '{ printf "(cd node_modules/%s && npm stop &)\n", $1 }' | bash -e
+$APPS_FILE | awk '{ printf "(cd node_modules/%s && npm stop &)\n", $1 }' | bash -e
 
