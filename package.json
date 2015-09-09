@@ -47,6 +47,7 @@
     "doc": "cat README.md | mddoc >README.html",
     "start": "bin/start",
     "stop": "bin/stop",
+    "restart": "bin/restart",
     "demo": "bin/demo",
     "perf": "bin/perf",
     "pub": "npm run babel && foreach abacus :path npm run pub && publish",
