@@ -41,6 +41,7 @@
     "hogan.js": "^3.0.2",
     "html-inline": "^1.1.1",
     "markdown-it": "^4.2.2",
+    "path-is-absolute": "^1.0.0",
     "request": "^2.37.0",
     "underscore": "^1.8.3"
   },

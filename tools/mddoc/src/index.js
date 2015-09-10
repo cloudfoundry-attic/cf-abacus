@@ -21,6 +21,10 @@ var wrap = _.wrap;
 
 /* eslint no-empty: 1 */
 
+// Install path.isAbsolute polyfill if needed
+if(!path.isAbsolute)
+  path.isAbsolute = require('path-is-absolute');
+
 var runCLI = function(stdin, stdout) {
   // Parse command line options
   commander
