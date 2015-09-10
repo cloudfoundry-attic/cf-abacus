@@ -149,7 +149,8 @@ describe('abacus-usage-accumulator-itest', () => {
     });
 
     const accumulatedTemplate = (o, ri, u) => extend(
-      omit(meteredTemplate(o, ri, u), ['id', 'metered_usage']), {
+      omit(meteredTemplate(o, ri, u), ['id', 'metered_usage',
+        'measured_usage']), {
         accumulated_usage: [
           {
             metric: 'storage', quantity: u === 0 ? {
