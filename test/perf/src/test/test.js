@@ -111,15 +111,18 @@ describe('abacus-perf-test', () => {
           aggregated_usage: [{
               metric: 'storage',
               quantity: 1 * nri,
+              summary: 1 * nri,
               charge: storageCost(nri, n)
             }, {
               metric: 'thousand_light_api_calls',
               quantity: 1 * nri * n,
+              summary: 1 * nri * n,
               charge: lightCost(nri, n)
             },
             {
               metric: 'heavy_api_calls',
               quantity: 100 * nri * n,
+              summary: 100 * nri * n,
               charge: heavyCost(nri, n)
             }],
           plans: [{
@@ -128,17 +131,20 @@ describe('abacus-perf-test', () => {
             aggregated_usage: [{
                 metric: 'storage',
                 quantity: 1 * nri,
+                summary: 1 * nri,
                 cost: storageCost(nri, n),
                 charge: storageCost(nri, n)
               }, {
                 metric: 'thousand_light_api_calls',
                 quantity: 1 * nri * n,
+                summary: 1 * nri * n,
                 cost: lightCost(nri, n),
                 charge: lightCost(nri, n)
               },
               {
                 metric: 'heavy_api_calls',
                 quantity: 100 * nri * n,
+                summary: 100 * nri * n,
                 cost: heavyCost(nri, n),
                 charge: heavyCost(nri, n)
               }]
@@ -153,15 +159,18 @@ describe('abacus-perf-test', () => {
             aggregated_usage: [{
                 metric: 'storage',
                 quantity: 1 * nri,
+                summary: 1 * nri,
                 charge: storageCost(nri, n)
               }, {
                 metric: 'thousand_light_api_calls',
                 quantity: 1 * nri * n,
+                summary: 1 * nri * n,
                 charge: lightCost(nri, n)
               },
               {
                 metric: 'heavy_api_calls',
                 quantity: 100 * nri * n,
+                summary: 100 * nri * n,
                 charge: heavyCost(nri, n)
               }],
             plans: [{
@@ -170,17 +179,20 @@ describe('abacus-perf-test', () => {
               aggregated_usage: [{
                   metric: 'storage',
                   quantity: 1 * nri,
+                  summary: 1 * nri,
                   cost: storageCost(nri, n),
                   charge: storageCost(nri, n)
                 }, {
                   metric: 'thousand_light_api_calls',
                   quantity: 1 * nri * n,
+                  summary: 1 * nri * n,
                   cost: lightCost(nri, n),
                   charge: lightCost(nri, n)
                 },
                 {
                   metric: 'heavy_api_calls',
                   quantity: 100 * nri * n,
+                  summary: 100 * nri * n,
                   cost: heavyCost(nri, n),
                   charge: heavyCost(nri, n)
                 }]
@@ -195,15 +207,18 @@ describe('abacus-perf-test', () => {
               aggregated_usage: [{
                   metric: 'storage',
                   quantity: 1 * nri,
+                  summary: 1 * nri,
                   charge: storageCost(nri, n)
                 }, {
                   metric: 'thousand_light_api_calls',
                   quantity: 1 * nri * n,
+                  summary: 1 * nri * n,
                   charge: lightCost(nri, n)
                 },
                 {
                   metric: 'heavy_api_calls',
                   quantity: 100 * nri * n,
+                  summary: 100 * nri * n,
                   charge: heavyCost(nri, n)
                 }],
               plans: [{
@@ -212,17 +227,20 @@ describe('abacus-perf-test', () => {
                 aggregated_usage: [{
                     metric: 'storage',
                     quantity: 1 * nri,
+                    summary: 1 * nri,
                     cost: storageCost(nri, n),
                     charge: storageCost(nri, n)
                   }, {
                     metric: 'thousand_light_api_calls',
                     quantity: 1 * nri * n,
+                    summary: 1 * nri * n,
                     cost: lightCost(nri, n),
                     charge: lightCost(nri, n)
                   },
                   {
                     metric: 'heavy_api_calls',
                     quantity: 100 * nri * n,
+                    summary: 100 * nri * n,
                     cost: heavyCost(nri, n),
                     charge: heavyCost(nri, n)
                   }]
@@ -261,7 +279,7 @@ describe('abacus-perf-test', () => {
     // report for our test resource
     const processed = (val) => {
       try {
-        return val.body.resources[0].aggregated_usage[1].quantity;
+        return val.body.resources[0].aggregated_usage[1].summary;
       }
       catch (e) {
         // The response doesn't contain a valid report

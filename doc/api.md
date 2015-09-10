@@ -199,8 +199,7 @@ Cloud resource definition documents are currently provided as [JSON configuratio
       "name": "storage",
       "unit": "GIGABYTE",
       "meter": "(m) => m.storage / 1073741824",
-      "accumulate": "(a, qty) => Math.max(a, qty)",
-      "rate": "(p, qty) => p ? p * qty : 0"
+      "accumulate": "(a, qty) => Math.max(a, qty)"
     },
     {
       "name": "thousand_api_calls",
@@ -208,7 +207,9 @@ Cloud resource definition documents are currently provided as [JSON configuratio
       "meter": "(m) => m.light_api_calls / 1000",
       "accumulate": "(a, qty) => a ? a + qty : qty",
       "aggregate": "(a, qty) => a ? a + qty : qty",
-      "rate": "(p, qty) => p ? p * qty : 0"
+      "rate": "(p, qty) => p ? p * qty : 0",
+      "summarize": "(t, qty) => qty",
+      "charge": "(t, cost) => cost"
     }
   ]
 }
@@ -275,6 +276,12 @@ Cloud resource definition documents are currently provided as [JSON configuratio
           },
           "rate": {
             "type": "string"
+          },
+          "summarize": {
+            "type": "string"
+          },
+          "charge": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -293,9 +300,9 @@ Usage summary report
 The _usage summary report_ API is used to retrieve usage summary report documents from Abacus.
 
 ### Method: get
-_HTTP request_: GET /v1/organizations/:organization_id/usage/:date
+_HTTP request_: GET /v1/organizations/:organization_id/usage/:time
 
-_Description_: Retrieves a usage report document containing a summary of the Cloud resource usage incurred by the specified organization on the specified date.
+_Description_: Retrieves a usage report document containing a summary of the Cloud resource usage incurred by the specified organization at the specified time.
 
 _HTTP response_: 200 to indicate success with a _usage summary report_ JSON document, 404 if the usage is not found, 500 to report a server error.
 
@@ -323,16 +330,19 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                 {
                   "metric": "storage",
                   "quantity": 1,
+                  "summary": 1,
                   "charge": 1
                 },
                 {
                   "metric": "thousand_light_api_calls",
                   "quantity": 3,
+                  "summary": 3,
                   "charge": 0.09
                 },
                 {
                   "metric": "heavy_api_calls",
                   "quantity": 300,
+                  "summary": 300,
                   "charge": 45
                 }
               ],
@@ -344,18 +354,21 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                     {
                       "metric": "storage",
                       "quantity": 1,
+                      "summary": 1,
                       "cost": 1,
                       "charge": 1
                     },
                     {
                       "metric": "thousand_light_api_calls",
                       "quantity": 3,
+                      "summary": 3,
                       "cost": 0.09,
                       "charge": 0.09
                     },
                     {
                       "metric": "heavy_api_calls",
                       "quantity": 300,
+                      "summary": 300,
                       "cost": 45,
                       "charge": 45
                     }
@@ -374,16 +387,19 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
             {
               "metric": "storage",
               "quantity": 1,
+              "summary": 1,
               "charge": 1
             },
             {
               "metric": "thousand_light_api_calls",
               "quantity": 3,
+              "summary": 3,
               "charge": 0.09
             },
             {
               "metric": "heavy_api_calls",
               "quantity": 300,
+              "summary": 300,
               "charge": 45
             }
           ],
@@ -395,18 +411,21 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                 {
                   "metric": "storage",
                   "quantity": 1,
+                  "summary": 1,
                   "cost": 1,
                   "charge": 1
                 },
                 {
                   "metric": "thousand_light_api_calls",
                   "quantity": 3,
+                  "summary": 3,
                   "cost": 0.09,
                   "charge": 0.09
                 },
                 {
                   "metric": "heavy_api_calls",
                   "quantity": 300,
+                  "summary": 300,
                   "cost": 45,
                   "charge": 45
                 }
@@ -425,16 +444,19 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
         {
           "metric": "storage",
           "quantity": 1,
+          "summary": 1,
           "charge": 1
         },
         {
           "metric": "thousand_light_api_calls",
           "quantity": 3,
+          "summary": 3,
           "charge": 0.09
         },
         {
           "metric": "heavy_api_calls",
           "quantity": 300,
+          "summary": 300,
           "charge": 45
         }
       ],
@@ -446,18 +468,21 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
             {
               "metric": "storage",
               "quantity": 1,
+              "summary": 1,
               "cost": 1,
               "charge": 1
             },
             {
               "metric": "thousand_light_api_calls",
               "quantity": 3,
+              "summary": 3,
               "cost": 0.09,
               "charge": 0.09
             },
             {
               "metric": "heavy_api_calls",
               "quantity": 300,
+              "summary": 300,
               "cost": 45,
               "charge": 45
             }
@@ -518,6 +543,9 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                 "quantity": {
                   "type": "number"
                 },
+                "summary": {
+                  "type": "number"
+                },
                 "charge": {
                   "type": "number"
                 }
@@ -525,6 +553,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
               "required": [
                 "metric",
                 "quantity",
+                "summary",
                 "charge"
               ],
               "additionalProperties": false
@@ -557,6 +586,9 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                       "quantity": {
                         "type": "number"
                       },
+                      "summary": {
+                        "type": "number"
+                      },
                       "cost": {
                         "type": "number"
                       },
@@ -567,6 +599,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                     "required": [
                       "metric",
                       "quantity",
+                      "summary",
                       "cost",
                       "charge"
                     ],
@@ -634,6 +667,9 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                       "quantity": {
                         "type": "number"
                       },
+                      "summary": {
+                        "type": "number"
+                      },
                       "charge": {
                         "type": "number"
                       }
@@ -641,6 +677,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                     "required": [
                       "metric",
                       "quantity",
+                      "summary",
                       "charge"
                     ],
                     "additionalProperties": false
@@ -673,6 +710,9 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                             "quantity": {
                               "type": "number"
                             },
+                            "summary": {
+                              "type": "number"
+                            },
                             "cost": {
                               "type": "number"
                             },
@@ -683,6 +723,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                           "required": [
                             "metric",
                             "quantity",
+                            "summary",
                             "cost",
                             "charge"
                           ],
@@ -768,6 +809,9 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                             "quantity": {
                               "type": "number"
                             },
+                            "summary": {
+                              "type": "number"
+                            },
                             "charge": {
                               "type": "number"
                             }
@@ -775,6 +819,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                           "required": [
                             "metric",
                             "quantity",
+                            "summary",
                             "charge"
                           ],
                           "additionalProperties": false
@@ -807,6 +852,9 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                                   "quantity": {
                                     "type": "number"
                                   },
+                                  "summary": {
+                                    "type": "number"
+                                  },
                                   "cost": {
                                     "type": "number"
                                   },
@@ -817,6 +865,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                                 "required": [
                                   "metric",
                                   "quantity",
+                                  "summary",
                                   "cost",
                                   "charge"
                                 ],

@@ -151,14 +151,17 @@ describe('abacus-demo-client', () => {
           aggregated_usage: [{
             metric: 'storage',
             quantity: 1,
+            summary: 1,
             charge: 1
           }, {
             metric: 'thousand_light_api_calls',
             quantity: 3,
+            summary: 3,
             charge: 0.09
           }, {
             metric: 'heavy_api_calls',
             quantity: 300,
+            summary: 300,
             charge: 45
           }],
           plans: [{
@@ -167,16 +170,19 @@ describe('abacus-demo-client', () => {
             aggregated_usage: [{
               metric: 'storage',
               quantity: 1,
+              summary: 1,
               cost: 1,
               charge: 1
             }, {
               metric: 'thousand_light_api_calls',
               quantity: 3,
+              summary: 3,
               cost: 0.09,
               charge: 0.09
             }, {
               metric: 'heavy_api_calls',
               quantity: 300,
+              summary: 300,
               cost: 45,
               charge: 45
             }]
@@ -191,14 +197,17 @@ describe('abacus-demo-client', () => {
             aggregated_usage: [{
               metric: 'storage',
               quantity: 1,
+              summary: 1,
               charge: 1
             }, {
               metric: 'thousand_light_api_calls',
               quantity: 3,
+              summary: 3,
               charge: 0.09
             }, {
               metric: 'heavy_api_calls',
               quantity: 300,
+              summary: 300,
               charge: 45
             }],
             plans: [{
@@ -207,16 +216,19 @@ describe('abacus-demo-client', () => {
               aggregated_usage: [{
                 metric: 'storage',
                 quantity: 1,
+                summary: 1,
                 cost: 1,
                 charge: 1
               }, {
                 metric: 'thousand_light_api_calls',
                 quantity: 3,
+                summary: 3,
                 cost: 0.09,
                 charge: 0.09
               }, {
                 metric: 'heavy_api_calls',
                 quantity: 300,
+                summary: 300,
                 cost: 45,
                 charge: 45
               }]
@@ -231,14 +243,17 @@ describe('abacus-demo-client', () => {
               aggregated_usage: [{
                 metric: 'storage',
                 quantity: 1,
+                summary: 1,
                 charge: 1
               }, {
                 metric: 'thousand_light_api_calls',
                 quantity: 3,
+                summary: 3,
                 charge: 0.09
               }, {
                 metric: 'heavy_api_calls',
                 quantity: 300,
+                summary: 300,
                 charge: 45
               }],
               plans: [{
@@ -247,16 +262,19 @@ describe('abacus-demo-client', () => {
                 aggregated_usage: [{
                   metric: 'storage',
                   quantity: 1,
+                  summary: 1,
                   cost: 1,
                   charge: 1
                 }, {
                   metric: 'thousand_light_api_calls',
                   quantity: 3,
+                  summary: 3,
                   cost: 0.09,
                   charge: 0.09
                 }, {
                   metric: 'heavy_api_calls',
                   quantity: 300,
+                  summary: 300,
                   cost: 45,
                   charge: 45
                 }]
@@ -293,7 +311,7 @@ describe('abacus-demo-client', () => {
       // report for our test resource
       const processed = (val) => {
         try {
-          return val.body.resources[0].aggregated_usage[1].quantity;
+          return val.body.resources[0].aggregated_usage[1].summary;
         }
         catch (e) {
           // The response doesn't contain a valid report
