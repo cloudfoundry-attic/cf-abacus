@@ -319,20 +319,19 @@ describe('abacus-demo-client', () => {
         }
       };
 
-      // Format a date like expected by the reporting service
-      const numFmt = (num, mask) => (mask + num).slice(-Math.max(mask.length,
-        (num + '').length));
-      const day = (d) => util.format('%s-%s-%s',
-        numFmt(d.getUTCFullYear(), '0000'),
-        numFmt(d.getUTCMonth() + 1, '00'),
-        numFmt(d.getUTCDate(), '00'));
+      // Return the reporting day for the given time
+      const day = (t) => {
+        const d = new Date(t);
+        return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+      };
 
       // Get a usage report for the test organization
       let gets = 0;
       const get = (done) => {
         request.get(reporting +
-          '/v1/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/usage/:day', {
-            day: day(new Date(start))
+          '/v1/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/usage/:time',
+          {
+            time: day(start)
           }, (err, val) => {
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(200);

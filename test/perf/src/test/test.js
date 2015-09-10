@@ -287,15 +287,17 @@ describe('abacus-perf-test', () => {
       }
     };
 
-    // Format a date like expected by the reporting service
-    const day = (d) => util.format('%d-%d-%d',
-      d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+    // Return the reporting day for the given time
+    const day = (t) => {
+      const d = new Date(t);
+      return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+    };
 
     // Get a usage report for the test organization
     let gets = 0;
     const get = (o, done) => {
       brequest.get('http://localhost:9088' + '/v1/organizations/' +
-        orgid(o) + '/usage/:day', { day: day(new Date(start)) },
+        orgid(o) + '/usage/:time', { time: day(start) },
         (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(200);
