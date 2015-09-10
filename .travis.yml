@@ -3,8 +3,9 @@ install: echo "install"
 script: npm run build
 after_script: npm run coveralls
 node_js:
+- '4.0'
+- 'iojs'
 - '0.12'
-- iojs
 - '0.10'
 notifications:
   irc:
