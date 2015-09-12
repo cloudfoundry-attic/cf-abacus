@@ -188,7 +188,12 @@ var runCLI = function() {
       instrumentMatcher(commander.istanbul), transformer(sources, maps));
 
   // Run the test with Mocha
-  mocha.addFile(target() + '/test/test.js');
+  var testDir = path.join(target(), 'test');
+  fs.readdirSync(testDir).filter(function(file) {
+    return file.substr(-7) === 'test.js';
+  }).forEach(function(file) {
+    mocha.addFile(path.join(testDir, file));
+  });
   mocha.run(function(failures) {
     var t1 = Date.now();
 
