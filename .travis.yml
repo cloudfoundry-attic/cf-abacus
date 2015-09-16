@@ -12,7 +12,7 @@ before_install:
   -  source ~/.nvm/nvm.sh
   -  nvm install $NODE_VERSION
 install: echo "install"
-script: npm run build
+script: npm run build-ci
 after_script: npm run coveralls
 notifications:
   irc:
