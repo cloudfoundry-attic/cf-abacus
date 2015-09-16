@@ -367,8 +367,14 @@ describe('abacus-demo-client', () => {
         const i = setInterval(() => get(() => done(clearInterval(i))), 250);
       };
 
-      // Run the above steps
-      map(usage, (u) => post(u, () => wait(done)));
+      // Wait for usage reporter to start
+      request.waitFor(reporting + '/batch', {}, (err, value) => {
+        // Failed to ping usage reporter before timing out
+        if (err) throw err;
+
+        // Run the above steps
+        map(usage, (u) => post(u, () => wait(done)));
+      });
     });
 });
 
