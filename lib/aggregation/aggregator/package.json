@@ -49,7 +49,6 @@
     "abacus-router": "file:../../utils/router",
     "abacus-seqid": "file:../../utils/seqid",
     "abacus-throttle": "file:../../utils/throttle",
-    "abacus-transform": "file:../../utils/transform",
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-yieldable": "file:../../utils/yieldable",
@@ -60,7 +59,8 @@
     "abacus-cfpack": "file:../../../tools/cfpack",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-publish": "file:../../../tools/publish"
+    "abacus-publish": "file:../../../tools/publish",
+    "abacus-transform": "file:../../utils/transform"
   },
   "engines": {
     "node": ">=0.10.0",

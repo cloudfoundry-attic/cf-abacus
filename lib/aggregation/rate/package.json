@@ -46,7 +46,6 @@
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-yieldable": "file:../../utils/yieldable",
-    "abacus-transform": "file:../../utils/transform",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
@@ -55,7 +54,8 @@
     "abacus-request": "file:../../utils/request",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-publish": "file:../../../tools/publish"
+    "abacus-publish": "file:../../../tools/publish",
+    "abacus-transform": "file:../../utils/transform"
   },
   "engines": {
     "node": ">=0.10.0",
