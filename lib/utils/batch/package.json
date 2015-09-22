@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "abacus-debug": "file:../debug",
+    "abacus-transform": "file:../transform",
     "abacus-yieldable": "file:../yieldable",
     "underscore": "^1.8.3"
   },
