@@ -37,7 +37,7 @@
     "abacus-lrudown": "file:../lrudown",
     "abacus-transform": "file:../transform",
     "commander": "^2.8.1",
-    "levelup": "~0.18.4",
+    "levelup": "^1.2.1",
     "request": "^2.37.0",
     "underscore": "^1.8.3"
   },

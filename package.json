@@ -118,9 +118,7 @@
     "abacus-publish": "file:tools/publish",
     "coveralls": "^2.11.3",
     "jshint": "^2.8.0",
-    "jsinspect": "^0.6.1",
-    "levelup": "~0.18.4",
-    "pouchdb": "3.6.0"
+    "jsinspect": "^0.6.1"
   },
   "engines": {
     "node": ">=0.10.0",

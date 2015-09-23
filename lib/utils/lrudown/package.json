@@ -29,18 +29,18 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abstract-leveldown": "^2.4.0",
+    "abstract-leveldown": "^2.4.1",
     "abacus-debug": "file:../debug",
+    "levelup": "^1.2.1",
     "lru-cache": "^2.6.5",
+    "pouchdb": "^4.0.3",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-publish": "file:../../../tools/publish",
-    "levelup": "~0.18.4",
-    "pouchdb": "3.6.0"
+    "abacus-publish": "file:../../../tools/publish"
   },
   "engines": {
     "node": ">=0.10.0",
