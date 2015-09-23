@@ -1,0 +1,9 @@
+applications:
+- name: abacus-usage-rate
+  host: abacus-usage-rate
+  path: .cfpack/app.zip
+  instances: 4
+  memory: 512M
+  disk_quota: 512M
+  env:
+    COUCHDB: abacus-dbserver
