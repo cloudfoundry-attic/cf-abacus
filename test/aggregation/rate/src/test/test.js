@@ -57,29 +57,41 @@ const eod = (t) => {
     d.getUTCDate() + 1) - 1;
 };
 
-// Custom object extender
-const cextend = (o, extender) => {
-  const copy = (k, v) => {
-    if(typeof v === 'object') return cextend(v, extender);
+// Extend an object using an interceptor
+// if interceptor returns a value, then use it to replace the original value
+const cextend = (o, interceptor) => {
+  const deepcopy = (k, v) => {
+    // if value is an object, then extend it using the interceptor
+    if(typeof v === 'object') return cextend(v, interceptor);
     return v;
   };
 
-  map(o, (v, k) => { o[k] = extender(k, v) || copy(k, v); });
+  // Go through object keys and extend
+  map(o, (v, k) => { o[k] = interceptor(k, v) || deepcopy(k, v); });
   return o;
 };
 
-// Add cost to the aggregated value
+// Add cost to aggregated usage at all plan levels
 const addCost = (k, v) => {
+  // plan and price details for test-resource to do a quick lookup
   const cost = {
-    storage: 1,
-    'thousand_light_api_calls': 0.03,
-    'heavy_api_calls': 0.15
+    basic: {
+      storage: 1,
+      'thousand_light_api_calls': 0.03,
+      'heavy_api_calls': 0.15
+    },
+    standard: {
+      storage: 0.5,
+      'thousand_light_api_calls': 0.04,
+      'heavy_api_calls': 0.18
+    }
   };
 
+  // all plan level aggregations need cost as part of aggregated_usage
   if (k === 'plans') return map(v, (p) => {
-    // Warning: mutating aggregated_usage objects
+    // Warning: mutating aggregated_usage to include cost
     p.aggregated_usage = map(p.aggregated_usage, (u) => {
-      u.cost = u.quantity * cost[u.metric];
+      u.cost = u.quantity * cost[p.plan_id][u.metric];
       return u;
     });
 
@@ -176,7 +188,7 @@ describe('abacus-usage-rate-itest', () => {
       o + 1, ri % 2 === 0 ? 1 : 2, ri % 8 < 4 ? 1 : 2].join('-');
 
     // One of the two plans based on resource instance index
-    const pid = (ri) => ri % 4 < 2 ? 'basic' : 'advanced';
+    const pid = (ri) => ri % 4 < 2 ? 'basic' : 'standard';
 
     // Use number sequences to find expected aggregated value at any given
     // resource instance index and a given usage index based on the generated

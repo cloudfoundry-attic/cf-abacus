@@ -215,7 +215,7 @@ describe('abacus-usage-aggregator-itest', () => {
       o + 1, ri % 2 === 0 ? 1 : 2, ri % 8 < 4 ? 1 : 2].join('-');
 
     // One of the two plans based on resource instance index
-    const pid = (ri) => ri % 4 < 2 ? 'basic' : 'advanced';
+    const pid = (ri) => ri % 4 < 2 ? 'basic' : 'standard';
 
     // Resource instance id based on org and resouce instance indices
     const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87',
