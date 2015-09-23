@@ -28,7 +28,8 @@
     "babel": "babel",
     "test": "eslint && mocha",
     "lint": "eslint",
-    "pub": "publish"
+    "pub": "publish",
+    "cfpush": "cfpack && cf push"
   },
   "dependencies": {
     "babel-runtime": "^5.8.19",
@@ -45,13 +46,13 @@
     "abacus-seqid": "file:../../utils/seqid",
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-webapp": "file:../../utils/webapp",
+    "abacus-cluster": "file:../../utils/cluster",
+    "abacus-request": "file:../../utils/request",
     "abacus-yieldable": "file:../../utils/yieldable",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
-    "abacus-cluster": "file:../../utils/cluster",
-    "abacus-request": "file:../../utils/request",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish",
