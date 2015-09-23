@@ -31,6 +31,7 @@
   "dependencies": {
     "abacus-debug": "file:../debug",
     "abacus-partition": "file:../partition",
+    "abacus-perf": "file:../perf",
     "abacus-transform": "file:../transform",
     "memdown": "^1.0.0",
     "pouchdb": "^4.0.3",
