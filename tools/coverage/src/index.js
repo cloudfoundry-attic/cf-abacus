@@ -17,7 +17,6 @@ var map = _.map;
 var filter = _.filter;
 var pairs = _.pairs;
 var object = _.object;
-var clone = _.clone;
 var extend = _.extend;
 var values = _.values;
 var flatten = _.flatten;
@@ -55,7 +54,7 @@ var sources = function(root, cov) {
     var l = rel.lastIndexOf('lib');
     var src = (l === -1 ? rel :
       rel.slice(0, l).concat(['src']).concat(rel.slice(l + 1))).join('/');
-    return [src, extend(clone(file[1]), {
+    return [src, extend({}, file[1], {
       path: src
     })];
 

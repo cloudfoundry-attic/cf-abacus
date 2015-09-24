@@ -14,7 +14,6 @@ var commander = require('commander');
 var map = _.map;
 var pairs = _.pairs;
 var object = _.object;
-var clone = _.clone;
 var extend = _.extend;
 var partial = _.partial;
 var noop = _.noop;
@@ -45,7 +44,7 @@ var local = function(root, d) {
 var repackage = function(root, cb) {
   var mod = require(path.join(process.cwd(), 'package.json'));
   var loc = partial(local, root);
-  var rmod = extend(clone(mod), {
+  var rmod = extend({}, mod, {
     dependencies: object(map(pairs(mod.dependencies), loc))
   }, {
     devDependencies: object(map(pairs(mod.devDependencies), loc))

@@ -14,7 +14,6 @@ var commander = require('commander');
 var map = _.map;
 var pairs = _.pairs;
 var object = _.object;
-var clone = _.clone;
 var extend = _.extend;
 
 /* eslint no-process-exit: 1 */
@@ -65,7 +64,7 @@ var pack = function(name, version, pubdir, cb) {
 var repackage = function(mod, pubdir, cb) {
   var pkg = path.resolve(pubdir, 'package/package.json');
   fs.unlink(pkg, function() {
-    var rmod = extend(clone(mod), {
+    var rmod = extend({}, mod, {
       private: false,
       dependencies: publicize(mod.dependencies),
       devDependencies: publicize(mod.devDependencies)
