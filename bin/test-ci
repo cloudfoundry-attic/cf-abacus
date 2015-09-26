@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Run integration, demo client and performance tests
+# with default program arguments
+
+# Based on default limits at throttle and batch processing and
+# intergration test matrix, we would need 2197(= 13 * 13 * 13)
+# usage submissions to get above 90 percent regression coverage
+npm run itest -- -o 1 -i 1 -u 1  && npm start && sleep 10s && npm run demo && npm run perf -- -o 1 -i 1 -u 1 && npm stop
