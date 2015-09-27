@@ -1,0 +1,57 @@
+{
+  "name": "abacus-usage-reporting-itest",
+  "description": "Usage reporting service integration and performance tests",
+  "license": "Apache-2.0",
+  "version": "0.0.1-dev.3",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/aggregation/reporting",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "lib/",
+    "src/"
+  ],
+  "main": "lib/index.js",
+  "scripts": {
+    "itest": "mocha --command",
+    "babel": "babel",
+    "test": "eslint",
+    "lint": "eslint",
+    "pub": "publish"
+  },
+  "dependencies": {
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-batch": "file:../../../lib/utils/batch",
+    "abacus-throttle": "file:../../../lib/utils/throttle",
+    "abacus-request": "file:../../../lib/utils/request",
+    "abacus-router": "file:../../../lib/utils/router",
+    "abacus-express": "file:../../../lib/utils/express",
+    "abacus-urienv": "file:../../../lib/utils/urienv",
+    "abacus-dbclient": "file:../../../lib/utils/dbclient",
+    "abacus-dbserver": "file:../../../lib/utils/dbserver",
+    "abacus-aggregation-db": "file:../../../lib/aggregation/db",
+    "abacus-usage-reporting": "file:../../../lib/aggregation/reporting",
+    "abacus-debug": "file:../../../lib/utils/debug",
+    "underscore": "^1.8.3",
+    "commander": "2.8.1"
+  },
+  "devDependencies": {
+    "abacus-babel": "file:../../../tools/babel",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-publish": "file:../../../tools/publish"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  }
+}
