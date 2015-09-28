@@ -89,8 +89,8 @@ var annotatedSource = function(source, coveredSpans, uncoveredSpans, opt) {
   // with marks indicating covered code, uncovered code and text sections
   var markedSource = function(accum, c) {
     if(accum.length === 0) return extend(accum, {
-        source: accum.source.concat([marks.end])
-      });
+      source: accum.source.concat([marks.end])
+    });
 
     // Determine if we are inside a covered code, uncovered code or text
     // section, and the corresponding mark
@@ -159,8 +159,8 @@ var printCoverage = function(coverage, sources, opt) {
       var statements = zip(values(cov.s), values(cov.statementMap));
       var branches = zip(flatten(values(cov.b)),
         flatten(map(values(cov.branchMap), function(b) {
-        return b.locations;
-      })));
+          return b.locations;
+        })));
       var spans = union(statements, branches);
       var coveredSpans = map(filter(spans, function(s) {
         return s[0] === 1;

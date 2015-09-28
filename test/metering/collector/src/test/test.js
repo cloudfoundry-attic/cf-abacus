@@ -99,7 +99,9 @@ describe('abacus-usage-collector-itest', () => {
     this.timeout(timeout + 2000);
 
     // Setup meter spy
-    const meter = spy((req, res, next) => { res.status(201).send(); });
+    const meter = spy((req, res, next) => {
+      res.status(201).send();
+    });
 
     // Start usage meter stub with the meter spy
     const app = express();
@@ -127,37 +129,37 @@ describe('abacus-usage-collector-itest', () => {
 
     // Measured usage for a given org, resource instance and usage #s
     const measuredTemplate = (o, ri, u) => ({
-        usage: [{
-          start: start + u,
-          end: end + u,
-          region: rid(o),
-          organization_id: oid(o),
-          space_id: sid(o, ri),
-          resource_id: 'test-resource',
-          plan_id: pid(ri, u),
-          resource_instance_id: riid(o, ri),
-          consumer: { type: 'EXTERNAL', consumer_id: cid(o, ri) },
-          measured_usage: [
+      usage: [{
+        start: start + u,
+        end: end + u,
+        region: rid(o),
+        organization_id: oid(o),
+        space_id: sid(o, ri),
+        resource_id: 'test-resource',
+        plan_id: pid(ri, u),
+        resource_instance_id: riid(o, ri),
+        consumer: { type: 'EXTERNAL', consumer_id: cid(o, ri) },
+        measured_usage: [
             { measure: 'storage', quantity: 1073741824 },
             { measure: 'light_api_calls', quantity: 1000 },
             { measure: 'heavy_api_calls', quantity: 100 }
-          ]
-        }, {
-          start: start + u,
-          end: end + u,
-          region: rid(o),
-          organization_id: oid(o),
-          space_id: sid(o, ri),
-          resource_id: 'test-resource',
-          plan_id: pid(ri, u),
-          resource_instance_id: riid(o, ri),
-          consumer: { type: 'EXTERNAL', consumer_id: cid(o, ri) },
-          measured_usage: [
+        ]
+      }, {
+        start: start + u,
+        end: end + u,
+        region: rid(o),
+        organization_id: oid(o),
+        space_id: sid(o, ri),
+        resource_id: 'test-resource',
+        plan_id: pid(ri, u),
+        resource_instance_id: riid(o, ri),
+        consumer: { type: 'EXTERNAL', consumer_id: cid(o, ri) },
+        measured_usage: [
             { measure: 'storage', quantity: 2147483648 },
             { measure: 'light_api_calls', quantity: 2000 },
             { measure: 'heavy_api_calls', quantity: 200 }
-          ]
-        }]
+        ]
+      }]
     });
 
     // Post a measured usage doc, throttled to default concurrent requests
@@ -178,7 +180,9 @@ describe('abacus-usage-collector-itest', () => {
             ' usage%d, verifying it...', o + 1, ri + 1, u + 1);
 
           let gets = 0;
-          const gcb = () => { if (++gets === 3) cb(); };
+          const gcb = () => {
+            if (++gets === 3) cb();
+          };
 
           // Verify normalized and submitted usage docs
           map(val.body.concat(val.headers.location), (l, i) => {

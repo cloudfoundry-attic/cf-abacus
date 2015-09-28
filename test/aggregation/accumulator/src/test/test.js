@@ -152,7 +152,9 @@ describe('abacus-usage-accumulator-itest', () => {
     this.timeout(timeout + 2000);
 
     // Setup aggregator spy
-    const aggregator = spy((req, res, next) => { res.status(201).send(); });
+    const aggregator = spy((req, res, next) => {
+      res.status(201).send();
+    });
 
     // Start usage aggregator stub with the aggregator spy
     const app = express();
@@ -204,18 +206,21 @@ describe('abacus-usage-accumulator-itest', () => {
     const accumulatedTemplate = (o, ri, u) => extend(
       omit(meteredTemplate(o, ri, u), ['id', 'metered_usage',
         'measured_usage']), {
-        accumulated_usage: [
-          {
-            metric: 'storage', quantity: buildQuantity(end, 0)
-          },
-          {
-            metric: 'thousand_light_api_calls', quantity: buildQuantity(end, u)
-          },
-          {
-            metric: 'heavy_api_calls', quantity: buildQuantity(end, u, 100)
-          }
-        ]
-      }
+          accumulated_usage: [
+            {
+              metric: 'storage',
+              quantity: buildQuantity(end, 0)
+            },
+            {
+              metric: 'thousand_light_api_calls',
+              quantity: buildQuantity(end, u)
+            },
+            {
+              metric: 'heavy_api_calls',
+              quantity: buildQuantity(end, u, 100)
+            }
+          ]
+        }
     );
 
     // Post a metered usage doc, throttled to default concurrent requests

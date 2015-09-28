@@ -94,7 +94,9 @@ describe('abacus-usage-meter-itest', () => {
     this.timeout(timeout + 2000);
 
     // Setup accumulator spy
-    const accumulate = spy((req, res, next) => { res.status(201).send(); });
+    const accumulate = spy((req, res, next) => {
+      res.status(201).send();
+    });
 
     // Start usage accumulator stub with the accumulate spy
     const app = express();

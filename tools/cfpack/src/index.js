@@ -85,7 +85,7 @@ var rootDir = function(dir) {
   try {
     if(JSON.parse(fs.readFileSync(
       path.resolve(dir, 'package.json')).toString()).name === 'cf-abacus')
-        return dir;
+      return dir;
     return rootDir(path.resolve(dir, '..'));
   }
   catch (e) {

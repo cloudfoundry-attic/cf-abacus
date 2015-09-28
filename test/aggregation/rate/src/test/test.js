@@ -67,7 +67,9 @@ const cextend = (o, interceptor) => {
   };
 
   // Go through object keys and extend
-  map(o, (v, k) => { o[k] = interceptor(k, v) || deepcopy(k, v); });
+  map(o, (v, k) => {
+    o[k] = interceptor(k, v) || deepcopy(k, v);
+  });
   return o;
 };
 
@@ -234,9 +236,9 @@ describe('abacus-usage-rate-itest', () => {
 
       // Create plan aggregations
       return create(plans, (i) => ({
-          plan_id: pid(i === 0 ? 0 : 2),
-          aggregated_usage: a(ri, u, i, count)
-        }));
+        plan_id: pid(i === 0 ? 0 : 2),
+        aggregated_usage: a(ri, u, i, count)
+      }));
     };
 
     // Consumer level resource aggregations for a given space

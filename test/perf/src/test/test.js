@@ -72,26 +72,26 @@ describe('abacus-perf-test', () => {
       o + 1].join('-');
 
     const usageTemplate = (o, ri, i) => ({
-        usage: [{
-          start: start + i,
-          end: end + i,
-          region: 'eu-gb',
-          organization_id: orgid(o),
-          space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-          resource_id: 'object-storage',
-          plan_id: 'basic',
-          resource_instance_id: riid(o, ri),
-          measured_usage: [{
-            measure: 'storage',
-            quantity: 1073741824
-          }, {
-            measure: 'light_api_calls',
-            quantity: 1000
-          }, {
-            measure: 'heavy_api_calls',
-            quantity: 100
-          }]
+      usage: [{
+        start: start + i,
+        end: end + i,
+        region: 'eu-gb',
+        organization_id: orgid(o),
+        space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
+        resource_id: 'object-storage',
+        plan_id: 'basic',
+        resource_instance_id: riid(o, ri),
+        measured_usage: [{
+          measure: 'storage',
+          quantity: 1073741824
+        }, {
+          measure: 'light_api_calls',
+          quantity: 1000
+        }, {
+          measure: 'heavy_api_calls',
+          quantity: 100
         }]
+      }]
     });
 
     // Compute the test costs
@@ -103,22 +103,70 @@ describe('abacus-perf-test', () => {
 
     // Return the expected usage report for the test organization
     const report = (o, nri, n) => ({
-        organization_id: orgid(o),
+      organization_id: orgid(o),
+      charge: totalCost(nri, n),
+      resources: [{
+        resource_id: 'object-storage',
+        charge: totalCost(nri, n),
+        aggregated_usage: [{
+          metric: 'storage',
+          quantity: 1 * nri,
+          summary: 1 * nri,
+          charge: storageCost(nri, n)
+        }, {
+          metric: 'thousand_light_api_calls',
+          quantity: 1 * nri * n,
+          summary: 1 * nri * n,
+          charge: lightCost(nri, n)
+        },
+          {
+            metric: 'heavy_api_calls',
+            quantity: 100 * nri * n,
+            summary: 100 * nri * n,
+            charge: heavyCost(nri, n)
+          }],
+        plans: [{
+          plan_id: 'basic',
+          charge: totalCost(nri, n),
+          aggregated_usage: [{
+            metric: 'storage',
+            quantity: 1 * nri,
+            summary: 1 * nri,
+            cost: storageCost(nri, n),
+            charge: storageCost(nri, n)
+          }, {
+            metric: 'thousand_light_api_calls',
+            quantity: 1 * nri * n,
+            summary: 1 * nri * n,
+            cost: lightCost(nri, n),
+            charge: lightCost(nri, n)
+          },
+            {
+              metric: 'heavy_api_calls',
+              quantity: 100 * nri * n,
+              summary: 100 * nri * n,
+              cost: heavyCost(nri, n),
+              charge: heavyCost(nri, n)
+            }]
+        }]
+      }],
+      spaces: [{
+        space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
         charge: totalCost(nri, n),
         resources: [{
           resource_id: 'object-storage',
           charge: totalCost(nri, n),
           aggregated_usage: [{
-              metric: 'storage',
-              quantity: 1 * nri,
-              summary: 1 * nri,
-              charge: storageCost(nri, n)
-            }, {
-              metric: 'thousand_light_api_calls',
-              quantity: 1 * nri * n,
-              summary: 1 * nri * n,
-              charge: lightCost(nri, n)
-            },
+            metric: 'storage',
+            quantity: 1 * nri,
+            summary: 1 * nri,
+            charge: storageCost(nri, n)
+          }, {
+            metric: 'thousand_light_api_calls',
+            quantity: 1 * nri * n,
+            summary: 1 * nri * n,
+            charge: lightCost(nri, n)
+          },
             {
               metric: 'heavy_api_calls',
               quantity: 100 * nri * n,
@@ -129,6 +177,54 @@ describe('abacus-perf-test', () => {
             plan_id: 'basic',
             charge: totalCost(nri, n),
             aggregated_usage: [{
+              metric: 'storage',
+              quantity: 1 * nri,
+              summary: 1 * nri,
+              cost: storageCost(nri, n),
+              charge: storageCost(nri, n)
+            }, {
+              metric: 'thousand_light_api_calls',
+              quantity: 1 * nri * n,
+              summary: 1 * nri * n,
+              cost: lightCost(nri, n),
+              charge: lightCost(nri, n)
+            },
+              {
+                metric: 'heavy_api_calls',
+                quantity: 100 * nri * n,
+                summary: 100 * nri * n,
+                cost: heavyCost(nri, n),
+                charge: heavyCost(nri, n)
+              }]
+          }]
+        }],
+        consumers: [{
+          consumer_id: 'ALL',
+          charge: totalCost(nri, n),
+          resources: [{
+            resource_id: 'object-storage',
+            charge: totalCost(nri, n),
+            aggregated_usage: [{
+              metric: 'storage',
+              quantity: 1 * nri,
+              summary: 1 * nri,
+              charge: storageCost(nri, n)
+            }, {
+              metric: 'thousand_light_api_calls',
+              quantity: 1 * nri * n,
+              summary: 1 * nri * n,
+              charge: lightCost(nri, n)
+            },
+              {
+                metric: 'heavy_api_calls',
+                quantity: 100 * nri * n,
+                summary: 100 * nri * n,
+                charge: heavyCost(nri, n)
+              }],
+            plans: [{
+              plan_id: 'basic',
+              charge: totalCost(nri, n),
+              aggregated_usage: [{
                 metric: 'storage',
                 quantity: 1 * nri,
                 summary: 1 * nri,
@@ -141,54 +237,6 @@ describe('abacus-perf-test', () => {
                 cost: lightCost(nri, n),
                 charge: lightCost(nri, n)
               },
-              {
-                metric: 'heavy_api_calls',
-                quantity: 100 * nri * n,
-                summary: 100 * nri * n,
-                cost: heavyCost(nri, n),
-                charge: heavyCost(nri, n)
-              }]
-          }]
-        }],
-        spaces: [{
-          space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-          charge: totalCost(nri, n),
-          resources: [{
-            resource_id: 'object-storage',
-            charge: totalCost(nri, n),
-            aggregated_usage: [{
-                metric: 'storage',
-                quantity: 1 * nri,
-                summary: 1 * nri,
-                charge: storageCost(nri, n)
-              }, {
-                metric: 'thousand_light_api_calls',
-                quantity: 1 * nri * n,
-                summary: 1 * nri * n,
-                charge: lightCost(nri, n)
-              },
-              {
-                metric: 'heavy_api_calls',
-                quantity: 100 * nri * n,
-                summary: 100 * nri * n,
-                charge: heavyCost(nri, n)
-              }],
-            plans: [{
-              plan_id: 'basic',
-              charge: totalCost(nri, n),
-              aggregated_usage: [{
-                  metric: 'storage',
-                  quantity: 1 * nri,
-                  summary: 1 * nri,
-                  cost: storageCost(nri, n),
-                  charge: storageCost(nri, n)
-                }, {
-                  metric: 'thousand_light_api_calls',
-                  quantity: 1 * nri * n,
-                  summary: 1 * nri * n,
-                  cost: lightCost(nri, n),
-                  charge: lightCost(nri, n)
-                },
                 {
                   metric: 'heavy_api_calls',
                   quantity: 100 * nri * n,
@@ -197,57 +245,9 @@ describe('abacus-perf-test', () => {
                   charge: heavyCost(nri, n)
                 }]
             }]
-          }],
-          consumers: [{
-            consumer_id: 'ALL',
-            charge: totalCost(nri, n),
-            resources: [{
-              resource_id: 'object-storage',
-              charge: totalCost(nri, n),
-              aggregated_usage: [{
-                  metric: 'storage',
-                  quantity: 1 * nri,
-                  summary: 1 * nri,
-                  charge: storageCost(nri, n)
-                }, {
-                  metric: 'thousand_light_api_calls',
-                  quantity: 1 * nri * n,
-                  summary: 1 * nri * n,
-                  charge: lightCost(nri, n)
-                },
-                {
-                  metric: 'heavy_api_calls',
-                  quantity: 100 * nri * n,
-                  summary: 100 * nri * n,
-                  charge: heavyCost(nri, n)
-                }],
-              plans: [{
-                plan_id: 'basic',
-                charge: totalCost(nri, n),
-                aggregated_usage: [{
-                    metric: 'storage',
-                    quantity: 1 * nri,
-                    summary: 1 * nri,
-                    cost: storageCost(nri, n),
-                    charge: storageCost(nri, n)
-                  }, {
-                    metric: 'thousand_light_api_calls',
-                    quantity: 1 * nri * n,
-                    summary: 1 * nri * n,
-                    cost: lightCost(nri, n),
-                    charge: lightCost(nri, n)
-                  },
-                  {
-                    metric: 'heavy_api_calls',
-                    quantity: 100 * nri * n,
-                    summary: 100 * nri * n,
-                    cost: heavyCost(nri, n),
-                    charge: heavyCost(nri, n)
-                  }]
-              }]
-            }]
           }]
         }]
+      }]
     });
 
     // Post one usage doc, throttled to 1000 concurrent requests
@@ -325,7 +325,9 @@ describe('abacus-perf-test', () => {
     let verified = 0;
     const wait = (done) => {
       console.log('\nRetrieving usage reports');
-      const cb = () => { if(++verified === orgs) done(); };
+      const cb = () => {
+        if(++verified === orgs) done();
+      };
 
       map(range(orgs), (o) => {
         const i = setInterval(() => get(o, () => cb(clearInterval(i))), 250);

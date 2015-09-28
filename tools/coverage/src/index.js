@@ -125,8 +125,8 @@ var percentages = function(coverage) {
   // Return the coverage percentages
   return {
     l: t.l.covered / (t.l.total || 1) * 100,
-    s: (t.s.covered + /*t.b.covered*/ 0) /
-      (t.s.total + /*t.b.total*/ 0 || 1) * 100
+    s: (t.s.covered + /* t.b.covered */ 0) /
+      (t.s.total + /* t.b.total */ 0 || 1) * 100
   };
 };
 

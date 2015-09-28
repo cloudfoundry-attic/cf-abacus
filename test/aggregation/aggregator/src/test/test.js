@@ -164,7 +164,9 @@ describe('abacus-usage-aggregator-itest', () => {
     this.timeout(timeout + 2000);
 
     // Setup rate spy
-    const rate = spy((req, res, next) => { res.status(201).send(); });
+    const rate = spy((req, res, next) => {
+      res.status(201).send();
+    });
 
     // Start usage rate stub with the rate spy
     const app = express();
@@ -295,9 +297,9 @@ describe('abacus-usage-aggregator-itest', () => {
 
       // Create plan aggregations
       return create(plans, (i) => ({
-          plan_id: pid(i === 0 ? 0 : 2),
-          aggregated_usage: a(ri, u, i, count)
-        }));
+        plan_id: pid(i === 0 ? 0 : 2),
+        aggregated_usage: a(ri, u, i, count)
+      }));
     };
 
     // Consumer level resource aggregations for a given space
