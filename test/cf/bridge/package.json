@@ -1,0 +1,95 @@
+{
+  "name": "abacus-cf-bridge-itest",
+  "description": "CF Bridge integration and performance tests",
+  "license": "Apache-2.0",
+  "version": "0.0.1-dev.3",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/cf/bridge",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "lib/",
+    "src/"
+  ],
+  "main": "lib/index.js",
+  "scripts": {
+    "itest": "mocha --command",
+    "babel": "babel",
+    "test": "eslint",
+    "lint": "eslint",
+    "pub": "publish"
+  },
+  "dependencies": {
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-resource-config": "file:../../../lib/config/resource",
+    "abacus-price-config": "file:../../../lib/config/price",
+    "abacus-usage-schemas": "file:../../../lib/config/schemas",
+    "abacus-usage-accumulator": "file:../../../lib/aggregation/accumulator",
+    "abacus-usage-aggregator": "file:../../../lib/aggregation/aggregator",
+    "abacus-instance-launcher": "file:../../../lib/aggregation/launcher",
+    "abacus-aggregation-db": "file:../../../lib/aggregation/db",
+    "abacus-usage-reporting": "file:../../../lib/aggregation/reporting",
+    "abacus-usage-collector": "file:../../../lib/metering/collector",
+    "abacus-usage-meter": "file:../../../lib/metering/meter",
+    "abacus-metering-db": "file:../../../lib/metering/db",
+    "abacus-usage-rate": "file:../../../lib/aggregation/rate",
+    "abacus-account-stub": "file:../../../lib/stubs/account",
+    "abacus-provisioning-stub": "file:../../../lib/stubs/provisioning",
+    "abacus-cf-bridge": "file:../../../lib/cf/bridge",
+    "abacus-batch": "file:../../../lib/utils/batch",
+    "abacus-breaker": "file:../../../lib/utils/breaker",
+    "abacus-cfoauth": "file:../../../lib/utils/cfoauth",
+    "abacus-cluster": "file:../../../lib/utils/cluster",
+    "abacus-dbclient": "file:../../../lib/utils/dbclient",
+    "abacus-dbserver": "file:../../../lib/utils/dbserver",
+    "abacus-debug": "file:../../../lib/utils/debug",
+    "abacus-eval": "file:../../../lib/utils/eval",
+    "abacus-events": "file:../../../lib/utils/events",
+    "abacus-express": "file:../../../lib/utils/express",
+    "abacus-hystrix": "file:../../../lib/utils/hystrix",
+    "abacus-lock": "file:../../../lib/utils/lock",
+    "abacus-lrudown": "file:../../../lib/utils/lrudown",
+    "abacus-partition": "file:../../../lib/utils/partition",
+    "abacus-perf": "file:../../../lib/utils/perf",
+    "abacus-request": "file:../../../lib/utils/request",
+    "abacus-retry": "file:../../../lib/utils/retry",
+    "abacus-router": "file:../../../lib/utils/router",
+    "abacus-schema": "file:../../../lib/utils/schema",
+    "abacus-seqid": "file:../../../lib/utils/seqid",
+    "abacus-throttle": "file:../../../lib/utils/throttle",
+    "abacus-transform": "file:../../../lib/utils/transform",
+    "abacus-urienv": "file:../../../lib/utils/urienv",
+    "abacus-vcapenv": "file:../../../lib/utils/vcapenv",
+    "abacus-webapp": "file:../../../lib/utils/webapp",
+    "abacus-yieldable": "file:../../../lib/utils/yieldable",
+    "abacus-perf-test": "file:../../../test/perf",
+    "abacus-usage-collector-itest": "file:../../../test/metering/collector",
+    "abacus-usage-meter-itest": "file:../../../test/metering/meter",
+    "abacus-usage-accumulator-itest": "file:../../../test/aggregation/accumulator",
+    "abacus-usage-aggregator-itest": "file:../../../test/aggregation/aggregator",
+    "abacus-usage-rate-itest": "file:../../../test/aggregation/rate",
+    "abacus-demo-client": "file:../../../demo/client",
+    "abacus-doc": "file:../../../doc",
+    "abacus-etc": "file:../../../etc",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "abacus-babel": "file:../../../tools/babel",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-publish": "file:../../../tools/publish"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  }
+}
