@@ -23,7 +23,7 @@
   ],
   "main": "lib/index.js",
   "scripts": {
-    "itest": "mocha --command",
+    "itest": "echo DISABLED",
     "babel": "babel",
     "test": "eslint",
     "lint": "eslint",
