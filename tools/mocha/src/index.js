@@ -5,6 +5,8 @@
 // Implemented in ES5 for now
 /* eslint no-var: 0 */
 
+if(process.env.LONGJOHN)
+  require('longjohn');
 var _ = require('underscore');
 var path = require('path');
 var util = require('util');

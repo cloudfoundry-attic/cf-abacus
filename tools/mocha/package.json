@@ -36,6 +36,7 @@
     "commander": "^2.8.1",
     "convert-source-map": "^1.1.1",
     "istanbul": "^0.3.17",
+    "longjohn": "^0.2.9",
     "mocha": "^2.2.5",
     "sinon": "^1.14.1",
     "source-map": "^0.4.2",
