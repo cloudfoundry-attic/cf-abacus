@@ -126,7 +126,7 @@ describe('abacus-usage-meter-itest', () => {
 
     // Measured usage for a given org, resource instance and usage #s
     const normalizedTemplate = (o, ri, u) => ({
-      usage_batch_id: bid(u),
+      collected_usage_id: bid(u),
       start: start + u,
       end: end + u,
       region: rid(o),
@@ -160,7 +160,7 @@ describe('abacus-usage-meter-itest', () => {
       debug('Submit normalized usage for org%d instance%d usage%d',
         o + 1, ri + 1, u + 1);
 
-      brequest.post('http://localhost::p/v1/metering/usage',
+      brequest.post('http://localhost::p/v1/metering/normalized/usage',
         { p: 9081, body: normalizedTemplate(o, ri, u) }, (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);

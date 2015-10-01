@@ -186,7 +186,7 @@ describe('abacus-usage-accumulator-itest', () => {
     // Return a usage with unique start and end time based on a number
     const meteredTemplate = (o, ri, u) => ({
       id: uid(o, ri, u),
-      usage_batch_id: bid(o, ri, u),
+      collected_usage_id: bid(o, ri, u),
       start: start + u,
       end: end + u,
       region: rid(o),

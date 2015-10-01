@@ -230,7 +230,7 @@ describe('abacus-usage-aggregator-itest', () => {
     // Accumulated usage for given org, resource instance and usage #s
     const accumulatedTemplate = (o, ri, u) => ({
       id: uid(o, ri, u),
-      usage_batch_id: bid(o, ri, u),
+      collected_usage_id: bid(o, ri, u),
       start: start + u,
       end: end + u,
       region: rid(o),

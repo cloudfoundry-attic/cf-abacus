@@ -254,7 +254,7 @@ describe('abacus-perf-test', () => {
     const post = throttle((o, ri, i, cb) => {
       debug('Submitting org%d instance%d usage%d',
         o + 1, ri + 1, i + 1);
-      brequest.post('http://localhost:9080/v1/metering/resource/usage',
+      brequest.post('http://localhost:9080/v1/metering/collected/usage',
         { body: usageTemplate(o, ri, i) }, (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);

@@ -294,7 +294,7 @@ describe('abacus-demo-client', () => {
           if(++posts === usage.length) done();
         };
 
-        request.post(collector + '/v1/metering/resource/usage', {
+        request.post(collector + '/v1/metering/collected/usage', {
           body: u.usage
         }, (err, val) => {
           expect(err).to.equal(undefined);

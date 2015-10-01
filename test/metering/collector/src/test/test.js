@@ -106,7 +106,7 @@ describe('abacus-usage-collector-itest', () => {
     // Start usage meter stub with the meter spy
     const app = express();
     const routes = router();
-    routes.post('/v1/metering/usage', meter);
+    routes.post('/v1/metering/normalized/usage', meter);
     app.use(routes);
     app.use(router.batch(routes));
     app.listen(9081);
@@ -169,7 +169,7 @@ describe('abacus-usage-collector-itest', () => {
 
       const usage = measuredTemplate(o, ri, u);
 
-      request.post('http://localhost::p/v1/metering/resource/usage',
+      request.post('http://localhost::p/v1/metering/collected/usage',
         { p: 9080, body: usage }, (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);
@@ -193,7 +193,7 @@ describe('abacus-usage-collector-itest', () => {
               expect(err).to.equal(undefined);
               expect(val.statusCode).to.equal(200);
 
-              expect(omit(val.body, ['id', 'usage_batch_id'])).to.deep
+              expect(omit(val.body, ['id', 'collected_usage_id'])).to.deep
                 .equal(i < 2 ? usage.usage[i] : usage);
 
               debug('Verified usage#%d for org%d instance%d usage%d',

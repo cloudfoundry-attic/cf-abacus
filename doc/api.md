@@ -8,7 +8,7 @@ Usage data is exchanged with Abacus in the form of usage documents. Each documen
 Document types
 ---
 
-Resource usage
+Resource usage collection
 
 Resource configuration
 
@@ -19,23 +19,23 @@ Detailed usage report
 Resource usage
 ---
 
-The _resource usage_ API is used by Cloud resource providers to submit usage for instances of Cloud resources, including service instances and application runtimes or containers.
+The _resource usage collection_ API is used by Cloud resource providers to submit usage for instances of Cloud resources, including service instances and application runtimes or containers.
 
 Usage can be submitted by POSTing _resource usage_ documents to Abacus.
 
 A _resource usage document_ contains usage measurements for one or more Cloud resources.
 
-Once a _resource usage_ document has been submitted it can be retrieved using GET.
+Once a _resource usage_ document has been submitted to Abacus it can be retrieved using GET.
 
 ### Method: insert
-_HTTP request_: POST /v1/metering/resource/usage with a _resource usage_ document.
+_HTTP request_: POST /v1/metering/collected/usage with a _resource usage_ document.
 
 _Description_: Records the _resource usage_ document and processes the Cloud resource usage data it contains.
 
 _HTTP response_: 201 to indicate success with the URL of the _resource usage_ document in a Location header, 400 to report an invalid request, 500 to report a server error.
 
 ### Method: get
-_HTTP request_: GET /v1/metering/resource/usage/:usage\_document\_id
+_HTTP request_: GET /v1/metering/collected/usage/:usage\_document\_id
 
 _Description_: Retrieves a previously submitted _resource usage_ document.
 

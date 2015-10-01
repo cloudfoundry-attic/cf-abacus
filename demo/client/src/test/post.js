@@ -52,7 +52,7 @@ const batch = {
   }]
 };
 
-request.post(collector + '/v1/metering/resource/usage', {
+request.post(collector + '/v1/metering/collected/usage', {
   rejectUnauthorized: false,
   body: batch
 }, (err, val) => {
