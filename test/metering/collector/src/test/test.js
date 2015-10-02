@@ -15,6 +15,7 @@ const map = _.map;
 const range = _.range;
 const clone = _.clone;
 const omit = _.omit;
+const rest = _.rest;
 
 // Batch the requests
 const brequest = batch(request);
@@ -174,7 +175,7 @@ describe('abacus-usage-collector-itest', () => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);
           expect(val.headers.location).to.not.equal(undefined);
-          expect(val.body.length).to.equal(2);
+          expect(val.body.length).to.equal(3);
 
           debug('Collected measured usage for org%d instance%d' +
             ' usage%d, verifying it...', o + 1, ri + 1, u + 1);
@@ -185,7 +186,7 @@ describe('abacus-usage-collector-itest', () => {
           };
 
           // Verify normalized and submitted usage docs
-          map(val.body.concat(val.headers.location), (l, i) => {
+          map(rest(val.body).concat(val.headers.location), (l, i) => {
             brequest.get(l, undefined, (err, val) => {
               debug('Verify usage#%d for org%d instance%d usage%d',
                 i + 1, o + 1, ri + 1, u + 1);
