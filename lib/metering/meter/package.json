@@ -39,7 +39,6 @@
     "abacus-dataflow": "file:../../utils/dataflow",
     "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-debug": "file:../../utils/debug",
-    "abacus-metering-db": "file:../db",
     "abacus-request": "file:../../utils/request",
     "abacus-resource-config": "file:../../config/resource",
     "abacus-retry": "file:../../utils/retry",

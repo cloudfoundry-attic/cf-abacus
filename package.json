@@ -68,7 +68,6 @@
     "abacus-usage-reporting": "file:lib/aggregation/reporting",
     "abacus-usage-collector": "file:lib/metering/collector",
     "abacus-usage-meter": "file:lib/metering/meter",
-    "abacus-metering-db": "file:lib/metering/db",
     "abacus-usage-rate": "file:lib/aggregation/rate",
     "abacus-account-stub": "file:lib/stubs/account",
     "abacus-provisioning-stub": "file:lib/stubs/provisioning",
