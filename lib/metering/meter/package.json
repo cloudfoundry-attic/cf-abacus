@@ -36,6 +36,7 @@
     "babel-runtime": "^5.8.19",
     "abacus-batch": "file:../../utils/batch",
     "abacus-breaker": "file:../../utils/breaker",
+    "abacus-cfoauth": "file:../../utils/cfoauth",
     "abacus-dataflow": "file:../../utils/dataflow",
     "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-debug": "file:../../utils/debug",
