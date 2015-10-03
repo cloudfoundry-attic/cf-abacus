@@ -37,6 +37,7 @@
     "abacus-aggregation-db": "file:../db",
     "abacus-batch": "file:../../utils/batch",
     "abacus-breaker": "file:../../utils/breaker",
+    "abacus-cfoauth": "file:../../utils/cfoauth",
     "abacus-cluster": "file:../../utils/cluster",
     "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-debug": "file:../../utils/debug",
