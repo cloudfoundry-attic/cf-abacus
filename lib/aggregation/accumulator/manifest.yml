@@ -10,4 +10,5 @@ applications:
     JWTKEY: undefined
     JWTALGO: undefined
     AGGREGATOR: abacus-usage-aggregator
+    PROVISIONING: abacus-provisioning-stub
     COUCHDB: abacus-dbserver

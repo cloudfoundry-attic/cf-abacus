@@ -29,7 +29,14 @@
     "pub": "publish"
   },
   "dependencies": {
+    "abacus-batch": "file:../../utils/batch",
+    "abacus-breaker": "file:../../utils/breaker",
+    "abacus-debug": "file:../../utils/debug",
     "abacus-eval": "file:../../utils/eval",
+    "abacus-lock": "file:../../utils/lock",
+    "abacus-request": "file:../../utils/request",
+    "abacus-retry": "file:../../utils/retry",
+    "abacus-urienv": "file:../../utils/urienv",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

@@ -36,6 +36,8 @@
     "babel-runtime": "^5.8.19",
     "abacus-debug": "file:../../utils/debug",
     "abacus-router": "file:../../utils/router",
+    "abacus-urienv": "file:../../utils/urienv",
+    "abacus-usage-schemas": "file:../../config/schemas",
     "abacus-webapp": "file:../../utils/webapp",
     "underscore": "^1.8.3"
   },

@@ -184,6 +184,7 @@ Cloud resource definition documents are currently provided as [JSON configuratio
 ```json
 {
   "resource_id": "object-storage",
+  "effective": 1420070400000,
   "measures": [
     {
       "name": "storage",
@@ -221,12 +222,17 @@ Cloud resource definition documents are currently provided as [JSON configuratio
   "type": "object",
   "required": [
     "resource_id",
+    "effective",
     "measures",
     "metrics"
   ],
   "properties": {
     "resource_id": {
       "type": "string"
+    },
+    "effective": {
+      "type": "integer",
+      "format": "utc-millisec"
     },
     "measures": {
       "type": "array",

@@ -6,8 +6,9 @@ applications:
   memory: 512M
   disk_quota: 512M
   env:
+    ACCUMULATOR: abacus-usage-accumulator
+    PROVISIONING: abacus-provisioning-stub
+    COUCHDB: abacus-dbserver
     SECURED: false
     JWTKEY: undefined
     JWTALGO: undefined
-    ACCUMULATOR: abacus-usage-accumulator
-    COUCHDB: abacus-dbserver
