@@ -173,12 +173,21 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
 }
 ```
 
-Cloud resource definitions
+Resource configuration
 ---
 
-Cloud resource definition documents are used to configure the types of measurements, metrics, units, and metering, aggregation and rating formulas used by Abacus to meter and rate usage for each type of Cloud resource.
+The _resource configuration_ API is used by Abacus to retrieve _resource configuration_ documents for the Cloud resources for which usage is submitted.
 
-Cloud resource definition documents are currently provided as [JSON configuration files](../lib/config/resource/src/resources). A REST API will also be defined to allow resource providers to submit resource definition documents for the resources they provide.
+_Resource configuration_ documents describe the types of measurements, metrics, units, and metering, aggregation, rating and reporting formulas that must be used by Abacus to meter, rate, and report usage for each type of Cloud resource.
+
+This API defines the contract between Abacus and the Cloud platform integrating it. The Cloud platform can manage and store _resource configuration_ documents describing its Cloud resources in a platform specific way outside of Abacus, and is simply expected to make these documents available to Abacus at an API endpoint supporting a GET method.
+
+### Method: get
+_HTTP request_: GET /v1/provisioning/resources/:resource\_id/config/:time
+
+_Description_: Retrieves the configuration of the specified Cloud resource effective at the specified time.
+
+_HTTP response_: 200 to indicate success with the requested _resource configuration_ document, 404 if the configuration is not found, 500 to report a server error.
 
 ### JSON representation:
 ```json
