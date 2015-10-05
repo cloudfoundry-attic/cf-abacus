@@ -26,9 +26,9 @@ const debug = require('abacus-debug')('abacus-usage-reporting-itest');
 
 // Parse command line options
 const argv = clone(process.argv);
-argv.splice(1, 1, 'usage-rate-itest');
+argv.splice(1, 1, 'usage-reporting-itest');
 commander
-  .option('-o, --orgs <n>', 'number of ten thousand organizations', parseInt)
+  .option('-o, --orgs <n>', 'number of thousands of organizations', parseInt)
   .option('-i, --instances <n>', 'number of resource instances', parseInt)
   .option('-u, --usagedocs <n>', 'number of usage docs', parseInt)
   .option('-d, --day <d>',
@@ -36,7 +36,7 @@ commander
   .allowUnknownOption(true)
   .parse(argv);
 
-// Number of thousand organizations
+// Number of thousands of organizations
 const orgs = (commander.orgs || 1) * 1000;
 
 // Number of resource instances
@@ -322,7 +322,7 @@ describe('abacus-usage-reporting-itest', () => {
       // Resource instance index shift
       const shift = (s) => s === 0 ? 1 : 0;
 
-      // Number sequnce of count
+      // Number sequence of count
       // 0, 1, 1, 2, 2, 3, 3, 4, 4,.....
       const count = (n, s) => Math.round((n + shift(s)) / 2);
 
