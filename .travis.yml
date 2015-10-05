@@ -1,11 +1,13 @@
-os:
-  - linux
-  - osx
-
-env:
-  - NODE_VERSION="4.0"
-  - NODE_VERSION="0.12"
-  - NODE_VERSION="0.10"
+matrix:
+  include:
+    - os: "linux"
+      env: NODE_VERSION="4.0"
+    - os: "linux"
+      env: NODE_VERSION="0.12"
+    - os: "linux"
+      env: NODE_VERSION="0.10"
+    - os: "osx"
+      env: NODE_VERSION="4.0"
 
 before_install:
   - rm -rf ~/.nvm
