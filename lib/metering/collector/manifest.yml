@@ -12,4 +12,3 @@ applications:
     COUCHDB: abacus-dbserver
     METER: abacus-usage-meter
     PROVISIONING: abacus-provisioning-stub
-
