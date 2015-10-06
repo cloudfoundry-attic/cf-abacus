@@ -16,7 +16,7 @@ before_install:
   -  nvm install $NODE_VERSION
 install: echo "install"
 
-script: npm run build-ci
+script: npm run cibuild
 after_script: npm run coveralls
 
 notifications:
