@@ -12,6 +12,8 @@ Resource usage collection
 
 Resource configuration
 
+Resource pricing
+
 Usage summary report
 
 Detailed usage report
@@ -176,7 +178,7 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
 Resource configuration
 ---
 
-The _resource configuration_ API is used by Abacus to retrieve _resource configuration_ documents for the Cloud resources for which usage is submitted.
+The _resource configuration_ API is used by Abacus to retrieve _resource configuration_ documents for Cloud resources.
 
 _Resource configuration_ documents describe the types of measurements, metrics, units, and metering, aggregation, rating and reporting formulas that must be used by Abacus to meter, rate, and report usage for each type of Cloud resource.
 
@@ -306,6 +308,227 @@ _HTTP response_: 200 to indicate success with the requested _resource configurat
   },
   "additionalProperties": false,
   "title": "Resource Definition"
+}
+```
+
+Resource pricing
+---
+
+The _resource pricing_ API is used by Abacus to retrieve _resource pricing_ data for Cloud resources.
+
+_Resource pricing_ documents are used to configure the prices of the metrics used to meter Cloud resources. Different prices can be defined for different countries.
+
+This API defines the contract between Abacus and the Cloud platform integrating it. The Cloud platform can manage and store _resource pricing_ data for its Cloud resources in a platform specific way outside of Abacus, and is simply expected to make the pricing data available to Abacus at an API endpoint supporting a GET method.
+
+### Method: get
+_HTTP request_: GET /v1/pricing/resources/:resource\_id/config/:time
+
+_Description_: Retrieves the pricing of the specified Cloud resource effective at the specified time.
+
+_HTTP response_: 200 to indicate success with the requested _resource pricing_ data, 404 if the pricing data is not found, 500 to report a server error.
+
+### JSON representation:
+```json
+{
+  "resource_id": "object-storage",
+  "effective": 1420070400000,
+  "plans": [
+    {
+      "plan_id": "basic",
+      "metrics": [
+        {
+          "name": "storage",
+          "prices": [
+            {
+              "country": "USA",
+              "price": 1
+            },
+            {
+              "country": "EUR",
+              "price": 0.7523
+            },
+            {
+              "country": "CAN",
+              "price": 1.06
+            }
+          ]
+        },
+        {
+          "name": "thousand_light_api_calls",
+          "prices": [
+            {
+              "country": "USA",
+              "price": 0.03
+            },
+            {
+              "country": "EUR",
+              "price": 0.0226
+            },
+            {
+              "country": "CAN",
+              "price": 0.0317
+            }
+          ]
+        },
+        {
+          "name": "heavy_api_calls",
+          "prices": [
+            {
+              "country": "USA",
+              "price": 0.15
+            },
+            {
+              "country": "EUR",
+              "price": 0.1129
+            },
+            {
+              "country": "CAN",
+              "price": 0.1585
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "plan_id": "standard",
+      "metrics": [
+        {
+          "name": "storage",
+          "prices": [
+            {
+              "country": "USA",
+              "price": 0.5
+            },
+            {
+              "country": "EUR",
+              "price": 0.45
+            },
+            {
+              "country": "CAN",
+              "price": 0.65
+            }
+          ]
+        },
+        {
+          "name": "thousand_light_api_calls",
+          "prices": [
+            {
+              "country": "USA",
+              "price": 0.04
+            },
+            {
+              "country": "EUR",
+              "price": 0.04
+            },
+            {
+              "country": "CAN",
+              "price": 0.05
+            }
+          ]
+        },
+        {
+          "name": "heavy_api_calls",
+          "prices": [
+            {
+              "country": "USA",
+              "price": 0.18
+            },
+            {
+              "country": "EUR",
+              "price": 0.16
+            },
+            {
+              "country": "CAN",
+              "price": 0.24
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+### JSON Schema:
+```json
+{
+  "title": "priceConfig",
+  "type": "object",
+  "properties": {
+    "resource_id": {
+      "type": "string"
+    },
+    "effective": {
+      "type": "integer",
+      "format": "utc-millisec"
+    },
+    "plans": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "title": "plan",
+        "type": "object",
+        "properties": {
+          "plan_id": {
+            "type": "string"
+          },
+          "metrics": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "title": "metric",
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "prices": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "title": "price",
+                    "type": "object",
+                    "properties": {
+                      "country": {
+                        "type": "string"
+                      },
+                      "price": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "country",
+                      "price"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "additionalItems": false
+                }
+              },
+              "required": [
+                "name",
+                "prices"
+              ],
+              "additionalProperties": false
+            },
+            "additionalItems": false
+          }
+        },
+        "required": [
+          "plan_id",
+          "metrics"
+        ],
+        "additionalProperties": false
+      },
+      "additionalItems": false
+    }
+  },
+  "required": [
+    "resource_id",
+    "effective",
+    "plans"
+  ],
+  "additionalProperties": false
 }
 ```
 
