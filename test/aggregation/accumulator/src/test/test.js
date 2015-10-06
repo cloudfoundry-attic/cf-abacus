@@ -77,7 +77,7 @@ const revertUTCNumber = (n) => {
 
 // Calculates the accumulated quantity given an end time, u, window size,
 // and multiplier factor of the usage
-const calculateQuantityByWindow = (e, u, w, m) => {
+const calculateQuantityByWindow = (e, u, w, m, f) => {
   // Only manipulate the time window if we're not accumulating forever
   if(w) {
     const time = e + u;
@@ -86,26 +86,24 @@ const calculateQuantityByWindow = (e, u, w, m) => {
 
     // Get the millisecond equivalent of the very start of the given window
     const windowTime = revertUTCNumber(windowTimeNum).getTime();
-    return m * Math.min(time - windowTime, u);
+    return f(m, Math.min(time - windowTime, u));
   }
-  return m * u;
+  return f(m, u);
 };
 
 // Builds the quantity array in the accumulated usage
-const buildQuantity = (e, u, m) => {
-  const usages = typeof u !== 'undefined' ? u : 0;
-  const multiplier = m ? m : 1;
+const buildQuantity = (e, u, m, f) => {
   // Scaling factor for a time window
   // [Second, Minute, Hour, Day, Month, Year, Forever]
   const timescale = [1, 100, 10000, 1000000, 100000000, 10000000000, 0];
   const quantity = map(timescale, (ts) => {
     // If this is the first usage, only return current
     if(u === 0)
-      return { current: (usages + 1) * multiplier };
+      return { current: f(m, u + 1) };
     // Return a properly accumulated current & previous
     return {
-      previous: calculateQuantityByWindow(e, usages, ts, multiplier),
-      current: calculateQuantityByWindow(e, usages + 1, ts, multiplier)
+      previous: calculateQuantityByWindow(e, u, ts, m, f),
+      current: calculateQuantityByWindow(e, u + 1, ts, m, f)
     };
   });
   return quantity;
@@ -205,21 +203,22 @@ describe('abacus-usage-accumulator-itest', () => {
 
     const accumulatedTemplate = (o, ri, u) => extend(
       omit(meteredTemplate(o, ri, u), ['id', 'metered_usage',
-        'measured_usage']), {
+        'measured_usage', 'start']), {
           accumulated_usage: [
             {
               metric: 'storage',
-              quantity: buildQuantity(end, 0)
+              quantity: buildQuantity(end, u, 1, (m, u) => m)
             },
             {
               metric: 'thousand_light_api_calls',
-              quantity: buildQuantity(end, u)
+              quantity: buildQuantity(end, u, 1, (m, u) => u)
             },
             {
               metric: 'heavy_api_calls',
-              quantity: buildQuantity(end, u, 100)
+              quantity: buildQuantity(end, u, 100, (m, u) => m * u)
             }
-          ]
+          ],
+          start: meteredTemplate(o, ri, 0).start
         }
     );
 
