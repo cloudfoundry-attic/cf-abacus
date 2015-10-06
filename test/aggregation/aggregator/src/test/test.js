@@ -46,19 +46,6 @@ const usage = commander.usagedocs || 1;
 // Usage time shift by number of days in milli-seconds
 const tshift = commander.day * 24 * 60 * 60 * 1000 || 0;
 
-// Return the aggregation start time for a given time
-const day = (t) => {
-  const d = new Date(t);
-  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
-};
-
-// Return the aggregation end time for a given time
-const eod = (t) => {
-  const d = new Date(t);
-  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(),
-    d.getUTCDate() + 1) - 1;
-};
-
 // Module directory
 const moduleDir = (module) => {
   const path = require.resolve(module);
@@ -89,7 +76,7 @@ const revertUTCNumber = (n) => {
 
 // Calculates the accumulated quantity given an end time, u, window size,
 // and multiplier factor of the usage
-const calculateQuantityByWindow = (e, u, w, m) => {
+const calculateQuantityByWindow = (e, u, w, m, f) => {
   // Only manipulate the time window if we're not accumulating forever
   if(w) {
     const time = e + u;
@@ -98,27 +85,43 @@ const calculateQuantityByWindow = (e, u, w, m) => {
 
     // Get the millisecond equivalent of the very start of the given window
     const windowTime = revertUTCNumber(windowTimeNum).getTime();
-    return m * Math.min(time - windowTime, u);
+    return f(m, Math.min(time - windowTime, u));
   }
-  return m * u;
+  return f(m, u);
 };
 
+// Scaling factor for a time window
+// [Second, Minute, Hour, Day, Month, Year, Forever]
+const timescale = [1, 100, 10000, 1000000, 100000000, 10000000000, 0];
+
 // Builds the quantity array in the accumulated usage
-const buildQuantity = (e, u, m) => {
-  const usages = typeof u !== 'undefined' ? u : 0;
-  const multiplier = m ? m : 1;
-  // Scaling factor for a time window
-  // [Second, Minute, Hour, Day, Month, Year, Forever]
-  const timescale = [1, 100, 10000, 1000000, 100000000, 10000000000, 0];
+const buildAccumulatedQuantity = (e, u, m, f) => {
   const quantity = map(timescale, (ts) => {
     // If this is the first usage, only return current
     if(u === 0)
-      return { current: (usages + 1) * multiplier };
+      return { current: f(m, u + 1) };
     // Return a properly accumulated current & previous
     return {
-      previous: calculateQuantityByWindow(e, usages, ts, multiplier),
-      current: calculateQuantityByWindow(e, usages + 1, ts, multiplier)
+      previous: calculateQuantityByWindow(e, u, ts, m, f),
+      current: calculateQuantityByWindow(e, u + 1, ts, m, f)
     };
+  });
+  return quantity;
+};
+
+// Builds the quantity array in the aggregated usage
+const buildAggregatedQuantity = (p, u, ri, tri, count, end, f) => {
+  const quantity = map(timescale, (ts) => {
+    if(ts) {
+      const time = end + u;
+      const timeNum = dateUTCNumbify(time);
+      const windowTimeNum = Math.floor(timeNum / ts) * ts;
+
+      // Get the millisecond equivalent of the very start of the given window
+      const windowTime = revertUTCNumber(windowTimeNum).getTime();
+      return f(p, Math.min(time - windowTime, u), ri, tri, count);
+    }
+    return f(p, u, ri, tri, count);
   });
   return quantity;
 };
@@ -156,7 +159,7 @@ describe('abacus-usage-aggregator-itest', () => {
     stop('abacus-dbserver');
   });
 
-  it('aggregate accumulated usage submissions', function(done) {
+  it('aggregatr accumulated usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs, with
     // a minimum of 20 secs
     const timeout = Math.max(20000,
@@ -242,13 +245,16 @@ describe('abacus-usage-aggregator-itest', () => {
       consumer: { type: 'EXTERNAL', consumer_id: cid(o, ri) },
       accumulated_usage: [
         {
-          metric: 'storage', quantity: buildQuantity(end, 0)
+          metric: 'storage',
+          quantity: buildAccumulatedQuantity(end, u, 1, (m, u) => m)
         },
         {
-          metric: 'thousand_light_api_calls', quantity: buildQuantity(end, u)
+          metric: 'thousand_light_api_calls',
+          quantity: buildAccumulatedQuantity(end, u, 1, (m, u) => m * u)
         },
         {
-          metric: 'heavy_api_calls', quantity: buildQuantity(end, u, 100)
+          metric: 'heavy_api_calls',
+          quantity: buildAccumulatedQuantity(end, u, 100, (m, u) => m * u)
         }
       ]
     });
@@ -270,11 +276,15 @@ describe('abacus-usage-aggregator-itest', () => {
     // For sum, we use current count + total count based on resource instance
     // and usage index
     const a = (ri, u, p, count) => [
-      { metric: 'storage', quantity: u === 0 ? count(ri, p) : count(tri, p) },
+      { metric: 'storage',
+        quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
+          (p, u, ri, tri, count) => u === 0 ? count(ri, p) : count(tri, p)) },
       { metric: 'thousand_light_api_calls',
-        quantity: count(ri, p) + u * count(tri, p) },
+        quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
+          (p, u, ri, tri, count) => count(ri, p) + u * count(tri, p)) },
       { metric: 'heavy_api_calls',
-        quantity: 100 * (count(ri, p) + u * count(tri, p)) }
+        quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
+          (p, u, ri, tri, count) => 100 * (count(ri, p) + u * count(tri, p))) }
     ];
 
     // Resouce plan level aggregations for a given consumer at given space
@@ -400,8 +410,8 @@ describe('abacus-usage-aggregator-itest', () => {
     const aggregatedTemplate = (o, ri, u) => ({
       accumulated_usage_id: uid(o, ri, u),
       organization_id: oid(o),
-      start: day(end + u),
-      end: eod(end + u),
+      start: end + u,
+      end: end + u,
       resources: [{
         resource_id: 'test-resource',
         aggregated_usage: a(ri, u, undefined, (n) => n + 1),

@@ -211,7 +211,7 @@ describe('abacus-usage-accumulator-itest', () => {
             },
             {
               metric: 'thousand_light_api_calls',
-              quantity: buildQuantity(end, u, 1, (m, u) => u)
+              quantity: buildQuantity(end, u, 1, (m, u) => m * u)
             },
             {
               metric: 'heavy_api_calls',
