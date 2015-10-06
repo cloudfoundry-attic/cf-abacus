@@ -29,13 +29,21 @@
     "pub": "publish"
   },
   "dependencies": {
+    "abacus-batch": "file:../../utils/batch",
+    "abacus-breaker": "file:../../utils/breaker",
+    "abacus-debug": "file:../../utils/debug",
+    "abacus-lock": "file:../../utils/lock",
+    "abacus-request": "file:../../utils/request",
+    "abacus-retry": "file:../../utils/retry",
+    "abacus-urienv": "file:../../utils/urienv",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish",
-    "underscore": "^1.8.3"
+    "abacus-usage-schemas": "file:../../config/schemas"
   },
   "engines": {
     "node": ">=0.10.0",
