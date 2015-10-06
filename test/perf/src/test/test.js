@@ -98,151 +98,131 @@ describe('abacus-perf-test', () => {
     const storageCost = (nri, n) => 1.00 * nri;
     const lightCost = (nri, n) => 0.03 * nri * n;
     const heavyCost = (nri, n) => 0.15 * 100 * nri * n;
-    const totalCost = (nri, n) =>
-      storageCost(nri, n) + lightCost(nri, n) + heavyCost(nri, n);
+
+    const windows = (obj) => {
+      const timewindows = [];
+      for(let i = 0; i < 7; i++)
+        timewindows.push(obj);
+      return timewindows;
+    }
+    const rwindow = (nri, n, s, m, fn) => {
+      return windows({
+        quantity: m * s,
+        summary: m * s,
+        charge: fn(nri, n)
+      });
+    };
+    const pwindow = (nri, n, s, m, fn) => {
+      return windows({
+        quantity: m * s,
+        summary: m * s,
+        cost: fn(nri, n),
+        charge: fn(nri, n)
+      });
+    };
+    const cwindow = (nri, n) => {
+      return windows({
+        charge: storageCost(nri, n) + lightCost(nri, n) + heavyCost(nri, n)
+      });
+    };
 
     // Return the expected usage report for the test organization
     const report = (o, nri, n) => ({
       organization_id: orgid(o),
-      charge: totalCost(nri, n),
+      windows: cwindow(nri, n),
       resources: [{
         resource_id: 'object-storage',
-        charge: totalCost(nri, n),
+        windows: cwindow(nri, n),
         aggregated_usage: [{
           metric: 'storage',
-          quantity: 1 * nri,
-          summary: 1 * nri,
-          charge: storageCost(nri, n)
+          windows: rwindow(nri, n, nri, 1, storageCost)
         }, {
           metric: 'thousand_light_api_calls',
-          quantity: 1 * nri * n,
-          summary: 1 * nri * n,
-          charge: lightCost(nri, n)
+          windows: rwindow(nri, n, nri * n, 1, lightCost)
         },
           {
             metric: 'heavy_api_calls',
-            quantity: 100 * nri * n,
-            summary: 100 * nri * n,
-            charge: heavyCost(nri, n)
+            windows: rwindow(nri, n, nri * n, 100, heavyCost)
           }],
         plans: [{
           plan_id: 'basic',
-          charge: totalCost(nri, n),
+          windows: cwindow(nri, n),
           aggregated_usage: [{
             metric: 'storage',
-            quantity: 1 * nri,
-            summary: 1 * nri,
-            cost: storageCost(nri, n),
-            charge: storageCost(nri, n)
+            windows: pwindow(nri, n, nri, 1, storageCost)
           }, {
             metric: 'thousand_light_api_calls',
-            quantity: 1 * nri * n,
-            summary: 1 * nri * n,
-            cost: lightCost(nri, n),
-            charge: lightCost(nri, n)
+            windows: pwindow(nri, n, nri * n, 1, lightCost)
           },
             {
               metric: 'heavy_api_calls',
-              quantity: 100 * nri * n,
-              summary: 100 * nri * n,
-              cost: heavyCost(nri, n),
-              charge: heavyCost(nri, n)
+              windows: pwindow(nri, n, nri * n, 100, heavyCost)
             }]
         }]
       }],
       spaces: [{
         space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-        charge: totalCost(nri, n),
+        windows: cwindow(nri, n),
         resources: [{
           resource_id: 'object-storage',
-          charge: totalCost(nri, n),
+          windows: cwindow(nri, n),
           aggregated_usage: [{
             metric: 'storage',
-            quantity: 1 * nri,
-            summary: 1 * nri,
-            charge: storageCost(nri, n)
+            windows: rwindow(nri, n, nri, 1, storageCost)
           }, {
             metric: 'thousand_light_api_calls',
-            quantity: 1 * nri * n,
-            summary: 1 * nri * n,
-            charge: lightCost(nri, n)
+            windows: rwindow(nri, n, nri * n, 1, lightCost)
           },
             {
               metric: 'heavy_api_calls',
-              quantity: 100 * nri * n,
-              summary: 100 * nri * n,
-              charge: heavyCost(nri, n)
+              windows: rwindow(nri, n, nri * n, 100, heavyCost)
             }],
           plans: [{
             plan_id: 'basic',
-            charge: totalCost(nri, n),
+            windows: cwindow(nri, n),
             aggregated_usage: [{
               metric: 'storage',
-              quantity: 1 * nri,
-              summary: 1 * nri,
-              cost: storageCost(nri, n),
-              charge: storageCost(nri, n)
+              windows: pwindow(nri, n, nri, 1, storageCost)
             }, {
               metric: 'thousand_light_api_calls',
-              quantity: 1 * nri * n,
-              summary: 1 * nri * n,
-              cost: lightCost(nri, n),
-              charge: lightCost(nri, n)
+              windows: pwindow(nri, n, nri * n, 1, lightCost)
             },
               {
                 metric: 'heavy_api_calls',
-                quantity: 100 * nri * n,
-                summary: 100 * nri * n,
-                cost: heavyCost(nri, n),
-                charge: heavyCost(nri, n)
+                windows: pwindow(nri, n, nri * n, 100, heavyCost)
               }]
           }]
         }],
         consumers: [{
           consumer_id: 'ALL',
-          charge: totalCost(nri, n),
+          windows: cwindow(nri, n),
           resources: [{
             resource_id: 'object-storage',
-            charge: totalCost(nri, n),
+            windows: cwindow(nri, n),
             aggregated_usage: [{
               metric: 'storage',
-              quantity: 1 * nri,
-              summary: 1 * nri,
-              charge: storageCost(nri, n)
+              windows: rwindow(nri, n, nri, 1, storageCost)
             }, {
               metric: 'thousand_light_api_calls',
-              quantity: 1 * nri * n,
-              summary: 1 * nri * n,
-              charge: lightCost(nri, n)
+              windows: rwindow(nri, n, nri * n, 1, lightCost)
             },
               {
                 metric: 'heavy_api_calls',
-                quantity: 100 * nri * n,
-                summary: 100 * nri * n,
-                charge: heavyCost(nri, n)
+                windows: rwindow(nri, n, nri * n, 100, heavyCost)
               }],
             plans: [{
               plan_id: 'basic',
-              charge: totalCost(nri, n),
+              windows: cwindow(nri, n),
               aggregated_usage: [{
                 metric: 'storage',
-                quantity: 1 * nri,
-                summary: 1 * nri,
-                cost: storageCost(nri, n),
-                charge: storageCost(nri, n)
+                windows: pwindow(nri, n, nri, 1, storageCost)
               }, {
                 metric: 'thousand_light_api_calls',
-                quantity: 1 * nri * n,
-                summary: 1 * nri * n,
-                cost: lightCost(nri, n),
-                charge: lightCost(nri, n)
+                windows: pwindow(nri, n, nri * n, 1, lightCost)
               },
                 {
                   metric: 'heavy_api_calls',
-                  quantity: 100 * nri * n,
-                  summary: 100 * nri * n,
-                  cost: heavyCost(nri, n),
-                  charge: heavyCost(nri, n)
+                  windows: pwindow(nri, n, nri * n, 100, heavyCost)
                 }]
             }]
           }]
@@ -287,19 +267,13 @@ describe('abacus-perf-test', () => {
       }
     };
 
-    // Return the reporting day for the given time
-    const day = (t) => {
-      const d = new Date(t);
-      return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
-    };
-
     // Get a usage report for the test organization
     let gets = 0;
     const get = (o, done) => {
       brequest.get('http://localhost:9088' + '/v1/metering/organizations' +
         '/:organization_id/aggregated/usage/:time', {
           organization_id: orgid(o),
-          time: day(start)
+          time: end + usage
         },
         (err, val) => {
           expect(err).to.equal(undefined);
