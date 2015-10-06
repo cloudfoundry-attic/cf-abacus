@@ -44,7 +44,7 @@ describe('abacus-demo-client', () => {
     'usage report', function(done) {
       // Configure the test timeout
       const timeout = 20000;
-      this.timeout(timeout + 2000);
+      this.timeout(timeout + 5000);
 
       // Test usage to be submitted by the client
       const start = 1435629365220 + delta;
@@ -348,12 +348,13 @@ describe('abacus-demo-client', () => {
             }
             catch (e) {
               // If the comparison fails we'll be called again to retry
-              // after 1 second, give up after the configured timeout
-              // still not getting the expected report then something
-              // must have failed in the processing of that usage
+              // after 250 msec, give up after the configured timeout as
+              // if we're still not getting the expected report then
+              // the processing of the submitted usage must have failed
               if(++gets === timeout / 250) {
                 console.log('All submitted usage still not processed\n');
-                throw e;
+                expect(omit(val.body,
+                  ['id', 'start', 'end'])).to.deep.equal(report);
               }
             }
           });
