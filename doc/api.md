@@ -1,7 +1,7 @@
 Abacus Metering and Aggregation REST API
 ===
 
-The Abacus Usage Metering and Aggregation REST API is used by Cloud resource providers to submit usage data, usage dashboards to retrieve real time usage reports, and billing systems to retrieve the aggregated and rated usage data needed for billing. Cloud resources include services and application runtimes or containers for example.
+The Abacus Usage Metering and Aggregation REST API can be used by Cloud resource providers to submit usage data, usage dashboards to retrieve real time usage reports, and billing systems to retrieve the aggregated and rated usage data needed for billing. Cloud resources include services and application runtimes or containers for example.
 
 Usage data is exchanged with Abacus in the form of usage documents. Each document type has a JSON representation and one or more REST methods.
 
@@ -16,12 +16,12 @@ Resource pricing
 
 Usage summary report
 
-Detailed usage report
+GraphQL usage query
 
 Resource usage
 ---
 
-The _resource usage collection_ API is used by Cloud resource providers to submit usage for instances of Cloud resources, including service instances and application runtimes or containers.
+The _resource usage collection_ API can be used by Cloud resource providers to submit usage for instances of Cloud resources, including service instances and application runtimes or containers.
 
 Usage can be submitted by POSTing _resource usage_ documents to Abacus.
 
@@ -30,14 +30,20 @@ A _resource usage document_ contains usage measurements for one or more Cloud re
 Once a _resource usage_ document has been submitted to Abacus it can be retrieved using GET.
 
 ### Method: insert
-_HTTP request_: POST /v1/metering/collected/usage with a _resource usage_ document.
+_HTTP request_:
+```
+POST /v1/metering/collected/usage with a resource usage document
+```
 
 _Description_: Records the _resource usage_ document and processes the Cloud resource usage data it contains.
 
 _HTTP response_: 201 to indicate success with the URL of the _resource usage_ document in a Location header, 400 to report an invalid request, 500 to report a server error.
 
 ### Method: get
-_HTTP request_: GET /v1/metering/collected/usage/:usage\_document\_id
+_HTTP request_:
+```
+GET /v1/metering/collected/usage/:usage_document_id
+```
 
 _Description_: Retrieves a previously submitted _resource usage_ document.
 
@@ -74,7 +80,7 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
 }
 ```
 
-### JSON Schema:
+### JSON schema:
 ```json
 {
   "type": "object",
@@ -185,7 +191,10 @@ _Resource configuration_ documents describe the types of measurements, metrics, 
 This API defines the contract between Abacus and the Cloud platform integrating it. The Cloud platform can manage and store _resource configuration_ documents describing its Cloud resources in a platform specific way outside of Abacus, and is simply expected to make these documents available to Abacus at an API endpoint supporting a GET method.
 
 ### Method: get
-_HTTP request_: GET /v1/provisioning/resources/:resource\_id/config/:time
+_HTTP request_:
+```
+GET /v1/provisioning/resources/:resource_id/config/:time
+```
 
 _Description_: Retrieves the configuration of the specified Cloud resource effective at the specified time.
 
@@ -227,7 +236,7 @@ _HTTP response_: 200 to indicate success with the requested _resource configurat
 }
 ```
 
-### JSON Schema:
+### JSON schema:
 ```json
 {
   "type": "object",
@@ -321,7 +330,10 @@ _Resource pricing_ documents are used to configure the prices of the metrics use
 This API defines the contract between Abacus and the Cloud platform integrating it. The Cloud platform can manage and store _resource pricing_ data for its Cloud resources in a platform specific way outside of Abacus, and is simply expected to make the pricing data available to Abacus at an API endpoint supporting a GET method.
 
 ### Method: get
-_HTTP request_: GET /v1/pricing/resources/:resource\_id/config/:time
+_HTTP request_:
+```
+GET /v1/pricing/resources/:resource_id/config/:time
+```
 
 _Description_: Retrieves the pricing of the specified Cloud resource effective at the specified time.
 
@@ -449,7 +461,7 @@ _HTTP response_: 200 to indicate success with the requested _resource pricing_ d
 }
 ```
 
-### JSON Schema:
+### JSON schema:
 ```json
 {
   "title": "priceConfig",
@@ -535,12 +547,15 @@ _HTTP response_: 200 to indicate success with the requested _resource pricing_ d
 Usage summary report
 ---
 
-The _usage summary report_ API is used to retrieve usage summary report documents from Abacus.
+The _usage summary report_ API can be used to retrieve aggregated usage summary report documents from Abacus.
 
 ### Method: get
-_HTTP request_: GET /v1/organizations/:organization_id/usage/:time
+_HTTP request_:
+```
+GET /v1/metering/organizations/:organization_id/aggregated/usage/:time
+```
 
-_Description_: Retrieves a usage report document containing a summary of the Cloud resource usage incurred by the specified organization at the specified time.
+_Description_: Retrieves a usage report document containing a summary of the aggregated Cloud resource usage incurred by the specified organization at the specified time.
 
 _HTTP response_: 200 to indicate success with a _usage summary report_ JSON document, 404 if the usage is not found, 500 to report a server error.
 
@@ -732,7 +747,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
 }
 ```
 
-### JSON Schema:
+### JSON schema:
 ```json
 {
   "title": "organizationReport",
@@ -1167,12 +1182,218 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
 }
 ```
 
-Detailed usage report
+GraphQL usage query
 ---
 
-### TODO
+The _GraphQL usage query_ API can be used to query aggregated usage using the [GraphQL](https://github.com/facebook/graphql) query language.
 
-Document how to get detailed usage reports with GraphQL.
-...
+Abacus defines a GraphQL schema for aggregated usage, allowing users to navigate and query the graph of aggregated usage within organizations and the spaces and resources they contain using the [GraphQL](https://github.com/facebook/graphql) query language.
 
+The GraphQL schema listed below describes the graph used to represent aggregated usage, as well as the supported usage queries.
+
+See the [GraphQL](https://github.com/facebook/graphql) documentation for more information on the GraphQL schema and query languages.
+
+### Method: get
+_HTTP request_:
+```
+GET /v1/metering/aggregated/usage/graph/:query
+```
+
+_Description_: Retrieves a usage report document containing a summary of the Cloud resource usage matching the specified GraphQL query.
+
+_HTTP response_: 200 to indicate success with a _usage summary report_ JSON document, 404 if the usage is not found, 500 to report a server error.
+
+### Example GraphQL queries:
+
+```graphql
+{
+  organization(
+    organization_id: "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+    time: 1435622400000) {
+      organization_id,
+      resources {
+        resource_id,
+        aggregated_usage {
+          metric,
+          quantity
+        }
+      }
+    }
+}
+
+{
+  organization(
+    organization_id: "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+    time: 1435622400000) {
+      organization_id,
+      spaces {
+        space_id,
+        resources {
+          resource_id,
+          aggregated_usage {
+            metric,
+            quantity
+          }
+        }
+      }
+    }
+}
+
+{
+  organization(
+    organization_id: "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+    time: 1435622400000) {
+      organization_id,
+      spaces {
+        space_id,
+        consumers {
+          consumer_id,
+          resources {
+            resource_id,
+            aggregated_usage {
+              metric,
+              quantity
+            }
+          }
+        }
+      }
+    }
+}
+
+{
+  organization(
+    organization_id: "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+    time: 1435622400000) {
+      organization_id,
+      spaces {
+        space_id,
+        consumers {
+          consumer_id
+        }
+      }
+    }
+}
+
+{
+  organization(
+    organization_id: "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+    time: 1435622400000) {
+      organization_id,
+      resources {
+        resource_id,
+        aggregated_usage {
+          metric,
+          quantity
+        }
+      }
+    }
+}
+
+{
+  organizations(
+    organization_ids: [
+      "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",                                      
+      "b3d7fe4d-3cb1-4cc3-a831-ffe98e20cf28"],
+    time: 1435622400000) {
+      organization_id,
+      resources {
+        resource_id,
+        aggregated_usage {
+          metric,
+          quantity
+        }
+      }
+    }
+}
+
+{
+  account(
+    account_id: "1234",
+    time: 1435622400000) {
+      organization_id,
+      resources {
+        resource_id,
+        aggregated_usage {
+          metric,
+          quantity
+        }
+      }
+    }
+}
+```
+
+### GraphQL schema:
+```graphql
+type PlanMetric {
+  metric: String
+  quantity: Float
+  cost: Float
+  summary: Float
+  charge: Float
+}
+
+type Plan {
+  plan_id: String
+  charge: Float
+  aggregated_usage: [PlanMetric]
+}
+
+type ResourceMetric {
+  metric: String
+  quantity: Float
+  summary: Float
+  charge: Float
+}
+
+type Resource {
+  resource_id: String
+  charge: Float
+  aggregated_usage: [ResourceMetric]
+  plans: [Plan]
+}
+
+enum ConsumerType { 'CF_APP', 'EXTERNAL' }
+
+type ConsumerID = {
+  type: ConsumerType
+  consumer_id: String
+}
+
+type Consumer {
+  consumer: ConsumerID
+  charge: Float
+  resources: [Resource]
+}
+
+type Space {
+  space_id: String
+  charge: Float
+  resources: [Resource]
+  consumers: [Consumer]
+}
+
+type OrganizationReport {
+  id: String
+  organization_id: String
+  start: Int
+  end: Int
+  charge: Float
+  resources: [Resource]
+  spaces: [Space]
+}
+
+type Query {
+  organization(
+    organization_id: String!,
+    time: Int) : OrganizationReport
+
+  organizations(
+    organization_ids: [String],
+    time: Int) : [OrganizationReport]
+
+  account(
+    account_id: String!,
+    time: Int) : [OrganizationReport]
+}
+```
 

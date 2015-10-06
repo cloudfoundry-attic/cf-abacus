@@ -1,0 +1,77 @@
+// GraphQL shorthand notation schema for usage reports
+
+type PlanMetric {
+  metric: String
+  quantity: Float
+  cost: Float
+  summary: Float
+  charge: Float
+}
+
+type Plan {
+  plan_id: String
+  charge: Float
+  aggregated_usage: [PlanMetric]
+}
+
+type ResourceMetric {
+  metric: String
+  quantity: Float
+  summary: Float
+  charge: Float
+}
+
+type Resource {
+  resource_id: String
+  charge: Float
+  aggregated_usage: [ResourceMetric]
+  plans: [Plan]
+}
+
+enum ConsumerType { 'CF_APP', 'EXTERNAL' }
+
+type ConsumerID = {
+  type: ConsumerType
+  consumer_id: String
+}
+
+type Consumer {
+  consumer: ConsumerID
+  charge: Float
+  resources: [Resource]
+}
+
+type Space {
+  space_id: String
+  charge: Float
+  resources: [Resource]
+  consumers: [Consumer]
+}
+
+type OrganizationReport {
+  id: String
+  organization_id: String
+  start: Int
+  end: Int
+  charge: Float
+  resources: [Resource]
+  spaces: [Space]
+}
+
+type Query {
+  organization(
+    organization_id: String!,
+    time: Int,
+    authorization: String) : OrganizationReport
+
+  organizations(
+    organization_ids: [String],
+    time: Int,
+    authorization: String) : [OrganizationReport]
+
+  account(
+    account_id: String!,
+    time: Int,
+    authorization: String) : [OrganizationReport]
+}
+

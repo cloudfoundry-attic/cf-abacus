@@ -2,7 +2,7 @@ body {
   margin: 10px;
 }
 @media print {
-    .language-json, .language-js, .language-sh {
+    .language-json, .language-js, .language-sh, .language-graphql {
         font-family: "Monaco", monospace;
         font-size: 8px;
     }
@@ -15,7 +15,7 @@ body {
     img {
         max-width: 800px;
     }
-    .language-json, .language-js, .language-sh {
+    .language-json, .language-js, .language-sh, .language-graphql {
         font-family: "Monaco", monospace;
         font-size: 10px;
     }
