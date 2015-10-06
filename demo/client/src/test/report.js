@@ -17,15 +17,17 @@ const reporting = /:/.test(commander.reporting) ? commander.reporting :
   'https://abacus-usage-reporting.' + commander.reporting;
 
 // Get a usage report
-request.get(reporting + '/v1/organizations/:organization_id/usage/:day', {
-  organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-  day: '2015-01-06'
-}, (err, val) => {
-  if(err)
-    console.log('Response', err);
-  else
-    console.log('Response', val.statusCode, require('util').inspect(val.body, {
-      depth: 10
-    }));
-});
+request.get(reporting +
+  '/v1/metering/organizations/:organization_id/aggregated/usage/:time', {
+    organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+    time: 1420502400000
+  }, (err, val) => {
+    if(err)
+      console.log('Response', err);
+    else
+      console.log('Response',
+        val.statusCode, require('util').inspect(val.body, {
+          depth: 10
+        }));
+  });
 

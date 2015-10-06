@@ -296,8 +296,11 @@ describe('abacus-perf-test', () => {
     // Get a usage report for the test organization
     let gets = 0;
     const get = (o, done) => {
-      brequest.get('http://localhost:9088' + '/v1/organizations/' +
-        orgid(o) + '/usage/:time', { time: day(start) },
+      brequest.get('http://localhost:9088' + '/v1/metering/organizations' +
+        '/:organization_id/aggregated/usage/:time', {
+          organization_id: orgid(o),
+          time: day(start)
+        },
         (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(200);

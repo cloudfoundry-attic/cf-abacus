@@ -437,8 +437,13 @@ describe('abacus-usage-reporting-itest', () => {
       debug('Get rated usage for org%d instance%d usage%d',
         o + 1, ri + 1, u + 1);
 
-      brequest.get('http://localhost::port/v1/organizations/:orgid/usage/:time',
-        { port: 9088, orgid: oid(o), time: day(end) }, (err, val) => {
+      brequest.get(
+        'http://localhost::port/v1/metering/organizations' +
+        '/:organization_id/aggregated/usage/:time', {
+          port: 9088,
+          organization_id: oid(o),
+          time: day(end)
+        }, (err, val) => {
           debug('Verify usage report for org%d', o + 1);
 
           expect(err).to.equal(undefined);

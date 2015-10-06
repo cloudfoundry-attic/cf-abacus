@@ -328,9 +328,9 @@ describe('abacus-demo-client', () => {
       // Get a usage report for the test organization
       let gets = 0;
       const get = (done) => {
-        request.get(reporting +
-          '/v1/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/usage/:time',
-          {
+        request.get(reporting + '/v1/metering/organizations' +
+          '/:organization_id/aggregated/usage/:time', {
+            organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
             time: day(start)
           }, (err, val) => {
             expect(err).to.equal(undefined);

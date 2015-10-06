@@ -21,36 +21,36 @@ const reporting = /:/.test(commander.reporting) ? commander.reporting :
 // Examples:
 //
 // const query = '{ organization(organization_id:
-//  "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", date: "2015-01-06") {
+//  "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", time: 1420502400000) {
 //  organization_id, resources { resource_id, aggregated_usage {
 //  metric, quantity }}}}';
 //
 // const query = '{ organization(organization_id:
-//   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", date: "2015-01-06") {
+//   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", time: 1420502400000) {
 //   organization_id, spaces { space_id, resources { resource_id,
 //   aggregated_usage { metric, quantity }}}}}';
 //
 // const query = '{ organization(organization_id:
-//   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", date: "2015-01-06") {
+//   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", time: 1420502400000) {
 //   organization_id, spaces { space_id, consumers { consumer_id,
 //   resources { resource_id, aggregated_usage { metric, quantity }}}}}}';
 //
 // const query = '{ organization(organization_id:
-//   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", date: "2015-01-06") {
+//   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", time: 1420502400000) {
 //   organization_id, spaces { space_id, consumers { consumer_id }}}}';
 //
 // const query = '{ organization(organization_id:
-//   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", date: "2015-01-06") {
+//   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", time: 1420502400000) {
 //   organization_id, resources { resource_id, aggregated_usage {
 //   metric, quantity }}}}';
 //
 // const query = '{ organizations(organization_ids: [
 //   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
-//   "b3d7fe4d-3cb1-4cc3-a831-ffe98e20cf28"], date: "2015-01-06") {
+//   "b3d7fe4d-3cb1-4cc3-a831-ffe98e20cf28"], time: 1420502400000) {
 //   organization_id, resources { resource_id, aggregated_usage {
 //   metric, quantity}}}}';
 
-const query = '{ account(account_id: "1234", date: "2015-01-06") { ' +
+const query = '{ account(account_id: "1234", time: 1420502400000) { ' +
   'organization_id, resources { resource_id, aggregated_usage { ' +
   'metric, quantity }}}}';
 
@@ -60,8 +60,9 @@ request.get(reporting + '/v1/metering/aggregated/usage/graph/:query', {
   if(err)
     console.log('Response', err);
   else
-    console.log('Response', val.statusCode, require('util').inspect(val.body, {
-      depth: 10
-    }));
+    console.log('Response',
+      val.statusCode, require('util').inspect(val.body, {
+        depth: 10
+      }));
 });
 

@@ -137,8 +137,10 @@ describe('abacus-usage-collector-itest', () => {
           expect(response.body).to.equal('Hello');
 
           setTimeout(() => {
-            request.get('http://localhost:9088/v1/organizations/' +
-              'e8139b76-e829-4af3-b332-87316b1c0a6c/usage/', {},
+            request.get('http://localhost:9088/v1/metering/organizations' +
+              '/:organization_id/aggregated/usage', {
+                organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c'
+              },
             (error, response) => {
               expect(error).to.equal(undefined);
 
