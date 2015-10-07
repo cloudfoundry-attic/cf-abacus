@@ -73,6 +73,29 @@ const cextend = (o, interceptor) => {
   return o;
 };
 
+// Add windows to aggregated usage at all non-plan levels
+const addResourceWindows = (r) => {
+  r.aggregated_usage = map(r.aggregated_usage, (u) => ({
+    metric: u.metric,
+    windows: map(u.quantity, (q) => ({
+      quantity: q
+    }))
+  }));
+  return r;
+}
+
+// Add windows to the entire aggregated usage object
+const addWindows = (u) => {
+  u.resources = map(u.resources, addResourceWindows);
+  map(u.spaces, (s) => {
+    s.resources = map(s.resources, addResourceWindows);
+    map(s.consumers, (c) => {
+      c.resources = map(c.resources, addResourceWindows);
+    })
+  });
+  return u;
+}
+
 // Add cost to aggregated usage at all plan levels
 const addCost = (k, v) => {
   // plan and price details for test-resource to do a quick lookup
@@ -92,13 +115,59 @@ const addCost = (k, v) => {
   // all plan level aggregations need cost as part of aggregated_usage
   if (k === 'plans') return map(v, (p) => {
     // Warning: mutating aggregated_usage to include cost
-    p.aggregated_usage = map(p.aggregated_usage, (u) => {
-      u.cost = u.quantity * cost[p.plan_id][u.metric];
-      return u;
-    });
+    p.aggregated_usage = map(p.aggregated_usage, (u) => ({
+      metric: u.metric,
+      windows: map(u.quantity, (q) => ({
+        quantity: q,
+        cost: q * cost[p.plan_id][u.metric]
+      }))
+    }));
 
     return p;
   });
+};
+
+// Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
+const dateUTCNumbify = (t) => {
+  const d = new Date(t);
+  return d.getUTCFullYear() * 10000000000 + d.getUTCMonth() * 100000000
+    + d.getUTCDate() * 1000000 + d.getUTCHours() * 10000 + d.getUTCMinutes()
+    * 100 + d.getUTCSeconds();
+};
+
+// Converts a number output in dateUTCNumbify back to a Date object
+const revertUTCNumber = (n) => {
+  const numstring = n.toString();
+  const d = new Date(Date.UTC(
+    numstring.substring(0, 4),
+    numstring.substring(4, 6),
+    numstring.substring(6, 8),
+    numstring.substring(8, 10),
+    numstring.substring(10, 12),
+    numstring.substring(12)
+  ));
+  return d;
+};
+
+// Scaling factor for a time window
+// [Second, Minute, Hour, Day, Month, Year, Forever]
+const timescale = [1, 100, 10000, 1000000, 100000000, 10000000000, 0];
+
+// Builds the quantity array in the aggregated usage
+const buildAggregatedQuantity = (p, u, ri, tri, count, end, f) => {
+  const quantity = map(timescale, (ts) => {
+    if(ts) {
+      const time = end + u;
+      const timeNum = dateUTCNumbify(time);
+      const windowTimeNum = Math.floor(timeNum / ts) * ts;
+
+      // Get the millisecond equivalent of the very start of the given window
+      const windowTime = revertUTCNumber(windowTimeNum).getTime();
+      return f(p, Math.min(time - windowTime, u), ri, tri, count);
+    }
+    return f(p, u, ri, tri, count);
+  });
+  return quantity;
 };
 
 // Module directory
@@ -209,11 +278,15 @@ describe('abacus-usage-rate-itest', () => {
     // For sum, we use current count + total count based on resource instance
     // and usage index
     const a = (ri, u, p, count) => [
-      { metric: 'storage', quantity: u === 0 ? count(ri, p) : count(tri, p) },
+      { metric: 'storage',
+        quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
+          (p, u, ri, tri, count) => u === 0 ? count(ri, p) : count(tri, p)) },
       { metric: 'thousand_light_api_calls',
-        quantity: count(ri, p) + u * count(tri, p) },
+        quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
+          (p, u, ri, tri, count) => count(ri, p) + u * count(tri, p)) },
       { metric: 'heavy_api_calls',
-        quantity: 100 * (count(ri, p) + u * count(tri, p)) }
+        quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
+          (p, u, ri, tri, count) => 100 * (count(ri, p) + u * count(tri, p))) }
     ];
 
     // Resouce plan level aggregations for a given consumer at given space
@@ -370,7 +443,8 @@ describe('abacus-usage-rate-itest', () => {
             expect(val.statusCode).to.equal(200);
 
             expect(omit(val.body, ['id'])).to.deep
-              .equal(cextend(aggregatedTemplate(o, ri, u), addCost));
+              .equal(addWindows(
+                cextend(aggregatedTemplate(o, ri, u), addCost)));
 
             debug('Verified rated usage for org%d instance%d usage%d',
               o + 1, ri + 1, u + 1);
