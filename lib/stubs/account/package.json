@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "babel-runtime": "^5.8.19",
+    "abacus-cfoauth": "file:../../utils/cfoauth",
     "abacus-debug": "file:../../utils/debug",
     "abacus-router": "file:../../utils/router",
     "abacus-usage-schemas": "file:../../config/schemas",
