@@ -31,7 +31,8 @@
   "dependencies": {
     "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-lrudown": "file:../../utils/lrudown",
-    "abacus-partition": "file:../../utils/partition"
+    "abacus-partition": "file:../../utils/partition",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
