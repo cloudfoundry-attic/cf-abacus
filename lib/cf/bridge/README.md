@@ -10,7 +10,8 @@ Register cf-bridge application as CF client with:
 
 ```
 gem install cf-uaac
-uaac-login.sh
+uaac target uaa.10.244.0.34.xip.io
+uaac token client get admin -s admin-secret
 uaac client add bridge --authorized_grant_types client_credentials --authorities cloud_controller.admin --secret secret
 ```
 
