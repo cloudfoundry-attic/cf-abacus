@@ -152,7 +152,7 @@ abacus-usage-reporting     started           1/1         512M     512M   abacus-
 abacus-dbserver            started           1/1         1G       512M   abacus-dbserver.10.244.0.34.xip.io   
 ```
 
-Running the demo
+Running the demo on Cloud Foundry
 ---
 
 The Abacus demo runs a simple test program that simulates the submission of usage by a Cloud service provider, then gets a daily report for the usage aggregated within a Cloud Foundry organization.
@@ -192,6 +192,11 @@ npm run demo
 # Stop everything
 npm stop
 ```
+
+Meter Cloud Foundry App Usage with Abacus on localhost
+---
+
+Abacus comes with a [bridge](lib/cf/bridge) that acts as a Srvice Provider. It reads Cloud Foundry's App Usage Events and reports usage to the `abacus-usage-collector`. In the end it enables you to see usage reports for your CLoud Foundry instance. In order to start the bridge follow its [readme](lib/cf/bridge/README.md) 
 
 Layout
 ---
