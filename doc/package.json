@@ -22,7 +22,7 @@
     "flow.png"
   ],
   "scripts": {
-    "doc": "cat api.md | mddoc >api.html",
+    "doc": "cat api.md | mddoc >api.html && cat faq.md | mddoc >faq.html",
     "babel": "true",
     "test": "true",
     "lint": "true",
