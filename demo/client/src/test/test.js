@@ -461,7 +461,7 @@ describe('abacus-demo-client', () => {
       // report for our test resource
       const processed = (val) => {
         try {
-          return val.body.resources[0].aggregated_usage[1].summary;
+          return val.body.resources[0].aggregated_usage[1].windows[6].summary;
         }
         catch (e) {
           // The response doesn't contain a valid report
@@ -500,6 +500,7 @@ describe('abacus-demo-client', () => {
                 expect(omit(val.body,
                   ['id', 'start', 'end'])).to.deep.equal(report);
               }
+              else setTimeout(() => get(done), 250);
             }
           });
       };
@@ -509,7 +510,7 @@ describe('abacus-demo-client', () => {
       // been processed
       const wait = (done) => {
         console.log('\nRetrieving usage report');
-        const i = setInterval(() => get(() => done(clearInterval(i))), 250);
+        get(done);
       };
 
       // Wait for usage reporter to start
