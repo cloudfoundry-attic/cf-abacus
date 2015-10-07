@@ -44,3 +44,13 @@ To stop the bridge:
 ```
 npm stop etc/apps-bridge
 ```
+
+## Usage reporting
+
+The bridge reports the metrics defined in [linux-container](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/lib/stubs/provisioning/src/resources/linux-container.js) resource:
+- instance_memory [GB]
+- running_instances [number]
+ 
+For every app usage event from CF the bridge POSTs time-based usage report as follows:
+- for STOPPED event: reports 0 memory and 0 insances since the timestamp in the STOPPED event
+- for other events: reports the actual memory and number of instances since the timestamp of the event
