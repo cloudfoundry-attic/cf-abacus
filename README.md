@@ -193,10 +193,10 @@ npm run demo
 npm stop
 ```
 
-Meter Cloud Foundry App Usage with Abacus on localhost
+Meter Cloud Foundry App Usage
 ---
 
-Abacus comes with a [bridge](lib/cf/bridge) that acts as a Srvice Provider. It reads Cloud Foundry's App Usage Events and reports usage to the `abacus-usage-collector`. In the end it enables you to see usage reports for your CLoud Foundry instance. In order to start the bridge follow its [readme](lib/cf/bridge/README.md) 
+Abacus comes with a [bridge](lib/cf/bridge) that acts as a Service Provider. It reads Cloud Foundry's [App Usage Events](http://apidocs.cloudfoundry.org/runtime-passed/app_usage_events/list_all_app_usage_events.html) and reports usage to the `abacus-usage-collector`. In the end it enables you to see usage reports for your Cloud Foundry instance. In order to start the bridge follow its [readme](lib/cf/bridge/README.md) 
 
 Layout
 ---
