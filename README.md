@@ -21,7 +21,7 @@ Frequently Asked Questions (FAQs)
 
 1. How to get Usage Data from CF?
 
-  We are currently building a prototype for reporting CF apps usage data to Abacus. You can have a look at the bridge source.
+  We are currently building a prototype for reporting CF apps usage data to Abacus. You can have a look at the [bridge source](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/cf/bridge).
   
   What we currently do is to:
   * obtain oauth token 
