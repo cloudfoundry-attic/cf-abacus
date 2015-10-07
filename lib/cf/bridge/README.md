@@ -25,7 +25,7 @@ export API=https://api.10.244.0.34.xip.io
 export UAA=https://uaa.10.244.0.34.xip.io
 ```
 
-You can enable the debug output with:
+You can optionally enable the debug output with:
 
 ```
 export DEBUG=abacus-cf-*
