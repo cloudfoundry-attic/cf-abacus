@@ -71,13 +71,6 @@
     "abacus-vcapenv": "file:../../../lib/utils/vcapenv",
     "abacus-webapp": "file:../../../lib/utils/webapp",
     "abacus-yieldable": "file:../../../lib/utils/yieldable",
-    "abacus-perf-test": "file:../../../test/perf",
-    "abacus-usage-collector-itest": "file:../../../test/metering/collector",
-    "abacus-usage-meter-itest": "file:../../../test/metering/meter",
-    "abacus-usage-accumulator-itest": "file:../../../test/aggregation/accumulator",
-    "abacus-usage-aggregator-itest": "file:../../../test/aggregation/aggregator",
-    "abacus-usage-rate-itest": "file:../../../test/aggregation/rate",
-    "abacus-demo-client": "file:../../../demo/client",
     "abacus-doc": "file:../../../doc",
     "abacus-etc": "file:../../../etc",
     "underscore": "^1.8.3"
