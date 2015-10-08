@@ -33,7 +33,7 @@
     "abacus-debug": "file:../debug",
     "levelup": "^1.2.1",
     "lru-cache": "^2.6.5",
-    "pouchdb": "^4.0.3",
+    "pouchdb": "^5.0.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
