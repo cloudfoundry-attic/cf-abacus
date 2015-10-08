@@ -18,6 +18,16 @@ const moduleDir = (module) => {
   return path.substr(0, path.indexOf(module + '/') + module.length);
 };
 
+const timeWindows = {
+  'second' : 0,
+  'minute' : 1,
+  'hour'   : 2,
+  'day'    : 3,
+  'month'  : 4,
+  'year'   : 5,
+  'forever': 6
+};
+
 process.env.API = 'http://localhost:4321';
 process.env.UAA = 'http://localhost:4321';
 
@@ -154,15 +164,21 @@ describe('abacus-usage-collector-itest', () => {
 
               expect(resources[0]).to.contain.all.keys(
                 'plans', 'aggregated_usage');
+
+              const checkAllTimeWindows = (usage) => {
+                for (const windowType in timeWindows) {
+                  const windowUsage = usage.windows[timeWindows[windowType]];
+                  expect(windowUsage.quantity.consuming).to.equal(0.5);
+                  expect(windowUsage.summary).to.be.above(0);
+                  expect(windowUsage.charge).to.be.above(0);
+                }
+              };
+
               const planUsage = resources[0].plans[0].aggregated_usage[0];
-              expect(planUsage.quantity.consuming).to.equal(0.5);
-              expect(planUsage.cost.burning).to.be.above(0);
-              expect(planUsage.summary).to.be.above(0);
-              expect(planUsage.charge).to.be.above(0);
-              const aggUsage = resources[0].aggregated_usage[0];
-              expect(aggUsage.quantity.consuming).to.equal(0.5);
-              expect(aggUsage.summary).to.be.above(0);
-              expect(aggUsage.charge).to.be.above(0);
+              checkAllTimeWindows(planUsage);
+
+              const aggregatedUsage = resources[0].aggregated_usage[0];
+              checkAllTimeWindows(aggregatedUsage);
 
               done();
             });
