@@ -6,6 +6,7 @@ applications:
   memory: 512M
   disk_quota: 512M
   env:
+    RATING: abacus-usage-rate
     PROVISIONING: abacus-provisioning-stub
     COUCHDB: abacus-dbserver
     SECURED: false
