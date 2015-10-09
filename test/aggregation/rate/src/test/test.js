@@ -249,6 +249,9 @@ describe('abacus-usage-rate-itest', () => {
     const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
       o + 1].join('-');
 
+    // One of the two regions based on an org index
+    const rid = (o) => o % 2 === 0 ? 'us-south' : 'eu-gb';
+
     // One of the two spaces at a given org based on resource instance index
     const sid = (o, ri) => ['aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
       o + 1, ri % 2 === 0 ? 1 : 2].join('-');
@@ -413,6 +416,7 @@ describe('abacus-usage-rate-itest', () => {
       organization_id: oid(o),
       start: day(end + u),
       end: eod(end + u),
+      region: rid(o),
       resources: [{
         resource_id: 'test-resource',
         aggregated_usage: a(ri, u, undefined, (n) => n + 1),

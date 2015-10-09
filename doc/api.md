@@ -56,6 +56,7 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
     {
       "start": 1396421450000,
       "end": 1396421451000,
+      "region": "us-south",
       "organization_id": "54257f98-83f0-4eca-ae04-9ea35277a538",
       "space_id": "d98b5916-3c77-44b9-ac12-04456df23eae",
       "consumer": {
@@ -562,9 +563,10 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
 ### JSON representation:
 ```json
 {
-  "organization_id": "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
   "start": 1435622400000,
   "end": 1435708799999,
+  "organization_id": "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+  "region": "us-south",
   "charge": 46.09,
   "id": "k-a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27-t-0001435622400000",
   "spaces": [
@@ -756,9 +758,6 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
     "id": {
       "type": "string"
     },
-    "organization_id": {
-      "type": "string"
-    },
     "start": {
       "type": "integer",
       "format": "utc-millisec"
@@ -766,6 +765,12 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
     "end": {
       "type": "integer",
       "format": "utc-millisec"
+    },
+    "region": {
+      "type": "string"
+    },
+    "organization_id": {
+      "type": "string"
     },
     "charge": {
       "type": "number"
@@ -1374,9 +1379,10 @@ type Space {
 
 type OrganizationReport {
   id: String
-  organization_id: String
   start: Int
   end: Int
+  region: String
+  organization_id: String
   charge: Float
   resources: [Resource]
   spaces: [Space]

@@ -412,6 +412,7 @@ describe('abacus-usage-aggregator-itest', () => {
       organization_id: oid(o),
       start: end + u,
       end: end + u,
+      region: rid(o),
       resources: [{
         resource_id: 'test-resource',
         aggregated_usage: a(ri, u, undefined, (n) => n + 1),

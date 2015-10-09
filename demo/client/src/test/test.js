@@ -144,6 +144,7 @@ describe('abacus-demo-client', () => {
       // Expected usage report for the test organization
       const report = {
         organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+        region: 'us',
         windows: [{ charge: 46.09 },
           { charge: 46.09 },
           { charge: 46.09 },
