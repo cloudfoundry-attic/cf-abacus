@@ -17,6 +17,7 @@ const map = _.map;
 const reduce = _.reduce;
 const range = _.range;
 const clone = _.clone;
+const zip = _.zip;
 
 // Batch the requests
 const brequest = batch(request);
@@ -37,7 +38,7 @@ commander
   .parse(argv);
 
 // Number of thousands of organizations
-const orgs = (commander.orgs || 1) * 1000;
+const orgs = (commander.orgs || 1) * 10;
 
 // Number of resource instances
 const resourceInstances = commander.instances || 1;
@@ -47,19 +48,6 @@ const usage = commander.usagedocs || 1;
 
 // Usage time shift by number of days in milli-seconds
 const tshift = commander.day * 24 * 60 * 60 * 1000 || 0;
-
-// Return the aggregation start time for a given time
-const day = (t) => {
-  const d = new Date(t);
-  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
-};
-
-// Return the aggregation end time for a given time
-const eod = (t) => {
-  const d = new Date(t);
-  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(),
-    d.getUTCDate() + 1) - 1;
-};
 
 // Extend an object using an interceptor
 // if interceptor returns a value, then use it to replace the original value
@@ -91,17 +79,50 @@ const cost = {
   }
 };
 
-// Add cost to aggregated_usage at all plan levels
+// Add windows to aggregated usage at all non-plan levels
+const addResourceWindows = (r) => {
+  r.aggregated_usage = map(r.aggregated_usage, (u) => ({
+    metric: u.metric,
+    windows: map(u.quantity, (q) => ({
+      quantity: q
+    }))
+  }));
+  return r;
+}
+
+// Add windows to the entire aggregated usage object
+const addWindows = (u) => {
+  u.resources = map(u.resources, addResourceWindows);
+  map(u.spaces, (s) => {
+    s.resources = map(s.resources, addResourceWindows);
+    map(s.consumers, (c) => {
+      c.resources = map(c.resources, addResourceWindows);
+    })
+  });
+  return u;
+}
+
+// Add cost to aggregated usage at all plan levels
 const addCost = (k, v) => {
   // all plan level aggregations need cost as part of aggregated_usage
   if (k === 'plans') return map(v, (p) => {
-    p.aggregated_usage = map(p.aggregated_usage, (u) => {
-      u.cost = u.quantity * cost[p.plan_id][u.metric];
-      return u;
-    });
+    // Warning: mutating aggregated_usage to include cost
+    p.aggregated_usage = map(p.aggregated_usage, (u) => ({
+      metric: u.metric,
+      windows: map(u.quantity, (q) => ({
+        quantity: q,
+        cost: q * cost[p.plan_id][u.metric]
+      }))
+    }));
 
     return p;
   });
+};
+
+// Reduce function that can be used to compute the sum of a list of charges
+const sumCharges = (a, m) => {
+  a.charge += m.charge ? m.charge : 0;
+  return a;
 };
 
 // Add charge, and summary to aggregated_usage at all resources and
@@ -111,29 +132,85 @@ const addCharge = (k, v) => {
     // Calculate plan level charges
     r.plans = map(r.plans, (p) => {
       p.aggregated_usage = map(p.aggregated_usage, (u) => {
-        u.charge = u.cost;
-        u.summary = u.quantity;
+        map(u.windows, (w) => {
+          w.charge = w.cost;
+          w.summary = w.quantity;
+        });
         return u;
       });
 
       // Total charge for a plan
-      p.charge = reduce(p.aggregated_usage, (a, u) => a + u.charge, 0);
+      p.windows = map(zip.apply(_, map(p.aggregated_usage, (u) => {
+        return u.windows
+      })),
+        (zu) => {
+          return reduce(zu, sumCharges, { charge: 0 });
+        });
       return p;
     });
 
     // Calculate resource level charges using plan level charges
-    r.aggregated_usage = map(r.aggregated_usage, (u) => {
-      u.charge = reduce(r.plans, (a, p) =>
-        a + reduce(p.aggregated_usage, (a1, u1) =>
-          a1 + (u1.metric === u.metric ? u1.charge : 0), 0), 0);
-      u.summary = u.quantity;
-      return u;
+    map(r.aggregated_usage, (u) => {
+      map(u.windows, (w, i) => {
+        w.summary = w.quantity;
+        w.charge = reduce(r.plans, (a, p) =>
+          a + reduce(p.aggregated_usage, (a1, u1) =>
+            a1 + (u1.metric === u.metric ? u1.windows[i].charge : 0), 0), 0);
+      });
     });
 
     // Total charges for a resource
-    r.charge = reduce(r.aggregated_usage, (a, u) => a + u.charge, 0);
+    r.windows = map(zip.apply(_, map(r.plans, (p) => {
+      return p.windows
+    })),
+      (zu) => {
+        return reduce(zu, sumCharges, { charge: 0 });
+      });
     return r;
   });
+};
+
+// Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
+const dateUTCNumbify = (t) => {
+  const d = new Date(t);
+  return d.getUTCFullYear() * 10000000000 + d.getUTCMonth() * 100000000
+    + d.getUTCDate() * 1000000 + d.getUTCHours() * 10000 + d.getUTCMinutes()
+    * 100 + d.getUTCSeconds();
+};
+
+// Converts a number output in dateUTCNumbify back to a Date object
+const revertUTCNumber = (n) => {
+  const numstring = n.toString();
+  const d = new Date(Date.UTC(
+    numstring.substring(0, 4),
+    numstring.substring(4, 6),
+    numstring.substring(6, 8),
+    numstring.substring(8, 10),
+    numstring.substring(10, 12),
+    numstring.substring(12)
+  ));
+  return d;
+};
+
+// Scaling factor for a time window
+// [Second, Minute, Hour, Day, Month, Year, Forever]
+const timescale = [1, 100, 10000, 1000000, 100000000, 10000000000, 0];
+
+// Builds the quantity array in the aggregated usage
+const buildAggregatedQuantity = (p, u, ri, tri, count, end, f) => {
+  const quantity = map(timescale, (ts) => {
+    if(ts) {
+      const time = end + u;
+      const timeNum = dateUTCNumbify(time);
+      const windowTimeNum = Math.floor(timeNum / ts) * ts;
+
+      // Get the millisecond equivalent of the very start of the given window
+      const windowTime = revertUTCNumber(windowTimeNum).getTime();
+      return f(p, Math.min(time - windowTime, u), ri, tri, count);
+    }
+    return f(p, u, ri, tri, count);
+  });
+  return quantity;
 };
 
 // Module directory
@@ -239,11 +316,17 @@ describe('abacus-usage-reporting-itest', () => {
     // and usage index
     const a = (ri, u, p, count) => [
       { metric: 'storage',
-        quantity: 10 * (u === 0 ? count(ri, p) : count(tri, p)) },
+        quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
+          (p, u, ri, tri, count) =>
+            10 * (u === 0 ? count(ri, p) : count(tri, p))) },
       { metric: 'thousand_light_api_calls',
-        quantity: 1000 * (count(ri, p) + u * count(tri, p)) },
+        quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
+          (p, u, ri, tri, count) =>
+            1000 * (count(ri, p) + u * count(tri, p))) },
       { metric: 'heavy_api_calls',
-        quantity: 100 * (count(ri, p) + u * count(tri, p)) }
+        quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
+          (p, u, ri, tri, count) =>
+            100 * (count(ri, p) + u * count(tri, p))) }
     ];
 
     // Resouce plan level aggregations for a given consumer at given space
@@ -367,10 +450,10 @@ describe('abacus-usage-reporting-itest', () => {
 
     // Rated usage for a given org, resource instance, usage indices
     const ratedTemplate = (o, ri, u) => ({
-      id: dbclient.kturi(oid(o), day(eod(end + u))),
+      id: dbclient.kturi(oid(o), end + u),
       organization_id: oid(o),
-      start: day(end + u),
-      end: eod(end + u),
+      start: end + u,
+      end: end + u,
       resources: cextend([{
         resource_id: 'test-resource',
         aggregated_usage: a(ri, u, undefined, (n) => n + 1),
@@ -382,14 +465,26 @@ describe('abacus-usage-reporting-itest', () => {
     // Usage report for a given org, resource instance, usage indices
     const reportTemplate = (o, ri, u) => {
       // Add charge and summary at all resources and plan level aggregations
-      const report = cextend(ratedTemplate(o, ri, u), addCharge);
+      const report = cextend(addWindows(ratedTemplate(o, ri, u)), addCharge);
 
       // Add charge at organization, space and consumer levels
-      report.charge = reduce(report.resources, (a, r) => a + r.charge, 0);
+      report.windows = map(zip.apply(_, map(report.resources, (r) => {
+        return r.windows
+      })), (zr) => {
+        return reduce(zr, sumCharges, { charge: 0 });
+      });
       report.spaces = map(report.spaces, (s) => {
-        s.charge = reduce(s.resources, (a, r) => a + r.charge, 0);
+        s.windows = map(zip.apply(_, map(s.resources, (r) => {
+          return r.windows
+        })), (zr) => {
+          return reduce(zr, sumCharges, { charge: 0 });
+        });
         s.consumers = map(s.consumers, (c) => {
-          c.charge = reduce(c.resources, (a, r) => a + r.charge, 0);
+          c.windows = map(zip.apply(_, map(c.resources, (r) => {
+            return r.windows
+          })), (zr) => {
+            return reduce(zr, sumCharges, { charge: 0 });
+          });
           return c;
         });
         return s;
@@ -402,14 +497,14 @@ describe('abacus-usage-reporting-itest', () => {
       couchdb: 5984
     });
 
-    const ratedb = batch(db.logdb(uri.couchdb, 'abacus-rated-usage'));
+    const ratedb = batch(db.logdb(uri.couchdb, 'abacus-rated-usage-log'));
 
     // Post rated usage doc, throttled to default concurrent requests
     const post = throttle((o, ri, u, cb) => {
       debug('Submit rated usage for org%d instance%d usage%d',
         o + 1, ri + 1, u + 1);
 
-      ratedb.put(ratedTemplate(o, ri, u), (err, val) => {
+      ratedb.put(addWindows(ratedTemplate(o, ri, u)), (err, val) => {
         debug('Verify rated usage for org%d', o + 1);
 
         expect(err).to.equal(null);
@@ -442,7 +537,7 @@ describe('abacus-usage-reporting-itest', () => {
         '/:organization_id/aggregated/usage/:time', {
           port: 9088,
           organization_id: oid(o),
-          time: day(end)
+          time: end + usage
         }, (err, val) => {
           debug('Verify usage report for org%d', o + 1);
 
