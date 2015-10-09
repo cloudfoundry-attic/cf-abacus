@@ -54,6 +54,7 @@
     "itest": "export THROTTLE=1 && foreach itest node_modules/:name npm run itest --",
     "pub": "npm run babel && foreach abacus :path npm run pub && publish",
     "cfpush": "bin/cfpush",
+    "cfdelete": "bin/cfdelete",
     "cfstart": "bin/cfstart",
     "cfstop": "bin/cfstop"
   },
