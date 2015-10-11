@@ -19,11 +19,13 @@ const commander = require('commander');
 const batch = require('abacus-batch');
 const request = require('abacus-request');
 const throttle = require('abacus-throttle');
+const jwt = require('jsonwebtoken');
 const util = require('util');
 
 const map = _.map;
 const range = _.range;
 const omit = _.omit;
+const extend = _.extend;
 const clone = _.clone;
 
 const brequest = batch(request);
@@ -231,12 +233,43 @@ describe('abacus-perf-test', () => {
       }]
     });
 
+    const token = {
+      jti: 'fa1b29fe-76a9-4c2d-903e-dddd0563a9e3',
+      sub: 'object-storage',
+      authorities: [
+        'abacus.usage.object-storage.write'
+      ],
+      scope: [
+        'abacus.usage.object-storage.write'
+      ],
+      client_id: 'object-storage',
+      cid: 'object-storage',
+      azp: 'object-storage',
+      grant_type: 'client_credentials',
+      iss: 'https://uaa.cf.net/oauth/token',
+      zid: 'uaa',
+      aud: [
+        'abacus',
+        'account'
+      ]
+    };
+
+    // OAuth bearer access token signed using JWTKEY and
+    // default algorithm (HS256)
+    const auth = process.env.SECURED === 'true' ?
+      jwt.sign(token, process.env.JWTKEY, {
+        expiresIn: 43200
+      }) : undefined;
+
+    // Use OAuth bearer as a HTTP request header field
+    const opt = auth ? { headers: { authorization: 'Bearer ' + auth } } : {};
+
     // Post one usage doc, throttled to 1000 concurrent requests
     const post = throttle((o, ri, i, cb) => {
       debug('Submitting org%d instance%d usage%d',
         o + 1, ri + 1, i + 1);
       brequest.post('http://localhost:9080/v1/metering/collected/usage',
-        { body: usageTemplate(o, ri, i) }, (err, val) => {
+        extend(opt, { body: usageTemplate(o, ri, i) }), (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);
           debug('Completed submission org%d instance%d usage%d',
@@ -260,7 +293,7 @@ describe('abacus-perf-test', () => {
     // report for our test resource
     const processed = (val) => {
       try {
-        return val.body.resources[0].aggregated_usage[1].summary;
+        return val.body.resources[0].aggregated_usage[1].windows[6].summary;
       }
       catch (e) {
         // The response doesn't contain a valid report
@@ -272,11 +305,10 @@ describe('abacus-perf-test', () => {
     let gets = 0;
     const get = (o, done) => {
       brequest.get('http://localhost:9088' + '/v1/metering/organizations' +
-        '/:organization_id/aggregated/usage/:time', {
+        '/:organization_id/aggregated/usage/:time', extend(opt, {
           organization_id: orgid(o),
           time: end + usage
-        },
-        (err, val) => {
+        }), (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(200);
 
