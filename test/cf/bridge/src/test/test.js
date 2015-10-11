@@ -10,7 +10,7 @@ const express = require('abacus-express');
 const clone = _.clone;
 
 // Setup the debug log
-const debug = require('abacus-debug')('abacus-usage-collector-itest');
+const debug = require('abacus-debug')('abacus-cf-bridge-itest');
 
 // Module directory
 const moduleDir = (module) => {
@@ -31,7 +31,7 @@ const timeWindows = {
 process.env.API = 'http://localhost:4321';
 process.env.UAA = 'http://localhost:4321';
 
-describe('abacus-usage-collector-itest', () => {
+describe('abacus-cf-bridge-itest', () => {
   let server;
 
   before(() => {
@@ -130,12 +130,12 @@ describe('abacus-usage-collector-itest', () => {
     server.close();
   });
 
-  it('collect measured usage submissions', function(done) {
+  it('submit runtime usage to usage collector', function(done) {
     this.timeout(30000);
 
     // Wait for bridge to start
     request.waitFor(
-      'http://localhost::p/v1/cf/bridge', {p: 9400},
+      'http://localhost::p/v1/cf/bridge', { p: 9400 },
       (err, uri, opts) => {
         // Failed to ping bridge before timing out
         if (err) throw err;
@@ -154,7 +154,7 @@ describe('abacus-usage-collector-itest', () => {
             (error, response) => {
               expect(error).to.equal(undefined);
 
-              console.log('Usage response: ',
+              console.log('Usage report: ',
                 JSON.stringify(response.body, null, 2));
 
               expect(response.body).to.contain.all.keys('resources', 'spaces');
