@@ -269,7 +269,7 @@ describe('abacus-perf-test', () => {
       debug('Submitting org%d instance%d usage%d',
         o + 1, ri + 1, i + 1);
       brequest.post('http://localhost:9080/v1/metering/collected/usage',
-        extend(opt, { body: usageTemplate(o, ri, i) }), (err, val) => {
+        extend({}, opt, { body: usageTemplate(o, ri, i) }), (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);
           debug('Completed submission org%d instance%d usage%d',
@@ -305,7 +305,7 @@ describe('abacus-perf-test', () => {
     let gets = 0;
     const get = (o, done) => {
       brequest.get('http://localhost:9088' + '/v1/metering/organizations' +
-        '/:organization_id/aggregated/usage/:time', extend(opt, {
+        '/:organization_id/aggregated/usage/:time', extend({}, opt, {
           organization_id: orgid(o),
           time: end + usage
         }), (err, val) => {
