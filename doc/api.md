@@ -19,6 +19,8 @@ Usage summary report
 GraphQL usage query
 
 Resource usage
+
+Resource Instance Usage
 ---
 
 The _resource usage collection_ API can be used by Cloud resource providers to submit usage for instances of Cloud resources, including service instances and application runtimes or containers.
@@ -1403,3 +1405,59 @@ type Query {
 }
 ```
 
+Resource Instance Usage
+---
+
+The _resource instance usage_ API is used to retrieve accumulated usage of a resource instance in an organization from Abacus
+
+### Method: get
+_HTTP request_: GET '/v1/metering/organizations/:organization_id/resources/:resource_instance_id/:plan/usage/:time?window=:window'
+
+_Description_: Retrieves accumulated usage information document containing instance level usage for a give time in ms and time window.
+_time_ is in msec and defaults to current time.
+_window_ can be YEAR|MONTH|DAY|HOUR|MINUTE|SECOND and defaults to MONTH.
+
+_HTTP response_: 200 to indicate success with a _resource instance usage_ JSON document, 500 to report a server error.
+
+### JSON representation:
+For instances with accumulated usage
+```json
+{
+    "accumulated_usage": [
+        {
+            "metric": "storage",
+            "quantity": 1
+        },
+        {
+            "metric": "thousand_light_api_calls",
+            "quantity": 3
+        },
+        {
+            "metric": "heavy_api_calls",
+            "quantity": 300
+        }
+    ],
+    "start": 1435629365220,
+    "end": 1435629465222,
+    "region": "us",
+    "organization_id": "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+    "space_id": "aaeae239-f3f8-483c-9dd0-de5d41c38b6a",
+    "consumer": {
+        "type": "EXTERNAL",
+        "consumer_id": "bbeae239-f3f8-483c-9dd0-de6781c38bab"
+    },
+    "resource_id": "object-storage",
+    "plan_id": "basic",
+    "resource_instance_id": "0b39fa70-a65f-4183-bae8-385633ca5c87"
+}
+```
+
+For instances without accumulated usage
+```json
+{
+    "resource_instance_id": "0b39fa70-a65f-4183-bae8-385633ca5c87",
+    "plan_id": "basic",
+    "organization_id": "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+    "accumulated_usage": []
+}
+```
