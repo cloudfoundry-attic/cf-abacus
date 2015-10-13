@@ -1,5 +1,6 @@
 .DS_Store
 README.html
+CHANGES.html
 node_modules/**
 **/node_modules/**
 tmp/**
