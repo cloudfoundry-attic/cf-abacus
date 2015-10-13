@@ -45,7 +45,7 @@
     "citest": "bin/citest",
     "coveralls": "cat .coverage/lcov.info | coveralls",
     "dupcode": "jsinspect",
-    "doc": "cat README.md | mddoc >README.html",
+    "doc": "cat README.md | mddoc >README.html && cat CHANGES.md | mddoc >CHANGES.html",
     "start": "bin/start",
     "stop": "bin/stop",
     "restart": "bin/restart",
