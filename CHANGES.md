@@ -1,10 +1,7 @@
-Abacus
+Abacus - Change History
 ===
 
 The Abacus usage metering and aggregation service.
-
-Change History
-===
 
 ---
 
