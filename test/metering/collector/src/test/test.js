@@ -15,7 +15,6 @@ const map = _.map;
 const range = _.range;
 const clone = _.clone;
 const omit = _.omit;
-const rest = _.rest;
 
 // Batch the requests
 const brequest = batch(request);
@@ -175,18 +174,17 @@ describe('abacus-usage-collector-itest', () => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);
           expect(val.headers.location).to.not.equal(undefined);
-          expect(val.body.length).to.equal(3);
 
           debug('Collected measured usage for org%d instance%d' +
             ' usage%d, verifying it...', o + 1, ri + 1, u + 1);
 
           let gets = 0;
           const gcb = () => {
-            if (++gets === 3) cb();
+            if (++gets === 1) cb();
           };
 
-          // Verify normalized and submitted usage docs
-          map(rest(val.body).concat(val.headers.location), (l, i) => {
+          // Verify submitted usage docs
+          map([val.headers.location], (l, i) => {
             brequest.get(l, undefined, (err, val) => {
               debug('Verify usage#%d for org%d instance%d usage%d',
                 i + 1, o + 1, ri + 1, u + 1);
@@ -194,8 +192,8 @@ describe('abacus-usage-collector-itest', () => {
               expect(err).to.equal(undefined);
               expect(val.statusCode).to.equal(200);
 
-              expect(omit(val.body, ['id', 'collected_usage_id'])).to.deep
-                .equal(i < 2 ? usage.usage[i] : usage);
+              expect(omit(
+                val.body, ['id', 'collected_usage_id'])).to.deep.equal(usage);
 
               debug('Verified usage#%d for org%d instance%d usage%d',
                 i + 1, o + 1, ri + 1, u + 1);
@@ -225,6 +223,7 @@ describe('abacus-usage-collector-itest', () => {
         debug('Verifying metering calls %d to equal to %d',
           meter.callCount, 2 * orgs * resourceInstances * usage);
 
+        // TODO check the values of the normalized usage
         expect(meter.callCount).to.equal(2 * orgs * resourceInstances * usage);
         done();
       }
