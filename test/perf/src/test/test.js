@@ -237,10 +237,12 @@ describe('abacus-perf-test', () => {
       jti: 'fa1b29fe-76a9-4c2d-903e-dddd0563a9e3',
       sub: 'object-storage',
       authorities: [
-        'abacus.usage.object-storage.write'
+        'abacus.usage.object-storage.write',
+        'abacus.usage.write'
       ],
       scope: [
-        'abacus.usage.object-storage.write'
+        'abacus.usage.object-storage.write',
+        'abacus.usage.write'
       ],
       client_id: 'object-storage',
       cid: 'object-storage',
