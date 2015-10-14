@@ -103,7 +103,7 @@ describe('abacus-perf-test', () => {
 
     const windows = (obj) => {
       const timewindows = [];
-      for(let i = 0; i < 7; i++)
+      for(let i = 0; i < 5; i++)
         timewindows.push(obj);
       return timewindows;
     }

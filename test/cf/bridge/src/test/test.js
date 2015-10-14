@@ -23,9 +23,7 @@ const timeWindows = {
   'minute' : 1,
   'hour'   : 2,
   'day'    : 3,
-  'month'  : 4,
-  'year'   : 5,
-  'forever': 6
+  'month'  : 4
 };
 
 process.env.API = 'http://localhost:4321';

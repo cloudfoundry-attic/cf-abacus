@@ -194,21 +194,18 @@ const revertUTCNumber = (n) => {
 
 // Scaling factor for a time window
 // [Second, Minute, Hour, Day, Month, Year, Forever]
-const timescale = [1, 100, 10000, 1000000, 100000000, 10000000000, 0];
+const timescale = [1, 100, 10000, 1000000, 100000000];
 
 // Builds the quantity array in the aggregated usage
 const buildAggregatedQuantity = (p, u, ri, tri, count, end, f) => {
   const quantity = map(timescale, (ts) => {
-    if(ts) {
-      const time = end + u;
-      const timeNum = dateUTCNumbify(time);
-      const windowTimeNum = Math.floor(timeNum / ts) * ts;
+    const time = end + u;
+    const timeNum = dateUTCNumbify(time);
+    const windowTimeNum = Math.floor(timeNum / ts) * ts;
 
-      // Get the millisecond equivalent of the very start of the given window
-      const windowTime = revertUTCNumber(windowTimeNum).getTime();
-      return f(p, Math.min(time - windowTime, u), ri, tri, count);
-    }
-    return f(p, u, ri, tri, count);
+    // Get the millisecond equivalent of the very start of the given window
+    const windowTime = revertUTCNumber(windowTimeNum).getTime();
+    return f(p, Math.min(time - windowTime, u), ri, tri, count);
   });
   return quantity;
 };
