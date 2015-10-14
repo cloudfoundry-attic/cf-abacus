@@ -168,7 +168,7 @@ describe('abacus-usage-meter-itest', () => {
           expect(val.statusCode).to.equal(201);
           expect(val.headers.location).to.not.equal(undefined);
 
-          debug('Metered normalized usage for org%d instance%d' +
+          debug('Normalized usage for org%d instance%d' +
             'usage%d, verifying it...', o + 1, ri + 1, u + 1);
 
           brequest.get(val.headers.location, undefined, (err, val) => {
