@@ -46,6 +46,7 @@ The Abacus usage metering and aggregation service.
 
 ##### Documentation
 - Improvements to the API doc
+- FAQ with a few initial questions
 
 ##### Misc
 - Support for usage region info
