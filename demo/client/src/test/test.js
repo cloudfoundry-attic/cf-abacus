@@ -149,15 +149,11 @@ describe('abacus-demo-client', () => {
           { charge: 46.09 },
           { charge: 46.09 },
           { charge: 46.09 },
-          { charge: 46.09 },
-          { charge: 46.09 },
           { charge: 46.09 }
         ],
         resources: [{
           resource_id: 'object-storage',
           windows: [{ charge: 46.09 },
-            { charge: 46.09 },
-            { charge: 46.09 },
             { charge: 46.09 },
             { charge: 46.09 },
             { charge: 46.09 },
@@ -169,8 +165,6 @@ describe('abacus-demo-client', () => {
               { quantity: 1, charge: 1, summary: 1 },
               { quantity: 1, charge: 1, summary: 1 },
               { quantity: 1, charge: 1, summary: 1 },
-              { quantity: 1, charge: 1, summary: 1 },
-              { quantity: 1, charge: 1, summary: 1 },
               { quantity: 1, charge: 1, summary: 1 }
             ]
           }, {
@@ -179,15 +173,11 @@ describe('abacus-demo-client', () => {
               { quantity: 3, charge: 0.09, summary: 3 },
               { quantity: 3, charge: 0.09, summary: 3 },
               { quantity: 3, charge: 0.09, summary: 3 },
-              { quantity: 3, charge: 0.09, summary: 3 },
-              { quantity: 3, charge: 0.09, summary: 3 },
               { quantity: 3, charge: 0.09, summary: 3 }
             ]
           }, {
             metric: 'heavy_api_calls',
             windows: [{ quantity: 300, charge: 45, summary: 300 },
-              { quantity: 300, charge: 45, summary: 300 },
-              { quantity: 300, charge: 45, summary: 300 },
               { quantity: 300, charge: 45, summary: 300 },
               { quantity: 300, charge: 45, summary: 300 },
               { quantity: 300, charge: 45, summary: 300 },
@@ -200,15 +190,11 @@ describe('abacus-demo-client', () => {
               { charge: 46.09 },
               { charge: 46.09 },
               { charge: 46.09 },
-              { charge: 46.09 },
-              { charge: 46.09 },
               { charge: 46.09 }
             ],
             aggregated_usage: [{
               metric: 'storage',
               windows: [{ quantity: 1, cost: 1, charge: 1, summary: 1 },
-                { quantity: 1, cost: 1, charge: 1, summary: 1 },
-                { quantity: 1, cost: 1, charge: 1, summary: 1 },
                 { quantity: 1, cost: 1, charge: 1, summary: 1 },
                 { quantity: 1, cost: 1, charge: 1, summary: 1 },
                 { quantity: 1, cost: 1, charge: 1, summary: 1 },
@@ -221,16 +207,12 @@ describe('abacus-demo-client', () => {
                 { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
                 { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
                 { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
                 { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }
               ]
             }, {
               metric: 'heavy_api_calls',
               windows: [
               { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                { quantity: 300, cost: 45, charge: 45, summary: 300 },
                 { quantity: 300, cost: 45, charge: 45, summary: 300 },
                 { quantity: 300, cost: 45, charge: 45, summary: 300 },
                 { quantity: 300, cost: 45, charge: 45, summary: 300 },
@@ -245,15 +227,11 @@ describe('abacus-demo-client', () => {
             { charge: 46.09 },
             { charge: 46.09 },
             { charge: 46.09 },
-            { charge: 46.09 },
-            { charge: 46.09 },
             { charge: 46.09 }
           ],
           resources: [{
             resource_id: 'object-storage',
             windows: [{ charge: 46.09 },
-              { charge: 46.09 },
-              { charge: 46.09 },
               { charge: 46.09 },
               { charge: 46.09 },
               { charge: 46.09 },
@@ -265,8 +243,6 @@ describe('abacus-demo-client', () => {
                 { quantity: 1, charge: 1, summary: 1 },
                 { quantity: 1, charge: 1, summary: 1 },
                 { quantity: 1, charge: 1, summary: 1 },
-                { quantity: 1, charge: 1, summary: 1 },
-                { quantity: 1, charge: 1, summary: 1 },
                 { quantity: 1, charge: 1, summary: 1 }
               ]
             }, {
@@ -275,15 +251,11 @@ describe('abacus-demo-client', () => {
                 { quantity: 3, charge: 0.09, summary: 3 },
                 { quantity: 3, charge: 0.09, summary: 3 },
                 { quantity: 3, charge: 0.09, summary: 3 },
-                { quantity: 3, charge: 0.09, summary: 3 },
-                { quantity: 3, charge: 0.09, summary: 3 },
                 { quantity: 3, charge: 0.09, summary: 3 }
               ]
             }, {
               metric: 'heavy_api_calls',
               windows: [{ quantity: 300, charge: 45, summary: 300 },
-                { quantity: 300, charge: 45, summary: 300 },
-                { quantity: 300, charge: 45, summary: 300 },
                 { quantity: 300, charge: 45, summary: 300 },
                 { quantity: 300, charge: 45, summary: 300 },
                 { quantity: 300, charge: 45, summary: 300 },
@@ -296,15 +268,11 @@ describe('abacus-demo-client', () => {
                 { charge: 46.09 },
                 { charge: 46.09 },
                 { charge: 46.09 },
-                { charge: 46.09 },
-                { charge: 46.09 },
                 { charge: 46.09 }
               ],
               aggregated_usage: [{
                 metric: 'storage',
                 windows: [{ quantity: 1, cost: 1, charge: 1, summary: 1 },
-                  { quantity: 1, cost: 1, charge: 1, summary: 1 },
-                  { quantity: 1, cost: 1, charge: 1, summary: 1 },
                   { quantity: 1, cost: 1, charge: 1, summary: 1 },
                   { quantity: 1, cost: 1, charge: 1, summary: 1 },
                   { quantity: 1, cost: 1, charge: 1, summary: 1 },
@@ -317,16 +285,12 @@ describe('abacus-demo-client', () => {
                   { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
                   { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
                   { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                  { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                  { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
                   { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }
                 ]
               }, {
                 metric: 'heavy_api_calls',
                 windows: [
                 { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                  { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                  { quantity: 300, cost: 45, charge: 45, summary: 300 },
                   { quantity: 300, cost: 45, charge: 45, summary: 300 },
                   { quantity: 300, cost: 45, charge: 45, summary: 300 },
                   { quantity: 300, cost: 45, charge: 45, summary: 300 },
@@ -341,15 +305,11 @@ describe('abacus-demo-client', () => {
               { charge: 46.09 },
               { charge: 46.09 },
               { charge: 46.09 },
-              { charge: 46.09 },
-              { charge: 46.09 },
               { charge: 46.09 }
             ],
             resources: [{
               resource_id: 'object-storage',
               windows: [{ charge: 46.09 },
-                { charge: 46.09 },
-                { charge: 46.09 },
                 { charge: 46.09 },
                 { charge: 46.09 },
                 { charge: 46.09 },
@@ -361,8 +321,6 @@ describe('abacus-demo-client', () => {
                   { quantity: 1, charge: 1, summary: 1 },
                   { quantity: 1, charge: 1, summary: 1 },
                   { quantity: 1, charge: 1, summary: 1 },
-                  { quantity: 1, charge: 1, summary: 1 },
-                  { quantity: 1, charge: 1, summary: 1 },
                   { quantity: 1, charge: 1, summary: 1 }
                 ]
               }, {
@@ -371,15 +329,11 @@ describe('abacus-demo-client', () => {
                   { quantity: 3, charge: 0.09, summary: 3 },
                   { quantity: 3, charge: 0.09, summary: 3 },
                   { quantity: 3, charge: 0.09, summary: 3 },
-                  { quantity: 3, charge: 0.09, summary: 3 },
-                  { quantity: 3, charge: 0.09, summary: 3 },
                   { quantity: 3, charge: 0.09, summary: 3 }
                 ]
               }, {
                 metric: 'heavy_api_calls',
                 windows: [{ quantity: 300, charge: 45, summary: 300 },
-                  { quantity: 300, charge: 45, summary: 300 },
-                  { quantity: 300, charge: 45, summary: 300 },
                   { quantity: 300, charge: 45, summary: 300 },
                   { quantity: 300, charge: 45, summary: 300 },
                   { quantity: 300, charge: 45, summary: 300 },
@@ -392,15 +346,11 @@ describe('abacus-demo-client', () => {
                   { charge: 46.09 },
                   { charge: 46.09 },
                   { charge: 46.09 },
-                  { charge: 46.09 },
-                  { charge: 46.09 },
                   { charge: 46.09 }
                 ],
                 aggregated_usage: [{
                   metric: 'storage',
                   windows: [{ quantity: 1, cost: 1, charge: 1, summary: 1 },
-                    { quantity: 1, cost: 1, charge: 1, summary: 1 },
-                    { quantity: 1, cost: 1, charge: 1, summary: 1 },
                     { quantity: 1, cost: 1, charge: 1, summary: 1 },
                     { quantity: 1, cost: 1, charge: 1, summary: 1 },
                     { quantity: 1, cost: 1, charge: 1, summary: 1 },
@@ -413,16 +363,12 @@ describe('abacus-demo-client', () => {
                     { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
                     { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
                     { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                    { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                    { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
                     { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }
                   ]
                 }, {
                   metric: 'heavy_api_calls',
                   windows: [
                   { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                    { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                    { quantity: 300, cost: 45, charge: 45, summary: 300 },
                     { quantity: 300, cost: 45, charge: 45, summary: 300 },
                     { quantity: 300, cost: 45, charge: 45, summary: 300 },
                     { quantity: 300, cost: 45, charge: 45, summary: 300 },

@@ -78,24 +78,20 @@ const revertUTCNumber = (n) => {
 // Calculates the accumulated quantity given an end time, u, window size,
 // and multiplier factor of the usage
 const calculateQuantityByWindow = (e, u, w, m, f) => {
-  // Only manipulate the time window if we're not accumulating forever
-  if(w) {
-    const time = e + u;
-    const timeNum = dateUTCNumbify(time);
-    const windowTimeNum = Math.floor(timeNum / w) * w;
+  const time = e + u;
+  const timeNum = dateUTCNumbify(time);
+  const windowTimeNum = Math.floor(timeNum / w) * w;
 
-    // Get the millisecond equivalent of the very start of the given window
-    const windowTime = revertUTCNumber(windowTimeNum).getTime();
-    return f(m, Math.min(time - windowTime, u));
-  }
-  return f(m, u);
+  // Get the millisecond equivalent of the very start of the given window
+  const windowTime = revertUTCNumber(windowTimeNum).getTime();
+  return f(m, Math.min(time - windowTime, u));
 };
 
 // Builds the quantity array in the accumulated usage
 const buildQuantity = (e, u, m, f) => {
   // Scaling factor for a time window
-  // [Second, Minute, Hour, Day, Month, Year, Forever]
-  const timescale = [1, 100, 10000, 1000000, 100000000, 10000000000, 0];
+  // [Second, Minute, Hour, Day, Month]
+  const timescale = [1, 100, 10000, 1000000, 100000000];
   const quantity = map(timescale, (ts) => {
     // If this is the first usage, only return current
     if(u === 0)
