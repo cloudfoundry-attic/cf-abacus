@@ -40,6 +40,7 @@
     "abacus-dbclient": "file:../../../lib/utils/dbclient",
     "abacus-dbserver": "file:../../../lib/utils/dbserver",
     "abacus-aggregation-db": "file:../../../lib/aggregation/db",
+    "abacus-account-stub": "file:../../../lib/stubs/account",
     "abacus-usage-reporting": "file:../../../lib/aggregation/reporting",
     "abacus-debug": "file:../../../lib/utils/debug",
     "underscore": "^1.8.3",
