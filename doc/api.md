@@ -565,6 +565,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
 {
   "start": 1435622400000,
   "end": 1435708799999,
+  "processed": 1435708800000,
   "organization_id": "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
   "region": "us-south",
   "charge": 46.09,
@@ -763,6 +764,10 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
       "format": "utc-millisec"
     },
     "end": {
+      "type": "integer",
+      "format": "utc-millisec"
+    },
+    "processed": {
       "type": "integer",
       "format": "utc-millisec"
     },
@@ -1179,6 +1184,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
     "organization_id",
     "start",
     "end",
+    "processed",
     "charge",
     "resources",
     "spaces"

@@ -430,7 +430,7 @@ describe('abacus-demo-client', () => {
             console.log('Processed %d usage docs', processed(val));
             try {
               expect(omit(val.body,
-                ['id', 'start', 'end'])).to.deep.equal(report);
+                'id', 'processed', 'start', 'end')).to.deep.equal(report);
               console.log('\n', util.inspect(val.body, {
                 depth: 10
               }), '\n');
@@ -444,7 +444,7 @@ describe('abacus-demo-client', () => {
               if(Date.now() >= giveup) {
                 console.log('All submitted usage still not processed\n');
                 expect(omit(val.body,
-                  ['id', 'start', 'end'])).to.deep.equal(report);
+                  'id', 'processed', 'start', 'end')).to.deep.equal(report);
               }
               else
                 setTimeout(() => get(done), 250);

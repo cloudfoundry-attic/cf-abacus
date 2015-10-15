@@ -343,8 +343,8 @@ describe('abacus-perf-test', () => {
             processed(val), o + 1);
           try {
             expect(fixup(omit(
-              val.body, ['id', 'start', 'end']))).to.deep.equal(
-                fixup(report(o, resourceInstances, usage)));
+              val.body, 'id', 'processed', 'start', 'end')))
+                .to.deep.equal(fixup(report(o, resourceInstances, usage)));
 
             console.log('\n', util.inspect(fixup(val.body), {
               depth: 15

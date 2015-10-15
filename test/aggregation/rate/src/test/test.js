@@ -458,8 +458,8 @@ describe('abacus-usage-rate-itest', () => {
               .equal(addWindows(
                 cextend(aggregatedTemplate(o, ri, u), addCost)));
             */
-            expect(omit(val.body, ['id'])).to.deep.equal(
-              aggregatedTemplate(o, ri, u));
+            expect(omit(val.body, 'id', 'processed'))
+              .to.deep.equal(aggregatedTemplate(o, ri, u));
 
             debug('Verified aggregated usage for org%d instance%d usage%d',
               o + 1, ri + 1, u + 1);

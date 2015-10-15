@@ -178,8 +178,8 @@ describe('abacus-usage-meter-itest', () => {
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(200);
 
-            expect(omit(
-              val.body, ['id'])).to.deep.equal(normalizedTemplate(o, ri, u));
+            expect(omit(val.body, 'id', 'processed'))
+              .to.deep.equal(normalizedTemplate(o, ri, u));
 
             debug('Verified usage for org%d instance%d usage%d',
               o + 1, ri + 1, u + 1);
