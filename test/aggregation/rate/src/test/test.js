@@ -431,7 +431,7 @@ describe('abacus-usage-rate-itest', () => {
       debug('Submit aggregated usage for org%d instance%d usage%d',
         o + 1, ri + 1, u + 1);
 
-      brequest.post('http://localhost::p/v1/rating/usage',
+      brequest.post('http://localhost::p/v1/rating/aggregated/usage',
         { p: 9410, body: aggregatedTemplate(o, ri, u) }, (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);

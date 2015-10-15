@@ -106,6 +106,7 @@ const buildAccumulatedQuantity = (e, u, m, f) => {
 };
 
 // Builds the quantity array in the aggregated usage
+/*
 const buildAggregatedQuantity = (p, u, ri, tri, count, end, f) => {
   const quantity = map(timescale, (ts) => {
     const time = end + u;
@@ -118,6 +119,7 @@ const buildAggregatedQuantity = (p, u, ri, tri, count, end, f) => {
   });
   return quantity;
 };
+*/
 
 describe('abacus-usage-aggregator-itest', () => {
   before(() => {
@@ -152,7 +154,7 @@ describe('abacus-usage-aggregator-itest', () => {
     stop('abacus-dbserver');
   });
 
-  it('aggregatr accumulated usage submissions', function(done) {
+  it('aggregator accumulated usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs, with
     // a minimum of 20 secs
     const timeout = Math.max(20000,
@@ -167,7 +169,7 @@ describe('abacus-usage-aggregator-itest', () => {
     // Start usage rate stub with the rate spy
     const app = express();
     const routes = router();
-    routes.post('/v1/rating/usage', rate);
+    routes.post('/v1/rating/aggregated/usage', rate);
     app.use(routes);
     app.use(router.batch(routes));
     app.listen(9410);
@@ -257,17 +259,22 @@ describe('abacus-usage-aggregator-itest', () => {
     // accumulated usage.
 
     // Total resource instances index
+    /*
     const tri = resourceInstances - 1;
+    */
 
     // Create an array of objects based on a range and a creator function
+    /*
     const create = (number, creator) =>
       map(range(number()), (i) => creator(i));
+    */
 
     // Aggregate metrics based on ressource instance, usage and plan indices
     // For max, we use either the current count or the totat count based on
     // resource instance index
     // For sum, we use current count + total count based on resource instance
     // and usage index
+    /*
     const a = (ri, u, p, count) => [
       { metric: 'storage',
         quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
@@ -279,8 +286,10 @@ describe('abacus-usage-aggregator-itest', () => {
         quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
           (p, u, ri, tri, count) => 100 * (count(ri, p) + u * count(tri, p))) }
     ];
+    */
 
-    // Resouce plan level aggregations for a given consumer at given space
+    // Resource plan level aggregations for a given consumer at given space
+    /*
     const scpagg = (o, ri, u, s, c) => {
       // Resource instance index shift to locate a value at count number
       // sequence specified below
@@ -304,8 +313,10 @@ describe('abacus-usage-aggregator-itest', () => {
         aggregated_usage: a(ri, u, i, count)
       }));
     };
+    */
 
     // Consumer level resource aggregations for a given space
+    /*
     const scagg = (o, ri, u, s) => {
       // Resource instance index shift
       const shift = (c) => (s === 0 ? 6 : 5) - (c === 0 ? 0 : 4);
@@ -331,8 +342,10 @@ describe('abacus-usage-aggregator-itest', () => {
         }]
       }));
     };
+    */
 
     // Resource plan level aggregations for a given space
+    /*
     const spagg = (o, ri, u, s) => {
       // resource instance index shift
       const shift = (p) => (s === 0 ? 3 : 2) - (p === 0 ? 0 : 2);
@@ -350,8 +363,10 @@ describe('abacus-usage-aggregator-itest', () => {
         aggregated_usage: a(ri, u, i, count)
       }));
     };
+    */
 
     // Space level resource aggregations for a given organization
+    /*
     const osagg = (o, ri, u) => {
       // Resource instance index shift
       const shift = (s) => s === 0 ? 1 : 0;
@@ -374,8 +389,10 @@ describe('abacus-usage-aggregator-itest', () => {
         consumers: scagg(o, ri, u, i)
       }));
     };
+    */
 
     // Resource plan level aggregations for a given organization
+    /*
     const opagg = (o, ri, u) => {
       // Resource instance index shift
       const shift = (p) => p === 0 ? 2 : 0;
@@ -398,8 +415,11 @@ describe('abacus-usage-aggregator-itest', () => {
         aggregated_usage: a(ri, u, i, count)
       }));
     };
+    */
 
     // Aggregated usage for a given org, resource instance, usage indices
+    // TODO check the values of the accumulated usage
+    /*
     const aggregatedTemplate = (o, ri, u) => ({
       accumulated_usage_id: uid(o, ri, u),
       organization_id: oid(o),
@@ -413,6 +433,7 @@ describe('abacus-usage-aggregator-itest', () => {
       }],
       spaces: osagg(o, ri, u)
     });
+    */
 
     // Post an accumulated usage doc, throttled to default concurrent requests
     const post = throttle((o, ri, u, cb) => {
@@ -425,20 +446,21 @@ describe('abacus-usage-aggregator-itest', () => {
           expect(val.statusCode).to.equal(201);
           expect(val.headers.location).to.not.equal(undefined);
 
-          debug('Aggregated accumulated usage for org%d instance%d' +
+          debug('Accumulated usage for org%d instance%d' +
             ' usage%d, verifying it...', o + 1, ri + 1, u + 1);
 
+          console.log('LOCATION', val.headers.location);
           brequest.get(val.headers.location, undefined, (err, val) => {
-            debug('Verify aggregated usage for org%d instance%d usage%d',
+            debug('Verify accumulated usage for org%d instance%d usage%d',
               o + 1, ri + 1, u + 1);
 
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(200);
 
             expect(omit(val.body, ['id'])).to.deep
-              .equal(aggregatedTemplate(o, ri, u));
+              .equal(omit(accumulatedTemplate(o, ri, u), 'id'));
 
-            debug('Verified aggregated usage for org%d instance%d usage%d',
+            debug('Verified accumulated usage for org%d instance%d usage%d',
               o + 1, ri + 1, u + 1);
 
             cb();

@@ -38,7 +38,6 @@
     "abacus-cfoauth": "file:../../utils/cfoauth",
     "abacus-cluster": "file:../../utils/cluster",
     "abacus-dataflow": "file:../../utils/dataflow",
-    "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-debug": "file:../../utils/debug",
     "abacus-instance-launcher": "file:../launcher",
     "abacus-request": "file:../../utils/request",
