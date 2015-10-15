@@ -101,12 +101,12 @@ const buildQuantity = (e, u, m, f) => {
   const quantity = map(timescale, (ts) => {
     // If this is the first usage, only return current
     if(u === 0)
-      return { current: f(m, u + 1) };
+      return [{ current: f(m, u + 1) }];
     // Return a properly accumulated current & previous
-    return {
+    return [{
       previous: calculateQuantityByWindow(e, u, ts, m, f),
       current: calculateQuantityByWindow(e, u + 1, ts, m, f)
-    };
+    }];
   });
   return quantity;
 };

@@ -166,9 +166,9 @@ describe('abacus-cf-bridge-itest', () => {
               const checkAllTimeWindows = (usage) => {
                 for (const windowType in timeWindows) {
                   const windowUsage = usage.windows[timeWindows[windowType]];
-                  expect(windowUsage.quantity.consuming).to.equal(0.5);
-                  expect(windowUsage.summary).to.be.above(0);
-                  expect(windowUsage.charge).to.be.above(0);
+                  expect(windowUsage[0].quantity.consuming).to.equal(0.5);
+                  expect(windowUsage[0].summary).to.be.above(0);
+                  expect(windowUsage[0].charge).to.be.above(0);
                 }
               };
 

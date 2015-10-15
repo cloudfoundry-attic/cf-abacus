@@ -145,234 +145,234 @@ describe('abacus-demo-client', () => {
       const report = {
         organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
         region: 'us',
-        windows: [{ charge: 46.09 },
-          { charge: 46.09 },
-          { charge: 46.09 },
-          { charge: 46.09 },
-          { charge: 46.09 }
+        windows: [[{ charge: 46.09 }],
+          [{ charge: 46.09 }],
+          [{ charge: 46.09 }],
+          [{ charge: 46.09 }],
+          [{ charge: 46.09 }]
         ],
         resources: [{
           resource_id: 'object-storage',
-          windows: [{ charge: 46.09 },
-            { charge: 46.09 },
-            { charge: 46.09 },
-            { charge: 46.09 },
-            { charge: 46.09 }
+          windows: [[{ charge: 46.09 }],
+            [{ charge: 46.09 }],
+            [{ charge: 46.09 }],
+            [{ charge: 46.09 }],
+            [{ charge: 46.09 }]
           ],
           aggregated_usage: [{
             metric: 'storage',
-            windows: [{ quantity: 1, charge: 1, summary: 1 },
-              { quantity: 1, charge: 1, summary: 1 },
-              { quantity: 1, charge: 1, summary: 1 },
-              { quantity: 1, charge: 1, summary: 1 },
-              { quantity: 1, charge: 1, summary: 1 }
+            windows: [[{ quantity: 1, charge: 1, summary: 1 }],
+              [{ quantity: 1, charge: 1, summary: 1 }],
+              [{ quantity: 1, charge: 1, summary: 1 }],
+              [{ quantity: 1, charge: 1, summary: 1 }],
+              [{ quantity: 1, charge: 1, summary: 1 }]
             ]
           }, {
             metric: 'thousand_light_api_calls',
-            windows: [{ quantity: 3, charge: 0.09, summary: 3 },
-              { quantity: 3, charge: 0.09, summary: 3 },
-              { quantity: 3, charge: 0.09, summary: 3 },
-              { quantity: 3, charge: 0.09, summary: 3 },
-              { quantity: 3, charge: 0.09, summary: 3 }
+            windows: [[{ quantity: 3, charge: 0.09, summary: 3 }],
+              [{ quantity: 3, charge: 0.09, summary: 3 }],
+              [{ quantity: 3, charge: 0.09, summary: 3 }],
+              [{ quantity: 3, charge: 0.09, summary: 3 }],
+              [{ quantity: 3, charge: 0.09, summary: 3 }]
             ]
           }, {
             metric: 'heavy_api_calls',
-            windows: [{ quantity: 300, charge: 45, summary: 300 },
-              { quantity: 300, charge: 45, summary: 300 },
-              { quantity: 300, charge: 45, summary: 300 },
-              { quantity: 300, charge: 45, summary: 300 },
-              { quantity: 300, charge: 45, summary: 300 }
+            windows: [[{ quantity: 300, charge: 45, summary: 300 }],
+              [{ quantity: 300, charge: 45, summary: 300 }],
+              [{ quantity: 300, charge: 45, summary: 300 }],
+              [{ quantity: 300, charge: 45, summary: 300 }],
+              [{ quantity: 300, charge: 45, summary: 300 }]
             ]
           }],
           plans: [{
             plan_id: 'basic',
-            windows: [{ charge: 46.09 },
-              { charge: 46.09 },
-              { charge: 46.09 },
-              { charge: 46.09 },
-              { charge: 46.09 }
+            windows: [[{ charge: 46.09 }],
+              [{ charge: 46.09 }],
+              [{ charge: 46.09 }],
+              [{ charge: 46.09 }],
+              [{ charge: 46.09 }]
             ],
             aggregated_usage: [{
               metric: 'storage',
-              windows: [{ quantity: 1, cost: 1, charge: 1, summary: 1 },
-                { quantity: 1, cost: 1, charge: 1, summary: 1 },
-                { quantity: 1, cost: 1, charge: 1, summary: 1 },
-                { quantity: 1, cost: 1, charge: 1, summary: 1 },
-                { quantity: 1, cost: 1, charge: 1, summary: 1 }
+              windows: [[{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
+                [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
+                [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
+                [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
+                [{ quantity: 1, cost: 1, charge: 1, summary: 1 }]
               ]
             }, {
               metric: 'thousand_light_api_calls',
               windows: [
-              { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }
+              [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
+                [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
+                [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
+                [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
+                [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }]
               ]
             }, {
               metric: 'heavy_api_calls',
               windows: [
-              { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                { quantity: 300, cost: 45, charge: 45, summary: 300 }
+              [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
+                [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
+                [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
+                [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
+                [{ quantity: 300, cost: 45, charge: 45, summary: 300 }]
               ]
             }]
           }]
         }],
         spaces: [{
           space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-          windows: [{ charge: 46.09 },
-            { charge: 46.09 },
-            { charge: 46.09 },
-            { charge: 46.09 },
-            { charge: 46.09 }
+          windows: [[{ charge: 46.09 }],
+            [{ charge: 46.09 }],
+            [{ charge: 46.09 }],
+            [{ charge: 46.09 }],
+            [{ charge: 46.09 }]
           ],
           resources: [{
             resource_id: 'object-storage',
-            windows: [{ charge: 46.09 },
-              { charge: 46.09 },
-              { charge: 46.09 },
-              { charge: 46.09 },
-              { charge: 46.09 }
+            windows: [[{ charge: 46.09 }],
+              [{ charge: 46.09 }],
+              [{ charge: 46.09 }],
+              [{ charge: 46.09 }],
+              [{ charge: 46.09 }]
             ],
             aggregated_usage: [{
               metric: 'storage',
-              windows: [{ quantity: 1, charge: 1, summary: 1 },
-                { quantity: 1, charge: 1, summary: 1 },
-                { quantity: 1, charge: 1, summary: 1 },
-                { quantity: 1, charge: 1, summary: 1 },
-                { quantity: 1, charge: 1, summary: 1 }
+              windows: [[{ quantity: 1, charge: 1, summary: 1 }],
+                [{ quantity: 1, charge: 1, summary: 1 }],
+                [{ quantity: 1, charge: 1, summary: 1 }],
+                [{ quantity: 1, charge: 1, summary: 1 }],
+                [{ quantity: 1, charge: 1, summary: 1 }]
               ]
             }, {
               metric: 'thousand_light_api_calls',
-              windows: [{ quantity: 3, charge: 0.09, summary: 3 },
-                { quantity: 3, charge: 0.09, summary: 3 },
-                { quantity: 3, charge: 0.09, summary: 3 },
-                { quantity: 3, charge: 0.09, summary: 3 },
-                { quantity: 3, charge: 0.09, summary: 3 }
+              windows: [[{ quantity: 3, charge: 0.09, summary: 3 }],
+                [{ quantity: 3, charge: 0.09, summary: 3 }],
+                [{ quantity: 3, charge: 0.09, summary: 3 }],
+                [{ quantity: 3, charge: 0.09, summary: 3 }],
+                [{ quantity: 3, charge: 0.09, summary: 3 }]
               ]
             }, {
               metric: 'heavy_api_calls',
-              windows: [{ quantity: 300, charge: 45, summary: 300 },
-                { quantity: 300, charge: 45, summary: 300 },
-                { quantity: 300, charge: 45, summary: 300 },
-                { quantity: 300, charge: 45, summary: 300 },
-                { quantity: 300, charge: 45, summary: 300 }
+              windows: [[{ quantity: 300, charge: 45, summary: 300 }],
+                [{ quantity: 300, charge: 45, summary: 300 }],
+                [{ quantity: 300, charge: 45, summary: 300 }],
+                [{ quantity: 300, charge: 45, summary: 300 }],
+                [{ quantity: 300, charge: 45, summary: 300 }]
               ]
             }],
             plans: [{
               plan_id: 'basic',
-              windows: [{ charge: 46.09 },
-                { charge: 46.09 },
-                { charge: 46.09 },
-                { charge: 46.09 },
-                { charge: 46.09 }
+              windows: [[{ charge: 46.09 }],
+                [{ charge: 46.09 }],
+                [{ charge: 46.09 }],
+                [{ charge: 46.09 }],
+                [{ charge: 46.09 }]
               ],
               aggregated_usage: [{
                 metric: 'storage',
-                windows: [{ quantity: 1, cost: 1, charge: 1, summary: 1 },
-                  { quantity: 1, cost: 1, charge: 1, summary: 1 },
-                  { quantity: 1, cost: 1, charge: 1, summary: 1 },
-                  { quantity: 1, cost: 1, charge: 1, summary: 1 },
-                  { quantity: 1, cost: 1, charge: 1, summary: 1 }
+                windows: [[{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
+                  [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
+                  [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
+                  [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
+                  [{ quantity: 1, cost: 1, charge: 1, summary: 1 }]
                 ]
               }, {
                 metric: 'thousand_light_api_calls',
                 windows: [
-                { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                  { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                  { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                  { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                  { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }
+                [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
+                  [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
+                  [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
+                  [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
+                  [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }]
                 ]
               }, {
                 metric: 'heavy_api_calls',
                 windows: [
-                { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                  { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                  { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                  { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                  { quantity: 300, cost: 45, charge: 45, summary: 300 }
+                [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
+                  [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
+                  [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
+                  [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
+                  [{ quantity: 300, cost: 45, charge: 45, summary: 300 }]
                 ]
               }]
             }]
           }],
           consumers: [{
             consumer_id: 'bbeae239-f3f8-483c-9dd0-de6781c38bab',
-            windows: [{ charge: 46.09 },
-              { charge: 46.09 },
-              { charge: 46.09 },
-              { charge: 46.09 },
-              { charge: 46.09 }
+            windows: [[{ charge: 46.09 }],
+              [{ charge: 46.09 }],
+              [{ charge: 46.09 }],
+              [{ charge: 46.09 }],
+              [{ charge: 46.09 }]
             ],
             resources: [{
               resource_id: 'object-storage',
-              windows: [{ charge: 46.09 },
-                { charge: 46.09 },
-                { charge: 46.09 },
-                { charge: 46.09 },
-                { charge: 46.09 }
+              windows: [[{ charge: 46.09 }],
+                [{ charge: 46.09 }],
+                [{ charge: 46.09 }],
+                [{ charge: 46.09 }],
+                [{ charge: 46.09 }]
               ],
               aggregated_usage: [{
                 metric: 'storage',
-                windows: [{ quantity: 1, charge: 1, summary: 1 },
-                  { quantity: 1, charge: 1, summary: 1 },
-                  { quantity: 1, charge: 1, summary: 1 },
-                  { quantity: 1, charge: 1, summary: 1 },
-                  { quantity: 1, charge: 1, summary: 1 }
+                windows: [[{ quantity: 1, charge: 1, summary: 1 }],
+                  [{ quantity: 1, charge: 1, summary: 1 }],
+                  [{ quantity: 1, charge: 1, summary: 1 }],
+                  [{ quantity: 1, charge: 1, summary: 1 }],
+                  [{ quantity: 1, charge: 1, summary: 1 }]
                 ]
               }, {
                 metric: 'thousand_light_api_calls',
-                windows: [{ quantity: 3, charge: 0.09, summary: 3 },
-                  { quantity: 3, charge: 0.09, summary: 3 },
-                  { quantity: 3, charge: 0.09, summary: 3 },
-                  { quantity: 3, charge: 0.09, summary: 3 },
-                  { quantity: 3, charge: 0.09, summary: 3 }
+                windows: [[{ quantity: 3, charge: 0.09, summary: 3 }],
+                  [{ quantity: 3, charge: 0.09, summary: 3 }],
+                  [{ quantity: 3, charge: 0.09, summary: 3 }],
+                  [{ quantity: 3, charge: 0.09, summary: 3 }],
+                  [{ quantity: 3, charge: 0.09, summary: 3 }]
                 ]
               }, {
                 metric: 'heavy_api_calls',
-                windows: [{ quantity: 300, charge: 45, summary: 300 },
-                  { quantity: 300, charge: 45, summary: 300 },
-                  { quantity: 300, charge: 45, summary: 300 },
-                  { quantity: 300, charge: 45, summary: 300 },
-                  { quantity: 300, charge: 45, summary: 300 }
+                windows: [[{ quantity: 300, charge: 45, summary: 300 }],
+                  [{ quantity: 300, charge: 45, summary: 300 }],
+                  [{ quantity: 300, charge: 45, summary: 300 }],
+                  [{ quantity: 300, charge: 45, summary: 300 }],
+                  [{ quantity: 300, charge: 45, summary: 300 }]
                 ]
               }],
               plans: [{
                 plan_id: 'basic',
-                windows: [{ charge: 46.09 },
-                  { charge: 46.09 },
-                  { charge: 46.09 },
-                  { charge: 46.09 },
-                  { charge: 46.09 }
+                windows: [[{ charge: 46.09 }],
+                  [{ charge: 46.09 }],
+                  [{ charge: 46.09 }],
+                  [{ charge: 46.09 }],
+                  [{ charge: 46.09 }]
                 ],
                 aggregated_usage: [{
                   metric: 'storage',
-                  windows: [{ quantity: 1, cost: 1, charge: 1, summary: 1 },
-                    { quantity: 1, cost: 1, charge: 1, summary: 1 },
-                    { quantity: 1, cost: 1, charge: 1, summary: 1 },
-                    { quantity: 1, cost: 1, charge: 1, summary: 1 },
-                    { quantity: 1, cost: 1, charge: 1, summary: 1 }
+                  windows: [[{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
+                    [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
+                    [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
+                    [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
+                    [{ quantity: 1, cost: 1, charge: 1, summary: 1 }]
                   ]
                 }, {
                   metric: 'thousand_light_api_calls',
                   windows: [
-                  { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                    { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                    { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                    { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 },
-                    { quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }
+                  [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
+                    [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
+                    [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
+                    [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
+                    [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }]
                   ]
                 }, {
                   metric: 'heavy_api_calls',
                   windows: [
-                  { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                    { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                    { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                    { quantity: 300, cost: 45, charge: 45, summary: 300 },
-                    { quantity: 300, cost: 45, charge: 45, summary: 300 }
+                  [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
+                    [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
+                    [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
+                    [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
+                    [{ quantity: 300, cost: 45, charge: 45, summary: 300 }]
                   ]
                 }]
               }]

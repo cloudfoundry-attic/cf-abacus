@@ -18,6 +18,7 @@ const reduce = _.reduce;
 const range = _.range;
 const clone = _.clone;
 const zip = _.zip;
+const unzip = _.unzip;
 
 // Batch the requests
 const brequest = batch(request);
@@ -83,9 +84,11 @@ const cost = {
 const addResourceWindows = (r) => {
   r.aggregated_usage = map(r.aggregated_usage, (u) => ({
     metric: u.metric,
-    windows: map(u.quantity, (q) => ({
-      quantity: q
-    }))
+    windows: map(u.quantity, (w) => {
+      return map(w, (q) => ({
+        quantity: q
+      }));
+    })
   }));
   return r;
 }
@@ -109,10 +112,12 @@ const addCost = (k, v) => {
     // Warning: mutating aggregated_usage to include cost
     p.aggregated_usage = map(p.aggregated_usage, (u) => ({
       metric: u.metric,
-      windows: map(u.quantity, (q) => ({
-        quantity: q,
-        cost: q * cost[p.plan_id][u.metric]
-      }))
+      windows: map(u.quantity, (w) => {
+        return map(w, (q) => ({
+          quantity: q,
+          cost: q * cost[p.plan_id][u.metric]
+        }));
+      })
     }));
 
     return p;
@@ -133,8 +138,10 @@ const addCharge = (k, v) => {
     r.plans = map(r.plans, (p) => {
       p.aggregated_usage = map(p.aggregated_usage, (u) => {
         map(u.windows, (w) => {
-          w.charge = w.cost;
-          w.summary = w.quantity;
+          map(w, (wi) => {
+            wi.charge = wi.cost;
+            wi.summary = wi.quantity;
+          });
         });
         return u;
       });
@@ -144,7 +151,9 @@ const addCharge = (k, v) => {
         return u.windows
       })),
         (zu) => {
-          return reduce(zu, sumCharges, { charge: 0 });
+          return map(unzip(zu), (uu) => {
+            return reduce(uu, sumCharges, { charge: 0 });
+          });
         });
       return p;
     });
@@ -152,10 +161,13 @@ const addCharge = (k, v) => {
     // Calculate resource level charges using plan level charges
     map(r.aggregated_usage, (u) => {
       map(u.windows, (w, i) => {
-        w.summary = w.quantity;
-        w.charge = reduce(r.plans, (a, p) =>
-          a + reduce(p.aggregated_usage, (a1, u1) =>
-            a1 + (u1.metric === u.metric ? u1.windows[i].charge : 0), 0), 0);
+        map(w, (wi, j) => {
+          wi.summary = wi.quantity;
+          wi.charge = reduce(r.plans, (a, p) =>
+            a + reduce(p.aggregated_usage, (a1, u1) =>
+              a1 + (u1.metric === u.metric ? u1.windows[i][j].charge : 0),
+                0), 0);
+        });
       });
     });
 
@@ -164,7 +176,9 @@ const addCharge = (k, v) => {
       return p.windows
     })),
       (zu) => {
-        return reduce(zu, sumCharges, { charge: 0 });
+        return map(unzip(zu), (uu) => {
+          return reduce(uu, sumCharges, { charge: 0 });
+        });
       });
     return r;
   });
@@ -205,7 +219,7 @@ const buildAggregatedQuantity = (p, u, ri, tri, count, end, f) => {
 
     // Get the millisecond equivalent of the very start of the given window
     const windowTime = revertUTCNumber(windowTimeNum).getTime();
-    return f(p, Math.min(time - windowTime, u), ri, tri, count);
+    return [f(p, Math.min(time - windowTime, u), ri, tri, count)];
   });
   return quantity;
 };
@@ -468,19 +482,25 @@ describe('abacus-usage-reporting-itest', () => {
       report.windows = map(zip.apply(_, map(report.resources, (r) => {
         return r.windows
       })), (zr) => {
-        return reduce(zr, sumCharges, { charge: 0 });
+        return map(unzip(zr), (uu) => {
+          return reduce(uu, sumCharges, { charge: 0 });
+        });
       });
       report.spaces = map(report.spaces, (s) => {
         s.windows = map(zip.apply(_, map(s.resources, (r) => {
           return r.windows
         })), (zr) => {
-          return reduce(zr, sumCharges, { charge: 0 });
+          return map(unzip(zr), (uu) => {
+            return reduce(uu, sumCharges, { charge: 0 });
+          });
         });
         s.consumers = map(s.consumers, (c) => {
           c.windows = map(zip.apply(_, map(c.resources, (r) => {
             return r.windows
           })), (zr) => {
-            return reduce(zr, sumCharges, { charge: 0 });
+            return map(unzip(zr), (uu) => {
+              return reduce(uu, sumCharges, { charge: 0 });
+            });
           });
           return c;
         });

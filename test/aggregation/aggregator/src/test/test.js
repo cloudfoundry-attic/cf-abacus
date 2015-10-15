@@ -95,12 +95,12 @@ const buildAccumulatedQuantity = (e, u, m, f) => {
   const quantity = map(timescale, (ts) => {
     // If this is the first usage, only return current
     if(u === 0)
-      return { current: f(m, u + 1) };
+      return [{ current: f(m, u + 1) }];
     // Return a properly accumulated current & previous
-    return {
+    return [{
       previous: calculateQuantityByWindow(e, u, ts, m, f),
       current: calculateQuantityByWindow(e, u + 1, ts, m, f)
-    };
+    }];
   });
   return quantity;
 };
@@ -114,7 +114,7 @@ const buildAggregatedQuantity = (p, u, ri, tri, count, end, f) => {
 
     // Get the millisecond equivalent of the very start of the given window
     const windowTime = revertUTCNumber(windowTimeNum).getTime();
-    return f(p, Math.min(time - windowTime, u), ri, tri, count);
+    return [f(p, Math.min(time - windowTime, u), ri, tri, count)];
   });
   return quantity;
 };
