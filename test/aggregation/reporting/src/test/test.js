@@ -520,7 +520,7 @@ describe('abacus-usage-reporting-itest', () => {
       couchdb: 5984
     });
 
-    const ratedb = batch(db.logdb(uri.couchdb, 'abacus-rated-usage-log'));
+    const ratedb = batch(db.logdb(uri.couchdb, 'abacus-rating-rated-usage'));
 
     // Post rated usage doc, throttled to default concurrent requests
     const post = throttle((o, ri, u, cb) => {
