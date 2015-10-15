@@ -74,6 +74,7 @@ const cextend = (o, interceptor) => {
 };
 
 // Add windows to aggregated usage at all non-plan levels
+/*
 const addResourceWindows = (r) => {
   r.aggregated_usage = map(r.aggregated_usage, (u) => ({
     metric: u.metric,
@@ -85,8 +86,10 @@ const addResourceWindows = (r) => {
   }));
   return r;
 }
+*/
 
 // Add windows to the entire aggregated usage object
+/*
 const addWindows = (u) => {
   u.resources = map(u.resources, addResourceWindows);
   map(u.spaces, (s) => {
@@ -97,8 +100,10 @@ const addWindows = (u) => {
   });
   return u;
 }
+*/
 
 // Add cost to aggregated usage at all plan levels
+/*
 const addCost = (k, v) => {
   // plan and price details for test-resource to do a quick lookup
   const cost = {
@@ -130,6 +135,7 @@ const addCost = (k, v) => {
     return p;
   });
 };
+*/
 
 // Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
 const dateUTCNumbify = (t) => {
@@ -437,21 +443,25 @@ describe('abacus-usage-rate-itest', () => {
           expect(val.statusCode).to.equal(201);
           expect(val.headers.location).to.not.equal(undefined);
 
-          debug('Rated aggregated usage for org%d instance%d' +
+          debug('Aggregated usage for org%d instance%d' +
             ' usage%d, verifying it...', o + 1, ri + 1, u + 1);
 
           brequest.get(val.headers.location, undefined, (err, val) => {
-            debug('Verify rated usage for org%d instance%d usage%d',
+            debug('Verify aggregated usage for org%d instance%d usage%d',
               o + 1, ri + 1, u + 1);
 
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(200);
 
+            /*
             expect(omit(val.body, ['id'])).to.deep
               .equal(addWindows(
                 cextend(aggregatedTemplate(o, ri, u), addCost)));
+            */
+            expect(omit(val.body, ['id'])).to.deep.equal(
+              aggregatedTemplate(o, ri, u));
 
-            debug('Verified rated usage for org%d instance%d usage%d',
+            debug('Verified aggregated usage for org%d instance%d usage%d',
               o + 1, ri + 1, u + 1);
 
             cb();

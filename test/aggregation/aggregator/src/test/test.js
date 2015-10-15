@@ -449,7 +449,6 @@ describe('abacus-usage-aggregator-itest', () => {
           debug('Accumulated usage for org%d instance%d' +
             ' usage%d, verifying it...', o + 1, ri + 1, u + 1);
 
-          console.log('LOCATION', val.headers.location);
           brequest.get(val.headers.location, undefined, (err, val) => {
             debug('Verify accumulated usage for org%d instance%d usage%d',
               o + 1, ri + 1, u + 1);
