@@ -67,7 +67,7 @@ describe('abacus-perf-test', () => {
       orgs, resourceInstances, usage);
 
     const timeout = Math.max(20000,
-      10 * orgs * resourceInstances * usage);
+      200 * orgs * resourceInstances * usage);
     this.timeout(timeout + 5000);
 
     console.log('Timeout %d', timeout);
@@ -363,7 +363,7 @@ describe('abacus-perf-test', () => {
             }), '\n');
             */
 
-            if(++gets === timeout / 250) throw e;
+            if(++gets >= orgs * timeout / 250) throw e;
           }
         });
     };
