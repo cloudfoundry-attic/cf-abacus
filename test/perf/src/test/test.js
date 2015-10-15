@@ -331,7 +331,6 @@ describe('abacus-perf-test', () => {
 
 
     // Get a usage report for the test organization
-    let gets = 0;
     const get = (o, done) => {
       brequest.get('http://localhost:9088' + '/v1/metering/organizations' +
         '/:organization_id/aggregated/usage/:time', extend({}, opt, {
