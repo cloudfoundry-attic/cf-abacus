@@ -67,8 +67,9 @@ describe('abacus-perf-test', () => {
       orgs, resourceInstances, usage);
 
     const timeout = Math.max(20000,
-      200 * orgs * resourceInstances * usage);
+      40 * orgs * resourceInstances * usage);
     this.timeout(timeout + 5000);
+    const giveup = Date.now() + timeout;
 
     console.log('Timeout %d', timeout);
 
@@ -357,13 +358,12 @@ describe('abacus-perf-test', () => {
           catch (e) {
             // If the comparison fails we'll be called again to retry
             // after 250 msec, but give up after the computed timeout
-            /*
-            console.log('\n', util.inspect(fixup(val.body), {
-              depth: 15
-            }), '\n');
-            */
-
-            if(++gets >= orgs * timeout / 250) throw e;
+            if(Date.now() >= giveup) {
+              console.log('\n', util.inspect(fixup(val.body), {
+                depth: 15
+              }), '\n');
+              throw e;
+            }
           }
         });
     };
