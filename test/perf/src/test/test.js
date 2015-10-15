@@ -27,6 +27,8 @@ const range = _.range;
 const omit = _.omit;
 const extend = _.extend;
 const clone = _.clone;
+const last = _.last;
+const keys = _.keys;
 
 const brequest = batch(request);
 
@@ -61,9 +63,14 @@ describe('abacus-perf-test', () => {
   it('measures performance of concurrent usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs, with
     // a minimum of 20 secs
+    console.log('Testing with %d orgs, %d resource instances, %d usage docs',
+      orgs, resourceInstances, usage);
+
     const timeout = Math.max(20000,
-      100 * orgs * resourceInstances * usage);
-    this.timeout(timeout + 2000);
+      10 * orgs * resourceInstances * usage);
+    this.timeout(timeout + 5000);
+
+    console.log('Timeout %d', timeout);
 
     // Return a usage with unique start and end time based on a number
     const start = 1435629365220 + delta;
@@ -295,13 +302,32 @@ describe('abacus-perf-test', () => {
     // report for our test resource
     const processed = (val) => {
       try {
-        return val.body.resources[0].aggregated_usage[1].windows[6].summary;
+        return val.body.resources[0].aggregated_usage[1]
+          .windows[4][0].summary;
       }
       catch (e) {
         // The response doesn't contain a valid report
         return 0;
       }
     };
+
+    // Fix up the usage time windows, only keep the month window
+    // as we may cross the boundaries of the smaller windows during
+    // the execution of the test
+    const fixup = (val) => {
+      if(!val)
+        return val;
+      if(val.windows)
+        val.windows = [last(val.windows)]
+      map(keys(val), (k) => {
+        if(typeof val[k] === 'object')
+          return fixup(val[k]);
+        if(typeof val[k] === 'array')
+          map(val[l], fixup);
+      });
+      return val;
+    };
+
 
     // Get a usage report for the test organization
     let gets = 0;
@@ -318,15 +344,26 @@ describe('abacus-perf-test', () => {
           console.log('Processed %d usage docs for org%d',
             processed(val), o + 1);
           try {
-            expect(omit(val.body, ['id', 'start', 'end'])).to.deep.
-              equal(report(o, resourceInstances, usage));
-            console.log('\n', util.inspect(val.body, { depth: 10 }), '\n');
+            expect(fixup(omit(
+              val.body, ['id', 'start', 'end']))).to.deep.equal(
+                fixup(report(o, resourceInstances, usage)));
+
+            console.log('\n', util.inspect(fixup(val.body), {
+              depth: 15
+            }), '\n');
+
             done();
           }
           catch (e) {
             // If the comparison fails we'll be called again to retry
             // after 250 msec, but give up after the computed timeout
-            if(++gets === timeout * Math.max(1, orgs / 4) / 250) throw e;
+            /*
+            console.log('\n', util.inspect(fixup(val.body), {
+              depth: 15
+            }), '\n');
+            */
+
+            if(++gets === timeout / 250) throw e;
           }
         });
     };
