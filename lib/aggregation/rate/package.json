@@ -40,6 +40,7 @@
     "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-debug": "file:../../utils/debug",
     "abacus-instance-launcher": "file:../launcher",
+    "abacus-lock": "file:../../utils/lock",
     "abacus-price-config": "file:../../config/price",
     "abacus-request": "file:../../utils/request",
     "abacus-resource-config": "file:../../config/resource",
@@ -50,6 +51,7 @@
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-yieldable": "file:../../utils/yieldable",
+    "lru-cache": "^2.6.5",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
