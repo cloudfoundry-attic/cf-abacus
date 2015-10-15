@@ -46,6 +46,7 @@
     "abacus-resource-config": "file:../../config/resource",
     "abacus-router": "file:../../utils/router",
     "abacus-schema": "file:../../utils/schema",
+    "abacus-seqid": "file:../../utils/seqid",
     "abacus-throttle": "file:../../utils/throttle",
     "abacus-transform": "file:../../utils/transform",
     "abacus-urienv": "file:../../utils/urienv",

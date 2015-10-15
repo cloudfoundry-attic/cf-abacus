@@ -66,8 +66,7 @@ describe('abacus-perf-test', () => {
     console.log('Testing with %d orgs, %d resource instances, %d usage docs',
       orgs, resourceInstances, usage);
 
-    const timeout = Math.max(20000,
-      40 * orgs * resourceInstances * usage);
+    const timeout = Math.max(20000, 40 * orgs * resourceInstances * usage);
     this.timeout(timeout + 5000);
     const giveup = Date.now() + timeout;
 
@@ -333,9 +332,8 @@ describe('abacus-perf-test', () => {
     // Get a usage report for the test organization
     const get = (o, done) => {
       brequest.get('http://localhost:9088' + '/v1/metering/organizations' +
-        '/:organization_id/aggregated/usage/:time', extend({}, opt, {
-          organization_id: orgid(o),
-          time: end + usage
+        '/:organization_id/aggregated/usage', extend({}, opt, {
+          organization_id: orgid(o)
         }), (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(200);

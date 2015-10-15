@@ -45,6 +45,7 @@ describe('abacus-demo-client', () => {
       // Configure the test timeout
       const timeout = 20000;
       this.timeout(timeout + 5000);
+      const giveup = Date.now() + timeout;
 
       // Test usage to be submitted by the client
       const start = 1435629365220 + delta;
@@ -417,12 +418,10 @@ describe('abacus-demo-client', () => {
       };
 
       // Get a usage report for the test organization
-      let gets = 0;
       const get = (done) => {
         request.get(reporting + '/v1/metering/organizations' +
-          '/:organization_id/aggregated/usage/:time', {
-            organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-            time: end + 2
+          '/:organization_id/aggregated/usage', {
+            organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27'
           }, (err, val) => {
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(200);
@@ -442,12 +441,13 @@ describe('abacus-demo-client', () => {
               // after 250 msec, give up after the configured timeout as
               // if we're still not getting the expected report then
               // the processing of the submitted usage must have failed
-              if(++gets === timeout / 250) {
+              if(Date.now() >= giveup) {
                 console.log('All submitted usage still not processed\n');
                 expect(omit(val.body,
                   ['id', 'start', 'end'])).to.deep.equal(report);
               }
-              else setTimeout(() => get(done), 250);
+              else
+                setTimeout(() => get(done), 250);
             }
           });
       };
