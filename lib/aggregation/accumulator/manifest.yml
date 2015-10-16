@@ -6,9 +6,12 @@ applications:
   memory: 512M
   disk_quota: 512M
   env:
-    SECURED: false
-    JWTKEY: undefined
-    JWTALGO: undefined
     AGGREGATOR: abacus-usage-aggregator
     PROVISIONING: abacus-provisioning-stub
     COUCHDB: abacus-dbserver
+    SECURED: false
+    AUTHSERVER: undefined
+    CLIENTID: undefined
+    CLIENTSECRET: undefined
+    JWTKEY: undefined
+    JWTALGO: undefined
