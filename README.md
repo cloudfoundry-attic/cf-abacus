@@ -59,13 +59,9 @@ The following steps assume a local Cloud Foundry deployment created using [Bosh-
 ```sh
 cd cf-abacus
 
-# Point the CF CLI to your local Cloud Foundry deployment
-cf api --skip-ssl-validation https://api.10.244.0.34.xip.io
-cf login -o <your organization> -s <your space>
-
-# Create a CF security group for the Abacus apps
-cf create-security-group abacus etc/secgroup.json
-cf bind-security-group abacus <your organization> <your space>
+# Point CF CLI to your local Cloud Foundry deployment and
+# create a CF security group for the Abacus apps
+bin/cfsetup
 
 # Run cf push on the Abacus apps to deploy them to Cloud Foundry
 npm run cfpush
@@ -79,7 +75,7 @@ OK
 
 name                       requested state   instances   memory   disk   urls   
 abacus-usage-collector     started           1/1         512M     512M   abacus-usage-collector.10.244.0.34.xip.io   
-abacus-usage-meter         started           1/1         512M     512M   abacus-usage-meter.10.244.0.34.xip.io 
+abacus-usage-meter         started           1/1         512M     512M   abacus-usage-meter.10.244.0.34.xip.io
 abacus-usage-accumulator   started           1/1         512M     512M   abacus-usage-accumulator.10.244.0.34.xip.io   
 abacus-usage-aggregator    started           1/1         512M     512M   abacus-usage-aggregator.10.244.0.34.xip.io   
 abacus-usage-rate          started           1/1         512M     512M   abacus-usage-rate.10.244.0.34.xip.io   
@@ -144,7 +140,7 @@ The Abacus source tree is organized as follows:
 
 ```sh
 
-bin/ - Start, stop, demo and cf push scripts 
+bin/ - Start, stop, demo and cf push scripts
 
 demo/ - Demo apps
 
@@ -171,7 +167,7 @@ lib/ - Abacus modules
         bridge - collects CF app usage data
 
     config/ - Usage formula and pricing configuration
-    
+
     utils/ - Utility modules used by the above
 
     stubs/ - Test stubs for provisioning and account services
@@ -263,4 +259,3 @@ License
 ---
 
   [Apache License 2.0](LICENSE)
-
