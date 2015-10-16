@@ -1,0 +1,29 @@
+#!/bin/bash
+set -e
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )"
+
+CF_ORG_DEFAULT=$(cf target | cut -d ':' -f 2 | tr -d ' ' | sed '4q;d')
+CF_SPACE_DEFAULT=$(cf target | cut -d ':' -f 2 | tr -d ' ' | sed '5q;d')
+
+read -p "Enter your organization [$CF_ORG_DEFAULT]: " CF_ORG
+CF_ORG="${CF_ORG:-$CF_ORG_DEFAULT}"
+if [[ -z $CF_ORG ]]; then
+  echo 'Missing organization'
+  exit 1
+fi
+
+read -p "Enter your space [$CF_SPACE_DEFAULT]: " CF_SPACE
+CF_SPACE="${CF_SPACE:-$CF_SPACE_DEFAULT}"
+if [[ -z $CF_SPACE ]]; then
+  echo 'Missing space'
+  exit 1
+fi
+
+# Point the CF CLI to your local Cloud Foundry deployment
+cf api --skip-ssl-validation https://api.10.244.0.34.xip.io
+cf login -o $CF_ORG -s $CF_SPACE
+
+# Create a CF security group for the Abacus apps
+cf create-security-group abacus $SCRIPT_DIR/../etc/secgroup.json
+cf bind-security-group abacus $CF_ORG $CF_SPACE
