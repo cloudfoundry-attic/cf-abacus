@@ -5,7 +5,7 @@ The Abacus usage metering and aggregation service.
 
 ---
 
-### v0.0.2 - 10/xx/2015
+### v0.0.2 - 10/16/2015
 
 ##### Usage submission
 - Simpler and more consistent usage submission API
