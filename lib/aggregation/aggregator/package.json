@@ -52,6 +52,7 @@
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
+    "abacus-batch": "file:../../utils/batch",
     "abacus-cfpack": "file:../../../tools/cfpack",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",

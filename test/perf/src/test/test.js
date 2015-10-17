@@ -73,8 +73,8 @@ describe('abacus-perf-test', () => {
     console.log('Timeout %d', timeout);
 
     // Return a usage with unique start and end time based on a number
-    const start = 1435629365220 + delta;
-    const end = 1435629465220 + delta;
+    const start = Date.now() + delta;
+    const end = Date.now() + delta;
     const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87',
       o + 1, ri + 1].join('-');
     const orgid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
