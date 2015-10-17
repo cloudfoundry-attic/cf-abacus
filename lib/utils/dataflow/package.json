@@ -34,6 +34,7 @@
     "abacus-batch": "file:../batch",
     "abacus-breaker": "file:../breaker",
     "abacus-cfoauth": "file:../cfoauth",
+    "abacus-cluster": "file:../cluster",
     "abacus-dbclient": "file:../dbclient",
     "abacus-debug": "file:../debug",
     "abacus-lock": "file:../lock",
@@ -46,12 +47,12 @@
     "abacus-throttle": "file:../../utils/throttle",
     "abacus-transform": "file:../../utils/transform",
     "abacus-urienv": "file:../../utils/urienv",
+    "abacus-vcapenv": "file:../../utils/vcapenv",
     "abacus-yieldable": "file:../../utils/yieldable",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
-    "abacus-cluster": "file:../../utils/cluster",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish",
