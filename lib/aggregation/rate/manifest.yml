@@ -10,5 +10,8 @@ applications:
     ACCOUNT: abacus-account-stub
     COUCHDB: abacus-dbserver
     SECURED: false
+    AUTHSERVER: undefined
+    CLIENTID: undefined
+    CLIENTSECRET: undefined
     JWTKEY: undefined
     JWTALGO: undefined
