@@ -2,7 +2,7 @@
   "name": "abacus-resource-config",
   "description": "Resource usage metering and aggregation configuration",
   "license": "Apache-2.0",
-  "version": "0.0.2-rc.0",
+  "version": "0.0.2-rc.1",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/config/resource",
   "bugs": {
