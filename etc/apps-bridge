@@ -9,7 +9,7 @@ abacus-usage-collector lib/metering/collector 1
 abacus-usage-meter lib/metering/meter 1
 abacus-usage-accumulator lib/aggregation/accumulator 1
 abacus-usage-aggregator lib/aggregation/aggregator 1
-abacus-usage-reporting lib/aggregation/reporting 1
 abacus-usage-rate lib/aggregation/rate 1
+abacus-usage-reporting lib/aggregation/reporting 1
 abacus-cf-bridge lib/cf/bridge 1
 EOF
