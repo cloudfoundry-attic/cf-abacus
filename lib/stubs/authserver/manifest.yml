@@ -1,0 +1,11 @@
+applications:
+- name: abacus-authserver-stub
+  host: abacus-authserver-stub
+  path: .cfpack/app.zip
+  instances: 1
+  memory: 512M
+  disk_quota: 512M
+  env:
+    SECURED: false
+    JWTKEY: undefined
+    JWTALGO: undefined

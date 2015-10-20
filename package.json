@@ -72,6 +72,7 @@
     "abacus-usage-rate": "file:lib/aggregation/rate",
     "abacus-account-stub": "file:lib/stubs/account",
     "abacus-provisioning-stub": "file:lib/stubs/provisioning",
+    "abacus-authserver-stub": "file:lib/stubs/authserver",
     "abacus-cf-bridge": "file:lib/cf/bridge",
     "abacus-batch": "file:lib/utils/batch",
     "abacus-breaker": "file:lib/utils/breaker",

@@ -1,0 +1,55 @@
+{
+  "name": "abacus-authserver-stub",
+  "description": "Stub for an authrorization server",
+  "license": "Apache-2.0",
+  "version": "0.0.2-rc.1",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/stubs/authserver",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "manifest.yml",
+    "lib/",
+    "src/"
+  ],
+  "main": "lib/index.js",
+  "scripts": {
+    "start": "webapp start --port 9382",
+    "stop": "webapp stop",
+    "babel": "babel",
+    "test": "eslint && mocha",
+    "lint": "eslint",
+    "pub": "publish",
+    "cfpush": "cfpack && cf push"
+  },
+  "dependencies": {
+    "babel-runtime": "^5.8.19",
+    "abacus-debug": "file:../../utils/debug",
+    "abacus-router": "file:../../utils/router",
+    "abacus-webapp": "file:../../utils/webapp",
+    "underscore": "^1.8.3",
+    "jsonwebtoken": "^5.0.5"
+  },
+  "devDependencies": {
+    "abacus-babel": "file:../../../tools/babel",
+    "abacus-cluster": "file:../../utils/cluster",
+    "abacus-cfpack": "file:../../../tools/cfpack",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-publish": "file:../../../tools/publish"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  }
+}
