@@ -7,6 +7,6 @@
 # intergration test matrix, we would need 2197(= 13 * 13 * 13)
 # usage submissions to get above 90 percent regression coverage
 npm run itest -- -o 4 -i 4 -u 4  &&
-npm start && sleep 10s && npm run demo && npm run perf -- -o 1 -i 1 -u 1 && npm stop
-# export SECURED=true JWTKEY=encode JWTALGO=HS256 &&
-# npm start && sleep 10s && npm run perf -- -o 4 -i 4 -u 4 && npm stop
+npm start && sleep 10s && npm run demo && npm run perf -- -o 1 -i 1 -u 1 && npm stop &&
+export SECURED=true JWTKEY=encode JWTALGO=HS256 &&
+npm start && sleep 10s && npm run perf -- -o 4 -i 4 -u 4 && npm stop

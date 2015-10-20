@@ -244,12 +244,10 @@ describe('abacus-perf-test', () => {
       jti: 'fa1b29fe-76a9-4c2d-903e-dddd0563a9e3',
       sub: 'object-storage',
       authorities: [
-        'abacus.usage.object-storage.write',
-        'abacus.usage.write'
+        'abacus.usage.object-storage.write'
       ],
       scope: [
-        'abacus.usage.object-storage.write',
-        'abacus.usage.write'
+        'abacus.usage.object-storage.write'
       ],
       client_id: 'object-storage',
       cid: 'object-storage',
@@ -267,6 +265,7 @@ describe('abacus-perf-test', () => {
     // default algorithm (HS256)
     const auth = process.env.SECURED === 'true' ?
       jwt.sign(token, process.env.JWTKEY, {
+        algorithm: process.env.JWTALGO,
         expiresIn: 43200
       }) : undefined;
 
