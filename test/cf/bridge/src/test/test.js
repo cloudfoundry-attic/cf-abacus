@@ -2,6 +2,7 @@
 
 const cp = require('child_process');
 const _ = require('underscore');
+const util = require('util');
 
 const request = require('abacus-request');
 const router = require('abacus-router');
@@ -103,8 +104,8 @@ describe('abacus-cf-bridge-itest', () => {
     start('abacus-usage-meter');
     start('abacus-usage-accumulator');
     start('abacus-usage-aggregator');
-    start('abacus-usage-reporting');
     start('abacus-usage-rate');
+    start('abacus-usage-reporting');
     start('abacus-cf-bridge');
   });
 
@@ -115,8 +116,8 @@ describe('abacus-cf-bridge-itest', () => {
     };
 
     stop('abacus-cf-bridge');
-    stop('abacus-usage-rate');
     stop('abacus-usage-reporting');
+    stop('abacus-usage-rate');
     stop('abacus-usage-aggregator');
     stop('abacus-usage-accumulator');
     stop('abacus-usage-meter');
@@ -128,8 +129,80 @@ describe('abacus-cf-bridge-itest', () => {
     server.close();
   });
 
+  const checkAllTimeWindows = (usage) => {
+    for (const windowType in timeWindows) {
+      const windowUsage = usage.windows[timeWindows[windowType]];
+      expect(windowUsage[0].quantity.consuming).to.equal(0.5);
+      expect(windowUsage[0].summary).to.be.above(0);
+      expect(windowUsage[0].charge).to.be.above(0);
+    }
+  };
+
+  const checkReport = (cb) => {
+    request.get('http://localhost:9088/v1/metering/organizations' +
+      '/:organization_id/aggregated/usage', {
+        organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c'
+      },
+      (error, response) => {
+        try {
+          expect(error).to.equal(undefined);
+
+          expect(response.body).to.contain.all.keys('resources', 'spaces');
+          const resources = response.body.resources;
+          expect(resources.length).to.equal(1);
+          expect(response.body.spaces.length).to.equal(1);
+
+          expect(resources[0]).to.contain.all.keys(
+            'plans', 'aggregated_usage');
+
+          const planUsage = resources[0].plans[0].aggregated_usage[0];
+          checkAllTimeWindows(planUsage);
+
+          const aggregatedUsage = resources[0].aggregated_usage[0];
+          checkAllTimeWindows(aggregatedUsage);
+
+          cb();
+        }
+        catch (e) {
+          const errorMsg = util.format('Check failed with %s.\nUsage report:\n',
+            e.stack,
+            response ? JSON.stringify(response.body, null, 2) : 'unknown');
+          cb(new Error(errorMsg, e));
+        }
+      });
+  };
+
+  const poll = (fn, done, timeout = 1000, interval = 100) => {
+    let lastError;
+
+    const doneInterceptor = (err) => {
+      if (!err) {
+        debug('Expectation in %s met', fn.name);
+        clearInterval(intervalTimer);
+        clearTimeout(timeoutTimer);
+        setImmediate(done);
+      }
+      lastError = err;
+    };
+
+    const intervalTimer = setInterval(() => {
+      debug('Calling %s ...', fn.name);
+      fn(doneInterceptor);
+    }, interval);
+
+    const timeoutTimer = setTimeout(() => {
+      debug('Clearing expectation timer ...');
+      clearInterval(intervalTimer);
+
+      const msg = util.format('Expectation not met for %d ms. Last error: %s',
+        timeout, lastError ? lastError.stack : 'unknown');
+      debug(msg);
+      setImmediate(() => done(lastError));
+    }, timeout);
+  };
+
   it('submit runtime usage to usage collector', function(done) {
-    this.timeout(30000);
+    this.timeout(60000);
 
     // Wait for bridge to start
     request.waitFor(
@@ -144,43 +217,7 @@ describe('abacus-cf-bridge-itest', () => {
           expect(response.statusCode).to.equal(200);
           expect(response.body).to.equal('Hello');
 
-          setTimeout(() => {
-            request.get('http://localhost:9088/v1/metering/organizations' +
-              '/:organization_id/aggregated/usage', {
-                organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c'
-              },
-            (error, response) => {
-              expect(error).to.equal(undefined);
-
-              console.log('Usage report: ',
-                JSON.stringify(response.body, null, 2));
-
-              expect(response.body).to.contain.all.keys('resources', 'spaces');
-              const resources = response.body.resources;
-              expect(resources.length).to.equal(1);
-              expect(response.body.spaces.length).to.equal(1);
-
-              expect(resources[0]).to.contain.all.keys(
-                'plans', 'aggregated_usage');
-
-              const checkAllTimeWindows = (usage) => {
-                for (const windowType in timeWindows) {
-                  const windowUsage = usage.windows[timeWindows[windowType]];
-                  expect(windowUsage[0].quantity.consuming).to.equal(0.5);
-                  expect(windowUsage[0].summary).to.be.above(0);
-                  expect(windowUsage[0].charge).to.be.above(0);
-                }
-              };
-
-              const planUsage = resources[0].plans[0].aggregated_usage[0];
-              checkAllTimeWindows(planUsage);
-
-              const aggregatedUsage = resources[0].aggregated_usage[0];
-              checkAllTimeWindows(aggregatedUsage);
-
-              done();
-            });
-          }, 20000);
+          poll(checkReport, done, 50000, 2000);
         });
       }
     );
