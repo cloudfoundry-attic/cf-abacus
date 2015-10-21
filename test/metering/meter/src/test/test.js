@@ -134,7 +134,7 @@ describe('abacus-usage-meter-itest', () => {
       resource_id: 'test-resource',
       resource_instance_id: riid(o, ri),
       plan_id: pid(ri, u),
-      consumer: { type: 'EXTERNAL', consumer_id: cid(o, ri) },
+      consumer_id: cid(o, ri),
       measured_usage: [
         { measure: 'storage', quantity: 1073741824 },
         { measure: 'light_api_calls', quantity: 1000 },

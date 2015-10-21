@@ -204,7 +204,7 @@ describe('abacus-perf-test', () => {
           }]
         }],
         consumers: [{
-          consumer_id: 'ALL',
+          consumer_id: 'UNKNOWN',
           windows: cwindow(nri, n),
           resources: [{
             resource_id: 'object-storage',

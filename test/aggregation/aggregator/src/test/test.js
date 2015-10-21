@@ -237,7 +237,7 @@ describe('abacus-usage-aggregator-itest', () => {
       resource_id: 'test-resource',
       resource_instance_id: riid(o, ri),
       plan_id: pid(ri, u),
-      consumer: { type: 'EXTERNAL', consumer_id: cid(o, ri) },
+      consumer_id: cid(o, ri),
       accumulated_usage: [
         {
           metric: 'storage',

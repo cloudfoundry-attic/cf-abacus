@@ -196,7 +196,7 @@ describe('abacus-usage-accumulator-itest', () => {
       resource_id: 'test-resource',
       resource_instance_id: riid(o, ri),
       plan_id: pid(ri, u),
-      consumer: { type: 'EXTERNAL', consumer_id: cid(o, ri) },
+      consumer_id: cid(o, ri),
       metered_usage: [
         { metric: 'storage', quantity: 1 },
         { metric: 'thousand_light_api_calls', quantity: 1 },

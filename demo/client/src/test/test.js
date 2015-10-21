@@ -61,10 +61,7 @@ describe('abacus-demo-client', () => {
               region: 'us',
               organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
               space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-              consumer: {
-                type: 'EXTERNAL',
-                consumer_id: 'bbeae239-f3f8-483c-9dd0-de6781c38bab'
-              },
+              consumer_id: 'external:bbeae239-f3f8-483c-9dd0-de6781c38bab',
               resource_id: 'object-storage',
               plan_id: 'basic',
               resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
@@ -91,10 +88,7 @@ describe('abacus-demo-client', () => {
               region: 'us',
               organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
               space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-              consumer: {
-                type: 'EXTERNAL',
-                consumer_id: 'bbeae239-f3f8-483c-9dd0-de6781c38bab'
-              },
+              consumer_id: 'external:bbeae239-f3f8-483c-9dd0-de6781c38bab',
               resource_id: 'object-storage',
               plan_id: 'basic',
               resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
@@ -121,10 +115,7 @@ describe('abacus-demo-client', () => {
               region: 'us',
               organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
               space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-              consumer: {
-                type: 'EXTERNAL',
-                consumer_id: 'bbeae239-f3f8-483c-9dd0-de6781c38bab'
-              },
+              consumer_id: 'external:bbeae239-f3f8-483c-9dd0-de6781c38bab',
               resource_id: 'object-storage',
               plan_id: 'basic',
               resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
@@ -301,7 +292,7 @@ describe('abacus-demo-client', () => {
             }]
           }],
           consumers: [{
-            consumer_id: 'bbeae239-f3f8-483c-9dd0-de6781c38bab',
+            consumer_id: 'external:bbeae239-f3f8-483c-9dd0-de6781c38bab',
             windows: [[{ charge: 0 }],
               [{ charge: 46.09 }],
               [{ charge: 46.09 }],
