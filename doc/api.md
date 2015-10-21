@@ -59,10 +59,7 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
       "region": "us-south",
       "organization_id": "54257f98-83f0-4eca-ae04-9ea35277a538",
       "space_id": "d98b5916-3c77-44b9-ac12-04456df23eae",
-      "consumer": {
-        "type": "CF_APP",
-        "consumer_id": "d98b5916-3c77-44b9-ac12-045678edabae"
-      },
+      "consumer_id": "app:d98b5916-3c77-44b9-ac12-045678edabae",
       "resource_id": "object-storage",
       "plan_id": "basic",
       "resource_instance_id": "d98b5916-3c77-44b9-ac12-04d61c7a4eae",
@@ -122,24 +119,8 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
           "space_id": {
             "type": "string"
           },
-          "consumer": {
-            "type": "object",
-            "required": [
-              "type", "consumer_id"
-            ],
-            "properties": {
-              "type": {
-                "enum": [
-                  "CF_APP",
-                  "EXTERNAL"
-                ],
-                "default": "CF_APP"
-              },
-              "consumer_id": {
-                "type": "string"
-              }
-            },
-            "additionalProperties": false
+          "consumer_id": {
+            "type": "string"
           },
           "resource_id": {
             "type": "string"
@@ -576,7 +557,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
       "charge": 46.09,
       "consumers": [
         {
-          "consumer_id": "d98b5916-3c77-44b9-ac12-045678edabae",
+          "consumer_id": "app:d98b5916-3c77-44b9-ac12-045678edabae",
           "charge": 46.09,
           "resources": [
             {
@@ -1022,26 +1003,8 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
               "title": "consumer",
               "type": "object",
               "properties": {
-                "consumer": {
-                  "title": "consumer",
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "title": "consumerType",
-                      "enum": [
-                        "CF_APP",
-                        "EXTERNAL"
-                      ],
-                      "default": "CF_APP"
-                    },
-                    "consumer_id": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "consumer_id"
-                  ],
-                  "additionalProperties": false
+                "consumer_id": {
+                  "type": "string"
                 },
                 "charge": {
                   "type": "number"
@@ -1159,7 +1122,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                 }
               },
               "required": [
-                "consumer",
+                "consumer_id",
                 "charge",
                 "resources"
               ],
@@ -1363,15 +1326,8 @@ type Resource {
   plans: [Plan]
 }
 
-enum ConsumerType { 'CF_APP', 'EXTERNAL' }
-
-type ConsumerID = {
-  type: ConsumerType
-  consumer_id: String
-}
-
 type Consumer {
-  consumer: ConsumerID
+  consumer_id: String
   charge: Float
   resources: [Resource]
 }
