@@ -1,0 +1,47 @@
+{
+  "name": "abacus-dedupe",
+  "description": "Duplicate detection using a LRU cache and bloom filters",
+  "license": "Apache-2.0",
+  "version": "0.0.2-rc.1",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/dedupe",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "lib/",
+    "src/"
+  ],
+  "main": "lib/index.js",
+  "scripts": {
+    "babel": "babel",
+    "test": "eslint && mocha",
+    "lint": "eslint",
+    "pub": "publish"
+  },
+  "dependencies": {
+    "abacus-debug": "file:../debug",
+    "bloem": "^0.2.4",
+    "lru-cache": "^2.6.5",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "abacus-babel": "file:../../../tools/babel",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-publish": "file:../../../tools/publish"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  }
+}

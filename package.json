@@ -82,6 +82,7 @@
     "abacus-dbclient": "file:lib/utils/dbclient",
     "abacus-dbserver": "file:lib/utils/dbserver",
     "abacus-debug": "file:lib/utils/debug",
+    "abacus-dedupe": "file:lib/utils/dedupe",
     "abacus-eval": "file:lib/utils/eval",
     "abacus-events": "file:lib/utils/events",
     "abacus-express": "file:lib/utils/express",

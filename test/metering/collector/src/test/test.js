@@ -146,7 +146,7 @@ describe('abacus-usage-collector-itest', () => {
         ]
       }, {
         start: start + u,
-        end: end + u,
+        end: end + u + 1,
         region: rid(o),
         organization_id: oid(o),
         space_id: sid(o, ri),
