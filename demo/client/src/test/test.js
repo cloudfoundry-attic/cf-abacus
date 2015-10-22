@@ -12,6 +12,7 @@ const commander = require('commander');
 const map = _.map;
 const omit = _.omit;
 const clone = _.clone;
+const range = _.range;
 
 // Parse command line options
 const argv = clone(process.argv);
@@ -39,17 +40,71 @@ const reporting = /:/.test(commander.reporting) ? commander.reporting :
 // Usage time window shift in milli-seconds
 const delta = commander.delta || 0;
 
+// The current time + 1 hour into the future
+const now = new Date(Date.now() + 3600000);
+
+// The current slack configuration
+const slack = /^[0-9]+[MDhms]$/.test(process.env.SLACK) ? {
+  scale : process.env.SLACK.charAt(process.env.SLACK.length - 1),
+  width : process.env.SLACK.match(/[0-9]+/)[0]
+} : {};
+
+// Calculates the max number of slack windows in a given time window
+const maxSlack = (w) => {
+  const slackscale = {
+    M: { 4: 1 },
+    D: { 4: 28, 3: 1 },
+    h: { 4: 672, 3: 24, 2: 1 },
+    m: { 4: 40320, 3: 1440, 2: 60, 1: 1 },
+    s: { 4: 2419200, 3: 86400, 2: 3600, 1: 60, 0: 1 }
+  };
+  if(slack.scale && slackscale[slack.scale][w])
+    return map(Array(Math.ceil(1 / slackscale[slack.scale][w] * slack.width)
+      + 1), () => 0);
+  return [0];
+};
+
+// Builds the expected window value based upon the
+// charge summary, quantity, cost, and window
+const buildWindow = (ch, s, q, c) => {
+  const windows = [];
+  map(range(5), (i) => {
+    const w = {};
+    // Adds the key value pair to o
+    // sets the value to zero if z is set
+    const addProperty = (k, v, o, z) => {
+      if(typeof v !== 'undefined')
+        o[k] = z ? 0 : v;
+    };
+    addProperty('charge', ch, w);
+    addProperty('summary', s, w);
+    addProperty('quantity', q, w);
+    addProperty('cost', c, w);
+    const ws = map(maxSlack(i), () => {
+      const wi = {};
+      addProperty('charge', ch, wi, true);
+      addProperty('summary', s, wi, true);
+      addProperty('quantity', q, wi, true);
+      addProperty('cost', c, wi, true);
+      return wi;
+    });
+    ws[0] = w;
+    windows.push(ws);
+  });
+  return windows;
+}
+
 describe('abacus-demo-client', () => {
   it('submits usage for a sample resource and retrieves an aggregated ' +
     'usage report', function(done) {
       // Configure the test timeout
       const timeout = 20000;
       this.timeout(timeout + 5000);
-      const giveup = Date.now() + timeout;
+      const giveup = now.getTime() + timeout;
 
       // Test usage to be submitted by the client
-      const start = Date.now() + delta;
-      const end = Date.now() + delta;
+      const start = now.getTime() + delta;
+      const end = now.getTime() + delta;
       const usage = [
         {
           message:
@@ -137,235 +192,94 @@ describe('abacus-demo-client', () => {
       const report = {
         organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
         region: 'us',
-        windows: [[{ charge: 0 }],
-          [{ charge: 46.09 }],
-          [{ charge: 46.09 }],
-          [{ charge: 46.09 }],
-          [{ charge: 46.09 }]
-        ],
+        windows: buildWindow(46.09),
         resources: [{
           resource_id: 'object-storage',
-          windows: [[{ charge: 0 }],
-            [{ charge: 46.09 }],
-            [{ charge: 46.09 }],
-            [{ charge: 46.09 }],
-            [{ charge: 46.09 }]
-          ],
+          windows: buildWindow(46.09),
           aggregated_usage: [{
             metric: 'storage',
-            windows: [[{ quantity: 0, charge: 0, summary: 0 }],
-              [{ quantity: 1, charge: 1, summary: 1 }],
-              [{ quantity: 1, charge: 1, summary: 1 }],
-              [{ quantity: 1, charge: 1, summary: 1 }],
-              [{ quantity: 1, charge: 1, summary: 1 }]
-            ]
+            windows: buildWindow(1, 1, 1)
           }, {
             metric: 'thousand_light_api_calls',
-            windows: [[{ quantity: 0, charge: 0, summary: 0 }],
-              [{ quantity: 3, charge: 0.09, summary: 3 }],
-              [{ quantity: 3, charge: 0.09, summary: 3 }],
-              [{ quantity: 3, charge: 0.09, summary: 3 }],
-              [{ quantity: 3, charge: 0.09, summary: 3 }]
-            ]
+            windows: buildWindow(0.09, 3, 3)
           }, {
             metric: 'heavy_api_calls',
-            windows: [[{ quantity: 0, charge: 0, summary: 0 }],
-              [{ quantity: 300, charge: 45, summary: 300 }],
-              [{ quantity: 300, charge: 45, summary: 300 }],
-              [{ quantity: 300, charge: 45, summary: 300 }],
-              [{ quantity: 300, charge: 45, summary: 300 }]
-            ]
+            windows: buildWindow(45, 300, 300)
           }],
           plans: [{
             plan_id: 'basic',
-            windows: [[{ charge: 0 }],
-              [{ charge: 46.09 }],
-              [{ charge: 46.09 }],
-              [{ charge: 46.09 }],
-              [{ charge: 46.09 }]
-            ],
+            windows: buildWindow(46.09),
             aggregated_usage: [{
               metric: 'storage',
-              windows: [[{ quantity: 0, cost: 0, charge: 0, summary: 0 }],
-                [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
-                [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
-                [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
-                [{ quantity: 1, cost: 1, charge: 1, summary: 1 }]
-              ]
+              windows: buildWindow(1, 1, 1, 1)
             }, {
               metric: 'thousand_light_api_calls',
-              windows: [
-              [{ quantity: 0, cost: 0, charge: 0, summary: 0 }],
-                [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
-                [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
-                [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
-                [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }]
-              ]
+              windows: buildWindow(0.09, 3, 3, 0.09)
             }, {
               metric: 'heavy_api_calls',
-              windows: [
-              [{ quantity: 0, cost: 0, charge: 0, summary: 0 }],
-                [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
-                [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
-                [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
-                [{ quantity: 300, cost: 45, charge: 45, summary: 300 }]
-              ]
+              windows: buildWindow(45, 300, 300, 45)
             }]
           }]
         }],
         spaces: [{
           space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-          windows: [[{ charge: 0 }],
-            [{ charge: 46.09 }],
-            [{ charge: 46.09 }],
-            [{ charge: 46.09 }],
-            [{ charge: 46.09 }]
-          ],
+          windows: buildWindow(46.09),
           resources: [{
             resource_id: 'object-storage',
-            windows: [[{ charge: 0 }],
-              [{ charge: 46.09 }],
-              [{ charge: 46.09 }],
-              [{ charge: 46.09 }],
-              [{ charge: 46.09 }]
-            ],
+            windows: buildWindow(46.09),
             aggregated_usage: [{
               metric: 'storage',
-              windows: [[{ quantity: 0, charge: 0, summary: 0 }],
-                [{ quantity: 1, charge: 1, summary: 1 }],
-                [{ quantity: 1, charge: 1, summary: 1 }],
-                [{ quantity: 1, charge: 1, summary: 1 }],
-                [{ quantity: 1, charge: 1, summary: 1 }]
-              ]
+              windows: buildWindow(1, 1, 1)
             }, {
               metric: 'thousand_light_api_calls',
-              windows: [[{ quantity: 0, charge: 0, summary: 0 }],
-                [{ quantity: 3, charge: 0.09, summary: 3 }],
-                [{ quantity: 3, charge: 0.09, summary: 3 }],
-                [{ quantity: 3, charge: 0.09, summary: 3 }],
-                [{ quantity: 3, charge: 0.09, summary: 3 }]
-              ]
+              windows: buildWindow(0.09, 3, 3)
             }, {
               metric: 'heavy_api_calls',
-              windows: [[{ quantity: 0, charge: 0, summary: 0 }],
-                [{ quantity: 300, charge: 45, summary: 300 }],
-                [{ quantity: 300, charge: 45, summary: 300 }],
-                [{ quantity: 300, charge: 45, summary: 300 }],
-                [{ quantity: 300, charge: 45, summary: 300 }]
-              ]
+              windows: buildWindow(45, 300, 300)
             }],
             plans: [{
               plan_id: 'basic',
-              windows: [[{ charge: 0 }],
-                [{ charge: 46.09 }],
-                [{ charge: 46.09 }],
-                [{ charge: 46.09 }],
-                [{ charge: 46.09 }]
-              ],
+              windows: buildWindow(46.09),
               aggregated_usage: [{
                 metric: 'storage',
-                windows: [[{ quantity: 0, cost: 0, charge: 0, summary: 0 }],
-                  [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
-                  [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
-                  [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
-                  [{ quantity: 1, cost: 1, charge: 1, summary: 1 }]
-                ]
+                windows: buildWindow(1, 1, 1, 1)
               }, {
                 metric: 'thousand_light_api_calls',
-                windows: [
-                [{ quantity: 0, cost: 0, charge: 0, summary: 0 }],
-                  [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
-                  [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
-                  [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
-                  [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }]
-                ]
+                windows: buildWindow(0.09, 3, 3, 0.09)
               }, {
                 metric: 'heavy_api_calls',
-                windows: [
-                [{ quantity: 0, cost: 0, charge: 0, summary: 0 }],
-                  [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
-                  [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
-                  [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
-                  [{ quantity: 300, cost: 45, charge: 45, summary: 300 }]
-                ]
+                windows: buildWindow(45, 300, 300, 45)
               }]
             }]
           }],
           consumers: [{
             consumer_id: 'external:bbeae239-f3f8-483c-9dd0-de6781c38bab',
-            windows: [[{ charge: 0 }],
-              [{ charge: 46.09 }],
-              [{ charge: 46.09 }],
-              [{ charge: 46.09 }],
-              [{ charge: 46.09 }]
-            ],
+            windows: buildWindow(46.09),
             resources: [{
               resource_id: 'object-storage',
-              windows: [[{ charge: 0 }],
-                [{ charge: 46.09 }],
-                [{ charge: 46.09 }],
-                [{ charge: 46.09 }],
-                [{ charge: 46.09 }]
-              ],
+              windows: buildWindow(46.09),
               aggregated_usage: [{
                 metric: 'storage',
-                windows: [[{ quantity: 0, charge: 0, summary: 0 }],
-                  [{ quantity: 1, charge: 1, summary: 1 }],
-                  [{ quantity: 1, charge: 1, summary: 1 }],
-                  [{ quantity: 1, charge: 1, summary: 1 }],
-                  [{ quantity: 1, charge: 1, summary: 1 }]
-                ]
+                windows: buildWindow(1, 1, 1)
               }, {
                 metric: 'thousand_light_api_calls',
-                windows: [[{ quantity: 0, charge: 0, summary: 0 }],
-                  [{ quantity: 3, charge: 0.09, summary: 3 }],
-                  [{ quantity: 3, charge: 0.09, summary: 3 }],
-                  [{ quantity: 3, charge: 0.09, summary: 3 }],
-                  [{ quantity: 3, charge: 0.09, summary: 3 }]
-                ]
+                windows: buildWindow(0.09, 3, 3)
               }, {
                 metric: 'heavy_api_calls',
-                windows: [[{ quantity: 0, charge: 0, summary: 0 }],
-                  [{ quantity: 300, charge: 45, summary: 300 }],
-                  [{ quantity: 300, charge: 45, summary: 300 }],
-                  [{ quantity: 300, charge: 45, summary: 300 }],
-                  [{ quantity: 300, charge: 45, summary: 300 }]
-                ]
+                windows: buildWindow(45, 300, 300)
               }],
               plans: [{
                 plan_id: 'basic',
-                windows: [[{ charge:  0}],
-                  [{ charge: 46.09 }],
-                  [{ charge: 46.09 }],
-                  [{ charge: 46.09 }],
-                  [{ charge: 46.09 }]
-                ],
+                windows: buildWindow(46.09),
                 aggregated_usage: [{
                   metric: 'storage',
-                  windows: [[{ quantity: 0, cost: 0, charge: 0, summary: 0 }],
-                    [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
-                    [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
-                    [{ quantity: 1, cost: 1, charge: 1, summary: 1 }],
-                    [{ quantity: 1, cost: 1, charge: 1, summary: 1 }]
-                  ]
+                  windows: buildWindow(1, 1, 1, 1)
                 }, {
                   metric: 'thousand_light_api_calls',
-                  windows: [
-                  [{ quantity: 0, cost: 0, charge: 0, summary: 0 }],
-                    [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
-                    [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
-                    [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }],
-                    [{ quantity: 3, cost: 0.09, charge: 0.09, summary: 3 }]
-                  ]
+                  windows: buildWindow(0.09, 3, 3, 0.09)
                 }, {
                   metric: 'heavy_api_calls',
-                  windows: [
-                  [{ quantity: 0, cost: 0, charge: 0, summary: 0 }],
-                    [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
-                    [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
-                    [{ quantity: 300, cost: 45, charge: 45, summary: 300 }],
-                    [{ quantity: 300, cost: 45, charge: 45, summary: 300 }]
-                  ]
+                  windows: buildWindow(45, 300, 300, 45)
                 }]
               }]
             }]
