@@ -27,14 +27,34 @@ const timeWindows = {
   'month'  : 4
 };
 
+// Checks if the difference between start and end time fall within a window
+const isWithinWindow = (start, end, timeWindow) => {
+  // [Second, Minute, Hour, Day, Month]
+  const timescale = [1, 100, 10000, 1000000, 100000000];
+  // Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
+  const dateUTCNumbify = (t) => {
+    const d = new Date(t);
+    return d.getUTCFullYear() * 10000000000 + d.getUTCMonth() * timescale[4]
+      + d.getUTCDate() * timescale[3] + d.getUTCHours() * timescale[2]
+      + d.getUTCMinutes() * timescale[1] + d.getUTCSeconds();
+  };
+
+  if(Math.floor(dateUTCNumbify(end) / timescale[timeWindow]) -
+    Math.floor(dateUTCNumbify(start) / timescale[timeWindow]) === 0)
+    return true;
+  return false;
+};
+
 process.env.API = 'http://localhost:4321';
 process.env.UAA = 'http://localhost:4321';
 
 describe('abacus-cf-bridge-itest', () => {
   let server;
+  let submittime;
 
   before(() => {
     const start = (module) => {
+      submittime = new Date();
       const c = cp.spawn('npm', ['run', 'start'], {
         cwd: moduleDir(module),
         env: clone(process.env)
@@ -60,7 +80,7 @@ describe('abacus-cf-bridge-itest', () => {
             metadata: {
               guid: '904419c4',
               url: '/v2/app_usage_events/904419c4',
-              created_at: new Date().toISOString()
+              created_at: submittime.toISOString()
             },
             entity: {
               state: 'STARTED',
@@ -129,12 +149,14 @@ describe('abacus-cf-bridge-itest', () => {
     server.close();
   });
 
-  const checkAllTimeWindows = (usage) => {
+  const checkAllTimeWindows = (usage, reporttime) => {
     for (const windowType in timeWindows) {
-      const windowUsage = usage.windows[timeWindows[windowType]];
-      expect(windowUsage[0].quantity.consuming).to.equal(0.5);
-      expect(windowUsage[0].summary).to.be.above(0);
-      expect(windowUsage[0].charge).to.be.above(0);
+      if(isWithinWindow(submittime, reporttime, timeWindows[windowType])) {
+        const windowUsage = usage.windows[timeWindows[windowType]];
+        expect(windowUsage[0].quantity.consuming).to.equal(0.5);
+        expect(windowUsage[0].summary).to.be.above(0);
+        expect(windowUsage[0].charge).to.be.above(0);
+      }
     }
   };
 
@@ -151,15 +173,16 @@ describe('abacus-cf-bridge-itest', () => {
           const resources = response.body.resources;
           expect(resources.length).to.equal(1);
           expect(response.body.spaces.length).to.equal(1);
+          const reporttime = new Date();
 
           expect(resources[0]).to.contain.all.keys(
             'plans', 'aggregated_usage');
 
           const planUsage = resources[0].plans[0].aggregated_usage[0];
-          checkAllTimeWindows(planUsage);
+          checkAllTimeWindows(planUsage, reporttime);
 
           const aggregatedUsage = resources[0].aggregated_usage[0];
-          checkAllTimeWindows(aggregatedUsage);
+          checkAllTimeWindows(aggregatedUsage, reporttime);
 
           cb();
         }
