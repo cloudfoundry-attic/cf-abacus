@@ -32,6 +32,7 @@
     "abacus-debug": "file:../debug",
     "abacus-partition": "file:../partition",
     "abacus-perf": "file:../perf",
+    "abacus-request": "file:../request",
     "abacus-transform": "file:../transform",
     "memdown": "^1.1.0",
     "pouchdb": "^5.0.0",
