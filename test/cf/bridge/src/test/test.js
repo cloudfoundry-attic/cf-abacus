@@ -39,10 +39,8 @@ const isWithinWindow = (start, end, timeWindow) => {
       + d.getUTCMinutes() * timescale[1] + d.getUTCSeconds();
   };
 
-  if(Math.floor(dateUTCNumbify(end) / timescale[timeWindow]) -
-    Math.floor(dateUTCNumbify(start) / timescale[timeWindow]) === 0)
-    return true;
-  return false;
+  return Math.floor(dateUTCNumbify(end) / timescale[timeWindow]) -
+    Math.floor(dateUTCNumbify(start) / timescale[timeWindow]) === 0;
 };
 
 process.env.API = 'http://localhost:4321';
@@ -118,6 +116,7 @@ describe('abacus-cf-bridge-itest', () => {
     server = app.listen(4321);
 
     start('abacus-dbserver');
+    start('abacus-authserver-stub');
     start('abacus-provisioning-stub');
     start('abacus-account-stub');
     start('abacus-usage-collector');
@@ -144,6 +143,7 @@ describe('abacus-cf-bridge-itest', () => {
     stop('abacus-usage-collector');
     stop('abacus-account-stub');
     stop('abacus-provisioning-stub');
+    stop('abacus-authserver-stub');
     stop('abacus-dbserver');
 
     server.close();
