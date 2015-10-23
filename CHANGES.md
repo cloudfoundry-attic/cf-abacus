@@ -5,7 +5,46 @@ The Abacus usage metering and aggregation service.
 
 ---
 
-### v0.0.2 - 10/16/2015
+### v0.0.2-rc.2 - 10/23/2015
+
+##### Usage submission
+- Change consumer field type to a string
+- Improve error reporting
+- Store provider client id with submitted usage
+
+##### Usage accumulation
+- Bug fixes with usage accumulation and slack windows
+- Improve reliability of duplicate usage doc detection
+
+##### Usage reports
+- Fix handling of undefined usage values
+
+##### App usage metering
+- Improvements to make test logic independent of timing
+- Throttle usage submission at startup time
+
+##### Security
+- Pass Abacus token instead of client token to resource config service
+- Add a test UAA stub service allowing all tests to run with security
+- Use more consistent config variable names
+
+##### Performance improvements
+- Faster duplicate usage doc detection
+- Reduced number of database writes per usage doc
+- Fixed Node.js IO starvation issues under load
+
+##### Misc
+- More flexible database name configuration
+- More flexible database partitioning configuration
+
+##### Prerequisites
+- Node.js 0.10, 0.12, 4.2
+- CouchDB 1.6 compatible database
+- Cloud Foundry v210+
+
+---
+
+### v0.0.2-rc.1 - 10/16/2015
 
 ##### Usage submission
 - Simpler and more consistent usage submission API
@@ -56,9 +95,9 @@ The Abacus usage metering and aggregation service.
 - Integration and performance tests
 
 ##### Prerequisites
-- Node.js 0.10, 0.12 or 4.0
+- Node.js 0.10, 0.12, 4.2
 - CouchDB 1.6 compatible database
-- Cloud Foundry v210
+- Cloud Foundry v210+
 
 ---
 
