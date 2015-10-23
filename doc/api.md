@@ -56,8 +56,7 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
     {
       "start": 1396421450000,
       "end": 1396421451000,
-      "region": "us-south",
-      "organization_id": "54257f98-83f0-4eca-ae04-9ea35277a538",
+      "organization_id": "us-south:54257f98-83f0-4eca-ae04-9ea35277a538",
       "space_id": "d98b5916-3c77-44b9-ac12-04456df23eae",
       "consumer_id": "app:d98b5916-3c77-44b9-ac12-045678edabae",
       "resource_id": "object-storage",
@@ -109,9 +108,6 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
           "end": {
             "type": "integer",
             "format": "utc-millisec"
-          },
-          "region": {
-            "type": "string"
           },
           "organization_id": {
             "type": "string"
@@ -547,8 +543,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
   "start": 1435622400000,
   "end": 1435708799999,
   "processed": 1435708800000,
-  "organization_id": "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
-  "region": "us-south",
+  "organization_id": "us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
   "charge": 46.09,
   "id": "k-a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27-t-0001435622400000",
   "spaces": [
@@ -751,9 +746,6 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
     "processed": {
       "type": "integer",
       "format": "utc-millisec"
-    },
-    "region": {
-      "type": "string"
     },
     "organization_id": {
       "type": "string"
@@ -1182,7 +1174,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
 ```graphql
 {
   organization(
-    organization_id: "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+    organization_id: "us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
     time: 1435622400000) {
       organization_id,
       resources {
@@ -1197,7 +1189,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
 
 {
   organization(
-    organization_id: "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+    organization_id: "us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
     time: 1435622400000) {
       organization_id,
       spaces {
@@ -1215,7 +1207,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
 
 {
   organization(
-    organization_id: "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+    organization_id: "us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
     time: 1435622400000) {
       organization_id,
       spaces {
@@ -1236,7 +1228,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
 
 {
   organization(
-    organization_id: "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+    organization_id: "us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
     time: 1435622400000) {
       organization_id,
       spaces {
@@ -1250,7 +1242,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
 
 {
   organization(
-    organization_id: "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+    organization_id: "us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
     time: 1435622400000) {
       organization_id,
       resources {
@@ -1266,8 +1258,8 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
 {
   organizations(
     organization_ids: [
-      "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",                                      
-      "b3d7fe4d-3cb1-4cc3-a831-ffe98e20cf28"],
+      "us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",                                      
+      "us-south:b3d7fe4d-3cb1-4cc3-a831-ffe98e20cf28"],
     time: 1435622400000) {
       organization_id,
       resources {
@@ -1343,7 +1335,6 @@ type OrganizationReport {
   id: String
   start: Int
   end: Int
-  region: String
   organization_id: String
   charge: Float
   resources: [Resource]

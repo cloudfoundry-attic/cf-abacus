@@ -113,10 +113,9 @@ describe('abacus-demo-client', () => {
             usage: [{
               start: start,
               end: end,
-              region: 'us',
-              organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+              organization_id: 'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
               space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-              consumer_id: 'external:bbeae239-f3f8-483c-9dd0-de6781c38bab',
+              consumer_id: 'app:bbeae239-f3f8-483c-9dd0-de6781c38bab',
               resource_id: 'object-storage',
               plan_id: 'basic',
               resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
@@ -140,10 +139,9 @@ describe('abacus-demo-client', () => {
             usage: [{
               start: start + 1,
               end: end + 1,
-              region: 'us',
-              organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+              organization_id: 'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
               space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-              consumer_id: 'external:bbeae239-f3f8-483c-9dd0-de6781c38bab',
+              consumer_id: 'app:bbeae239-f3f8-483c-9dd0-de6781c38bab',
               resource_id: 'object-storage',
               plan_id: 'basic',
               resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
@@ -167,10 +165,9 @@ describe('abacus-demo-client', () => {
             usage: [{
               start: start + 2,
               end: end + 2,
-              region: 'us',
-              organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+              organization_id: 'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
               space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-              consumer_id: 'external:bbeae239-f3f8-483c-9dd0-de6781c38bab',
+              consumer_id: 'app:bbeae239-f3f8-483c-9dd0-de6781c38bab',
               resource_id: 'object-storage',
               plan_id: 'basic',
               resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
@@ -190,8 +187,7 @@ describe('abacus-demo-client', () => {
 
       // Expected usage report for the test organization
       const report = {
-        organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-        region: 'us',
+        organization_id: 'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
         windows: buildWindow(46.09),
         resources: [{
           resource_id: 'object-storage',
@@ -253,7 +249,7 @@ describe('abacus-demo-client', () => {
             }]
           }],
           consumers: [{
-            consumer_id: 'external:bbeae239-f3f8-483c-9dd0-de6781c38bab',
+            consumer_id: 'app:bbeae239-f3f8-483c-9dd0-de6781c38bab',
             windows: buildWindow(46.09),
             resources: [{
               resource_id: 'object-storage',
@@ -326,7 +322,7 @@ describe('abacus-demo-client', () => {
       const get = (done) => {
         request.get(reporting + '/v1/metering/organizations' +
           '/:organization_id/aggregated/usage', {
-            organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27'
+            organization_id: 'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27'
           }, (err, val) => {
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(200);
