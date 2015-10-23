@@ -46,7 +46,7 @@ var throttle = function(fn, max) {
       running = running - 1;
       if(queue.length) {
         var next = queue.shift();
-        process.nextTick(function() {
+        setImmediate(function() {
           run(next);
         });
       }
