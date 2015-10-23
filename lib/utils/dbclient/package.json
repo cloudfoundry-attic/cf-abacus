@@ -2,7 +2,7 @@
   "name": "abacus-dbclient",
   "description": "Subset of the PouchDB API over a set of DB partitions",
   "license": "Apache-2.0",
-  "version": "0.0.2-rc.1",
+  "version": "0.0.2-rc.2",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/dbclient",
   "bugs": {

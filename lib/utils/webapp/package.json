@@ -2,7 +2,7 @@
   "name": "abacus-webapp",
   "description": "Setup Express with a process cluster and a selection of useful Express middleware",
   "license": "Apache-2.0",
-  "version": "0.0.2-rc.1",
+  "version": "0.0.2-rc.2",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/webapp",
   "bugs": {
