@@ -8,10 +8,9 @@ const commander = require('commander');
 const batch = require('abacus-batch');
 const throttle = require('abacus-throttle');
 const request = require('abacus-request');
-const urienv = require('abacus-urienv');
-
 const dbclient = require('abacus-dbclient');
-const db = require('abacus-aggregation-db');
+const dataflow = require('abacus-dataflow');
+const yieldable = require('abacus-yieldable');
 
 const map = _.map;
 const reduce = _.reduce;
@@ -515,19 +514,16 @@ describe('abacus-usage-reporting-itest', () => {
       return report;
     };
 
-    // Resolve db URI
-    const uri = urienv({
-      couchdb: 5984
-    });
-
-    const ratedb = batch(db.logdb(uri.couchdb, 'abacus-rating-rated-usage'));
 
     // Post rated usage doc, throttled to default concurrent requests
+    const ratedb = dataflow.db('abacus-rating-rated-usage');
+    const dbput = yieldable.functioncb(ratedb.put);
+
     const post = throttle((o, ri, u, cb) => {
       debug('Submit rated usage for org%d instance%d usage%d',
         o + 1, ri + 1, u + 1);
 
-      ratedb.put(addWindows(ratedTemplate(o, ri, u)), (err, val) => {
+      dbput(addWindows(ratedTemplate(o, ri, u)), (err, val) => {
         debug('Verify rated usage for org%d', o + 1);
 
         expect(err).to.equal(null);

@@ -37,7 +37,6 @@
     "abacus-usage-accumulator": "file:../../../lib/aggregation/accumulator",
     "abacus-usage-aggregator": "file:../../../lib/aggregation/aggregator",
     "abacus-instance-launcher": "file:../../../lib/aggregation/launcher",
-    "abacus-aggregation-db": "file:../../../lib/aggregation/db",
     "abacus-usage-reporting": "file:../../../lib/aggregation/reporting",
     "abacus-usage-collector": "file:../../../lib/metering/collector",
     "abacus-usage-meter": "file:../../../lib/metering/meter",
