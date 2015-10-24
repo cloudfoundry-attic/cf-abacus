@@ -4,10 +4,6 @@ matrix:
       env: NODE_VERSION="4.2"
     - os: "linux"
       env: NODE_VERSION="0.12"
-    - os: "linux"
-      env: NODE_VERSION="0.10"
-    - os: "osx"
-      env: NODE_VERSION="4.2"
 
 before_install:
   - rm -rf ~/.nvm
