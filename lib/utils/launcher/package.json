@@ -1,10 +1,10 @@
 {
-  "name": "abacus-instance-launcher",
+  "name": "abacus-launcher",
   "description": "Launch multiple instances of an application",
   "license": "Apache-2.0",
   "version": "0.0.2-rc.2",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/aggregation/launcher",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/launcher",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -33,8 +33,8 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-debug": "file:../../utils/debug",
-    "abacus-vcapenv": "file:../../utils/vcapenv",
+    "abacus-debug": "file:../debug",
+    "abacus-vcapenv": "file:../vcapenv",
     "commander": "^2.8.1",
     "underscore": "^1.8.3"
   },
