@@ -12,7 +12,7 @@ const commander = require('commander');
 const map = _.map;
 const omit = _.omit;
 const clone = _.clone;
-const range = _.range;
+// const range = _.range;
 
 // Parse command line options
 const argv = clone(process.argv);
@@ -41,58 +41,55 @@ const reporting = /:/.test(commander.reporting) ? commander.reporting :
 const delta = commander.delta || 0;
 
 // The current time + 1 hour into the future
-const now = new Date(Date.now() + 3600000);
-
-// The current slack configuration
-const slack = /^[0-9]+[MDhms]$/.test(process.env.SLACK) ? {
-  scale : process.env.SLACK.charAt(process.env.SLACK.length - 1),
-  width : process.env.SLACK.match(/[0-9]+/)[0]
-} : {};
-
-// Calculates the max number of slack windows in a given time window
-const maxSlack = (w) => {
-  const slackscale = {
-    M: { 4: 1 },
-    D: { 4: 28, 3: 1 },
-    h: { 4: 672, 3: 24, 2: 1 },
-    m: { 4: 40320, 3: 1440, 2: 60, 1: 1 },
-    s: { 4: 2419200, 3: 86400, 2: 3600, 1: 60, 0: 1 }
-  };
-  if(slack.scale && slackscale[slack.scale][w])
-    return map(Array(Math.ceil(1 / slackscale[slack.scale][w] * slack.width)
-      + 1), () => 0);
-  return [0];
-};
+const now = new Date(Date.now());
 
 // Builds the expected window value based upon the
 // charge summary, quantity, cost, and window
 const buildWindow = (ch, s, q, c) => {
-  const windows = [];
-  map(range(5), (i) => {
-    const w = {};
-    // Adds the key value pair to o
-    // sets the value to zero if z is set
-    const addProperty = (k, v, o, z) => {
-      if(typeof v !== 'undefined')
-        o[k] = z ? 0 : v;
+  const addProperty = (k, v, o, z) => {
+    if(typeof v !== 'undefined')
+      o[k] = z ? 0 : v;
+  };
+  const win = {};
+  addProperty('charge', ch, win);
+  addProperty('summary', s, win);
+  addProperty('quantity', q, win);
+  addProperty('cost', c, win);
+  return win;
+};
+
+// Prunes all the windows of everything but the monthly charge
+const prune = (k, v) => {
+  if(k === 'windows') {
+    const nwin = {};
+    const sumWindowValue = (w1, w2, k) => {
+      if(typeof w1[k] !== 'undefined') {
+        nwin[k] = w2 ? w1[k] + w2[k] : w1[k];
+      }
     };
-    addProperty('charge', ch, w);
-    addProperty('summary', s, w);
-    addProperty('quantity', q, w);
-    addProperty('cost', c, w);
-    const ws = map(maxSlack(i), () => {
-      const wi = {};
-      addProperty('charge', ch, wi, true);
-      addProperty('summary', s, wi, true);
-      addProperty('quantity', q, wi, true);
-      addProperty('cost', c, wi, true);
-      return wi;
-    });
-    ws[0] = w;
-    windows.push(ws);
-  });
-  return windows;
+    sumWindowValue(v[4][0], v[4][1], 'charge');
+    sumWindowValue(v[4][0], v[4][1], 'summary');
+    sumWindowValue(v[4][0], v[4][1], 'cost');
+    sumWindowValue(v[4][0], v[4][1], 'quantity');
+    return nwin;
+  }
 }
+
+// Extend an object using an interceptor
+// if interceptor returns a value, then use it to replace the original value
+const cextend = (o, interceptor) => {
+  const deepcopy = (k, v) => {
+    // if value is an object, then extend it using the interceptor
+    if(typeof v === 'object') return cextend(v, interceptor);
+    return v;
+  };
+
+  // Go through object keys and extend
+  map(o, (v, k) => {
+    o[k] = interceptor(k, v) || deepcopy(k, v);
+  });
+  return o;
+};
 
 describe('abacus-demo-client', () => {
   it('submits usage for a sample resource and retrieves an aggregated ' +
@@ -327,9 +324,10 @@ describe('abacus-demo-client', () => {
 
             // Compare the usage report we got with the expected report
             console.log('Processed %d usage docs', processed(val));
+            const actual = cextend(omit(val.body,
+              'id', 'processed', 'start', 'end'), prune);
             try {
-              expect(omit(val.body,
-                'id', 'processed', 'start', 'end')).to.deep.equal(report);
+              expect(actual).to.deep.equal(report);
               console.log('\n', util.inspect(val.body, {
                 depth: 10
               }), '\n');
@@ -342,8 +340,7 @@ describe('abacus-demo-client', () => {
               // the processing of the submitted usage must have failed
               if(Date.now() >= giveup) {
                 console.log('All submitted usage still not processed\n');
-                expect(omit(val.body,
-                  'id', 'processed', 'start', 'end')).to.deep.equal(report);
+                expect(actual).to.deep.equal(report);
               }
               else
                 setTimeout(() => get(done), 250);
