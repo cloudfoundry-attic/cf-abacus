@@ -224,8 +224,7 @@ describe('abacus-cf-bridge-itest', () => {
     }, timeout);
   };
 
-  it('submit runtime usage to usage collector', function(done) {
-    this.timeout(60000);
+  it('submit runtime usage to usage collector', (done) => {
 
     // Wait for bridge to start
     request.waitFor(

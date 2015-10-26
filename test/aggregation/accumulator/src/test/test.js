@@ -147,8 +147,8 @@ describe('abacus-usage-accumulator-itest', () => {
 
   it('accumulate metered usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs, with
-    // a minimum of 20 secs
-    const timeout = Math.max(20000,
+    // a minimum of 60 secs
+    const timeout = Math.max(60000,
       100 * orgs * resourceInstances * usage);
     this.timeout(timeout + 2000);
 

@@ -167,7 +167,7 @@ var runCLI = function() {
 
   // Configure Mocha
   var mocha = new Mocha({
-    timeout: 20000,
+    timeout: 60000,
     useColors: colorify(commander)
   });
 

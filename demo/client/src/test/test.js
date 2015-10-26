@@ -96,11 +96,9 @@ const buildWindow = (ch, s, q, c) => {
 
 describe('abacus-demo-client', () => {
   it('submits usage for a sample resource and retrieves an aggregated ' +
-    'usage report', function(done) {
+    'usage report', (done) => {
       // Configure the test timeout
-      const timeout = 20000;
-      this.timeout(timeout + 5000);
-      const giveup = now.getTime() + timeout;
+      const giveup = now.getTime() + 60000;
 
       // Test usage to be submitted by the client
       const start = now.getTime() + delta;
