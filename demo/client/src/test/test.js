@@ -63,9 +63,8 @@ const prune = (k, v) => {
   if(k === 'windows') {
     const nwin = {};
     const sumWindowValue = (w1, w2, k) => {
-      if(typeof w1[k] !== 'undefined') {
+      if(typeof w1[k] !== 'undefined')
         nwin[k] = w2 ? w1[k] + w2[k] : w1[k];
-      }
     };
     sumWindowValue(v[4][0], v[4][1], 'charge');
     sumWindowValue(v[4][0], v[4][1], 'summary');
