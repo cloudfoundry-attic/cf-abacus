@@ -109,7 +109,7 @@ describe('abacus-usage-collector-itest', () => {
     routes.post('/v1/metering/normalized/usage', meter);
     app.use(routes);
     app.use(router.batch(routes));
-    app.listen(9081);
+    app.listen(9100);
 
     // Initialize usage doc properties with unique values
     const start = 1435629365220 + tshift;

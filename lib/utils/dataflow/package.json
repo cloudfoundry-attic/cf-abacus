@@ -38,6 +38,7 @@
     "abacus-dbclient": "file:../dbclient",
     "abacus-debug": "file:../debug",
     "abacus-dedupe": "file:../dedupe",
+    "abacus-eureka": "file:../eureka",
     "abacus-lock": "file:../lock",
     "abacus-lrudown": "file:../lrudown",
     "abacus-partition": "file:../partition",

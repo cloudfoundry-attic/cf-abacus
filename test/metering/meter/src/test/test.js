@@ -103,7 +103,7 @@ describe('abacus-usage-meter-itest', () => {
     routes.post('/v1/metering/metered/usage', accumulate);
     app.use(routes);
     app.use(router.batch(routes));
-    app.listen(9100);
+    app.listen(9200);
 
     // Initialize usage doc properties with unique values
     const start = 1435629365220 + tshift;
@@ -163,7 +163,7 @@ describe('abacus-usage-meter-itest', () => {
         o + 1, ri + 1, u + 1);
 
       brequest.post('http://localhost::p/v1/metering/normalized/usage',
-        { p: 9081, body: normalizedTemplate(o, ri, u) }, (err, val) => {
+        { p: 9100, body: normalizedTemplate(o, ri, u) }, (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);
           expect(val.headers.location).to.not.equal(undefined);
@@ -222,7 +222,7 @@ describe('abacus-usage-meter-itest', () => {
 
     // Wait for usage meter to start
     request.waitFor('http://localhost::p/batch',
-      { p: 9081 }, (err, value) => {
+      { p: 9100 }, (err, value) => {
         // Failed to ping usage meter before timing out
         if (err) throw err;
 

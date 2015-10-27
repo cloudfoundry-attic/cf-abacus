@@ -228,7 +228,7 @@ describe('abacus-cf-bridge-itest', () => {
 
     // Wait for bridge to start
     request.waitFor(
-      'http://localhost::p/v1/cf/bridge', { p: 9400 },
+      'http://localhost::p/v1/cf/bridge', { p: 9500 },
       (err, uri, opts) => {
         // Failed to ping bridge before timing out
         if (err) throw err;

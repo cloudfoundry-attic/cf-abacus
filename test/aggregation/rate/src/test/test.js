@@ -438,7 +438,7 @@ describe('abacus-usage-rate-itest', () => {
         o + 1, ri + 1, u + 1);
 
       brequest.post('http://localhost::p/v1/rating/aggregated/usage',
-        { p: 9410, body: aggregatedTemplate(o, ri, u) }, (err, val) => {
+        { p: 9400, body: aggregatedTemplate(o, ri, u) }, (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);
           expect(val.headers.location).to.not.equal(undefined);
@@ -483,7 +483,7 @@ describe('abacus-usage-rate-itest', () => {
 
     // Wait for usage rating service to start
     request.waitFor('http://localhost::p/batch',
-      { p: 9410 }, (err, value) => {
+      { p: 9400 }, (err, value) => {
         // Failed to ping usage rating service before timing out
         if (err) throw err;
 

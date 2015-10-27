@@ -163,7 +163,7 @@ describe('abacus-usage-accumulator-itest', () => {
     routes.post('/v1/metering/accumulated/usage', aggregator);
     app.use(routes);
     app.use(router.batch(routes));
-    app.listen(9200);
+    app.listen(9300);
 
     // Initialize usage doc properties with unique values
     const start = 1435629365220 + tshift;
@@ -235,7 +235,7 @@ describe('abacus-usage-accumulator-itest', () => {
         o + 1, ri + 1, u + 1);
 
       brequest.post('http://localhost::p/v1/metering/metered/usage',
-        { p: 9100, body: meteredTemplate(o, ri, u) }, (err, val) => {
+        { p: 9200, body: meteredTemplate(o, ri, u) }, (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);
           expect(val.headers.location).to.not.equal(undefined);
@@ -295,7 +295,7 @@ describe('abacus-usage-accumulator-itest', () => {
 
     // Wait for usage accumulator to start
     request.waitFor('http://localhost::p/batch',
-      { p: 9100 }, (err, value) => {
+      { p: 9200 }, (err, value) => {
         // Failed to ping usage accumulator before timing out
         if (err) throw err;
 

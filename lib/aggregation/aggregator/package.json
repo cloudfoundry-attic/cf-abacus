@@ -24,7 +24,7 @@
   ],
   "main": "lib/index.js",
   "scripts": {
-    "start": "launch webappstart --port 9200",
+    "start": "launch webappstart --port 9300",
     "webappstart": "webapp start",
     "stop": "webapp stop",
     "babel": "babel",

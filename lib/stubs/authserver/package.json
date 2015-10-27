@@ -24,7 +24,7 @@
   ],
   "main": "lib/index.js",
   "scripts": {
-    "start": "webapp start --port 9382",
+    "start": "webapp start --port 9882",
     "stop": "webapp stop",
     "babel": "babel",
     "test": "eslint && mocha",
