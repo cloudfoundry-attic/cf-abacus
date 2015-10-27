@@ -92,6 +92,7 @@
     "abacus-lrudown": "file:lib/utils/lrudown",
     "abacus-partition": "file:lib/utils/partition",
     "abacus-perf": "file:lib/utils/perf",
+    "abacus-rc": "file:lib/utils/rc",
     "abacus-request": "file:lib/utils/request",
     "abacus-retry": "file:lib/utils/retry",
     "abacus-router": "file:lib/utils/router",
