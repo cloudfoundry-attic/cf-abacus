@@ -1,5 +1,3 @@
-{
-  "staging": {
-    "FOO": "bar"
-  }
-}
+staging:
+  FOO: bar
+  HEY: there
