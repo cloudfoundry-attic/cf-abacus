@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+# Setup CF for use with Abacus
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )"
 
 CF_ORG_DEFAULT=$(cf target | cut -d ':' -f 2 | tr -d ' ' | sed '4q;d')
@@ -27,3 +28,4 @@ cf login -o $CF_ORG -s $CF_SPACE
 # Create a CF security group for the Abacus apps
 cf create-security-group abacus $SCRIPT_DIR/../etc/secgroup.json
 cf bind-security-group abacus $CF_ORG $CF_SPACE
+

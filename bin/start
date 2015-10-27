@@ -1,12 +1,15 @@
 #!/bin/bash
 
-APPS_FILE=etc/apps
-if [ -n "$1" ]
-  then APPS_FILE=$1
+# Start all the Abacus services
+CONF=default
+if [ -n "$1" ]; then
+  CONF=$1
 fi
 
-echo "Using apps list $APPS_FILE"
-
-# Start all the Abacus services
-$APPS_FILE | awk '{ printf "(sleep 1 && cd node_modules/%s && npm start &)\n", $1 }' | bash -e
+etc/apps/$CONF | awk '{
+  if ($3 != "")
+    printf "(sleep 1 && cd node_modules/%s && npm start -- -i %s&)\n", $1, $3;
+  else
+    printf "(sleep 1 && cd node_modules/%s && npm start &)\n", $1;
+}' | bash -xe
 

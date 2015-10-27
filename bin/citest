@@ -1,12 +1,26 @@
 #!/bin/bash
 
 # Run integration, demo client and performance tests
-# with default program arguments
 
-# Based on default limits at throttle and batch processing and
-# intergration test matrix, we would need 2197(= 13 * 13 * 13)
+# Based on default limits in throttle and batch processing and
+# integration test matrix, we would need 2197 (= 13 * 13 * 13)
 # usage submissions to get above 90 percent regression coverage
-npm run itest -- -o 4 -i 4 -u 4  &&
-npm start && sleep 10s && npm run demo && npm run perf -- -o 1 -i 1 -u 1 && npm stop &&
-export SECURED=true JWTKEY=encode JWTALGO=HS256 &&
-npm start && sleep 10s && npm run perf -- -o 4 -i 4 -u 4 && npm stop
+
+npm run itest -- -o 4 -i 4 -u 4
+
+# Run demo and perf test without security
+npm start
+sleep 10s
+npm run demo
+npm run perf -- -o 1 -i 1 -u 1
+npm stop
+
+# Run perf test with security
+export SECURED=true
+export JWTKEY=encode
+export JWTALGO=HS256
+npm start
+sleep 10s
+npm run perf -- -o 4 -i 4 -u 4
+npm stop
+
