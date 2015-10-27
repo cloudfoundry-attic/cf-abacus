@@ -237,7 +237,6 @@ describe('abacus-cf-bridge-itest', () => {
         request.get(uri, opts, (err, response) => {
           expect(err).to.equal(undefined);
           expect(response.statusCode).to.equal(200);
-          expect(response.body).to.equal('Hello');
 
           poll(checkReport, done, 50000, 2000);
         });
