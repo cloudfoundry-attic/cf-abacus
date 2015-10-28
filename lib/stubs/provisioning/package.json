@@ -34,18 +34,18 @@
   },
   "dependencies": {
     "babel-runtime": "^5.8.19",
+    "abacus-batch": "file:../../utils/batch",
+    "abacus-breaker": "file:../../utils/breaker",
     "abacus-cfoauth": "file:../../utils/cfoauth",
+    "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-debug": "file:../../utils/debug",
+    "abacus-partition": "file:../../utils/partition",
+    "abacus-retry": "file:../../utils/retry",
     "abacus-router": "file:../../utils/router",
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-usage-schemas": "file:../../config/schemas",
     "abacus-webapp": "file:../../utils/webapp",
-    "abacus-dbclient": "file:../../utils/dbclient",
-    "abacus-batch": "file:../../utils/batch",
-    "abacus-breaker": "file:../../utils/breaker",
-    "abacus-retry": "file:../../utils/retry",
     "abacus-yieldable": "file:../../utils/yieldable",
-    "abacus-partition": "file:../../utils/partition",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

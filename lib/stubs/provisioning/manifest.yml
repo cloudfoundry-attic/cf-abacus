@@ -6,6 +6,7 @@ applications:
   memory: 512M
   disk_quota: 512M
   env:
+    COUCHDB: abacus-dbserver
     SECURED: false
     JWTKEY: undefined
     JWTALGO: undefined
