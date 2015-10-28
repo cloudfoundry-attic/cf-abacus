@@ -76,6 +76,7 @@
     "abacus-batch": "file:lib/utils/batch",
     "abacus-breaker": "file:lib/utils/breaker",
     "abacus-cfoauth": "file:lib/utils/cfoauth",
+    "abacus-clone": "file:lib/utils/clone",
     "abacus-cluster": "file:lib/utils/cluster",
     "abacus-dataflow": "file:lib/utils/dataflow",
     "abacus-dbclient": "file:lib/utils/dbclient",
