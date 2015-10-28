@@ -8,11 +8,10 @@ const _ = require('underscore');
 const request = require('abacus-request');
 const util = require('util');
 const commander = require('commander');
+const clone = require('abacus-clone');;
 
 const map = _.map;
 const omit = _.omit;
-const clone = _.clone;
-// const range = _.range;
 
 // Parse command line options
 const argv = clone(process.argv);
@@ -24,8 +23,6 @@ commander
   .option('-r, --reporting <uri>',
     'usage reporting URL or domain name [http://localhost:9088]',
     'http://localhost:9088')
-  .option(
-    '-d, --delta <d>', 'usage time window shift in milli-seconds', parseInt)
   .allowUnknownOption(true)
   .parse(argv);
 
@@ -36,9 +33,6 @@ const collector = /:/.test(commander.collector) ? commander.collector :
 // Reporting service URL
 const reporting = /:/.test(commander.reporting) ? commander.reporting :
   'https://abacus-usage-reporting.' + commander.reporting;
-
-// Usage time window shift in milli-seconds
-const delta = commander.delta || 0;
 
 // The current time + 1 hour into the future
 const now = new Date(Date.now());
@@ -59,7 +53,7 @@ const buildWindow = (ch, s, q, c) => {
 };
 
 // Prunes all the windows of everything but the monthly charge
-const prune = (k, v) => {
+const prune = (v, k) => {
   if(k === 'windows') {
     const nwin = {};
     const sumWindowValue = (w1, w2, k) => {
@@ -72,33 +66,18 @@ const prune = (k, v) => {
     sumWindowValue(v[4][0], v[4][1], 'quantity');
     return nwin;
   }
+  return v;
 }
-
-// Extend an object using an interceptor
-// if interceptor returns a value, then use it to replace the original value
-const cextend = (o, interceptor) => {
-  const deepcopy = (k, v) => {
-    // if value is an object, then extend it using the interceptor
-    if(typeof v === 'object') return cextend(v, interceptor);
-    return v;
-  };
-
-  // Go through object keys and extend
-  map(o, (v, k) => {
-    o[k] = interceptor(k, v) || deepcopy(k, v);
-  });
-  return o;
-};
 
 describe('abacus-demo-client', () => {
   it('submits usage for a sample resource and retrieves an aggregated ' +
     'usage report', (done) => {
       // Configure the test timeout
-      const giveup = now.getTime() + 60000;
+      const giveup = now.getTime() + 20000;
 
       // Test usage to be submitted by the client
-      const start = now.getTime() + delta;
-      const end = now.getTime() + delta;
+      const start = now.getTime();
+      const end = now.getTime();
       const usage = [
         {
           message:
@@ -323,7 +302,7 @@ describe('abacus-demo-client', () => {
 
             // Compare the usage report we got with the expected report
             console.log('Processed %d usage docs', processed(val));
-            const actual = cextend(omit(val.body,
+            const actual = clone(omit(val.body,
               'id', 'processed', 'start', 'end'), prune);
             try {
               expect(actual).to.deep.equal(report);

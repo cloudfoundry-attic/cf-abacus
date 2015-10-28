@@ -30,6 +30,7 @@
     "pub": "publish"
   },
   "dependencies": {
+    "abacus-clone": "file:../../lib/utils/clone",
     "abacus-mocha": "file:../../tools/mocha",
     "abacus-request": "file:../../lib/utils/request",
     "commander": "^2.8.1",
