@@ -36,13 +36,13 @@ Finally start the bridge with:
 
 ```
 cd ~/workspace/cf-abacus
-npm start etc/apps-bridge
+npm start bridge
 ```
 
 To stop the bridge:
 
 ```
-npm stop etc/apps-bridge
+npm stop bridge
 ```
 
 ## Usage reporting
