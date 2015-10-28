@@ -1,3 +1,6 @@
-staging:
+default:
   FOO: bar
+
+staging:
   HEY: there
+
