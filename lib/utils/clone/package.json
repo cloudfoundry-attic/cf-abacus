@@ -1,10 +1,10 @@
 {
-  "name": "abacus-launcher",
-  "description": "Launch multiple instances of an application",
+  "name": "abacus-clone",
+  "description": "Does a deep copy of an array or object with an optional interceptor",
   "license": "Apache-2.0",
   "version": "0.0.2-rc.2",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/launcher",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/clone",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -18,14 +18,10 @@
   ],
   "files": [
     ".npmrc",
-    "launch",
     "lib/",
     "src/"
   ],
   "main": "lib/index.js",
-  "bin": {
-    "launch": "./launch"
-  },
   "scripts": {
     "babel": "babel",
     "test": "eslint && mocha",
@@ -34,9 +30,6 @@
   },
   "dependencies": {
     "abacus-debug": "file:../debug",
-    "abacus-rc": "file:../rc",
-    "abacus-vcapenv": "file:../vcapenv",
-    "commander": "^2.8.1",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

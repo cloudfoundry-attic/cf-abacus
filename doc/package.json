@@ -22,10 +22,11 @@
     "flow.png"
   ],
   "scripts": {
-    "doc": "npm run apidoc && npm run faqdoc && npm run confdoc",
+    "doc": "npm run apidoc && npm run faqdoc && npm run confdoc && npm run designdoc",
     "apidoc": "cat api.md | mddoc >api.html",
     "faqdoc": "cat faq.md | mddoc >faq.html",
     "confdoc": "cat conf.md | mddoc >conf.html",
+    "designdoc": "cat design.md | mddoc >design.html",
     "babel": "true",
     "test": "true",
     "lint": "true",
