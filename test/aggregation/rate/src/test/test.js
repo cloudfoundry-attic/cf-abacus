@@ -8,10 +8,13 @@ const commander = require('commander');
 const batch = require('abacus-batch');
 const throttle = require('abacus-throttle');
 const request = require('abacus-request');
+const dbclient = require('abacus-dbclient');
+const clone = require('abacus-clone');
+const seqid = require('abacus-seqid');
+const yieldable = require('abacus-yieldable');
 
 const map = _.map;
 const range = _.range;
-const clone = _.clone;
 const omit = _.omit;
 
 // Batch the requests
@@ -44,6 +47,9 @@ const usage = commander.usagedocs || 1;
 // Usage time shift by number of days in milli-seconds
 const tshift = commander.day * 24 * 60 * 60 * 1000 || 0;
 
+const db = require('abacus-dataflow').db('abacus-rating-rated-usage');
+db.allDocs = yieldable.functioncb(db.allDocs);
+
 // Return the aggregation start time for a given time
 const day = (t) => {
   const d = new Date(t);
@@ -57,54 +63,8 @@ const eod = (t) => {
     d.getUTCDate() + 1) - 1;
 };
 
-// Extend an object using an interceptor
-// if interceptor returns a value, then use it to replace the original value
-const cextend = (o, interceptor) => {
-  const deepcopy = (k, v) => {
-    // if value is an object, then extend it using the interceptor
-    if(typeof v === 'object') return cextend(v, interceptor);
-    return v;
-  };
-
-  // Go through object keys and extend
-  map(o, (v, k) => {
-    o[k] = interceptor(k, v) || deepcopy(k, v);
-  });
-  return o;
-};
-
-// Add windows to aggregated usage at all non-plan levels
-/*
-const addResourceWindows = (r) => {
-  r.aggregated_usage = map(r.aggregated_usage, (u) => ({
-    metric: u.metric,
-    windows: map(u.quantity, (w) => {
-      return map(w, (q) => ({
-        quantity: q
-      }));
-    })
-  }));
-  return r;
-}
-*/
-
-// Add windows to the entire aggregated usage object
-/*
-const addWindows = (u) => {
-  u.resources = map(u.resources, addResourceWindows);
-  map(u.spaces, (s) => {
-    s.resources = map(s.resources, addResourceWindows);
-    map(s.consumers, (c) => {
-      c.resources = map(c.resources, addResourceWindows);
-    })
-  });
-  return u;
-}
-*/
-
 // Add cost to aggregated usage at all plan levels
-/*
-const addCost = (k, v) => {
+const addWindows = (v, k) => {
   // plan and price details for test-resource to do a quick lookup
   const cost = {
     basic: {
@@ -119,23 +79,56 @@ const addCost = (k, v) => {
     }
   };
 
-  // all plan level aggregations need cost as part of aggregated_usage
-  if (k === 'plans') return map(v, (p) => {
-    // Warning: mutating aggregated_usage to include cost
-    p.aggregated_usage = map(p.aggregated_usage, (u) => ({
-      metric: u.metric,
-      windows: map(u.quantity, (w) => {
-        return map(w, (q) => ({
-          quantity: q,
-          cost: q * cost[p.plan_id][u.metric]
-        }));
-      })
-    }));
+  // all resource level aggregations just need to change quantity to resources
+  if(k === 'resources')
+    return map(v, (r) => {
+      r.aggregated_usage = map(r.aggregated_usage, (u) => ({
+        metric: u.metric,
+        windows: map(u.quantity, (w) => {
+          return map(w, (q) => ({
+            quantity: q
+          }));
+        })
+      }));
+      return r;
+    });
 
-    return p;
-  });
+  // all plan level aggregations need cost as part of aggregated_usage
+  if(k === 'plans')
+    return map(v, (p) => {
+      // Warning: mutating aggregated_usage to include cost
+      p.aggregated_usage = map(p.aggregated_usage, (u) => ({
+        metric: u.metric,
+        windows: map(u.quantity, (w) => {
+          return map(w, (q) => ({
+            quantity: q,
+            cost: q * cost[p.plan_id][u.metric]
+          }));
+        })
+      }));
+
+      return p;
+    });
+
+  return v;
 };
-*/
+
+// Prunes all the windows of everything but the monthly charge
+const pruneWindows = (v, k) => {
+  if(k === 'windows') {
+    const nwin = {};
+    const sumWindowValue = (w1, w2, k) => {
+      if(typeof w1[k] !== 'undefined')
+        nwin[k] = w2 ? w1[k] + w2[k] : w1[k];
+    };
+    sumWindowValue(v[4][0], v[4][1], 'charge');
+    sumWindowValue(v[4][0], v[4][1], 'summary');
+    sumWindowValue(v[4][0], v[4][1], 'cost');
+    sumWindowValue(v[4][0], v[4][1], 'quantity');
+    return nwin;
+  }
+  return v;
+}
 
 // Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
 const dateUTCNumbify = (t) => {
@@ -228,6 +221,7 @@ describe('abacus-usage-rate-itest', () => {
     const timeout = Math.max(60000,
       100 * orgs * resourceInstances * usage);
     this.timeout(timeout + 2000);
+    const giveup = Date.now() + timeout;
 
     // Initialize usage doc properties with unique values
     const end = 1435629465220 + tshift;
@@ -432,6 +426,13 @@ describe('abacus-usage-rate-itest', () => {
       spaces: osagg(o, ri, u)
     });
 
+    // The expected output based upon the arguments passed
+    const expected = clone(
+      clone(
+        aggregatedTemplate(orgs - 1, resourceInstances - 1, usage - 1),
+      addWindows),
+    pruneWindows);
+
     // Post an aggregated usage doc, throttled to default concurrent requests
     const post = throttle((o, ri, u, cb) => {
       debug('Submit aggregated usage for org%d instance%d usage%d',
@@ -453,11 +454,6 @@ describe('abacus-usage-rate-itest', () => {
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(200);
 
-            /*
-            expect(omit(val.body, ['id'])).to.deep
-              .equal(addWindows(
-                cextend(aggregatedTemplate(o, ri, u), addCost)));
-            */
             expect(omit(val.body, 'id', 'processed'))
               .to.deep.equal(aggregatedTemplate(o, ri, u));
 
@@ -469,11 +465,51 @@ describe('abacus-usage-rate-itest', () => {
         });
     });
 
+    // Verify the database output
+    const verifyOutput = (done) => {
+      const startDate = Date.UTC(new Date().getUTCFullYear(),
+        new Date().getUTCMonth() + 1) - 1;
+      const endDate = Date.UTC(new Date().getUTCFullYear(),
+        new Date().getUTCMonth(), 1);
+      const sid = dbclient.kturi(expected.organization_id,
+        seqid.pad16(startDate));
+      const eid = dbclient.kturi(expected.organization_id,
+        seqid.pad16(endDate));
+      debug('comparing latest record within %s and %s', sid, eid);
+
+      // Retrieve the latest document in the db and verify if it matches
+      db.allDocs({ limit: 1, startkey: sid, endkey: eid,
+        descending: true, include_docs: true },
+        (err, val) => {
+          try {
+            expect(clone(omit(val.rows[0].doc,
+              ['id', 'processed', '_id', '_rev', 'aggregated_usage_id']),
+                pruneWindows)).to.deep.equal(expected);
+            done();
+          }
+          catch(e) {
+            // If the test cannot verify the actual data with the expected
+            // data within the giveup time, forward the exception
+            if(Date.now() >= giveup) {
+              debug('Unable to properly verify the last record');
+              expect(clone(omit(val.rows[0].doc,
+                ['id', 'processed', '_id', '_rev', 'aggregated_usage_id']),
+                  pruneWindows)).to.deep.equal(expected);
+            }
+            else
+              // Try the expected test again
+              setTimeout(function() {
+                verifyOutput(done);
+              }, 250);
+          }
+        });
+    };
+
     // Post the requested number of aggregated usage docs
     const submit = (done) => {
       let posts = 0;
       const cb = () => {
-        if(++posts === orgs * resourceInstances * usage) done();
+        if(++posts === orgs * resourceInstances * usage) verifyOutput(done);
       };
 
       // Submit usage for all orgs and resource instances
