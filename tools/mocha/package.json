@@ -2,7 +2,7 @@
   "name": "abacus-mocha",
   "description": "Painless testing and code coverage with Mocha and Istanbul",
   "license": "Apache-2.0",
-  "version": "0.0.2-rc.2",
+  "version": "0.0.2",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tools/mocha",
   "bugs": {

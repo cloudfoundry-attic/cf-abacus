@@ -2,7 +2,7 @@
   "name": "abacus-coverage",
   "description": "Report overall code coverage from Istanbul coverage files",
   "license": "Apache-2.0",
-  "version": "0.0.2-rc.2",
+  "version": "0.0.2",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tools/coverage",
   "bugs": {
