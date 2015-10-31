@@ -7,6 +7,6 @@ if [ -n "$1" ]; then
 fi
 
 node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps | awk '{
-  printf "APP=$(node_modules/abacus-etc/appname %s) && (cd node_modules/$APP && npm stop)\n", $1;
+  printf "(APP=$(node_modules/abacus-etc/appname %s) && (cd node_modules/$APP && npm stop))\n", $1;
 }' | bash
 
