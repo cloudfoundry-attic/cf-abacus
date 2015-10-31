@@ -32,7 +32,8 @@
     "babel-runtime": "^5.8.19",
     "abacus-debug": "file:../debug",
     "abacus-perf": "file:../perf",
-    "abacus-request": "file:../request"
+    "abacus-request": "file:../request",
+    "abacus-urienv": "file:../urienv"
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
