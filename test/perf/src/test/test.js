@@ -346,8 +346,8 @@ describe('abacus-perf-test', () => {
               val.body, 'id', 'processed', 'start', 'end')))
                 .to.deep.equal(fixup(report(o, resourceInstances, usage)));
 
-            console.log('\n', util.inspect(fixup(val.body), {
-              depth: 15
+            console.log('\n', util.inspect(val.body, {
+              depth: 20
             }), '\n');
 
             done();
@@ -356,8 +356,8 @@ describe('abacus-perf-test', () => {
             // If the comparison fails we'll be called again to retry
             // after 250 msec, but give up after the computed timeout
             if(Date.now() >= giveup) {
-              console.log('\n', util.inspect(fixup(val.body), {
-                depth: 15
+              console.log('\n', util.inspect(val.body, {
+                depth: 20
               }), '\n');
               throw e;
             }

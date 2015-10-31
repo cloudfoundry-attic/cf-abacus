@@ -307,7 +307,7 @@ describe('abacus-demo-client', () => {
             try {
               expect(actual).to.deep.equal(report);
               console.log('\n', util.inspect(val.body, {
-                depth: 10
+                depth: 20
               }), '\n');
               done();
             }
