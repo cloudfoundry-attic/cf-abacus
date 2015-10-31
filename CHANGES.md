@@ -5,6 +5,30 @@ The Abacus usage metering and aggregation service.
 
 ---
 
+### v0.0.2 - 10/30/2015
+
+##### Usage submission
+- Accept and record duplicate usage docs
+- Fix issue with db partitioning in provisioning service
+
+##### Usage accumulation
+- Fix timing and event sequencing issues in tests
+
+##### App usage metering
+- Fix detection of duplicate usage docs with multiple consumers
+
+##### Misc
+- App health checks based on error rates
+- Optional registration in Eureka for monitoring with Hystrix
+- Support easier app environment configuration with .rc files
+
+##### Prerequisites
+- Node.js 0.12, 4.2
+- CouchDB 1.6 compatible database
+- Cloud Foundry v210+
+
+---
+
 ### v0.0.2-rc.2 - 10/23/2015
 
 ##### Usage submission
