@@ -7,6 +7,7 @@ applications:
   disk_quota: 512M
   env:
     CONF: default
+    DEBUG: e-abacus-*
     ACCUMULATOR: abacus-usage-accumulator
     PROVISIONING: abacus-provisioning-stub
     COUCHDB: abacus-dbserver

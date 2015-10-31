@@ -7,3 +7,4 @@ applications:
   disk_quota: 512M
   env:
     CONF: default
+    DEBUG: e-abacus-*

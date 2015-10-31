@@ -7,6 +7,7 @@ applications:
   disk_quota: 512M
   env:
     CONF: default
+    DEBUG: e-abacus-*
     COLLECTOR: abacus-usage-collector
     COUCHDB: abacus-dbserver
     EUREKA: abacus-eureka-stub
