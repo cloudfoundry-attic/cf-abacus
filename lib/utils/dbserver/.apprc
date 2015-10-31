@@ -1,0 +1,17 @@
+default:
+  PORT: 5984
+  APPS: 1
+  INSTANCES: 1
+
+small:
+  APPS: 1
+  INSTANCES: 1
+
+medium:
+  APPS: 1
+  INSTANCES: 1
+
+large:
+  APPS: 1
+  INSTANCES: 1
+

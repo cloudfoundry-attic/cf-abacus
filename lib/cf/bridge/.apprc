@@ -1,0 +1,26 @@
+default:
+  PORT: 9500
+  APPS: 1
+  INSTANCES: 1
+  DB_PARTITIONS: 1
+  COLLECTOR: 9080
+  EUREKA: 9990
+  COUCHDB: 5984
+  UAA:
+  API:
+
+small:
+  APPS: 1
+  INSTANCES: 1
+  DB_PARTITIONS: 1
+
+medium:
+  APPS: 1
+  INSTANCES: 1
+  DB_PARTITIONS: 1
+
+large:
+  APPS: 1
+  INSTANCES: 1
+  DB_PARTITIONS: 1
+

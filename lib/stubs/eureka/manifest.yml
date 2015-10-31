@@ -2,11 +2,12 @@ applications:
 - name: abacus-eureka-stub
   host: abacus-eureka-stub
   path: .cfpack/app.zip
-  instances: 2
+  instances: 1
   memory: 512M
   disk_quota: 512M
   env:
+    CONF: default
     COUCHDB: abacus-dbserver
     SECURED: false
-    JWTKEY: undefined
-    JWTALGO: undefined
+    # JWTKEY:
+    # JWTALGO:

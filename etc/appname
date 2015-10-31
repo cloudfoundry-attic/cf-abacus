@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+'use strict';
+
+// Print the name of an app
+require('./src/appname.js').runCLI();
+

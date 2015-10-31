@@ -17,6 +17,7 @@
     "abacus"
   ],
   "files": [
+    ".apprc",
     ".npmrc",
     "manifest.yml",
     "lib/",
@@ -24,8 +25,7 @@
   ],
   "main": "lib/index.js",
   "scripts": {
-    "start": "launch webappstart --port 9300",
-    "webappstart": "webapp start",
+    "start": "launch webapp start",
     "stop": "webapp stop",
     "babel": "babel",
     "test": "eslint && mocha",

@@ -2,16 +2,18 @@ applications:
 - name: abacus-usage-aggregator
   host: abacus-usage-aggregator
   path: .cfpack/app.zip
-  instances: 4
+  instances: 1
   memory: 512M
   disk_quota: 512M
   env:
+    CONF: default
     RATING: abacus-usage-rate
     PROVISIONING: abacus-provisioning-stub
     COUCHDB: abacus-dbserver
+    EUREKA: abacus-eureka-stub
     SECURED: false
-    AUTH_SERVER: undefined
-    CLIENT_ID: undefined
-    CLIENT_SECRET: undefined
-    JWTKEY: undefined
-    JWTALGO: undefined
+    # AUTH_SERVER:
+    # CLIENT_ID:
+    # CLIENT_SECRET:
+    # JWTKEY:
+    # JWTALGO:

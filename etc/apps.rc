@@ -1,0 +1,35 @@
+default:
+  apps:
+    - lib/utils/dbserver
+    - lib/stubs/eureka
+    - lib/stubs/authserver
+    - lib/stubs/provisioning
+    - lib/stubs/account
+    - lib/metering/collector
+    - lib/metering/meter
+    - lib/aggregation/accumulator
+    - lib/aggregation/aggregator
+    - lib/aggregation/rate
+    - lib/aggregation/reporting
+
+small:
+
+medium:
+
+large:
+
+bridge:
+  apps:
+    - lib/utils/dbserver
+    - lib/stubs/eureka
+    - lib/stubs/authserver
+    - lib/stubs/provisioning
+    - lib/stubs/account
+    - lib/metering/collector
+    - lib/metering/meter
+    - lib/aggregation/accumulator
+    - lib/aggregation/aggregator
+    - lib/aggregation/rate
+    - lib/aggregation/reporting
+    - lib/cf/bridge
+

@@ -1,0 +1,25 @@
+default:
+  PORT: 9990
+  APPS: 1
+  INSTANCES: 1
+  DB_PARTITIONS: 1
+  COUCHDB: 5984
+  SECURED: false
+  JWTKEY:
+  JWTALGO:
+
+small:
+  APPS: 1
+  INSTANCES: 2
+  DB_PARTITIONS: 1
+
+medium:
+  APPS: 1
+  INSTANCES: 2
+  DB_PARTITIONS: 1
+
+large:
+  APPS: 1
+  INSTANCES: 2
+  DB_PARTITIONS: 1
+

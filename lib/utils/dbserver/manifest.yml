@@ -5,4 +5,5 @@ applications:
   instances: 1
   memory: 1G
   disk_quota: 512M
-
+  env:
+    CONF: default

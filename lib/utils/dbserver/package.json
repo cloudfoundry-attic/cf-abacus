@@ -17,6 +17,7 @@
     "abacus"
   ],
   "files": [
+    ".apprc",
     ".npmrc",
     "dbserver",
     "manifest.yml",
@@ -28,7 +29,7 @@
     "dbserver": "./dbserver"
   },
   "scripts": {
-    "start": "./dbserver start",
+    "start": "launch ./dbserver start",
     "stop": "./dbserver stop",
     "babel": "babel",
     "test": "eslint && mocha",
@@ -39,6 +40,7 @@
   "dependencies": {
     "abacus-cluster": "file:../cluster",
     "abacus-debug": "file:../debug",
+    "abacus-launcher": "file:../launcher",
     "abacus-webapp": "file:../webapp",
     "commander": "^2.8.1",
     "express": "^4.9.4",

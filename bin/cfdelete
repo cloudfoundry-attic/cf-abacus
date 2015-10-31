@@ -6,8 +6,7 @@ if [ -n "$1" ]; then
   CONF=$1
 fi
 
-etc/apps/$CONF | awk '{
-  printf "cf delete -f -r %s\n", $1
-}' | bash -xe
-
+node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps | awk '{
+  printf "APP=$(node_modules/abacus-etc/appname %s) && (cf delete -f -r $APP)\n", $1;
+}' | bash
 

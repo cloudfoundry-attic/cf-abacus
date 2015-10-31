@@ -17,6 +17,7 @@
     "abacus"
   ],
   "files": [
+    ".apprc",
     ".npmrc",
     "manifest.yml",
     "lib/",
@@ -24,7 +25,7 @@
   ],
   "main": "lib/index.js",
   "scripts": {
-    "start": "webapp start --port 9882",
+    "start": "launch webapp start",
     "stop": "webapp stop",
     "babel": "babel",
     "test": "eslint && mocha",
@@ -35,6 +36,7 @@
   "dependencies": {
     "babel-runtime": "^5.8.19",
     "abacus-debug": "file:../../utils/debug",
+    "abacus-launcher": "file:../../utils/launcher",
     "abacus-router": "file:../../utils/router",
     "abacus-webapp": "file:../../utils/webapp",
     "underscore": "^1.8.3",

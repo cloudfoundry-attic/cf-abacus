@@ -18,19 +18,19 @@
   ],
   "files": [
     ".npmrc",
-    "apps",
-    "cfapi",
+    "appname",
+    "apprc",
+    "apps.rc",
     "foreach",
     "npm2",
-    "secgroup",
+    "secgroup.json",
     "versions",
     "lib/",
     "src/"
   ],
   "main": "src/index.js",
   "bin": {
-    "apps": "./apps",
-    "cfapi": "./cfapi",
+    "apprc": "./apprc",
     "foreach": "./foreach",
     "npm2": "./npm2",
     "versions": "./versions"
@@ -43,6 +43,8 @@
   },
   "dependencies": {
     "commander": "^2.8.1",
+    "js-yaml": "^3.4.3",
+    "strip-json-comments": "0.1.x",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

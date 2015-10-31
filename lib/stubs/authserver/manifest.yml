@@ -6,6 +6,8 @@ applications:
   memory: 512M
   disk_quota: 512M
   env:
+    CONF: default
+    EUREKA: abacus-eureka-stub
     SECURED: false
-    JWTKEY: undefined
-    JWTALGO: undefined
+    # JWTKEY:
+    # JWTALGO:

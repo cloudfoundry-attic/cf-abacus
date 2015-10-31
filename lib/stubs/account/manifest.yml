@@ -2,10 +2,12 @@ applications:
 - name: abacus-account-stub
   host: abacus-account-stub
   path: .cfpack/app.zip
-  instances: 2
+  instances: 1
   memory: 512M
   disk_quota: 512M
   env:
+    CONF: default
+    EUREKA: abacus-eureka-stub
     SECURED: false
-    JWTKEY: undefined
-    JWTALGO: undefined
+    # JWTKEY:
+    # JWTALGO:

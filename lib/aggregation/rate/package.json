@@ -17,13 +17,15 @@
     "abacus"
   ],
   "files": [
+    ".apprc",
     ".npmrc",
+    "manifest.yml",
     "lib/",
     "src/"
   ],
   "main": "lib/index.js",
   "scripts": {
-    "start": "webapp start --port 9400",
+    "start": "launch webapp start",
     "stop": "webapp stop",
     "babel": "babel",
     "test": "eslint && mocha",

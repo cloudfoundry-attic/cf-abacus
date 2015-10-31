@@ -6,12 +6,7 @@ if [ -n "$1" ]; then
   CONF=$1
 fi
 
-etc/apps/$CONF | awk '{
-  if ($3 != "") {
-    printf "(cd %s && npm run cfpush -- -i %s)\n", $2, $3;
-  }
-  else {
-    printf "(cd %s && npm run cfpush)\n", $2;
-  }
-}' | bash -xe
+node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps | awk -v CONF=$CONF '{
+  printf "(INSTANCES=$(node_modules/abacus-etc/apprc %s/.apprc %s INSTANCES) && (cd %s && npm run cfpush -- -i $INSTANCES))\n", $1, CONF, $1;
+}' | bash
 

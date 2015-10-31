@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 # Setup CF for use with Abacus
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )"
@@ -26,6 +25,6 @@ cf api --skip-ssl-validation https://api.10.244.0.34.xip.io
 cf login -o $CF_ORG -s $CF_SPACE
 
 # Create a CF security group for the Abacus apps
-cf create-security-group abacus $SCRIPT_DIR/../etc/secgroup.json
+cf create-security-group abacus $SCRIPT_DIR/../node_modules/abacus-etc/secgroup.json
 cf bind-security-group abacus $CF_ORG $CF_SPACE
 

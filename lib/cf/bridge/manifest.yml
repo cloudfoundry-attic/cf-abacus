@@ -6,6 +6,9 @@ applications:
   memory: 512M
   disk_quota: 512M
   env:
+    CONF: default
     COLLECTOR: abacus-usage-collector
+    COUCHDB: abacus-dbserver
+    EUREKA: abacus-eureka-stub
     UAA: uaa
     API: api

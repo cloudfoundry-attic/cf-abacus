@@ -1,0 +1,21 @@
+default:
+  PORT: 9882
+  APPS: 1
+  INSTANCES: 1
+  EUREKA: 9990
+  SECURED: false
+  JWTKEY:
+  JWTALGO:
+
+small:
+  APPS: 1
+  INSTANCES: 2
+
+medium:
+  APPS: 1
+  INSTANCES: 2
+
+large:
+  APPS: 1
+  INSTANCES: 2
+
