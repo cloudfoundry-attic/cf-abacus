@@ -15,7 +15,7 @@ var util = require('util');
 var map = _.map;
 
 // Parse JSON and Yaml
-var parse = (content) => {
+var parse = function(content) {
   if(/^\s*{/.test(content))
     return JSON.parse(strip(content))
   return yaml.load(content);
@@ -52,7 +52,7 @@ var runCLI = function() {
         return;
 
       // Write the specified variable
-      const val = env(rc, commander.conf, commander.name) ||
+      var val = env(rc, commander.conf, commander.name) ||
       env(rc, 'default', commander.name);
       map(typeof val === 'object' || typeof val === 'array' ? val : [val],
         function(v) {
