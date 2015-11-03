@@ -34,10 +34,10 @@
   },
   "dependencies": {
     "abacus-debug": "file:../debug",
-    "abacus-lrudown": "file:../lrudown",
+    "abacus-lock": "file:../lock",
     "abacus-transform": "file:../transform",
     "commander": "^2.8.1",
-    "levelup": "^1.2.1",
+    "lru-cache": "^2.6.5",
     "request": "^2.37.0",
     "underscore": "^1.8.3"
   },
