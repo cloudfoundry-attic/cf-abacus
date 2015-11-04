@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Start all the Abacus services
-CONF=default
+export CONF=default
 if [ -n "$1" ]; then
-  CONF=$1
+  export CONF=$1
 fi
 
 node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps | awk '{

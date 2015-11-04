@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Push all the Abacus apps to Cloud Foundry
-CONF=default
+export CONF=default
 if [ -n "$1" ]; then
-  CONF=$1
+  export CONF=$1
 fi
 
-node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps | awk -v CONF=$CONF '{
-  printf "(INSTANCES=$(node_modules/abacus-etc/apprc %s/.apprc %s INSTANCES) && (cd %s && npm run cfpush -- -i $INSTANCES))\n", $1, CONF, $1;
+node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps | awk '{
+  printf "(INSTANCES=$(node_modules/abacus-etc/apprc %s/.apprc %s INSTANCES) && (cd %s && npm run cfpush -- -i $INSTANCES))\n", $1, $CONF, $1;
 }' | bash
 
