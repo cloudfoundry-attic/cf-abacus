@@ -41,6 +41,7 @@
     "abacus-cluster": "file:../cluster",
     "abacus-debug": "file:../debug",
     "abacus-launcher": "file:../launcher",
+    "abacus-vcapenv": "file:../vcapenv",
     "abacus-webapp": "file:../webapp",
     "commander": "^2.8.1",
     "express": "^4.9.4",
