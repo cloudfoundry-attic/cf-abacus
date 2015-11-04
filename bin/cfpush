@@ -7,6 +7,6 @@ if [ -n "$1" ]; then
 fi
 
 node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps | awk '{
-  printf "(INSTANCES=$(node_modules/abacus-etc/apprc %s/.apprc %s INSTANCES) && (cd %s && npm run cfpush -- -i $INSTANCES))\n", $1, $CONF, $1;
+  printf "(INSTANCES=$(node_modules/abacus-etc/apprc %s/.apprc $CONF INSTANCES) && (cd %s && npm run cfpush -- -i $INSTANCES))\n", $1, $1;
 }' | bash
 
