@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Push all the Abacus apps to Cloud Foundry
 export CONF=default
 if [ -n "$1" ]; then
