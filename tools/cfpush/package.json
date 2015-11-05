@@ -1,0 +1,48 @@
+{
+  "name": "abacus-cfpush",
+  "description": "Deploy an app to CloudFoundry",
+  "license": "Apache-2.0",
+  "version": "0.0.2",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tools/cfpush",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "cfpush",
+    "src/"
+  ],
+  "main": "src/index.js",
+  "bin": {
+    "cfpush": "./cfpush"
+  },
+  "scripts": {
+    "babel": "true",
+    "test": "eslint",
+    "lint": "eslint",
+    "pub": "publish"
+  },
+  "dependencies": {
+    "commander": "^2.8.1",
+    "js-yaml": "^3.4.3",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "abacus-eslint": "file:../eslint",
+    "abacus-mocha": "file:../mocha",
+    "abacus-publish": "file:../publish"
+  },
+  "engines": {
+    "node": ">=0.10.0",
+    "npm": ">=2.0.0"
+  }
+}

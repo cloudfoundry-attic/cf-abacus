@@ -31,7 +31,8 @@
     "test": "eslint && mocha",
     "lint": "eslint",
     "pub": "publish",
-    "cfpush": "cfpack && cf push"
+    "cfpack": "cfpack",
+    "cfpush": "cfpush"
   },
   "dependencies": {
     "babel-runtime": "^5.8.19",
@@ -57,6 +58,7 @@
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
     "abacus-cfpack": "file:../../../tools/cfpack",
+    "abacus-cfpush": "file:../../../tools/cfpush",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish"
