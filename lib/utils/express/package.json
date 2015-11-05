@@ -35,6 +35,7 @@
   "dependencies": {
     "abacus-debug": "file:../debug",
     "abacus-events": "file:../events",
+    "abacus-rc": "file:../rc",
     "abacus-vcapenv": "file:../vcapenv",
     "body-parser": "^1.4.3",
     "commander": "^2.8.1",
