@@ -11,6 +11,7 @@ const request = require('abacus-request');
 const dbclient = require('abacus-dbclient');
 const dataflow = require('abacus-dataflow');
 const yieldable = require('abacus-yieldable');
+const BigNumber = require('bignumber.js');
 
 const map = _.map;
 const reduce = _.reduce;
@@ -114,7 +115,7 @@ const addCost = (k, v) => {
       windows: map(u.quantity, (w) => {
         return map(w, (q) => ({
           quantity: q,
-          cost: q * cost[p.plan_id][u.metric]
+          cost: new BigNumber(q).mul(cost[p.plan_id][u.metric]).toNumber()
         }));
       })
     }));
@@ -125,7 +126,7 @@ const addCost = (k, v) => {
 
 // Reduce function that can be used to compute the sum of a list of charges
 const sumCharges = (a, m) => {
-  a.charge += m.charge ? m.charge : 0;
+  a.charge = new BigNumber(a.charge).add(m.charge ? m.charge : 0).toNumber();
   return a;
 };
 
@@ -163,9 +164,10 @@ const addCharge = (k, v) => {
         map(w, (wi, j) => {
           wi.summary = wi.quantity;
           wi.charge = reduce(r.plans, (a, p) =>
-            a + reduce(p.aggregated_usage, (a1, u1) =>
-              a1 + (u1.metric === u.metric ? u1.windows[i][j].charge : 0),
-                0), 0);
+            new BigNumber(a).add(reduce(p.aggregated_usage, (a1, u1) =>
+              new BigNumber(a1).add(u1.metric === u.metric ?
+                u1.windows[i][j].charge : 0).toNumber(),
+                  0)).toNumber(), 0);
         });
       });
     });

@@ -35,7 +35,6 @@
     "cfpush": "cfpush"
   },
   "dependencies": {
-    "babel-runtime": "^5.8.19",
     "abacus-batch": "file:../../utils/batch",
     "abacus-breaker": "file:../../utils/breaker",
     "abacus-cfoauth": "file:../../utils/cfoauth",
@@ -45,8 +44,8 @@
     "abacus-debug": "file:../../utils/debug",
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-request": "file:../../utils/request",
-    "abacus-retry": "file:../../utils/retry",
     "abacus-resource-config": "file:../../config/resource",
+    "abacus-retry": "file:../../utils/retry",
     "abacus-router": "file:../../utils/router",
     "abacus-schema": "file:../../utils/schema",
     "abacus-seqid": "file:../../utils/seqid",
@@ -56,6 +55,8 @@
     "abacus-usage-schemas": "file:../../config/schemas",
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-yieldable": "file:../../utils/yieldable",
+    "babel-runtime": "^5.8.19",
+    "bignumber.js": "^2.1.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

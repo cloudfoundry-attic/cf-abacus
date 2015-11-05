@@ -12,6 +12,7 @@ const dbclient = require('abacus-dbclient');
 const clone = require('abacus-clone');
 const seqid = require('abacus-seqid');
 const yieldable = require('abacus-yieldable');
+const BigNumber = require('bignumber.js');
 
 const map = _.map;
 const range = _.range;
@@ -102,7 +103,7 @@ const addWindows = (v, k) => {
         windows: map(u.quantity, (w) => {
           return map(w, (q) => ({
             quantity: q,
-            cost: q * cost[p.plan_id][u.metric]
+            cost: new BigNumber(q).mul(cost[p.plan_id][u.metric]).toNumber()
           }));
         })
       }));
