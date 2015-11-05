@@ -6,8 +6,19 @@ if [ -n "$1" ]; then
   export CONF=$1
 fi
 
-node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps | awk '{
-  printf "(APP=$(node_modules/abacus-etc/appname %s) && (cd node_modules/$APP && npm stop &))\n", $1;
-  printf "(APP=$(node_modules/abacus-etc/appname %s) && (cd node_modules/$APP && npm start &))\n", $1;
-}' | bash
+MODULES=$(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps)
+
+for MODULE in $MODULES; do
+  APPNAME=$(node_modules/abacus-etc/appname $MODULE)
+  (cd node_modules/$APPNAME && npm stop &)
+done
+
+wait
+
+for MODULE in $MODULES; do
+  APPNAME=$(node_modules/abacus-etc/appname $MODULE)
+  (cd node_modules/$APPNAME && npm start &)
+done
+
+wait
 

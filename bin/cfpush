@@ -6,7 +6,18 @@ if [ -n "$1" ]; then
   export CONF=$1
 fi
 
-node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps | awk '{
-  printf "(INSTANCES=$(node_modules/abacus-etc/apprc %s/.apprc $CONF INSTANCES) && (cd %s && npm run cfpush -- -i $INSTANCES))\n", $1, $1;
-}' | bash
+for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
+  APPNAME=$(node_modules/abacus-etc/appname $MODULE)
+  INSTANCES=$(node_modules/abacus-etc/apprc $MODULE/.apprc $CONF INSTANCES)
+  APPS=$(echo $(node_modules/abacus-etc/apprc node_modules/$APPNAME/.apprc $CONF APPS) - 1 | bc)
+  if [ "$APPS" == "0" ]; then
+    (cd $MODULE && npm run cfpush -- $APPNAME -n $APPNAME -i $INSTANCES &)
+  else
+    for I in $(seq 0 $APPS); do
+      (cd $MODULE && npm run cfpush -- $APPNAME-$I -n $APPNAME-$I -i $INSTANCES &)
+    done
+  fi
+done
+
+wait
 
