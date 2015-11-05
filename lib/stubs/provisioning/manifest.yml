@@ -10,6 +10,7 @@ applications:
     DEBUG: e-abacus-*
     COUCHDB: abacus-dbserver
     EUREKA: abacus-eureka-stub
+    NODE_MODULES_CACHE: false
     SECURED: false
     # JWTKEY:
     # JWTALGO:

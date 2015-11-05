@@ -9,6 +9,7 @@ applications:
     CONF: default
     DEBUG: e-abacus-*
     EUREKA: abacus-eureka-stub
+    NODE_MODULES_CACHE: false
     SECURED: false
     # JWTKEY:
     # JWTALGO:

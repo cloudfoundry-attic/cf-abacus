@@ -13,3 +13,4 @@ applications:
     EUREKA: abacus-eureka-stub
     UAA: uaa
     API: api
+    NODE_MODULES_CACHE: false

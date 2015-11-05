@@ -12,6 +12,7 @@ applications:
     ACCOUNT: abacus-account-stub
     COUCHDB: abacus-dbserver
     EUREKA: abacus-eureka-stub
+    NODE_MODULES_CACHE: false
     SECURED: false
     # AUTH_SERVER:
     # CLIENT_ID:
