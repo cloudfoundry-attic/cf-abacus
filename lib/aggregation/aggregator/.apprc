@@ -27,7 +27,7 @@ medium:
   SINK_PARTITIONS: 4
 
 large:
-  APPS: 4
+  APPS: 6
   INSTANCES: 1
   DB_PARTITIONS: 6
   SINK_PARTITIONS: 6
