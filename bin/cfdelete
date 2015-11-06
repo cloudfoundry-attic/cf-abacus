@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Delete all the Abacus apps on Cloud Foundry
 export CONF=default
 if [ -n "$1" ]; then
