@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Run the demo app
 (cd node_modules/abacus-demo-client && npm run demo -- $@)
 

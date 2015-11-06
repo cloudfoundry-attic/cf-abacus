@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Point CF API to local Cloud Foundry
 cf api --skip-ssl-validation https://api.10.244.0.34.xip.io
 

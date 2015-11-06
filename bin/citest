@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Run integration, demo client and performance tests
 
 # Based on default limits in throttle and batch processing and

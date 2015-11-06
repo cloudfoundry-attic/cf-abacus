@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Restart all the Abacus services
 export CONF=default
 if [ -n "$1" ]; then
