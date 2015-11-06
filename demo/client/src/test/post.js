@@ -29,7 +29,6 @@ const batch = {
   usage: [{
     start: 1420502400000 + delta,
     end: 1420502401000 + delta,
-    region: 'us',
     organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
     space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
     consumer_id: 'external:bbeae239-f3f8-483c-9dd0-de6781c38bab',

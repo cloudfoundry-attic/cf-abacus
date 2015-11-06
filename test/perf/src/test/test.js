@@ -86,7 +86,6 @@ describe('abacus-perf-test', () => {
       usage: [{
         start: start + i,
         end: end + i,
-        region: 'eu-gb',
         organization_id: orgid(o),
         space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
         resource_id: 'object-storage',
@@ -143,7 +142,6 @@ describe('abacus-perf-test', () => {
     // Return the expected usage report for the test organization
     const report = (o, nri, n) => ({
       organization_id: orgid(o),
-      region: 'eu-gb',
       windows: cwindow(nri, n),
       resources: [{
         resource_id: 'object-storage',

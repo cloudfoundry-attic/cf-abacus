@@ -171,7 +171,6 @@ describe('abacus-usage-accumulator-itest', () => {
 
     const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
       o + 1].join('-');
-    const rid = (o) => o % 2 === 0 ? 'us-south' : 'eu-gb';
     const sid = (o, ri) => ['aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
       o + 1].join('-');
     const cid = (o, ri) => ['bbeae239-f3f8-483c-9dd0-de6781c38bab',
@@ -190,7 +189,6 @@ describe('abacus-usage-accumulator-itest', () => {
       collected_usage_id: bid(o, ri, u),
       start: start + u,
       end: end + u,
-      region: rid(o),
       organization_id: oid(o),
       space_id: sid(o, ri),
       resource_id: 'test-resource',
