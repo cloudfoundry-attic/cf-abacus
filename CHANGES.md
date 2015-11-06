@@ -5,6 +5,31 @@ The Abacus usage metering and aggregation service.
 
 ---
 
+### v0.0.3 - 11/06/2015
+
+##### Usage submission
+- Scoped organization ids (e.g. per deployment, region, zone etc)
+
+##### Usage metering and rating
+- Accurate floating point calculations using BigNumber.js
+
+##### Usage accumulation
+- Fix remaining timing and event sequencing issues in tests
+
+##### Misc
+- Performance optimizations, latency and memory footprint
+- Several small/medium/large deployment config options
+
+##### Documentation
+- Japanese translation
+
+##### Prerequisites
+- Node.js 0.12, 4.2
+- CouchDB 1.6 compatible database
+- Cloud Foundry v210+
+
+---
+
 ### v0.0.2 - 10/30/2015
 
 ##### Usage submission
