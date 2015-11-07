@@ -31,7 +31,7 @@
   "dependencies": {
     "abacus-debug": "file:../debug",
     "abacus-transform": "file:../transform",
-    "murmurhash": "0.0.3",
+    "murmurhash": "0.0.2",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
