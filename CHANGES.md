@@ -16,12 +16,15 @@ The Abacus usage metering and aggregation service.
 ##### Usage accumulation
 - Fix remaining timing and event sequencing issues in tests
 
-##### Misc
-- Performance optimizations, latency and memory footprint
+##### Deployment
 - Several small/medium/large deployment config options
+- Prototype of a BOSH release for Abacus
 
 ##### Documentation
 - Japanese translation
+
+##### Misc
+- Performance optimizations, latency and memory footprint
 
 ##### Prerequisites
 - Node.js 0.12, 4.2
