@@ -2,7 +2,7 @@
   "name": "abacus-partition",
   "description": "Distribute time-based versions of keys over a set of partitions",
   "license": "Apache-2.0",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/partition",
   "bugs": {
@@ -31,7 +31,7 @@
   "dependencies": {
     "abacus-debug": "file:../debug",
     "abacus-transform": "file:../transform",
-    "murmurhash": "0.0.2",
+    "murmurhash": "0.0.3",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

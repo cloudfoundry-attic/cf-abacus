@@ -2,7 +2,7 @@
   "name": "abacus-cf-bridge-itest",
   "description": "CF Bridge integration and performance tests",
   "license": "Apache-2.0",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/cf/bridge",
   "bugs": {
