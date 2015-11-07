@@ -1,0 +1,29 @@
+#!/bin/bash
+set -e
+
+ABACUS_PATH=$(pwd)
+BOSH_PATH=$ABACUS_PATH/etc/bosh
+
+cd $BOSH_PATH
+
+bosh -n -v upload release --skip-if-exists
+
+BOSH_STATUS=$(bosh status)
+EXPECTED_DIRECTOR_NAME="Bosh Lite Director"
+
+if [[ "$(echo "$BOSH_STATUS" | grep Name)" != *"$EXPECTED_DIRECTOR_NAME"* ]]; then
+  echo "Can only target $EXPECTED_DIRECTOR_NAME. Please use 'bosh target' before running this script."
+  exit 1
+fi
+DIRECTOR_UUID=$(echo "$BOSH_STATUS" | grep UUID | awk '{print $2}')
+EXPRESSION='s/DIRECTOR_UUID/'$DIRECTOR_UUID'/g'
+
+mkdir -p  $BOSH_PATH/deployments
+
+sed $EXPRESSION $BOSH_PATH/spec/cf-abacus.yml.erb > $BOSH_PATH/deployments/cf-abacus.yml
+
+bosh -n -v delete deployment cf-abacus
+
+bosh -n -v deployment $BOSH_PATH/deployments/cf-abacus.yml
+
+bosh -n -v deploy

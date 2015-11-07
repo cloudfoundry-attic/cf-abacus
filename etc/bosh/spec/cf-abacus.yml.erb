@@ -1,0 +1,81 @@
+---
+name: cf-abacus
+director_uuid: DIRECTOR_UUID
+release:
+  name: cf-abacus
+  version: latest
+compilation:
+  workers: 1
+  network: default
+  cloud_properties:
+    instance_type: m1.small
+update:
+  canaries: 1
+  canary_watch_time: 30000
+  update_watch_time: 30000
+  max_in_flight: 4
+  max_errors: 1
+networks:
+  - name: default
+    type: dynamic
+    cloud_properties:
+      security_groups:
+      - default
+resource_pools:
+  - name: errandPool
+    network: default
+    stemcell:
+      name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+      version: latest
+    cloud_properties:
+      instance_type: m1.small
+      availability_zone:
+      key_name:
+jobs:
+- name: deploy-abacus
+  template: deploy-abacus
+  lifecycle: errand
+  instances: 1
+  resource_pool: errandPool
+  networks:
+  - name: default
+properties:
+  cf:
+    api: api.bosh-lite.com
+    email: admin
+    password: admin
+    space: dev
+    organization: abacus
+    domain: bosh-lite.com
+    disk_quota: 256M
+    memory: 256M
+    instances: 1
+  abacus:
+    env:
+      secured: false
+      jwt_key: undefined
+      jwt_algo: undefined
+      client_id: undefined
+      client_secret: undefined
+      auth_server: undefined
+      debug: e-*
+    account:
+      host: abacus-account-stub
+    provisioning:
+      host: abacus-provisioning-stub
+    eureka:
+      host: abacus-eureka-stub
+    collector:
+      host: abacus-usage-collector
+    meter:
+      host: abacus-usage-meter
+    accumulator:
+      host: abacus-usage-accumulator
+    aggregator:
+      host: abacus-usage-aggregator
+    rating:
+      host: abacus-usage-rate
+    reporting:
+      host: abacus-usage-reporting
+    dbserver:
+      host: abacus-dbserver

@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+ABACUS_PATH=$(pwd)
+export PATH=$PATH:$ABACUS_PATH/node_modules/.bin
+node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc default apps | awk '{ printf "(cd %s && cfpack)\n", $1 }' | bash -xe
+pushd $ABACUS_PATH/etc/bosh
+bosh create release --force --name cf-abacus
+popd

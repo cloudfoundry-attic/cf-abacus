@@ -1,0 +1,3 @@
+set -e
+
+rsync -a cf-abacus/ ${BOSH_INSTALL_TARGET}

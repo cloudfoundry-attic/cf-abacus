@@ -1,0 +1,111 @@
+---
+domain: <%= p("cf.domain") %>
+memory: <%= p("cf.memory") %>
+disk_quota: <%= p("cf.disk_quota") %>
+instances: <%= p("cf.instances") %>
+applications:
+  - name: abacus-dbserver
+    host: <%= p("abacus.dbserver.host") %>
+    path: /var/vcap/packages/cf-abacus/lib/utils/dbserver/.cfpack/app.zip
+  - name: abacus-eureka-stub
+    host: <%= p("abacus.eureka.host") %>
+    path: /var/vcap/packages/cf-abacus/lib/stubs/eureka/.cfpack/app.zip
+    env:
+      SECURED: <%= p("abacus.env.secured") %>
+      JWTKEY: <%= p("abacus.env.jwt_key") %>
+      JWTALGO: <%= p("abacus.env.jwt_algo") %>
+      COUCHDB:  <%= p("abacus.dbserver.host") %>
+  - name: abacus-account-stub
+    host: <%= p("abacus.account.host") %>
+    path: /var/vcap/packages/cf-abacus/lib/stubs/account/.cfpack/app.zip
+    env:
+      SECURED: <%= p("abacus.env.secured") %>
+      JWTKEY: <%= p("abacus.env.jwt_key") %>
+      JWTALGO: <%= p("abacus.env.jwt_algo") %>
+  - name: abacus-provisioning-stub
+    host: <%= p("abacus.provisioning.host") %>
+    path: /var/vcap/packages/cf-abacus/lib/stubs/provisioning/.cfpack/app.zip
+    env:
+      SECURED: <%= p("abacus.env.secured") %>
+      JWTKEY: <%= p("abacus.env.jwt_key") %>
+      JWTALGO: <%= p("abacus.env.jwt_algo") %>
+      COUCHDB:  <%= p("abacus.dbserver.host") %>
+  - name: abacus-usage-collector
+    host: <%= p("abacus.collector.host") %>
+    path: /var/vcap/packages/cf-abacus/lib/metering/collector/.cfpack/app.zip
+    env:
+      SECURED: <%= p("abacus.env.secured") %>
+      JWTKEY: <%= p("abacus.env.jwt_key") %>
+      JWTALGO: <%= p("abacus.env.jwt_algo") %>
+      CLIENT_ID: <%= p("abacus.env.client_id") %>
+      CLIENT_SECRET: <%= p("abacus.env.client_secret") %>
+      COUCHDB:  <%= p("abacus.dbserver.host") %>
+      EUREKA: <%= p("abacus.eureka.host") %>
+      PROVISIONING: <%= p("abacus.provisioning.host") %>
+      METER:  <%= p("abacus.meter.host") %>
+  - name: abacus-usage-meter
+    host: <%= p("abacus.meter.host") %>
+    path: /var/vcap/packages/cf-abacus/lib/metering/meter/.cfpack/app.zip
+    env:
+      SECURED: <%= p("abacus.env.secured") %>
+      JWTKEY: <%= p("abacus.env.jwt_key") %>
+      JWTALGO: <%= p("abacus.env.jwt_algo") %>
+      CLIENT_ID: <%= p("abacus.env.client_id") %>
+      CLIENT_SECRET: <%= p("abacus.env.client_secret") %>
+      COUCHDB:  <%= p("abacus.dbserver.host") %>
+      EUREKA: <%= p("abacus.eureka.host") %>
+      PROVISIONING: <%= p("abacus.provisioning.host") %>
+      ACCUMULATOR:  <%= p("abacus.accumulator.host") %>
+  - name: abacus-usage-accumulator
+    host: <%= p("abacus.accumulator.host") %>
+    path: /var/vcap/packages/cf-abacus/lib/aggregation/accumulator/.cfpack/app.zip
+    env:
+      SECURED: <%= p("abacus.env.secured") %>
+      JWTKEY: <%= p("abacus.env.jwt_key") %>
+      JWTALGO: <%= p("abacus.env.jwt_algo") %>
+      CLIENT_ID: <%= p("abacus.env.client_id") %>
+      CLIENT_SECRET: <%= p("abacus.env.client_secret") %>
+      COUCHDB:  <%= p("abacus.dbserver.host") %>
+      EUREKA: <%= p("abacus.eureka.host") %>
+      PROVISIONING: <%= p("abacus.provisioning.host") %>
+      AGGREGATOR:  <%= p("abacus.aggregator.host") %>
+  - name: abacus-usage-aggregator
+    host: <%= p("abacus.aggregator.host") %>
+    path: /var/vcap/packages/cf-abacus/lib/aggregation/aggregator/.cfpack/app.zip
+    env:
+      SECURED: <%= p("abacus.env.secured") %>
+      JWTKEY: <%= p("abacus.env.jwt_key") %>
+      JWTALGO: <%= p("abacus.env.jwt_algo") %>
+      CLIENT_ID: <%= p("abacus.env.client_id") %>
+      CLIENT_SECRET: <%= p("abacus.env.client_secret") %>
+      COUCHDB:  <%= p("abacus.dbserver.host") %>
+      EUREKA: <%= p("abacus.eureka.host") %>
+      ACCOUNT: <%= p("abacus.account.host") %>
+      PROVISIONING: <%= p("abacus.provisioning.host") %>
+      RATING:  <%= p("abacus.rating.host") %>
+  - name: abacus-usage-rate
+    host: <%= p("abacus.rating.host") %>
+    path: /var/vcap/packages/cf-abacus/lib/aggregation/rate/.cfpack/app.zip
+    env:
+      SECURED: <%= p("abacus.env.secured") %>
+      JWTKEY: <%= p("abacus.env.jwt_key") %>
+      JWTALGO: <%= p("abacus.env.jwt_algo") %>
+      CLIENT_ID: <%= p("abacus.env.client_id") %>
+      CLIENT_SECRET: <%= p("abacus.env.client_secret") %>
+      COUCHDB:  <%= p("abacus.dbserver.host") %>
+      EUREKA: <%= p("abacus.eureka.host") %>
+      ACCOUNT: <%= p("abacus.account.host") %>
+      PROVISIONING: <%= p("abacus.provisioning.host") %>
+  - name: abacus-usage-reporting
+    host: <%= p("abacus.reporting.host") %>
+    path: /var/vcap/packages/cf-abacus/lib/aggregation/reporting/.cfpack/app.zip
+    env:
+      SECURED: <%= p("abacus.env.secured") %>
+      JWTKEY: <%= p("abacus.env.jwt_key") %>
+      JWTALGO: <%= p("abacus.env.jwt_algo") %>
+      CLIENT_ID: <%= p("abacus.env.client_id") %>
+      CLIENT_SECRET: <%= p("abacus.env.client_secret") %>
+      COUCHDB:  <%= p("abacus.dbserver.host") %>
+      EUREKA: <%= p("abacus.eureka.host") %>
+      ACCOUNT: <%= p("abacus.account.host") %>
+      PROVISIONING: <%= p("abacus.provisioning.host") %>

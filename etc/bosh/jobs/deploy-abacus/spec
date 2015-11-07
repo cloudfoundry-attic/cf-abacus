@@ -1,0 +1,62 @@
+---
+name: deploy-abacus
+description: "Deploys Abacus apps to cloud foundry"
+packages:
+  - cf-abacus
+  - cli
+templates:
+  run.erb: bin/run
+  manifest.yml.erb: bin/manifest.yml
+properties:
+  cf.api:
+    description:
+  cf.email:
+    description:
+  cf.password:
+    description:
+  cf.space:
+    description:
+  cf.organization:
+    description:
+  cf.domain:
+    description:
+  cf.disk_quota:
+    description:
+  cf.memory:
+    description:
+  cf.instances:
+    description:
+  abacus.env.secured:
+    description:
+  abacus.env.jwt_key:
+    description:
+  abacus.env.jwt_algo:
+    description:
+  abacus.env.client_id:
+    description:
+  abacus.env.client_secret:
+    description:
+  abacus.env.auth_server:
+    description:
+  abacus.env.debug:
+    description:
+  abacus.account.host:
+    description:
+  abacus.provisioning.host:
+    description:
+  abacus.eureka.host:
+    description:
+  abacus.collector.host:
+    description:
+  abacus.meter.host:
+    description:
+  abacus.accumulator.host:
+    description:
+  abacus.aggregator.host:
+    description:
+  abacus.rating.host:
+    description:
+  abacus.reporting.host:
+    description:
+  abacus.dbserver.host:
+    description:
