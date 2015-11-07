@@ -9,6 +9,7 @@ The Abacus usage metering and aggregation service.
 
 ##### Usage submission
 - Scoped organization ids (e.g. per deployment, region, zone etc)
+- Optionally replay unprocessed usage after a restart
 
 ##### Usage metering and rating
 - Accurate floating point calculations using BigNumber.js
@@ -27,8 +28,8 @@ The Abacus usage metering and aggregation service.
 - Performance optimizations, latency and memory footprint
 
 ##### Prerequisites
-- Node.js 0.12, 4.2
-- CouchDB 1.6 compatible database
+- Node.js 0.12, 4.2, 5.0
+- CouchDB 1.6+ compatible database
 - Cloud Foundry v210+
 
 ---
