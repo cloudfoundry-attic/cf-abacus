@@ -1,0 +1,14 @@
+#!/bin/bash
+set -xe
+BASEDIR=$(dirname $0)
+cd $BASEDIR
+
+export PATH=$PATH:/var/vcap/packages/cli/bin
+
+cf api --skip-ssl-validation <%= p("cf.api") %>
+
+cf auth <%= p("cf.email") %> <%= p("cf.password") %>
+
+cf target -o <%= p("cf.organization") %> -s <%= p("cf.space") %>
+
+cf push

@@ -1,0 +1,4 @@
+---
+name: cf-abacus
+files:
+  - cf-abacus/**/*.zip
