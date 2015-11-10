@@ -50,11 +50,13 @@ var remanifest = function(root, name, instances, conf, cb) {
 };
 
 // Push an app
-var push = function(name, cb) {
-  var ex = cp.exec('cf push -f .cfpush/' +
-    [name, 'manifest.yml'].join('-'), {
-      cwd: process.cwd()
-    });
+var push = function(name, stageOnly, cb) {
+  var command = 'cf push ' +
+    (stageOnly ? '--no-start ' : '') +
+    '-f .cfpush/' + [name, 'manifest.yml'].join('-');
+  var ex = cp.exec(command, {
+    cwd: process.cwd()
+  });
   ex.stdout.on('data', function(data) {
     process.stdout.write(data);
   });
@@ -77,6 +79,8 @@ var runCLI = function() {
     .option('-i, --instances <nb>', 'nb of instances')
     .option('-c, --conf <value>',
       'configuration name', process.env.CONF)
+    .option('-s, --stage',
+      'Stage only. Do not start an app after pushing')
     .parse(process.argv);
 
   // Create the directories we need
@@ -85,6 +89,8 @@ var runCLI = function() {
       console.log('Couldn\'t setup cfpack layout -', err);
       process.exit(1);
     }
+
+    console.log('commander', commander, 'stage', commander.stage);
 
     // Generate the updated manifest.yml
     remanifest(commander.root,
@@ -95,7 +101,7 @@ var runCLI = function() {
         }
 
         // Produce the packaged app zip
-        push(commander.name, function(err) {
+        push(commander.name, commander.stage, function(err) {
           if(err) {
             console.log('Couldn\'t push app %s -', commander.name, err);
             process.exit(1);
