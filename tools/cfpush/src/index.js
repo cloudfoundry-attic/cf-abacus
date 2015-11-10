@@ -90,8 +90,6 @@ var runCLI = function() {
       process.exit(1);
     }
 
-    console.log('commander', commander, 'stage', commander.stage);
-
     // Generate the updated manifest.yml
     remanifest(commander.root,
       commander.name, commander.instances, commander.conf, function(err) {
