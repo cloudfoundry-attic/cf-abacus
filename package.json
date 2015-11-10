@@ -56,7 +56,10 @@
     "cfpush": "bin/cfpush",
     "cfdelete": "bin/cfdelete",
     "cfstart": "bin/cfstart",
-    "cfstop": "bin/cfstop"
+    "cfstop": "bin/cfstop",
+    "boshrelease": "bin/boshrelease",
+    "boshdeploy": "bin/boshdeploy",
+    "boshrun": "bin/boshrun"
   },
   "dependencies": {
     "abacus-resource-config": "file:lib/config/resource",
