@@ -1,6 +1,0 @@
-#!/usr/bin/env node
-'use strict';
-
-// Run npm 2.x, install it if needed
-require('./src/npm2.js').runCLI();
-

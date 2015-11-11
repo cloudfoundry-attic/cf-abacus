@@ -22,7 +22,6 @@
     "apprc",
     "apps.rc",
     "foreach",
-    "npm2",
     "secgroup.json",
     "versions",
     "lib/",
@@ -32,7 +31,6 @@
   "bin": {
     "apprc": "./apprc",
     "foreach": "./foreach",
-    "npm2": "./npm2",
     "versions": "./versions"
   },
   "scripts": {
@@ -52,7 +50,7 @@
     "abacus-publish": "file:../tools/publish"
   },
   "engines": {
-    "node": ">=0.10.0",
-    "npm": ">=2.0.0"
+    "node": ">=0.12.7",
+    "npm": ">=2.11.3"
   }
 }
