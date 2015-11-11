@@ -47,7 +47,7 @@
     "abacus-usage-schemas": "file:../../config/schemas"
   },
   "engines": {
-    "node": ">=0.12.7",
-    "npm": ">=2.11.3"
+    "node": ">=0.12.0",
+    "npm": ">=2.0.0"
   }
 }

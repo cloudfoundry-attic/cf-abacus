@@ -42,6 +42,6 @@
     "abacus-publish": "file:../publish"
   },
   "engines": {
-    "node": ">=0.12.7"
+    "node": ">=0.12.0"
   }
 }
