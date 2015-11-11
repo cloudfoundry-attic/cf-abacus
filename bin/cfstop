@@ -10,7 +10,7 @@ fi
 
 for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
   APPNAME=$(node_modules/abacus-etc/appname $MODULE)
-  APPS=$(echo $(node_modules/abacus-etc/apprc node_modules/$APPNAME/.apprc $CONF APPS) - 1 | bc)
+  APPS=$(( $(node_modules/abacus-etc/apprc node_modules/$APPNAME/.apprc $CONF APPS) - 1 ))
   if [ "$APPS" == "0" ]; then
     (cf stop $APPNAME)&
   else

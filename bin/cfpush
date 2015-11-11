@@ -11,7 +11,7 @@ fi
 for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
   APPNAME=$(node_modules/abacus-etc/appname $MODULE)
   INSTANCES=$(node_modules/abacus-etc/apprc $MODULE/.apprc $CONF INSTANCES)
-  APPS=$(echo $(node_modules/abacus-etc/apprc node_modules/$APPNAME/.apprc $CONF APPS) - 1 | bc)
+  APPS=$(( $(node_modules/abacus-etc/apprc node_modules/$APPNAME/.apprc $CONF APPS) - 1 ))
   (cd $MODULE && npm run cfpack)
   if [ "$APPS" == "0" ]; then
     (cd $MODULE && npm run cfpush -- -n $APPNAME -i $INSTANCES -c $CONF)&
