@@ -70,7 +70,10 @@ var runCLI = function(stdin, stdout) {
     sin.on('end', function() {
       // Render markdown input and merge into HTML template
       var html = hogan.compile(template.toString()).render({
-        __dirname: path.relative(process.cwd(), path.resolve(__dirname, '..')),
+        __mddoc: path.relative(process.cwd(),
+          path.resolve(__dirname, '..')),
+        __hljs: path.relative(process.cwd(),
+          path.resolve(require.resolve('highlight.js'), '../..')),
         markdown: md.render(input.join())
       });
 
