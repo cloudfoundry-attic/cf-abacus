@@ -73,7 +73,7 @@ describe('abacus-demo-client', () => {
   it('submits usage for a sample resource and retrieves an aggregated ' +
     'usage report', (done) => {
       // Configure the test timeout
-      const giveup = now.getTime() + 20000;
+      const giveup = now.getTime() + 40000;
 
       // Test usage to be submitted by the client
       const start = now.getTime();
