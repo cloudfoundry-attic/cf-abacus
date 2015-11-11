@@ -12,10 +12,10 @@ for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $C
   APPNAME=$(node_modules/abacus-etc/appname $MODULE)
   APPS=$(echo $(node_modules/abacus-etc/apprc node_modules/$APPNAME/.apprc $CONF APPS) - 1 | bc)
   if [ "$APPS" == "0" ]; then
-    cf delete -f -r $APPNAME &
+    (cf delete -f -r $APPNAME)&
   else
     for I in $(seq 0 $APPS); do
-      cf delete -f -r $APPNAME-$I &
+      (cf delete -f -r $APPNAME-$I)&
     done
   fi
 done

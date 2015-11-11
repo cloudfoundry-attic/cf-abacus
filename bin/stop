@@ -10,7 +10,7 @@ fi
 
 for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
   APPNAME=$(node_modules/abacus-etc/appname $MODULE)
-  (cd node_modules/$APPNAME && npm stop &)
+  (cd node_modules/$APPNAME && npm stop)&
 done
 
 wait
