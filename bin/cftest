@@ -43,8 +43,8 @@ if [ "$CF_TEST" == "true" ]; then
   # Start clean
   npm run cfdelete
 
-  # Push and start the apps
-  npm run cfpush
+  # Stage and start the apps
+  npm run cfstage
   npm run cfstart
 
   # Run the demo
