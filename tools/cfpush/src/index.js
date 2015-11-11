@@ -50,11 +50,13 @@ var remanifest = function(root, name, instances, conf, cb) {
 };
 
 // Push an app
-var push = function(name, cb) {
-  var ex = cp.exec('cf push -f .cfpush/' +
-    [name, 'manifest.yml'].join('-'), {
-      cwd: process.cwd()
-    });
+var push = function(name, start, cb) {
+  var command = 'cf push ' +
+    (start ? '' : '--no-start ') +
+    '-f .cfpush/' + [name, 'manifest.yml'].join('-');
+  var ex = cp.exec(command, {
+    cwd: process.cwd()
+  });
   ex.stdout.on('data', function(data) {
     process.stdout.write(data);
   });
@@ -77,6 +79,8 @@ var runCLI = function() {
     .option('-i, --instances <nb>', 'nb of instances')
     .option('-c, --conf <value>',
       'configuration name', process.env.CONF)
+    .option('-s, --start',
+      'start an app after pushing')
     .parse(process.argv);
 
   // Create the directories we need
@@ -95,7 +99,7 @@ var runCLI = function() {
         }
 
         // Produce the packaged app zip
-        push(commander.name, function(err) {
+        push(commander.name, commander.start, function(err) {
           if(err) {
             console.log('Couldn\'t push app %s -', commander.name, err);
             process.exit(1);
