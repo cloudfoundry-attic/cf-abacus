@@ -29,11 +29,11 @@
     "pub": "publish"
   },
   "dependencies": {
-    "babel-runtime": "^5.8.19",
     "abacus-debug": "file:../debug",
     "abacus-perf": "file:../perf",
     "abacus-request": "file:../request",
-    "abacus-urienv": "file:../urienv"
+    "abacus-urienv": "file:../urienv",
+    "babel-preset-es2015": "^6.1.4"
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",

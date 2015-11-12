@@ -1,7 +1,6 @@
 {
     "compact": false,
-    "optional": "runtime",
-    "nonStandard": true,
+    "presets": ["es2015"],
     "auxiliaryCommentBefore": "istanbul ignore next",
     "sourceMaps": "inline"
 }

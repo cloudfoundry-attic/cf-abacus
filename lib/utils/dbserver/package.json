@@ -43,6 +43,7 @@
     "abacus-debug": "file:../debug",
     "abacus-launcher": "file:../launcher",
     "abacus-webapp": "file:../webapp",
+    "babel-preset-es2015": "^6.1.4",
     "commander": "^2.8.1",
     "express": "^4.9.4",
     "express-pouchdb": "^1.0.0",

@@ -40,6 +40,7 @@
     "abacus-provisioning-stub": "file:../../../lib/stubs/provisioning",
     "abacus-usage-collector": "file:../../../lib/metering/collector",
     "abacus-debug": "file:../../../lib/utils/debug",
+    "babel-preset-es2015": "^6.1.4",
     "underscore": "^1.8.3",
     "commander": "2.8.1"
   },

@@ -35,13 +35,13 @@
     "cfpush": "cfpush"
   },
   "dependencies": {
-    "babel-runtime": "^5.8.19",
     "abacus-cfoauth": "file:../../utils/cfoauth",
     "abacus-debug": "file:../../utils/debug",
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-router": "file:../../utils/router",
     "abacus-usage-schemas": "file:../../config/schemas",
     "abacus-webapp": "file:../../utils/webapp",
+    "babel-preset-es2015": "^6.1.4",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

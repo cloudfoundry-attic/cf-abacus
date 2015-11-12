@@ -33,7 +33,7 @@
     "tools/"
   ],
   "scripts": {
-    "bootstrap": "npm install etc tools/babel tools/eslint tools/mocha tools/publish tools/cfpack tools/cfpush",
+    "bootstrap": "npm install etc tools/babel tools/eslint tools/mocha tools/publish tools/cfpack tools/cfpush babel-preset-es2015",
     "babel": "foreach abacus :path npm run babel",
     "build": "etc/versions && npm run bootstrap && npm run babel && npm install && npm test",
     "clean": "git clean -df",
@@ -121,6 +121,7 @@
     "abacus-demo-client": "file:demo/client",
     "abacus-doc": "file:doc",
     "abacus-etc": "file:etc",
+    "babel-preset-es2015": "^6.1.4",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

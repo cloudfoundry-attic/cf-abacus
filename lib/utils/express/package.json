@@ -37,6 +37,7 @@
     "abacus-events": "file:../events",
     "abacus-rc": "file:../rc",
     "abacus-vcapenv": "file:../vcapenv",
+    "babel-preset-es2015": "^6.1.4",
     "body-parser": "^1.4.3",
     "commander": "^2.8.1",
     "compression": "^1.0.8",

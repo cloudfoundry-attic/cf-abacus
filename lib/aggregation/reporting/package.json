@@ -55,7 +55,7 @@
     "abacus-usage-schemas": "file:../../config/schemas",
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-yieldable": "file:../../utils/yieldable",
-    "babel-runtime": "^5.8.19",
+    "babel-preset-es2015": "^6.1.4",
     "bignumber.js": "^2.1.0",
     "underscore": "^1.8.3"
   },

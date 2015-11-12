@@ -30,7 +30,8 @@
   },
   "dependencies": {
     "abacus-cluster": "file:../cluster",
-    "abacus-vcapenv": "file:../vcapenv"
+    "abacus-vcapenv": "file:../vcapenv",
+    "babel-preset-es2015": "^6.1.4"
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",

@@ -21,7 +21,10 @@ var runCLI = function() {
     .parse(process.argv);
 
   var args = [
-    '--babelrc', path.resolve(__dirname, '../.babelrc'),
+    '--compact', 'false', 
+    '--presets', 'es2015', 
+    /* '--auxiliary-comment-before', 'istanbul ignore next', */
+    '--source-maps', 'inline',
     '--out-dir', 'lib', 'src'
   ].concat(commander.dir ? [commander.dir] : []);
   var babel = cp.spawn(path.resolve(

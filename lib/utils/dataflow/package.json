@@ -30,7 +30,6 @@
     "pub": "publish"
   },
   "dependencies": {
-    "babel-runtime": "^5.8.19",
     "abacus-batch": "file:../batch",
     "abacus-breaker": "file:../breaker",
     "abacus-cfoauth": "file:../cfoauth",
@@ -51,6 +50,7 @@
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-vcapenv": "file:../../utils/vcapenv",
     "abacus-yieldable": "file:../../utils/yieldable",
+    "babel-preset-es2015": "^6.1.4",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

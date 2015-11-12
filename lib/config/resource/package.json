@@ -37,6 +37,7 @@
     "abacus-request": "file:../../utils/request",
     "abacus-retry": "file:../../utils/retry",
     "abacus-urienv": "file:../../utils/urienv",
+    "babel-preset-es2015": "^6.1.4",
     "bignumber.js": "^2.1.0",
     "lru-cache": "^2.6.5",
     "underscore": "^1.8.3"

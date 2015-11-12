@@ -29,8 +29,9 @@
     "pub": "publish"
   },
   "dependencies": {
-    "underscore": "^1.8.3",
+    "babel-preset-es2015": "^6.1.4",
     "emit-stream": "^0.1.2",
+    "underscore": "^1.8.3",
     "through": "^2.3.4"
   },
   "devDependencies": {

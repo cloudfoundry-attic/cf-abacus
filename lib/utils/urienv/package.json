@@ -31,6 +31,7 @@
   "dependencies": {
     "abacus-debug": "file:../debug",
     "abacus-vcapenv": "file:../vcapenv",
+    "babel-preset-es2015": "^6.1.4",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

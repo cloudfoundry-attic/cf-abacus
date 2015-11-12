@@ -154,13 +154,16 @@ var runCLI = function() {
     commander.istanbul = false;
     commander.color = true;
   }
-  else
+  else {
     commander
       .option('--no-istanbul', 'do not instrument with Istanbul')
       .option('-i, --istanbul-includes <regex>',
         'instrument matching modules with Istanbul [abacus]', 'abacus')
       .option('--no-color', 'do not colorify output')
       .parse(process.argv);
+    if(process.env.NO_ISTANBUL)
+      commander.istanbul = false;
+  }
 
   // Time the execution of the tests
   var t0 = new Date();

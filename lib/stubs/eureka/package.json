@@ -35,7 +35,6 @@
     "cfpush": "cfpush"
   },
   "dependencies": {
-    "babel-runtime": "^5.8.19",
     "abacus-batch": "file:../../utils/batch",
     "abacus-breaker": "file:../../utils/breaker",
     "abacus-cfoauth": "file:../../utils/cfoauth",
@@ -48,6 +47,7 @@
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-yieldable": "file:../../utils/yieldable",
+    "babel-preset-es2015": "^6.1.4",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
