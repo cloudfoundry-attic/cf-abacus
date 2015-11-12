@@ -3,27 +3,27 @@ Monitoring Abacus applications using Hystrix Dashboard
 
 * Get latest customized Hystrix Dashboard
 
-```bash
-git clone https://github.com/sasrin/Hystrix
-cd Hystrix
-git checkout dev
-git pull
-```
+  ```bash
+  git clone https://github.com/sasrin/Hystrix
+  cd Hystrix
+  git checkout dev
+  git pull
+  ```
 
 * Build the dashboard using Gradle
 
-```bash
-cd hystrix-dashboard
-../gradlew build
-```
+  ```bash
+  cd hystrix-dashboard
+  ../gradlew build
+  ```
 
 The build creates Hystrix Dashboard web application at ./build/libs/hystrix-dashboard-X.X.X-SNAPSHOT.war
 
 * Run the dashboard using Jetty
 
-```bash
-../gradlew jettyRun
-```
+  ```bash
+  ../gradlew jettyRun
+  ```
 
 * Access the dashboard at `http://localhost:7979/hystrix-dashboard`
 
