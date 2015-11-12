@@ -28,10 +28,12 @@ Run the dashboard using Jetty
 ../gradlew jettyRun
 ```
 
+Gradle build will hang at 75% with the URL needed to access the dashboard: `Running at http://localhost:7979/hystrix-dashboard`
+
 Monitoring with Hystrix
 ---
 
-Access the dashboard at `http://localhost:7979/hystrix-dashboard`
+Access the dashboard at the URL from the last step: `http://localhost:7979/hystrix-dashboard`
 
 Add hystrix streams from Abacus applications:
 * Enter hystrix steam URL for an application. For example, the usage collector application running at local machine would have hystrix stream reachable at `http://localhost:9080/hystrix.stream`
