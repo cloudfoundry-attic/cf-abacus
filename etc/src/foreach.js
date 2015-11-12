@@ -122,17 +122,17 @@ var runCLI = function() {
     function(dep) {
       return rx.test(dep[0]) && /^file:/.test(dep[1]);
     }), function(dep) {
-      var resolve = function(s) {
-        return s.replace(/\:name/, dep[0])
-          .replace(/:path/, dep[1].split(':')[1]);
-      };
+    var resolve = function(s) {
+      return s.replace(/\:name/, dep[0])
+        .replace(/:path/, dep[1].split(':')[1]);
+    };
 
-      // Run the given command on each module
-      exec(resolve([commander.cmd].concat(commander.args).join(' ')),
-        resolve(commander.dir), function(err, val) {
-          if(err) process.exit(err);
-        });
-    });
+    // Run the given command on each module
+    exec(resolve([commander.cmd].concat(commander.args).join(' ')),
+      resolve(commander.dir), function(err, val) {
+        if(err) process.exit(err);
+      });
+  });
 };
 
 // Export our CLI
