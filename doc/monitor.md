@@ -17,7 +17,7 @@ Monitoring Abacus applications using Hystrix Dashboard
   ../gradlew build
   ```
 
-The build creates Hystrix Dashboard web application at ./build/libs/hystrix-dashboard-X.X.X-SNAPSHOT.war
+  The build creates Hystrix Dashboard web application at ./build/libs/hystrix-dashboard-X.X.X-SNAPSHOT.war
 
 * Run the dashboard using Jetty
 
