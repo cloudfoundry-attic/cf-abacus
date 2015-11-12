@@ -41,11 +41,11 @@ if [ "$CF_TEST" == "true" ]; then
   cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
 
   # Start clean
-  npm run cfdelete
+  npm run cfdelete medium
 
   # Stage and start the apps
-  npm run cfstage
-  npm run cfstart
+  npm run cfstage medium
+  npm run cfstart medium
 
   # Run the demo
   npm run demo -- --collector https://abacus-usage-collector.$CF_DOMAIN --reporting https://abacus-usage-reporting.$CF_DOMAIN
