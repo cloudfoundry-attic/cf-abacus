@@ -1,38 +1,43 @@
 Monitoring Abacus applications using Hystrix Dashboard
 ===
 
-* Get latest customized Hystrix Dashboard
+Building Hystrix Dashboard
+---
 
-  ```bash
-  git clone https://github.com/sasrin/Hystrix
-  cd Hystrix
-  git checkout dev
-  git pull
-  ```
+Get latest customized Hystrix Dashboard
 
-* Build the dashboard using Gradle
+```bash
+git clone https://github.com/sasrin/Hystrix
+cd Hystrix
+git checkout dev
+git pull
+```
 
-  ```bash
-  cd hystrix-dashboard
-  ../gradlew build
-  ```
+Build the dashboard using Gradle
 
-  The build creates Hystrix Dashboard web application at ./build/libs/hystrix-dashboard-X.X.X-SNAPSHOT.war
+```bash
+cd hystrix-dashboard
+../gradlew build
+```
 
-* Run the dashboard using Jetty
+The build creates Hystrix Dashboard web application at ./build/libs/hystrix-dashboard-X.X.X-SNAPSHOT.war
 
-  ```bash
-  ../gradlew jettyRun
-  ```
+Run the dashboard using Jetty
 
-* Access the dashboard at `http://localhost:7979/hystrix-dashboard`
+```bash
+../gradlew jettyRun
+```
 
-* Add hystrix streams from Abacus applications
+Monitoring with Hystrix
+---
 
- * Enter hystrix steam URL for an application. For example, the usage collector application running at local machine would have hystrix stream reachable at `http://localhost:9080/hystrix.stream`
- * Enter a title for an application
- * Uncheck *Monitor Thread Pools*
- * Click *Add Stream*
- * Repeat the above steps for each application
+Access the dashboard at `http://localhost:7979/hystrix-dashboard`
 
-* Click *Monitor Streams* to monitor the applications
+Add hystrix streams from Abacus applications:
+* Enter hystrix steam URL for an application. For example, the usage collector application running at local machine would have hystrix stream reachable at `http://localhost:9080/hystrix.stream`
+* Enter a title for an application
+* Uncheck *Monitor Thread Pools*
+* Click *Add Stream*
+* Repeat the above steps for each application
+
+Click *Monitor Streams* to monitor the applications
