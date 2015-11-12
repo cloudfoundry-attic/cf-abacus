@@ -22,8 +22,10 @@ cd hystrix-dashboard
 
 The build creates Hystrix Dashboard web application at ./build/libs/hystrix-dashboard-X.X.X-SNAPSHOT.war
 
-Monitoring local Abacus installation
+Monitoring Abacus
 ---
+
+### Local installation
 
 Run the dashboard using Jetty
 
@@ -44,9 +46,7 @@ Add hystrix streams from Abacus applications:
 
 Click *Monitor Streams* to monitor the applications
 
-
-Monitoring Abacus installation running on Cloud Foundry
----
+### Cloud Foundry installation
 
 Push the Hystrix dashboard application using:
 ```bash
