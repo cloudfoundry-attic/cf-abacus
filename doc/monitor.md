@@ -61,7 +61,7 @@ cf push hystrix-dashboard -p ./build/libs/hystrix-dashboard-*-SNAPSHOT.war -b gi
 Access the dashboard URL displayed in the end of the `cf push` command output
 
 Add hystrix streams from Abacus applications:
-* Enter hystrix steam URL for an application. For example, the usage collector application may have hystrix stream reachable at `http://abacus-usage-collector.cfdomain.com/hystrix.stream`
+* Enter hystrix steam URL for an application. For example, the usage collector application will have hystrix stream reachable at the URL of the application plus the `hystrix.stream` suffix:  `http://abacus-usage-collector.cfdomain.com/hystrix.stream`
 * Enter a title for an application
 * Uncheck *Monitor Thread Pools*
 * Click *Add Stream*
