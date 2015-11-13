@@ -90,7 +90,7 @@ var exec = parallel(function(cmd, cwd, cb) {
     cb(code !== 0 ? code : undefined, true);
   });
 }, process.env.PARALLEL ?
-  parseInt(process.env.PARALLEL) : Math.min(os.cpus().length, 4));
+  parseInt(process.env.PARALLEL) : Math.min(os.cpus().length, 8));
 
 // Execute a build command for each Abacus module
 var runCLI = function() {
