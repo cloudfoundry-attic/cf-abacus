@@ -52,7 +52,7 @@
     "restart": "bin/restart",
     "demo": "bin/demo",
     "perf": "bin/perf",
-    "itest": "export PARALLEL=1 && foreach itest node_modules/:name npm run itest --",
+    "itest": "export JOBS=1 && foreach itest node_modules/:name npm run itest --",
     "pub": "npm run babel && foreach abacus :path npm run pub && publish",
     "cfpush": "bin/cfpush",
     "cfstage": "bin/cfstage",

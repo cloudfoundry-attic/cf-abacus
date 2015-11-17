@@ -30,8 +30,8 @@ var buildenv = _.extend(process.env, {
   MOCHA_COLORS: 'true'
 });
 
-// Control the number of parallel executions of a function
-var parallel = function(fn, max) {
+// Throttle the number of concurrent executions of a function
+var throttle = function(fn, max) {
   var running = 0;
   var queue = [];
 
@@ -58,9 +58,9 @@ var parallel = function(fn, max) {
   };
 };
 
-// Execute a command in a given module directory. We limit the number of
-// parallel executions of the command to a reasonable number.
-var exec = parallel(function(cmd, cwd, cb) {
+// Execute a command in a given module directory. We throttle the number of
+// concurrent jobs executing the command to a reasonable number.
+var exec = throttle(function(cmd, cwd, cb) {
   process.stdout.write(util.format('> %s: %s\n', cwd, cmd));
   var ex = cp.exec(cmd, {
     cwd: cwd,
@@ -89,8 +89,8 @@ var exec = parallel(function(cmd, cwd, cb) {
     // Call back when done
     cb(code !== 0 ? code : undefined, true);
   });
-}, process.env.PARALLEL ?
-  parseInt(process.env.PARALLEL) : Math.min(os.cpus().length, 8));
+}, process.env.JOBS ?
+  parseInt(process.env.JOBS) : Math.min(os.cpus().length, 8));
 
 // Execute a build command for each Abacus module
 var runCLI = function() {
