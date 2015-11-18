@@ -1,6 +1,6 @@
 {
-  "name": "abacus-subscription",
-  "description": "Maintains a registry of subscriptions",
+  "name": "abacus-notify",
+  "description": "Handler for sending notifications to subscribers after matching predicates with events",
   "license": "Apache-2.0",
   "version": "0.0.3",
   "private": true,
@@ -29,9 +29,21 @@
     "pub": "publish"
   },
   "dependencies": {
+    "babel-runtime": "^5.8.19",
+    "abacus-batch": "file:../batch",
+    "abacus-breaker": "file:../breaker",
+    "abacus-dbclient": "file:../dbclient",
     "abacus-debug": "file:../debug",
+    "abacus-lrudown": "file:../lrudown",
+    "abacus-partition": "file:../partition",
     "abacus-request": "file:../request",
-    "abacus-transform": "file:../transform"
+    "abacus-retry": "file:../retry",
+    "abacus-router": "file:../router",
+    "abacus-throttle": "file:../throttle",
+    "abacus-transform": "file:../transform",
+    "abacus-urienv": "file:../../utils/urienv",
+    "abacus-yieldable": "file:../yieldable",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
