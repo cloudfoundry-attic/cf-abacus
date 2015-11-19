@@ -7,20 +7,28 @@ const commander = require('commander');
 
 const batch = require('abacus-batch');
 const throttle = require('abacus-throttle');
+const yieldable = require('abacus-yieldable');
+const dbclient = require('abacus-dbclient');
 const request = require('abacus-request');
+const seqid = require('abacus-seqid');
 const router = require('abacus-router');
 const express = require('abacus-express');
+const clone = require('abacus-clone');
 
 const map = _.map;
 const range = _.range;
-const clone = _.clone;
 const omit = _.omit;
+const extend = _.extend;
 
 // Batch the requests
 const brequest = batch(request);
 
 // Setup the debug log
 const debug = require('abacus-debug')('abacus-usage-accumulator-itest');
+
+const db = require('abacus-dataflow')
+  .db('abacus-accumulator-accumulated-usage');
+db.allDocs = yieldable.functioncb(db.allDocs);
 
 // Parse command line options
 const argv = clone(process.argv);
@@ -52,7 +60,12 @@ const moduleDir = (module) => {
   return path.substr(0, path.indexOf(module + '/') + module.length);
 };
 
-/*
+const pruneQuantity = (v, k) => {
+  if(k === 'quantity')
+    return v[4];
+  return v;
+};
+
 // Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
 const dateUTCNumbify = (t) => {
   const d = new Date(t);
@@ -60,9 +73,7 @@ const dateUTCNumbify = (t) => {
     + d.getUTCDate() * 1000000 + d.getUTCHours() * 10000 + d.getUTCMinutes()
     * 100 + d.getUTCSeconds();
 };
-*/
 
-/*
 // Converts a number output in dateUTCNumbify back to a Date object
 const revertUTCNumber = (n) => {
   const numstring = n.toString();
@@ -76,9 +87,7 @@ const revertUTCNumber = (n) => {
   ));
   return d;
 };
-*/
 
-/*
 // Calculates the accumulated quantity given an end time, u, window size,
 // and multiplier factor of the usage
 const calculateQuantityByWindow = (e, u, w, m, f) => {
@@ -90,9 +99,7 @@ const calculateQuantityByWindow = (e, u, w, m, f) => {
   const windowTime = revertUTCNumber(windowTimeNum).getTime();
   return f(m, Math.min(time - windowTime, u));
 };
-*/
 
-/*
 // Builds the quantity array in the accumulated usage
 const buildQuantity = (e, u, m, f) => {
   // Scaling factor for a time window
@@ -110,7 +117,6 @@ const buildQuantity = (e, u, m, f) => {
   });
   return quantity;
 };
-*/
 
 describe('abacus-usage-accumulator-itest', () => {
   before(() => {
@@ -151,6 +157,7 @@ describe('abacus-usage-accumulator-itest', () => {
     const timeout = Math.max(60000,
       100 * orgs * resourceInstances * usage);
     this.timeout(timeout + 2000);
+    const giveup = Date.now() + timeout;
 
     // Setup aggregator spy
     const aggregator = spy((req, res, next) => {
@@ -166,8 +173,8 @@ describe('abacus-usage-accumulator-itest', () => {
     app.listen(9300);
 
     // Initialize usage doc properties with unique values
-    const start = 1435629365220 + tshift;
-    const end = 1435629465220 + tshift;
+    const start = Date.now() + tshift;
+    const end = Date.now() + tshift;
 
     const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
       o + 1].join('-');
@@ -204,7 +211,6 @@ describe('abacus-usage-accumulator-itest', () => {
 
     // Accumulated usage for given org, resource instance and usage #s
     // TODO check the values of the accumulated usage
-    /*
     const accumulatedTemplate = (o, ri, u) => extend(
       omit(meteredTemplate(o, ri, u), ['id', 'metered_usage',
         'measured_usage', 'start']), {
@@ -225,7 +231,9 @@ describe('abacus-usage-accumulator-itest', () => {
           start: meteredTemplate(o, ri, 0).start
         }
     );
-    */
+
+    const expected = clone(accumulatedTemplate(
+      orgs - 1, resourceInstances - 1, usage - 1), pruneQuantity);
 
     // Post a metered usage doc, throttled to default concurrent requests
     const post = throttle((o, ri, u, cb) => {
@@ -273,22 +281,38 @@ describe('abacus-usage-accumulator-itest', () => {
         (ri) => map(range(orgs), (o) => post(o, ri, u, cb))));
     };
 
-    let retries = 0;
     const verifyAggregator = (done) => {
-      try {
-        debug('Verifying aggregator calls %d to equal to %d',
-          aggregator.callCount, orgs * resourceInstances * usage);
-
-        expect(aggregator.callCount).to.equal(orgs * resourceInstances * usage);
-        done();
-      }
-      catch (e) {
-        // If the comparison fails we'll be called again to retry
-        // after 250 msec, but give up after 10 seconds
-        if(++retries === 40) throw e;
-
-        debug('Retry#%d', retries);
-      }
+      const startDate = Date.UTC(new Date().getUTCFullYear(),
+        new Date().getUTCMonth() + 1) - 1;
+      const endDate = Date.UTC(new Date().getUTCFullYear(),
+        new Date().getUTCMonth(), 1);
+      const sid = dbclient.kturi([expected.organization_id,
+        expected.resource_instance_id, expected.consumer_id,
+          expected.plan_id].join('/'), seqid.pad16(startDate));
+      const eid = dbclient.kturi([expected.organization_id,
+        expected.resource_instance_id, expected.consumer_id,
+          expected.plan_id].join('/'), seqid.pad16(endDate));
+      debug('comparing latest record within %s and %s', sid, eid);
+      db.allDocs({ limit: 1, startkey: sid, endkey: eid, descending: true,
+        include_docs: true },
+        (err, val) => {
+          try {
+            expect(clone(omit(val.rows[0].doc,
+              ['processed', '_rev', '_id', 'id', 'metered-usage_id']),
+                pruneQuantity)).to.deep.equal(expected);
+            done();
+          }
+          catch (e) {
+            if(Date.now() >= giveup)
+              expect(clone(omit(val.rows[0].doc,
+                ['processed', '_rev', '_id', 'id', 'metered-usage_id']),
+                  pruneQuantity)).to.deep.equal(expected);
+            else
+              setTimeout(function() {
+                verifyAggregator(done);
+              }, 250);
+          }
+        })
     };
 
     // Wait for usage accumulator to start
@@ -298,10 +322,7 @@ describe('abacus-usage-accumulator-itest', () => {
         if (err) throw err;
 
         // Submit metered usage and verify
-        submit(() => {
-          const i = setInterval(() =>
-            verifyAggregator(() => done(clearInterval(i))), 250);
-        });
+        submit(() => verifyAggregator(() => done()));
       });
   });
 });

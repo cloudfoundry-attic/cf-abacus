@@ -30,18 +30,23 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-mocha": "file:../../../tools/mocha",
     "abacus-batch": "file:../../../lib/utils/batch",
-    "abacus-throttle": "file:../../../lib/utils/throttle",
+    "abacus-clone": "file:../../../lib/utils/clone",
+    "abacus-dataflow": "file:../../../lib/utils/dataflow",
+    "abacus-dbclient": "file:../../../lib/utils/dbclient",
+    "abacus-dbserver": "file:../../../lib/utils/dbserver",
+    "abacus-debug": "file:../../../lib/utils/debug",
+    "abacus-express": "file:../../../lib/utils/express",
+    "abacus-mocha": "file:../../../tools/mocha",
     "abacus-request": "file:../../../lib/utils/request",
     "abacus-router": "file:../../../lib/utils/router",
-    "abacus-express": "file:../../../lib/utils/express",
-    "abacus-dbserver": "file:../../../lib/utils/dbserver",
+    "abacus-seqid": "file:../../../lib/utils/seqid",
+    "abacus-throttle": "file:../../../lib/utils/throttle",
     "abacus-usage-accumulator": "file:../../../lib/aggregation/accumulator",
-    "abacus-debug": "file:../../../lib/utils/debug",
+    "abacus-yieldable": "file:../../../lib/utils/yieldable",
     "babel-preset-es2015": "^6.1.4",
-    "underscore": "^1.8.3",
-    "commander": "2.8.1"
+    "commander": "2.8.1",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",

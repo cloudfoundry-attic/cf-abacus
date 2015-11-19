@@ -13,7 +13,7 @@ const seqid = require('abacus-seqid');
 const request = require('abacus-request');
 const router = require('abacus-router');
 const express = require('abacus-express');
-const clone = require('abacus-clone');;
+const clone = require('abacus-clone');
 
 const map = _.map;
 const range = _.range;
