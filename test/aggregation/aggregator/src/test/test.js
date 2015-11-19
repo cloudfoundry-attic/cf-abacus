@@ -7,13 +7,16 @@ const commander = require('commander');
 
 const batch = require('abacus-batch');
 const throttle = require('abacus-throttle');
+const yieldable = require('abacus-yieldable');
+const dbclient = require('abacus-dbclient');
+const seqid = require('abacus-seqid');
 const request = require('abacus-request');
 const router = require('abacus-router');
 const express = require('abacus-express');
+const clone = require('abacus-clone');;
 
 const map = _.map;
 const range = _.range;
-const clone = _.clone;
 const omit = _.omit;
 
 // Batch the requests
@@ -21,6 +24,9 @@ const brequest = batch(request);
 
 // Setup the debug log
 const debug = require('abacus-debug')('abacus-usage-aggregator-itest');
+
+const db = require('abacus-dataflow').db('abacus-aggregator-aggregated-usage');
+db.allDocs = yieldable.functioncb(db.allDocs);
 
 // Parse command line options
 const argv = clone(process.argv);
@@ -50,6 +56,13 @@ const tshift = commander.day * 24 * 60 * 60 * 1000 || 0;
 const moduleDir = (module) => {
   const path = require.resolve(module);
   return path.substr(0, path.indexOf(module + '/') + module.length);
+};
+
+// Prunes the quantity of all the other windows except the monthly one
+const pruneQuantity = (v, k) => {
+  if(k === 'quantity')
+    return v[4];
+  return v;
 };
 
 // Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
@@ -106,7 +119,6 @@ const buildAccumulatedQuantity = (e, u, m, f) => {
 };
 
 // Builds the quantity array in the aggregated usage
-/*
 const buildAggregatedQuantity = (p, u, ri, tri, count, end, f) => {
   const quantity = map(timescale, (ts) => {
     const time = end + u;
@@ -119,7 +131,6 @@ const buildAggregatedQuantity = (p, u, ri, tri, count, end, f) => {
   });
   return quantity;
 };
-*/
 
 describe('abacus-usage-aggregator-itest', () => {
   before(() => {
@@ -160,6 +171,7 @@ describe('abacus-usage-aggregator-itest', () => {
     const timeout = Math.max(60000,
       100 * orgs * resourceInstances * usage);
     this.timeout(timeout + 2000);
+    const giveup = Date.now() + timeout;
 
     // Setup rate spy
     const rate = spy((req, res, next) => {
@@ -255,22 +267,17 @@ describe('abacus-usage-aggregator-itest', () => {
     // accumulated usage.
 
     // Total resource instances index
-    /*
     const tri = resourceInstances - 1;
-    */
 
     // Create an array of objects based on a range and a creator function
-    /*
     const create = (number, creator) =>
       map(range(number()), (i) => creator(i));
-    */
 
     // Aggregate metrics based on ressource instance, usage and plan indices
     // For max, we use either the current count or the totat count based on
     // resource instance index
     // For sum, we use current count + total count based on resource instance
     // and usage index
-    /*
     const a = (ri, u, p, count) => [
       { metric: 'storage',
         quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
@@ -282,10 +289,8 @@ describe('abacus-usage-aggregator-itest', () => {
         quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
           (p, u, ri, tri, count) => 100 * (count(ri, p) + u * count(tri, p))) }
     ];
-    */
 
     // Resource plan level aggregations for a given consumer at given space
-    /*
     const scpagg = (o, ri, u, s, c) => {
       // Resource instance index shift to locate a value at count number
       // sequence specified below
@@ -309,10 +314,8 @@ describe('abacus-usage-aggregator-itest', () => {
         aggregated_usage: a(ri, u, i, count)
       }));
     };
-    */
 
     // Consumer level resource aggregations for a given space
-    /*
     const scagg = (o, ri, u, s) => {
       // Resource instance index shift
       const shift = (c) => (s === 0 ? 6 : 5) - (c === 0 ? 0 : 4);
@@ -338,10 +341,8 @@ describe('abacus-usage-aggregator-itest', () => {
         }]
       }));
     };
-    */
 
     // Resource plan level aggregations for a given space
-    /*
     const spagg = (o, ri, u, s) => {
       // resource instance index shift
       const shift = (p) => (s === 0 ? 3 : 2) - (p === 0 ? 0 : 2);
@@ -359,10 +360,8 @@ describe('abacus-usage-aggregator-itest', () => {
         aggregated_usage: a(ri, u, i, count)
       }));
     };
-    */
 
     // Space level resource aggregations for a given organization
-    /*
     const osagg = (o, ri, u) => {
       // Resource instance index shift
       const shift = (s) => s === 0 ? 1 : 0;
@@ -385,10 +384,8 @@ describe('abacus-usage-aggregator-itest', () => {
         consumers: scagg(o, ri, u, i)
       }));
     };
-    */
 
     // Resource plan level aggregations for a given organization
-    /*
     const opagg = (o, ri, u) => {
       // Resource instance index shift
       const shift = (p) => p === 0 ? 2 : 0;
@@ -411,13 +408,10 @@ describe('abacus-usage-aggregator-itest', () => {
         aggregated_usage: a(ri, u, i, count)
       }));
     };
-    */
 
     // Aggregated usage for a given org, resource instance, usage indices
     // TODO check the values of the accumulated usage
-    /*
     const aggregatedTemplate = (o, ri, u) => ({
-      accumulated_usage_id: uid(o, ri, u),
       organization_id: oid(o),
       start: end + u,
       end: end + u,
@@ -428,7 +422,9 @@ describe('abacus-usage-aggregator-itest', () => {
       }],
       spaces: osagg(o, ri, u)
     });
-    */
+
+    const expected = clone(aggregatedTemplate(
+      orgs - 1, resourceInstances - 1, usage - 1), pruneQuantity);
 
     // Post an accumulated usage doc, throttled to default concurrent requests
     const post = throttle((o, ri, u, cb) => {
@@ -475,22 +471,41 @@ describe('abacus-usage-aggregator-itest', () => {
         (ri) => map(range(orgs), (o) => post(o, ri, u, cb))));
     };
 
-    let retries = 0;
     const verifyRating = (done) => {
-      try {
-        debug('Verifying rating calls %d to equal to %d',
-          rate.callCount, orgs * resourceInstances * usage);
-
-        expect(rate.callCount).to.equal(orgs * resourceInstances * usage);
-        done();
-      }
-      catch (e) {
-        // If the comparison fails we'll be called again to retry
-        // after 250 msec, but give up after 10 seconds
-        if(++retries === 40) throw e;
-
-        debug('Retry#%d', retries);
-      }
+      const startDate = Date.UTC(new Date().getUTCFullYear(),
+        new Date().getUTCMonth() + 1) - 1;
+      const endDate = Date.UTC(new Date().getUTCFullYear(),
+        new Date().getUTCMonth(), 1);
+      const sid = dbclient.kturi(expected.organization_id,
+        seqid.pad16(startDate));
+      const eid = dbclient.kturi(expected.organization_id,
+        seqid.pad16(endDate));
+      debug('comparing latest record within %s and %s', sid, eid);
+      db.allDocs({ limit: 1, startkey: sid, endkey: eid, descending: true,
+        include_docs: true },
+        (err, val) => {
+          try {
+            expect(clone(omit(val.rows[0].doc, ['id', 'processed',
+              '_id', '_rev', 'accumulated_usage_id', 'start']),
+                pruneQuantity)).to.deep.equal(omit(expected, ['start']));
+            done();
+          }
+          catch (e) {
+            // If the test cannot verify the actual data with the expected
+            // data within the giveup time, forward the exception
+            if(Date.now() >= giveup) {
+              debug('Unable to properly verify the last record');
+              expect(clone(omit(val.rows[0].doc, ['id', 'processed',
+                '_id', '_rev', 'accumulated_usage_id', 'start']),
+                  pruneQuantity)).to.deep.equal(omit(expected, ['start']));
+            }
+            else
+              // Try the expected test again
+              setTimeout(function() {
+                verifyRating(done);
+              }, 250);
+          }
+        });
     };
 
     // Wait for usage aggregator to start
@@ -500,10 +515,7 @@ describe('abacus-usage-aggregator-itest', () => {
         if (err) throw err;
 
         // Submit accumulated usage and verify
-        submit(() => {
-          const i = setInterval(() =>
-            verifyRating(() => done(clearInterval(i))), 250);
-        });
+        submit(() => verifyRating(() => done()));
       });
   });
 });
