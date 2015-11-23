@@ -161,6 +161,7 @@ describe('abacus-demo-client', () => {
     // Expected usage report for the test organization
     const report = {
       organization_id: 'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+      account_id: '1234',
       windows: buildWindow(46.09),
       resources: [{
         resource_id: 'object-storage',
@@ -344,4 +345,3 @@ describe('abacus-demo-client', () => {
     });
   });
 });
-
