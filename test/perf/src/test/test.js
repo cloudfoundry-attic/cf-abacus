@@ -142,6 +142,7 @@ describe('abacus-perf-test', () => {
     // Return the expected usage report for the test organization
     const report = (o, nri, n) => ({
       organization_id: orgid(o),
+      account_id: '1234',
       windows: cwindow(nri, n),
       resources: [{
         resource_id: 'object-storage',
@@ -386,4 +387,3 @@ describe('abacus-perf-test', () => {
     submit(() => wait(done));
   });
 });
-
