@@ -11,7 +11,10 @@ const request = require('abacus-request');
 const dbclient = require('abacus-dbclient');
 const dataflow = require('abacus-dataflow');
 const yieldable = require('abacus-yieldable');
+
+// BigNumber
 const BigNumber = require('bignumber.js');
+BigNumber.config({ ERRORS: false });
 
 const map = _.map;
 const reduce = _.reduce;
