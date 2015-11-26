@@ -21,7 +21,10 @@ const request = require('abacus-request');
 const throttle = require('abacus-throttle');
 const jwt = require('jsonwebtoken');
 const util = require('util');
+
+// BigNumber
 const BigNumber = require('bignumber.js');
+BigNumber.config({ ERRORS: false });
 
 const map = _.map;
 const range = _.range;

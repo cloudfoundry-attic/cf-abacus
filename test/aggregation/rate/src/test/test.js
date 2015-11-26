@@ -12,7 +12,10 @@ const dbclient = require('abacus-dbclient');
 const clone = require('abacus-clone');
 const seqid = require('abacus-seqid');
 const yieldable = require('abacus-yieldable');
+
+// BigNumber
 const BigNumber = require('bignumber.js');
+BigNumber.config({ ERRORS: false });
 
 const map = _.map;
 const range = _.range;
