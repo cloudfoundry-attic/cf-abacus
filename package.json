@@ -95,6 +95,7 @@
     "abacus-hystrix": "file:lib/utils/hystrix",
     "abacus-launcher": "file:lib/utils/launcher",
     "abacus-lock": "file:lib/utils/lock",
+    "abacus-lrucache": "file:lib/utils/lrucache",
     "abacus-lrudown": "file:lib/utils/lrudown",
     "abacus-partition": "file:lib/utils/partition",
     "abacus-perf": "file:lib/utils/perf",
