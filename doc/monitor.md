@@ -54,15 +54,14 @@ Edit ./turbine-web/build.gradle and configure Jetty to use a unique local port f
  }
 ```
 
-Build the turbine web application using Gradle
+Build the turbine web application using Gradle:
 
 ```bash
 ./gradlew build
 ```
+**Note:** If you are using Java 8 then your build may run into Java doc lint errors, see [Building Turbine 1.x branch using Java 8 results in Java doc lint errors](https://github.com/Netflix/Turbine/issues/103) for more details.
 
 The build creates Turbine web application at ./turbine-web/build/libs/turbine-web-1.0.0-SNAPSHOT.war
-
-Note: If you are using Java 8 then your build may run into Java doc lint errors, see [Building Turbine 1.x branch using Java 8 results in Java doc lint errors](https://github.com/Netflix/Turbine/issues/103) for more details.
 
 Building Eureka
 ---
