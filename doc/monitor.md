@@ -7,6 +7,7 @@ Building Hystrix Dashboard
 Get latest customized Hystrix Dashboard
 
 ```bash
+cd ~/workspace
 git clone https://github.com/sasrin/Hystrix
 cd Hystrix
 git checkout dev
@@ -30,6 +31,7 @@ This is an optional step and is required only if you are running more than one i
 Get Turbine source code
 
 ```bash
+cd ~/workspace
 git clone https://github.com/Netflix/Turbine
 cd Turbine
 git checkout 1.x
@@ -71,6 +73,7 @@ This is an optional step and is required only if you are running more than one i
 Get Eureka source code
 
 ```bash
+cd ~/workspace
 git clone https://github.com/Netflix/eureka
 cd eureka
 git pull
@@ -91,7 +94,7 @@ Register Abacus with Eureka and aggregate application instances metrics using Tu
 * Run Turbine using Jetty
 
  ```bash
- cd <turbine-source-root>
+ cd ~/workspace/Turbine
  ./gradlew jettyRun
  ```
  Gradle build will hang with the URL needed to access the turbine: `Running at http://localhost:7980/turbine-web`
@@ -99,14 +102,14 @@ Register Abacus with Eureka and aggregate application instances metrics using Tu
 * Run Eureka using Jetty
 
  ```bash
- cd <eureka-source-root>
+ cd ~/workspace/eureka
  ./gradlew jettyRun
  ```
  Gradle build will hang at 92% with the URL needed to access the eureka: `Running at http://localhost:8080/eureka`
 
 * Run Abacus applications
  ```bash
- cd <abacus-source-root>
+ cd ~/workspace/cf-abacus
  # Set EUREKA environment variable to http://localhost:8080
  export EUREKA=http://localhost:8080
  npm start
@@ -120,7 +123,7 @@ Monitoring Abacus
 Run the dashboard using Jetty
 
  ```bash
- cd <hystrix-source-root>/hystrix-dashboard
+ cd ~/workspace/Hystrix/hystrix-dashboard
  ../gradlew jettyRun
  ```
 
@@ -141,11 +144,13 @@ Click *Monitor Streams* to monitor the applications
 
 Push the Hystrix dashboard application using:
 ```bash
+cd ~/workspace/Hystrix
 cf push hystrix-dashboard -p ./build/libs/hystrix-dashboard-*-SNAPSHOT.war
 ```
 
 To use Jetty application server use the following command:
 ```bash
+cd ~/workspace/Hystrix
 cf push hystrix-dashboard -p ./build/libs/hystrix-dashboard-*-SNAPSHOT.war -b git://github.com/jmcc0nn3ll/jetty-buildpack.git
 ```
 
