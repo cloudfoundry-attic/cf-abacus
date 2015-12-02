@@ -15,6 +15,9 @@ const router = require('abacus-router');
 const express = require('abacus-express');
 const clone = require('abacus-clone');
 
+const BigNumber = require('bignumber.js');
+BigNumber.config({ ERRORS: false });
+
 const map = _.map;
 const range = _.range;
 const omit = _.omit;
@@ -58,12 +61,20 @@ const moduleDir = (module) => {
   return path.substr(0, path.indexOf(module + '/') + module.length);
 };
 
-// Prunes the quantity of all the other windows except the monthly one
-const pruneQuantity = (v, k) => {
-  if(k === 'quantity')
-    return v[4];
+// Prunes all the windows of everything but the monthly quantity and cost
+const pruneWindows = (v, k) => {
+  if(k === 'windows') {
+    const nwin = {};
+    const sumWindowValue = (w1, w2, k) => {
+      if(typeof w1[k] !== 'undefined')
+        nwin[k] = w2 ? w1[k] + w2[k] : w1[k];
+    };
+    sumWindowValue(v[4][0], v[4][1], 'quantity');
+    sumWindowValue(v[4][0], v[4][1], 'cost');
+    return nwin;
+  }
   return v;
-};
+}
 
 // Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
 const dateUTCNumbify = (t) => {
@@ -119,17 +130,20 @@ const buildAccumulatedQuantity = (e, u, m, f) => {
 };
 
 // Builds the quantity array in the aggregated usage
-const buildAggregatedQuantity = (p, u, ri, tri, count, end, f) => {
-  const quantity = map(timescale, (ts) => {
+const buildAggregatedWindows = (p, u, ri, tri, count, end, f, cost) => {
+  return map(timescale, (ts) => {
     const time = end + u;
     const timeNum = dateUTCNumbify(time);
     const windowTimeNum = Math.floor(timeNum / ts) * ts;
 
     // Get the millisecond equivalent of the very start of the given window
     const windowTime = revertUTCNumber(windowTimeNum).getTime();
-    return [f(p, Math.min(time - windowTime, u), ri, tri, count)];
+
+    const q = f(p, Math.min(time - windowTime, u), ri, tri, count);
+    return cost === undefined ? [{ quantity: q }] :
+      [{ quantity: q,
+        cost: new BigNumber(q).mul(cost).toNumber() }];
   });
-  return quantity;
 };
 
 describe('abacus-usage-aggregator-itest', () => {
@@ -148,6 +162,9 @@ describe('abacus-usage-aggregator-itest', () => {
     // Start local database server
     start('abacus-dbserver');
 
+    // Start account stub
+    start('abacus-account-stub');
+
     // Start usage aggregator
     start('abacus-usage-aggregator');
   });
@@ -160,6 +177,9 @@ describe('abacus-usage-aggregator-itest', () => {
 
     // Stop usage aggregator
     stop('abacus-usage-aggregator');
+
+    // Stop account stub
+    stop('abacus-account-stub');
 
     // Stop local database server
     stop('abacus-dbserver');
@@ -278,16 +298,20 @@ describe('abacus-usage-aggregator-itest', () => {
     // resource instance index
     // For sum, we use current count + total count based on resource instance
     // and usage index
-    const a = (ri, u, p, count) => [
+    /* eslint complexity: [1, 6] */
+    const a = (ri, u, p, count, addCost) => [
       { metric: 'storage',
-        quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
-          (p, u, ri, tri, count) => u === 0 ? count(ri, p) : count(tri, p)) },
+        windows: buildAggregatedWindows(p, u, ri, tri, count, end,
+          (p, u, ri, tri, count) => u === 0 ? count(ri, p) : count(tri, p),
+          addCost ? p === 0 ? 1 : 0.5 : undefined) },
       { metric: 'thousand_light_api_calls',
-        quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
-          (p, u, ri, tri, count) => count(ri, p) + u * count(tri, p)) },
+        windows: buildAggregatedWindows(p, u, ri, tri, count, end,
+          (p, u, ri, tri, count) => count(ri, p) + u * count(tri, p),
+          addCost ? p === 0 ? 0.03 : 0.04 : undefined) },
       { metric: 'heavy_api_calls',
-        quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
-          (p, u, ri, tri, count) => 100 * (count(ri, p) + u * count(tri, p))) }
+        windows: buildAggregatedWindows(p, u, ri, tri, count, end,
+          (p, u, ri, tri, count) => 100 * (count(ri, p) + u * count(tri, p)),
+          addCost ? p === 0 ? 0.15 : 0.18 : undefined) }
     ];
 
     // Resource plan level aggregations for a given consumer at given space
@@ -311,7 +335,7 @@ describe('abacus-usage-aggregator-itest', () => {
       // Create plan aggregations
       return create(plans, (i) => ({
         plan_id: pid(i === 0 ? 0 : 2),
-        aggregated_usage: a(ri, u, i, count)
+        aggregated_usage: a(ri, u, i, count, true)
       }));
     };
 
@@ -336,7 +360,7 @@ describe('abacus-usage-aggregator-itest', () => {
         consumer_id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
         resources: [{
           resource_id: 'test-resource',
-          aggregated_usage: a(ri, u, i, count),
+          aggregated_usage: a(ri, u, i, count, false),
           plans: scpagg(o, ri, u, s, i)
         }]
       }));
@@ -357,7 +381,7 @@ describe('abacus-usage-aggregator-itest', () => {
       // Create plan level aggregations
       return create(plans, (i) => ({
         plan_id: pid(i === 0 ? 0 : 2),
-        aggregated_usage: a(ri, u, i, count)
+        aggregated_usage: a(ri, u, i, count, true)
       }));
     };
 
@@ -378,7 +402,7 @@ describe('abacus-usage-aggregator-itest', () => {
         space_id: sid(o, i),
         resources: [{
           resource_id: 'test-resource',
-          aggregated_usage: a(ri, u, i, count),
+          aggregated_usage: a(ri, u, i, count, false),
           plans: spagg(o, ri, u, i)
         }],
         consumers: scagg(o, ri, u, i)
@@ -405,7 +429,7 @@ describe('abacus-usage-aggregator-itest', () => {
       // Create plan aggregations
       return create(plans, (i) => ({
         plan_id: pid(i === 0 ? 0 : 2),
-        aggregated_usage: a(ri, u, i, count)
+        aggregated_usage: a(ri, u, i, count, true)
       }));
     };
 
@@ -417,14 +441,14 @@ describe('abacus-usage-aggregator-itest', () => {
       end: end + u,
       resources: [{
         resource_id: 'test-resource',
-        aggregated_usage: a(ri, u, undefined, (n) => n + 1),
+        aggregated_usage: a(ri, u, undefined, (n) => n + 1, false),
         plans: opagg(o, ri, u)
       }],
       spaces: osagg(o, ri, u)
     });
 
     const expected = clone(aggregatedTemplate(
-      orgs - 1, resourceInstances - 1, usage - 1), pruneQuantity);
+      orgs - 1, resourceInstances - 1, usage - 1), pruneWindows);
 
     // Post an accumulated usage doc, throttled to default concurrent requests
     const post = throttle((o, ri, u, cb) => {
@@ -487,7 +511,7 @@ describe('abacus-usage-aggregator-itest', () => {
           try {
             expect(clone(omit(val.rows[0].doc, ['id', 'processed',
               '_id', '_rev', 'accumulated_usage_id', 'start']),
-                pruneQuantity)).to.deep.equal(omit(expected, ['start']));
+                pruneWindows)).to.deep.equal(omit(expected, ['start']));
             done();
           }
           catch (e) {
@@ -497,7 +521,7 @@ describe('abacus-usage-aggregator-itest', () => {
               debug('Unable to properly verify the last record');
               expect(clone(omit(val.rows[0].doc, ['id', 'processed',
                 '_id', '_rev', 'accumulated_usage_id', 'start']),
-                  pruneQuantity)).to.deep.equal(omit(expected, ['start']));
+                  pruneWindows)).to.deep.equal(omit(expected, ['start']));
             }
             else
               // Try the expected test again
