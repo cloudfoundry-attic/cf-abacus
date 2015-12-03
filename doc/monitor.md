@@ -191,7 +191,7 @@ The previous approach becomes pretty cumbersome once Abacus is scaled and there 
  ```
  The command should output a lot of data about Abacus instances like their IPs and ports.
 
-* Edit `~workspace/Turbine/turbine-web/src/main/webapp/WEB-INF/classes/config.properties` and put your CF domain in the Eureka service URL. The file should look like this:
+* Edit `~/workspace/Turbine/turbine-web/src/main/webapp/WEB-INF/classes/config.properties` and put your CF domain in the Eureka service URL. The file should look like this:
  ```
  InstanceDiscovery.impl=com.netflix.turbine.discovery.EurekaInstanceDiscovery
  turbine.aggregator.clusterConfig=ABACUS-USAGE-COLLECTOR,ABACUS-USAGE-METER,ABACUS-USAGE-ACCUMULATOR,ABACUS-USAGE-AGGREGATOR,ABACUS-USAGE-RATE,ABACUS-USAGE-REPORTING,ABACUS-ACCOUNT-STUB,ABACUS-AUTHSERVER-STUB,ABACUS-PROVISIONING-STUB,ABACUS-EUREKA-STUB
