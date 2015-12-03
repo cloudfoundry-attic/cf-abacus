@@ -86,10 +86,33 @@ Build the eureka web application using Gradle
 
 The build creates Eureka web applications at ./eureka-server/build/libs/eureka-server-1.3.5-SNAPSHOT.war and ./eureka-server-karyon3/build/libs/eureka-server-karyon3-1.3.5-SNAPSHOT.war. You can use any one of them as your Eureka server.
 
-Register Abacus with Eureka and aggregate application instances metrics using Turbine
+Monitoring Abacus
 ---
 
 ### Local installation
+
+#### Direct instance monitoring
+
+Run the dashboard using Jetty
+ ```bash
+ cd ~/workspace/Hystrix/hystrix-dashboard
+ ../gradlew jettyRun
+ ```
+
+Gradle build will hang at 75% with the URL needed to access the dashboard: `Running at http://localhost:7979/hystrix-dashboard`. Access the dashboard URL from the last step: `http://localhost:7979/hystrix-dashboard`
+
+Add hystrix streams from Abacus applications:
+* Enter hystrix or turbine stream URL for an application. For example, the usage collector application running at local machine would have hystrix stream reachable at `http://localhost:9080/hystrix.stream`
+* Enter a title for an application
+* Uncheck *Monitor Thread Pools*
+* Click *Add Stream*
+* Repeat the above steps for each application
+
+Click *Monitor Streams* to monitor the applications
+
+#### Aggregate application instances metrics
+
+The previous approach becomes pretty cumbersome once Abacus is scaled and there are more than one instance of an application. To deal with this we can use Eureka and Turbine to aggregate the metrics.
 
 * Run Turbine using Jetty
 
@@ -115,24 +138,16 @@ Register Abacus with Eureka and aggregate application instances metrics using Tu
  npm start
  ```
 
-Monitoring Abacus
----
-
-### Local installation
-
 Run the dashboard using Jetty
-
  ```bash
  cd ~/workspace/Hystrix/hystrix-dashboard
  ../gradlew jettyRun
  ```
 
-Gradle build will hang at 75% with the URL needed to access the dashboard: `Running at http://localhost:7979/hystrix-dashboard`
-
-Access the dashboard URL from the last step: `http://localhost:7979/hystrix-dashboard`
+Gradle build will hang at 75% with the URL needed to access the dashboard: `Running at http://localhost:7979/hystrix-dashboard`. Access the dashboard URL from the last step: `http://localhost:7979/hystrix-dashboard`
 
 Add hystrix streams from Abacus applications:
-* Enter hystrix or turbine stream URL for an application. For example, the usage collector application running at local machine would have hystrix stream reachable at `http://localhost:9080/hystrix.stream` and would have turbine stream reachable at `http://localhost:7980/turbine-web/turbine.stream?cluster=ABACUS-USAGE-COLLECTOR`
+* Enter hystrix or turbine stream URL for an application. The turbine streams are reachable at `localhost:7980`. For example: `http://localhost:7980/turbine-web/turbine.stream?cluster=ABACUS-USAGE-COLLECTOR`
 * Enter a title for an application
 * Uncheck *Monitor Thread Pools*
 * Click *Add Stream*
