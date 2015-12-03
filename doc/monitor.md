@@ -212,13 +212,11 @@ Click *Monitor Streams* to monitor the applications
 
  Note: If you want to use Jetty as application server, add the Jetty Buildpack: `-b git://github.com/jmcc0nn3ll/jetty-buildpack.git` to the `cf push` arguments.
 
- Access the dashboard URL displayed in the end of the last `cf push` command output
+* Access the dashboard URL displayed in the end of the last `cf push` command output and add hystrix streams from Abacus applications:
+   * Enter hystrix steam URL for an application. For example, the usage collector application will have hystrix stream reachable at the URL of the turbine application plus the application name:  `http://turbine.cfapps.neo.ondemand.com/turbine-web/turbine.stream?cluster=ABACUS-USAGE-COLLECTOR`
+   * Enter a title for an application
+   * Uncheck *Monitor Thread Pools*
+   * Click *Add Stream*
+   * Repeat the above steps for each application
 
-Add hystrix streams from Abacus applications:
-* Enter hystrix steam URL for an application. For example, the usage collector application will have hystrix stream reachable at the URL of the turbine application plus the application name:  `http://turbine.cfapps.neo.ondemand.com/turbine-web/turbine.stream?cluster=ABACUS-USAGE-COLLECTOR`
-* Enter a title for an application
-* Uncheck *Monitor Thread Pools*
-* Click *Add Stream*
-* Repeat the above steps for each application
-
-Click *Monitor Streams* to monitor the applications
+ Click *Monitor Streams* to monitor the applications
