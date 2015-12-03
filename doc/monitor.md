@@ -138,13 +138,13 @@ The previous approach becomes pretty cumbersome once Abacus is scaled and there 
  npm start
  ```
 
-Run the dashboard using Jetty
+* Run the dashboard using Jetty
  ```bash
  cd ~/workspace/Hystrix/hystrix-dashboard
  ../gradlew jettyRun
  ```
 
-Gradle build will hang at 75% with the URL needed to access the dashboard: `Running at http://localhost:7979/hystrix-dashboard`. Access the dashboard URL from the last step: `http://localhost:7979/hystrix-dashboard`
+ Gradle build will hang at 75% with the URL needed to access the dashboard: `Running at http://localhost:7979/hystrix-dashboard`. Access the dashboard URL from the last step: `http://localhost:7979/hystrix-dashboard`
 
 Add hystrix streams from Abacus applications:
 * Enter hystrix or turbine stream URL for an application. The turbine streams are reachable at `localhost:7980`. For example: `http://localhost:7980/turbine-web/turbine.stream?cluster=ABACUS-USAGE-COLLECTOR`
