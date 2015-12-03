@@ -23,7 +23,7 @@ if [[ -z $CF_SPACE ]]; then
 fi
 
 # Point the CF CLI to your local Cloud Foundry deployment
-cf api --skip-ssl-validation https://api.10.244.0.34.xip.io
+cf api --skip-ssl-validation https://api.bosh-lite.com
 cf login -o $CF_ORG -s $CF_SPACE
 
 # Create a CF security group for the Abacus apps
