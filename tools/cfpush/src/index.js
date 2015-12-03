@@ -37,7 +37,7 @@ var remanifest = function(root, name, instances, conf, cb) {
         app.host = name;
         if(instances)
           app.instances = parseInt(instances);
-        app.path = '../.cfpack/app.zip';
+        app.path = '../' + app.path;
         if(conf) {
           if(!app.env) app.env = {};
           app.env.CONF = conf;
