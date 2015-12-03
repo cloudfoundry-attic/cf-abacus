@@ -10,6 +10,7 @@ applications:
     DEBUG: e-abacus-*
     RATING: abacus-usage-rate
     PROVISIONING: abacus-provisioning-stub
+    ACCOUNT: abacus-account-stub
     COUCHDB: abacus-dbserver
     EUREKA: abacus-eureka-stub
     NODE_MODULES_CACHE: false
