@@ -157,12 +157,12 @@ Click *Monitor Streams* to monitor the applications
 
 ### Cloud Foundry installation
 
-Change the `~/workspace/cf-abacus/lib/stubs/eureka/manifest.yml` to use the real Eureka server with the `/eureka` context path:
+* Change the `~/workspace/cf-abacus/lib/stubs/eureka/manifest.yml` to use the real Eureka server with the `/eureka` context path:
 ```yml
 applications:
 - name: abacus-eureka-stub
   host: abacus-eureka-stub
-  path: ../../../../../workspace/eureka/eureka-server/build/libs/eureka-server-1.3.5-SNAPSHOT.war
+  path: ../../../../eureka/eureka-server/build/libs/eureka-server-1.3.5-SNAPSHOT.war
   buildpack: https://github.com/cloudfoundry/java-buildpack.git
   instances: 1
   memory: 512M
@@ -178,20 +178,20 @@ applications:
     # JWTALGO:
 ```
 
-Stage and start Abacus applications:
+* Stage and start Abacus applications:
 ```bash
 cd ~/workspace/cf-abacus
 npm run cfstage
 npm run cfstart
 ```
 
-Check if Eureka knows about all Abacus applications:
+* Check if Eureka knows about all Abacus applications:
 ```bash
 curl --compressed abacus-eureka-stub.cfapps.neo.ondemand.com/eureka/v2/apps
 ```
-The command should output a lot of data about Abacus instances like their IPs and ports.
+ The command should output a lot of data about Abacus instances like their IPs and ports.
 
-Edit `~workspace/Turbine/turbine-web/src/main/webapp/WEB-INF/classes/config.properties` and put your CF domain in the Eureka service URL. The file should look like this:
+* Edit `~workspace/Turbine/turbine-web/src/main/webapp/WEB-INF/classes/config.properties` and put your CF domain in the Eureka service URL. The file should look like this:
 ```
 InstanceDiscovery.impl=com.netflix.turbine.discovery.EurekaInstanceDiscovery
 turbine.aggregator.clusterConfig=ABACUS-USAGE-COLLECTOR,ABACUS-USAGE-METER,ABACUS-USAGE-ACCUMULATOR,ABACUS-USAGE-AGGREGATOR,ABACUS-USAGE-RATE,ABACUS-USAGE-REPORTING,ABACUS-ACCOUNT-STUB,ABACUS-AUTHSERVER-STUB,ABACUS-PROVISIONING-STUB,ABACUS-EUREKA-STUB
@@ -204,15 +204,15 @@ eureka.serviceUrl.default=http://abacus-eureka-stub.<your domain>/eureka/v2/
 turbine.ZookeeperInstanceDiscovery.zookeeper.quorum=127.0.0.1
 ```
 
-Push the monitoring applications to CF using:
+* Push the monitoring applications to CF using:
 ```bash
 cf push turbine -p ~/workspace/Turbine/turbine-web/build/libs/turbine-web.war
 cf push hystrix-dashboard -p ~/workspace/Hystrix/hystrix-dashboard/build/libs/hystrix-dashboard-*-SNAPSHOT.war
 ```
 
-Note: If you want to use Jetty as application server, add the Jetty Buildpack: `-b git://github.com/jmcc0nn3ll/jetty-buildpack.git` to the `cf push` arguments.
+ Note: If you want to use Jetty as application server, add the Jetty Buildpack: `-b git://github.com/jmcc0nn3ll/jetty-buildpack.git` to the `cf push` arguments.
 
-Access the dashboard URL displayed in the end of the `cf push` command output
+ Access the dashboard URL displayed in the end of the last `cf push` command output
 
 Add hystrix streams from Abacus applications:
 * Enter hystrix steam URL for an application. For example, the usage collector application will have hystrix stream reachable at the URL of the turbine application plus the application name:  `http://turbine.cfapps.neo.ondemand.com/turbine-web/turbine.stream?cluster=ABACUS-USAGE-COLLECTOR`
