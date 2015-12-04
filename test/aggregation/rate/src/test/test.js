@@ -20,6 +20,7 @@ BigNumber.config({ ERRORS: false });
 const map = _.map;
 const range = _.range;
 const omit = _.omit;
+const extend = _.extend;
 
 // Batch the requests
 const brequest = batch(request);
@@ -427,11 +428,11 @@ describe('abacus-usage-rate-itest', () => {
     });
 
     // The expected output based upon the arguments passed
-    const expected = clone(
+    const expected = extend({}, { account_id: '1234' }, clone(
       clone(
         aggregatedTemplate(orgs - 1, resourceInstances - 1, usage - 1),
       addWindows),
-    pruneWindows);
+    pruneWindows));
 
     // Post an aggregated usage doc, throttled to default concurrent requests
     const post = throttle((o, ri, u, cb) => {
