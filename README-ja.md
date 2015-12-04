@@ -119,7 +119,6 @@ abacus-usage-collector     started           1/1         512M     512M   abacus-
 abacus-usage-meter         started           1/1         512M     512M   abacus-usage-meter.10.244.0.34.xip.io
 abacus-usage-accumulator   started           1/1         512M     512M   abacus-usage-accumulator.10.244.0.34.xip.io   
 abacus-usage-aggregator    started           1/1         512M     512M   abacus-usage-aggregator.10.244.0.34.xip.io   
-abacus-usage-rate          started           1/1         512M     512M   abacus-usage-rate.10.244.0.34.xip.io   
 abacus-usage-reporting     started           1/1         512M     512M   abacus-usage-reporting.10.244.0.34.xip.io   
 abacus-provisioning-stub   started           1/1         512M     512M   abacus-provisioning-stub.10.244.0.34.xip.io   
 abacus-account-stub        started           1/1         512M     512M   abacus-account-stub.10.244.0.34.xip.io   
@@ -210,8 +209,8 @@ lib/ - Abacus modules
     aggregation/ - Aggregation services
 
         accumulator - accumulates usage over time
-        aggregator  - aggregates usage within an organization
-        rating      - applies pricing to usage
+        aggregator  - aggregates usage within an organization and applies
+                      pricing to aggregated usage
         reporting   - returns usage reports
 
     cf/ - CF platform integration

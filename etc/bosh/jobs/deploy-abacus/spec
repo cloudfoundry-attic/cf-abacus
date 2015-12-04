@@ -54,8 +54,6 @@ properties:
     description:
   abacus.aggregator.host:
     description:
-  abacus.rating.host:
-    description:
   abacus.reporting.host:
     description:
   abacus.dbserver.host:

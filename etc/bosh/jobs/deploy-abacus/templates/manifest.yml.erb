@@ -82,20 +82,6 @@ applications:
       EUREKA: <%= p("abacus.eureka.host") %>
       ACCOUNT: <%= p("abacus.account.host") %>
       PROVISIONING: <%= p("abacus.provisioning.host") %>
-      RATING:  <%= p("abacus.rating.host") %>
-  - name: abacus-usage-rate
-    host: <%= p("abacus.rating.host") %>
-    path: /var/vcap/packages/cf-abacus/lib/aggregation/rate/.cfpack/app.zip
-    env:
-      SECURED: <%= p("abacus.env.secured") %>
-      JWTKEY: <%= p("abacus.env.jwt_key") %>
-      JWTALGO: <%= p("abacus.env.jwt_algo") %>
-      CLIENT_ID: <%= p("abacus.env.client_id") %>
-      CLIENT_SECRET: <%= p("abacus.env.client_secret") %>
-      COUCHDB:  <%= p("abacus.dbserver.host") %>
-      EUREKA: <%= p("abacus.eureka.host") %>
-      ACCOUNT: <%= p("abacus.account.host") %>
-      PROVISIONING: <%= p("abacus.provisioning.host") %>
   - name: abacus-usage-reporting
     host: <%= p("abacus.reporting.host") %>
     path: /var/vcap/packages/cf-abacus/lib/aggregation/reporting/.cfpack/app.zip

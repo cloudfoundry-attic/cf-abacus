@@ -198,11 +198,11 @@ The all-access group should not be used in productive environments. An alternati
 * Edit `~/workspace/Turbine/turbine-web/src/main/webapp/WEB-INF/classes/config.properties`. The file should look like this:
  ```
  InstanceDiscovery.impl=com.netflix.turbine.discovery.EurekaInstanceDiscovery
- turbine.aggregator.clusterConfig=ABACUS-USAGE-COLLECTOR,ABACUS-USAGE-METER,ABACUS-USAGE-ACCUMULATOR,ABACUS-USAGE-AGGREGATOR,ABACUS-USAGE-RATE,ABACUS-USAGE-REPORTING,ABACUS-ACCOUNT-STUB,ABACUS-AUTHSERVER-STUB,ABACUS-PROVISIONING-STUB
+ turbine.aggregator.clusterConfig=ABACUS-USAGE-COLLECTOR,ABACUS-USAGE-METER,ABACUS-USAGE-ACCUMULATOR,ABACUS-USAGE-AGGREGATOR,ABACUS-USAGE-REPORTING,ABACUS-ACCOUNT-STUB,ABACUS-AUTHSERVER-STUB,ABACUS-PROVISIONING-STUB
  turbine.instanceUrlSuffix=:{port}/hystrix.stream
  turbine.ConfigPropertyBasedDiscovery.<cluster1>.instances=<instance1a>,<instance1b>
  turbine.ConfigPropertyBasedDiscovery.<cluster2>.instances=<instance2a>,<instance2b>
- turbine.appConfig=ABACUS-USAGE-COLLECTOR,ABACUS-USAGE-METER,ABACUS-USAGE-ACCUMULATOR,ABACUS-USAGE-AGGREGATOR,ABACUS-USAGE-RATE,ABACUS-USAGE-REPORTING,ABACUS-ACCOUNT-STUB,ABACUS-AUTHSERVER-STUB,ABACUS-PROVISIONING-STUB
+ turbine.appConfig=ABACUS-USAGE-COLLECTOR,ABACUS-USAGE-METER,ABACUS-USAGE-ACCUMULATOR,ABACUS-USAGE-AGGREGATOR,ABACUS-USAGE-REPORTING,ABACUS-ACCOUNT-STUB,ABACUS-AUTHSERVER-STUB,ABACUS-PROVISIONING-STUB
  eureka.region=us-east-1
  eureka.serviceUrl.default=http://abacus-eureka-stub.bosh-lite.com/eureka/v2/
  turbine.ZookeeperInstanceDiscovery.zookeeper.quorum=127.0.0.1

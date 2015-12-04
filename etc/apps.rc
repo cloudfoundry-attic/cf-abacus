@@ -9,7 +9,6 @@ default:
     - lib/metering/meter
     - lib/aggregation/accumulator
     - lib/aggregation/aggregator
-    - lib/aggregation/rate
     - lib/aggregation/reporting
 
 small:
@@ -29,7 +28,6 @@ bridge:
     - lib/metering/meter
     - lib/aggregation/accumulator
     - lib/aggregation/aggregator
-    - lib/aggregation/rate
     - lib/aggregation/reporting
     - lib/cf/bridge
 

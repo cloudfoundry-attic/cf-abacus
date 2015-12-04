@@ -521,8 +521,8 @@ describe('abacus-usage-reporting-itest', () => {
 
 
     // Post rated usage doc, throttled to default concurrent requests
-    const ratedb = dataflow.db('abacus-rating-rated-usage');
-    const dbput = yieldable.functioncb(ratedb.put);
+    const aggregatordb = dataflow.db('abacus-aggregator-aggregated-usage');
+    const dbput = yieldable.functioncb(aggregatordb.put);
 
     const post = throttle((o, ri, u, cb) => {
       debug('Submit rated usage for org%d instance%d usage%d',

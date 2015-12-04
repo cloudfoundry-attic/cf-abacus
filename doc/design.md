@@ -65,15 +65,3 @@ _Output_:
 /k/:organization_id/t/:seqid
 ```
 
-#### Rating
-
-_Input_:
-```
-/t/:seqid/k/:organization_id
-```
-
-_Output_:
-```
-/k/:organization_id/t/:seqid
-```
-

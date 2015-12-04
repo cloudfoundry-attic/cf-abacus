@@ -11,8 +11,6 @@ const yieldable = require('abacus-yieldable');
 const dbclient = require('abacus-dbclient');
 const seqid = require('abacus-seqid');
 const request = require('abacus-request');
-const router = require('abacus-router');
-const express = require('abacus-express');
 const clone = require('abacus-clone');
 
 const BigNumber = require('bignumber.js');
@@ -192,19 +190,6 @@ describe('abacus-usage-aggregator-itest', () => {
       100 * orgs * resourceInstances * usage);
     this.timeout(timeout + 2000);
     const giveup = Date.now() + timeout;
-
-    // Setup rate spy
-    const rate = spy((req, res, next) => {
-      res.status(201).send();
-    });
-
-    // Start usage rate stub with the rate spy
-    const app = express();
-    const routes = router();
-    routes.post('/v1/rating/aggregated/usage', rate);
-    app.use(routes);
-    app.use(router.batch(routes));
-    app.listen(9400);
 
     // Initialize usage doc properties with unique values
     const start = 1435629365220 + tshift;

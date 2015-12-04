@@ -123,7 +123,6 @@ describe('abacus-cf-bridge-itest', () => {
     start('abacus-usage-meter');
     start('abacus-usage-accumulator');
     start('abacus-usage-aggregator');
-    start('abacus-usage-rate');
     start('abacus-usage-reporting');
     start('abacus-cf-bridge');
   });
@@ -136,7 +135,6 @@ describe('abacus-cf-bridge-itest', () => {
 
     stop('abacus-cf-bridge');
     stop('abacus-usage-reporting');
-    stop('abacus-usage-rate');
     stop('abacus-usage-aggregator');
     stop('abacus-usage-accumulator');
     stop('abacus-usage-meter');

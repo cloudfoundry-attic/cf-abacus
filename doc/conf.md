@@ -13,7 +13,6 @@ These port numbers are used when running Abacus in a local dev environment.
 9100 abacus-usage-meter   
 9200 abacus-usage-accumulator   
 9300 abacus-usage-aggregator   
-9400 abacus-usage-rating   
 9500 abacus-cf-bridge   
 
 9880 abacus-provisioning-stub   

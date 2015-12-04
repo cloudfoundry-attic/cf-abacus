@@ -58,7 +58,6 @@
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
-    "abacus-batch": "file:../../utils/batch",
     "abacus-cfpack": "file:../../../tools/cfpack",
     "abacus-cfpush": "file:../../../tools/cfpush",
     "abacus-eslint": "file:../../../tools/eslint",
