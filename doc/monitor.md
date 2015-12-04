@@ -157,6 +157,10 @@ The previous approach becomes pretty cumbersome once Abacus is scaled and there 
 
 ### Cloud Foundry installation
 
+The described monitoring method in BOSH-Lite requires an [all access security group](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/etc/secgroup.json) to enable direct app-to-app communication between Turbine and Abacus applications.
+
+The all-access group should not be used in productive environments. An alternative solution is to use a special cell (placement pool) for Abacus applications or to deploy Abacus as infrastructure distributed system with the help of BOSH deployment.
+
 * Change the `~/workspace/cf-abacus/lib/stubs/eureka/manifest.yml` to use the real Eureka server with the `/eureka` context path:
  ```yml
  applications:
@@ -187,20 +191,20 @@ The previous approach becomes pretty cumbersome once Abacus is scaled and there 
 
 * Check if Eureka knows about all Abacus applications:
  ```bash
- curl --compressed abacus-eureka-stub.cfapps.neo.ondemand.com/eureka/v2/apps
+ curl --compressed abacus-eureka-stub.bosh-lite.com/eureka/v2/apps
  ```
  The command should output a lot of data about Abacus instances like their IPs and ports.
 
-* Edit `~/workspace/Turbine/turbine-web/src/main/webapp/WEB-INF/classes/config.properties` and put your CF domain in the Eureka service URL. The file should look like this:
+* Edit `~/workspace/Turbine/turbine-web/src/main/webapp/WEB-INF/classes/config.properties`. The file should look like this:
  ```
  InstanceDiscovery.impl=com.netflix.turbine.discovery.EurekaInstanceDiscovery
- turbine.aggregator.clusterConfig=ABACUS-USAGE-COLLECTOR,ABACUS-USAGE-METER,ABACUS-USAGE-ACCUMULATOR,ABACUS-USAGE-AGGREGATOR,ABACUS-USAGE-RATE,ABACUS-USAGE-REPORTING,ABACUS-ACCOUNT-STUB,ABACUS-AUTHSERVER-STUB,ABACUS-PROVISIONING-STUB,ABACUS-EUREKA-STUB
+ turbine.aggregator.clusterConfig=ABACUS-USAGE-COLLECTOR,ABACUS-USAGE-METER,ABACUS-USAGE-ACCUMULATOR,ABACUS-USAGE-AGGREGATOR,ABACUS-USAGE-RATE,ABACUS-USAGE-REPORTING,ABACUS-ACCOUNT-STUB,ABACUS-AUTHSERVER-STUB,ABACUS-PROVISIONING-STUB
  turbine.instanceUrlSuffix=:{port}/hystrix.stream
  turbine.ConfigPropertyBasedDiscovery.<cluster1>.instances=<instance1a>,<instance1b>
  turbine.ConfigPropertyBasedDiscovery.<cluster2>.instances=<instance2a>,<instance2b>
- turbine.appConfig=ABACUS-USAGE-COLLECTOR,ABACUS-USAGE-METER,ABACUS-USAGE-ACCUMULATOR,ABACUS-USAGE-AGGREGATOR,ABACUS-USAGE-RATE,ABACUS-USAGE-REPORTING,ABACUS-ACCOUNT-STUB,ABACUS-AUTHSERVER-STUB,ABACUS-PROVISIONING-STUB,ABACUS-EUREKA-STUB
+ turbine.appConfig=ABACUS-USAGE-COLLECTOR,ABACUS-USAGE-METER,ABACUS-USAGE-ACCUMULATOR,ABACUS-USAGE-AGGREGATOR,ABACUS-USAGE-RATE,ABACUS-USAGE-REPORTING,ABACUS-ACCOUNT-STUB,ABACUS-AUTHSERVER-STUB,ABACUS-PROVISIONING-STUB
  eureka.region=us-east-1
- eureka.serviceUrl.default=http://abacus-eureka-stub.<your domain>/eureka/v2/
+ eureka.serviceUrl.default=http://abacus-eureka-stub.bosh-lite.com/eureka/v2/
  turbine.ZookeeperInstanceDiscovery.zookeeper.quorum=127.0.0.1
  ```
 
@@ -213,7 +217,7 @@ The previous approach becomes pretty cumbersome once Abacus is scaled and there 
  Note: If you want to use Jetty as application server, add the Jetty Buildpack: `-b git://github.com/jmcc0nn3ll/jetty-buildpack.git` to the `cf push` arguments.
 
 * Access the dashboard URL displayed in the end of the last `cf push` command output and add hystrix streams from Abacus applications:
-   * Enter hystrix steam URL for an application. For example, the usage collector application will have hystrix stream reachable at the URL of the turbine application plus the application name:  `http://turbine.cfapps.neo.ondemand.com/turbine-web/turbine.stream?cluster=ABACUS-USAGE-COLLECTOR`
+   * Enter hystrix steam URL for an application. For example, the usage collector application will have hystrix stream reachable at the URL of the turbine application plus the application name:  `http://turbine.bosh-lite.com/turbine.stream?cluster=ABACUS-USAGE-COLLECTOR`
    * Enter a title for an application
    * Uncheck *Monitor Thread Pools*
    * Click *Add Stream*
