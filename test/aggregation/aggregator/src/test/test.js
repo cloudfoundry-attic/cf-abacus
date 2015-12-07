@@ -192,8 +192,8 @@ describe('abacus-usage-aggregator-itest', () => {
     const giveup = Date.now() + timeout;
 
     // Initialize usage doc properties with unique values
-    const start = 1435629365220 + tshift;
-    const end = 1435629465220 + tshift;
+    const start = Date.now() + tshift;
+    const end = Date.now() + tshift;
 
     // Produce usage for two spaces in an organization, two consumers
     // in a space and create resource instances using two resource plans
