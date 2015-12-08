@@ -35,10 +35,10 @@
   "dependencies": {
     "abacus-debug": "file:../debug",
     "abacus-lock": "file:../lock",
+    "abacus-lrucache": "file:../lrucache",
     "abacus-transform": "file:../transform",
     "babel-preset-es2015": "^6.1.4",
     "commander": "^2.8.1",
-    "lru-cache": "^2.6.5",
     "request": "^2.37.0",
     "underscore": "^1.8.3"
   },

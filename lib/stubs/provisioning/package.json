@@ -42,6 +42,7 @@
     "abacus-debug": "file:../../utils/debug",
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-lock": "file:../../utils/lock",
+    "abacus-lrucache": "file:../../utils/lrucache",
     "abacus-partition": "file:../../utils/partition",
     "abacus-retry": "file:../../utils/retry",
     "abacus-router": "file:../../utils/router",
@@ -50,7 +51,6 @@
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-yieldable": "file:../../utils/yieldable",
     "babel-preset-es2015": "^6.1.4",
-    "lru-cache": "^2.6.5",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
