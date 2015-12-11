@@ -165,7 +165,6 @@ const addCharge = (k, v) => {
     map(r.aggregated_usage, (u) => {
       map(u.windows, (w, i) => {
         map(w, (wi, j) => {
-          wi.summary = wi.quantity;
           wi.charge = reduce(r.plans, (a, p) =>
             new BigNumber(a).add(reduce(p.aggregated_usage, (a1, u1) =>
               new BigNumber(a1).add(u1.metric === u.metric ?

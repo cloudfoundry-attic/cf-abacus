@@ -123,7 +123,6 @@ describe('abacus-perf-test', () => {
     const rwindow = (nri, n, s, m, fn) => {
       return windows({
         quantity: new BigNumber(m).mul(s).toNumber(),
-        summary: new BigNumber(m).mul(s).toNumber(),
         charge: fn(nri, n)
       });
     };

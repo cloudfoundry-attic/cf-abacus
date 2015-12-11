@@ -168,13 +168,13 @@ describe('abacus-demo-client', () => {
         windows: buildWindow(46.09),
         aggregated_usage: [{
           metric: 'storage',
-          windows: buildWindow(1, 1, 1)
+          windows: buildWindow(1, undefined, 1)
         }, {
           metric: 'thousand_light_api_calls',
-          windows: buildWindow(0.09, 3, 3)
+          windows: buildWindow(0.09, undefined, 3)
         }, {
           metric: 'heavy_api_calls',
-          windows: buildWindow(45, 300, 300)
+          windows: buildWindow(45, undefined, 300)
         }],
         plans: [{
           plan_id: 'basic',
@@ -199,13 +199,13 @@ describe('abacus-demo-client', () => {
           windows: buildWindow(46.09),
           aggregated_usage: [{
             metric: 'storage',
-            windows: buildWindow(1, 1, 1)
+            windows: buildWindow(1, undefined, 1)
           }, {
             metric: 'thousand_light_api_calls',
-            windows: buildWindow(0.09, 3, 3)
+            windows: buildWindow(0.09, undefined, 3)
           }, {
             metric: 'heavy_api_calls',
-            windows: buildWindow(45, 300, 300)
+            windows: buildWindow(45, undefined, 300)
           }],
           plans: [{
             plan_id: 'basic',
@@ -230,13 +230,13 @@ describe('abacus-demo-client', () => {
             windows: buildWindow(46.09),
             aggregated_usage: [{
               metric: 'storage',
-              windows: buildWindow(1, 1, 1)
+              windows: buildWindow(1, undefined, 1)
             }, {
               metric: 'thousand_light_api_calls',
-              windows: buildWindow(0.09, 3, 3)
+              windows: buildWindow(0.09, undefined, 3)
             }, {
               metric: 'heavy_api_calls',
-              windows: buildWindow(45, 300, 300)
+              windows: buildWindow(45, undefined, 300)
             }],
             plans: [{
               plan_id: 'basic',

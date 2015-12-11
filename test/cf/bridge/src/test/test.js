@@ -152,7 +152,6 @@ describe('abacus-cf-bridge-itest', () => {
       if(isWithinWindow(submittime, reporttime, timeWindows[windowType])) {
         const windowUsage = usage.windows[timeWindows[windowType]];
         expect(windowUsage[0].quantity.consuming).to.equal(0.5);
-        expect(windowUsage[0].summary).to.be.above(0);
         expect(windowUsage[0].charge).to.be.above(0);
       }
     }
