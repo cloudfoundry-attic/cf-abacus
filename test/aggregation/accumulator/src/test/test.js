@@ -15,6 +15,9 @@ const router = require('abacus-router');
 const express = require('abacus-express');
 const clone = require('abacus-clone');
 
+const BigNumber = require('bignumber.js');
+BigNumber.config({ ERRORS: false });
+
 const map = _.map;
 const range = _.range;
 const omit = _.omit;
@@ -60,8 +63,8 @@ const moduleDir = (module) => {
   return path.substr(0, path.indexOf(module + '/') + module.length);
 };
 
-const pruneQuantity = (v, k) => {
-  if(k === 'quantity')
+const pruneWindows = (v, k) => {
+  if(k === 'windows')
     return v[4];
   return v;
 };
@@ -101,21 +104,23 @@ const calculateQuantityByWindow = (e, u, w, m, f) => {
 };
 
 // Builds the quantity array in the accumulated usage
-const buildQuantity = (e, u, m, f) => {
+const buildQuantityWindows = (e, u, m, f, price) => {
   // Scaling factor for a time window
   // [Second, Minute, Hour, Day, Month]
   const timescale = [1, 100, 10000, 1000000, 100000000];
-  const quantity = map(timescale, (ts) => {
+  const windows = map(timescale, (ts) => {
     // If this is the first usage, only return current
     if(u === 0)
-      return [{ current: f(m, u + 1) }];
+      return [{ quantity: { current: f(m, u + 1) } }];
     // Return a properly accumulated current & previous
     return [{
-      previous: calculateQuantityByWindow(e, u, ts, m, f),
-      current: calculateQuantityByWindow(e, u + 1, ts, m, f)
-    }];
+      quantity: {
+        previous: calculateQuantityByWindow(e, u, ts, m, f),
+        current: calculateQuantityByWindow(e, u + 1, ts, m, f) } }];
   });
-  return quantity;
+
+  return map(windows, (w) => map(w, (q) => extend(q, {
+    cost: new BigNumber(q.quantity.current).mul(price).toNumber() })));
 };
 
 describe('abacus-usage-accumulator-itest', () => {
@@ -134,6 +139,9 @@ describe('abacus-usage-accumulator-itest', () => {
     // Start local database server
     start('abacus-dbserver');
 
+    // Start account stub
+    start('abacus-account-stub');
+
     // Start usage accumulator
     start('abacus-usage-accumulator');
   });
@@ -146,6 +154,9 @@ describe('abacus-usage-accumulator-itest', () => {
 
     // Stop usage accumulator
     stop('abacus-usage-accumulator');
+
+    // Stop account stub
+    stop('abacus-account-stub');
 
     // Stop local database server
     stop('abacus-dbserver');
@@ -182,7 +193,7 @@ describe('abacus-usage-accumulator-itest', () => {
       o + 1].join('-');
     const cid = (o, ri) => ['bbeae239-f3f8-483c-9dd0-de6781c38bab',
       o + 1].join('-');
-    const pid = (ri, u) => 'basic';
+    const pid = () => 'basic';
 
     const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87',
       o + 1, ri + 1].join('-');
@@ -200,7 +211,7 @@ describe('abacus-usage-accumulator-itest', () => {
       space_id: sid(o, ri),
       resource_id: 'test-resource',
       resource_instance_id: riid(o, ri),
-      plan_id: pid(ri, u),
+      plan_id: pid(),
       consumer_id: cid(o, ri),
       metered_usage: [
         { metric: 'storage', quantity: 1 },
@@ -217,15 +228,18 @@ describe('abacus-usage-accumulator-itest', () => {
           accumulated_usage: [
             {
               metric: 'storage',
-              quantity: buildQuantity(end, u, 1, (m, u) => m)
+              windows: buildQuantityWindows(end, u, 1, (m, u) => m,
+                pid() === 'basic' ? 1 : 0.5)
             },
             {
               metric: 'thousand_light_api_calls',
-              quantity: buildQuantity(end, u, 1, (m, u) => m * u)
+              windows: buildQuantityWindows(end, u, 1, (m, u) => m * u,
+                pid() === 'basic' ? 0.03 : 0.04)
             },
             {
               metric: 'heavy_api_calls',
-              quantity: buildQuantity(end, u, 100, (m, u) => m * u)
+              windows: buildQuantityWindows(end, u, 100, (m, u) => m * u,
+                pid() === 'basic' ? 0.15 : 0.18)
             }
           ],
           start: meteredTemplate(o, ri, 0).start
@@ -233,7 +247,7 @@ describe('abacus-usage-accumulator-itest', () => {
     );
 
     const expected = clone(accumulatedTemplate(
-      orgs - 1, resourceInstances - 1, usage - 1), pruneQuantity);
+      orgs - 1, resourceInstances - 1, usage - 1), pruneWindows);
 
     // Post a metered usage doc, throttled to default concurrent requests
     const post = throttle((o, ri, u, cb) => {
@@ -299,14 +313,14 @@ describe('abacus-usage-accumulator-itest', () => {
           try {
             expect(clone(omit(val.rows[0].doc,
               ['processed', '_rev', '_id', 'id', 'metered-usage_id']),
-                pruneQuantity)).to.deep.equal(expected);
+                pruneWindows)).to.deep.equal(expected);
             done();
           }
           catch (e) {
             if(Date.now() >= giveup)
               expect(clone(omit(val.rows[0].doc,
                 ['processed', '_rev', '_id', 'id', 'metered-usage_id']),
-                  pruneQuantity)).to.deep.equal(expected);
+                  pruneWindows)).to.deep.equal(expected);
             else
               setTimeout(function() {
                 verifyAggregator(done);

@@ -18,6 +18,7 @@ BigNumber.config({ ERRORS: false });
 
 const map = _.map;
 const range = _.range;
+const extend = _.extend;
 const omit = _.omit;
 
 // Batch the requests
@@ -113,22 +114,23 @@ const calculateQuantityByWindow = (e, u, w, m, f) => {
 const timescale = [1, 100, 10000, 1000000, 100000000];
 
 // Builds the quantity array in the accumulated usage
-const buildAccumulatedQuantity = (e, u, m, f) => {
-  const quantity = map(timescale, (ts) => {
+const buildAccumulatedWindows = (e, u, m, f, price) => {
+  const windows = map(timescale, (ts) => {
     // If this is the first usage, only return current
     if(u === 0)
-      return [{ current: f(m, u + 1) }];
+      return [{ quantity: { current: f(m, u + 1) } }];
     // Return a properly accumulated current & previous
     return [{
-      previous: calculateQuantityByWindow(e, u, ts, m, f),
-      current: calculateQuantityByWindow(e, u + 1, ts, m, f)
-    }];
+      quantity: {
+        previous: calculateQuantityByWindow(e, u, ts, m, f),
+        current: calculateQuantityByWindow(e, u + 1, ts, m, f) } }];
   });
-  return quantity;
+  return map(windows, (w) => map(w, (q) => extend(q, {
+    cost: new BigNumber(q.quantity.current).mul(price).toNumber() })));
 };
 
 // Builds the quantity array in the aggregated usage
-const buildAggregatedWindows = (p, u, ri, tri, count, end, f, cost) => {
+const buildAggregatedWindows = (p, u, ri, tri, count, end, f, price) => {
   return map(timescale, (ts) => {
     const time = end + u;
     const timeNum = dateUTCNumbify(time);
@@ -138,9 +140,9 @@ const buildAggregatedWindows = (p, u, ri, tri, count, end, f, cost) => {
     const windowTime = revertUTCNumber(windowTimeNum).getTime();
 
     const q = f(p, Math.min(time - windowTime, u), ri, tri, count);
-    return cost === undefined ? [{ quantity: q }] :
+    return price === undefined ? [{ quantity: q }] :
       [{ quantity: q,
-        cost: new BigNumber(q).mul(cost).toNumber() }];
+        cost: new BigNumber(q).mul(price).toNumber() }];
   });
 };
 
@@ -249,20 +251,23 @@ describe('abacus-usage-aggregator-itest', () => {
       space_id: sid(o, ri),
       resource_id: 'test-resource',
       resource_instance_id: riid(o, ri),
-      plan_id: pid(ri, u),
+      plan_id: pid(ri),
       consumer_id: cid(o, ri),
       accumulated_usage: [
         {
           metric: 'storage',
-          quantity: buildAccumulatedQuantity(end, u, 1, (m, u) => m)
+          windows: buildAccumulatedWindows(end, u, 1, (m, u) => m,
+            pid(ri) === 'basic' ? 1 : 0.5)
         },
         {
           metric: 'thousand_light_api_calls',
-          quantity: buildAccumulatedQuantity(end, u, 1, (m, u) => m * u)
+          windows: buildAccumulatedWindows(end, u, 1, (m, u) => m * u,
+            pid(ri) === 'basic' ? 0.03 : 0.04)
         },
         {
           metric: 'heavy_api_calls',
-          quantity: buildAccumulatedQuantity(end, u, 100, (m, u) => m * u)
+          windows: buildAccumulatedWindows(end, u, 100, (m, u) => m * u,
+            pid(ri) === 'basic' ? 0.15 : 0.18)
         }
       ]
     });

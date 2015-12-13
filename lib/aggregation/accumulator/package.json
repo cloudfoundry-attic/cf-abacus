@@ -35,13 +35,18 @@
     "cfpush": "cfpush"
   },
   "dependencies": {
+    "abacus-batch": "file:../../utils/batch",
+    "abacus-breaker": "file:../../utils/breaker",
     "abacus-cfoauth": "file:../../utils/cfoauth",
     "abacus-cluster": "file:../../utils/cluster",
     "abacus-dataflow": "file:../../utils/dataflow",
     "abacus-debug": "file:../../utils/debug",
     "abacus-launcher": "file:../../utils/launcher",
+    "abacus-lrucache": "file:../../utils/lrucache",
+    "abacus-price-config": "file:../../config/price",
     "abacus-request": "file:../../utils/request",
     "abacus-resource-config": "file:../../config/resource",
+    "abacus-retry": "file:../../utils/retry",
     "abacus-router": "file:../../utils/router",
     "abacus-seqid": "file:../../utils/seqid",
     "abacus-transform": "file:../../utils/transform",
@@ -53,7 +58,6 @@
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
-    "abacus-batch": "file:../../utils/batch",
     "abacus-cfpack": "file:../../../tools/cfpack",
     "abacus-cfpush": "file:../../../tools/cfpush",
     "abacus-eslint": "file:../../../tools/eslint",

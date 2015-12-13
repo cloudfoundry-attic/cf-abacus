@@ -156,7 +156,8 @@ lib/ - Abacus modules
 
     aggregation/ - Aggregation services
 
-        accumulator - accumulates usage over time
+        accumulator - accumulates usage over time and applies
+                      pricing to accumulated usage
         aggregator  - aggregates usage within an organization and applies
                       pricing to aggregated usage
         reporting   - returns usage reports

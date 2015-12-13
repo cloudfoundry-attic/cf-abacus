@@ -43,8 +43,10 @@
     "abacus-seqid": "file:../../../lib/utils/seqid",
     "abacus-throttle": "file:../../../lib/utils/throttle",
     "abacus-usage-accumulator": "file:../../../lib/aggregation/accumulator",
+    "abacus-account-stub": "file:../../../lib/stubs/account",
     "abacus-yieldable": "file:../../../lib/utils/yieldable",
     "babel-preset-es2015": "^6.1.4",
+    "bignumber.js": "^2.1.0",
     "commander": "2.8.1",
     "underscore": "^1.8.3"
   },
