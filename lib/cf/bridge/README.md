@@ -55,6 +55,10 @@ Setup CF:
 ```bash
 ./bin/cfsetup
 ```
+Go to bridge directory:
+```bash
+cd ~/workspace/cf-abacus/lib/cf/bridge
+```
 
 Edit the `manifest.yml` to look like this:
 ```yml
