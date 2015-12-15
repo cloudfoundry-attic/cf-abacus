@@ -473,6 +473,7 @@ describe('abacus-usage-reporting-itest', () => {
     const ratedTemplate = (o, ri, u) => ({
       id: dbclient.kturi(oid(o), end + u),
       organization_id: oid(o),
+      account_id: '1234',
       start: end + u,
       end: end + u,
       resources: cextend([{

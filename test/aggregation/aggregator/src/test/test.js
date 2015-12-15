@@ -427,6 +427,7 @@ describe('abacus-usage-aggregator-itest', () => {
     // TODO check the values of the accumulated usage
     const aggregatedTemplate = (o, ri, u) => ({
       organization_id: oid(o),
+      account_id: '1234',
       start: end + u,
       end: end + u,
       resources: [{
