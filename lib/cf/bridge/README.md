@@ -19,7 +19,9 @@ uaac client add bridge --authorized_grant_types client_credentials --authorities
 
 ## Start the bridge
 
-To start the bridge locally against CF running on bosh-lite set the API and UAA addresses:
+### Locally
+
+To start the bridge locally against CF running on BOSH Lite set the API and UAA addresses:
 
 ```
 export API=https://api.bosh-lite.com
@@ -43,6 +45,52 @@ To stop the bridge:
 
 ```
 npm stop bridge
+```
+
+### Cloud Foundry
+
+To start the bridge on CF running on BOSH Lite follow the steps below.
+
+Setup CF:
+```bash
+./bin/cfsetup
+```
+
+Edit the `manifest.yml` to look like this:
+```yml
+applications:
+- name: abacus-cf-bridge
+  host: abacus-cf-bridge
+  path: .cfpack/app.zip
+  instances: 1
+  memory: 512M
+  disk_quota: 512M
+  env:
+    CONF: default
+    DEBUG: abacus-cf*
+    COLLECTOR: abacus-usage-collector
+    COUCHDB: abacus-dbserver
+    EUREKA: abacus-eureka-stub
+    UAA: https://uaa.bosh-lite.com:443
+    API: https://api.bosh-lite.com:443
+    NODE_MODULES_CACHE: false
+```
+
+Build, pack and push the bridge to Cloud Foundry:
+```bash
+npm install && npm run babel && npm run lint && npm test
+npm run cfpack
+npm run cfpush
+```
+
+Start the bridge:
+```bash
+cf start abacus-cf-bridge
+```
+
+Tail the logs to check the progress:
+```bash
+cf logs abacus-cf-bridge
 ```
 
 ## Usage reporting
