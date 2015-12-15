@@ -10,7 +10,7 @@ Register cf-bridge application as CF client with:
 
 ```
 gem install cf-uaac
-uaac target uaa.10.244.0.34.xip.io
+uaac target uaa.bosh-lite.com
 uaac token client get admin -s admin-secret
 uaac client add bridge --authorized_grant_types client_credentials --authorities cloud_controller.admin --secret secret
 ```
@@ -19,11 +19,11 @@ uaac client add bridge --authorized_grant_types client_credentials --authorities
 
 ## Start the bridge
 
-To start the bridge with CF running on bosh-lite set the API and UAA addresses:
+To start the bridge locally against CF running on bosh-lite set the API and UAA addresses:
 
 ```
-export API=https://api.10.244.0.34.xip.io
-export UAA=https://uaa.10.244.0.34.xip.io
+export API=https://api.bosh-lite.com
+export UAA=https://uaa.bosh-lite.com
 ```
 
 You can optionally enable the debug output with:
