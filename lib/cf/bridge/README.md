@@ -10,7 +10,7 @@ Register cf-bridge application as CF client with:
 
 ```
 gem install cf-uaac
-uaac target uaa.bosh-lite.com
+uaac target uaa.bosh-lite.com --skip-ssl-validation
 uaac token client get admin -s admin-secret
 uaac client add bridge --authorized_grant_types client_credentials --authorities cloud_controller.admin --secret secret
 ```
