@@ -3,12 +3,18 @@ abacus-cf-bridge
 
 CF app usage reporting bridge.
 
+The bridge reports the metrics defined in [linux-container](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/lib/stubs/provisioning/src/resources/linux-container.js) resource:
+- instance_memory [GB]
+- running_instances [number]
+ 
+For every app usage event from CF the bridge POSTs time-based usage report as follows:
+- for STOPPED event: reports 0 memory and 0 insances since the timestamp in the STOPPED event
+- for other events: reports the actual memory and number of instances since the timestamp of the event
 
 ## UAA Client
 
-Register cf-bridge application as CF client with:
-
-```
+The bridge communicates with Cloud Controller. Register cf-bridge application as CF client with:
+```bosh
 gem install cf-uaac
 uaac target uaa.bosh-lite.com --skip-ssl-validation
 uaac token client get admin -s admin-secret
@@ -97,12 +103,3 @@ Tail the logs to check the progress:
 cf logs abacus-cf-bridge
 ```
 
-## Usage reporting
-
-The bridge reports the metrics defined in [linux-container](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/lib/stubs/provisioning/src/resources/linux-container.js) resource:
-- instance_memory [GB]
-- running_instances [number]
- 
-For every app usage event from CF the bridge POSTs time-based usage report as follows:
-- for STOPPED event: reports 0 memory and 0 insances since the timestamp in the STOPPED event
-- for other events: reports the actual memory and number of instances since the timestamp of the event
