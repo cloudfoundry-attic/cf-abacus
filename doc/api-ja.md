@@ -267,32 +267,68 @@ _HTTPレスポンス_: 要求された_リソース設定_ドキュメントが2
 {
   "resource_id": "object-storage",
   "effective": 1420070400000,
-  "measures": [
+  "plans": [
     {
-      "name": "storage",
-      "unit": "BYTE"
+      "plan_id": "basic",
+      "measures": [
+        {
+          "name": "storage",
+          "unit": "BYTE"
+        },
+        {
+          "name": "api_calls",
+          "units": "CALL"
+        }
+      ],
+      "metrics": [
+        {
+          "name": "storage",
+          "unit": "GIGABYTE",
+          "meter": "(m) => m.storage / 1073741824",
+          "accumulate": "(a, qty) => Math.max(a, qty)"
+        },
+        {
+          "name": "thousand_api_calls",
+          "unit": "THOUSAND_CALLS",
+          "meter": "(m) => m.light_api_calls / 1000",
+          "accumulate": "(a, qty) => a ? a + qty : qty",
+          "aggregate": "(a, qty) => a ? a + qty : qty",
+          "rate": "(p, qty) => p ? p * qty : 0",
+          "summarize": "(t, qty) => qty",
+          "charge": "(t, cost) => cost"
+        }
+      ]
     },
     {
-      "name": "api_calls",
-      "units": "CALL"
-    }
-  ],
-  "metrics": [
-    {
-      "name": "storage",
-      "unit": "GIGABYTE",
-      "meter": "(m) => m.storage / 1073741824",
-      "accumulate": "(a, qty) => Math.max(a, qty)"
-    },
-    {
-      "name": "thousand_api_calls",
-      "unit": "THOUSAND_CALLS",
-      "meter": "(m) => m.light_api_calls / 1000",
-      "accumulate": "(a, qty) => a ? a + qty : qty",
-      "aggregate": "(a, qty) => a ? a + qty : qty",
-      "rate": "(p, qty) => p ? p * qty : 0",
-      "summarize": "(t, qty) => qty",
-      "charge": "(t, cost) => cost"
+      "plan_id": "standard",
+      "measures": [
+        {
+          "name": "storage",
+          "unit": "BYTE"
+        },
+        {
+          "name": "api_calls",
+          "units": "CALL"
+        }
+      ],
+      "metrics": [
+        {
+          "name": "storage",
+          "unit": "GIGABYTE",
+          "meter": "(m) => m.storage / 1073741824",
+          "accumulate": "(a, qty) => Math.max(a, qty)"
+        },
+        {
+          "name": "thousand_api_calls",
+          "unit": "THOUSAND_CALLS",
+          "meter": "(m) => m.light_api_calls / 1000",
+          "accumulate": "(a, qty) => a ? a + qty : qty",
+          "aggregate": "(a, qty) => a ? a + qty : qty",
+          "rate": "(p, qty) => p ? p * qty : 0",
+          "summarize": "(t, qty) => qty",
+          "charge": "(t, cost) => cost"
+        }
+      ]
     }
   ]
 }
@@ -307,9 +343,7 @@ _HTTPレスポンス_: 要求された_リソース設定_ドキュメントが2
   "type": "object",
   "required": [
     "resource_id",
-    "effective",
-    "measures",
-    "metrics"
+    "effective"
   ],
   "properties": {
     "resource_id": {
@@ -319,60 +353,79 @@ _HTTPレスポンス_: 要求された_リソース設定_ドキュメントが2
       "type": "integer",
       "format": "utc-millisec"
     },
-    "measures": {
+    "plans": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
         "required": [
-          "name",
-          "unit"
+          "plan_id",
+          "measures",
+          "metrics"
         ],
         "properties": {
-          "name": {
+          "plan_id": {
             "type": "string"
           },
-          "unit": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "additionalItems": false
-    },
-    "metrics": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "object",
-        "required": [
-          "name",
-          "unit",
-        ],
-        "properties": {
-          "name": {
-            "type": "string"
+          "measures": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "unit"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "unit": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "additionalItems": false
           },
-          "unit": {
-            "type": "string"
-          },
-          "meter": {
-            "type": "string"
-          },
-          "accumulate": {
-            "type": "string"
-          },
-          "aggregate": {
-            "type": "string"
-          },
-          "rate": {
-            "type": "string"
-          },
-          "summarize": {
-            "type": "string"
-          },
-          "charge": {
-            "type": "string"
+          "metrics": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "unit"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "meter": {
+                  "type": "string"
+                },
+                "accumulate": {
+                  "type": "string"
+                },
+                "aggregate": {
+                  "type": "string"
+                },
+                "rate": {
+                  "type": "string"
+                },
+                "summarize": {
+                  "type": "string"
+                },
+                "charge": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "additionalItems": false
           }
         },
         "additionalProperties": false
@@ -382,8 +435,7 @@ _HTTPレスポンス_: 要求された_リソース設定_ドキュメントが2
   },
   "additionalProperties": false,
   "title": "Resource Definition"
-}
-```
+}```
 
 <!--
 Resource pricing
