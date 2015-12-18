@@ -37,7 +37,7 @@
   "dependencies": {
     "abacus-batch": "file:../../utils/batch",
     "abacus-breaker": "file:../../utils/breaker",
-    "abacus-cfoauth": "file:../../utils/cfoauth",
+    "abacus-oauth": "file:../../utils/oauth",
     "abacus-cluster": "file:../../utils/cluster",
     "abacus-dataflow": "file:../../utils/dataflow",
     "abacus-debug": "file:../../utils/debug",

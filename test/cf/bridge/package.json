@@ -44,7 +44,7 @@
     "abacus-cf-bridge": "file:../../../lib/cf/bridge",
     "abacus-batch": "file:../../../lib/utils/batch",
     "abacus-breaker": "file:../../../lib/utils/breaker",
-    "abacus-cfoauth": "file:../../../lib/utils/cfoauth",
+    "abacus-oauth": "file:../../../lib/utils/oauth",
     "abacus-cluster": "file:../../../lib/utils/cluster",
     "abacus-dbclient": "file:../../../lib/utils/dbclient",
     "abacus-dbserver": "file:../../../lib/utils/dbserver",

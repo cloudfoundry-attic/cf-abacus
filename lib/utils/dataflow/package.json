@@ -32,7 +32,7 @@
   "dependencies": {
     "abacus-batch": "file:../batch",
     "abacus-breaker": "file:../breaker",
-    "abacus-cfoauth": "file:../cfoauth",
+    "abacus-oauth": "file:../oauth",
     "abacus-cluster": "file:../cluster",
     "abacus-dbclient": "file:../dbclient",
     "abacus-debug": "file:../debug",

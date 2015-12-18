@@ -1,16 +1,20 @@
 {
-  "name": "abacus-cfoauth",
-  "description": "Simplify getting OAuth token using client credentials",
+  "name": "abacus-oauth",
+  "description": "OAuth based authentication and authorization helpers",
   "license": "Apache-2.0",
   "version": "0.0.3",
   "private": true,
-  "readme": "README.md",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/oauth",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/piotrprzybylski/cf-abacus.git"
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
   },
   "keywords": [
     "cf",
+    "oauth",
     "abacus"
   ],
   "files": [

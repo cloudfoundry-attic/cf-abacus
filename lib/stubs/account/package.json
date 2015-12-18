@@ -35,7 +35,7 @@
     "cfpush": "cfpush"
   },
   "dependencies": {
-    "abacus-cfoauth": "file:../../utils/cfoauth",
+    "abacus-oauth": "file:../../utils/oauth",
     "abacus-debug": "file:../../utils/debug",
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-router": "file:../../utils/router",
