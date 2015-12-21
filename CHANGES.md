@@ -5,6 +5,49 @@ The Abacus usage metering and aggregation service.
 
 ---
 
+### v0.0.4 - 12/21/2015
+
+##### Usage collection
+- Handle runtime usage GUID resets
+
+##### Usage metering and rating
+- Metering and rating configuration at the resource/plan level
+- Usage rating at the resource instance level
+- Remove separate rating service
+- Disable BigNumber errors with more than 15 significant digits
+
+##### Usage accumulation and aggregation
+- Fixes to time window and slack window processing logic
+- Refactor and simplify aggregation processing
+- Include account id in aggregated usage
+- Remove deprecated region property
+- Optionally post aggregated usage to an external service
+
+##### Deployment
+- Upgrade to latest Node dependencies
+- Improve BOSH release creation and deployment scripts
+- Improve performance of deployment to CF
+
+##### Monitoring
+- Monitoring of Abacus services using Hystrix, Eureka and Turbine
+- Config options and instrumentation to help monitor memory usage
+- Fix service health reporting logic
+
+##### Security
+- Refactor and simplify OAuth support module
+- Don't write passwords to debug log
+
+##### Performance
+- Improve memory usage and fix memory leaks
+- Tune throttling and cache sizes
+- Implement usage processing backpressure 
+- Minimize number of usage replays when recovering
+
+##### Prerequisites
+- Node.js 0.12, 4.2, 5.3
+- CouchDB 1.6+ compatible database
+- Cloud Foundry v210+
+
 ### v0.0.3 - 11/06/2015
 
 ##### Usage submission
