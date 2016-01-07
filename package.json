@@ -65,6 +65,8 @@
   },
   "dependencies": {
     "abacus-resource-config": "file:lib/config/resource",
+    "abacus-rating-config": "file:lib/config/rate",
+    "abacus-metering-config": "file:lib/config/meter",
     "abacus-price-config": "file:lib/config/price",
     "abacus-usage-schemas": "file:lib/config/schemas",
     "abacus-usage-accumulator": "file:lib/aggregation/accumulator",
