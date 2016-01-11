@@ -72,6 +72,8 @@ const pruneWindows = (v, k) => {
     sumWindowValue(v[4][0], v[4][1], 'cost');
     return nwin;
   }
+  if(k === 'consumers')
+    return map(v, (c) => c.split('/')[0]);
   return v;
 }
 
@@ -329,8 +331,8 @@ describe('abacus-usage-aggregator-itest', () => {
       }));
     };
 
-    // Consumer level resource aggregations for a given space
-    const scagg = (o, ri, u, s) => {
+    // Consumer-level Resource Aggregation
+    const cagg = (o, ri, u, s) => {
       // Resource instance index shift
       const shift = (c) => (s === 0 ? 6 : 5) - (c === 0 ? 0 : 4);
 
@@ -354,6 +356,15 @@ describe('abacus-usage-aggregator-itest', () => {
           plans: scpagg(o, ri, u, s, i)
         }]
       }));
+    };
+
+    // Consumer ids for a given space
+    const scagg = (o, ri, u, s) => {
+      // Number of consumers at a given resource instance and space indices
+      const consumers = () => u === 0 && ri <= 3 + s || tri <= 3 + s ? 1 : 2;
+
+      // Create resource aggregations
+      return create(consumers, (i) => cid(o, i === 0 ? s : s === 0 ? 4 : 5));
     };
 
     // Resource plan level aggregations for a given space
@@ -438,7 +449,22 @@ describe('abacus-usage-aggregator-itest', () => {
       spaces: osagg(o, ri, u)
     });
 
+    // Aggregated usage for a given consumer
+    const consumerTemplate = (o, ri, u) => {
+      // Number of spaces at a given resource index
+      const spaces = () => u === 0 && ri === 0 || tri === 0 ? 1 : 2;
+
+      return create(spaces, (i) => {
+        return extend({
+          organization_id: oid(o),
+          space_id: sid(o, i)
+        }, cagg(o, ri, u, i)[0]);
+      })[0];
+    };
+
     const expected = clone(aggregatedTemplate(
+      orgs - 1, resourceInstances - 1, usage - 1), pruneWindows);
+    const expectedConsumer = clone(consumerTemplate(
       orgs - 1, resourceInstances - 1, usage - 1), pruneWindows);
 
     // Post an accumulated usage doc, throttled to default concurrent requests
@@ -523,6 +549,48 @@ describe('abacus-usage-aggregator-itest', () => {
         });
     };
 
+    const verifyConsumerRating = (done) => {
+      const startDate = Date.UTC(new Date().getUTCFullYear(),
+        new Date().getUTCMonth() + 1) - 1;
+      const endDate = Date.UTC(new Date().getUTCFullYear(),
+        new Date().getUTCMonth(), 1);
+      const sid = dbclient.kturi([expectedConsumer.organization_id,
+        expectedConsumer.space_id, expectedConsumer.consumer_id].join('/'),
+        seqid.pad16(startDate));
+      const eid = dbclient.kturi([expectedConsumer.organization_id,
+        expectedConsumer.space_id, expectedConsumer.consumer_id].join('/'),
+        seqid.pad16(endDate));
+      debug('%o', expectedConsumer);
+      debug('comparing latest consumer record within %s and %s', sid, eid);
+      db.allDocs({ limit: 1, startkey: sid, endkey: eid, descending: true,
+        include_docs: true },
+        (err, val) => {
+          try {
+            expect(clone(omit(val.rows[0].doc, ['id', 'processed',
+              '_id', '_rev', 'accumulated_usage_id', 'start']),
+                pruneWindows)).to.deep.equal(omit(expectedConsumer, ['start',
+                  'organization_id', 'space_id']));
+            done();
+          }
+          catch (e) {
+            // If the test cannot verify the actual data with the expected
+            // data within the giveup time, forward the exception
+            if(Date.now() >= giveup) {
+              debug('Unable to properly verify the last record');
+              expect(clone(omit(val.rows[0].doc, ['id', 'processed',
+                '_id', '_rev', 'accumulated_usage_id', 'start']),
+                  pruneWindows)).to.deep.equal(omit(expectedConsumer, ['start',
+                    'organization_id', 'space_id']));
+            }
+            else
+              // Try the expected test again
+              setTimeout(function() {
+                verifyConsumerRating(done);
+              }, 250);
+          }
+        });
+    };
+
     // Wait for usage aggregator to start
     request.waitFor('http://localhost::p/batch',
       { p: 9300 }, (err, value) => {
@@ -530,7 +598,7 @@ describe('abacus-usage-aggregator-itest', () => {
         if (err) throw err;
 
         // Submit accumulated usage and verify
-        submit(() => verifyRating(() => done()));
+        submit(() => verifyRating(() => verifyConsumerRating(() => done())));
       });
   });
 });

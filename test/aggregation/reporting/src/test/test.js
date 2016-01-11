@@ -22,6 +22,7 @@ const range = _.range;
 const clone = _.clone;
 const zip = _.zip;
 const unzip = _.unzip;
+const flatten = _.flatten;
 
 // Batch the requests
 const brequest = batch(request);
@@ -102,7 +103,8 @@ const addWindows = (u) => {
   map(u.spaces, (s) => {
     s.resources = map(s.resources, addResourceWindows);
     map(s.consumers, (c) => {
-      c.resources = map(c.resources, addResourceWindows);
+      if(c.resources)
+        c.resources = map(c.resources, addResourceWindows);
     })
   });
   return u;
@@ -375,7 +377,7 @@ describe('abacus-usage-reporting-itest', () => {
     };
 
     // Consumer level resource aggregations for a given space
-    const scagg = (o, ri, u, s) => {
+    const cagg = (o, ri, u, s, id) => {
       // Resource instance index shift
       const shift = (c) => (s === 0 ? 6 : 5) - (c === 0 ? 0 : 4);
 
@@ -391,14 +393,34 @@ describe('abacus-usage-reporting-itest', () => {
       const consumers = () => u === 0 && ri <= 3 + s || tri <= 3 + s ? 1 : 2;
 
       // Create resource aggregations
-      return create(consumers, (i) => ({
-        consumer_id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
-        resources: [{
-          resource_id: 'test-resource',
-          aggregated_usage: a(ri, u, i, count),
-          plans: scpagg(o, ri, u, s, i)
-        }]
-      }));
+      return create(consumers, (i) => {
+        const consumer = {
+          consumer_id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
+          resources: [{
+            resource_id: 'test-resource',
+            aggregated_usage: a(ri, u, i, count),
+            plans: scpagg(o, ri, u, s, i)
+          }]
+        };
+        if(id)
+          consumer.id = dbclient.kturi([oid(o), sid(o, s),
+            cid(o, i === 0 ? s : s === 0 ? 4 : 5)].join('/'), end + u);
+        return consumer;
+      });
+    };
+
+    // Consumer level resource aggregations for a given space
+    const scagg = (o, ri, u, s, c) => {
+      // Number of consumers at a given resource instance and space indices
+      const consumers = () => u === 0 && ri <= 3 + s || tri <= 3 + s ? 1 : 2;
+
+      // Create resource aggregations only if true, otherwise, return the id
+      if(c)
+        return cagg(o, ri, u, s);
+      return create(consumers, (i) => {
+        return [cid(o, i === 0 ? s : s === 0 ? 4 : 5), 't',
+          dbclient.pad16(end + u)].join('/');
+      });
     };
 
     // Resource plan level aggregations for a given space
@@ -421,7 +443,7 @@ describe('abacus-usage-reporting-itest', () => {
     };
 
     // Space level resource aggregations for a given organization
-    const osagg = (o, ri, u) => {
+    const osagg = (o, ri, u, c) => {
       // Resource instance index shift
       const shift = (s) => s === 0 ? 1 : 0;
 
@@ -440,7 +462,7 @@ describe('abacus-usage-reporting-itest', () => {
           aggregated_usage: a(ri, u, i, count),
           plans: spagg(o, ri, u, i)
         }],
-        consumers: scagg(o, ri, u, i)
+        consumers: scagg(o, ri, u, i, c)
       }));
     };
 
@@ -468,8 +490,9 @@ describe('abacus-usage-reporting-itest', () => {
       }));
     };
 
-    // Rated usage for a given org, resource instance, usage indices
-    const ratedTemplate = (o, ri, u) => ({
+    // Rated usage for a given org, resource instance, usage indices, whether
+    // to fill the consumer usage or not
+    const ratedTemplate = (o, ri, u, c) => ({
       id: dbclient.kturi(oid(o), end + u),
       organization_id: oid(o),
       account_id: '1234',
@@ -480,13 +503,25 @@ describe('abacus-usage-reporting-itest', () => {
         aggregated_usage: a(ri, u, undefined, (n) => n + 1),
         plans: opagg(o, ri, u)
       }], addCost),
-      spaces: cextend(osagg(o, ri, u), addCost)
+      spaces: cextend(osagg(o, ri, u, c), addCost)
     });
+    // Rated usage for a given consumer
+    const ratedConsumerTemplate = (o, ri, u) => {
+      // Number of spaces at a given resource index
+      const spaces = () => u === 0 && ri === 0 || tri === 0 ? 1 : 2;
+      return flatten(map(create(spaces, (i) => cagg(o, ri, u, i, 1)), (s) => {
+        map(s, (c) => {
+          c.resources = cextend(
+            map(c.resources, addResourceWindows), addCost);
+        });
+        return s;
+      }));
+    };
 
     // Usage report for a given org, resource instance, usage indices
     const reportTemplate = (o, ri, u) => {
       // Add charge and summary at all resources and plan level aggregations
-      const report = cextend(addWindows(ratedTemplate(o, ri, u)), addCharge);
+      const report = cextend(addWindows(ratedTemplate(o, ri, u, 1)), addCharge);
 
       // Add charge at organization, space and consumer levels
       report.windows = map(zip.apply(_, map(report.resources, (r) => {
@@ -523,6 +558,7 @@ describe('abacus-usage-reporting-itest', () => {
     // Post rated usage doc, throttled to default concurrent requests
     const aggregatordb = dataflow.db('abacus-aggregator-aggregated-usage');
     const dbput = yieldable.functioncb(aggregatordb.put);
+    const dbbulk = yieldable.functioncb(aggregatordb.bulkDocs);
 
     const post = throttle((o, ri, u, cb) => {
       debug('Submit rated usage for org%d instance%d usage%d',
@@ -535,8 +571,15 @@ describe('abacus-usage-reporting-itest', () => {
         expect(val).to.not.equal(undefined);
 
         debug('Verified rated usage for org%d', o + 1);
+        dbbulk(ratedConsumerTemplate(o, ri, u), (err, val) => {
+          debug('Verify rated consumer usage for org%d', o + 1);
 
-        cb();
+          expect(err).to.equal(null);
+          expect(val).to.not.equal(undefined);
+
+          debug('Verified rated consumer usage for org%d', o + 1);
+          cb();
+        });
       });
     });
 
