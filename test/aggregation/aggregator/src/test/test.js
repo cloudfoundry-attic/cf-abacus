@@ -602,3 +602,425 @@ describe('abacus-usage-aggregator-itest', () => {
       });
   });
 });
+
+// const dbV2 = require('abacus-dataflow')
+//   .db('abacus-aggregator-aggregated-usage-v2');
+// dbV2.allDocs = yieldable.functioncb(dbV2.allDocs);
+
+// describe('abacus-usage-aggregator-itest V2', () => {
+//   before(() => {
+//     const start = (module) => {
+//       const c = cp.spawn('npm', ['run', 'start'],
+//         { cwd: moduleDir(module), env: clone(process.env) });
+
+//       // Add listeners to stdout, stderr and exit messsage and forward the
+//       // messages to debug logs
+//       c.stdout.on('data', (d) => process.stdout.write(d));
+//       c.stderr.on('data', (d) => process.stderr.write(d));
+//       c.on('exit', (c) => debug('Application exited with code %d', c));
+//     };
+
+//     // Start local database server
+//     start('abacus-dbserver');
+
+//     // Start account stub
+//     start('abacus-account-stub');
+
+//     // Start usage aggregator
+//     start('abacus-usage-aggregator');
+//   });
+
+//   after(() => {
+//     const stop = (module) => {
+//       cp.spawn('npm', ['run', 'stop'],
+//         { cwd: moduleDir(module), env: clone(process.env) });
+//     };
+
+//     // Stop usage aggregator
+//     stop('abacus-usage-aggregator');
+
+//     // Stop account stub
+//     stop('abacus-account-stub');
+
+//     // Stop local database server
+//     stop('abacus-dbserver');
+//   });
+
+//   it('aggregator accumulated usage submissions V2', function(done) {
+//     // Configure the test timeout based on the number of usage docs, with
+//     // a minimum of 60 secs
+//     const timeout = Math.max(60000,
+//       100 * orgs * resourceInstances * usage);
+//     this.timeout(timeout + 2000);
+//     const giveup = Date.now() + timeout;
+
+//     // Initialize usage doc properties with unique values
+//     const start = Date.now() + tshift;
+//     const end = Date.now() + tshift;
+
+//     // Produce usage for two spaces in an organization, two consumers
+//     // in a space and create resource instances using two resource plans
+//     // at each space.
+
+//     // Usage template index values for a given org
+//     //  Usage  ResourceInstance  Space Plan Consumer(with space)
+//     //    0           0            0    0        0-0
+//     //    0           1            1    0        1-0
+//     //    0           2            0    1        0-0
+//     //    0           3            1    1        1-0
+//     //    0           4            0    0        0-1
+//     //    0           5            1    0        1-1
+//     //    0           6            0    1        0-1
+//     //    0           7            1    1        1-1
+//     //    0           8            0    0        0-0
+//     //    0           9            1    0        1-0
+//     //    0          10            0    1        0-0
+//     //    1           0            0    0        0-0
+//     //    1           1            1    0        1-0
+
+//     // Organization id based on org index
+//     const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+//       o + 1].join('-');
+
+//     // One of the two spaces at a given org based on resource instance index
+//     const sid = (o, ri) => ['aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
+//       o + 1, ri % 2 === 0 ? 1 : 2].join('-');
+
+//     // One of the two consumers at a given org and derived space based on
+//     // resource instance index
+//     const cid = (o, ri) => ['bbeae239-f3f8-483c-9dd0-de6781c38bab',
+//       o + 1, ri % 2 === 0 ? 1 : 2, ri % 8 < 4 ? 1 : 2].join('-');
+
+//     // One of the two plans based on resource instance index
+//     const pid = (ri) => ri % 4 < 2 ? 'basic' : 'standard';
+
+//     // Resource instance id based on org and resouce instance indices
+//     const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87',
+//       o + 1, ri + 1].join('-');
+
+//     // Usage and usage batch ids
+//     const uid = (o, ri, u) => [start, o + 1, ri + 1, u + 1].join('-');
+//     const bid = (u) => [start, u + 1].join('-');
+
+//     // Accumulated usage for given org, resource instance and usage #s
+//     const accumulatedTemplate = (o, ri, u) => ({
+//       id: uid(o, ri, u),
+//       collected_usage_id: bid(o, ri, u),
+//       start: start + u,
+//       end: end + u,
+//       organization_id: oid(o),
+//       space_id: sid(o, ri),
+//       resource_id: 'test-resource',
+//       resource_instance_id: riid(o, ri),
+//       plan_id: pid(ri),
+//       metering_plan_id: pid(ri),
+//       rating_plan_id: pid(ri),
+//       price_id: 'common',
+//       resource_type: '1.0',
+//       account_id: '1234',
+//       consumer_id: cid(o, ri),
+//       accumulated_usage: [
+//         {
+//           metric: 'storage',
+//           windows: buildAccumulatedWindows(end, u, 1, (m, u) => m,
+//             pid(ri) === 'basic' ? 1 : 0.5)
+//         },
+//         {
+//           metric: 'thousand_light_api_calls',
+//           windows: buildAccumulatedWindows(end, u, 1, (m, u) => m * u,
+//             pid(ri) === 'basic' ? 0.03 : 0.04)
+//         },
+//         {
+//           metric: 'heavy_api_calls',
+//           windows: buildAccumulatedWindows(end, u, 100, (m, u) => m * u,
+//             pid(ri) === 'basic' ? 0.15 : 0.18)
+//         }
+//       ]
+//     });
+
+//     // Use number sequences to find expected aggregated value at any given
+//     // resource instance index and a given usage index based on the generated
+//     // accumulated usage.
+
+//     // Total resource instances index
+//     const tri = resourceInstances - 1;
+
+//     // Create an array of objects based on a range and a creator function
+//     const create = (number, creator) =>
+//       map(range(number()), (i) => creator(i));
+
+//     // Aggregate metrics based on ressource instance, usage and plan indices
+//     // For max, we use either the current count or the totat count based on
+//     // resource instance index
+//     // For sum, we use current count + total count based on resource instance
+//     // and usage index
+//     /* eslint complexity: [1, 6] */
+//     const a = (ri, u, p, count, addCost) => [
+//       { metric: 'storage',
+//         windows: buildAggregatedWindows(p, u, ri, tri, count, end,
+//           (p, u, ri, tri, count) => u === 0 ? count(ri, p) : count(tri, p),
+//           addCost ? p === 0 ? 1 : 0.5 : undefined) },
+//       { metric: 'thousand_light_api_calls',
+//         windows: buildAggregatedWindows(p, u, ri, tri, count, end,
+//           (p, u, ri, tri, count) => count(ri, p) + u * count(tri, p),
+//           addCost ? p === 0 ? 0.03 : 0.04 : undefined) },
+//       { metric: 'heavy_api_calls',
+//         windows: buildAggregatedWindows(p, u, ri, tri, count, end,
+//           (p, u, ri, tri, count) => 100 * (count(ri, p) + u * count(tri, p)),
+//           addCost ? p === 0 ? 0.15 : 0.18 : undefined) }
+//     ];
+
+//     // Resource plan level aggregations for a given consumer at given space
+//     const scpagg = (o, ri, u, s, c) => {
+//       // Resource instance index shift to locate a value at count number
+//       // sequence specified below
+//       const shift = (p) =>
+//         (s === 0 ? c === 0 ? 8 : 4 : c === 0 ? 7 : 3) - (p === 0 ? 0 : 2);
+
+//       // Number sequence representing count for a given space, consumer and
+//       // plan based on specified spread using id generators
+//       // 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
+//       // 2, 2, 2, 2, 2, 2, 2, 2, 3, ......
+//       const count = (n, p) => Math.round((n + shift(p)) / 8 - 0.50);
+
+//       // Number of plans at a given space, consumer and
+//       // resource instance indices
+//       const plans = () => u === 0 && ri <= (c === 0 ? 1 + s : 5 + s) ||
+//         tri <= (c === 0 ? 1 + s : 5 + s) ? 1 : 2;
+
+//       // Create plan aggregations
+//       return create(plans, (i) => ({
+//         metering_plan_id: pid(i === 0 ? 0 : 2),
+//         aggregated_usage: a(ri, u, i, count, false),
+//         rating_plans: [{
+//           rating_plan_id: pid(i === 0 ? 0 : 2),
+//           aggregated_usage: a(ri, u, i, count, false),
+//           prices: [{
+//             price_id: 'common',
+//             aggregated_usage: a(ri, u, i, count, true)
+//           }]
+//         }]
+//       }));
+//     };
+
+//     // Consumer level resource aggregations for a given space
+//     const scagg = (o, ri, u, s) => {
+//       // Resource instance index shift
+//       const shift = (c) => (s === 0 ? 6 : 5) - (c === 0 ? 0 : 4);
+
+//       // Number sequence of count
+//       // 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4, 4,
+//       // 5, 5, 6, .....
+//       const count = (n, c) => {
+//         const nri = n + shift(c);
+//         return 2 * Math.round(nri / 8 - 0.50) + (nri % 8 < 6 ? 0 : 1);
+//       };
+
+//       // Number of consumers at a given resource instance and space indices
+//       const consumers = () => u === 0 && ri <= 3 + s || tri <= 3 + s ? 1 : 2;
+
+//       // Create resource aggregations
+//       return create(consumers, (i) => ({
+//         consumer_id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
+//         resources: [{
+//           resource_id: 'test-resource',
+//           aggregated_usage: a(ri, u, i, count, false),
+//           metering_plans: scpagg(o, ri, u, s, i)
+//         }]
+//       }));
+//     };
+
+//     // Resource plan level aggregations for a given space
+//     const spagg = (o, ri, u, s) => {
+//       // resource instance index shift
+//       const shift = (p) => (s === 0 ? 3 : 2) - (p === 0 ? 0 : 2);
+
+//       // Number sequence of count
+//       // 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, ......
+//       const count = (n, p) => Math.round((n + shift(p)) / 4 - 0.25);
+
+//       // Number of plans at a given resource instance and space indices
+//       const plans = () => u === 0 && ri <= 1 + s || tri <= 1 + s ? 1 : 2;
+
+//       // Create plan level aggregations
+//       return create(plans, (i) => ({
+//         metering_plan_id: pid(i === 0 ? 0 : 2),
+//         aggregated_usage: a(ri, u, i, count, false),
+//         rating_plans: [{
+//           rating_plan_id: pid(i === 0 ? 0 : 2),
+//           aggregated_usage: a(ri, u, i, count, false),
+//           prices: [{
+//             price_id: 'common',
+//             aggregated_usage: a(ri, u, i, count, true)
+//           }]
+//         }]
+//       }));
+//     };
+
+//     // Space level resource aggregations for a given organization
+//     const osagg = (o, ri, u) => {
+//       // Resource instance index shift
+//       const shift = (s) => s === 0 ? 1 : 0;
+
+//       // Number sequnce of count
+//       // 0, 1, 1, 2, 2, 3, 3, 4, 4,.....
+//       const count = (n, s) => Math.round((n + shift(s)) / 2);
+
+//       // Number of spaces at a given resource index
+//       const spaces = () => u === 0 && ri === 0 || tri === 0 ? 1 : 2;
+
+//       // Create resource instance aggregations
+//       return create(spaces, (i) => ({
+//         space_id: sid(o, i),
+//         resources: [{
+//           resource_id: 'test-resource',
+//           aggregated_usage: a(ri, u, i, count, false),
+//           metering_plans: spagg(o, ri, u, i)
+//         }],
+//         consumers: scagg(o, ri, u, i)
+//       }));
+//     };
+
+//     // Resource plan level aggregations for a given organization
+//     const opagg = (o, ri, u) => {
+//       // Resource instance index shift
+//       const shift = (p) => p === 0 ? 2 : 0;
+
+//       // Number sequence of count
+//       // 0, 0, 1, 2, 2, 2, 3, 4, 4, 4, 5, 6, 6, 6, 7, 8, 8, 8, ...........
+//       const count = (n, p) => {
+//         const nri = n + shift(p);
+
+//         return Math.round(nri / 2 +
+//           (nri % 2 === 0 ? 0 : 0.5) * ((nri / 2 - 0.5) % 2 === 0 ? -1 : 1));
+//       };
+
+//       // Number of plans at a given resource instance index
+//       const plans = () => u === 0 && ri <= 1 || tri <= 1 ? 1 : 2;
+
+//       // Create plan aggregations
+//       return create(plans, (i) => ({
+//         metering_plan_id: pid(i === 0 ? 0 : 2),
+//         aggregated_usage: a(ri, u, i, count, false),
+//         rating_plans: [{
+//           rating_plan_id: pid(i === 0 ? 0 : 2),
+//           aggregated_usage: a(ri, u, i, count, false),
+//           prices: [{
+//             price_id: 'common',
+//             aggregated_usage: a(ri, u, i, count, true)
+//           }]
+//         }]
+//       }));
+//     };
+
+//     // Aggregated usage for a given org, resource instance, usage indices
+//     // TODO check the values of the accumulated usage
+//     const aggregatedTemplate = (o, ri, u) => ({
+//       organization_id: oid(o),
+//       account_id: '1234',
+//       start: end + u,
+//       end: end + u,
+//       resources: [{
+//         resource_id: 'test-resource',
+//         aggregated_usage: a(ri, u, undefined, (n) => n + 1, false),
+//         metering_plans: opagg(o, ri, u)
+//       }],
+//       spaces: osagg(o, ri, u)
+//     });
+
+//     const expected = clone(aggregatedTemplate(
+//       orgs - 1, resourceInstances - 1, usage - 1), pruneWindows);
+
+//     // Post an accumulated usage doc, throttled to default concurrent request
+//     const post = throttle((o, ri, u, cb) => {
+//       debug('Submit accumulated usage for org%d instance%d usage%d',
+//         o + 1, ri + 1, u + 1);
+
+//       brequest.post('http://localhost::p/v2/metering/accumulated/usage',
+//         { p: 9300, body: accumulatedTemplate(o, ri, u) }, (err, val) => {
+//           expect(err).to.equal(undefined);
+//           expect(val.statusCode).to.equal(201);
+//           expect(val.headers.location).to.not.equal(undefined);
+
+//           debug('Accumulated usage for org%d instance%d' +
+//             ' usage%d, verifying it...', o + 1, ri + 1, u + 1);
+
+//           brequest.get(val.headers.location, undefined, (err, val) => {
+//             debug('Verify accumulated usage for org%d instance%d usage%d',
+//               o + 1, ri + 1, u + 1);
+
+//             expect(err).to.equal(undefined);
+//             expect(val.statusCode).to.equal(200);
+
+//             expect(omit(val.body, 'id', 'processed'))
+//               .to.deep.equal(omit(
+//                 accumulatedTemplate(o, ri, u), 'id', 'processed'));
+
+//             debug('Verified accumulated usage for org%d instance%d usage%d',
+//               o + 1, ri + 1, u + 1);
+
+//             cb();
+//           });
+//         });
+//     });
+
+//     // Post the requested number of accumulated usage docs
+//     const submit = (done) => {
+//       let posts = 0;
+//       const cb = () => {
+//         if(++posts === orgs * resourceInstances * usage) done();
+//       };
+
+//       // Submit usage for all orgs and resource instances
+//       map(range(usage), (u) => map(range(resourceInstances),
+//         (ri) => map(range(orgs), (o) => post(o, ri, u, cb))));
+//     };
+
+//     const verifyRating = (done) => {
+//       const startDate = Date.UTC(new Date().getUTCFullYear(),
+//         new Date().getUTCMonth() + 1) - 1;
+//       const endDate = Date.UTC(new Date().getUTCFullYear(),
+//         new Date().getUTCMonth(), 1);
+//       const sid = dbclient.kturi(expected.organization_id,
+//         seqid.pad16(startDate));
+//       const eid = dbclient.kturi(expected.organization_id,
+//         seqid.pad16(endDate));
+//       debug('comparing latest record within %s and %s', sid, eid);
+//       dbV2.allDocs({ limit: 1, startkey: sid, endkey: eid, descending: true,
+//         include_docs: true },
+//         (err, val) => {
+//           try {
+//             expect(clone(omit(val.rows[0].doc, ['id', 'processed',
+//               '_id', '_rev', 'accumulated_usage_v2_id', 'start']),
+//                 pruneWindows)).to.deep.equal(omit(expected, ['start']));
+//             done();
+//           }
+//           catch (e) {
+//             // If the test cannot verify the actual data with the expected
+//             // data within the giveup time, forward the exception
+//             if(Date.now() >= giveup) {
+//               debug('Unable to properly verify the last record');
+//               expect(clone(omit(val.rows[0].doc, ['id', 'processed',
+//                 '_id', '_rev', 'accumulated_usage_v2_id', 'start']),
+//                   pruneWindows)).to.deep.equal(omit(expected, ['start']));
+//             }
+//             else
+//               // Try the expected test again
+//               setTimeout(function() {
+//                 verifyRating(done);
+//               }, 250);
+//           }
+//         });
+//     };
+
+//     // Wait for usage aggregator to start
+//     request.waitFor('http://localhost::p/batch',
+//       { p: 9300 }, (err, value) => {
+//         // Failed to ping usage aggregator before timing out
+//         if (err) throw err;
+
+//         // Submit accumulated usage and verify
+//         submit(() => verifyRating(() => done()));
+//       });
+//   });
+// });

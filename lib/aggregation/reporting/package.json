@@ -43,6 +43,8 @@
     "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-debug": "file:../../utils/debug",
     "abacus-launcher": "file:../../utils/launcher",
+    "abacus-metering-config": "file:../../config/meter",
+    "abacus-rating-config": "file:../../config/rate",
     "abacus-request": "file:../../utils/request",
     "abacus-resource-config": "file:../../config/resource",
     "abacus-retry": "file:../../utils/retry",
