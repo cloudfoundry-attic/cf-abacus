@@ -1027,7 +1027,8 @@ describe('abacus-usage-reporting-itest V2', () => {
     // Usage report for a given org, resource instance, usage indices
     const reportTemplate = (o, ri, u) => {
       // Add charge and summary at all resources and plan level aggregations
-      const report = cextend(addWindowsV2(ratedTemplate(o, ri, u)), addChargeV2);
+      const report = cextend(addWindowsV2(ratedTemplate(o, ri, u)),
+        addChargeV2);
 
       // Add charge at organization, space and consumer levels
       report.windows = map(zip.apply(_, map(report.resources, (r) => {
