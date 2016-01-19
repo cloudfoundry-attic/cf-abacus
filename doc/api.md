@@ -1339,6 +1339,28 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
       }
     }
 }
+
+{
+  resource_instance(
+    organization_id: "us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+    consumer_id: "bbeae239-f3f8-483c-9dd0-de6781c38bab",
+    resource_instance_id: "0b39fa70-a65f-4183-bae8-385633ca5c87",
+    plan_id: "basic",
+    time: time: 1435622400000) {
+      organization_id,
+      space_id,
+      resource_id,
+      resource_instance_id,
+      plan_id,
+      accumulated_usage {
+        metric,
+        windows {
+          summary,
+          charge
+        }
+      }
+    }
+}
 ```
 
 ### GraphQL schema:
@@ -1392,6 +1414,19 @@ type OrganizationReport {
   charge: Float
   resources: [Resource]
   spaces: [Space]
+}
+
+type resourceInstanceReport {
+  id: String
+  start: Int
+  end: Int
+  organization_id: String
+  space_id: String
+  resource_id: String
+  resource_instance_id: String
+  consumer_id: String
+  plan_id: String
+  accumulated_usage: [PlanMetric]
 }
 
 type Query {
