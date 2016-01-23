@@ -1,0 +1,55 @@
+{
+  "name": "abacus-rating-config",
+  "description": "Resource usage rating configuration",
+  "license": "Apache-2.0",
+  "version": "0.0.4",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/config/rating",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "lib/",
+    "src/"
+  ],
+  "main": "lib/index.js",
+  "scripts": {
+    "babel": "babel",
+    "test": "eslint && mocha",
+    "lint": "eslint",
+    "pub": "publish"
+  },
+  "dependencies": {
+    "abacus-batch": "file:../../utils/batch",
+    "abacus-breaker": "file:../../utils/breaker",
+    "abacus-debug": "file:../../utils/debug",
+    "abacus-eval": "file:../../utils/eval",
+    "abacus-lock": "file:../../utils/lock",
+    "abacus-request": "file:../../utils/request",
+    "abacus-retry": "file:../../utils/retry",
+    "abacus-urienv": "file:../../utils/urienv",
+    "babel-preset-es2015": "^6.1.4",
+    "bignumber.js": "^2.1.0",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "abacus-babel": "file:../../../tools/babel",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-publish": "file:../../../tools/publish",
+    "abacus-usage-schemas": "file:../../config/schemas"
+  },
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=2.0.0"
+  }
+}
