@@ -47,7 +47,7 @@
     "abacus-lrucache": "file:../../utils/lrucache",
     "abacus-price-config": "file:../../config/price",
     "abacus-request": "file:../../utils/request",
-    "abacus-resource-config": "file:../../config/resource",
+    "abacus-metering-config": "file:../../config/metering",
     "abacus-retry": "file:../../utils/retry",
     "abacus-router": "file:../../utils/router",
     "abacus-seqid": "file:../../utils/seqid",

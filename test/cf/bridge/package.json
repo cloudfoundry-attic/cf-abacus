@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-resource-config": "file:../../../lib/config/resource",
+    "abacus-metering-config": "file:../../../lib/config/metering",
     "abacus-price-config": "file:../../../lib/config/price",
     "abacus-usage-schemas": "file:../../../lib/config/schemas",
     "abacus-usage-accumulator": "file:../../../lib/aggregation/accumulator",
