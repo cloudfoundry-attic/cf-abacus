@@ -235,6 +235,14 @@ describe('abacus-usage-aggregator-itest', () => {
     // One of the two plans based on resource instance index
     const pid = (ri) => ri % 4 < 2 ? 'basic' : 'standard';
 
+    // One of the two rating plans based on resource instance index
+    const ppid = (ri) => ri % 4 < 2 ? 'test-pricing-basic' :
+      'test-pricing-standard';
+
+    // One of the two pricing plans based on resource instance index
+    const rpid = (ri) => ri % 4 < 2 ? 'basic-test-rating-plan' :
+      'standard-test-rating-plan';
+
     // Resource instance id based on org and resouce instance indices
     const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87',
       o + 1, ri + 1].join('-');
@@ -252,6 +260,20 @@ describe('abacus-usage-aggregator-itest', () => {
       organization_id: oid(o),
       space_id: sid(o, ri),
       resource_id: 'test-resource',
+      resource_type: 'test-resource',
+      account_id: '1234',
+      pricing_country: 'USA',
+      pricing_plan_id: ppid(ri),
+      pricing_metrics: [
+        { name: 'storage',
+          price: pid(ri) === 'basic' ? 1 : 0.5 },
+        { name: 'thousand_light_api_calls',
+          price: pid(ri) === 'basic' ? 0.03 : 0.04 },
+        { name: 'heavy_api_calls',
+          price: pid(ri) === 'basic' ? 0.15 : 0.18 }
+      ],
+      rating_plan_id: rpid(ri),
+      metering_plan_id: pid(ri),
       resource_instance_id: riid(o, ri),
       plan_id: pid(ri),
       consumer_id: cid(o, ri),

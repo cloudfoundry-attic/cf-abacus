@@ -207,6 +207,7 @@ describe('abacus-usage-accumulator-itest', () => {
     // Return a usage with unique start and end time based on a number
     const meteredTemplate = (o, ri, u) => ({
       id: uid(o, ri, u),
+      account_id: '1234',
       collected_usage_id: bid(o, ri, u),
       start: start + u,
       end: end + u,
@@ -216,13 +217,16 @@ describe('abacus-usage-accumulator-itest', () => {
       resource_type: 'test-resource',
       resource_instance_id: riid(o, ri),
       plan_id: pid(),
+      pricing_country: 'USA',
       metering_plan_id: mpid(),
       rating_plan_id: rpid(),
       pricing_plan_id: ppid(),
       pricing_metrics: [
-        { name: 'storage', price: 1 },
-        { name: 'thousand_light_api_calls', price: 0.03 },
-        { name: 'heavy_api_calls', price: 0.15 }
+        { name: 'storage',
+          price: pid() === 'basic' ? 1 : 0.5 },
+        { name: 'thousand_light_api_calls',
+          price: pid() === 'basic' ? 0.03 : 0.04 },
+        { name: 'heavy_api_calls', price: pid() === 'basic' ? 0.15 : 0.18 }
       ],
       consumer_id: cid(o, ri),
       metered_usage: [
