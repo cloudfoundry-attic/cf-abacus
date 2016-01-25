@@ -235,6 +235,9 @@ describe('abacus-usage-aggregator-itest', () => {
     // One of the two plans based on resource instance index
     const pid = (ri) => ri % 4 < 2 ? 'basic' : 'standard';
 
+    // The metering plan id
+    const mid = (ri) => 'basic-test-metering-plan';
+
     // One of the two rating plans based on resource instance index
     const ppid = (ri) => ri % 4 < 2 ? 'test-pricing-basic' :
       'test-pricing-standard';
@@ -273,7 +276,7 @@ describe('abacus-usage-aggregator-itest', () => {
           price: pid(ri) === 'basic' ? 0.15 : 0.18 }
       ],
       rating_plan_id: rpid(ri),
-      metering_plan_id: pid(ri),
+      metering_plan_id: mid(ri),
       resource_instance_id: riid(o, ri),
       plan_id: pid(ri),
       consumer_id: cid(o, ri),
@@ -348,7 +351,8 @@ describe('abacus-usage-aggregator-itest', () => {
 
       // Create plan aggregations
       return create(plans, (i) => ({
-        plan_id: pid(i === 0 ? 0 : 2),
+        plan_id: [pid(i === 0 ? 0 : 2), mid(i === 0 ? 0 : 2),
+          rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
         aggregated_usage: a(ri, u, i, count, true)
       }));
     };
@@ -403,7 +407,8 @@ describe('abacus-usage-aggregator-itest', () => {
 
       // Create plan level aggregations
       return create(plans, (i) => ({
-        plan_id: pid(i === 0 ? 0 : 2),
+        plan_id: [pid(i === 0 ? 0 : 2), mid(i === 0 ? 0 : 2),
+          rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
         aggregated_usage: a(ri, u, i, count, true)
       }));
     };
@@ -451,7 +456,8 @@ describe('abacus-usage-aggregator-itest', () => {
 
       // Create plan aggregations
       return create(plans, (i) => ({
-        plan_id: pid(i === 0 ? 0 : 2),
+        plan_id: [pid(i === 0 ? 0 : 2), mid(i === 0 ? 0 : 2),
+          rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
         aggregated_usage: a(ri, u, i, count, true)
       }));
     };
