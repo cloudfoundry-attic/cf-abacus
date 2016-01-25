@@ -194,6 +194,9 @@ describe('abacus-usage-accumulator-itest', () => {
     const cid = (o, ri) => ['bbeae239-f3f8-483c-9dd0-de6781c38bab',
       o + 1].join('-');
     const pid = () => 'basic';
+    const ppid = () => 'test-pricing-basic';
+    const rpid = () => 'basic-test-rating-plan';
+    const mpid = () => 'basic-test-metering-plan';
 
     const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87',
       o + 1, ri + 1].join('-');
@@ -210,8 +213,17 @@ describe('abacus-usage-accumulator-itest', () => {
       organization_id: oid(o),
       space_id: sid(o, ri),
       resource_id: 'test-resource',
+      resource_type: 'test-resource',
       resource_instance_id: riid(o, ri),
       plan_id: pid(),
+      metering_plan_id: mpid(),
+      rating_plan_id: rpid(),
+      pricing_plan_id: ppid(),
+      pricing_metrics: [
+        { name: 'storage', price: 1 },
+        { name: 'thousand_light_api_calls', price: 0.03 },
+        { name: 'heavy_api_calls', price: 0.15 }
+      ],
       consumer_id: cid(o, ri),
       metered_usage: [
         { metric: 'storage', quantity: 1 },
