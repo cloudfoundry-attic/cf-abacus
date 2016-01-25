@@ -1,5 +1,5 @@
-abacus-resource-config
+abacus-metering-config
 ===
 
-Resource usage metering and aggregation configuration.
+Resource usage metering configuration.
 
