@@ -42,6 +42,8 @@
     "abacus-debug": "file:../../utils/debug",
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-lrucache": "file:../../utils/lrucache",
+    "abacus-pricing-config": "file:../../config/pricing",
+    "abacus-rating-config": "file:../../config/rating",
     "abacus-request": "file:../../utils/request",
     "abacus-retry": "file:../../utils/retry",
     "abacus-router": "file:../../utils/router",
