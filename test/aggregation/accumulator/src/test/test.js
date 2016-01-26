@@ -194,6 +194,9 @@ describe('abacus-usage-accumulator-itest', () => {
     const cid = (o, ri) => ['bbeae239-f3f8-483c-9dd0-de6781c38bab',
       o + 1].join('-');
     const pid = () => 'basic';
+    const ppid = () => 'test-pricing-basic';
+    const rpid = () => 'basic-test-rating-plan';
+    const mpid = () => 'basic-test-metering-plan';
 
     const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87',
       o + 1, ri + 1].join('-');
@@ -204,14 +207,27 @@ describe('abacus-usage-accumulator-itest', () => {
     // Return a usage with unique start and end time based on a number
     const meteredTemplate = (o, ri, u) => ({
       id: uid(o, ri, u),
+      account_id: '1234',
       collected_usage_id: bid(o, ri, u),
       start: start + u,
       end: end + u,
       organization_id: oid(o),
       space_id: sid(o, ri),
       resource_id: 'test-resource',
+      resource_type: 'test-resource',
       resource_instance_id: riid(o, ri),
       plan_id: pid(),
+      pricing_country: 'USA',
+      metering_plan_id: mpid(),
+      rating_plan_id: rpid(),
+      pricing_plan_id: ppid(),
+      pricing_metrics: [
+        { name: 'storage',
+          price: pid() === 'basic' ? 1 : 0.5 },
+        { name: 'thousand_light_api_calls',
+          price: pid() === 'basic' ? 0.03 : 0.04 },
+        { name: 'heavy_api_calls', price: pid() === 'basic' ? 0.15 : 0.18 }
+      ],
       consumer_id: cid(o, ri),
       metered_usage: [
         { metric: 'storage', quantity: 1 },
@@ -302,10 +318,12 @@ describe('abacus-usage-accumulator-itest', () => {
         new Date().getUTCMonth(), 1);
       const sid = dbclient.kturi([expected.organization_id,
         expected.resource_instance_id, expected.consumer_id,
-          expected.plan_id].join('/'), seqid.pad16(startDate));
+          expected.plan_id, expected.metering_plan_id, expected.rating_plan_id,
+          expected.pricing_plan_id].join('/'), seqid.pad16(startDate));
       const eid = dbclient.kturi([expected.organization_id,
         expected.resource_instance_id, expected.consumer_id,
-          expected.plan_id].join('/'), seqid.pad16(endDate));
+          expected.plan_id, expected.metering_plan_id, expected.rating_plan_id,
+          expected.pricing_plan_id].join('/'), seqid.pad16(endDate));
       debug('comparing latest record within %s and %s', sid, eid);
       db.allDocs({ limit: 1, startkey: sid, endkey: eid, descending: true,
         include_docs: true },
