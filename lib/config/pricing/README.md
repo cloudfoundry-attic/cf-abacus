@@ -1,4 +1,4 @@
-abacus-price-config
+abacus-pricing-config
 ===
 
 Resource pricing configuration.

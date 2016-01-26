@@ -71,6 +71,9 @@ describe('abacus-usage-collector-itest', () => {
     // Start provisioning service
     start('abacus-provisioning-stub');
 
+    // Start account service
+    start('abacus-account-stub');
+
     // Start usage collector
     start('abacus-usage-collector');
   });
@@ -86,6 +89,9 @@ describe('abacus-usage-collector-itest', () => {
 
     // Stop provisioning service
     stop('abacus-provisioning-stub');
+
+    // Stop account service
+    stop('abacus-account-stub');
 
     // Stop local database server
     stop('abacus-dbserver');
@@ -187,6 +193,7 @@ describe('abacus-usage-collector-itest', () => {
                 i + 1, o + 1, ri + 1, u + 1);
 
               expect(err).to.equal(undefined);
+              console.log(val.body);
               expect(val.statusCode).to.equal(200);
 
               expect(omit(
