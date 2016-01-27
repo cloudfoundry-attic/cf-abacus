@@ -116,6 +116,9 @@ describe('abacus-usage-meter-itest', () => {
     const cid = (o, ri) => ['bbeae239-f3f8-483c-9dd0-de6781c38bab',
       o + 1].join('-');
     const pid = (ri, u) => 'basic';
+    const mpid = () => 'basic-test-metering-plan';
+    const rpid = () => 'basic-test-rating-plan';
+    const ppid = () => 'test-pricing-basic';
 
     const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87',
       o + 1, ri + 1].join('-');
@@ -139,6 +142,22 @@ describe('abacus-usage-meter-itest', () => {
         { measure: 'heavy_api_calls', quantity: 100 },
         { measure: 'instance_memory', quantity: 3 },
         { measure: 'running_instances', quantity: 2 }
+      ],
+      resource_type: 'test-resource',
+      account_id: '1234',
+      pricing_country: 'USA',
+      metering_plan_id: mpid(),
+      rating_plan_id: rpid(),
+      pricing_plan_id: ppid(),
+      pricing_metrics: [
+        { name: 'storage',
+          price: pid() === 'basic' ? 1 : 0.5 },
+        { name: 'thousand_light_api_calls',
+          price: pid() === 'basic' ? 0.03 : 0.04 },
+        { name: 'heavy_api_calls',
+          price: pid() === 'basic' ? 0.15 : 0.18 },
+        { name: 'memory',
+          price: pid() === 'basic' ? 0.00014 : 0.00028 }
       ]
     });
 
