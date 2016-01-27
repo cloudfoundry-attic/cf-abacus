@@ -322,7 +322,7 @@ describe('abacus-usage-reporting-itest', () => {
     const pid = (ri) => ri % 4 < 2 ? 'basic' : 'standard';
     
     // The metering plan id
-    const mid = (ri) => 'basic-test-metering-plan';
+    const mpid = (ri) => 'basic-test-metering-plan';
 
     // One of the two rating plans based on resource instance index
     const ppid = (ri) => ri % 4 < 2 ? 'test-pricing-basic' :
@@ -384,7 +384,7 @@ describe('abacus-usage-reporting-itest', () => {
       // Create plan aggregations
       return create(plans, (i) => {
         const planId = pid(i === 0 ? 0 : 2);
-        const meteringPlanId = mid(i === 0 ? 0 : 2);
+        const meteringPlanId = mpid(i === 0 ? 0 : 2);
         const ratingPlanId = rpid(i === 0 ? 0 : 2);
         const pricingPlanId = ppid(i === 0 ? 0 : 2);
         return {
@@ -460,7 +460,7 @@ describe('abacus-usage-reporting-itest', () => {
       // Create plan level aggregations
       return create(plans, (i) => {
         const planId = pid(i === 0 ? 0 : 2);
-        const meteringPlanId = mid(i === 0 ? 0 : 2);
+        const meteringPlanId = mpid(i === 0 ? 0 : 2);
         const ratingPlanId = rpid(i === 0 ? 0 : 2);
         const pricingPlanId = ppid(i === 0 ? 0 : 2);
         return {
@@ -518,7 +518,7 @@ describe('abacus-usage-reporting-itest', () => {
       // Create plan aggregations
       return create(plans, (i) => {
         const planId = pid(i === 0 ? 0 : 2);
-        const meteringPlanId = mid(i === 0 ? 0 : 2);
+        const meteringPlanId = mpid(i === 0 ? 0 : 2);
         const ratingPlanId = rpid(i === 0 ? 0 : 2);
         const pricingPlanId = ppid(i === 0 ? 0 : 2);
         return {
