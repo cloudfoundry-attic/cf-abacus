@@ -11,7 +11,8 @@ commander
     'Usage reporting URL or domain name [http://localhost:9088]',
     'http://localhost:9088')
   .option('-o, --org <guid>',
-    'guid of cf organization to report on [us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27]',
+    'guid of cf organization to report on ' +
+    '[us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27]',
     'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27')
   .option('-t, --time <timestamp> [1420502400000]',
     'timestamp to report on',

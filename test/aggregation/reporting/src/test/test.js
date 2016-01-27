@@ -120,7 +120,8 @@ const addCost = (k, v) => {
       windows: map(u.quantity, (w) => {
         return map(w, (q) => ({
           quantity: q,
-          cost: new BigNumber(q).mul(cost[p.plan_id][u.metric]).toNumber()
+          cost: new BigNumber(q).mul(cost[p.plan_id.split('/')[0]]
+            [u.metric]).toNumber()
         }));
       })
     }));
@@ -319,6 +320,17 @@ describe('abacus-usage-reporting-itest', () => {
 
     // One of the two plans based on resource instance index
     const pid = (ri) => ri % 4 < 2 ? 'basic' : 'standard';
+    
+    // The metering plan id
+    const mid = (ri) => 'basic-test-metering-plan';
+
+    // One of the two rating plans based on resource instance index
+    const ppid = (ri) => ri % 4 < 2 ? 'test-pricing-basic' :
+      'test-pricing-standard';
+
+    // One of the two pricing plans based on resource instance index
+    const rpid = (ri) => ri % 4 < 2 ? 'basic-test-rating-plan' :
+      'standard-test-rating-plan';
 
     // Use number sequences to find expected aggregated value at any given
     // resource instance index and a given usage index based on the generated
@@ -371,7 +383,8 @@ describe('abacus-usage-reporting-itest', () => {
 
       // Create plan aggregations
       return create(plans, (i) => ({
-        plan_id: pid(i === 0 ? 0 : 2),
+        plan_id: [pid(i === 0 ? 0 : 2), mid(i === 0 ? 0 : 2),
+          rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
         aggregated_usage: a(ri, u, i, count)
       }));
     };
@@ -437,7 +450,8 @@ describe('abacus-usage-reporting-itest', () => {
 
       // Create plan level aggregations
       return create(plans, (i) => ({
-        plan_id: pid(i === 0 ? 0 : 2),
+        plan_id: [pid(i === 0 ? 0 : 2), mid(i === 0 ? 0 : 2),
+          rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
         aggregated_usage: a(ri, u, i, count)
       }));
     };
@@ -485,7 +499,8 @@ describe('abacus-usage-reporting-itest', () => {
 
       // Create plan aggregations
       return create(plans, (i) => ({
-        plan_id: pid(i === 0 ? 0 : 2),
+        plan_id: [pid(i === 0 ? 0 : 2), mid(i === 0 ? 0 : 2),
+          rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
         aggregated_usage: a(ri, u, i, count)
       }));
     };
