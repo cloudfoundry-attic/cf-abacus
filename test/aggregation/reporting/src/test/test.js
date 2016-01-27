@@ -382,11 +382,20 @@ describe('abacus-usage-reporting-itest', () => {
         tri <= (c === 0 ? 1 + s : 5 + s) ? 1 : 2;
 
       // Create plan aggregations
-      return create(plans, (i) => ({
-        plan_id: [pid(i === 0 ? 0 : 2), mid(i === 0 ? 0 : 2),
-          rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
-        aggregated_usage: a(ri, u, i, count)
-      }));
+      return create(plans, (i) => {
+        const planId = pid(i === 0 ? 0 : 2);
+        const meteringPlanId = mid(i === 0 ? 0 : 2);
+        const ratingPlanId = rpid(i === 0 ? 0 : 2);
+        const pricingPlanId = ppid(i === 0 ? 0 : 2);
+        return {
+          plan_id: [planId, meteringPlanId, ratingPlanId,
+            pricingPlanId].join('/'),
+          metering_plan_id: meteringPlanId,
+          rating_plan_id: ratingPlanId,
+          pricing_plan_id: pricingPlanId,
+          aggregated_usage: a(ri, u, i, count)
+        };
+      });
     };
 
     // Consumer level resource aggregations for a given space
@@ -449,11 +458,20 @@ describe('abacus-usage-reporting-itest', () => {
       const plans = () => u === 0 && ri <= 1 + s || tri <= 1 + s ? 1 : 2;
 
       // Create plan level aggregations
-      return create(plans, (i) => ({
-        plan_id: [pid(i === 0 ? 0 : 2), mid(i === 0 ? 0 : 2),
-          rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
-        aggregated_usage: a(ri, u, i, count)
-      }));
+      return create(plans, (i) => {
+        const planId = pid(i === 0 ? 0 : 2);
+        const meteringPlanId = mid(i === 0 ? 0 : 2);
+        const ratingPlanId = rpid(i === 0 ? 0 : 2);
+        const pricingPlanId = ppid(i === 0 ? 0 : 2);
+        return {
+          plan_id: [planId, meteringPlanId, ratingPlanId,
+            pricingPlanId].join('/'),
+          metering_plan_id: meteringPlanId,
+          rating_plan_id: ratingPlanId,
+          pricing_plan_id: pricingPlanId,
+          aggregated_usage: a(ri, u, i, count)
+        };
+      });
     };
 
     // Space level resource aggregations for a given organization
@@ -498,11 +516,20 @@ describe('abacus-usage-reporting-itest', () => {
       const plans = () => u === 0 && ri <= 1 || tri <= 1 ? 1 : 2;
 
       // Create plan aggregations
-      return create(plans, (i) => ({
-        plan_id: [pid(i === 0 ? 0 : 2), mid(i === 0 ? 0 : 2),
-          rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
-        aggregated_usage: a(ri, u, i, count)
-      }));
+      return create(plans, (i) => {
+        const planId = pid(i === 0 ? 0 : 2);
+        const meteringPlanId = mid(i === 0 ? 0 : 2);
+        const ratingPlanId = rpid(i === 0 ? 0 : 2);
+        const pricingPlanId = ppid(i === 0 ? 0 : 2);
+        return {
+          plan_id: [planId, meteringPlanId, ratingPlanId,
+            pricingPlanId].join('/'),
+          metering_plan_id: meteringPlanId,
+          rating_plan_id: ratingPlanId,
+          pricing_plan_id: pricingPlanId,
+          aggregated_usage: a(ri, u, i, count)
+        };
+      });
     };
 
     // Rated usage for a given org, resource instance, usage indices, whether

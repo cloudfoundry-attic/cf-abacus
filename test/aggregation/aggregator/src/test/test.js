@@ -353,6 +353,9 @@ describe('abacus-usage-aggregator-itest', () => {
       return create(plans, (i) => ({
         plan_id: [pid(i === 0 ? 0 : 2), mid(i === 0 ? 0 : 2),
           rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
+        metering_plan_id: mid(i === 0 ? 0 : 2),
+        rating_plan_id: rpid(i === 0 ? 0 : 2),
+        pricing_plan_id: ppid(i === 0 ? 0 : 2),
         aggregated_usage: a(ri, u, i, count, true)
       }));
     };
@@ -409,6 +412,9 @@ describe('abacus-usage-aggregator-itest', () => {
       return create(plans, (i) => ({
         plan_id: [pid(i === 0 ? 0 : 2), mid(i === 0 ? 0 : 2),
           rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
+        metering_plan_id: mid(i === 0 ? 0 : 2),
+        rating_plan_id: rpid(i === 0 ? 0 : 2),
+        pricing_plan_id: ppid(i === 0 ? 0 : 2),
         aggregated_usage: a(ri, u, i, count, true)
       }));
     };
@@ -458,6 +464,9 @@ describe('abacus-usage-aggregator-itest', () => {
       return create(plans, (i) => ({
         plan_id: [pid(i === 0 ? 0 : 2), mid(i === 0 ? 0 : 2),
           rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
+        metering_plan_id: mid(i === 0 ? 0 : 2),
+        rating_plan_id: rpid(i === 0 ? 0 : 2),
+        pricing_plan_id: ppid(i === 0 ? 0 : 2),
         aggregated_usage: a(ri, u, i, count, true)
       }));
     };
