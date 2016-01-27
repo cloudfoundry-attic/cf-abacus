@@ -136,13 +136,6 @@ describe('abacus-usage-meter-itest', () => {
       resource_instance_id: riid(o, ri),
       plan_id: pid(ri, u),
       consumer_id: cid(o, ri),
-      measured_usage: [
-        { measure: 'storage', quantity: 1073741824 },
-        { measure: 'light_api_calls', quantity: 1000 },
-        { measure: 'heavy_api_calls', quantity: 100 },
-        { measure: 'instance_memory', quantity: 3 },
-        { measure: 'running_instances', quantity: 2 }
-      ],
       resource_type: 'test-resource',
       account_id: '1234',
       pricing_country: 'USA',
@@ -158,6 +151,13 @@ describe('abacus-usage-meter-itest', () => {
           price: pid() === 'basic' ? 0.15 : 0.18 },
         { name: 'memory',
           price: pid() === 'basic' ? 0.00014 : 0.00028 }
+      ],
+      measured_usage: [
+        { measure: 'storage', quantity: 1073741824 },
+        { measure: 'light_api_calls', quantity: 1000 },
+        { measure: 'heavy_api_calls', quantity: 100 },
+        { measure: 'instance_memory', quantity: 3 },
+        { measure: 'running_instances', quantity: 2 }
       ]
     });
 

@@ -207,16 +207,17 @@ describe('abacus-usage-accumulator-itest', () => {
     // Return a usage with unique start and end time based on a number
     const meteredTemplate = (o, ri, u) => ({
       id: uid(o, ri, u),
-      account_id: '1234',
       collected_usage_id: bid(o, ri, u),
       start: start + u,
       end: end + u,
       organization_id: oid(o),
       space_id: sid(o, ri),
       resource_id: 'test-resource',
-      resource_type: 'test-resource',
       resource_instance_id: riid(o, ri),
       plan_id: pid(),
+      consumer_id: cid(o, ri),
+      resource_type: 'test-resource',
+      account_id: '1234',
       pricing_country: 'USA',
       metering_plan_id: mpid(),
       rating_plan_id: rpid(),
@@ -226,9 +227,11 @@ describe('abacus-usage-accumulator-itest', () => {
           price: pid() === 'basic' ? 1 : 0.5 },
         { name: 'thousand_light_api_calls',
           price: pid() === 'basic' ? 0.03 : 0.04 },
-        { name: 'heavy_api_calls', price: pid() === 'basic' ? 0.15 : 0.18 }
+        { name: 'heavy_api_calls',
+          price: pid() === 'basic' ? 0.15 : 0.18 },
+        { name: 'memory',
+          price: pid() === 'basic' ? 0.00014 : 0.00028 }
       ],
-      consumer_id: cid(o, ri),
       metered_usage: [
         { metric: 'storage', quantity: 1 },
         { metric: 'thousand_light_api_calls', quantity: 1 },

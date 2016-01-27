@@ -236,7 +236,7 @@ describe('abacus-usage-aggregator-itest', () => {
     const pid = (ri) => ri % 4 < 2 ? 'basic' : 'standard';
 
     // The metering plan id
-    const mid = (ri) => 'basic-test-metering-plan';
+    const mpid = (ri) => 'basic-test-metering-plan';
 
     // One of the two rating plans based on resource instance index
     const ppid = (ri) => ri % 4 < 2 ? 'test-pricing-basic' :
@@ -263,9 +263,14 @@ describe('abacus-usage-aggregator-itest', () => {
       organization_id: oid(o),
       space_id: sid(o, ri),
       resource_id: 'test-resource',
+      resource_instance_id: riid(o, ri),
+      plan_id: pid(ri),
+      consumer_id: cid(o, ri),
       resource_type: 'test-resource',
       account_id: '1234',
       pricing_country: 'USA',
+      metering_plan_id: mpid(ri),
+      rating_plan_id: rpid(ri),
       pricing_plan_id: ppid(ri),
       pricing_metrics: [
         { name: 'storage',
@@ -273,13 +278,10 @@ describe('abacus-usage-aggregator-itest', () => {
         { name: 'thousand_light_api_calls',
           price: pid(ri) === 'basic' ? 0.03 : 0.04 },
         { name: 'heavy_api_calls',
-          price: pid(ri) === 'basic' ? 0.15 : 0.18 }
+          price: pid(ri) === 'basic' ? 0.15 : 0.18 },
+        { name: 'memory',
+          price: pid(ri) === 'basic' ? 0.00014 : 0.00028 }
       ],
-      rating_plan_id: rpid(ri),
-      metering_plan_id: mid(ri),
-      resource_instance_id: riid(o, ri),
-      plan_id: pid(ri),
-      consumer_id: cid(o, ri),
       accumulated_usage: [
         {
           metric: 'storage',
@@ -351,7 +353,7 @@ describe('abacus-usage-aggregator-itest', () => {
 
       // Create plan aggregations
       return create(plans, (i) => ({
-        plan_id: [pid(i === 0 ? 0 : 2), mid(i === 0 ? 0 : 2),
+        plan_id: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2),
           rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
         aggregated_usage: a(ri, u, i, count, true)
       }));
@@ -407,7 +409,7 @@ describe('abacus-usage-aggregator-itest', () => {
 
       // Create plan level aggregations
       return create(plans, (i) => ({
-        plan_id: [pid(i === 0 ? 0 : 2), mid(i === 0 ? 0 : 2),
+        plan_id: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2),
           rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
         aggregated_usage: a(ri, u, i, count, true)
       }));
@@ -456,7 +458,7 @@ describe('abacus-usage-aggregator-itest', () => {
 
       // Create plan aggregations
       return create(plans, (i) => ({
-        plan_id: [pid(i === 0 ? 0 : 2), mid(i === 0 ? 0 : 2),
+        plan_id: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2),
           rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
         aggregated_usage: a(ri, u, i, count, true)
       }));
