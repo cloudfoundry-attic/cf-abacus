@@ -177,7 +177,11 @@ describe('abacus-demo-client', () => {
           windows: buildWindow(45, undefined, 300)
         }],
         plans: [{
-          plan_id: 'basic',
+          plan_id: 'basic/basic-object-storage/' +
+            'object-rating-plan/object-pricing-basic',
+          metering_plan_id: 'basic-object-storage',
+          rating_plan_id: 'object-rating-plan',
+          pricing_plan_id: 'object-pricing-basic',
           windows: buildWindow(46.09),
           aggregated_usage: [{
             metric: 'storage',
@@ -208,7 +212,11 @@ describe('abacus-demo-client', () => {
             windows: buildWindow(45, undefined, 300)
           }],
           plans: [{
-            plan_id: 'basic',
+            plan_id: 'basic/basic-object-storage/' +
+              'object-rating-plan/object-pricing-basic',
+            metering_plan_id: 'basic-object-storage',
+            rating_plan_id: 'object-rating-plan',
+            pricing_plan_id: 'object-pricing-basic',
             windows: buildWindow(46.09),
             aggregated_usage: [{
               metric: 'storage',
@@ -239,7 +247,11 @@ describe('abacus-demo-client', () => {
               windows: buildWindow(45, undefined, 300)
             }],
             plans: [{
-              plan_id: 'basic',
+              plan_id: 'basic/basic-object-storage/' +
+                'object-rating-plan/object-pricing-basic',
+              metering_plan_id: 'basic-object-storage',
+              rating_plan_id: 'object-rating-plan',
+              pricing_plan_id: 'object-pricing-basic',
               windows: buildWindow(46.09),
               aggregated_usage: [{
                 metric: 'storage',

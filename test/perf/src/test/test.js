@@ -161,7 +161,11 @@ describe('abacus-perf-test', () => {
             windows: rwindow(nri, n, nri * n, 100, heavyCost)
           }],
         plans: [{
-          plan_id: 'basic',
+          plan_id: 'basic/basic-object-storage/' +
+            'object-rating-plan/object-pricing-basic',
+          metering_plan_id: 'basic-object-storage',
+          rating_plan_id: 'object-rating-plan',
+          pricing_plan_id: 'object-pricing-basic',
           windows: cwindow(nri, n),
           aggregated_usage: [{
             metric: 'storage',
@@ -194,7 +198,11 @@ describe('abacus-perf-test', () => {
               windows: rwindow(nri, n, nri * n, 100, heavyCost)
             }],
           plans: [{
-            plan_id: 'basic',
+            plan_id: 'basic/basic-object-storage/' +
+              'object-rating-plan/object-pricing-basic',
+            metering_plan_id: 'basic-object-storage',
+            rating_plan_id: 'object-rating-plan',
+            pricing_plan_id: 'object-pricing-basic',
             windows: cwindow(nri, n),
             aggregated_usage: [{
               metric: 'storage',
@@ -227,7 +235,11 @@ describe('abacus-perf-test', () => {
                 windows: rwindow(nri, n, nri * n, 100, heavyCost)
               }],
             plans: [{
-              plan_id: 'basic',
+              plan_id: 'basic/basic-object-storage/' +
+                'object-rating-plan/object-pricing-basic',
+              metering_plan_id: 'basic-object-storage',
+              rating_plan_id: 'object-rating-plan',
+              pricing_plan_id: 'object-pricing-basic',
               windows: cwindow(nri, n),
               aggregated_usage: [{
                 metric: 'storage',
