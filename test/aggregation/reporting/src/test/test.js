@@ -613,7 +613,7 @@ describe('abacus-usage-reporting-itest', () => {
         expect(val).to.not.equal(undefined);
 
         debug('Verified rated usage for org%d', o + 1);
-        dbbulk(ratedConsumerTemplate(o, ri, u), (err, val) => {
+        dbbulk(ratedConsumerTemplate(o, ri, u), {}, (err, val) => {
           debug('Verify rated consumer usage for org%d', o + 1);
 
           expect(err).to.equal(null);
