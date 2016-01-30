@@ -9,9 +9,9 @@ applications:
     CONF: default
     DEBUG: e-abacus-*
     ACCUMULATOR: abacus-usage-accumulator
-    PROVISIONING: abacus-provisioning-stub
+    PROVISIONING: abacus-provisioning-plugin
     COUCHDB: abacus-dbserver
-    EUREKA: abacus-eureka-stub
+    EUREKA: abacus-eureka-plugin
     NODE_MODULES_CACHE: false
     SECURED: false
     # AUTH_SERVER:

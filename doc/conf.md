@@ -15,8 +15,8 @@ These port numbers are used when running Abacus in a local dev environment.
 9300 abacus-usage-aggregator   
 9500 abacus-cf-bridge   
 
-9880 abacus-provisioning-stub   
-9881 abacus-account-stub   
-9882 abacus-authserver-stub   
-9990 abacus-eureka-stub   
+9880 abacus-provisioning-plugin   
+9881 abacus-account-plugin   
+9882 abacus-authserver-plugin   
+9990 abacus-eureka-plugin   
 

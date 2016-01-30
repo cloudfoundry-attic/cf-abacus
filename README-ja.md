@@ -120,8 +120,8 @@ abacus-usage-meter         started           1/1         512M     512M   abacus-
 abacus-usage-accumulator   started           1/1         512M     512M   abacus-usage-accumulator.10.244.0.34.xip.io   
 abacus-usage-aggregator    started           1/1         512M     512M   abacus-usage-aggregator.10.244.0.34.xip.io   
 abacus-usage-reporting     started           1/1         512M     512M   abacus-usage-reporting.10.244.0.34.xip.io   
-abacus-provisioning-stub   started           1/1         512M     512M   abacus-provisioning-stub.10.244.0.34.xip.io   
-abacus-account-stub        started           1/1         512M     512M   abacus-account-stub.10.244.0.34.xip.io   
+abacus-provisioning-plugin started           1/1         512M     512M   abacus-provisioning-plugin.10.244.0.34.xip.io   
+abacus-account-plugin      started           1/1         512M     512M   abacus-account-plugin.10.244.0.34.xip.io   
 abacus-dbserver            started           1/1         1G       512M   abacus-dbserver.10.244.0.34.xip.io   
 ```
 
@@ -222,7 +222,7 @@ lib/ - Abacus modules
 
     utils/ - Utility modules used by the above
 
-    stubs/ - Test stubs for provisioning and account services
+    plugins/ - Plugins for provisioning and account services
 
 test/ - End to end tests
 

@@ -8,10 +8,10 @@ applications:
   env:
     CONF: default
     DEBUG: e-abacus-*
-    PROVISIONING: abacus-provisioning-stub
-    ACCOUNT: abacus-account-stub
+    PROVISIONING: abacus-provisioning-plugin
+    ACCOUNT: abacus-account-plugin
     COUCHDB: abacus-dbserver
-    EUREKA: abacus-eureka-stub
+    EUREKA: abacus-eureka-plugin
     NODE_MODULES_CACHE: false
     SECURED: false
     # AUTH_SERVER:

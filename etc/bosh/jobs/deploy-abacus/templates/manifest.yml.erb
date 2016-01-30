@@ -7,24 +7,24 @@ applications:
   - name: abacus-dbserver
     host: <%= p("abacus.dbserver.host") %>
     path: /var/vcap/packages/cf-abacus/lib/utils/dbserver/.cfpack/app.zip
-  - name: abacus-eureka-stub
+  - name: abacus-eureka-plugin
     host: <%= p("abacus.eureka.host") %>
-    path: /var/vcap/packages/cf-abacus/lib/stubs/eureka/.cfpack/app.zip
+    path: /var/vcap/packages/cf-abacus/lib/plugins/eureka/.cfpack/app.zip
     env:
       SECURED: <%= p("abacus.env.secured") %>
       JWTKEY: <%= p("abacus.env.jwt_key") %>
       JWTALGO: <%= p("abacus.env.jwt_algo") %>
       COUCHDB:  <%= p("abacus.dbserver.host") %>
-  - name: abacus-account-stub
+  - name: abacus-account-plugin
     host: <%= p("abacus.account.host") %>
-    path: /var/vcap/packages/cf-abacus/lib/stubs/account/.cfpack/app.zip
+    path: /var/vcap/packages/cf-abacus/lib/plugins/account/.cfpack/app.zip
     env:
       SECURED: <%= p("abacus.env.secured") %>
       JWTKEY: <%= p("abacus.env.jwt_key") %>
       JWTALGO: <%= p("abacus.env.jwt_algo") %>
-  - name: abacus-provisioning-stub
+  - name: abacus-provisioning-plugin
     host: <%= p("abacus.provisioning.host") %>
-    path: /var/vcap/packages/cf-abacus/lib/stubs/provisioning/.cfpack/app.zip
+    path: /var/vcap/packages/cf-abacus/lib/plugins/provisioning/.cfpack/app.zip
     env:
       SECURED: <%= p("abacus.env.secured") %>
       JWTKEY: <%= p("abacus.env.jwt_key") %>

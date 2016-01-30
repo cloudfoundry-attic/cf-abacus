@@ -161,11 +161,11 @@ The described monitoring method in BOSH-Lite requires an [all access security gr
 
 The all-access group should not be used in productive environments. An alternative solution is to use a special cell (placement pool) for Abacus applications or to deploy Abacus as infrastructure distributed system with the help of BOSH deployment.
 
-* Change the `~/workspace/cf-abacus/lib/stubs/eureka/manifest.yml` to use the real Eureka server with the `/eureka` context path:
+* Change the `~/workspace/cf-abacus/lib/plugins/eureka/manifest.yml` to use the real Eureka server with the `/eureka` context path:
  ```yml
  applications:
- - name: abacus-eureka-stub
-   host: abacus-eureka-stub
+ - name: abacus-eureka-plugin
+   host: abacus-eureka-plugin
    path: ../../../../eureka/eureka-server/build/libs/eureka-server-1.3.5-SNAPSHOT.war
    buildpack: https://github.com/cloudfoundry/java-buildpack.git
    instances: 1
@@ -191,20 +191,20 @@ The all-access group should not be used in productive environments. An alternati
 
 * Check if Eureka knows about all Abacus applications:
  ```bash
- curl --compressed abacus-eureka-stub.bosh-lite.com/eureka/v2/apps
+ curl --compressed abacus-eureka-plugin.bosh-lite.com/eureka/v2/apps
  ```
  The command should output a lot of data about Abacus instances like their IPs and ports.
 
 * Edit `~/workspace/Turbine/turbine-web/src/main/webapp/WEB-INF/classes/config.properties`. The file should look like this:
  ```
  InstanceDiscovery.impl=com.netflix.turbine.discovery.EurekaInstanceDiscovery
- turbine.aggregator.clusterConfig=ABACUS-USAGE-COLLECTOR,ABACUS-USAGE-METER,ABACUS-USAGE-ACCUMULATOR,ABACUS-USAGE-AGGREGATOR,ABACUS-USAGE-REPORTING,ABACUS-ACCOUNT-STUB,ABACUS-AUTHSERVER-STUB,ABACUS-PROVISIONING-STUB
+ turbine.aggregator.clusterConfig=ABACUS-USAGE-COLLECTOR,ABACUS-USAGE-METER,ABACUS-USAGE-ACCUMULATOR,ABACUS-USAGE-AGGREGATOR,ABACUS-USAGE-REPORTING,ABACUS-ACCOUNT-PLUGIN,ABACUS-AUTHSERVER-PLUGIN,ABACUS-PROVISIONING-PLUGIN
  turbine.instanceUrlSuffix=:{port}/hystrix.stream
  turbine.ConfigPropertyBasedDiscovery.<cluster1>.instances=<instance1a>,<instance1b>
  turbine.ConfigPropertyBasedDiscovery.<cluster2>.instances=<instance2a>,<instance2b>
- turbine.appConfig=ABACUS-USAGE-COLLECTOR,ABACUS-USAGE-METER,ABACUS-USAGE-ACCUMULATOR,ABACUS-USAGE-AGGREGATOR,ABACUS-USAGE-REPORTING,ABACUS-ACCOUNT-STUB,ABACUS-AUTHSERVER-STUB,ABACUS-PROVISIONING-STUB
+ turbine.appConfig=ABACUS-USAGE-COLLECTOR,ABACUS-USAGE-METER,ABACUS-USAGE-ACCUMULATOR,ABACUS-USAGE-AGGREGATOR,ABACUS-USAGE-REPORTING,ABACUS-ACCOUNT-PLUGIN,ABACUS-AUTHSERVER-PLUGIN,ABACUS-PROVISIONING-PLUGIN
  eureka.region=us-east-1
- eureka.serviceUrl.default=http://abacus-eureka-stub.bosh-lite.com/eureka/v2/
+ eureka.serviceUrl.default=http://abacus-eureka-plugin.bosh-lite.com/eureka/v2/
  turbine.ZookeeperInstanceDiscovery.zookeeper.quorum=127.0.0.1
  ```
 

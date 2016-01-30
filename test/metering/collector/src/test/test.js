@@ -68,11 +68,11 @@ describe('abacus-usage-collector-itest', () => {
     // Start local database server
     start('abacus-dbserver');
 
-    // Start provisioning service
-    start('abacus-provisioning-stub');
+    // Start provisioning plugin
+    start('abacus-provisioning-plugin');
 
-    // Start account service
-    start('abacus-account-stub');
+    // Start account plugin
+    start('abacus-account-plugin');
 
     // Start usage collector
     start('abacus-usage-collector');
@@ -87,11 +87,11 @@ describe('abacus-usage-collector-itest', () => {
     // Stop usage collector
     stop('abacus-usage-collector');
 
-    // Stop provisioning service
-    stop('abacus-provisioning-stub');
+    // Stop provisioning plugin
+    stop('abacus-provisioning-plugin');
 
-    // Stop account service
-    stop('abacus-account-stub');
+    // Stop account plugin
+    stop('abacus-account-plugin');
 
     // Stop local database server
     stop('abacus-dbserver');

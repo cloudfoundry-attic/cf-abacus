@@ -30,7 +30,7 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-account-stub": "file:../../../lib/stubs/account",
+    "abacus-account-plugin": "file:../../../lib/plugins/account",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-batch": "file:../../../lib/utils/batch",
     "abacus-dbclient": "file:../../../lib/utils/dbclient",

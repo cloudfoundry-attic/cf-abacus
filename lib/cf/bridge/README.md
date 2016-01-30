@@ -3,7 +3,7 @@ abacus-cf-bridge
 
 CF app usage reporting bridge.
 
-The bridge reports the metrics defined in [linux-container](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/lib/stubs/provisioning/src/resources/linux-container.js) resource:
+The bridge reports the metrics defined in [linux-container](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/lib/plugins/provisioning/src/resources/linux-container.js) resource:
 - instance_memory [GB]
 - running_instances [number]
  
@@ -80,7 +80,7 @@ applications:
     DEBUG: abacus-cf*
     COLLECTOR: abacus-usage-collector
     COUCHDB: abacus-dbserver
-    EUREKA: abacus-eureka-stub
+    EUREKA: abacus-eureka-plugin
     UAA: https://uaa.bosh-lite.com:443
     API: https://api.bosh-lite.com:443
     NODE_MODULES_CACHE: false

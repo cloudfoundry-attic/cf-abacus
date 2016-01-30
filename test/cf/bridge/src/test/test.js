@@ -116,9 +116,9 @@ describe('abacus-cf-bridge-itest', () => {
     server = app.listen(4321);
 
     start('abacus-dbserver');
-    start('abacus-authserver-stub');
-    start('abacus-provisioning-stub');
-    start('abacus-account-stub');
+    start('abacus-authserver-plugin');
+    start('abacus-provisioning-plugin');
+    start('abacus-account-plugin');
     start('abacus-usage-collector');
     start('abacus-usage-meter');
     start('abacus-usage-accumulator');
@@ -139,9 +139,9 @@ describe('abacus-cf-bridge-itest', () => {
     stop('abacus-usage-accumulator');
     stop('abacus-usage-meter');
     stop('abacus-usage-collector');
-    stop('abacus-account-stub');
-    stop('abacus-provisioning-stub');
-    stop('abacus-authserver-stub');
+    stop('abacus-account-plugin');
+    stop('abacus-provisioning-plugin');
+    stop('abacus-authserver-plugin');
     stop('abacus-dbserver');
 
     server.close();

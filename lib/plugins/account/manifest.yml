@@ -1,6 +1,6 @@
 applications:
-- name: abacus-cf-bridge
-  host: abacus-cf-bridge
+- name: abacus-account-plugin
+  host: abacus-account-plugin
   path: .cfpack/app.zip
   instances: 1
   memory: 512M
@@ -8,9 +8,8 @@ applications:
   env:
     CONF: default
     DEBUG: e-abacus-*
-    COLLECTOR: abacus-usage-collector
-    COUCHDB: abacus-dbserver
     EUREKA: abacus-eureka-plugin
-    UAA: uaa
-    API: api
     NODE_MODULES_CACHE: false
+    SECURED: false
+    # JWTKEY:
+    # JWTALGO:

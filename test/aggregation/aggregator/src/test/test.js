@@ -164,8 +164,8 @@ describe('abacus-usage-aggregator-itest', () => {
     // Start local database server
     start('abacus-dbserver');
 
-    // Start account stub
-    start('abacus-account-stub');
+    // Start account plugin
+    start('abacus-account-plugin');
 
     // Start usage aggregator
     start('abacus-usage-aggregator');
@@ -180,8 +180,8 @@ describe('abacus-usage-aggregator-itest', () => {
     // Stop usage aggregator
     stop('abacus-usage-aggregator');
 
-    // Stop account stub
-    stop('abacus-account-stub');
+    // Stop account plugin
+    stop('abacus-account-plugin');
 
     // Stop local database server
     stop('abacus-dbserver');
