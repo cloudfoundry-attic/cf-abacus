@@ -1,6 +1,6 @@
 {
   "name": "abacus-account-plugin",
-  "description": "Plugin for an account management service.",
+  "description": "Account management plugin example.",
   "license": "Apache-2.0",
   "version": "0.0.4",
   "private": true,
