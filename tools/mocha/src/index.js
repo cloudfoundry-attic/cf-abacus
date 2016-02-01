@@ -159,7 +159,7 @@ var dropMongoDatabases = function(cb) {
   if (process.env.JOBS !== '1')
     throw new Error('Parallel execution with MongoDB is not supported');
 
-  const mongoShellScript =
+  var mongoShellScript =
     'db.adminCommand("listDatabases").databases.forEach(function(d) {' +
     '  if(d.name != "admin" && d.name != "local" && d.name != "config") {' +
     '    db.getSiblingDB(d.name).dropDatabase();' +
@@ -167,8 +167,8 @@ var dropMongoDatabases = function(cb) {
     '  }' +
     '});';
 
-  const spawn = require('child_process').spawn;
-  const ls = spawn('mongo', ['admin', '--eval', mongoShellScript]);
+  var spawn = require('child_process').spawn;
+  var ls = spawn('mongo', ['admin', '--eval', mongoShellScript]);
   ls.stdout.on('data', (data) => {
     process.stdout.write(`mongo stdout: ${data}`);
   });
