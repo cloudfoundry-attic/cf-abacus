@@ -8,6 +8,7 @@ applications:
   env:
     CONF: default
     DEBUG: e-abacus-*
+    COUCHDB: abacus-dbserver
     EUREKA: abacus-eureka-plugin
     NODE_MODULES_CACHE: false
     SECURED: false
