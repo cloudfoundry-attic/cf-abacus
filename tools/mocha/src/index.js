@@ -238,40 +238,42 @@ var runCLI = function() {
   }).forEach(function(file) {
     mocha.addFile(path.join(testDir, file));
   });
-  mocha.run(function(failures) {
-    var t1 = Date.now();
+  dropMongoDatabases(function() {
+    mocha.run(function(failures) {
+      var t1 = Date.now();
 
-    // Print the test execution time
-    var time = function() {
-      process.stdout.write(util.format('\nRun time %dms\n', t1 - t0));
-    };
+      // Print the test execution time
+      var time = function() {
+        process.stdout.write(util.format('\nRun time %dms\n', t1 - t0));
+      };
 
-    if(!global.__coverage) {
-      time();
-      process.exit(failures);
-    }
+      if (!global.__coverage) {
+        time();
+        process.exit(failures);
+      }
 
-    // Remap the generated source coverage maps using the collected source
-    // maps
-    remap(global.__coverage, maps);
+      // Remap the generated source coverage maps using the collected source
+      // maps
+      remap(global.__coverage, maps);
 
-    // Write the JSON and LCOV coverage reports
-    var collector = new istanbul.Collector();
-    collector.add(global.__coverage);
-    var coverage = collector.getFinalCoverage();
-    var reporter = new istanbul.Reporter(undefined, '.coverage');
-    reporter.addAll(['lcovonly']);
-    reporter.write(collector, false, function() {
-      fs.writeFileSync('.coverage/coverage.json', JSON.stringify(coverage));
+      // Write the JSON and LCOV coverage reports
+      var collector = new istanbul.Collector();
+      collector.add(global.__coverage);
+      var coverage = collector.getFinalCoverage();
+      var reporter = new istanbul.Reporter(undefined, '.coverage');
+      reporter.addAll(['lcovonly']);
+      reporter.write(collector, false, function() {
+        fs.writeFileSync('.coverage/coverage.json', JSON.stringify(coverage));
 
-      // Print a detailed source coverage text report and the test
-      // execution time
-      textcov(coverage, sources, {
-        color: colorify(commander)
+        // Print a detailed source coverage text report and the test
+        // execution time
+        textcov(coverage, sources, {
+          color: colorify(commander)
+        });
+        time();
+
+        process.exit(failures);
       });
-      time();
-
-      process.exit(failures);
     });
   });
 };
