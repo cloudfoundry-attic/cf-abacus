@@ -1,6 +1,6 @@
 {
   "name": "abacus-rating-config",
-  "description": "Resource usage rating configuration",
+  "description": "Provides access to rating plans",
   "license": "Apache-2.0",
   "version": "0.0.4",
   "private": true,

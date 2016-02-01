@@ -1,4 +1,4 @@
 abacus-rating-config
 ===
 
-Resource rating configuration.
+Provides access to rating plans.
