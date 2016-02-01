@@ -1,6 +1,6 @@
 {
   "name": "abacus-pricing-config",
-  "description": "Resource pricing configuration",
+  "description": "Provides access to pricing plans",
   "license": "Apache-2.0",
   "version": "0.0.4",
   "private": true,

@@ -1,5 +1,5 @@
 abacus-pricing-config
 ===
 
-Resource pricing configuration.
+Provides access to pricing plans.
 
