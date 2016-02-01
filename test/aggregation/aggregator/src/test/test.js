@@ -75,7 +75,7 @@ const pruneWindows = (v, k) => {
   if(k === 'consumers')
     return map(v, (c) => c.split('/')[0]);
   return v;
-}
+};
 
 // Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
 const dateUTCNumbify = (t) => {
@@ -162,7 +162,8 @@ describe('abacus-usage-aggregator-itest', () => {
     };
 
     // Start local database server
-    start('abacus-dbserver');
+    if (!process.env.COUCHDB)
+      start('abacus-dbserver');
 
     // Start account plugin
     start('abacus-account-plugin');
@@ -184,7 +185,8 @@ describe('abacus-usage-aggregator-itest', () => {
     stop('abacus-account-plugin');
 
     // Stop local database server
-    stop('abacus-dbserver');
+    if (!process.env.COUCHDB)
+      stop('abacus-dbserver');
   });
 
   it('aggregator accumulated usage submissions', function(done) {

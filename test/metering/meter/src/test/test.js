@@ -66,7 +66,8 @@ describe('abacus-usage-meter-itest', () => {
     };
 
     // Start local database server
-    start('abacus-dbserver');
+    if (!process.env.COUCHDB)
+      start('abacus-dbserver');
 
     // Start usage meter
     start('abacus-usage-meter');
@@ -82,7 +83,8 @@ describe('abacus-usage-meter-itest', () => {
     stop('abacus-usage-meter');
 
     // Stop local database server
-    stop('abacus-dbserver');
+    if (!process.env.COUCHDB)
+      stop('abacus-dbserver');
   });
 
   it('meter normalized usage submissions', function(done) {

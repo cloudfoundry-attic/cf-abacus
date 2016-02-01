@@ -115,7 +115,8 @@ describe('abacus-cf-bridge-itest', () => {
     app.use(router.batch(routes));
     server = app.listen(4321);
 
-    start('abacus-dbserver');
+    if (!process.env.COUCHDB)
+      start('abacus-dbserver');
     start('abacus-authserver-plugin');
     start('abacus-provisioning-plugin');
     start('abacus-account-plugin');
@@ -142,7 +143,8 @@ describe('abacus-cf-bridge-itest', () => {
     stop('abacus-account-plugin');
     stop('abacus-provisioning-plugin');
     stop('abacus-authserver-plugin');
-    stop('abacus-dbserver');
+    if (!process.env.COUCHDB)
+      stop('abacus-dbserver');
 
     server.close();
   });

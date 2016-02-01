@@ -66,7 +66,8 @@ describe('abacus-usage-collector-itest', () => {
     };
 
     // Start local database server
-    start('abacus-dbserver');
+    if (!process.env.COUCHDB)
+      start('abacus-dbserver');
 
     // Start provisioning plugin
     start('abacus-provisioning-plugin');
@@ -94,7 +95,8 @@ describe('abacus-usage-collector-itest', () => {
     stop('abacus-account-plugin');
 
     // Stop local database server
-    stop('abacus-dbserver');
+    if (!process.env.COUCHDB)
+      stop('abacus-dbserver');
   });
 
   it('collect measured usage submissions', function(done) {
