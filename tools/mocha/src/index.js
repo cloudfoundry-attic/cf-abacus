@@ -145,6 +145,47 @@ var colorify = memoize(function(opt) {
   return tty.isatty(process.stdout) || opt.color;
 });
 
+// Delete all MongoDB databases.
+var dropMongoDatabases = function(cb) {
+
+  // The db drop is executed only when:
+  // - we use external/standalone DB
+  // - the DB is set to mongodb
+  // - no parallel execution is active (JOBS === 1)
+  if (!process.env.COUCHDB)
+    return cb();
+  if (!process.env.COUCHDB.startsWith('mongodb'))
+    return cb();
+  if (process.env.JOBS !== '1')
+    throw new Error('Parallel execution with MongoDB is not supported');
+
+  var mongoShellScript =
+    'db.adminCommand("listDatabases").databases.forEach(function(d) {' +
+    '  if(d.name != "admin" && d.name != "local" && d.name != "config") {' +
+    '    db.getSiblingDB(d.name).dropDatabase();' +
+    '    print("Dropping database " + d.name);' +
+    '  }' +
+    '});';
+
+  var spawn = require('child_process').spawn;
+  var ls = spawn('mongo', ['admin', '--eval', mongoShellScript]);
+  ls.stdout.on('data', function(data) {
+    process.stdout.write(util.format('mongo stdout: %s', data));
+  });
+  ls.stderr.on('data', function(data) {
+    process.stderr.write(util.format('mongo stderr: %s', data));
+  });
+  ls.on('close', function(code) {
+    process.stdout.write(util.format('mongo shell exited with code %d\n',
+      code));
+    if (code === 0)
+      cb();
+  });
+  ls.on('error', function(err) {
+    process.stdout.write(util.format('failed to launch mongo shell %s\n', err));
+  });
+};
+
 // Run Mocha with Istanbul
 var runCLI = function() {
   process.stdout.write('Testing...\n');
