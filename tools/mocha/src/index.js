@@ -169,18 +169,18 @@ var dropMongoDatabases = function(cb) {
 
   var spawn = require('child_process').spawn;
   var ls = spawn('mongo', ['admin', '--eval', mongoShellScript]);
-  ls.stdout.on('data', (data) => {
+  ls.stdout.on('data', function(data) {
     process.stdout.write(`mongo stdout: ${data}`);
   });
-  ls.stderr.on('data', (data) => {
+  ls.stderr.on('data', function(data) {
     process.stderr.write(`mongo stderr: ${data}`);
   });
-  ls.on('close', (code) => {
+  ls.on('close', function(code) {
     process.stdout.write(`mongo shell exited with code ${code}\n`);
     if (code === 0)
       cb();
   });
-  ls.on('error', (err) => {
+  ls.on('error', function(err) {
     process.stdout.write(`failed to launch mongo shell ${err}\n`);
   });
 };
