@@ -26,29 +26,35 @@ if [ "$CF_TEST" == "true" ]; then
     CF_DOMAIN=$6
   fi
 
-  # Download the CF CLI
-  mkdir -p bin/.cf
-  UNAME=$(uname)
-  if [ "$UNAME" == "Darwin" ]; then
-    (cd bin/.cf && curl -L "https://cli.run.pivotal.io/stable?release=macosx64-binary&source=github" | tar -zx)
+  # Only run the following steps if CF_API is configured
+  if [ "$CF_API" != "" ]; then
+
+    # Download the CF CLI
+    mkdir -p bin/.cf
+    UNAME=$(uname)
+    if [ "$UNAME" == "Darwin" ]; then
+      (cd bin/.cf && curl -L "https://cli.run.pivotal.io/stable?release=macosx64-binary&source=github" | tar -zx)
+    else
+      (cd bin/.cf && curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx)
+    fi
+    export PATH=$PATH:$(pwd)/bin/.cf
+
+    # Login
+    cf api --skip-ssl-validation https://api.$CF_API
+    cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+
+    # Start clean
+    npm run cfdelete medium
+
+    # Stage and start the apps
+    npm run cfstage medium
+    npm run cfstart medium
+
+    # Run the demo
+    npm run demo -- --collector https://abacus-usage-collector.$CF_DOMAIN --reporting https://abacus-usage-reporting.$CF_DOMAIN
+
   else
-    (cd bin/.cf && curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx)
+    echo "Warning: skipping CF test as CF_API is not configured" >&2
   fi
-  export PATH=$PATH:$(pwd)/bin/.cf
-
-  # Login
-  cf api --skip-ssl-validation https://api.$CF_API
-  cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
-
-  # Start clean
-  npm run cfdelete medium
-
-  # Stage and start the apps
-  npm run cfstage medium
-  npm run cfstart medium
-
-  # Run the demo
-  npm run demo -- --collector https://abacus-usage-collector.$CF_DOMAIN --reporting https://abacus-usage-reporting.$CF_DOMAIN
-
 fi
 
