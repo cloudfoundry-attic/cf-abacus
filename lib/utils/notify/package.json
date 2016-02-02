@@ -34,7 +34,7 @@
     "abacus-breaker": "file:../breaker",
     "abacus-dbclient": "file:../dbclient",
     "abacus-debug": "file:../debug",
-    "abacus-lrudown": "file:../lrudown",
+    "abacus-lrucache": "file:../lrucache",
     "abacus-partition": "file:../partition",
     "abacus-request": "file:../request",
     "abacus-retry": "file:../retry",
