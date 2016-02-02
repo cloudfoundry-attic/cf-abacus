@@ -224,16 +224,18 @@ describe('abacus-usage-accumulator-itest', () => {
       metering_plan_id: mpid(),
       rating_plan_id: rpid(),
       pricing_plan_id: ppid(),
-      pricing_metrics: [
-        { name: 'storage',
-          price: pid() === 'basic' ? 1 : 0.5 },
-        { name: 'thousand_light_api_calls',
-          price: pid() === 'basic' ? 0.03 : 0.04 },
-        { name: 'heavy_api_calls',
-          price: pid() === 'basic' ? 0.15 : 0.18 },
-        { name: 'memory',
-          price: pid() === 'basic' ? 0.00014 : 0.00028 }
-      ],
+      prices: {
+        metrics: [
+          { name: 'storage',
+            price: pid() === 'basic' ? 1 : 0.5 },
+          { name: 'thousand_light_api_calls',
+            price: pid() === 'basic' ? 0.03 : 0.04 },
+          { name: 'heavy_api_calls',
+            price: pid() === 'basic' ? 0.15 : 0.18 },
+          { name: 'memory',
+            price: pid() === 'basic' ? 0.00014 : 0.00028 }
+        ]
+      },
       metered_usage: [
         { metric: 'storage', quantity: 1 },
         { metric: 'thousand_light_api_calls', quantity: 1 },
