@@ -5,6 +5,16 @@ The Abacus usage metering and aggregation service.
 
 ---
 
+### v0.0.5-rc.0 - 02/02/2015
+
+##### Usage metering and rating
+- Refactor plugins to use separate metering, rating and pricing plans
+
+##### Misc
+- Database client fixes
+
+---
+
 ### v0.0.4 - 12/21/2015
 
 ##### Usage collection
