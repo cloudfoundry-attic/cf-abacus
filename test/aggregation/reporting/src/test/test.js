@@ -308,16 +308,16 @@ describe('abacus-usage-reporting-itest', () => {
     //    1           1            1    0        1-0
 
     // Organization id based on org index
-    const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+    const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf28',
       o + 1].join('-');
 
     // One of the two spaces at a given org based on resource instance index
-    const sid = (o, ri) => ['aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
+    const sid = (o, ri) => ['aaeae239-f3f8-483c-9dd0-de5d41c38b6b',
       o + 1, ri % 2 === 0 ? 1 : 2].join('-');
 
     // One of the two consumers at a given org and derived space based on
     // resource instance index
-    const cid = (o, ri) => ['bbeae239-f3f8-483c-9dd0-de6781c38bab',
+    const cid = (o, ri) => ['bbeae239-f3f8-483c-9dd0-de6781c38bac',
       o + 1, ri % 2 === 0 ? 1 : 2, ri % 8 < 4 ? 1 : 2].join('-');
 
     // One of the two plans based on resource instance index
