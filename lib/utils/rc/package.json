@@ -2,7 +2,7 @@
   "name": "abacus-rc",
   "description": "Populates the application environment from an rc file",
   "license": "Apache-2.0",
-  "version": "0.0.4",
+  "version": "0.0.5-rc.0",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/rc",
   "bugs": {
