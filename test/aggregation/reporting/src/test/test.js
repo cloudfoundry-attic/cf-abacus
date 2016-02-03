@@ -672,8 +672,10 @@ describe('abacus-usage-reporting-itest', () => {
     };
 
     // Wait for usage reporting service to start
+    const procStartTimeout = process.env.CI_TIMEOUT ?
+      parseInt(process.env.CI_TIMEOUT) : 10000;
     request.waitFor('http://localhost::p/batch',
-      { p: 9088 }, (err, value) => {
+      { p: 9088 }, procStartTimeout, (err, value) => {
         // Failed to ping usage reporting service before timing out
         if (err) throw err;
 

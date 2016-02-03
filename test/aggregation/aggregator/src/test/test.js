@@ -635,8 +635,10 @@ describe('abacus-usage-aggregator-itest', () => {
     };
 
     // Wait for usage aggregator to start
+    const procStartTimeout = process.env.CI_TIMEOUT ?
+      parseInt(process.env.CI_TIMEOUT) : 10000;
     request.waitFor('http://localhost::p/batch',
-      { p: 9300 }, (err, value) => {
+      { p: 9300 }, procStartTimeout, (err, value) => {
         // Failed to ping usage aggregator before timing out
         if (err) throw err;
 

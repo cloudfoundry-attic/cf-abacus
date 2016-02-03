@@ -244,8 +244,10 @@ describe('abacus-usage-collector-itest', () => {
     };
 
     // Wait for usage collector to start
+    const procStartTimeout = process.env.CI_TIMEOUT ?
+      parseInt(process.env.CI_TIMEOUT) : 10000;
     request.waitFor('http://localhost::p/batch',
-      { p: 9080 }, (err, value) => {
+      { p: 9080 }, procStartTimeout, (err, value) => {
         // Failed to ping usage collector before timing out
         if (err) throw err;
 

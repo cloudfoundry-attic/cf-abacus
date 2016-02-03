@@ -226,9 +226,10 @@ describe('abacus-cf-bridge-itest', () => {
   it('submit runtime usage to usage collector', (done) => {
 
     // Wait for bridge to start
-    request.waitFor(
-      'http://localhost::p/v1/cf/bridge', { p: 9500 },
-      (err, uri, opts) => {
+    const procStartTimeout = process.env.CI_TIMEOUT ?
+      parseInt(process.env.CI_TIMEOUT) : 10000;
+    request.waitFor('http://localhost::p/v1/cf/bridge',
+      { p: 9500 }, procStartTimeout, (err, uri, opts) => {
         // Failed to ping bridge before timing out
         if (err) throw err;
 

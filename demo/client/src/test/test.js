@@ -348,7 +348,9 @@ describe('abacus-demo-client', () => {
     };
 
     // Wait for usage reporter to start
-    request.waitFor(reporting + '/batch', {}, (err, value) => {
+    const startTimeout = process.env.CI_TIMEOUT ?
+      parseInt(process.env.CI_TIMEOUT) : 10000;
+    request.waitFor(reporting + '/batch', {}, startTimeout, (err, value) => {
       // Failed to ping usage reporter before timing out
       if (err) throw err;
 
