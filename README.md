@@ -12,7 +12,7 @@ Abacus provides usage metering and aggregation for [Cloud Foundry (CF)](https://
 
 Abacus is implemented in Node.js and the different micro-services can run as CF apps.
 
-This diagram shows the main Abacus services and their role in the processing of usage data. It also shows the the services you can deploy around Abacus to integrate it into your Cloud platform.
+This diagram shows the main Abacus services and their role in the processing of usage data. It also shows the services you can deploy around Abacus to integrate it into your Cloud platform.
 
 ![Abacus flow diagram](doc/flow.png)
 
