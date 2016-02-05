@@ -12,7 +12,13 @@ Abacus provides usage metering and aggregation for [Cloud Foundry (CF)](https://
 
 Abacus is implemented in Node.js and the different micro-services can run as CF apps.
 
-Abacus provides a REST API allowing Cloud service providers to submit usage data, and a REST API allowing usage dashboards, and billing systems to retrieve usage reports. The Abacus REST API is described in [doc/api.md](doc/api.md). For presentations related to CF-Abacus, see the [presentations](doc/presentations.md) page.
+This diagram shows the main Abacus services and their role in the processing of usage data. It also shows the the services you can deploy around Abacus to integrate it into your Cloud platform.
+
+![Abacus flow diagram](doc/flow.png)
+
+Abacus provides a REST API allowing Cloud service providers to submit usage data, and a REST API allowing usage dashboards, and billing systems to retrieve usage reports. The Abacus REST API is described in [doc/api.md](doc/api.md).
+
+For presentations related to CF-Abacus, see the [presentations](doc/presentations.md) page.
 
 Frequently Asked Questions (FAQs)
 ---
@@ -22,7 +28,7 @@ The Abacus FAQ can be found in [doc/faq.md](doc/faq.md).
 Building
 ---
 
-Abacus requires Npm >= 2.10.1 and Node.js >= 0.10.36.
+Abacus requires Npm >= 3.x and Node.js >= 0.12.x
 
 ```sh
 cd cf-abacus
@@ -50,11 +56,7 @@ Deploying to Cloud Foundry
 
 Abacus runs as a set of applications deployed to Cloud Foundry. Each application is configured to run in multiple instances for availability and performance. Service usage data is stored in CouchDB databases.
 
-This diagram shows the main Abacus apps and their role in the processing of usage data.
-
-![Abacus flow diagram](doc/flow.png)
-
-The following steps assume a local Cloud Foundry deployment created using [Bosh-lite](https://github.com/cloudfoundry/bosh-lite), running on the default local IP 10.244.0.34 assigned by the Bosh-lite CF installation script, and have been tested on CF v210. Please adjust to your particular Cloud Foundry deployment environment.
+The following steps assume a local Cloud Foundry deployment created using [Bosh-lite](https://github.com/cloudfoundry/bosh-lite), running on the default local IP assigned by the Bosh-lite CF installation script, and have been tested on CF v221. Please adjust to your particular Cloud Foundry deployment environment.
 
 ```sh
 cd cf-abacus
@@ -74,14 +76,14 @@ Getting apps in org <your organization> / space <your space>...
 OK
 
 name                       requested state   instances   memory   disk   urls   
-abacus-usage-collector     started           1/1         512M     512M   abacus-usage-collector.10.244.0.34.xip.io   
-abacus-usage-meter         started           1/1         512M     512M   abacus-usage-meter.10.244.0.34.xip.io
-abacus-usage-accumulator   started           1/1         512M     512M   abacus-usage-accumulator.10.244.0.34.xip.io   
-abacus-usage-aggregator    started           1/1         512M     512M   abacus-usage-aggregator.10.244.0.34.xip.io   
-abacus-usage-reporting     started           1/1         512M     512M   abacus-usage-reporting.10.244.0.34.xip.io   
-abacus-provisioning-plugin started           1/1         512M     512M   abacus-provisioning-plugin.10.244.0.34.xip.io   
-abacus-account-plugin      started           1/1         512M     512M   abacus-account-plugin.10.244.0.34.xip.io   
-abacus-dbserver            started           1/1         1G       512M   abacus-dbserver.10.244.0.34.xip.io   
+abacus-usage-collector     started           1/1         512M     512M   abacus-usage-collector.both-lite.com   
+abacus-usage-meter         started           1/1         512M     512M   abacus-usage-meter.both-lite.com
+abacus-usage-accumulator   started           1/1         512M     512M   abacus-usage-accumulator.both-lite.com   
+abacus-usage-aggregator    started           1/1         512M     512M   abacus-usage-aggregator.both-lite.com   
+abacus-usage-reporting     started           1/1         512M     512M   abacus-usage-reporting.both-lite.com   
+abacus-provisioning-plugin started           1/1         512M     512M   abacus-provisioning-plugin.both-lite.com   
+abacus-account-plugin      started           1/1         512M     512M   abacus-account-plugin.both-lite.com   
+abacus-dbserver            started           1/1         1G       512M   abacus-dbserver.both-lite.com   
 ```
 
 Running the demo on Cloud Foundry
@@ -98,8 +100,8 @@ cd cf-abacus
 
 # Run the demo script
 npm run demo -- \
-  --collector https://abacus-usage-collector.10.244.0.34.xip.io \
-  --reporting https://abacus-usage-reporting.10.244.0.34.xip.io
+  --collector https://abacus-usage-collector.both-lite.com \
+  --reporting https://abacus-usage-reporting.both-lite.com
 
 # You should see usage being submitted and a usage report for the demo organization
 
@@ -125,12 +127,12 @@ npm run demo
 npm stop
 ```
 
-Meter Cloud Foundry app usage
+Metering Cloud Foundry app usage
 ---
 
 Abacus comes with a CF [bridge](lib/cf/bridge) that acts as a resource provider for Cloud Foundry app runtime usage, reads Cloud Foundry [app usage events](http://apidocs.cloudfoundry.org/runtime-passed/app_usage_events/list_all_app_usage_events.html) and reports usage to the Abacus usage [collector](lib/metering/collector).
 
-In the end the Abacus CF bridge enables you to see runtime usage reports for the apps running on your Cloud Foundry instance. In order to start the bridge follow its [README](lib/cf/bridge/README.md).
+In the end the Abacus CF bridge enables you to see runtime usage reports for the apps running on your Cloud Foundry instance. In order to start the CF bridge follow its [README](lib/cf/bridge/README.md).
 
 Layout
 ---
