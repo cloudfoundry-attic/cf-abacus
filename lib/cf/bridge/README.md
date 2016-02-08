@@ -21,7 +21,11 @@ uaac token client get admin -s admin-secret
 uaac client add bridge --authorized_grant_types client_credentials --authorities cloud_controller.admin --secret secret
 ```
 
-**Note:** *Currently the client ID and secret are hardcoded*
+Specify client ID and secret like so:
+```
+cf set-env abacus-cf-bridge CLIENT_ID clientid
+cf set-env abacus-cf-bridge SECRET secret
+```
 
 ## Start the bridge
 
