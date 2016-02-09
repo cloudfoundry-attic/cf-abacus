@@ -47,6 +47,9 @@ const isWithinWindow = (start, end, timeWindow) => {
 process.env.API = 'http://localhost:4321';
 process.env.UAA = 'http://localhost:4321';
 
+process.env.CLIENT_ID = 'bridge';
+process.env.SECRET = 'secret';
+
 // Parse command line options
 const argv = clone(process.argv);
 argv.splice(1, 1, 'usage-collector-itest');
