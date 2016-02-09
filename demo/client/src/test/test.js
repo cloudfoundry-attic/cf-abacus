@@ -23,6 +23,10 @@ commander
   .option('-r, --reporting <uri>',
     'usage reporting URL or domain name [http://localhost:9088]',
     'http://localhost:9088')
+  .option('-t, --start-timeout <n>',
+    'external processes start timeout in milliseconds', parseInt)
+  .option('-x, --total-timeout <n>',
+    'test timeout in milliseconds', parseInt)
   .allowUnknownOption(true)
   .parse(argv);
 
@@ -33,6 +37,12 @@ const collector = /:/.test(commander.collector) ? commander.collector :
 // Reporting service URL
 const reporting = /:/.test(commander.reporting) ? commander.reporting :
   'https://abacus-usage-reporting.' + commander.reporting;
+
+// External Abacus processes start timeout
+const startTimeout = commander.startTimeout || 10000;
+
+// This test timeout
+const totalTimeout = commander.totalTimeout || 60000;
 
 // The current time + 1 hour into the future
 const now = new Date(Date.now());
@@ -67,13 +77,16 @@ const prune = (v, k) => {
     return nwin;
   }
   return v;
-}
+};
 
-describe('abacus-demo-client', () => {
+describe('abacus-demo-client', function() {
   it('submits usage for a sample resource and retrieves an aggregated ' +
     'usage report', (done) => {
+
     // Configure the test timeout
-    const giveup = now.getTime() + 40000;
+    const timeout = Math.max(totalTimeout, 40000);
+    this.timeout(timeout + 2000);
+    const processingDeadline = Date.now() + timeout;
 
     // Test usage to be submitted by the client
     const start = now.getTime();
@@ -329,7 +342,7 @@ describe('abacus-demo-client', () => {
             // after 250 msec, give up after the configured timeout as
             // if we're still not getting the expected report then
             // the processing of the submitted usage must have failed
-            if(Date.now() >= giveup) {
+            if(Date.now() >= processingDeadline) {
               console.log('All submitted usage still not processed\n');
               expect(actual).to.deep.equal(report);
             }
@@ -348,8 +361,6 @@ describe('abacus-demo-client', () => {
     };
 
     // Wait for usage reporter to start
-    const startTimeout = process.env.CI_TIMEOUT ?
-      parseInt(process.env.CI_TIMEOUT) : 10000;
     request.waitFor(reporting + '/batch', {}, startTimeout, (err, value) => {
       // Failed to ping usage reporter before timing out
       if (err) throw err;

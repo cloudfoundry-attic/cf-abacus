@@ -31,6 +31,10 @@ commander
   .option('-u, --usagedocs <n>', 'number of usage docs', parseInt)
   .option('-d, --day <d>',
     'usage time shift using number of days', parseInt)
+  .option('-t, --start-timeout <n>',
+    'external processes start timeout in milliseconds', parseInt)
+  .option('-x, --total-timeout <n>',
+    'test timeout in milliseconds', parseInt)
   .allowUnknownOption(true)
   .parse(argv);
 
@@ -45,6 +49,12 @@ const usage = commander.usagedocs || 1;
 
 // Usage time shift by number of days in milli-seconds
 const tshift = commander.day * 24 * 60 * 60 * 1000 || 0;
+
+// External Abacus processes start timeout
+const startTimeout = commander.startTimeout || 10000;
+
+// This test timeout
+const totalTimeout = commander.totalTimeout || 60000;
 
 // Module directory
 const moduleDir = (module) => {
@@ -88,11 +98,12 @@ describe('abacus-usage-meter-itest', () => {
   });
 
   it('meter normalized usage submissions', function(done) {
-    // Configure the test timeout based on the number of usage docs, with
-    // a minimum of 60 secs
-    const timeout = Math.max(60000,
+    // Configure the test timeout based on the number of usage docs or
+    // a predefined timeout
+    const timeout = Math.max(totalTimeout,
       100 * orgs * resourceInstances * usage);
     this.timeout(timeout + 2000);
+    const processingDeadline = Date.now() + timeout;
 
     // Setup accumulator spy
     const accumulate = spy((req, res, next) => {
@@ -222,7 +233,6 @@ describe('abacus-usage-meter-itest', () => {
         (ri) => map(range(orgs), (o) => post(o, ri, u, cb))));
     };
 
-    let retries = 0;
     const verifyAccumulator = (done) => {
       try {
         debug('Verifying accumulator calls %d to equal to %d',
@@ -234,18 +244,16 @@ describe('abacus-usage-meter-itest', () => {
       }
       catch (e) {
         // If the comparison fails we'll be called again to retry
-        // after 250 msec, but give up after 10 seconds
-        if(++retries === 40) throw e;
+        // after 250 msec, but give up after deadline
+        if(Date.now() >= processingDeadline) throw e;
 
         debug('Retry#%d', retries);
       }
     };
 
     // Wait for usage meter to start
-    const procStartTimeout = process.env.CI_TIMEOUT ?
-      parseInt(process.env.CI_TIMEOUT) : 10000;
     request.waitFor('http://localhost::p/batch',
-      { p: 9100 }, procStartTimeout, (err, value) => {
+      { p: 9100 }, startTimeout, (err, value) => {
         // Failed to ping usage meter before timing out
         if (err) throw err;
 

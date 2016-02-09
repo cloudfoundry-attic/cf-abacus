@@ -48,6 +48,10 @@ commander
   .option('-u, --usagedocs <n>', 'number of usage docs', parseInt)
   .option('-d, --delta <d>',
     'usage time window shift in milli-seconds', parseInt)
+  .option('-t, --start-timeout <n>',
+    'external processes start timeout in milliseconds', parseInt)
+  .option('-x, --total-timeout <n>',
+    'test timeout in milliseconds', parseInt)
   .allowUnknownOption(true)
   .parse(argv);
 
@@ -63,17 +67,19 @@ const usage = commander.usagedocs || 1;
 // Usage time window shift in milli-seconds
 const delta = commander.delta || 0;
 
+// This test timeout
+const totalTimeout = commander.totalTimeout || 60000;
+
 describe('abacus-perf-test', () => {
   it('measures performance of concurrent usage submissions', function(done) {
-    // Configure the test timeout based on the number of usage docs, with
-    // a minimum of 60 secs
+    // Configure the test timeout based on the number of usage docs or
+    // a preset timeout
     console.log('Testing with %d orgs, %d resource instances, %d usage docs',
       orgs, resourceInstances, usage);
-
-    const timeout = Math.max(60000,
-      40 * orgs * resourceInstances * usage);
-    this.timeout(timeout + 5000);
-    const giveup = Date.now() + timeout;
+    const timeout = Math.max(totalTimeout,
+      100 * orgs * resourceInstances * usage);
+    this.timeout(timeout + 2000);
+    const processingDeadline = Date.now() + timeout;
 
     console.log('Timeout %d', timeout);
 
@@ -119,7 +125,7 @@ describe('abacus-perf-test', () => {
       for(let i = 0; i < 5; i++)
         timewindows.push([obj]);
       return timewindows;
-    }
+    };
     const rwindow = (nri, n, s, m, fn) => {
       return windows({
         quantity: new BigNumber(m).mul(s).toNumber(),
@@ -372,7 +378,7 @@ describe('abacus-perf-test', () => {
           catch (e) {
             // If the comparison fails we'll be called again to retry
             // after 250 msec, but give up after the computed timeout
-            if(Date.now() >= giveup) {
+            if(Date.now() >= processingDeadline) {
               console.log('\n', util.inspect(val.body, {
                 depth: 20
               }), '\n');

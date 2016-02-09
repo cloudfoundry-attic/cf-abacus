@@ -1,5 +1,6 @@
 'use strict';
 
+const commander = require('commander');
 const cp = require('child_process');
 const _ = require('underscore');
 const util = require('util');
@@ -45,6 +46,23 @@ const isWithinWindow = (start, end, timeWindow) => {
 
 process.env.API = 'http://localhost:4321';
 process.env.UAA = 'http://localhost:4321';
+
+// Parse command line options
+const argv = clone(process.argv);
+argv.splice(1, 1, 'usage-collector-itest');
+commander
+  .option('-t, --start-timeout <n>',
+    'external processes start timeout in milliseconds', parseInt)
+  .option('-x, --total-timeout <n>',
+    'test timeout in milliseconds', parseInt)
+  .allowUnknownOption(true)
+  .parse(argv);
+
+// External Abacus processes start timeout
+const startTimeout = commander.startTimeout || 10000;
+
+// This test timeout
+const totalTimeout = commander.totalTimeout || 60000;
 
 describe('abacus-cf-bridge-itest', () => {
   let server;
@@ -223,13 +241,12 @@ describe('abacus-cf-bridge-itest', () => {
     }, timeout);
   };
 
-  it('submit runtime usage to usage collector', (done) => {
+  it('submit runtime usage to usage collector', function(done) {
+    this.timeout(totalTimeout + 2000);
 
     // Wait for bridge to start
-    const procStartTimeout = process.env.CI_TIMEOUT ?
-      parseInt(process.env.CI_TIMEOUT) : 10000;
     request.waitFor('http://localhost::p/v1/cf/bridge',
-      { p: 9500 }, procStartTimeout, (err, uri, opts) => {
+      { p: 9500 }, startTimeout, (err, uri, opts) => {
         // Failed to ping bridge before timing out
         if (err) throw err;
 
@@ -238,9 +255,10 @@ describe('abacus-cf-bridge-itest', () => {
           expect(err).to.equal(undefined);
           expect(response.statusCode).to.equal(200);
 
-          poll(checkReport, done, 50000, 2000);
+          poll(checkReport, done, totalTimeout, 2000);
         });
       }
     );
   });
 });
+
