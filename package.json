@@ -107,6 +107,7 @@
     "abacus-schema": "file:lib/utils/schema",
     "abacus-seqid": "file:lib/utils/seqid",
     "abacus-throttle": "file:lib/utils/throttle",
+    "abacus-timewindow": "file:lib/utils/timewindow",
     "abacus-transform": "file:lib/utils/transform",
     "abacus-urienv": "file:lib/utils/urienv",
     "abacus-vcapenv": "file:lib/utils/vcapenv",
