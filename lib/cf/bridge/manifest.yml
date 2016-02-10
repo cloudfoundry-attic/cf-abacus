@@ -13,4 +13,6 @@ applications:
     EUREKA: abacus-eureka-plugin
     UAA: uaa
     API: api
+    CLIENT_ID: bridge
+    SECRET: secret
     NODE_MODULES_CACHE: false
