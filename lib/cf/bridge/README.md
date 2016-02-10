@@ -18,7 +18,7 @@ The bridge communicates with Cloud Controller. Register cf-bridge application as
 gem install cf-uaac
 uaac target uaa.bosh-lite.com --skip-ssl-validation
 uaac token client get admin -s admin-secret
-uaac client add bridge --authorized_grant_types client_credentials --authorities cloud_controller.admin --secret secret
+uaac client add bridge --name cf-bridge --authorized_grant_types client_credentials --authorities cloud_controller.admin --secret secret
 ```
 
 Take care to set change the client ID and secret in the example above.
