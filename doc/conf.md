@@ -28,24 +28,31 @@ To run Abacus in secure mode (HTTPS + oAuth tokens) you should:
 
 * Create UAA client:
 
-```
-gem install cf-uaac
-uaac target uaa.bosh-lite.com
-uaac token client get admin -s secret
-uaac client add abacus --name abacus --authorized_grant_types client_credentials --scope abacus.usage.write,abacus.usage.read --secret secret
-```
+   ```
+   gem install cf-uaac
+   uaac target uaa.bosh-lite.com
+   uaac token client get admin -s secret
+   uaac client add abacus --name abacus --authorized_grant_types client_credentials --scope abacus.usage.write,abacus.usage.read --secret    secret
+   ```
 
    Note: Change the id and secret to more secure values.
 
 * Modify relevant manifest.yml files
 
-The set of properties should contain:
+   The set of properties should contain:
+   * SECURED - `true` / `false` - Use `true` to enable the security checks
+   * AUTHSERVER - Authorization Server URL used to get access token endpoint in the format of `https://hostname:port` or just `https://hostname`.
+   * CLIENTID - Client identifier registered with the specified authorization server.
+   * CLIENTSECRET - Client secret used to authenticate the client identifier with the authorization server.
+   * JWTKEY - Key used to sign the JWT- JWS
+   * JWTALGO - Cryptographic algorithm used to sign and secure JWT-JWS
 
-```
-  SECURED: true
-  AUTH_SERVER: https://api.bosh-lite.com:443
-  CLIENT_ID: abacus
-  CLIENT_SECRET: secret
-  JWTKEY: encode
-  JWTALGO: HS256
-```
+   An example section of the manifest looks like this:
+   ```
+     SECURED: true
+     AUTH_SERVER: https://api.bosh-lite.com:443
+     CLIENT_ID: abacus
+     CLIENT_SECRET: secret
+     JWTKEY: encode
+     JWTALGO: HS256
+   ```
