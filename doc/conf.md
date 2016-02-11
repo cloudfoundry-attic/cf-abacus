@@ -24,9 +24,9 @@ These port numbers are used when running Abacus in a local dev environment.
 
 ### Secure Abacus configuration
 
-To run Abacus in secure mode (HTTPS + oAuth tokens) you should modify the relevant manifest.yml files
+To run Abacus in secure mode (HTTPS + oAuth tokens) you should modify Abacus application's manifest.yml files.
 
-The set of properties contains:
+The set of properties that has to be changed contains:
 * SECURED - `true` / `false` - Use `true` to enable the security checks
 * AUTHSERVER - Authorization Server URL used to get access token endpoint in the format of `https://hostname:port` or just `https://hostname`.
 * CLIENTID - Client identifier registered with the specified authorization server.
@@ -34,7 +34,7 @@ The set of properties contains:
 * JWTKEY - Key used to sign the JWT- JWS
 * JWTALGO - Cryptographic algorithm used to sign and secure JWT-JWS
 
-An example section of the manifest looks like this:
+An example manifest snippet:
 ```
   SECURED: true
   AUTH_SERVER: abacus-authserver-plugin
