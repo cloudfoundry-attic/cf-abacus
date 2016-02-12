@@ -552,6 +552,7 @@ describe('abacus-usage-reporting-itest', () => {
       account_id: '1234',
       start: end + u,
       end: end + u,
+      processed: end + u,
       resources: cextend([{
         resource_id: 'test-resource',
         aggregated_usage: a(ri, u, undefined, (n) => n + 1),
@@ -565,6 +566,7 @@ describe('abacus-usage-reporting-itest', () => {
       const spaces = () => u === 0 && ri === 0 || tri === 0 ? 1 : 2;
       return flatten(map(create(spaces, (i) => cagg(o, ri, u, i, 1)), (s) => {
         map(s, (c) => {
+          c.processed = end + u;
           c.resources = cextend(
             map(c.resources, addResourceWindows), addCost);
         });

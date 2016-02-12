@@ -51,6 +51,7 @@
     "abacus-schema": "file:../../utils/schema",
     "abacus-seqid": "file:../../utils/seqid",
     "abacus-throttle": "file:../../utils/throttle",
+    "abacus-timewindow": "file:../../utils/timewindow",
     "abacus-transform": "file:../../utils/transform",
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-usage-schemas": "file:../../config/schemas",
