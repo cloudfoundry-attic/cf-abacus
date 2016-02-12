@@ -38,7 +38,7 @@ Set the used client ID and secret with:
 
 ```
 export CLIENT_ID=bridge
-export SECRET=secret
+export CLIENT_SECRET=secret
 ```
 
 You can optionally enable the debug output with:
@@ -92,7 +92,7 @@ applications:
     API: https://api.bosh-lite.com:443
     NODE_MODULES_CACHE: false
     CLIENT_ID: bridge
-    SECRET: secret
+    CLIENT_SECRET: secret
 ```
 
 Build, pack and push the bridge to Cloud Foundry:
@@ -115,7 +115,7 @@ cf logs abacus-cf-bridge
 You can change the client ID and secret used to communicate with CC like so:
 ```
 cf set-env abacus-cf-bridge CLIENT_ID <client_id>
-cf set-env abacus-cf-bridge SECRET <secret>
+cf set-env abacus-cf-bridge CLIENT_SECRET <secret>
 cf restart abacus-cf-bridge
 ```
 
