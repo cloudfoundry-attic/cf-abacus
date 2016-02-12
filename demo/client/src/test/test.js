@@ -4,14 +4,15 @@
 // verifies the submission by retrieving a usage report.
 
 const _ = require('underscore');
+const map = _.map;
+const omit = _.omit;
+const extend = _.extend;
 
 const request = require('abacus-request');
 const util = require('util');
 const commander = require('commander');
-const clone = require('abacus-clone');;
-
-const map = _.map;
-const omit = _.omit;
+const clone = require('abacus-clone');
+const oauth = require('abacus-oauth');
 
 // Parse command line options
 const argv = clone(process.argv);
@@ -23,6 +24,9 @@ commander
   .option('-r, --reporting <uri>',
     'usage reporting URL or domain name [http://localhost:9088]',
     'http://localhost:9088')
+  .option('-a, --auth-server <uri>',
+    'authentication server URL or domain name [http://localhost:9882]',
+    'http://localhost:9882')
   .option('-t, --start-timeout <n>',
     'external processes start timeout in milliseconds', parseInt)
   .option('-x, --total-timeout <n>',
@@ -38,6 +42,10 @@ const collector = /:/.test(commander.collector) ? commander.collector :
 const reporting = /:/.test(commander.reporting) ? commander.reporting :
   'https://abacus-usage-reporting.' + commander.reporting;
 
+// Auth server URL
+const authServer = /:/.test(commander.authServer) ? commander.authServer :
+'https://abacus-authserver-plugin.' + commander.authServer;
+
 // External Abacus processes start timeout
 const startTimeout = commander.startTimeout || 10000;
 
@@ -46,6 +54,15 @@ const totalTimeout = commander.totalTimeout || 60000;
 
 // The current time + 1 hour into the future
 const now = new Date(Date.now());
+
+// Use secure routes or not
+const secured = () => process.env.SECURED === 'true' ? true : false;
+
+// Token fetcher
+const token = secured() ? oauth.cache(authServer,
+  process.env.CLIENT_ID, process.env.CLIENT_SECRET,
+  'abacus.usage.object-storage.write abacus.usage.object-storage.read') :
+  undefined;
 
 // Builds the expected window value based upon the
 // charge summary, quantity, cost, and window
@@ -79,7 +96,18 @@ const prune = (v, k) => {
   return v;
 };
 
+const authHeader = (token) => token ? {
+  headers: {
+    authorization: token()
+  }
+} : {};
+
 describe('abacus-demo-client', function() {
+  before(() => {
+    if (token)
+      token.start();
+  });
+
   it('submits usage for a sample resource and retrieves an aggregated ' +
     'usage report', (done) => {
 
@@ -292,16 +320,15 @@ describe('abacus-demo-client', function() {
         if(++posts === usage.length) done();
       };
 
-      request.post(collector + '/v1/metering/collected/usage', {
-        body: u.usage
-      }, (err, val) => {
-        expect(err).to.equal(undefined);
+      request.post(collector + '/v1/metering/collected/usage',
+        extend({ body: u.usage }, authHeader(token)), (err, val) => {
+          expect(err).to.equal(undefined);
 
-        // Expect a 201 with the location of the accumulated usage
-        expect(val.statusCode).to.equal(201);
-        expect(val.headers.location).to.not.equal(undefined);
-        cb();
-      });
+          // Expect a 201 with the location of the accumulated usage
+          expect(val.statusCode).to.equal(201);
+          expect(val.headers.location).to.not.equal(undefined);
+          cb();
+        });
     };
 
     // Print the number of usage docs already processed given a get report
@@ -319,37 +346,39 @@ describe('abacus-demo-client', function() {
 
     // Get a usage report for the test organization
     const get = (done) => {
-      request.get(reporting + '/v1/metering/organizations' +
-        '/:organization_id/aggregated/usage', {
-          organization_id: 'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27'
-        }, (err, val) => {
-          expect(err).to.equal(undefined);
-          expect(val.statusCode).to.equal(200);
+      request.get([
+        reporting,
+        'v1/metering/organizations',
+        'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+        'aggregated/usage'
+      ].join('/'), extend({}, authHeader(token)), (err, val) => {
+        expect(err).to.equal(undefined);
+        expect(val.statusCode).to.equal(200);
 
-          // Compare the usage report we got with the expected report
-          console.log('Processed %d usage docs', processed(val));
-          const actual = clone(omit(val.body,
-            'id', 'processed', 'start', 'end'), prune);
-          try {
+        // Compare the usage report we got with the expected report
+        console.log('Processed %d usage docs', processed(val));
+        const actual = clone(omit(val.body,
+          'id', 'processed', 'start', 'end'), prune);
+        try {
+          expect(actual).to.deep.equal(report);
+          console.log('\n', util.inspect(val.body, {
+            depth: 20
+          }), '\n');
+          done();
+        }
+        catch (e) {
+          // If the comparison fails we'll be called again to retry
+          // after 250 msec, give up after the configured timeout as
+          // if we're still not getting the expected report then
+          // the processing of the submitted usage must have failed
+          if(Date.now() >= processingDeadline) {
+            console.log('All submitted usage still not processed\n');
             expect(actual).to.deep.equal(report);
-            console.log('\n', util.inspect(val.body, {
-              depth: 20
-            }), '\n');
-            done();
           }
-          catch (e) {
-            // If the comparison fails we'll be called again to retry
-            // after 250 msec, give up after the configured timeout as
-            // if we're still not getting the expected report then
-            // the processing of the submitted usage must have failed
-            if(Date.now() >= processingDeadline) {
-              console.log('All submitted usage still not processed\n');
-              expect(actual).to.deep.equal(report);
-            }
-            else
-              setTimeout(() => get(done), 250);
-          }
-        });
+          else
+            setTimeout(() => get(done), 250);
+        }
+      });
     };
 
     // Wait for the expected usage report, get a report every 250 msec until
