@@ -48,7 +48,7 @@ process.env.API = 'http://localhost:4321';
 process.env.UAA = 'http://localhost:4321';
 
 process.env.CLIENT_ID = 'bridge';
-process.env.SECRET = 'secret';
+process.env.CLIENT_SECRET = 'secret';
 
 // Parse command line options
 const argv = clone(process.argv);
