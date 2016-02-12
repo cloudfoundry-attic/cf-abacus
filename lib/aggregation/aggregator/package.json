@@ -47,6 +47,7 @@
     "abacus-retry": "file:../../utils/retry",
     "abacus-router": "file:../../utils/router",
     "abacus-seqid": "file:../../utils/seqid",
+    "abacus-timewindow": "file:../../utils/timewindow",
     "abacus-transform": "file:../../utils/transform",
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-webapp": "file:../../utils/webapp",
