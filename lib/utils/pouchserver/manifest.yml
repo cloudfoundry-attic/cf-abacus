@@ -1,6 +1,6 @@
 applications:
-- name: abacus-dbserver
-  host: abacus-dbserver
+- name: abacus-pouchserver
+  host: abacus-pouchserver
   path: .cfpack/app.zip
   instances: 1
   memory: 1G

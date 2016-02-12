@@ -1,6 +1,6 @@
 default:
   apps:
-    - lib/utils/dbserver
+    - lib/utils/pouchserver
     - lib/plugins/eureka
     - lib/plugins/authserver
     - lib/plugins/provisioning
@@ -19,7 +19,7 @@ large:
 
 bridge:
   apps:
-    - lib/utils/dbserver
+    - lib/utils/pouchserver
     - lib/plugins/eureka
     - lib/plugins/authserver
     - lib/plugins/provisioning

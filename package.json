@@ -86,7 +86,7 @@
     "abacus-cluster": "file:lib/utils/cluster",
     "abacus-dataflow": "file:lib/utils/dataflow",
     "abacus-dbclient": "file:lib/utils/dbclient",
-    "abacus-dbserver": "file:lib/utils/dbserver",
+    "abacus-pouchserver": "file:lib/utils/pouchserver",
     "abacus-debug": "file:lib/utils/debug",
     "abacus-dedupe": "file:lib/utils/dedupe",
     "abacus-eureka": "file:lib/utils/eureka",

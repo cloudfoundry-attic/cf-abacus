@@ -7,7 +7,7 @@ These port numbers are used when running Abacus in a local dev environment.
 
 | port |      component             |
 |:-----|:---------------------------|
-| 5984 | abacus-dbserver            |
+| 5984 | abacus-pouchserver         |
 |      |                            |
 | 9080 | abacus-usage-collector     |   
 | 9088 | abacus-usage-reporting     |  

@@ -4,9 +4,9 @@ memory: <%= p("cf.memory") %>
 disk_quota: <%= p("cf.disk_quota") %>
 instances: <%= p("cf.instances") %>
 applications:
-  - name: abacus-dbserver
+  - name: abacus-pouchserver
     host: <%= p("abacus.dbserver.host") %>
-    path: /var/vcap/packages/cf-abacus/lib/utils/dbserver/.cfpack/app.zip
+    path: /var/vcap/packages/cf-abacus/lib/utils/pouchserver/.cfpack/app.zip
   - name: abacus-eureka-plugin
     host: <%= p("abacus.eureka.host") %>
     path: /var/vcap/packages/cf-abacus/lib/plugins/eureka/.cfpack/app.zip

@@ -34,7 +34,7 @@
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-batch": "file:../../../lib/utils/batch",
     "abacus-dbclient": "file:../../../lib/utils/dbclient",
-    "abacus-dbserver": "file:../../../lib/utils/dbserver",
+    "abacus-pouchserver": "file:../../../lib/utils/pouchserver",
     "abacus-debug": "file:../../../lib/utils/debug",
     "abacus-express": "file:../../../lib/utils/express",
     "abacus-request": "file:../../../lib/utils/request",

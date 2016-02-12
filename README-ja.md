@@ -122,7 +122,7 @@ abacus-usage-aggregator    started           1/1         512M     512M   abacus-
 abacus-usage-reporting     started           1/1         512M     512M   abacus-usage-reporting.10.244.0.34.xip.io   
 abacus-provisioning-plugin started           1/1         512M     512M   abacus-provisioning-plugin.10.244.0.34.xip.io   
 abacus-account-plugin      started           1/1         512M     512M   abacus-account-plugin.10.244.0.34.xip.io   
-abacus-dbserver            started           1/1         1G       512M   abacus-dbserver.10.244.0.34.xip.io   
+abacus-pouchserver         started           1/1         1G       512M   abacus-pouchserver.10.244.0.34.xip.io   
 ```
 
 <!--

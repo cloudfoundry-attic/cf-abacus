@@ -39,7 +39,7 @@
     "abacus-express": "file:../../../lib/utils/express",
     "abacus-dataflow": "file:../../../lib/utils/dataflow",
     "abacus-dbclient": "file:../../../lib/utils/dbclient",
-    "abacus-dbserver": "file:../../../lib/utils/dbserver",
+    "abacus-pouchserver": "file:../../../lib/utils/pouchserver",
     "abacus-seqid": "file:../../../lib/utils/seqid",
     "abacus-usage-aggregator": "file:../../../lib/aggregation/aggregator",
     "abacus-account-plugin": "file:../../../lib/plugins/account",

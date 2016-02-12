@@ -173,7 +173,7 @@ describe('abacus-usage-aggregator-itest', () => {
 
     // Start local database server
     if (!process.env.COUCHDB)
-      start('abacus-dbserver');
+      start('abacus-pouchserver');
 
     // Start account plugin
     start('abacus-account-plugin');
@@ -196,7 +196,7 @@ describe('abacus-usage-aggregator-itest', () => {
 
     // Stop local database server
     if (!process.env.COUCHDB)
-      stop('abacus-dbserver');
+      stop('abacus-pouchserver');
   });
 
   it('aggregator accumulated usage submissions', function(done) {

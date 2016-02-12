@@ -86,7 +86,7 @@ applications:
     CONF: default
     DEBUG: abacus-cf*
     COLLECTOR: abacus-usage-collector
-    COUCHDB: abacus-dbserver
+    COUCHDB: abacus-pouchserver
     EUREKA: abacus-eureka-plugin
     UAA: https://uaa.bosh-lite.com:443
     API: https://api.bosh-lite.com:443

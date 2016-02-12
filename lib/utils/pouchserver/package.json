@@ -1,10 +1,10 @@
 {
-  "name": "abacus-dbserver",
+  "name": "abacus-pouchserver",
   "description": "Mini CouchDB-compatible server built using PouchDB and Express",
   "license": "Apache-2.0",
   "version": "0.0.5-rc.0",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/dbserver",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/pouchserver",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -19,18 +19,18 @@
   "files": [
     ".apprc",
     ".npmrc",
-    "dbserver",
+    "pouchserver",
     "manifest.yml",
     "lib/",
     "src/"
   ],
   "main": "lib/index.js",
   "bin": {
-    "dbserver": "./dbserver"
+    "pouchserver": "./pouchserver"
   },
   "scripts": {
-    "start": "launch ./dbserver start",
-    "stop": "./dbserver stop",
+    "start": "launch ./pouchserver start",
+    "stop": "./pouchserver stop",
     "babel": "babel",
     "test": "eslint && mocha",
     "lint": "eslint",

@@ -47,7 +47,7 @@
     "abacus-oauth": "file:../../../lib/utils/oauth",
     "abacus-cluster": "file:../../../lib/utils/cluster",
     "abacus-dbclient": "file:../../../lib/utils/dbclient",
-    "abacus-dbserver": "file:../../../lib/utils/dbserver",
+    "abacus-pouchserver": "file:../../../lib/utils/pouchserver",
     "abacus-debug": "file:../../../lib/utils/debug",
     "abacus-eval": "file:../../../lib/utils/eval",
     "abacus-events": "file:../../../lib/utils/events",

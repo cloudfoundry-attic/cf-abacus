@@ -8,7 +8,7 @@ applications:
   env:
     CONF: default
     DEBUG: e-abacus-*
-    COUCHDB: abacus-dbserver
+    COUCHDB: abacus-pouchserver
     NODE_MODULES_CACHE: false
     SECURED: false
     # JWTKEY:

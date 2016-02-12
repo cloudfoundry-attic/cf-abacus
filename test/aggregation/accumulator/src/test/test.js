@@ -148,7 +148,7 @@ describe('abacus-usage-accumulator-itest', () => {
 
     // Start local database server
     if (!process.env.COUCHDB)
-      start('abacus-dbserver');
+      start('abacus-pouchserver');
 
     // Start account plugin
     start('abacus-account-plugin');
@@ -171,7 +171,7 @@ describe('abacus-usage-accumulator-itest', () => {
 
     // Stop local database server
     if (!process.env.COUCHDB)
-      stop('abacus-dbserver');
+      stop('abacus-pouchserver');
   });
 
   it('accumulate metered usage submissions', function(done) {

@@ -36,7 +36,7 @@
     "abacus-request": "file:../../../lib/utils/request",
     "abacus-router": "file:../../../lib/utils/router",
     "abacus-express": "file:../../../lib/utils/express",
-    "abacus-dbserver": "file:../../../lib/utils/dbserver",
+    "abacus-pouchserver": "file:../../../lib/utils/pouchserver",
     "abacus-usage-meter": "file:../../../lib/metering/meter",
     "abacus-debug": "file:../../../lib/utils/debug",
     "babel-preset-es2015": "^6.1.4",

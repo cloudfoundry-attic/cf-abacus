@@ -36,7 +36,7 @@
     "abacus-request": "file:../../../lib/utils/request",
     "abacus-router": "file:../../../lib/utils/router",
     "abacus-express": "file:../../../lib/utils/express",
-    "abacus-dbserver": "file:../../../lib/utils/dbserver",
+    "abacus-pouchserver": "file:../../../lib/utils/pouchserver",
     "abacus-provisioning-plugin": "file:../../../lib/plugins/provisioning",
     "abacus-usage-collector": "file:../../../lib/metering/collector",
     "abacus-debug": "file:../../../lib/utils/debug",

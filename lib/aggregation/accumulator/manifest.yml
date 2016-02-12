@@ -11,7 +11,7 @@ applications:
     AGGREGATOR: abacus-usage-aggregator
     PROVISIONING: abacus-provisioning-plugin
     ACCOUNT: abacus-account-plugin
-    COUCHDB: abacus-dbserver
+    COUCHDB: abacus-pouchserver
     EUREKA: abacus-eureka-plugin
     NODE_MODULES_CACHE: false
     SECURED: false

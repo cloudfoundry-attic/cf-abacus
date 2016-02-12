@@ -83,7 +83,7 @@ abacus-usage-aggregator    started           1/1         512M     512M   abacus-
 abacus-usage-reporting     started           1/1         512M     512M   abacus-usage-reporting.both-lite.com   
 abacus-provisioning-plugin started           1/1         512M     512M   abacus-provisioning-plugin.both-lite.com   
 abacus-account-plugin      started           1/1         512M     512M   abacus-account-plugin.both-lite.com   
-abacus-dbserver            started           1/1         1G       512M   abacus-dbserver.both-lite.com   
+abacus-pouchserver         started           1/1         1G       512M   abacus-pouchserver.both-lite.com   
 ```
 
 Running the demo on Cloud Foundry
