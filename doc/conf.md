@@ -1,7 +1,7 @@
 Abacus Configuration
 ===
 
-### Default port numbers used by Abacus
+## Default port numbers used by Abacus
 
 These port numbers are used when running Abacus in a local dev environment.
 
@@ -22,7 +22,7 @@ These port numbers are used when running Abacus in a local dev environment.
 | 9882 | abacus-authserver-plugin   |
 | 9990 | abacus-eureka-plugin       |
 
-### Secure Abacus configuration
+## Securing Abacus
 
 To run Abacus in secure mode (HTTPS + oAuth tokens) you should modify Abacus application's manifest.yml files.
 
@@ -42,4 +42,28 @@ An example manifest snippet:
   CLIENT_SECRET: secret
   JWTKEY: encode
   JWTALGO: HS256
+```
+
+## Logging
+
+Logs are controlled via the `DEBUG` environment variable. There are 3 types of logs:
+* debug logs (starting with `abacus-`)
+* exception logs (`e-abacus-`)
+* performance logs (`p-abacus-`)
+
+For example to monitor the inner working of the `abacus-breaker` module you need to set `DEBUG=abacus-breaker`.
+
+You can also configure logging for multiple modules like this `DEBUG=abacus-breaker,abacus-retry`.
+
+The logs are DEBUG logs so they will produce a lot of entries in production. Usually you'll want to use the exception logs `DEBUG=e-*`
+
+**Dynamic/Remote configuration**
+
+The debug log can be configured dynamically (remotely). To get the current debug log config: 
+```
+curl http://<host><:port>/log
+```
+To enable `abacus-breaker` and `abacus-retry` for example:
+```
+curl http://<host><:port>/log?config=abacus-breaker,abacus-retry
 ```
