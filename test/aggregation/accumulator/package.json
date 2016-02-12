@@ -41,6 +41,7 @@
     "abacus-request": "file:../../../lib/utils/request",
     "abacus-router": "file:../../../lib/utils/router",
     "abacus-seqid": "file:../../../lib/utils/seqid",
+    "abacus-timewindow": "file:../../../lib/utils/timewindow",
     "abacus-throttle": "file:../../../lib/utils/throttle",
     "abacus-usage-accumulator": "file:../../../lib/aggregation/accumulator",
     "abacus-account-plugin": "file:../../../lib/plugins/account",
