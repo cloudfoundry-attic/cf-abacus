@@ -260,7 +260,7 @@ describe('abacus-usage-reporting-itest', () => {
     };
 
     // Start local database server
-    if (!process.env.COUCHDB)
+    if (!process.env.DB)
       start('abacus-pouchserver');
 
     // Start account plugin
@@ -283,7 +283,7 @@ describe('abacus-usage-reporting-itest', () => {
     stop('abacus-account-plugin');
 
     // Stop local database server
-    if (!process.env.COUCHDB)
+    if (!process.env.DB)
       stop('abacus-pouchserver');
   });
 

@@ -10,7 +10,7 @@ applications:
     DEBUG: e-abacus-*
     METER: abacus-usage-meter
     PROVISIONING: abacus-provisioning-plugin
-    COUCHDB: abacus-pouchserver
+    DB: abacus-pouchserver
     ACCOUNT: abacus-account-plugin
     EUREKA: abacus-eureka-plugin
     NODE_MODULES_CACHE: false

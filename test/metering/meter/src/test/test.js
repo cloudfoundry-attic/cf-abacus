@@ -76,7 +76,7 @@ describe('abacus-usage-meter-itest', () => {
     };
 
     // Start local database server
-    if (!process.env.COUCHDB)
+    if (!process.env.DB)
       start('abacus-pouchserver');
 
     // Start usage meter
@@ -93,7 +93,7 @@ describe('abacus-usage-meter-itest', () => {
     stop('abacus-usage-meter');
 
     // Stop local database server
-    if (!process.env.COUCHDB)
+    if (!process.env.DB)
       stop('abacus-pouchserver');
   });
 

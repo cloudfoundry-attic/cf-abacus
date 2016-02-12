@@ -5,7 +5,7 @@ default:
   DB_PARTITIONS: 1
   COLLECTOR: 9080
   EUREKA: 9990
-  COUCHDB: 5984
+  DB: 5984
   UAA:
   API:
 

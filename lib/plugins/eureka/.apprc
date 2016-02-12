@@ -3,7 +3,7 @@ default:
   APPS: 1
   INSTANCES: 1
   DB_PARTITIONS: 1
-  COUCHDB: 5984
+  DB: 5984
   SECURED: false
   JWTKEY:
   JWTALGO:

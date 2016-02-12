@@ -174,7 +174,7 @@ The all-access group should not be used in productive environments. An alternati
    env:
      CONF: default
      DEBUG: e-abacus-*
-     COUCHDB: abacus-pouchserver
+     DB: abacus-pouchserver
      NODE_MODULES_CACHE: false
      SECURED: false
      JBP_CONFIG_TOMCAT: "{tomcat: { context_path: eureka }}"
