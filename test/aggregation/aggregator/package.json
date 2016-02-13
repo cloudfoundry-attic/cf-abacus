@@ -41,6 +41,7 @@
     "abacus-dbclient": "file:../../../lib/utils/dbclient",
     "abacus-pouchserver": "file:../../../lib/utils/pouchserver",
     "abacus-seqid": "file:../../../lib/utils/seqid",
+    "abacus-timewindow": "file:../../../lib/utils/timewindow",
     "abacus-usage-aggregator": "file:../../../lib/aggregation/aggregator",
     "abacus-account-plugin": "file:../../../lib/plugins/account",
     "abacus-debug": "file:../../../lib/utils/debug",
