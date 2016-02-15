@@ -34,7 +34,8 @@ The set of properties that has to be changed contains:
 * JWTKEY - Key used to sign the JWT- JWS
 * JWTALGO - Cryptographic algorithm used to sign and secure JWT-JWS
 
-An example manifest snippet:
+### Abacus authorization server
+Use the following configuration:
 ```
   SECURED: true
   AUTH_SERVER: abacus-authserver-plugin
@@ -43,6 +44,26 @@ An example manifest snippet:
   JWTKEY: encode
   JWTALGO: HS256
 ```
+
+### CF UAA
+Check your UAA configuration or CF deploy manifest on how the JSON Web Token (JWT) is signed. Check the:
+* JWT algorithm 
+* public key (or secret)
+
+Abacus configuration snippet for UAA:
+
+```
+    SECURED: true
+    AUTH_SERVER: https://api.<CF domain>:443
+    CLIENT_ID: abacus
+    CLIENT_SECRET: secret
+    JWTKEY: |+
+      -----BEGIN PUBLIC KEY-----
+      ... <UAA public key> ...
+      -----END PUBLIC KEY-----
+    JWTALGO: RS256
+```
+
 
 ## Logging
 
