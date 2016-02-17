@@ -1,10 +1,10 @@
 {
-  "name": "abacus-dbclient",
+  "name": "abacus-couchclient",
   "description": "Subset of the PouchDB API over a set of DB partitions",
   "license": "Apache-2.0",
   "version": "0.0.5-rc.0",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/dbclient",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/couchclient",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -29,8 +29,15 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-couchclient": "file:../couchclient",
-    "babel-preset-es2015": "^6.1.4"
+    "abacus-debug": "file:../debug",
+    "abacus-partition": "file:../partition",
+    "abacus-perf": "file:../perf",
+    "abacus-request": "file:../request",
+    "abacus-transform": "file:../transform",
+    "babel-preset-es2015": "^6.1.4",
+    "memdown": "^1.1.0",
+    "pouchdb": "^5.0.0",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
