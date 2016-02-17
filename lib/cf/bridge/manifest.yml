@@ -14,5 +14,5 @@ applications:
     UAA: uaa
     API: api
     CLIENT_ID: bridge
-    SECRET: secret
+    CLIENT_SECRET: secret
     NODE_MODULES_CACHE: false
