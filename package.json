@@ -85,6 +85,7 @@
     "abacus-clone": "file:lib/utils/clone",
     "abacus-cluster": "file:lib/utils/cluster",
     "abacus-couchclient": "file:lib/utils/couchclient",
+    "abacus-mongoclient": "file:lib/utils/mongoclient",
     "abacus-dataflow": "file:lib/utils/dataflow",
     "abacus-dbclient": "file:lib/utils/dbclient",
     "abacus-pouchserver": "file:lib/utils/pouchserver",
