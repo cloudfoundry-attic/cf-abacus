@@ -24,7 +24,8 @@
   "main": "lib/index.js",
   "scripts": {
     "babel": "babel",
-    "test": "eslint && mocha",
+    "test": "eslint && npm run mongotest",
+    "mongotest": "if [ \"$(netstat -an | grep 27017)\" != \"\" ]; then mocha; fi",
     "lint": "eslint",
     "pub": "publish"
   },
