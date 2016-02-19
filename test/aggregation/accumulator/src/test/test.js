@@ -76,7 +76,7 @@ const moduleDir = (module) => {
 
 const pruneWindows = (v, k) => {
   if(k === 'windows')
-    return v[4];
+    return [v[4][0]];
   return v;
 };
 

@@ -32,6 +32,7 @@ const omit = _.omit;
 const extend = _.extend;
 const clone = _.clone;
 const last = _.last;
+const first = _.first;
 const keys = _.keys;
 
 const brequest = batch(request);
@@ -341,7 +342,7 @@ describe('abacus-perf-test', () => {
       if(!val)
         return val;
       if(val.windows)
-        val.windows = [last(val.windows)]
+        val.windows = [[first(last(val.windows))]]
       map(keys(val), (k) => {
         if(typeof val[k] === 'object')
           return fixup(val[k]);
