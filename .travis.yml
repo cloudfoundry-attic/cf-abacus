@@ -1,7 +1,7 @@
 matrix:
   include:
     - os: "linux"
-      env: NODE_VERSION="5.3" CI_TEST="true" CF_TEST="false"
+      env: NODE_VERSION="5.6" CI_TEST="true" CF_TEST="false"
     - os: "linux"
       env: NODE_VERSION="4.2" CI_TEST="true" CF_TEST="false"
     - os: "linux"
