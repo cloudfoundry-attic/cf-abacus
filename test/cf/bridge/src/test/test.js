@@ -45,10 +45,9 @@ const isWithinWindow = (start, end, timeWindow) => {
 };
 
 process.env.API = 'http://localhost:4321';
-process.env.UAA = 'http://localhost:4321';
 
-process.env.CLIENT_ID = 'bridge';
-process.env.CLIENT_SECRET = 'secret';
+process.env.CF_CLIENT_ID = 'bridge';
+process.env.CF_CLIENT_SECRET = 'secret';
 
 // Parse command line options
 const argv = clone(process.argv);
@@ -69,11 +68,11 @@ const totalTimeout = commander.totalTimeout || 60000;
 
 describe('abacus-cf-bridge-itest', () => {
   let server;
-  let submittime;
+  let submittime = new Date();
 
   before(() => {
     const start = (module) => {
-      submittime = new Date();
+      debug('Starting %s in directory %s', module, moduleDir(module));
       const c = cp.spawn('npm', ['run', 'start'], {
         cwd: moduleDir(module),
         env: clone(process.env)
@@ -124,6 +123,12 @@ describe('abacus-cf-bridge-itest', () => {
     routes.get('/v2/apps', (request, response) => {
       response.status(200).send({});
     });
+    routes.get('/v2/info',
+      (request, response) => {
+        response.status(200).send({
+          token_endpoint: 'http://localhost:4321'
+        });
+      });
     routes.get('/oauth/token',
       (request, response) => {
         response.status(200).send({
@@ -138,6 +143,7 @@ describe('abacus-cf-bridge-itest', () => {
 
     if (!process.env.DB)
       start('abacus-pouchserver');
+    start('abacus-eureka-plugin');
     start('abacus-authserver-plugin');
     start('abacus-provisioning-plugin');
     start('abacus-account-plugin');
@@ -164,6 +170,7 @@ describe('abacus-cf-bridge-itest', () => {
     stop('abacus-account-plugin');
     stop('abacus-provisioning-plugin');
     stop('abacus-authserver-plugin');
+    stop('abacus-eureka-plugin');
     if (!process.env.DB)
       stop('abacus-pouchserver');
 
