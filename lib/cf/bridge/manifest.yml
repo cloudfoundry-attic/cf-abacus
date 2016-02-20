@@ -8,11 +8,12 @@ applications:
   env:
     CONF: default
     DEBUG: e-abacus-*
+    DBCLIENT: abacus-mongoclient
     COLLECTOR: abacus-usage-collector
-    DB: abacus-pouchserver
     EUREKA: abacus-eureka-plugin
-    UAA: uaa
     API: api
-    CLIENT_ID: bridge
+    CLIENT_ID: abacus-linux-container
     CLIENT_SECRET: secret
+    CF_CLIENT_ID: abacus-cf-bridge
+    CF_CLIENT_SECRET: secret
     NODE_MODULES_CACHE: false
