@@ -57,10 +57,10 @@ commander
   .parse(argv);
 
 // External Abacus processes start timeout
-const startTimeout = commander.startTimeout || 20000;
+const startTimeout = commander.startTimeout || 10000;
 
 // This test timeout
-const totalTimeout = commander.totalTimeout || 120000;
+const totalTimeout = commander.totalTimeout || 60000;
 
 // Token setup
 process.env.API = 'http://localhost:4321';
@@ -117,7 +117,9 @@ const test = (secured) => {
   let submittime = new Date();
 
   beforeEach(() => {
+    // Enable/disable the oAuth token authorization
     process.env.SECURED = secured ? 'true' : 'false';
+    debug('Set SECURED = %s', process.env.SECURED);
 
     const start = (module) => {
       debug('Starting %s in directory %s', module, moduleDir(module));
@@ -126,11 +128,12 @@ const test = (secured) => {
         env: clone(process.env)
       });
 
-      // Add listeners to stdout, stderr and exit messsage and forward the
+      // Add listeners to stdout, stderr and exit message and forward the
       // messages to debug logs
-      c.stdout.on('data', (d) => process.stdout.write(d));
-      c.stderr.on('data', (d) => process.stderr.write(d));
-      c.on('exit', (c) => debug('Application exited with code %d', c));
+      c.stdout.on('data', (data) => process.stdout.write(data));
+      c.stderr.on('data', (data) => process.stderr.write(data));
+      c.on('exit', (code) => debug('Module %s started with code %d',
+        module, code));
     };
 
     const app = express();
@@ -206,24 +209,40 @@ const test = (secured) => {
     start('abacus-cf-bridge');
   });
 
-  afterEach(() => {
-    const stop = (module) => {
-      cp.spawn('npm', ['run', 'stop'],
-        { cwd: moduleDir(module), env: clone(process.env) });
+  afterEach((done) => {
+    let counter = 0;
+    const finishCb = (module, code) => {
+      debug('Module %s exited with code %d', module, code);
+      if (++counter == 11) {
+        debug('All modules stopped. Exiting test');
+        done();
+      }
     };
 
-    stop('abacus-cf-bridge');
-    stop('abacus-usage-reporting');
-    stop('abacus-usage-aggregator');
-    stop('abacus-usage-accumulator');
-    stop('abacus-usage-meter');
-    stop('abacus-usage-collector');
-    stop('abacus-account-plugin');
-    stop('abacus-provisioning-plugin');
-    stop('abacus-authserver-plugin');
-    stop('abacus-eureka-plugin');
+    const stop = (module, cb) => {
+      debug('Stopping %s in directory %s', module, moduleDir(module));
+      const c = cp.spawn('npm', ['run', 'stop'],
+        { cwd: moduleDir(module), env: clone(process.env) });
+
+      // Add listeners to stdout, stderr and exit message and forward the
+      // messages to debug logs
+      c.stdout.on('data', (data) => process.stdout.write(data));
+      c.stderr.on('data', (data) => process.stderr.write(data));
+      c.on('exit', (code) => cb(module, code));
+    };
+
+    stop('abacus-cf-bridge', finishCb);
+    stop('abacus-usage-reporting', finishCb);
+    stop('abacus-usage-aggregator', finishCb);
+    stop('abacus-usage-accumulator', finishCb);
+    stop('abacus-usage-meter', finishCb);
+    stop('abacus-usage-collector', finishCb);
+    stop('abacus-account-plugin', finishCb);
+    stop('abacus-provisioning-plugin', finishCb);
+    stop('abacus-authserver-plugin', finishCb);
+    stop('abacus-eureka-plugin', finishCb);
     if (!process.env.DB)
-      stop('abacus-pouchserver');
+      stop('abacus-pouchserver', finishCb);
 
     server.close();
   });
@@ -277,32 +296,27 @@ const test = (secured) => {
   };
 
   const poll = (fn, done, timeout = 1000, interval = 100) => {
-    let lastError;
+    const startTimestamp = Date.now();
 
-    const doneInterceptor = (err) => {
+    const doneCallback = (err) => {
       if (!err) {
         debug('Expectation in %s met', fn.name);
-        clearInterval(intervalTimer);
-        clearTimeout(timeoutTimer);
-        setImmediate(done);
+        setImmediate(() => done());
+        return;
       }
-      lastError = err;
+
+      if (Date.now() - startTimestamp > timeout)
+        setImmediate(() => done(util.format('Expectation not met for %d ms. ' +
+          'Error: %o', timeout, err)));
+      else
+        setTimeout(() => {
+          debug('Calling %s after >= %d ms...', fn.name, interval);
+          fn(doneCallback);
+        }, interval);
     };
 
-    const intervalTimer = setInterval(() => {
-      debug('Calling %s ...', fn.name);
-      fn(doneInterceptor);
-    }, interval);
-
-    const timeoutTimer = setTimeout(() => {
-      debug('Clearing expectation timer ...');
-      clearInterval(intervalTimer);
-
-      const msg = util.format('Expectation not met for %d ms. Last error: %s',
-        timeout, lastError ? lastError.stack : 'unknown');
-      debug(msg);
-      setImmediate(() => done(lastError));
-    }, timeout);
+    debug('Calling %s for the first time...', fn.name);
+    fn(doneCallback);
   };
 
   it('submit runtime usage to usage collector', function(done) {
@@ -319,13 +333,13 @@ const test = (secured) => {
           expect(err).to.equal(undefined);
           expect(response.statusCode).to.equal(200);
 
-          poll(checkReport, done, totalTimeout, 2000);
+          poll(checkReport, done, totalTimeout, 1000);
         });
       }
     );
   });
 };
 
-describe('abacus-cf-bridge-itest with oAuth', () => test(true));
-
 describe('abacus-cf-bridge-itest without oAuth', () => test(false));
+
+describe('abacus-cf-bridge-itest with oAuth', () => test(true));
