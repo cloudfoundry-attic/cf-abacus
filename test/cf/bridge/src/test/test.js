@@ -4,6 +4,7 @@ const commander = require('commander');
 const cp = require('child_process');
 const _ = require('underscore');
 const util = require('util');
+const jwt = require('jsonwebtoken');
 
 const request = require('abacus-request');
 const router = require('abacus-router');
@@ -44,16 +45,6 @@ const isWithinWindow = (start, end, timeWindow) => {
     Math.floor(dateUTCNumbify(start) / timescale[timeWindow]) === 0;
 };
 
-process.env.API = 'http://localhost:4321';
-
-process.env.CF_CLIENT_ID = 'abacus-cf-bridge';
-process.env.CF_CLIENT_SECRET = 'secret';
-
-process.env.CLIENT_ID = 'abacus-linux-container';
-process.env.CLIENT_SECRET = 'secret';
-process.env.JWTKEY = 'encode';
-process.env.JWTALGO = 'HS256';
-
 // Parse command line options
 const argv = clone(process.argv);
 argv.splice(1, 1, 'usage-collector-itest');
@@ -71,11 +62,63 @@ const startTimeout = commander.startTimeout || 10000;
 // This test timeout
 const totalTimeout = commander.totalTimeout || 60000;
 
-describe('abacus-cf-bridge-itest', () => {
+// Token setup
+process.env.API = 'http://localhost:4321';
+
+process.env.CF_CLIENT_ID = 'abacus-cf-bridge';
+process.env.CF_CLIENT_SECRET = 'secret';
+
+process.env.CLIENT_ID = 'abacus-linux-container';
+process.env.CLIENT_SECRET = 'secret';
+const tokenSecret = 'secret';
+const tokenAlgorithm = 'HS256';
+process.env.JWTKEY = tokenSecret;
+process.env.JWTALGO = tokenAlgorithm;
+
+const decodedToken = {
+  header: {
+    alg: tokenAlgorithm
+  },
+  payload: {
+    jti: '254abca5-1c25-40c5-99d7-2cc641791517',
+    sub: 'abacus-cf-bridge',
+    authorities: [
+      'abacus.usage.linux-container.write',
+      'abacus.usage.linux-container.read'
+    ],
+    scope: [
+      'abacus.usage.linux-container.read',
+      'abacus.usage.linux-container.write'
+    ],
+    client_id: 'abacus-cf-bridge',
+    cid: 'abacus-cf-bridge',
+    azp: 'abacus-cf-bridge',
+    grant_type: 'client_credentials',
+    rev_sig: '2cf89595',
+    iat: 1456147679,
+    exp: 1456190879,
+    iss: 'https://localhost:1234/oauth/token',
+    zid: 'uaa',
+    aud: [
+      'abacus-cf-bridge',
+      'abacus.usage.linux-container'
+    ]
+  },
+  signature: 'irxoV230hkDJenXoTSHQFfqzoUl353lS2URo1fJm21Y'
+};
+
+// Sign a known token using default algorithm (HS256)
+const signedToken = jwt.sign(decodedToken.payload, tokenSecret, {
+  expiresIn: 43200
+});
+
+const test = (secured) => {
   let server;
   let submittime = new Date();
 
-  before(() => {
+  beforeEach(() => {
+    process.env.SECURED = secured ? 'true' : 'false';
+
     const start = (module) => {
       debug('Starting %s in directory %s', module, moduleDir(module));
       const c = cp.spawn('npm', ['run', 'start'], {
@@ -89,19 +132,6 @@ describe('abacus-cf-bridge-itest', () => {
       c.stderr.on('data', (d) => process.stderr.write(d));
       c.on('exit', (c) => debug('Application exited with code %d', c));
     };
-
-    const encodedToken = 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmYTFiMjlmZS03NmE5LT' +
-      'RjMmQtOTAzZS1kZGRkMDU2M2E5ZTMiLCJzdWIiOiJydW50aW1lZXh0IiwiYXV0aG9yaXRp' +
-      'ZXMiOlsic2NpbS5yZWFkIiwidWFhLnJlc291cmNlIiwib3BlbmlkIiwiY2xvdWRfY29udH' +
-      'JvbGxlci5yZWFkIiwic2VydmljZV9icm9rZXIiXSwic2NvcGUiOlsic2NpbS5yZWFkIiwi' +
-      'dWFhLnJlc291cmNlIiwib3BlbmlkIiwiYWJhY3VzLnVzYWdlLmxpbnV4LWNvbnRhaW5lci' +
-      '53cml0ZSIsImFiYWN1cy51c2FnZS5saW51eC1jb250YWluZXIucmVhZCJdLCJjbGllbnRf' +
-      'aWQiOiJydW50aW1lZXh0IiwiY2lkIjoicnVudGltZWV4dCIsImF6cCI6InJ1bnRpbWVleH' +
-      'QiLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwiaWF0IjoxNDQwNDY0MzI5' +
-      'LCJleHAiOjE0NDA1MDc1MjksImlzcyI6Imh0dHBzOi8vdWFhLmNmLm5ldC9vYXV0aC90b2' +
-      'tlbiIsInppZCI6InVhYSIsImF1ZCI6WyJydW50aW1lZXh0Iiwic2NpbSIsImNsb3VkX2Nv' +
-      'bnRyb2xsZXIiLCJ1YWEiLCJvcGVuaWQiXX0.h7XowzPRFP6kbUefs73YQT8AIRotWEdEaw' +
-      'R3CGjQqys';
 
     const app = express();
     const routes = router();
@@ -151,8 +181,11 @@ describe('abacus-cf-bridge-itest', () => {
       (request, response) => {
         response.status(200).send({
           token_type: 'bearer',
-          access_token: encodedToken,
-          expires_in: 100000
+          access_token: signedToken,
+          expires_in: 100000,
+          scope: 'abacus.usage.linux-container.read ' +
+            'abacus.usage.linux-container.write',
+          jti: '254abca5-1c25-40c5-99d7-2cc641791517'
         });
       });
     app.use(routes);
@@ -173,7 +206,7 @@ describe('abacus-cf-bridge-itest', () => {
     start('abacus-cf-bridge');
   });
 
-  after(() => {
+  afterEach(() => {
     const stop = (module) => {
       cp.spawn('npm', ['run', 'stop'],
         { cwd: moduleDir(module), env: clone(process.env) });
@@ -208,7 +241,10 @@ describe('abacus-cf-bridge-itest', () => {
   const checkReport = (cb) => {
     request.get('http://localhost:9088/v1/metering/organizations' +
       '/:organization_id/aggregated/usage', {
-        organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c'
+        organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+        headers: {
+          authorization: 'bearer ' + signedToken
+        }
       },
       (error, response) => {
         try {
@@ -232,8 +268,8 @@ describe('abacus-cf-bridge-itest', () => {
           cb();
         }
         catch (e) {
-          const errorMsg = util.format('Check failed with %s.\nUsage report:\n',
-            e.stack,
+          const errorMsg = util.format('Check failed with %s.\n' +
+            'Usage report:\n', e.stack,
             response ? JSON.stringify(response.body, null, 2) : 'unknown');
           cb(new Error(errorMsg, e));
         }
@@ -288,5 +324,8 @@ describe('abacus-cf-bridge-itest', () => {
       }
     );
   });
-});
+};
 
+describe('abacus-cf-bridge-itest with oAuth', () => test(true));
+
+describe('abacus-cf-bridge-itest without oAuth', () => test(false));
