@@ -45,10 +45,14 @@ const isWithinWindow = (start, end, timeWindow) => {
 };
 
 process.env.API = 'http://localhost:4321';
-process.env.UAA = 'http://localhost:4321';
 
-process.env.CLIENT_ID = 'bridge';
+process.env.CF_CLIENT_ID = 'abacus-cf-bridge';
+process.env.CF_CLIENT_SECRET = 'secret';
+
+process.env.CLIENT_ID = 'abacus-linux-container';
 process.env.CLIENT_SECRET = 'secret';
+process.env.JWTKEY = 'encode';
+process.env.JWTALGO = 'HS256';
 
 // Parse command line options
 const argv = clone(process.argv);
@@ -69,11 +73,11 @@ const totalTimeout = commander.totalTimeout || 60000;
 
 describe('abacus-cf-bridge-itest', () => {
   let server;
-  let submittime;
+  let submittime = new Date();
 
   before(() => {
     const start = (module) => {
-      submittime = new Date();
+      debug('Starting %s in directory %s', module, moduleDir(module));
       const c = cp.spawn('npm', ['run', 'start'], {
         cwd: moduleDir(module),
         env: clone(process.env)
@@ -85,6 +89,19 @@ describe('abacus-cf-bridge-itest', () => {
       c.stderr.on('data', (d) => process.stderr.write(d));
       c.on('exit', (c) => debug('Application exited with code %d', c));
     };
+
+    const encodedToken = 'eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmYTFiMjlmZS03NmE5LT' +
+      'RjMmQtOTAzZS1kZGRkMDU2M2E5ZTMiLCJzdWIiOiJydW50aW1lZXh0IiwiYXV0aG9yaXRp' +
+      'ZXMiOlsic2NpbS5yZWFkIiwidWFhLnJlc291cmNlIiwib3BlbmlkIiwiY2xvdWRfY29udH' +
+      'JvbGxlci5yZWFkIiwic2VydmljZV9icm9rZXIiXSwic2NvcGUiOlsic2NpbS5yZWFkIiwi' +
+      'dWFhLnJlc291cmNlIiwib3BlbmlkIiwiYWJhY3VzLnVzYWdlLmxpbnV4LWNvbnRhaW5lci' +
+      '53cml0ZSIsImFiYWN1cy51c2FnZS5saW51eC1jb250YWluZXIucmVhZCJdLCJjbGllbnRf' +
+      'aWQiOiJydW50aW1lZXh0IiwiY2lkIjoicnVudGltZWV4dCIsImF6cCI6InJ1bnRpbWVleH' +
+      'QiLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwiaWF0IjoxNDQwNDY0MzI5' +
+      'LCJleHAiOjE0NDA1MDc1MjksImlzcyI6Imh0dHBzOi8vdWFhLmNmLm5ldC9vYXV0aC90b2' +
+      'tlbiIsInppZCI6InVhYSIsImF1ZCI6WyJydW50aW1lZXh0Iiwic2NpbSIsImNsb3VkX2Nv' +
+      'bnRyb2xsZXIiLCJ1YWEiLCJvcGVuaWQiXX0.h7XowzPRFP6kbUefs73YQT8AIRotWEdEaw' +
+      'R3CGjQqys';
 
     const app = express();
     const routes = router();
@@ -124,11 +141,17 @@ describe('abacus-cf-bridge-itest', () => {
     routes.get('/v2/apps', (request, response) => {
       response.status(200).send({});
     });
+    routes.get('/v2/info',
+      (request, response) => {
+        response.status(200).send({
+          token_endpoint: 'http://localhost:4321'
+        });
+      });
     routes.get('/oauth/token',
       (request, response) => {
         response.status(200).send({
           token_type: 'bearer',
-          access_token: 'token',
+          access_token: encodedToken,
           expires_in: 100000
         });
       });
@@ -138,6 +161,7 @@ describe('abacus-cf-bridge-itest', () => {
 
     if (!process.env.DB)
       start('abacus-pouchserver');
+    start('abacus-eureka-plugin');
     start('abacus-authserver-plugin');
     start('abacus-provisioning-plugin');
     start('abacus-account-plugin');
@@ -164,6 +188,7 @@ describe('abacus-cf-bridge-itest', () => {
     stop('abacus-account-plugin');
     stop('abacus-provisioning-plugin');
     stop('abacus-authserver-plugin');
+    stop('abacus-eureka-plugin');
     if (!process.env.DB)
       stop('abacus-pouchserver');
 
