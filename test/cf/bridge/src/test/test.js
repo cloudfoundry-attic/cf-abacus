@@ -60,7 +60,7 @@ commander
 const startTimeout = commander.startTimeout || 10000;
 
 // This test timeout
-const totalTimeout = commander.totalTimeout || 60000;
+const totalTimeout = commander.totalTimeout || 120000;
 
 // Token setup
 process.env.API = 'http://localhost:4321';
