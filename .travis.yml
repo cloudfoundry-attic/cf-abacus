@@ -14,7 +14,6 @@ before_install:
   - git clone https://github.com/creationix/nvm.git ~/.nvm
   - source ~/.nvm/nvm.sh
   - nvm install $NODE_VERSION
-  - export DEBUG=abacus-*
 
 install: echo "install"
 
