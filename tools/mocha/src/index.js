@@ -67,7 +67,7 @@ var src = function(file) {
 
 // Return a transform function that transforms a file and records the original
 // source and a source map in the given sets
-var transformer = function(sources, maps) {
+var transformer = function(sources, maps, transformers) {
   // Set up an instrument function that will instrument the relevant code
   var instrumenter = new istanbul.Instrumenter({
     coverageVariable: '__coverage',
@@ -79,6 +79,9 @@ var transformer = function(sources, maps) {
     // Skip files that contain /istanbul ignore file/
     if(/istanbul ignore file/.test(code))
       return code;
+
+    if (transformers[file])
+      return transformers[file];
 
     // Save the original source of each instrumented file
     sources[file] = fs.readFileSync(src(file)).toString();
@@ -92,7 +95,9 @@ var transformer = function(sources, maps) {
     process.stdout.write(
       util.format('Running Istanbul instrumentation on %s\n',
       path.relative(process.cwd(), file)));
-    return instrumenter.instrumentSync(code, file);
+    var transformer = instrumenter.instrumentSync(code, file);
+    transformers[file] = transformer;
+    return transformer;
   };
 };
 
@@ -166,7 +171,7 @@ var runCLI = function() {
   }
 
   // Time the execution of the tests
-  var t0 = new Date();
+  var t0 = Date.now();
 
   // Configure Mocha
   var mocha = new Mocha({
@@ -185,10 +190,11 @@ var runCLI = function() {
   // match our instrumentMatcher
   var sources = [];
   var maps = [];
+  var transformers = [];
   if(commander.istanbul)
     istanbul.hook.hookRequire(
       instrumentMatcher(commander.istanbulIncludes),
-      transformer(sources, maps));
+      transformer(sources, maps, transformers));
 
   // Run the test with Mocha
   var testDir = path.join(target(), 'test');
