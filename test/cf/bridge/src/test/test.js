@@ -210,10 +210,12 @@ const test = (secured) => {
   });
 
   afterEach((done) => {
-    let counter = 0;
+    let counter = 11;
     const finishCb = (module, code) => {
-      debug('Module %s exited with code %d', module, code);
-      if (++counter == 11) {
+      counter--;
+      debug('Module %s exited with code %d. Left %d modules',
+        module, code, counter);
+      if (counter === 0) {
         debug('All modules stopped. Exiting test');
         done();
       }
@@ -241,8 +243,7 @@ const test = (secured) => {
     stop('abacus-provisioning-plugin', finishCb);
     stop('abacus-authserver-plugin', finishCb);
     stop('abacus-eureka-plugin', finishCb);
-    if (!process.env.DB)
-      stop('abacus-pouchserver', finishCb);
+    stop('abacus-pouchserver', finishCb);
 
     server.close();
   });
