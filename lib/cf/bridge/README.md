@@ -49,8 +49,8 @@ In case of secured Abacus set the JWT algorithm, key and the resource provider c
 ```bash
 export CLIENT_ID=abacus-linux-container
 export CLIENT_SECRET=secret
-export JWTKEY=secret;
-export JWTALGO=HS256;
+export JWTKEY=secret
+export JWTALGO=HS256
 ```
 
 You can optionally enable the debug output with:
@@ -97,7 +97,6 @@ applications:
     COLLECTOR: abacus-usage-collector
     DB: abacus-pouchserver
     EUREKA: abacus-eureka-plugin
-    UAA: https://uaa.bosh-lite.com:443
     API: https://api.bosh-lite.com:443
     NODE_MODULES_CACHE: false
     CF_CLIENT_ID: abacus-cf-bridge
@@ -107,7 +106,7 @@ applications:
 In case you are running a secured Abacus installation, add the following entries:
 ```yml
     SECURED: true
-    AUTH_SERVER: api
+    AUTH_SERVER: https://api.bosh-lite.com:443
     CLIENT_ID: abacus-linux-container
     CLIENT_SECRET: secret
     JWTKEY: |+
