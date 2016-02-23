@@ -111,7 +111,7 @@ In case you are running a secured Abacus installation, add the following entries
     CLIENT_SECRET: secret
     JWTKEY: |+
       -----BEGIN PUBLIC KEY-----
-      ... <public key in PEM format> ... 
+      ... <UAA public key in PEM format> ... 
       -----END PUBLIC KEY-----
     JWTALGO: RS256
 ```

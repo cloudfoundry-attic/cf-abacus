@@ -32,7 +32,7 @@
   "dependencies": {
     "abacus-clone": "file:../../lib/utils/clone",
     "abacus-mocha": "file:../../tools/mocha",
-    "abacus-oauth": "file:../../utils/oauth",
+    "abacus-oauth": "file:../../lib/utils/oauth",
     "abacus-request": "file:../../lib/utils/request",
     "babel-preset-es2015": "^6.1.4",
     "commander": "^2.8.1",
