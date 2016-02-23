@@ -93,7 +93,7 @@ applications:
   disk_quota: 512M
   env:
     CONF: default
-    DEBUG: abacus-cf*
+    DEBUG: e-abacus*,abacus-cf*
     COLLECTOR: abacus-usage-collector
     DB: abacus-pouchserver
     EUREKA: abacus-eureka-plugin
