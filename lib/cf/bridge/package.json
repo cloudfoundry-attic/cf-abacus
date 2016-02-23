@@ -39,6 +39,7 @@
     "abacus-cluster": "file:../../utils/cluster",
     "abacus-debug": "file:../../utils/debug",
     "abacus-launcher": "file:../../utils/launcher",
+    "abacus-oauth": "file:../../utils/oauth",
     "abacus-request": "file:../../utils/request",
     "abacus-router": "file:../../utils/router",
     "abacus-throttle": "file:../../utils/throttle",

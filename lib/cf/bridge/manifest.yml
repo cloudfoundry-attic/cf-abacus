@@ -9,11 +9,18 @@ applications:
     CONF: default
     DEBUG: e-abacus-*
     COLLECTOR: abacus-usage-collector
-    DB: abacus-pouchserver
     EUREKA: abacus-eureka-plugin
     API: api
-    CLIENT_ID: abacus-linux-container
-    CLIENT_SECRET: secret
     CF_CLIENT_ID: abacus-cf-bridge
     CF_CLIENT_SECRET: secret
     NODE_MODULES_CACHE: false
+    SECURED: false
+    AUTH_SERVER: api
+    CLIENT_ID: abacus-linux-container
+    CLIENT_SECRET: secret
+    JWTKEY: |+
+      -----BEGIN PUBLIC KEY-----
+      ... <UAA public key in PEM format> ...
+      -----END PUBLIC KEY-----
+    JWTALGO: RS256
+    THROTTLE: 2
