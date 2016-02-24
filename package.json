@@ -114,6 +114,7 @@
     "abacus-urienv": "file:lib/utils/urienv",
     "abacus-vcapenv": "file:lib/utils/vcapenv",
     "abacus-webapp": "file:lib/utils/webapp",
+    "abacus-webhook": "file:lib/utils/webhook",
     "abacus-yieldable": "file:lib/utils/yieldable",
     "abacus-perf-test": "file:test/perf",
     "abacus-usage-collector-itest": "file:test/metering/collector",

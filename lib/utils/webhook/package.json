@@ -1,0 +1,49 @@
+{
+  "name": "abacus-webhook",
+  "description": "Wrapper around the request module providing an easy way to implement a Webhook",
+  "license": "Apache-2.0",
+  "version": "0.0.5-rc.0",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/webhook",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "lib/",
+    "src/"
+  ],
+  "main": "lib/index.js",
+  "scripts": {
+    "babel": "babel",
+    "test": "eslint && mocha",
+    "lint": "eslint",
+    "pub": "publish"
+  },
+  "dependencies": {
+    "abacus-debug": "file:../debug",
+    "abacus-request": "file:../request",
+    "abacus-transform": "file:../transform",
+    "babel-preset-es2015": "^6.1.4",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "abacus-babel": "file:../../../tools/babel",
+    "abacus-batch": "file:../batch",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-publish": "file:../../../tools/publish"
+  },
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=2.0.0"
+  }
+}
