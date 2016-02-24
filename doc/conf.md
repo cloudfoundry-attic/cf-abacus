@@ -29,14 +29,16 @@ To run Abacus in secure mode (HTTPS + oAuth tokens) you should modify Abacus app
 The set of properties that has to be changed contains:
 * SECURED - `true` / `false` - Use `true` to enable the security checks
 * AUTHSERVER - Authorization Server URL used to get access token endpoint in the format of `https://hostname:port` or just `https://hostname`.
-* CLIENTID - Client identifier registered with the specified authorization server.
-* CLIENTSECRET - Client secret used to authenticate the client identifier with the authorization server.
+* CLIENT_ID - Client identifier registered with the specified authorization server.
+* CLIENT_SECRET - Client secret used to authenticate the client identifier with the authorization server.
 * JWTKEY - Key used to sign the JWT- JWS
 * JWTALGO - Cryptographic algorithm used to sign and secure JWT-JWS
 
+You can use CF UAA or an Abacus authorization server as a oAuth token provider. We provide a sample implementation of such server - the Abacus authorization plugin.
+
 ### Abacus authorization server
 Use the following configuration:
-```
+```yml
   SECURED: true
   AUTH_SERVER: abacus-authserver-plugin
   CLIENT_ID: abacus
@@ -46,13 +48,12 @@ Use the following configuration:
 ```
 
 ### CF UAA
-Check your UAA configuration or CF deploy manifest on how the JSON Web Token (JWT) is signed. Check the:
+Check your UAA configuration or CF deploy manifest on how the JSON Web Token (JWT) is signed. Search for:
 * JWT algorithm 
 * public key (or secret)
 
-Abacus configuration snippet for UAA:
-
-```
+Abacus configuration snippet for UAA should look like this:
+```yml
     SECURED: true
     AUTH_SERVER: https://api.<CF domain>:443
     CLIENT_ID: abacus
@@ -63,7 +64,6 @@ Abacus configuration snippet for UAA:
       -----END PUBLIC KEY-----
     JWTALGO: RS256
 ```
-
 
 ## Logging
 
