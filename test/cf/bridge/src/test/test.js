@@ -307,8 +307,8 @@ const test = (secured) => {
       }
 
       if (Date.now() - startTimestamp > timeout)
-        setImmediate(() => done(util.format('Expectation not met for %d ms. ' +
-          'Error: %o', timeout, err)));
+        setImmediate(() => done(new Error(util.format('Expectation not met ' +
+          'for %d ms. Error: %o', timeout, err))));
       else
         setTimeout(() => {
           debug('Calling %s after >= %d ms...', fn.name, interval);
