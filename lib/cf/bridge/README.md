@@ -121,11 +121,28 @@ To limit the number of events submitted to Abacus add:
     THROTTLE: 2
 ```
 
+Add the DB client implementation you would like to use with the bridge:
+```yml
+    DBCLIENT: abacus-couchclient
+```
+
 Build, pack and push the bridge to Cloud Foundry:
 ```bash
 npm install && npm run babel && npm run lint && npm test
 npm run cfpack
 npm run cfpush
+```
+
+Create a database service instance, called `db` and bind it to `abacus-cf-bridge`:
+```bash
+cf create-service mongodb-3.0.7-lite free db
+cf bind-service abacus-cf-bridge db
+```
+
+In case you want to use external DB you can do this by adding `DB` to the deployment manifest:
+```yml
+    DB: mongodb://user:password@mymongohost.com:27017/databaseName?ssl=true
+    DBCLIENT: abacus-mongoclient
 ```
 
 Start the bridge:

@@ -11,6 +11,8 @@ applications:
     COLLECTOR: abacus-usage-collector
     EUREKA: abacus-eureka-plugin
     API: api
+    DB: abacus-pouchserver
+    DBCLIENT: abacus-couchclient
     CF_CLIENT_ID: abacus-cf-bridge
     CF_CLIENT_SECRET: secret
     NODE_MODULES_CACHE: false
