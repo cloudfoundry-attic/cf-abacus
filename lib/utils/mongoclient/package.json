@@ -35,7 +35,6 @@
     "abacus-request": "file:../request",
     "abacus-transform": "file:../transform",
     "babel-preset-es2015": "^6.1.4",
-    "memdown": "^1.1.0",
     "mongodb": "~2.0",
     "underscore": "^1.8.3"
   },
