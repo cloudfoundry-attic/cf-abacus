@@ -14,10 +14,9 @@ Differences between Couch and Mongo
 -----------------------------------
 
 ### Revisions
-Couch supports revisions of documents using the `_rev` filed. Updates are done specifying the previous revision, while Mongo does not have this concept.
+Couch supports revisions of documents using the `_rev` field. Updates are done specifying the previous revision in the document, while Mongo does not have this concept.
 
-The revisions do not impact the API or the implementation itself, but Abacus modules should store the _rev field in memory, so they can provide it during 
-update to be able to function with both Couch and Mongo clients.
+The revisions do not impact the API or the implementation itself, but Abacus modules should store the _rev field in memory, so they can provide it on update to be able to function with both Couch and Mongo clients.
 
 
 ### User provided vs stored fields
@@ -29,11 +28,11 @@ The API function callbacks with CouchDB client module will return the non-prefix
 To keep the same behaviour the MongoDB client returns the `id` field.
 
 
-### Duplicating documents in request
+### Duplicated documents
 
-The multi-document functions such as `allDocs` and `bulkDocs` return the result in the same form as the input array of document ids.
+The multi-document functions such as `allDocs` and `bulkDocs` return the result in the same order as the input array of document ids.
 
-This is important if the list of ids contains duplicated entries:
+If the list of ids contains duplicated entries:
 ```
 id1
 id2
@@ -41,7 +40,7 @@ id3
 id1
 ```
 
-The result with CouchDB will be:
+then the result with CouchDB is:
 ```
 value1
 value2
@@ -86,7 +85,7 @@ This client adds the same flags, based on different criteria - error code 11000 
 
 This module adds support for the collections in MongoDB. If the URI is in the form ```mongodb://user:password@host:port/database/collection```, then the documents will be saved under the specified collection.
 
-If no collection is specified, then the default `documents` will be used.
+If no collection is specified, then the default collection `documents` will be used.
 
 
 ### Partitioning
@@ -100,12 +99,12 @@ This enables the use of managed databases, that usually provide service instance
 
 ### URI
 
-This client appends all options specified by the user to the partitions created during its normal functioning. An example is the Mongo schema, specified as option: `ssl=true`.
+This client appends all options specified by the user to the partitions created during its normal functioning. An example is the Mongo schema, specified as option `?ssl=true` after the address.
 
 
 ### Connection options
 
-Couch client passes special options to the DB to avoid creating a database on read. In Mongo this is the default behaviour.
+Couch client passes `skip_setup: true` option to avoid creating a database on read access. In Mongo this is the default behaviour and we don't need any additional flags.
 
 The Mongo client uses a pool of 1 connection since every DB is pooled internally. It also uses socket keep alive and connection timeout of 30000 ms by default.
 
