@@ -183,8 +183,8 @@ describe('abacus-usage-accumulator-itest', () => {
       o + 1].join('-');
     const pid = () => 'basic';
     const ppid = () => 'test-pricing-basic';
-    const rpid = () => 'basic-test-rating-plan';
-    const mpid = () => 'basic-test-metering-plan';
+    const rpid = () => 'test-rating-plan';
+    const mpid = () => 'test-metering-plan';
 
     const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87',
       o + 1, ri + 1].join('-');
