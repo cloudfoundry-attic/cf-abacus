@@ -334,15 +334,15 @@ describe('abacus-usage-reporting-itest', () => {
     const pid = (ri) => ri % 4 < 2 ? 'basic' : 'standard';
     
     // The metering plan id
-    const mpid = (ri) => 'basic-test-metering-plan';
+    const mpid = (ri) => 'test-metering-plan';
 
     // One of the two rating plans based on resource instance index
     const ppid = (ri) => ri % 4 < 2 ? 'test-pricing-basic' :
       'test-pricing-standard';
 
     // One of the two pricing plans based on resource instance index
-    const rpid = (ri) => ri % 4 < 2 ? 'basic-test-rating-plan' :
-      'standard-test-rating-plan';
+    const rpid = (ri) => ri % 4 < 2 ? 'test-rating-plan' :
+      'test-rating-plan-standard';
 
     // Use number sequences to find expected aggregated value at any given
     // resource instance index and a given usage index based on the generated
