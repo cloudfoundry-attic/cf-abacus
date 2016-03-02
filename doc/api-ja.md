@@ -723,16 +723,64 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
   "end": 1435708799999,
   "processed": 1435708800000,
   "organization_id": "us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
-  "charge": 46.09,
+  "windows": [
+    [{
+      "charge": 46.09,
+    }],
+    [{
+      "charge": 46.09,
+    }],
+    [{
+      "charge": 46.09,
+    }],
+    [{
+      "charge": 46.09,
+    }],
+    [{
+      "charge": 46.09,
+    }]
+  ],
   "id": "k-a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27-t-0001435622400000",
   "spaces": [
     {
       "space_id": "aaeae239-f3f8-483c-9dd0-de5d41c38b6a",
-      "charge": 46.09,
+      "windows": [
+        [{
+          "charge": 46.09,
+        }],
+        [{
+          "charge": 46.09,
+        }],
+        [{
+          "charge": 46.09,
+        }],
+        [{
+          "charge": 46.09,
+        }],
+        [{
+          "charge": 46.09,
+        }]
+      ],
       "consumers": [
         {
           "consumer_id": "app:d98b5916-3c77-44b9-ac12-045678edabae",
-          "charge": 46.09,
+          "windows": [
+            [{
+              "charge": 46.09,
+            }],
+            [{
+              "charge": 46.09,
+            }],
+            [{
+              "charge": 46.09,
+            }],
+            [{
+              "charge": 46.09,
+            }],
+            [{
+              "charge": 46.09,
+            }]
+          ],
           "resources": [
             {
               "resource_id": "object-storage",
@@ -740,48 +788,220 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
               "aggregated_usage": [
                 {
                   "metric": "storage",
-                  "quantity": 1,
-                  "summary": 1,
-                  "charge": 1
+                  "windows": [
+                    [{
+                      "quantity": 1,
+                      "summary": 1,
+                      "charge": 1
+                    }],
+                    [{
+                      "quantity": 1,
+                      "summary": 1,
+                      "charge": 1
+                    }],
+                    [{
+                      "quantity": 1,
+                      "summary": 1,
+                      "charge": 1
+                    }],
+                    [{
+                      "quantity": 1,
+                      "summary": 1,
+                      "charge": 1
+                    }],
+                    [{
+                      "quantity": 1,
+                      "summary": 1,
+                      "charge": 1
+                    }]
+                  ]
                 },
                 {
                   "metric": "thousand_light_api_calls",
-                  "quantity": 3,
-                  "summary": 3,
-                  "charge": 0.09
+                  "windows": [
+                    [{
+                      "quantity": 3,
+                      "summary": 3,
+                      "charge": 0.09
+                    }],
+                    [{
+                      "quantity": 3,
+                      "summary": 3,
+                      "charge": 0.09
+                    }],
+                    [{
+                      "quantity": 3,
+                      "summary": 3,
+                      "charge": 0.09
+                    }],
+                    [{
+                      "quantity": 3,
+                      "summary": 3,
+                      "charge": 0.09
+                    }],
+                    [{
+                      "quantity": 3,
+                      "summary": 3,
+                      "charge": 0.09
+                    }]
+                  ]
                 },
                 {
                   "metric": "heavy_api_calls",
-                  "quantity": 300,
-                  "summary": 300,
-                  "charge": 45
+                  "windows": [
+                    [{
+                      "quantity": 300,
+                      "summary": 300,
+                      "charge": 45
+                    }],
+                    [{
+                      "quantity": 300,
+                      "summary": 300,
+                      "charge": 45
+                    }],
+                    [{
+                      "quantity": 300,
+                      "summary": 300,
+                      "charge": 45
+                    }],
+                    [{
+                      "quantity": 300,
+                      "summary": 300,
+                      "charge": 45
+                    }],
+                    [{
+                      "quantity": 300,
+                      "summary": 300,
+                      "charge": 45
+                    }]
+                  ]
                 }
               ],
               "plans": [
                 {
                   "plan_id": "basic",
-                  "charge": 46.09,
+                  "windows": [
+                    [{
+                      "charge": 46.09,
+                    }],
+                    [{
+                      "charge": 46.09,
+                    }],
+                    [{
+                      "charge": 46.09,
+                    }],
+                    [{
+                      "charge": 46.09,
+                    }],
+                    [{
+                      "charge": 46.09,
+                    }]
+                  ],
                   "aggregated_usage": [
                     {
                       "metric": "storage",
-                      "quantity": 1,
-                      "summary": 1,
-                      "cost": 1,
-                      "charge": 1
+                      "windows": [
+                        [{
+                          "quantity": 1,
+                          "summary": 1,
+                          "cost": 1,
+                          "charge": 1
+                        }],
+                        [{
+                          "quantity": 1,
+                          "summary": 1,
+                          "cost": 1,
+                          "charge": 1
+                        }],
+                        [{
+                          "quantity": 1,
+                          "summary": 1,
+                          "cost": 1,
+                          "charge": 1
+                        }],
+                        [{
+                          "quantity": 1,
+                          "summary": 1,
+                          "cost": 1,
+                          "charge": 1
+                        }],
+                        [{
+                          "quantity": 1,
+                          "summary": 1,
+                          "cost": 1,
+                          "charge": 1
+                        }]
+                      ]
                     },
                     {
                       "metric": "thousand_light_api_calls",
-                      "quantity": 3,
-                      "summary": 3,
-                      "cost": 0.09,
-                      "charge": 0.09
+                      "windows": [
+                        [{
+                          "quantity": 3,
+                          "summary": 3,
+                          "cost": 0.09,
+                          "charge": 0.09
+                        }],
+                        [{
+                          "quantity": 3,
+                          "summary": 3,
+                          "cost": 0.09,
+                          "charge": 0.09
+                        }],
+                        [{
+                          "quantity": 3,
+                          "summary": 3,
+                          "cost": 0.09,
+                          "charge": 0.09
+                        }],
+                        [{
+                          "quantity": 3,
+                          "summary": 3,
+                          "cost": 0.09,
+                          "charge": 0.09
+                        }],
+                        [{
+                          "quantity": 3,
+                          "summary": 3,
+                          "cost": 0.09,
+                          "charge": 0.09
+                        }]
+                      ]
                     },
                     {
                       "metric": "heavy_api_calls",
-                      "quantity": 300,
-                      "summary": 300,
-                      "cost": 45,
-                      "charge": 45
+                      "windows": [
+                        [{
+                          "quantity": 300,
+                          "summary": 300,
+                          "cost": 45,
+                          "charge": 45
+                        }],
+                        [{
+                          "quantity": 300,
+                          "summary": 300,
+                          "cost": 45,
+                          "charge": 45
+                        }],
+                        [{
+                          "quantity": 300,
+                          "summary": 300,
+                          "cost": 45,
+                          "charge": 45
+                        }],
+                        [{
+                          "quantity": 300,
+                          "summary": 300,
+                          "cost": 45,
+                          "charge": 45
+                        }],
+                        [{
+                          "quantity": 300,
+                          "summary": 300,
+                          "cost": 45,
+                          "charge": 45
+                        }]
+                      ]
                     }
                   ]
                 }
@@ -793,52 +1013,225 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
       "resources": [
         {
           "resource_id": "object-storage",
-          "charge": 46.09,
+          "windows": [
+            [{
+              "charge": 46.09,
+            }],
+            [{
+              "charge": 46.09,
+            }],
+            [{
+              "charge": 46.09,
+            }],
+            [{
+              "charge": 46.09,
+            }],
+            [{
+              "charge": 46.09,
+            }]
+          ],
           "aggregated_usage": [
             {
               "metric": "storage",
-              "quantity": 1,
-              "summary": 1,
-              "charge": 1
+              "windows": [
+                [{
+                  "quantity": 1,
+                  "summary": 1,
+                  "charge": 1
+                }],
+                [{
+                  "quantity": 1,
+                  "summary": 1,
+                  "charge": 1
+                }],
+                [{
+                  "quantity": 1,
+                  "summary": 1,
+                  "charge": 1
+                }],
+                [{
+                  "quantity": 1,
+                  "summary": 1,
+                  "charge": 1
+                }],
+                [{
+                  "quantity": 1,
+                  "summary": 1,
+                  "charge": 1
+                }]
+              ]
             },
             {
               "metric": "thousand_light_api_calls",
-              "quantity": 3,
-              "summary": 3,
-              "charge": 0.09
+              "windows": [
+                [{
+                  "quantity": 3,
+                  "summary": 3,
+                  "charge": 0.09
+                }],
+                [{
+                  "quantity": 3,
+                  "summary": 3,
+                  "charge": 0.09
+                }],
+                [{
+                  "quantity": 3,
+                  "summary": 3,
+                  "charge": 0.09
+                }],
+                [{
+                  "quantity": 3,
+                  "summary": 3,
+                  "charge": 0.09
+                }],
+                [{
+                  "quantity": 3,
+                  "summary": 3,
+                  "charge": 0.09
+                }]
+              ]
             },
             {
               "metric": "heavy_api_calls",
-              "quantity": 300,
-              "summary": 300,
-              "charge": 45
+              "windows": [
+                [{
+                  "quantity": 300,
+                  "summary": 300,
+                  "charge": 45
+                }],
+                [{
+                  "quantity": 300,
+                  "summary": 300,
+                  "charge": 45
+                }],
+                [{
+                  "quantity": 300,
+                  "summary": 300,
+                  "charge": 45
+                }],
+                [{
+                  "quantity": 300,
+                  "summary": 300,
+                  "charge": 45
+                }],
+                [{
+                  "quantity": 300,
+                  "summary": 300,
+                  "charge": 45
+                }]
+              ]
             }
           ],
           "plans": [
             {
               "plan_id": "basic",
-              "charge": 46.09,
+              "windows": [
+                [{
+                  "charge": 46.09,
+                }],
+                [{
+                  "charge": 46.09,
+                }],
+                [{
+                  "charge": 46.09,
+                }],
+                [{
+                  "charge": 46.09,
+                }],
+                [{
+                  "charge": 46.09,
+                }]
+              ],
               "aggregated_usage": [
                 {
                   "metric": "storage",
-                  "quantity": 1,
-                  "summary": 1,
-                  "cost": 1,
-                  "charge": 1
+                  "windows": [
+                    [{
+                      "quantity": 1,
+                      "summary": 1,
+                      "charge": 1
+                    }],
+                    [{
+                      "quantity": 1,
+                      "summary": 1,
+                      "charge": 1
+                    }],
+                    [{
+                      "quantity": 1,
+                      "summary": 1,
+                      "charge": 1
+                    }],
+                    [{
+                      "quantity": 1,
+                      "summary": 1,
+                      "charge": 1
+                    }],
+                    [{
+                      "quantity": 1,
+                      "summary": 1,
+                      "charge": 1
+                    }]
+                  ]
                 },
                 {
                   "metric": "thousand_light_api_calls",
-                  "quantity": 3,
-                  "summary": 3,
-                  "cost": 0.09,
-                  "charge": 0.09
+                  "windows": [
+                    [{
+                      "quantity": 3,
+                      "summary": 3,
+                      "charge": 0.09
+                    }],
+                    [{
+                      "quantity": 3,
+                      "summary": 3,
+                      "charge": 0.09
+                    }],
+                    [{
+                      "quantity": 3,
+                      "summary": 3,
+                      "charge": 0.09
+                    }],
+                    [{
+                      "quantity": 3,
+                      "summary": 3,
+                      "charge": 0.09
+                    }],
+                    [{
+                      "quantity": 3,
+                      "summary": 3,
+                      "charge": 0.09
+                    }]
+                  ]
                 },
                 {
                   "metric": "heavy_api_calls",
-                  "quantity": 300,
-                  "summary": 300,
-                  "cost": 45,
-                  "charge": 45
+                  "windows": [
+                    [{
+                      "quantity": 300,
+                      "summary": 300,
+                      "charge": 45
+                    }],
+                    [{
+                      "quantity": 300,
+                      "summary": 300,
+                      "charge": 45
+                    }],
+                    [{
+                      "quantity": 300,
+                      "summary": 300,
+                      "charge": 45
+                    }],
+                    [{
+                      "quantity": 300,
+                      "summary": 300,
+                      "charge": 45
+                    }],
+                    [{
+                      "quantity": 300,
+                      "summary": 300,
+                      "charge": 45
+                    }]
+                  ]
                 }
               ]
             }
@@ -850,52 +1243,225 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
   "resources": [
     {
       "resource_id": "object-storage",
-      "charge": 46.09,
+      "windows": [
+        [{
+          "charge": 46.09,
+        }],
+        [{
+          "charge": 46.09,
+        }],
+        [{
+          "charge": 46.09,
+        }],
+        [{
+          "charge": 46.09,
+        }],
+        [{
+          "charge": 46.09,
+        }]
+      ],
       "aggregated_usage": [
         {
           "metric": "storage",
-          "quantity": 1,
-          "summary": 1,
-          "charge": 1
+          "windows": [
+            [{
+              "quantity": 1,
+              "summary": 1,
+              "charge": 1
+            }],
+            [{
+              "quantity": 1,
+              "summary": 1,
+              "charge": 1
+            }],
+            [{
+              "quantity": 1,
+              "summary": 1,
+              "charge": 1
+            }],
+            [{
+              "quantity": 1,
+              "summary": 1,
+              "charge": 1
+            }],
+            [{
+              "quantity": 1,
+              "summary": 1,
+              "charge": 1
+            }]
+          ]
         },
         {
           "metric": "thousand_light_api_calls",
-          "quantity": 3,
-          "summary": 3,
-          "charge": 0.09
+          "windows": [
+            [{
+              "quantity": 3,
+              "summary": 3,
+              "charge": 0.09
+            }],
+            [{
+              "quantity": 3,
+              "summary": 3,
+              "charge": 0.09
+            }],
+            [{
+              "quantity": 3,
+              "summary": 3,
+              "charge": 0.09
+            }],
+            [{
+              "quantity": 3,
+              "summary": 3,
+              "charge": 0.09
+            }],
+            [{
+              "quantity": 3,
+              "summary": 3,
+              "charge": 0.09
+            }]
+          ]
         },
         {
           "metric": "heavy_api_calls",
-          "quantity": 300,
-          "summary": 300,
-          "charge": 45
+          "windows": [
+            [{
+              "quantity": 300,
+              "summary": 300,
+              "charge": 45
+            }],
+            [{
+              "quantity": 300,
+              "summary": 300,
+              "charge": 45
+            }],
+            [{
+              "quantity": 300,
+              "summary": 300,
+              "charge": 45
+            }],
+            [{
+              "quantity": 300,
+              "summary": 300,
+              "charge": 45
+            }],
+            [{
+              "quantity": 300,
+              "summary": 300,
+              "charge": 45
+            }]
+          ]
         }
       ],
       "plans": [
         {
           "plan_id": "basic",
-          "charge": 46.09,
+          "windows": [
+            [{
+              "charge": 46.09,
+            }],
+            [{
+              "charge": 46.09,
+            }],
+            [{
+              "charge": 46.09,
+            }],
+            [{
+              "charge": 46.09,
+            }],
+            [{
+              "charge": 46.09,
+            }]
+          ],
           "aggregated_usage": [
             {
               "metric": "storage",
-              "quantity": 1,
-              "summary": 1,
-              "cost": 1,
-              "charge": 1
+              "windows": [
+                [{
+                  "quantity": 1,
+                  "summary": 1,
+                  "charge": 1
+                }],
+                [{
+                  "quantity": 1,
+                  "summary": 1,
+                  "charge": 1
+                }],
+                [{
+                  "quantity": 1,
+                  "summary": 1,
+                  "charge": 1
+                }],
+                [{
+                  "quantity": 1,
+                  "summary": 1,
+                  "charge": 1
+                }],
+                [{
+                  "quantity": 1,
+                  "summary": 1,
+                  "charge": 1
+                }]
+              ]
             },
             {
               "metric": "thousand_light_api_calls",
-              "quantity": 3,
-              "summary": 3,
-              "cost": 0.09,
-              "charge": 0.09
+              "windows": [
+                [{
+                  "quantity": 3,
+                  "summary": 3,
+                  "charge": 0.09
+                }],
+                [{
+                  "quantity": 3,
+                  "summary": 3,
+                  "charge": 0.09
+                }],
+                [{
+                  "quantity": 3,
+                  "summary": 3,
+                  "charge": 0.09
+                }],
+                [{
+                  "quantity": 3,
+                  "summary": 3,
+                  "charge": 0.09
+                }],
+                [{
+                  "quantity": 3,
+                  "summary": 3,
+                  "charge": 0.09
+                }]
+              ]
             },
             {
               "metric": "heavy_api_calls",
-              "quantity": 300,
-              "summary": 300,
-              "cost": 45,
-              "charge": 45
+              "windows": [
+                [{
+                  "quantity": 300,
+                  "summary": 300,
+                  "charge": 45
+                }],
+                [{
+                  "quantity": 300,
+                  "summary": 300,
+                  "charge": 45
+                }],
+                [{
+                  "quantity": 300,
+                  "summary": 300,
+                  "charge": 45
+                }],
+                [{
+                  "quantity": 300,
+                  "summary": 300,
+                  "charge": 45
+                }],
+                [{
+                  "quantity": 300,
+                  "summary": 300,
+                  "charge": 45
+                }]
+              ]
             }
           ]
         }
@@ -932,8 +1498,20 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
     "organization_id": {
       "type": "string"
     },
-    "charge": {
-      "type": "number"
+    "windows": {
+      "type": "array",
+      "items": {
+        "title": "cwindow",
+        "type": "object",
+        "properties": {
+          "charge": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "charge"
+        ]
+      }
     },
     "resources": {
       "type": "array",
@@ -945,8 +1523,20 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
           "resource_id": {
             "type": "string"
           },
-          "charge": {
-            "type": "number"
+          "windows": {
+            "type": "array",
+            "items": {
+              "title": "cwindow",
+              "type": "object",
+              "properties": {
+                "charge": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "charge"
+              ]
+            }
           },
           "aggregated_usage": {
             "type": "array",
@@ -958,21 +1548,33 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
                 "metric": {
                   "type": "string"
                 },
-                "quantity": {
-                  "type": "number"
-                },
-                "summary": {
-                  "type": "number"
-                },
-                "charge": {
-                  "type": "number"
+                "windows": {
+                  "type": "array",
+                  "items": {
+                    "title": "rwindow",
+                    "type": "object",
+                    "properties": {
+                      "quantity": {
+                        "type": "number"
+                      },
+                      "summary": {
+                        "type": "number"
+                      },
+                      "charge": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "quantity",
+                      "summary",
+                      "charge"
+                    ]
+                  }
                 }
               },
               "required": [
                 "metric",
-                "quantity",
-                "summary",
-                "charge"
+                "windows"
               ],
               "additionalProperties": false
             },
@@ -988,8 +1590,20 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
                 "plan_id": {
                   "type": "string"
                 },
-                "charge": {
-                  "type": "number"
+                "windows": {
+                  "type": "array",
+                  "items": {
+                    "title": "cwindow",
+                    "type": "object",
+                    "properties": {
+                      "charge": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "charge"
+                    ]
+                  }
                 },
                 "aggregated_usage": {
                   "type": "array",
@@ -1001,25 +1615,37 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
                       "metric": {
                         "type": "string"
                       },
-                      "quantity": {
-                        "type": "number"
-                      },
-                      "summary": {
-                        "type": "number"
-                      },
-                      "cost": {
-                        "type": "number"
-                      },
-                      "charge": {
-                        "type": "number"
+                      "windows": {
+                        "type": "array",
+                        "items": {
+                          "title": "pwindow",
+                          "type": "object",
+                          "properties": {
+                            "quantity": {
+                              "type": "number"
+                            },
+                            "summary": {
+                              "type": "number"
+                            },
+                            "cost": {
+                              "type": "number"
+                            },
+                            "charge": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "quantity",
+                            "summary",
+                            "cost",
+                            "charge"
+                          ]
+                        }
                       }
                     },
                     "required": [
                       "metric",
-                      "quantity",
-                      "summary",
-                      "cost",
-                      "charge"
+                      "windows"
                     ],
                     "additionalProperties": false
                   },
@@ -1028,7 +1654,7 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
               },
               "required": [
                 "plan_id",
-                "charge",
+                "windows",
                 "aggregated_usage"
               ],
               "additionalProperties": false
@@ -1038,7 +1664,7 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
         },
         "required": [
           "resource_id",
-          "charge",
+          "windows",
           "aggregated_usage",
           "plans"
         ],
@@ -1056,8 +1682,20 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
           "space_id": {
             "type": "string"
           },
-          "charge": {
-            "type": "number"
+          "windows": {
+            "type": "array",
+            "items": {
+              "title": "cwindow",
+              "type": "object",
+              "properties": {
+                "charge": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "charge"
+              ]
+            }
           },
           "resources": {
             "type": "array",
@@ -1069,8 +1707,20 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
                 "resource_id": {
                   "type": "string"
                 },
-                "charge": {
-                  "type": "number"
+                "windows": {
+                  "type": "array",
+                  "items": {
+                    "title": "cwindow",
+                    "type": "object",
+                    "properties": {
+                      "charge": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "charge"
+                    ]
+                  }
                 },
                 "aggregated_usage": {
                   "type": "array",
@@ -1082,21 +1732,33 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
                       "metric": {
                         "type": "string"
                       },
-                      "quantity": {
-                        "type": "number"
-                      },
-                      "summary": {
-                        "type": "number"
-                      },
-                      "charge": {
-                        "type": "number"
+                      "windows": {
+                        "type": "array",
+                        "items": {
+                          "title": "rwindow",
+                          "type": "object",
+                          "properties": {
+                            "quantity": {
+                              "type": "number"
+                            },
+                            "summary": {
+                              "type": "number"
+                            },
+                            "charge": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "quantity",
+                            "summary",
+                            "charge"
+                          ]
+                        }
                       }
                     },
                     "required": [
                       "metric",
-                      "quantity",
-                      "summary",
-                      "charge"
+                      "windows"
                     ],
                     "additionalProperties": false
                   },
@@ -1112,8 +1774,20 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
                       "plan_id": {
                         "type": "string"
                       },
-                      "charge": {
-                        "type": "number"
+                      "windows": {
+                        "type": "array",
+                        "items": {
+                          "title": "cwindow",
+                          "type": "object",
+                          "properties": {
+                            "charge": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "charge"
+                          ]
+                        }
                       },
                       "aggregated_usage": {
                         "type": "array",
@@ -1125,25 +1799,37 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
                             "metric": {
                               "type": "string"
                             },
-                            "quantity": {
-                              "type": "number"
-                            },
-                            "summary": {
-                              "type": "number"
-                            },
-                            "cost": {
-                              "type": "number"
-                            },
-                            "charge": {
-                              "type": "number"
+                            "windows": {
+                              "type": "array",
+                              "items": {
+                                "title": "pwindow",
+                                "type": "object",
+                                "properties": {
+                                  "quantity": {
+                                    "type": "number"
+                                  },
+                                  "summary": {
+                                    "type": "number"
+                                  },
+                                  "cost": {
+                                    "type": "number"
+                                  },
+                                  "charge": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "quantity",
+                                  "summary",
+                                  "cost",
+                                  "charge"
+                                ]
+                              }
                             }
                           },
                           "required": [
                             "metric",
-                            "quantity",
-                            "summary",
-                            "cost",
-                            "charge"
+                            "windows"
                           ],
                           "additionalProperties": false
                         },
@@ -1152,7 +1838,7 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
                     },
                     "required": [
                       "plan_id",
-                      "charge",
+                      "windows",
                       "aggregated_usage"
                     ],
                     "additionalProperties": false
@@ -1162,7 +1848,7 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
               },
               "required": [
                 "resource_id",
-                "charge",
+                "windows",
                 "aggregated_usage",
                 "plans"
               ],
@@ -1180,8 +1866,20 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
                 "consumer_id": {
                   "type": "string"
                 },
-                "charge": {
-                  "type": "number"
+                "windows": {
+                  "type": "array",
+                  "items": {
+                    "title": "cwindow",
+                    "type": "object",
+                    "properties": {
+                      "charge": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "charge"
+                    ]
+                  }
                 },
                 "resources": {
                   "type": "array",
@@ -1193,8 +1891,20 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
                       "resource_id": {
                         "type": "string"
                       },
-                      "charge": {
-                        "type": "number"
+                      "windows": {
+                        "type": "array",
+                        "items": {
+                          "title": "cwindow",
+                          "type": "object",
+                          "properties": {
+                            "charge": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "charge"
+                          ]
+                        }
                       },
                       "aggregated_usage": {
                         "type": "array",
@@ -1206,21 +1916,33 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
                             "metric": {
                               "type": "string"
                             },
-                            "quantity": {
-                              "type": "number"
-                            },
-                            "summary": {
-                              "type": "number"
-                            },
-                            "charge": {
-                              "type": "number"
+                            "windows": {
+                              "type": "array",
+                              "items": {
+                                "title": "rwindow",
+                                "type": "object",
+                                "properties": {
+                                  "quantity": {
+                                    "type": "number"
+                                  },
+                                  "summary": {
+                                    "type": "number"
+                                  },
+                                  "charge": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "quantity",
+                                  "summary",
+                                  "charge"
+                                ]
+                              }
                             }
                           },
                           "required": [
                             "metric",
-                            "quantity",
-                            "summary",
-                            "charge"
+                            "windows"
                           ],
                           "additionalProperties": false
                         },
@@ -1236,8 +1958,20 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
                             "plan_id": {
                               "type": "string"
                             },
-                            "charge": {
-                              "type": "number"
+                            "windows": {
+                              "type": "array",
+                              "items": {
+                                "title": "cwindow",
+                                "type": "object",
+                                "properties": {
+                                  "charge": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "charge"
+                                ]
+                              }
                             },
                             "aggregated_usage": {
                               "type": "array",
@@ -1249,25 +1983,37 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
                                   "metric": {
                                     "type": "string"
                                   },
-                                  "quantity": {
-                                    "type": "number"
-                                  },
-                                  "summary": {
-                                    "type": "number"
-                                  },
-                                  "cost": {
-                                    "type": "number"
-                                  },
-                                  "charge": {
-                                    "type": "number"
+                                  "windows": {
+                                    "type": "array",
+                                    "items": {
+                                      "title": "pwindow",
+                                      "type": "object",
+                                      "properties": {
+                                        "quantity": {
+                                          "type": "number"
+                                        },
+                                        "summary": {
+                                          "type": "number"
+                                        },
+                                        "cost": {
+                                          "type": "number"
+                                        },
+                                        "charge": {
+                                          "type": "number"
+                                        }
+                                      },
+                                      "required": [
+                                        "quantity",
+                                        "summary",
+                                        "cost",
+                                        "charge"
+                                      ]
+                                    }
                                   }
                                 },
                                 "required": [
                                   "metric",
-                                  "quantity",
-                                  "summary",
-                                  "cost",
-                                  "charge"
+                                  "windows"
                                 ],
                                 "additionalProperties": false
                               },
@@ -1276,7 +2022,7 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
                           },
                           "required": [
                             "plan_id",
-                            "charge",
+                            "windows",
                             "aggregated_usage"
                           ],
                           "additionalProperties": false
@@ -1286,7 +2032,7 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
                     },
                     "required": [
                       "resource_id",
-                      "charge",
+                      "windows",
                       "aggregated_usage",
                       "plans"
                     ],
@@ -1297,7 +2043,7 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
               },
               "required": [
                 "consumer_id",
-                "charge",
+                "windows",
                 "resources"
               ],
               "additionalProperties": false
@@ -1307,7 +2053,7 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
         },
         "required": [
           "space_id",
-          "charge",
+          "windows",
           "resources",
           "consumers"
         ],
@@ -1322,7 +2068,7 @@ _HTTPレスポンス_: _利用量サマリレポート_のJSONドキュメント
     "start",
     "end",
     "processed",
-    "charge",
+    "windows",
     "resources",
     "spaces"
   ],
