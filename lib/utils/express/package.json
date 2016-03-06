@@ -35,6 +35,7 @@
   "dependencies": {
     "abacus-debug": "file:../debug",
     "abacus-events": "file:../events",
+    "abacus-oauth": "file:../oauth",
     "abacus-rc": "file:../rc",
     "abacus-vcapenv": "file:../vcapenv",
     "babel-preset-es2015": "^6.1.4",
