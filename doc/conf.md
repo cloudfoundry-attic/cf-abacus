@@ -82,9 +82,9 @@ The logs are DEBUG logs so they will produce a lot of entries in production. Usu
 
 The debug log can be configured dynamically (remotely). To get the current debug log config: 
 ```
-curl http://<host><:port>/log
+curl http://<host><:port>/debug
 ```
 To enable `abacus-breaker` and `abacus-retry` for example:
 ```
-curl http://<host><:port>/log?config=abacus-breaker,abacus-retry
+curl http://<host><:port>/debug?config=abacus-breaker,abacus-retry
 ```
