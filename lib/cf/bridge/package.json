@@ -43,6 +43,7 @@
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-oauth": "file:../../utils/oauth",
     "abacus-partition": "file:../../utils/partition",
+    "abacus-perf": "file:../../utils/perf",
     "abacus-request": "file:../../utils/request",
     "abacus-retry": "file:../../utils/retry",
     "abacus-router": "file:../../utils/router",
@@ -58,7 +59,8 @@
     "abacus-cfpush": "file:../../../tools/cfpush",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-publish": "file:../../../tools/publish"
+    "abacus-publish": "file:../../../tools/publish",
+    "jsonwebtoken": "^5.0.5"
   },
   "engines": {
     "node": ">=0.12.0",
