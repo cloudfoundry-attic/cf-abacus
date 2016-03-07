@@ -1,5 +1,5 @@
 abacus-dupe
 ===
 
-End to end duplicate submission test.
+End to end duplicate usage detection test.
 

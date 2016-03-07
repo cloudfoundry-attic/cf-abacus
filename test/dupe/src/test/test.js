@@ -1,7 +1,7 @@
 'use strict';
 
-// Simulate a test service provider that submits usage for a resource and
-// verifies the submission by retrieving a usage report.
+// Simulate a test service provider that submits duplicate usage for a
+// resource and verifies the submission by retrieving a usage report.
 
 const _ = require('underscore');
 const extend = _.extend;

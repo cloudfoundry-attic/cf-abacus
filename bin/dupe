@@ -2,6 +2,6 @@
 
 set -e
 
-# Run the performance tests
+# Run the duplicate usage detection tests
 (cd node_modules/abacus-dupe-test && npm run dupe -- $@)
 

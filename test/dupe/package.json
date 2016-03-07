@@ -1,6 +1,6 @@
 {
   "name": "abacus-dupe-test",
-  "description": "End to end duplicate test",
+  "description": "End to end duplicate usage detection test",
   "license": "Apache-2.0",
   "version": "0.0.5-rc.0",
   "private": true,
