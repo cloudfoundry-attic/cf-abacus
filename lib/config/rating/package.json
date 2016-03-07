@@ -34,6 +34,7 @@
     "abacus-debug": "file:../../utils/debug",
     "abacus-eval": "file:../../utils/eval",
     "abacus-lock": "file:../../utils/lock",
+    "abacus-lrucache": "file:../../utils/lrucache",
     "abacus-request": "file:../../utils/request",
     "abacus-retry": "file:../../utils/retry",
     "abacus-urienv": "file:../../utils/urienv",
