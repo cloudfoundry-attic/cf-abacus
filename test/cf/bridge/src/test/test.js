@@ -75,7 +75,7 @@ const tokenAlgorithm = 'HS256';
 process.env.JWTKEY = tokenSecret;
 process.env.JWTALGO = tokenAlgorithm;
 
-const decodedToken = {
+const resourceToken = {
   header: {
     alg: tokenAlgorithm
   },
@@ -107,10 +107,45 @@ const decodedToken = {
   signature: 'irxoV230hkDJenXoTSHQFfqzoUl353lS2URo1fJm21Y'
 };
 
-// Sign a known token using default algorithm (HS256)
-const signedToken = jwt.sign(decodedToken.payload, tokenSecret, {
+const systemToken = {
+  header: {
+    alg: tokenAlgorithm
+  },
+  payload: {
+    jti: '254abca5-1c25-40c5-99d7-2cc641791517',
+    sub: 'abacus-cf-bridge',
+    authorities: [
+      'abacus.usage.write',
+      'abacus.usage.read'
+    ],
+    scope: [
+      'abacus.usage.write',
+      'abacus.usage.read'
+    ],
+    client_id: 'abacus-cf-bridge',
+    cid: 'abacus-cf-bridge',
+    azp: 'abacus-cf-bridge',
+    grant_type: 'client_credentials',
+    rev_sig: '2cf89595',
+    iat: 1456147679,
+    exp: 1456190879,
+    iss: 'https://localhost:1234/oauth/token',
+    zid: 'uaa',
+    aud: [
+      'abacus-cf-bridge',
+      'abacus.usage'
+    ]
+  },
+  signature: 'OVNTKTvu-yHI6QXmYxtPeJZofNddX36Mx1q4PDWuYQE'
+};
+
+const signedResourceToken = jwt.sign(resourceToken.payload, tokenSecret, {
   expiresIn: 43200
 });
+const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
+  expiresIn: 43200
+});
+
 
 const test = (secured) => {
   let server;
@@ -184,7 +219,7 @@ const test = (secured) => {
       (request, response) => {
         response.status(200).send({
           token_type: 'bearer',
-          access_token: signedToken,
+          access_token: signedResourceToken,
           expires_in: 100000,
           scope: 'abacus.usage.linux-container.read ' +
             'abacus.usage.linux-container.write',
@@ -263,7 +298,7 @@ const test = (secured) => {
       '/:organization_id/aggregated/usage', {
         organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
         headers: {
-          authorization: 'bearer ' + signedToken
+          authorization: 'bearer ' + signedResourceToken
         }
       },
       (error, response) => {
@@ -324,13 +359,17 @@ const test = (secured) => {
     this.timeout(totalTimeout + 2000);
 
     // Wait for bridge to start
-    request.waitFor('http://localhost::p/v1/cf/bridge',
-      { p: 9500 }, startTimeout, (err, uri, opts) => {
+    request.waitFor('http://localhost::p/v1/cf/bridge', { p: 9500 },
+      startTimeout, (err, uri, opts) => {
         // Failed to ping bridge before timing out
         if (err) throw err;
 
         // Check report
-        request.get(uri, opts, (err, response) => {
+        request.get(uri, {
+          headers: {
+            authorization: secured ? 'bearer ' + signedSystemToken : ''
+          }
+        }, (err, response) => {
           expect(err).to.equal(undefined);
           expect(response.statusCode).to.equal(200);
 
