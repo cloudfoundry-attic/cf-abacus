@@ -5,7 +5,49 @@ The Abacus usage metering and aggregation service.
 
 ---
 
-### v0.0.5-rc.0 - 02/02/2015
+### v0.0.5-rc.1 - 03/07/2016
+
+##### Usage metering and rating
+- refactor provisioning config and account plugins
+- improve flexibility of metering, rating, and pricing plans
+- persist last submitted runtime usage GUID
+
+##### Usage accumulation and aggregation
+- refactor time window processing
+- fixes to time window based usage accumulation
+- support out of sequence time-based usage events
+- remove consumers without usage from aggregated usage
+- support variable usage slack window
+
+##### Usage reporting
+- improve GraphQL error reporting
+- support user-defined quantities and costs in GraphQL reports
+
+##### Deployment
+- pluggable database support
+- support both CouchDB and MongoDB databases
+- improved pipeline configuration documentation
+- improved security configuration documentation
+
+##### Security
+- secure /log routes
+- refactor CF bridge OAuth support
+- secure CF bridge routes
+
+##### Performance
+- improve CF bridge performance
+
+##### Misc
+- add useful error logging
+
+##### Prerequisites
+- Node.js 0.12, 4.2, 5.6
+- CouchDB 1.6+ compatible database or MongoDB 3.2+ database
+- Cloud Foundry v210+
+
+---
+
+### v0.0.5-rc.0 - 02/02/2016
 
 ##### Usage metering and rating
 - Refactor plugins to use separate metering, rating and pricing plans
