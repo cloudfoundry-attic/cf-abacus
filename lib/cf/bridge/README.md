@@ -163,3 +163,63 @@ cf restart abacus-cf-bridge
 ```
 
 To change the resource provider (abacus-linux-container) settings or the number of connections, set the respective environment variables using `cf set-env`.
+
+## Statistics
+
+The bridge exposes the `/v1/cf/bridge/` endpoint that provides performance metrics and call statistics. A snippet of the values returned:
+```json
+    "statistics": {
+      "cache": {
+        "read": 1,
+        "write": 428
+      },
+      "compensation": {
+        "saveCalls": 999,
+        "started": 831,
+        "fetchSuccess": 1,
+        "fetchFailure": 1,
+        "usageSuccess": 22,
+        "usageFailure": 0,
+        "usageSkip": 36
+      },
+      "usage": {
+        "missingToken": 0,
+        "reportFailures": 2,
+        "reportSuccess": 2379,
+        "loopFailures": 2,
+        "loopSuccess": 2357
+      },
+      "paging": {
+        "missingToken": 1,
+        "pageReadSuccess": 1,
+        "pageReadFailures": 0,
+        "pageProcessSuccess": 3415,
+        "pageProcessFailures": 1,
+        "pageProcessEnd": 67
+      }
+    }
+ ```
+ 
+The following values are exposed:
+* cache.read/write: Number of cache operations. The cache stores the last processed app usage event GUID. 
+* compensation
+   * saveCalls: Number of applications stored in memory
+   * started: Number of processed started applications
+   * fetchSuccess: Successful /v2/apps list operations (usually 1)
+   * fetchFailure: Failed attempts to read /v2/apps
+   * usageSuccess: Successful compensation reports to Abacus
+   * usageFailure: Failed compensation usage reports to Abacus
+   * usageSkip: Skipped usage reports
+* usage
+   * missingToken: Missing abacus resource token
+   * reportFailures: Number of failed usage reports
+   * reportSuccess: Successful usage reports
+   * loopFailures: Number of report loop failures
+   * loopSuccess: Number of successful report loop cycles
+* paging
+   * missingToken: Missing CF CC token
+   * pageReadSuccess: Number of successful page reads
+   * pageReadFailures: Failed page reads
+   * pageProcessSuccess: Number of successfully processed resources
+   * pageProcessFailures: Number of unsuccessfully processed resources
+   * pageProcessEnd: Number of processed pages
