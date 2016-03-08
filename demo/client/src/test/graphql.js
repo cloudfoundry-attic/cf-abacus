@@ -23,17 +23,18 @@ const reporting = /:/.test(commander.reporting) ? commander.reporting :
 // const query = '{ organization(organization_id:
 //  "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", time: 1420502400000) {
 //  organization_id, resources { resource_id, aggregated_usage {
-//  metric, quantity }}}}';
+//  metric, windows { quantity }}}}}';
 //
 // const query = '{ organization(organization_id:
 //   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", time: 1420502400000) {
 //   organization_id, spaces { space_id, resources { resource_id,
-//   aggregated_usage { metric, quantity }}}}}';
+//   aggregated_usage { metric, windows { quantity }}}}}}';
 //
 // const query = '{ organization(organization_id:
 //   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", time: 1420502400000) {
 //   organization_id, spaces { space_id, consumers { consumer_id,
-//   resources { resource_id, aggregated_usage { metric, quantity }}}}}}';
+//   resources { resource_id, aggregated_usage { metric,
+//   windows { quantity }}}}}}}';
 //
 // const query = '{ organization(organization_id:
 //   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", time: 1420502400000) {
@@ -42,17 +43,17 @@ const reporting = /:/.test(commander.reporting) ? commander.reporting :
 // const query = '{ organization(organization_id:
 //   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27", time: 1420502400000) {
 //   organization_id, resources { resource_id, aggregated_usage {
-//   metric, quantity }}}}';
+//   metric, windows { quantity }}}}}';
 //
 // const query = '{ organizations(organization_ids: [
 //   "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
 //   "b3d7fe4d-3cb1-4cc3-a831-ffe98e20cf28"], time: 1420502400000) {
 //   organization_id, resources { resource_id, aggregated_usage {
-//   metric, quantity}}}}';
+//   metric, windows { quantity }}}}}';
 
 const query = '{ account(account_id: "1234", time: 1420502400000) { ' +
   'organization_id, resources { resource_id, aggregated_usage { ' +
-  'metric, quantity }}}}';
+  'metric, windows { quantity }}}}}';
 
 request.get(reporting + '/v1/metering/aggregated/usage/graph/:query', {
   query: query
