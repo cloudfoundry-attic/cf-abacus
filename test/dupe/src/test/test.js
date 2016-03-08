@@ -28,6 +28,8 @@ commander
     'http://localhost:9882')
   .option('-t, --start-timeout <n>',
     'external processes start timeout in milliseconds', parseInt)
+  .option('-u, --usage-time <n>',
+    'submitted usage time', parseInt)
   .option('-d, --delay <n>',
     'delay between submissions', parseInt)
   .option('-n, --num <n>',
@@ -50,6 +52,9 @@ const authServer = /:/.test(commander.authServer) ? commander.authServer :
 // External Abacus processes start timeout
 const startTimeout = commander.startTimeout || 10000;
 
+// Submitted usage time
+const usageTime = commander.usageTime || Date.now();
+
 // Delay in milliseconds between each submission
 const delay = commander.delay || 20000;
 
@@ -58,9 +63,6 @@ const num = commander.num || 7;
 
 // This test timeout
 const totalTimeout = 60000 + delay * num;
-
-// The current time + 1 hour into the future
-const now = new Date(Date.now());
 
 // Use secure routes or not
 const secured = () => process.env.SECURED === 'true' ? true : false;
@@ -107,8 +109,8 @@ describe('abacus-dupe', function() {
     this.timeout(timeout);
 
     // Test usage to be submitted by the client
-    const start = now.getTime();
-    const end = now.getTime();
+    const start = usageTime;
+    const end = usageTime;
 
     const usage = {
       usage: [{
