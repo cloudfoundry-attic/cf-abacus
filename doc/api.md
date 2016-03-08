@@ -1980,7 +1980,9 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
         resource_id,
         aggregated_usage {
           metric,
-          quantity
+          windows {
+            quantity
+          }
         }
       }
     }
@@ -1997,7 +1999,9 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
           resource_id,
           aggregated_usage {
             metric,
-            quantity
+            windows {
+              quantity
+            }
           }
         }
       }
@@ -2017,7 +2021,9 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
             resource_id,
             aggregated_usage {
               metric,
-              quantity
+              windows {
+                quantity
+              }
             }
           }
         }
@@ -2048,7 +2054,9 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
         resource_id,
         aggregated_usage {
           metric,
-          quantity
+          windows {
+            quantity
+          }
         }
       }
     }
@@ -2065,7 +2073,9 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
         resource_id,
         aggregated_usage {
           metric,
-          quantity
+          windows {
+            quantity
+          }
         }
       }
     }
@@ -2080,7 +2090,9 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
         resource_id,
         aggregated_usage {
           metric,
-          quantity
+          windows {
+            quantity
+          }
         }
       }
     }
