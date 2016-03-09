@@ -34,7 +34,7 @@ Abacus uses OAuth to authorize:
 * Users that want to view usage reports
 * Internal pipeline processing steps
 
-OAuth uses access tokens.
+OAuth uses access tokens. Abacus works with two types of access tokens: resource and system tokens.
 
 
 #### Resource tokens
@@ -44,8 +44,10 @@ A Resource Provider is expected to present an OAuth token with the usage it subm
 The OAuth token should include:
 * a user id uniquely identifying that Resource Provider
 * an OAuth scope named like `abacus.usage.<resource_id>.write`
+ 
+A user that wants to get a report for a resource should present a token that has scope named `abacus.usage.<resource_id>.read`.
 
-For example the linux-container resource the provider should have scope `abacus.usage.linux-container.write` to submit usage.  To get the report for that resource you should present a token with the `abacus.usage.linux-container.read` scope to the Abacus reporting component.
+For example the `linux-container` resource provider should have scope `abacus.usage.linux-container.write` to submit usage.  To get a report an user should present token with the `abacus.usage.linux-container.read` scope to the Abacus reporting component.
 
 
 #### System token
