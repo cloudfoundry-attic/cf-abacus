@@ -86,6 +86,8 @@ Therefore Abacus validates the token using [jsonwebtoken library](https://www.np
 
 ## Configuration
 
+### Abacus
+
 To run Abacus in secure mode (HTTPS + OAuth tokens) you should modify Abacus application's manifest.yml files.
 
 The set of properties that has to be changed contains:
@@ -128,3 +130,17 @@ Abacus configuration snippet for UAA should look like this:
       -----END PUBLIC KEY-----
     JWTALGO: RS256
 ```
+
+### Cloud Foundry
+
+The Abacus pipeline consists of several micro-services that run as CF applications. The applications communicate using the externally accessible endpoints, thus no special security settings are needed by default.
+
+To pull monitoring data from all micro-service instances we need to be able to access a specific instance address. Cloud Foundry hides the instances behind a router, so this is not easily achievable.
+
+Abacus uses Netflix's Eureka as a service discovery mechanism to solve the problem. This plays nice with the rest of Netflix products, such as Turbine, used to aggregate metrics streams. The needed configuration is described in the [monitorig doc](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/monitor.md#cloud-foundry-installation)).
+
+To enable monitoring with Eureka and Turbine, an Abacus integrator needs to run Abacus applications into a special security group. This group shall allow direct (app-to-app) communication between Turbine and Abacus applications. This is an additional attack vector, considered as a security risk, since the Abacus pipeline can then access all other CF applications.
+
+For development and testing on BOSH-Lite you can use the [all access security group](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/etc/secgroup.json).
+
+An alternative solution to securing CF Abacus system is to use a special cell (placement pool) with a predefined network for the Abacus applications, or to deploy Abacus as distributed system managed by BOSH in its own network.
