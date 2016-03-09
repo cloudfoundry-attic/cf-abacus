@@ -451,10 +451,12 @@ describe('abacus-usage-reporting-itest', () => {
       // Create resource aggregations only if true, otherwise, return the id
       if(c)
         return cagg(o, ri, u, s);
-      return create(consumers, (i) => {
-        return [cid(o, i === 0 ? s : s === 0 ? 4 : 5), 't',
-          dbclient.pad16(end + u)].join('/');
-      });
+      return create(consumers, (i) => ({
+        consumer_id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
+        space_id: sid(o, s),
+        doc_id: ['k', oid(o), sid(o, s), cid(o, i === 0 ? s : s === 0 ? 4 : 5),
+          't', dbclient.pad16(end + u)].join('/')
+      }));
     };
 
     // Resource plan level aggregations for a given space
