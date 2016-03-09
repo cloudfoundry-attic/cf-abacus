@@ -182,6 +182,12 @@ Note: The timeout between CF API calls and Abacus usage retries is increased exp
 
 The bridge exposes the `/v1/cf/bridge/` endpoint that provides performance metrics and call statistics. A snippet of the values returned:
 ```json
+    "cache": {
+      "lastRecordedGUID": "35c4ff2fa",
+      "lastRecordedTimestamp": "2015-08-18T11:28:20Z",
+      "lastCompensatedGUID": "acc4152dab",
+      "lastCompensatedTimestamp": "2015-07-18T11:24:15Z"
+    },
     "statistics": {
       "cache": {
         "read": 1,
@@ -213,9 +219,17 @@ The bridge exposes the `/v1/cf/bridge/` endpoint that provides performance metri
       }
     }
  ```
- 
-The following values are exposed:
-* cache.read/write: Number of cache operations. The cache stores the last processed app usage event GUID. 
+
+The following data is available:
+
+Cache content:
+* lastRecordedGUID: GUID of the last reported event
+* lastRecordedTimestamp: Timestamp of the last reported event. For example 2015-08-18T11:28:20Z
+* lastCompensatedGUID: GUID of the last compensated event
+* lastCompensatedTimestamp: Timestamp of the last compensated event. For example: 2015-07-18T11:24:15Z
+
+Operation statistics:
+* cache.read/write: Number of cache operations. The cache stores the last processed app usage event GUID.
 * compensation
    * saveCalls: Number of applications stored in memory
    * started: Number of processed started applications
