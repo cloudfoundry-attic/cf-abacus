@@ -157,9 +157,7 @@ The previous approach becomes pretty cumbersome once Abacus is scaled and there 
 
 ### Cloud Foundry installation
 
-The described monitoring method in BOSH-Lite requires an [all access security group](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/etc/secgroup.json) to enable direct app-to-app communication between Turbine and Abacus applications.
-
-The all-access group should not be used in productive environments. An alternative solution is to use a special cell (placement pool) for Abacus applications or to deploy Abacus as infrastructure distributed system with the help of BOSH deployment.
+Check the security recomendations for setting up monitoring in the [security document](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/security.md#cloud-foundry).
 
 * Change the `~/workspace/cf-abacus/lib/plugins/eureka/manifest.yml` to use the real Eureka server with the `/eureka` context path:
  ```yml
