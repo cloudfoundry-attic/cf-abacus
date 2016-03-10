@@ -85,6 +85,8 @@ const pruneWindows = (v, k) => {
   }
   if(k === 'consumers')
     return map(v, (c) => c.split('/')[0]);
+  if(k === 'resource_instances')
+    return map(v, (ri) => omit(ri, 'processed'));
   return v;
 };
 
@@ -461,6 +463,19 @@ describe('abacus-usage-aggregator-itest', () => {
       }));
     };
 
+    const riagg = (o, ri, u) => {
+      const instances = () => ri + 1;
+      return create(instances, (i) => {
+        const key = [oid(o), riid(o, i), cid(o, i), pid(i), mpid(i),
+          rpid(i), ppid(i)].join('/');
+        const time = map([end + u, end + u], (t) => seqid.pad16(t)).join('/');
+        return {
+          key: key,
+          id: dbclient.kturi(key, time)
+        };
+      });
+    };
+
     // Aggregated usage for a given org, resource instance, usage indices
     // TODO check the values of the accumulated usage
     const aggregatedTemplate = (o, ri, u) => ({
@@ -473,7 +488,8 @@ describe('abacus-usage-aggregator-itest', () => {
         aggregated_usage: a(ri, u, undefined, (n) => n + 1, false),
         plans: opagg(o, ri, u)
       }],
-      spaces: osagg(o, ri, u)
+      spaces: osagg(o, ri, u),
+      resource_instances: riagg(o, ri, u)
     });
 
     // Aggregated usage for a given consumer
