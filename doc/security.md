@@ -68,6 +68,8 @@ This system token is used to protect the pipeline from unauthorized (erroneous o
 Abacus can work with Cloud Foundry's UAA or other token issuers, complying with JWT (https://tools.ietf.org/html/rfc7519) and JWS (https://tools.ietf.org/html/rfc7515) specifications.
   
 The JWT specification (https://tools.ietf.org/html/rfc7519#page-16) only requires HMAC SHA-256 algorithm to be implemented to sign the message (or token), the other algorithms are either recommended or optional. And the JWS specification (https://tools.ietf.org/html/rfc7515#section-10.5) assumes shared key is used - same key to sign and validate the signature.
+
+Token issuer can support both symmetric & asymmetric cryptographic algorithms for token signature and verification. UAA supports both.
  
 Symmetric encryption is usually used when all parties are trusted (and can therefore be trusted with the key). In environments where not all parties are trusted, asymmetric encryption should be used.
 
@@ -81,8 +83,6 @@ The access tokens that are passed in the header serve as both a proof of authent
 The validation of the request includes checks for:
 * presence of the bearer token
 * issuer, signature, expiry, scope
-
-Toker issuer can support both symmetric & asymmetric cryptographic algorithms for token signature and verification. UAA supports both.
 
 UAA exposes an endpoint called `check_token`, but it's use increases the traffic to UAA, which makes its use in loaded environments undesired.
 
