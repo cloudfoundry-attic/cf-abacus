@@ -182,11 +182,11 @@ describe('abacus-dupe', function() {
         if(!previousReport) {
           console.log('Setting report');
           previousReport = clone(omit(val.body,
-            'id', 'processed', 'start', 'end'), prune);
+            'id', 'processed', 'processed_id', 'start', 'end'), prune);
         }
         else {
           expect(previousReport).to.deep.equal(clone(omit(val.body,
-            'id', 'processed', 'start', 'end'), prune));
+            'id', 'processed', 'processed_id', 'start', 'end'), prune));
           console.log('No change in report');
         }
 

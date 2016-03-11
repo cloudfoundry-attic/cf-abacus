@@ -336,7 +336,7 @@ describe('abacus-demo-client', function() {
     // report for our test resource
     const processed = (val) => {
       try {
-        return val.body.resources[0].aggregated_usage[1].windows[6].summary;
+        return val.body.resources[0].aggregated_usage[1].windows[4][0].quantity;
       }
       catch (e) {
         // The response doesn't contain a valid report
@@ -358,7 +358,8 @@ describe('abacus-demo-client', function() {
         // Compare the usage report we got with the expected report
         console.log('Processed %d usage docs', processed(val));
         const actual = clone(omit(val.body,
-          'id', 'processed', 'start', 'end'), prune);
+          'id', 'processed', 'processed_id', 'start', 'end'), prune);
+
         try {
           expect(actual).to.deep.equal(report);
           console.log('\n', util.inspect(val.body, {

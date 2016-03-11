@@ -209,8 +209,8 @@ describe('abacus-usage-collector-itest', () => {
               expect(val.statusCode).to.equal(200);
 
               expect(omit(
-                val.body, 'id', 'processed', 'collected_usage_id'))
-                .to.deep.equal(usage);
+                val.body, 'id', 'processed', 'processed_id',
+                'collected_usage_id')).to.deep.equal(usage);
 
               debug('Verified usage #%d for org %d instance %d usage %d',
                 i + 1, o + 1, ri + 1, u + 1);

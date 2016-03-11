@@ -534,9 +534,10 @@ describe('abacus-usage-aggregator-itest', () => {
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(200);
 
-            expect(omit(val.body, 'id', 'processed'))
+            expect(omit(val.body, 'id', 'processed', 'processed_id'))
               .to.deep.equal(omit(
-                accumulatedTemplate(o, ri, u), 'id', 'processed'));
+                accumulatedTemplate(o, ri, u),
+                'id', 'processed', 'processed_id'));
 
             debug('Verified accumulated usage for org%d instance%d usage%d',
               o + 1, ri + 1, u + 1);
@@ -572,7 +573,8 @@ describe('abacus-usage-aggregator-itest', () => {
         include_docs: true },
         (err, val) => {
           try {
-            expect(clone(omit(val.rows[0].doc, ['id', 'processed',
+            expect(clone(omit(val.rows[0].doc, ['id',
+              'processed', 'processed_id',
               '_id', '_rev', 'accumulated_usage_id', 'start']),
                 pruneWindows)).to.deep.equal(omit(expected, ['start']));
             done();
@@ -582,7 +584,8 @@ describe('abacus-usage-aggregator-itest', () => {
             // data within the giveup time, forward the exception
             if(Date.now() >= processingDeadline) {
               debug('Unable to properly verify the last record');
-              expect(clone(omit(val.rows[0].doc, ['id', 'processed',
+              expect(clone(omit(val.rows[0].doc, ['id',
+                'processed', 'processed_id',
                 '_id', '_rev', 'accumulated_usage_id', 'start']),
                   pruneWindows)).to.deep.equal(omit(expected, ['start']));
             }
@@ -612,7 +615,8 @@ describe('abacus-usage-aggregator-itest', () => {
         include_docs: true },
         (err, val) => {
           try {
-            expect(clone(omit(val.rows[0].doc, ['id', 'processed',
+            expect(clone(omit(val.rows[0].doc, ['id',
+              'processed', 'processed_id',
               '_id', '_rev', 'accumulated_usage_id', 'start']),
                 pruneWindows)).to.deep.equal(omit(expectedConsumer, ['start',
                   'organization_id', 'space_id']));
@@ -623,7 +627,8 @@ describe('abacus-usage-aggregator-itest', () => {
             // data within the giveup time, forward the exception
             if(Date.now() >= processingDeadline) {
               debug('Unable to properly verify the last record');
-              expect(clone(omit(val.rows[0].doc, ['id', 'processed',
+              expect(clone(omit(val.rows[0].doc,
+                ['id', 'processed', 'processed_id',
                 '_id', '_rev', 'accumulated_usage_id', 'start']),
                   pruneWindows)).to.deep.equal(omit(expectedConsumer, ['start',
                     'organization_id', 'space_id']));

@@ -280,9 +280,10 @@ describe('abacus-usage-accumulator-itest', () => {
             expect(val.statusCode).to.equal(200);
 
             expect(omit(
-              val.body, 'id', 'processed', 'processed_usage_id'))
+              val.body, 'id', 'processed',
+              'processed_id', 'processed_usage_id'))
               .to.deep.equal(omit(
-                meteredTemplate(o, ri, u), 'id', 'processed'));
+                meteredTemplate(o, ri, u), 'id', 'processed', 'processed_id'));
 
             debug('Verified metered usage for org%d instance%d usage%d',
               o + 1, ri + 1, u + 1);
@@ -323,14 +324,16 @@ describe('abacus-usage-accumulator-itest', () => {
         (err, val) => {
           try {
             expect(clone(omit(val.rows[0].doc,
-              ['processed', '_rev', '_id', 'id', 'metered-usage_id']),
+              ['processed', 'processed_id',
+              '_rev', '_id', 'id', 'metered-usage_id']),
                 pruneWindows)).to.deep.equal(expected);
             done();
           }
           catch (e) {
             if(Date.now() >= processingDeadline)
               expect(clone(omit(val.rows[0].doc,
-                ['processed', '_rev', '_id', 'id', 'metered-usage_id']),
+                ['processed', 'processed_id',
+                '_rev', '_id', 'id', 'metered-usage_id']),
                   pruneWindows)).to.deep.equal(expected);
             else
               setTimeout(function() {
