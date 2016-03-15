@@ -128,9 +128,8 @@ Add the DB client implementation you would like to use with the bridge:
 
 Build, pack and push the bridge to Cloud Foundry:
 ```bash
-npm install && npm run babel && npm run lint && npm test
-npm run cfpack
-npm run cfpush
+npm install && npm run babel && npm run lint && npm test &&
+npm run cfpack && npm run cfpush
 ```
 
 Create a database service instance, called `db` and bind it to `abacus-cf-bridge`:
