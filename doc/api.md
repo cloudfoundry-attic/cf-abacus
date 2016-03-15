@@ -2123,43 +2123,55 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
 
 ### GraphQL schema:
 ```graphql
-type PlanMetric {
-  metric: String
+type ChargeWindow {
+  charge: Float
+}
+
+type PlanWindow {
   quantity: Float
   cost: Float
   summary: Float
   charge: Float
 }
 
+type PlanMetric {
+  metric: String
+  windows: [[PlanWindow]]
+}
+
 type Plan {
   plan_id: String
-  charge: Float
+  windows: [[ChargeWindow]]
   aggregated_usage: [PlanMetric]
 }
 
-type ResourceMetric {
-  metric: String
+type ResourceWindow {
   quantity: Float
   summary: Float
   charge: Float
 }
 
+type ResourceMetric {
+  metric: String
+  windows: [[ResourceWindow]]
+}
+
 type Resource {
   resource_id: String
-  charge: Float
+  windows: [[ChargeWindow]]
   aggregated_usage: [ResourceMetric]
   plans: [Plan]
 }
 
 type Consumer {
   consumer_id: String
-  charge: Float
+  windows: [[ChargeWindow]]
   resources: [Resource]
 }
 
 type Space {
   space_id: String
-  charge: Float
+  windows: [[ChargeWindow]]
   resources: [Resource]
   consumers: [Consumer]
 }
@@ -2169,7 +2181,7 @@ type OrganizationReport {
   start: Int
   end: Int
   organization_id: String
-  charge: Float
+  windows: [[ChargeWindow]]
   resources: [Resource]
   spaces: [Space]
 }
@@ -2184,6 +2196,7 @@ type resourceInstanceReport {
   resource_instance_id: String
   consumer_id: String
   plan_id: String
+  windows: [[ChargeWindow]]
   accumulated_usage: [PlanMetric]
 }
 
