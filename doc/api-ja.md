@@ -435,7 +435,8 @@ _HTTPレスポンス_: 要求された_リソース設定_ドキュメントが2
   },
   "additionalProperties": false,
   "title": "Resource Definition"
-}```
+}
+```
 
 <!--
 Resource pricing
