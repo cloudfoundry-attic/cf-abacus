@@ -142,10 +142,20 @@ The Abacus pipeline consists of several micro-services that run as CF applicatio
 
 To pull monitoring data from all micro-service instances we need to be able to access a specific instance address. Cloud Foundry hides the instances behind a router, so this is not easily achievable. Cloud Foundry's router provides a single hostname for all instances of the same application. For example it cannot provide access to the 4th instance of an application, and instead it loadbalances between all of them.
 
-Abacus uses Netflix's Eureka as a service discovery mechanism to solve the problem. All Abacus applications are registered in Eureka with their IP and port. This plays nice with the rest of Netflix products, such as Turbine, that contacts Eureka to get a list of addresses and use them to aggregate metrics streams. The needed configuration is described in the [monitorig doc](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/monitor.md#cloud-foundry-installation).
+To solve the problem we can use two approaches:
+* Netflix's [Eureka](https://github.com/Netflix/eureka)
+* Cloud Foundry routing
 
-To enable monitoring with Eureka and Turbine, an Abacus integrator needs to run Abacus applications into a special security group. This group shall allow direct (app-to-app) communication between Turbine and Abacus applications, so that Turbine can access each microservice instance and fetch data for the individual app instance state. This app-to-app communication is considered a security risk. It is an additional attack vector, since if an attacker gains access to the Abacus pipeline, it can easily reach to all other CF applications.
+Netflix's Eureka is a service discovery. All Abacus applications are registered in Eureka with their IP and port. This plays nice with the rest of Netflix products, such as Turbine, that contacts Eureka to get a list of addresses and use them to aggregate metrics streams. The needed configuration is described in the [monitorig doc](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/monitor.md#cloud-foundry-installation).
 
-For development and testing on BOSH-Lite you can use the [all access security group](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/etc/secgroup.json).
+To enable monitoring with Eureka and Turbine, an Abacus integrator needs to run Abacus applications into a special security group. This group shall allow direct (app-to-app) communication between Turbine and Abacus applications, so that Turbine can access each microservice instance and fetch data for the individual app instance state. This app-to-app communication is considered a security risk. For development and testing on BOSH-Lite you can use the [all access security group](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/etc/secgroup.json). However in production this is an additional attack vector, since if an attacker gains access to the Abacus pipeline, it can easily reach to all other CF applications. 
 
-An alternative solution to securing CF Abacus system is to use a special cell (placement pool) with a predefined network for the Abacus applications, or to deploy Abacus as distributed system managed by BOSH in its own network.
+To work around the security and routing issues we can scale Abacus micro-services as applications instead of app instances. We can push a micro-service as a set of applications. For example `app-0`, `app-1` and `app-2` can form a micro-service `app` with 3 instances. We can still use Eureka to know which application belongs to which micro-service and to get hold of the set of endpoints that form the miscro-service.
+
+The Abacus pipeline has 2 services that are used as user/agent-facing endpoints. We want theese to be accessible to users without forcing them to manually load-balance though several URLs, or granting them access to Eureka and thus binding them to our internal service discovery mechanism. These are the `abacus-usage-collector` that receives the usage reports from Resource Providers and `abacus-usage-reporting` that serves as an endpoint that generates usage reports.
+
+Both of these micro-services can scale via different applications. We need to provide a single URL for easy access to the Resource Providers and report consumers. To do this we should map each set of applications to a new Cloud Foundry route using `cf map-route`. We can use:
+* `abacus-usage-reporting` for all usage-reporting-<number> apps
+* `abacus-usage-collector` for all usage-collecotr-<number> apps
+
+In this way the providers and reporting consumers have to keep track of just one URL. The Cloud Foundry router handles the load-balancing between the 2 sets of applications.
