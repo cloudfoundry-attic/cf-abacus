@@ -157,7 +157,11 @@ The previous approach becomes pretty cumbersome once Abacus is scaled and there 
 
 ### Cloud Foundry
 
-#### Default (non-secure) installation
+#### Default (non-secured) installation
+
+To enable Eureka access Abacus applications you may need to modify your security group. Have a look at the [security doc] (https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/security.md#cloud-foundry) for more info.
+
+To add monitoring capabilities to your Abacus installation follow these steps:
 
 * Change the `~/workspace/cf-abacus/lib/plugins/eureka/manifest.yml` to use the real Eureka server with the `/eureka` context path:
  ```yml
