@@ -39,6 +39,8 @@ You can also configure logging for multiple modules like this `DEBUG=abacus-brea
 
 The logs are DEBUG logs so they will produce a lot of entries in production. Usually you'll want to use the exception logs `DEBUG=e-*`
 
+:rotating_light: **Warning:** Enabling debug logging with high visibility (`abacus-*`) may lead to increased memory consumption and eventually to out of memory errors (OOM).
+
 **Dynamic/Remote configuration**
 
 The debug log can be configured dynamically (remotely). To get the current debug log config: 
