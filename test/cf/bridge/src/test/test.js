@@ -74,7 +74,6 @@ const tokenSecret = 'secret';
 const tokenAlgorithm = 'HS256';
 process.env.JWTKEY = tokenSecret;
 process.env.JWTALGO = tokenAlgorithm;
-
 const resourceToken = {
   header: {
     alg: tokenAlgorithm
@@ -106,7 +105,6 @@ const resourceToken = {
   },
   signature: 'irxoV230hkDJenXoTSHQFfqzoUl353lS2URo1fJm21Y'
 };
-
 const systemToken = {
   header: {
     alg: tokenAlgorithm
@@ -138,7 +136,6 @@ const systemToken = {
   },
   signature: 'OVNTKTvu-yHI6QXmYxtPeJZofNddX36Mx1q4PDWuYQE'
 };
-
 const signedResourceToken = jwt.sign(resourceToken.payload, tokenSecret, {
   expiresIn: 43200
 });
@@ -146,10 +143,9 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
   expiresIn: 43200
 });
 
-
 const test = (secured) => {
+  const submittime = Date.now();
   let server;
-  let submittime = new Date();
 
   beforeEach(() => {
     // Enable/disable the oAuth token authorization
@@ -174,8 +170,19 @@ const test = (secured) => {
     const app = express();
     const routes = router();
     routes.get('/v2/app_usage_events', (request, response) => {
+      if (request.url.indexOf('after_guid') !== -1) {
+        debug('Returning empty list of usage events');
+        return response.status(200).send({
+          total_results: 0,
+          total_pages: 0,
+          prev_url: null,
+          next_url: null,
+          resources: []
+        });
+      }
+
       response.status(200).send({
-        total_results: 1,
+        total_results: 2,
         total_pages: 1,
         prev_url: null,
         next_url: null,
@@ -184,7 +191,7 @@ const test = (secured) => {
             metadata: {
               guid: '904419c4',
               url: '/v2/app_usage_events/904419c4',
-              created_at: submittime.toISOString()
+              created_at: new Date(submittime).toISOString()
             },
             entity: {
               state: 'STARTED',
@@ -206,9 +213,6 @@ const test = (secured) => {
         ]
       });
     });
-    routes.get('/v2/apps', (request, response) => {
-      response.status(200).send({});
-    });
     routes.get('/v2/info',
       (request, response) => {
         response.status(200).send({
@@ -222,7 +226,7 @@ const test = (secured) => {
           access_token: signedResourceToken,
           expires_in: 100000,
           scope: 'abacus.usage.linux-container.read ' +
-            'abacus.usage.linux-container.write',
+          'abacus.usage.linux-container.write',
           jti: '254abca5-1c25-40c5-99d7-2cc641791517'
         });
       });
@@ -309,7 +313,7 @@ const test = (secured) => {
           const resources = response.body.resources;
           expect(resources.length).to.equal(1);
           expect(response.body.spaces.length).to.equal(1);
-          const reporttime = new Date();
+          const reporttime = Date.now();
 
           expect(resources[0]).to.contain.all.keys(
             'plans', 'aggregated_usage');
