@@ -182,7 +182,7 @@ const test = (secured) => {
       }
 
       response.status(200).send({
-        total_results: 2,
+        total_results: 1,
         total_pages: 1,
         prev_url: null,
         next_url: null,
