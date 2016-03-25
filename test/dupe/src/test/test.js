@@ -34,6 +34,8 @@ commander
     'delay between submissions', parseInt)
   .option('-n, --num <n>',
     'number of submissions', parseInt)
+  .option('-o, --organization-guid <o>',
+    'organization guid to submit duplicate usage for')
   .allowUnknownOption(true)
   .parse(argv);
 
@@ -60,6 +62,9 @@ const delay = commander.delay || 20000;
 
 // Total number of submissions to attempt
 const num = commander.num || 7;
+
+// Test organization guid
+const organization = commander.organizationGuid || 'test-org';
 
 // This test timeout
 const totalTimeout = 60000 + delay * num;
@@ -116,7 +121,7 @@ describe('abacus-dupe', function() {
       usage: [{
         start: start,
         end: end,
-        organization_id: 'test-org',
+        organization_id: organization,
         space_id: 'test-space',
         consumer_id: 'test-consumer',
         resource_id: 'test-resource',
@@ -157,11 +162,20 @@ describe('abacus-dupe', function() {
 
       request.post(collector + '/v1/metering/collected/usage',
         extend({ body: u }, authHeader(token)), (err, val) => {
-          expect(err).to.equal(undefined);
-
+          if(organization === 'test_status_code_502') {
+            expect(err).to.not.equal(undefined);
+            expect(val).to.equal(undefined);
+          }
+          else {
+            expect(err).to.equal(undefined)
+            if(organization !== 'test_status_code_404') {
+              expect(val.statusCode).to.equal(201);
+              expect(val.headers.location).to.not.equal(undefined);
+            }
+            else
+              expect(val.statusCode).to.equal(404);
+          }
           // Expect a 201 with the location of the accumulated usage
-          expect(val.statusCode).to.equal(201);
-          expect(val.headers.location).to.not.equal(undefined);
           cb();
         });
     };
@@ -172,22 +186,30 @@ describe('abacus-dupe', function() {
       request.get([
         reporting,
         'v1/metering/organizations',
-        'test-org',
+        organization,
         'aggregated/usage'
       ].join('/'), extend({}, authHeader(token)), (err, val) => {
-        expect(err).to.equal(undefined);
-        expect(val.statusCode).to.equal(200);
-
-        // Only check the previous report if it exists
-        if(!previousReport) {
-          console.log('Setting report');
-          previousReport = clone(omit(val.body,
-            'id', 'processed', 'processed_id', 'start', 'end'), prune);
+        if(organization === 'test_status_code_502')
+          expect(err).to.not.equal(undefined);
+        else if(organization === 'test_status_code_404') {
+          expect(err).to.equal(undefined);
+          expect(val.statusCode).to.equal(404);
         }
         else {
-          expect(previousReport).to.deep.equal(clone(omit(val.body,
-            'id', 'processed', 'processed_id', 'start', 'end'), prune));
-          console.log('No change in report');
+          expect(err).to.equal(undefined);
+          expect(val.statusCode).to.equal(200);
+
+          // Only check the previous report if it exists
+          if(!previousReport) {
+            console.log('Setting report');
+            previousReport = clone(omit(val.body,
+              'id', 'processed', 'processed_id', 'start', 'end'), prune);
+          }
+          else {
+            expect(previousReport).to.deep.equal(clone(omit(val.body,
+              'id', 'processed', 'processed_id', 'start', 'end'), prune));
+            console.log('No change in report');
+          }
         }
 
         // Exit if all submissions are done, otherwise wait and post again
