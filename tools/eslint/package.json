@@ -28,8 +28,8 @@
   },
   "scripts": {
     "babel": "true",
-    "lint": "eslint -c .eslintrc src",
-    "test": "eslint -c .eslintrc src",
+    "lint": "eslint -f unix -c .eslintrc src",
+    "test": "eslint -f unix -c .eslintrc src",
     "pub": "publish"
   },
   "dependencies": {

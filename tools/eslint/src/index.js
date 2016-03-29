@@ -40,7 +40,7 @@ var runCLI = function() {
   if (process.env.ESLINT_FIX)
     CLIEngine.outputFixes(report);
 
-  var formatter = engine.getFormatter('stylish');
+  var formatter = engine.getFormatter('unix');
   var output = formatter(report.results);
   console.log(output);
   
