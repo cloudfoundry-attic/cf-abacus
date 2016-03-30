@@ -158,93 +158,119 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
   "title": "Resource Usage"
 }
 ```
-
-Resource configuration
+Resource type
 ---
+The _resource type_ API is used by abacus to retrieve _resource type_ for Cloud resources.
 
-The _resource configuration_ API is used by Abacus to retrieve _resource configuration_ documents for Cloud resources.
-
-_Resource configuration_ documents describe the types of measurements, metrics, units, and metering, aggregation, rating and reporting formulas that must be used by Abacus to meter, rate, and report usage for each type of Cloud resource.
-
-This API defines the contract between Abacus and the Cloud platform integrating it. The Cloud platform can manage and store _resource configuration_ documents describing its Cloud resources in a platform specific way outside of Abacus, and is simply expected to make these documents available to Abacus at an API endpoint supporting a GET method.
+This API enable Cloud platform integrating Abacus to generalizes onboarded resource_ids to a single resource type.
 
 ### Method: get
 _HTTP request_:
 ```
-GET /v1/provisioning/resources/:resource_id/config/:time
+GET /v1/provisioning/resources/:resource_id/type
+```
+_Description_: Retrieves the resource type for the specified resource id.
+
+_HTTP response_: 200 to indicate success with the requested _resource type_, 404 if the resource type is not found, 500 to report a server error.
+
+Metering plan id
+---
+The _metering plan id_ API is used by abacus to retrieve _metering plan id_ for Cloud resources.
+
+Given the organization id, resource type, plan id, and time returns the metering plan id.
+
+This API gives more flexibility to Cloud platform integrating Abacus. Cloud platform integrating Abacus would be able give different way of metering depending on the given organization id, resource type, plan id, and time. 
+
+### Method: get
+_HTTP request_:
+```
+GET /v1/metering/organizations/:organization_id/resource_types/:resource_type/plans/:plan_id/time/:time/metering_plan/id
+```
+_Description_: Retrieves the metering plan of the specified organization id, resource type, plan id at the specified time.
+
+_HTTP response_: 200 to indicate success with the requested _metering plan id_, 404 if the metering plan id is not found, 500 to report a server error.
+
+Rating plan id
+---
+The _rating plan id_ API is used by abacus to retrieve _rating plan id_ for Cloud resources.
+
+Given the organization id, resource type, plan id, and time returns the rating plan id.
+
+This API gives more flexibility to Cloud platform integrating Abacus. Cloud platform integrating Abacus would be able give different way of rating depending on the given organization id, resource type, plan id, and time. 
+
+### Method: get
+_HTTP request_:
+```
+GET /v1/rating/organizations/:organization_id/resource_types/:resource_type/plans/:plan_id/time/:time/rating_plan/id
+```
+_Description_: Retrieves the rating plan of the specified organization id, resource type, plan id at the specified time.
+
+_HTTP response_: 200 to indicate success with the requested _rating plan id_, 404 if the rating plan id is not found, 500 to report a server error.
+
+Pricing plan id
+---
+The _pricing plan id_ API is used by abacus to retrieve _pricing plan id_ for Cloud resources.
+
+Given the organization id, resource type, plan id, and time returns the pricing plan id.
+
+This API gives more flexibility to Cloud platform integrating Abacus. Cloud platform integrating Abacus would be able give different pricing depending on the given organization id, resource type, plan id, and time. 
+
+### Method: get
+_HTTP request_:
+```
+GET /v1/pricing/organizations/:organization_id/resource_types/:resource_type/plans/:plan_id/time/:time/pricing_plan/id
+```
+_Description_: Retrieves the pricing plan of the specified organization id, resource type, plan id at the specified time.
+
+_HTTP response_: 200 to indicate success with the requested _pricing plan id_, 404 if the pricing plan id is not found, 500 to report a server error.
+
+Metering plans
+---
+
+The _metering plans_ API is used by Abacus to retrieve _metering plan_ documents for Cloud resources.
+
+_Metering plan_ documents describe the types of measurements, metrics, units, and metering, accumulation, aggregation, and reporting formulas that must be used by Abacus to meter, and report usage for each type of Cloud resource.
+
+This API defines the contract between Abacus and the Cloud platform integrating it. The Cloud platform can manage and store _metering plan_ documents describing its Cloud resources in a platform specific way outside of Abacus, and is simply expected to make these documents available to Abacus at an API endpoint supporting a GET method.
+
+### Method: get
+_HTTP request_:
+```
+GET /v1/metering/plans/:metering_plan_id
 ```
 
-_Description_: Retrieves the configuration of the specified Cloud resource effective at the specified time.
+_Description_: Retrieves the metering plan of the specified metering plan id.
 
-_HTTP response_: 200 to indicate success with the requested _resource configuration_ document, 404 if the configuration is not found, 500 to report a server error.
+_HTTP response_: 200 to indicate success with the requested _metering configuration_ document, 404 if the configuration is not found, 500 to report a server error.
 
 ### JSON representation:
 ```json
 {
-  "resource_id": "object-storage",
-  "effective": 1420070400000,
-  "plans": [
+  "plan_id": "basic-object-storage",
+  "measures": [
     {
-      "plan_id": "basic",
-      "measures": [
-        {
-          "name": "storage",
-          "unit": "BYTE"
-        },
-        {
-          "name": "api_calls",
-          "units": "CALL"
-        }
-      ],
-      "metrics": [
-        {
-          "name": "storage",
-          "unit": "GIGABYTE",
-          "meter": "(m) => m.storage / 1073741824",
-          "accumulate": "(a, qty) => Math.max(a, qty)"
-        },
-        {
-          "name": "thousand_api_calls",
-          "unit": "THOUSAND_CALLS",
-          "meter": "(m) => m.light_api_calls / 1000",
-          "accumulate": "(a, qty) => a ? a + qty : qty",
-          "aggregate": "(a, qty) => a ? a + qty : qty",
-          "rate": "(p, qty) => p ? p * qty : 0",
-          "summarize": "(t, qty) => qty",
-          "charge": "(t, cost) => cost"
-        }
-      ]
+      "name": "storage",
+      "unit": "BYTE"
     },
     {
-      "plan_id": "standard",
-      "measures": [
-        {
-          "name": "storage",
-          "unit": "BYTE"
-        },
-        {
-          "name": "api_calls",
-          "units": "CALL"
-        }
-      ],
-      "metrics": [
-        {
-          "name": "storage",
-          "unit": "GIGABYTE",
-          "meter": "(m) => m.storage / 1073741824",
-          "accumulate": "(a, qty) => Math.max(a, qty)"
-        },
-        {
-          "name": "thousand_api_calls",
-          "unit": "THOUSAND_CALLS",
-          "meter": "(m) => m.light_api_calls / 1000",
-          "accumulate": "(a, qty) => a ? a + qty : qty",
-          "aggregate": "(a, qty) => a ? a + qty : qty",
-          "rate": "(p, qty) => p ? p * qty : 0",
-          "summarize": "(t, qty) => qty",
-          "charge": "(t, cost) => cost"
-        }
-      ]
+      "name": "api_calls",
+      "units": "CALL"
+    }
+  ],
+  "metrics": [
+    {
+      "name": "storage",
+      "unit": "GIGABYTE",
+      "meter": "(m) => m.storage / 1073741824",
+      "accumulate": "(a, qty) => Math.max(a, qty)"
+    },
+    {
+      "name": "thousand_api_calls",
+      "unit": "THOUSAND_CALLS",
+      "meter": "(m) => m.light_api_calls / 1000",
+      "accumulate": "(a, qty) => a ? a + qty : qty",
+      "aggregate": "(a, qty) => a ? a + qty : qty",
+      "summarize": "(t, qty) => qty"
     }
   ]
 }
@@ -255,236 +281,205 @@ _HTTP response_: 200 to indicate success with the requested _resource configurat
 {
   "type": "object",
   "required": [
-    "resource_id",
-    "effective"
+    "plan_id",
+    "measures",
+    "metrics"
   ],
   "properties": {
-    "resource_id": {
+    "plan_id": {
       "type": "string"
     },
-    "effective": {
-      "type": "integer",
-      "format": "utc-millisec"
+    "measures": {
+      "type": "array",
+      "minItems": "1",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "unit"
+        ],
+        "properties": [
+          "name": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          }
+        ],
+        "additionalProperties": false
+      },
+      "additionalItems": false
     },
-    "plans": {
+    "metrics": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
         "required": [
-          "plan_id",
-          "measures",
-          "metrics"
+          "name",
+          "unit"
         ],
         "properties": {
-          "plan_id": {
+          "name": {
             "type": "string"
           },
-          "measures": {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "type": "object",
-              "required": [
-                "name",
-                "unit"
-              ],
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "unit": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": false
-            },
-            "additionalItems": false
+          "unit": {
+            "type": "string"
           },
-          "metrics": {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "type": "object",
-              "required": [
-                "name",
-                "unit"
-              ],
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "unit": {
-                  "type": "string"
-                },
-                "meter": {
-                  "type": "string"
-                },
-                "accumulate": {
-                  "type": "string"
-                },
-                "aggregate": {
-                  "type": "string"
-                },
-                "rate": {
-                  "type": "string"
-                },
-                "summarize": {
-                  "type": "string"
-                },
-                "charge": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": false
-            },
-            "additionalItems": false
+          "meter": {
+            "type": "string"
+          },
+          "accumulate": {
+            "type": "string"
+          },
+          "aggregate": {
+            "type": "string"
+          },
+          "summarize": {
+            "type": "string"
           }
         },
         "additionalProperties": false
       },
       "additionalItems": false
     }
-  },
   "additionalProperties": false,
-  "title": "Resource Definition"
+  "title": "Metering Plan"
 }
 ```
 
-Resource pricing
+Rating plans
 ---
 
-The _resource pricing_ API is used by Abacus to retrieve _resource pricing_ data for Cloud resources.
+The _rating plans_ API is used by Abacus to retrieve _rating plan_ documents for Cloud resources.
 
-_Resource pricing_ documents are used to configure the prices of the metrics used to meter Cloud resources. Different prices can be defined for different countries.
+_Rating plan_ documents describe the types of metrics, and rating, and charge formulas that must be used by Abacus to rate, and report usage for each type of Cloud resource.
 
-This API defines the contract between Abacus and the Cloud platform integrating it. The Cloud platform can manage and store _resource pricing_ data for its Cloud resources in a platform specific way outside of Abacus, and is simply expected to make the pricing data available to Abacus at an API endpoint supporting a GET method.
+This API defines the contract between Abacus and the Cloud platform integrating it. The Cloud platform can manage and store _rating plan_ documents describing its Cloud resources in a platform specific way outside of Abacus, and is simply expected to make these documents available to Abacus at an API endpoint supporting a GET method.
 
 ### Method: get
 _HTTP request_:
 ```
-GET /v1/pricing/resources/:resource_id/config/:time
+GET /v1/rating/plans/:rating_plan_id
 ```
 
-_Description_: Retrieves the pricing of the specified Cloud resource effective at the specified time.
+_Description_: Retrieves the rating plan of the specified rating plan id.
 
-_HTTP response_: 200 to indicate success with the requested _resource pricing_ data, 404 if the pricing data is not found, 500 to report a server error.
+_HTTP response_: 200 to indicate success with the requested _rating plan_ document, 404 if the plan is not found, 500 to report a server error.
 
 ### JSON representation:
 ```json
 {
-  "resource_id": "object-storage",
-  "effective": 1420070400000,
-  "plans": [
+  "plan_id": "object-rating-plan",
+  "metrics": [
     {
-      "plan_id": "basic",
-      "metrics": [
+      "name": "storage"
+    },
+    {
+      "name": "thousand_api_calls",
+      "rate": "(p, qty) => p ? p * qty : 0",
+      "charge": "(t, cost) => cost"
+    }
+  ]
+}
+```
+
+### JSON schema:
+```json
+{
+  "type": "object",
+  "required": [
+    "plan_id",
+    "metrics"
+  ],
+  "properties": {
+    "plan_id": {
+      "type": "string"
+    },
+    "metrics": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "rate": {
+            "type": "string"
+          },
+          "charge": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "additionalItems": false
+    }
+  "additionalProperties": false,
+  "title": "Metering Plan"
+}
+```
+
+
+Pricing plans
+---
+
+The _pricing plans_ API is used by Abacus to retrieve _pricing plan_ data for Cloud resources.
+
+_Pricing plan_ documents are used to configure the prices of the metrics used to rate Cloud resources. Different prices can be defined for different countries.
+
+This API defines the contract between Abacus and the Cloud platform integrating it. The Cloud platform can manage and store _pricing plan_ data for its Cloud resources in a platform specific way outside of Abacus, and is simply expected to make the pricing data available to Abacus at an API endpoint supporting a GET method.
+
+### Method: get
+_HTTP request_:
+```
+GET /v1/pricing/plans/:pricing_plan_id
+```
+
+_Description_: Retrieves the pricing of the specified pricing plan id.
+
+_HTTP response_: 200 to indicate success with the requested _pricing plan_ data, 404 if the pricing data is not found, 500 to report a server error.
+
+### JSON representation:
+```json
+{
+  "plan_id": "object-pricing-basic",
+  "metrics": [
+    {
+      "name": "storage",
+      "prices": [
         {
-          "name": "storage",
-          "prices": [
-            {
-              "country": "USA",
-              "price": 1
-            },
-            {
-              "country": "EUR",
-              "price": 0.7523
-            },
-            {
-              "country": "CAN",
-              "price": 1.06
-            }
-          ]
+          "country": "USA",
+          "price": 1
         },
         {
-          "name": "thousand_light_api_calls",
-          "prices": [
-            {
-              "country": "USA",
-              "price": 0.03
-            },
-            {
-              "country": "EUR",
-              "price": 0.0226
-            },
-            {
-              "country": "CAN",
-              "price": 0.0317
-            }
-          ]
+          "country": "EUR",
+          "price": 0.7523
         },
         {
-          "name": "heavy_api_calls",
-          "prices": [
-            {
-              "country": "USA",
-              "price": 0.15
-            },
-            {
-              "country": "EUR",
-              "price": 0.1129
-            },
-            {
-              "country": "CAN",
-              "price": 0.1585
-            }
-          ]
+          "country": "CAN",
+          "price": 1.06
         }
       ]
     },
     {
-      "plan_id": "standard",
-      "metrics": [
+      "name": "thousand_api_calls",
+      "prices": [
         {
-          "name": "storage",
-          "prices": [
-            {
-              "country": "USA",
-              "price": 0.5
-            },
-            {
-              "country": "EUR",
-              "price": 0.45
-            },
-            {
-              "country": "CAN",
-              "price": 0.65
-            }
-          ]
+          "country": "USA",
+          "price": 0.03
         },
         {
-          "name": "thousand_light_api_calls",
-          "prices": [
-            {
-              "country": "USA",
-              "price": 0.04
-            },
-            {
-              "country": "EUR",
-              "price": 0.04
-            },
-            {
-              "country": "CAN",
-              "price": 0.05
-            }
-          ]
+          "country": "EUR",
+          "price": 0.0226
         },
         {
-          "name": "heavy_api_calls",
-          "prices": [
-            {
-              "country": "USA",
-              "price": 0.18
-            },
-            {
-              "country": "EUR",
-              "price": 0.16
-            },
-            {
-              "country": "CAN",
-              "price": 0.24
-            }
-          ]
+          "country": "CAN",
+          "price": 0.0317
         }
       ]
     }
@@ -495,62 +490,39 @@ _HTTP response_: 200 to indicate success with the requested _resource pricing_ d
 ### JSON schema:
 ```json
 {
-  "title": "priceConfig",
+  "title": "Price Plan",
   "type": "object",
   "properties": {
-    "resource_id": {
+    "plan_id": {
       "type": "string"
     },
-    "effective": {
-      "type": "integer",
-      "format": "utc-millisec"
-    },
-    "plans": {
+    "metrics": {
       "type": "array",
       "minItems": 1,
       "items": {
-        "title": "plan",
+        "title": "metric",
         "type": "object",
         "properties": {
-          "plan_id": {
+          "name": {
             "type": "string"
           },
-          "metrics": {
+          "prices": {
             "type": "array",
             "minItems": 1,
             "items": {
-              "title": "metric",
+              "title": "price",
               "type": "object",
               "properties": {
-                "name": {
+                "country": {
                   "type": "string"
                 },
-                "prices": {
-                  "type": "array",
-                  "minItems": 1,
-                  "items": {
-                    "title": "price",
-                    "type": "object",
-                    "properties": {
-                      "country": {
-                        "type": "string"
-                      },
-                      "price": {
-                        "type": "number"
-                      }
-                    },
-                    "required": [
-                      "country",
-                      "price"
-                    ],
-                    "additionalProperties": false
-                  },
-                  "additionalItems": false
+                "price": {
+                  "type": "number"
                 }
               },
               "required": [
-                "name",
-                "prices"
+                "country",
+                "price"
               ],
               "additionalProperties": false
             },
@@ -558,8 +530,8 @@ _HTTP response_: 200 to indicate success with the requested _resource pricing_ d
           }
         },
         "required": [
-          "plan_id",
-          "metrics"
+          "name",
+          "prices"
         ],
         "additionalProperties": false
       },
@@ -567,9 +539,8 @@ _HTTP response_: 200 to indicate success with the requested _resource pricing_ d
     }
   },
   "required": [
-    "resource_id",
-    "effective",
-    "plans"
+    "plan_id",
+    "metrics"
   ],
   "additionalProperties": false
 }
