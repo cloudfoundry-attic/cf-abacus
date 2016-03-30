@@ -298,14 +298,14 @@ _HTTP response_: 200 to indicate success with the requested _metering configurat
           "name",
           "unit"
         ],
-        "properties": [
+        "properties": {
           "name": {
             "type": "string"
           },
           "unit": {
             "type": "string"
           }
-        ],
+        },
         "additionalProperties": false
       },
       "additionalItems": false
@@ -342,7 +342,7 @@ _HTTP response_: 200 to indicate success with the requested _metering configurat
         "additionalProperties": false
       },
       "additionalItems": false
-    }
+    },
   "additionalProperties": false,
   "title": "Metering Plan"
 }
@@ -418,7 +418,7 @@ _HTTP response_: 200 to indicate success with the requested _rating plan_ docume
         "additionalProperties": false
       },
       "additionalItems": false
-    }
+    },
   "additionalProperties": false,
   "title": "Metering Plan"
 }
