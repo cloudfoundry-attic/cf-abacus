@@ -31,6 +31,8 @@
   "dependencies": {
     "abacus-perf": "file:../perf",
     "abacus-debug": "file:../debug",
+    "abacus-oauth": "file:../oauth",
+    "abacus-urienv": "file:../urienv",
     "babel-preset-es2015": "^6.1.4",
     "underscore": "^1.8.3"
   },
