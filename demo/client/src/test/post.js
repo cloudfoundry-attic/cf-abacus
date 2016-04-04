@@ -52,10 +52,9 @@ request.post(collector + '/v1/metering/collected/usage', {
   rejectUnauthorized: false,
   body: batch
 }, (err, val) => {
-  console.log('Response', err ? err : val.statusCode);
-  if(!err) {
-    console.log(val.headers.location);
-    map(val.body, (loc) => console.log('  %s', loc));
-  }
+  if(err)
+    console.log('Error', err);
+  else
+    console.log('Status', val.statusCode, ', body ', val.body);
 });
 
