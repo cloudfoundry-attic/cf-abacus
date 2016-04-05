@@ -2,11 +2,8 @@
 
 // Test usage poster
 
-const _ = require('underscore');
 const request = require('abacus-request');
 const commander = require('commander');
-
-const map = _.map;
 
 // Parse command line options
 commander
