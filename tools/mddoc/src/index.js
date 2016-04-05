@@ -49,6 +49,7 @@ var runCLI = function(stdin, stdout) {
         catch (e) {
           return '';
         }
+      return '';
     }
   });
 

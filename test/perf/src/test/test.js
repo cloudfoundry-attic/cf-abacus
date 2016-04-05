@@ -345,7 +345,7 @@ describe('abacus-perf-test', () => {
         val.windows = [[first(last(val.windows))]]
       map(keys(val), (k) => {
         if(typeof val[k] === 'object')
-          return fixup(val[k]);
+          fixup(val[k]);
         if(typeof val[k] === 'array')
           map(val[l], fixup);
       });

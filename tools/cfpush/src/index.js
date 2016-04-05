@@ -29,7 +29,10 @@ var mkdirs = function(cb) {
 var remanifest = function(root, name, instances, conf, cb) {
   fs.readFile(
     path.join(process.cwd(), 'manifest.yml'), function(err, content) {
-      if(err) return cb(err);
+      if(err) {
+        cb(err);
+        return;
+      }
       var yml = yaml.load(content);
       var app = yml.applications[0];
       if(app) {

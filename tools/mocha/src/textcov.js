@@ -45,45 +45,43 @@ var nextpos = function(pos, c) {
 var annotatedSource = function(source, coveredSpans, uncoveredSpans, opt) {
   // Use colors or markup tags to mark the covered code, uncovered code and
   // non-code text sections.
-  var marks = opt.color ?
+  var marks = opt.color ? {
     // Uncovered code is underlined red, covered code is green, non-code
     // text is blue
-    {
-      uncovered: {
-        start: '\u001b[31m\u001b[4m',
-        end: '\u001b[0m'
-      },
-      covered: {
-        start: '\u001b[32m',
-        end: '\u001b[0m'
-      },
-      text: {
-        start: '\u001b[34m',
-        end: '\u001b[0m'
-      },
-      none: {
-        start: '\u001b[0m',
-        end: '\u001b[0m'
-      }
-    } :
-    {
-      uncovered: {
-        start: '<U>',
-        end: '</U>'
-      },
-      covered: {
-        start: '<C>',
-        end: '</C>'
-      },
-      text: {
-        start: '',
-        end: ''
-      },
-      none: {
-        start: '',
-        end: ''
-      }
-    };
+    uncovered: {
+      start: '\u001b[31m\u001b[4m',
+      end: '\u001b[0m'
+    },
+    covered: {
+      start: '\u001b[32m',
+      end: '\u001b[0m'
+    },
+    text: {
+      start: '\u001b[34m',
+      end: '\u001b[0m'
+    },
+    none: {
+      start: '\u001b[0m',
+      end: '\u001b[0m'
+    }
+  } : {
+    uncovered: {
+      start: '<U>',
+      end: '</U>'
+    },
+    covered: {
+      start: '<C>',
+      end: '</C>'
+    },
+    text: {
+      start: '',
+      end: ''
+    },
+    none: {
+      start: '',
+      end: ''
+    }
+  };
 
   // Return an array of characters representing the source document marked
   // with marks indicating covered code, uncovered code and text sections

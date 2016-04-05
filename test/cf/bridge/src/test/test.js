@@ -172,13 +172,14 @@ const test = (secured) => {
     routes.get('/v2/app_usage_events', (request, response) => {
       if (request.url.indexOf('after_guid') !== -1) {
         debug('Returning empty list of usage events');
-        return response.status(200).send({
+        response.status(200).send({
           total_results: 0,
           total_pages: 0,
           prev_url: null,
           next_url: null,
           resources: []
         });
+        return;
       }
 
       response.status(200).send({
@@ -288,13 +289,12 @@ const test = (secured) => {
   });
 
   const checkAllTimeWindows = (usage, reporttime) => {
-    for (const windowType in timeWindows) {
+    for (const windowType in timeWindows)
       if(isWithinWindow(submittime, reporttime, timeWindows[windowType])) {
         const windowUsage = usage.windows[timeWindows[windowType]];
         expect(windowUsage[0].quantity.consuming).to.equal(0.5);
         expect(windowUsage[0].charge).to.be.above(0);
       }
-    }
   };
 
   const checkReport = (cb) => {

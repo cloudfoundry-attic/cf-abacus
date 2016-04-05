@@ -123,7 +123,7 @@ const addWindows = (u) => {
 // Add cost to aggregated usage at all plan levels
 const addCost = (k, v) => {
   // all plan level aggregations need cost as part of aggregated_usage
-  if (k === 'plans') return map(v, (p) => {
+  if (k === 'plans') map(v, (p) => {
     // Warning: mutating aggregated_usage to include cost
     p.aggregated_usage = map(p.aggregated_usage, (u) => ({
       metric: u.metric,
@@ -149,7 +149,7 @@ const sumCharges = (a, m) => {
 // Add charge, and summary to aggregated_usage at all resources and
 // all plan levels
 const addCharge = (k, v) => {
-  if (k === 'resources') return map(v, (r) => {
+  if (k === 'resources') map(v, (r) => {
     // Calculate plan level charges
     r.plans = map(r.plans, (p) => {
       p.aggregated_usage = map(p.aggregated_usage, (u) => {
