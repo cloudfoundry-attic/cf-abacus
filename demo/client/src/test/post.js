@@ -11,21 +11,21 @@ commander
     'Usage collector URL or domain name [http://localhost:9080]',
     'http://localhost:9080')
   .option(
-    '-d, --delta <d>', 'Usage time window shift in milli-seconds', parseInt)
+    '-t, --time <t>', 'Usage time in milli-seconds', parseInt)
   .parse(process.argv);
 
 // Collector service URL
 const collector = /:/.test(commander.collector) ? commander.collector :
   'https://abacus-usage-collector.' + commander.collector;
 
-// Usage time window shift in milli-seconds
-const delta = commander.delta || 0;
+// Usage time in milli-seconds
+const time = commander.time || Date.now();
 
 // Post usage for a resource
 const batch = {
   usage: [{
-    start: 1420502400000 + delta,
-    end: 1420502401000 + delta,
+    start: time,
+    end: time + 1,
     organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
     space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
     consumer_id: 'external:bbeae239-f3f8-483c-9dd0-de6781c38bab',
@@ -51,7 +51,12 @@ request.post(collector + '/v1/metering/collected/usage', {
 }, (err, val) => {
   if(err)
     console.log('Error', err);
-  else
-    console.log('Status', val.statusCode, ', body ', val.body);
+  if(val) {
+    console.log('Status %d', val.statusCode);
+    if(val.headers.location)
+      console.log('Location %s', val.headers.location);
+    if(val.body)
+      console.log('Body', val.body);
+  }
 });
 
