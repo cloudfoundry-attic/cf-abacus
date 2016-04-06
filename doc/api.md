@@ -1917,6 +1917,288 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
   "additionalProperties": false
 }
 ```
+Resource instance usage summary report
+---
+
+The _resource instance usage summary report_ API can be used to retrieve aggregated usage summary report documents for a resource instance from Abacus.
+
+### Method: get
+_HTTP request_:
+```
+GET /v1/metering/organizations/:organization_id/resource_instances/:resource_instance_id/consumers/:consumer_id/plans/:plan_id/metering_plans/:metering_plan_id/rating_plans/:rating_plan_id/pricing_plans/:pricing_plan_id/aggregated/usage/:time
+```
+
+_Description_: Retrieves a usage report document containing a summary of the aggregated Cloud resource usage incurred by the specified resource instance within an organization and the specific set of plans at the specified time.
+
+_HTTP response_: 200 to indicate success with a _usage summary report_ JSON document, 404 if the usage is not found, 500 to report a server error.
+
+### JSON representation:
+```json
+{
+  "start": 1435622400000,
+  "end": 1435708799999,
+  "processed": 1435708800000,
+  "organization_id": "us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+  "plan_id": "basic",
+  "metering_plan_id": "test-metering-plan",
+  "rating_plan_id": "test-rating-plan",
+  "pricing_plan_id": "test-pricing-basic",
+  "consumer_id": "app:d98b5916-3c77-44b9-ac12-045678edabae",
+  "resource_instance_id": "0b39fa70-a65f-4183-bae8-385633ca5c87",
+  "space_id": "aaeae239-f3f8-483c-9dd0-de5d41c38b6a",
+  "resource_id": "object-storage",
+  "accumulated_usage": [
+    {
+      "metric": "storage",
+      "windows": [
+        [{
+          "quantity": 1,
+          "summary": 1,
+          "cost": 1,
+          "charge": 1
+        }],
+        [{
+          "quantity": 1,
+          "summary": 1,
+          "cost": 1,
+          "charge": 1
+        }],
+        [{
+          "quantity": 1,
+          "summary": 1,
+          "cost": 1,
+          "charge": 1
+        }],
+        [{
+          "quantity": 1,
+          "summary": 1,
+          "cost": 1,
+          "charge": 1
+        }],
+        [{
+          "quantity": 1,
+          "summary": 1,
+          "cost": 1,
+          "charge": 1
+        }]
+      ]
+    },
+    {
+      "metric": "thousand_light_api_calls",
+      "windows": [
+        [{
+          "quantity": 3,
+          "summary": 3,
+          "cost": 0.09,
+          "charge": 0.09
+        }],
+        [{
+          "quantity": 3,
+          "summary": 3,
+          "cost": 0.09,
+          "charge": 0.09
+        }],
+        [{
+          "quantity": 3,
+          "summary": 3,
+          "cost": 0.09,
+          "charge": 0.09
+        }],
+        [{
+          "quantity": 3,
+          "summary": 3,
+          "cost": 0.09,
+          "charge": 0.09
+        }],
+        [{
+          "quantity": 3,
+          "summary": 3,
+          "cost": 0.09,
+          "charge": 0.09
+        }]
+      ]
+    },
+    {
+      "metric": "heavy_api_calls",
+      "windows": [
+        [{
+          "quantity": 300,
+          "summary": 300,
+          "cost": 45,
+          "charge": 45
+        }],
+        [{
+          "quantity": 300,
+          "summary": 300,
+          "cost": 45,
+          "charge": 45
+        }],
+        [{
+          "quantity": 300,
+          "summary": 300,
+          "cost": 45,
+          "charge": 45
+        }],
+        [{
+          "quantity": 300,
+          "summary": 300,
+          "cost": 45,
+          "charge": 45
+        }],
+        [{
+          "quantity": 300,
+          "summary": 300,
+          "cost": 45,
+          "charge": 45
+        }]
+      ]
+    }
+  ],
+  "windows": [
+    [{
+      "charge": 46.09,
+    }],
+    [{
+      "charge": 46.09,
+    }],
+    [{
+      "charge": 46.09,
+    }],
+    [{
+      "charge": 46.09,
+    }],
+    [{
+      "charge": 46.09,
+    }]
+  ],
+  "id": "k/us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/0b39fa70-a65f-4183-bae8-385633ca5c87/app:d98b5916-3c77-44b9-ac12-045678edabae/basic/test-metering-plan/test-rating-plan/test-pricing-basic/t/0001435622400000",
+}
+```
+
+### JSON schema:
+```json
+{
+  "title": "resourceInstanceReport",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "start": {
+      "type": "integer",
+      "format": "utc-millisec"
+    },
+    "end": {
+      "type": "integer",
+      "format": "utc-millisec"
+    },
+    "processed": {
+      "type": "integer",
+      "format": "utc-millisec"
+    },
+    "organization_id": {
+      "type": "string"
+    },
+    "space_id": {
+      "type": "string"
+    },
+    "resource_instance_id": {
+      "type": "string"
+    },
+    "consumer_id": {
+      "type": "string"
+    },
+    "plan_id": {
+      "type": "string"
+    },
+    "metering_plan_id": {
+      "type": "string"
+    },
+    "rating_plan_id": {
+      "type": "string"
+    },
+    "pricing_plan_id": {
+      "type": "string"
+    },
+    "accumulated_usage": {
+      "type": "array",
+      "items": {
+        "title": "accumulated",
+        "type": "object",
+        "properties": {
+          "metric": {
+            "type": "string"
+          },
+          "windows": {
+            "type": "array",
+            "items": {
+              "title": "pwindow",
+              "type": "object",
+              "properties": {
+                "quantity": {
+                  "type": "number"
+                },
+                "summary": {
+                  "type": "number"
+                },
+                "cost": {
+                  "type": "number"
+                },
+                "charge": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "quantity",
+                "summary",
+                "cost",
+                "charge"
+              ]
+            }
+          }
+        }
+      },
+      "required": [
+        "metric",
+        "windows"
+      ]
+    },
+    "windows": {
+      "type": "array",
+      "items": {
+        "title": "cwindow",
+        "type": "object",
+        "properties": {
+          "charge": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "charge"
+        ]
+      }
+    }
+  },
+  "required": [
+    "id",
+    "organization_id",
+    "space_id",
+    "resource_instance_id",
+    "consumer_id",
+    "resource_id",
+    "plan_id",
+    "metering_plan_id",
+    "rating_plan_id",
+    "pricing_plan_id",
+    "start",
+    "end",
+    "processed",
+    "accumulated_usage",
+    "windows"
+  ],
+  "additionalProperties": false
+}
+```
 
 GraphQL usage query
 ---
