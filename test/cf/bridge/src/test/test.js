@@ -14,6 +14,7 @@ const clone = _.clone;
 
 // Setup the debug log
 const debug = require('abacus-debug')('abacus-cf-bridge-itest');
+const rdebug = require('abacus-debug')('abacus-cf-bridge-itest-response');
 
 // Module directory
 const moduleDir = (module) => {
@@ -196,8 +197,11 @@ const test = (secured) => {
             },
             entity: {
               state: 'STARTED',
+              previous_state: 'STOPPED',
               memory_in_mb_per_instance: 512,
+              previous_memory_in_mb_per_instance: 0,
               instance_count: 1,
+              previous_instance_count: 0,
               app_guid: '35c4ff2f',
               app_name: 'app',
               space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
@@ -206,6 +210,7 @@ const test = (secured) => {
               buildpack_guid: null,
               buildpack_name: null,
               package_state: 'PENDING',
+              previous_package_state: 'PENDING',
               parent_app_guid: null,
               parent_app_name: null,
               process_type: 'web'
@@ -327,10 +332,11 @@ const test = (secured) => {
           cb();
         }
         catch (e) {
-          const errorMsg = util.format('Check failed with %s.\n' +
+          const message = util.format('Check failed with %s.\n' +
             'Usage report:\n', e.stack,
-            response ? JSON.stringify(response.body, null, 2) : 'unknown');
-          cb(new Error(errorMsg, e));
+            response ? JSON.stringify(response.body, null, 2) : undefined);
+          rdebug(message);
+          cb(new Error(message), e);
         }
       });
   };
@@ -345,9 +351,10 @@ const test = (secured) => {
         return;
       }
 
-      if (Date.now() - startTimestamp > timeout)
-        setImmediate(() => done(new Error(util.format('Expectation not met ' +
-          'for %d ms. Error: %o', timeout, err))));
+      if (Date.now() - startTimestamp > timeout) {
+        debug('Expectation not met for %d ms. Error: %o', timeout, err);
+        setImmediate(() => done(new Error(err)));
+      }
       else
         setTimeout(() => {
           debug('Calling %s after >= %d ms...', fn.name, interval);
@@ -359,10 +366,11 @@ const test = (secured) => {
     fn(doneCallback);
   };
 
-  xit('submit runtime usage to usage collector', function(done) {
+  it('submit runtime usage to usage collector', function(done) {
     this.timeout(totalTimeout + 2000);
 
     // Wait for bridge to start
+    const startWaitTime = Date.now();
     request.waitFor('http://localhost::p/v1/cf/bridge', { p: 9500 },
       startTimeout, (err, uri, opts) => {
         // Failed to ping bridge before timing out
@@ -377,7 +385,8 @@ const test = (secured) => {
           expect(err).to.equal(undefined);
           expect(response.statusCode).to.equal(200);
 
-          poll(checkReport, done, totalTimeout, 1000);
+          poll(checkReport, done,
+            totalTimeout - (Date.now() - startWaitTime), 1000);
         });
       }
     );
