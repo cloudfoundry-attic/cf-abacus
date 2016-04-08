@@ -168,7 +168,7 @@ To change the resource provider (abacus-linux-container) settings or the number 
 Bridge internal timeouts can be configured by modifying these environment variables:
 * MIN_INTERVAL_TIME
    * minimum time [milliseconds] between each call to CF [app usage events API](http://apidocs.cloudfoundry.org/231/app_usage_events/list_all_app_usage_events.html)
-   * this variable also controls the time between each attempt to cache the last processd app usage GUID. The bridge tries to cache the GUID every 2 * MIN_INTERVAL_TIME milliseconds
+   * this variable also controls the time between each attempt to cache the last processd app usage GUID. The bridge tries to cache the GUID every 5 * MIN_INTERVAL_TIME milliseconds
 * MAX_INTERVAL_TIME
    * maximum time [milliseconds] between app usage calls to CF
    * maximum time between Abacus reporting attempts
