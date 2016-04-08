@@ -116,6 +116,7 @@
     "abacus-vcapenv": "file:lib/utils/vcapenv",
     "abacus-webapp": "file:lib/utils/webapp",
     "abacus-webhook": "file:lib/utils/webhook",
+    "abacus-webproxy": "file:lib/utils/webproxy",
     "abacus-yieldable": "file:lib/utils/yieldable",
     "abacus-dupe-test": "file:test/dupe",
     "abacus-perf-test": "file:test/perf",
