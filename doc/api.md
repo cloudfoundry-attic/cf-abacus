@@ -25,7 +25,7 @@ The _resource usage collection_ API can be used by Cloud resource providers to s
 
 Usage can be submitted by POSTing _resource usage_ documents to Abacus.
 
-A _resource usage document_ contains usage measurements for one or more Cloud resources.
+A _resource usage document_ contains usage measurements for a Cloud resource.
 
 Once a _resource usage_ document has been submitted to Abacus it can be retrieved using GET.
 
@@ -52,26 +52,22 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
 ### JSON representation:
 ```json
 {
-  "usage": [
+  "start": 1396421450000,
+  "end": 1396421451000,
+  "organization_id": "us-south:54257f98-83f0-4eca-ae04-9ea35277a538",
+  "space_id": "d98b5916-3c77-44b9-ac12-04456df23eae",
+  "consumer_id": "app:d98b5916-3c77-44b9-ac12-045678edabae",
+  "resource_id": "object-storage",
+  "plan_id": "basic",
+  "resource_instance_id": "d98b5916-3c77-44b9-ac12-04d61c7a4eae",
+  "measured_usage": [
     {
-      "start": 1396421450000,
-      "end": 1396421451000,
-      "organization_id": "us-south:54257f98-83f0-4eca-ae04-9ea35277a538",
-      "space_id": "d98b5916-3c77-44b9-ac12-04456df23eae",
-      "consumer_id": "app:d98b5916-3c77-44b9-ac12-045678edabae",
-      "resource_id": "object-storage",
-      "plan_id": "basic",
-      "resource_instance_id": "d98b5916-3c77-44b9-ac12-04d61c7a4eae",
-      "measured_usage": [
-        {
-          "measure": "storage",
-          "quantity": 10
-        },
-        {
-          "measure": "api_calls",
-          "quantity": 10
-        }
-      ]
+      "measure": "storage",
+      "quantity": 10
+    },
+    {
+      "measure": "api_calls",
+      "quantity": 10
     }
   ]
 }
@@ -85,68 +81,47 @@ _HTTP response_: 200 to indicate success with the requested _resource usage_ doc
     "usage"
   ],
   "properties": {
-    "usage": {
+    "start": {
+      "type": "integer",
+      "format": "utc-millisec"
+    },
+    "end": {
+      "type": "integer",
+      "format": "utc-millisec"
+    },
+    "organization_id": {
+      "type": "string"
+    },
+    "space_id": {
+      "type": "string"
+    },
+    "consumer_id": {
+      "type": "string"
+    },
+    "resource_id": {
+      "type": "string"
+    },
+    "plan_id": {
+      "type": "string"
+    },
+    "resource_instance_id": {
+      "type": "string"
+    },
+    "measured_usage": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
         "required": [
-          "start",
-          "end",
-          "organization_id",
-          "space_id",
-          "resource_id",
-          "plan_id",
-          "resource_instance_id",
-          "measured_usage"
+          "measure",
+          "quantity"
         ],
         "properties": {
-          "start": {
-            "type": "integer",
-            "format": "utc-millisec"
-          },
-          "end": {
-            "type": "integer",
-            "format": "utc-millisec"
-          },
-          "organization_id": {
+          "measure": {
             "type": "string"
           },
-          "space_id": {
-            "type": "string"
-          },
-          "consumer_id": {
-            "type": "string"
-          },
-          "resource_id": {
-            "type": "string"
-          },
-          "plan_id": {
-            "type": "string"
-          },
-          "resource_instance_id": {
-            "type": "string"
-          },
-          "measured_usage": {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "type": "object",
-              "required": [
-                "measure",
-                "quantity"
-              ],
-              "properties": {
-                "measure": {
-                  "type": "string"
-                },
-                "quantity": {
-                  "type": "number"
-                }
-              },
-              "additionalProperties": false
-            },
-            "additionalItems": false
+          "quantity": {
+            "type": "number"
           }
         },
         "additionalProperties": false

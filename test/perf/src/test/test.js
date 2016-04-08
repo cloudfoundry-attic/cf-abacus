@@ -93,24 +93,22 @@ describe('abacus-perf-test', () => {
       o + 1].join('-');
 
     const usageTemplate = (o, ri, i) => ({
-      usage: [{
-        start: start + i,
-        end: end + i,
-        organization_id: orgid(o),
-        space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-        resource_id: 'object-storage',
-        plan_id: 'basic',
-        resource_instance_id: riid(o, ri),
-        measured_usage: [{
-          measure: 'storage',
-          quantity: 1073741824
-        }, {
-          measure: 'light_api_calls',
-          quantity: 1000
-        }, {
-          measure: 'heavy_api_calls',
-          quantity: 100
-        }]
+      start: start + i,
+      end: end + i,
+      organization_id: orgid(o),
+      space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
+      resource_id: 'object-storage',
+      plan_id: 'basic',
+      resource_instance_id: riid(o, ri),
+      measured_usage: [{
+        measure: 'storage',
+        quantity: 1073741824
+      }, {
+        measure: 'light_api_calls',
+        quantity: 1000
+      }, {
+        measure: 'heavy_api_calls',
+        quantity: 100
       }]
     });
 

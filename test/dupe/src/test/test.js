@@ -118,34 +118,32 @@ describe('abacus-dupe', function() {
     const end = usageTime;
 
     const usage = {
-      usage: [{
-        start: start,
-        end: end,
-        organization_id: organization,
-        space_id: 'test-space',
-        consumer_id: 'test-consumer',
-        resource_id: 'test-resource',
-        plan_id: 'basic',
-        resource_instance_id: 'test-instance',
-        measured_usage: [
-          {
-            measure: 'previous_instance_memory',
-            quantity: 536870912
-          },
-          {
-            measure: 'previous_running_instances',
-            quantity: 0
-          },
-          {
-            measure: 'current_instance_memory',
-            quantity: 536870912
-          },
-          {
-            measure: 'current_running_instances',
-            quantity: 1
-          }
-        ]
-      }]
+      start: start,
+      end: end,
+      organization_id: organization,
+      space_id: 'test-space',
+      consumer_id: 'test-consumer',
+      resource_id: 'test-resource',
+      plan_id: 'basic',
+      resource_instance_id: 'test-instance',
+      measured_usage: [
+        {
+          measure: 'previous_instance_memory',
+          quantity: 536870912
+        },
+        {
+          measure: 'previous_running_instances',
+          quantity: 0
+        },
+        {
+          measure: 'current_instance_memory',
+          quantity: 536870912
+        },
+        {
+          measure: 'current_running_instances',
+          quantity: 1
+        }
+      ]
     }
 
     // Submit usage for sample resource with 10 GB, 1000 light API calls,

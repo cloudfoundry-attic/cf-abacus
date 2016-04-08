@@ -147,35 +147,19 @@ describe('abacus-usage-collector-itest', () => {
 
     // Measured usage for a given org, resource instance and usage #s
     const measuredTemplate = (o, ri, u) => ({
-      usage: [{
-        start: start + u,
-        end: end + u,
-        organization_id: oid(o),
-        space_id: sid(o, ri),
-        resource_id: 'test-resource',
-        plan_id: pid(ri, u),
-        resource_instance_id: riid(o, ri),
-        consumer_id: cid(o, ri),
-        measured_usage: [
-            { measure: 'storage', quantity: 1073741824 },
-            { measure: 'light_api_calls', quantity: 1000 },
-            { measure: 'heavy_api_calls', quantity: 100 }
-        ]
-      }, {
-        start: start + u,
-        end: end + u + 1,
-        organization_id: oid(o),
-        space_id: sid(o, ri),
-        resource_id: 'test-resource',
-        plan_id: pid(ri, u),
-        resource_instance_id: riid(o, ri),
-        consumer_id: cid(o, ri),
-        measured_usage: [
-            { measure: 'storage', quantity: 2147483648 },
-            { measure: 'light_api_calls', quantity: 2000 },
-            { measure: 'heavy_api_calls', quantity: 200 }
-        ]
-      }]
+      start: start + u,
+      end: end + u,
+      organization_id: oid(o),
+      space_id: sid(o, ri),
+      resource_id: 'test-resource',
+      plan_id: pid(ri, u),
+      resource_instance_id: riid(o, ri),
+      consumer_id: cid(o, ri),
+      measured_usage: [
+          { measure: 'storage', quantity: 1073741824 },
+          { measure: 'light_api_calls', quantity: 1000 },
+          { measure: 'heavy_api_calls', quantity: 100 }
+      ]
     });
 
     // Post a measured usage doc, throttled to default concurrent requests
@@ -237,10 +221,10 @@ describe('abacus-usage-collector-itest', () => {
     const verifyMetering = (done) => {
       try {
         debug('Verifying metering calls %d to equal to %d',
-          meter.callCount, 2 * orgs * resourceInstances * usage);
+          meter.callCount, orgs * resourceInstances * usage);
 
         // TODO check the values of the normalized usage
-        expect(meter.callCount).to.equal(2 * orgs * resourceInstances * usage);
+        expect(meter.callCount).to.equal(orgs * resourceInstances * usage);
         done();
       }
       catch (e) {
