@@ -1,7 +1,7 @@
 default:
   PORT: 8080
   APPS: 1
-  INSTANCES: 1
+  INSTANCES: 2
 
 small:
   APPS: 1
