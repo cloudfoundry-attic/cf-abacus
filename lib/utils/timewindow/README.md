@@ -23,24 +23,24 @@ in 4.
 
 ```javascript
 // Results in 4
-timewindow.monthWindowDiff(new Date(Date.UTC(2015, 8)),
-  new Date(Date.UTC(2016, 0)));
+timewindow.diff(new Date(Date.UTC(2015, 8)),
+  new Date(Date.UTC(2016, 0)), 'M');
 
 // Results in 6
-timewindow.dateWindowDiff(new Date(Date.UTC(2016, 0, 1)),
-  new Date(Date.UTC(2016, 0, 7)));
+timewindow.diff(new Date(Date.UTC(2016, 0, 1)),
+  new Date(Date.UTC(2016, 0, 7)), 'D');
 
 // Results in 13
-timewindow.hoursWindowDiff(new Date(Date.UTC(2016, 0, 1, 10)),
-  new Date(Date.UTC(2016, 0, 1, 23)));
+timewindow.diff(new Date(Date.UTC(2016, 0, 1, 10)),
+  new Date(Date.UTC(2016, 0, 1, 23)), 'h');
 
 // Results in 23
-timewindow.minutesWindowDiff(new Date(Date.UTC(2016, 0, 1, 0, 23)),
-  new Date(Date.UTC(2016, 0, 1, 0, 46)));
+timewindow.diff(new Date(Date.UTC(2016, 0, 1, 0, 23)),
+  new Date(Date.UTC(2016, 0, 1, 0, 46)), 'm');
 
 // Results in 35
-timewindow.secondsWindowDiff(new Date(Date.UTC(2016, 0, 1, 0, 0, 20)),
-  new Date(Date.UTC(2016, 0, 1, 0, 0, 55)));
+timewindow.diff(new Date(Date.UTC(2016, 0, 1, 0, 0, 20)),
+  new Date(Date.UTC(2016, 0, 1, 0, 0, 55)), 's');
 ```
 
 "Flattening" a date
