@@ -62,6 +62,8 @@ The Resource Providers can:
 
 This system token is used to protect the pipeline from unauthorized (erroneous or even malicious) requests, made directly steps of the pipeline, other than the collector and reporting.
 
+In order to read Abacus's health and hystrix stream, basic authentication is required. Abacus will use the provided basic authentication to obtain a bearer token and validates if the user has the `abacus.system.read` permission. 
+
 
 #### Token issuer
 
