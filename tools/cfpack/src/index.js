@@ -8,8 +8,9 @@
 var _ = require('underscore');
 var fs = require('fs');
 var path = require('path');
-var cp = require('child_process');
 var commander = require('commander');
+var archiver = require('archiver');
+var globby = require('globby');
 
 var map = _.map;
 var pairs = _.pairs;
@@ -54,27 +55,40 @@ var repackage = function(root, cb) {
 };
 
 // Produce the packaged app zip
-var zip = function(ignore, cb) {
+var zip = function(cb) {
   fs.unlink(path.resolve('.cfpack', 'app.zip'), function(err) {
+
     if(err) noop();
 
-    // We're using the system zip command here, may be better to use a
-    // Javascript zip library instead
-    var files = '-type f -not -regex "\\./\\.cfpack/package\\.json" ' +
-      '-not -regex ".*/\\.git"';
-    var ex = cp.exec('(find . .cfpack/lib/* ' + files + ' | zip -q -x@' +
-      ignore + ' -@ .cfpack/app.zip) && ' +
-      '(zip -q -j .cfpack/app.zip .cfpack/package.json)', {
-        cwd: process.cwd()
-      });
-    ex.stdout.on('data', function(data) {
-      process.stdout.write(data);
+    var patterns = ['**/*', '!.gitignore', '!.cfpack/app.zip',
+      '!.cfpack/lib/**/.cfpack/**', '!.cfpack/lib/**/.gitignore'];
+
+    var output = fs.createWriteStream('.cfpack/app.zip');
+    var archive = archiver('zip');
+
+    output.on('close', function() {
+      console.log(archive.pointer() + ' byte(s)');
+      cb(0);
     });
-    ex.stderr.on('data', function(data) {
-      process.stderr.write(data);
+
+    archive.on('error', function(err) {
+      cb(err);
     });
-    ex.on('close', function(code) {
-      cb(code);
+
+    archive.pipe(output);
+
+    globby(patterns, {
+      dot: true,
+      follow: true
+    }).catch(function(e) {
+      cb(e);
+    }).then(function(paths) {
+      console.log(paths);
+      map(paths, function(path) {
+        archive.file(path, { src : path });
+      })
+      archive.file('.cfpack/package.json', { src: 'package.json' });
+      archive.finalize();
     });
   });
 };
@@ -119,7 +133,7 @@ var runCLI = function() {
       }
 
       // Produce the packaged app zip
-      zip(path.join(commander.root, '.gitignore'), function(err) {
+      zip(function(err) {
         if(err) {
           console.log('Couldn\'t produce .cfpack/app.zip -', err);
           process.exit(1);
@@ -131,4 +145,3 @@ var runCLI = function() {
 
 // Export our CLI
 module.exports.runCLI = runCLI;
-
