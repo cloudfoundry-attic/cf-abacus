@@ -83,7 +83,6 @@ var zip = function(cb) {
     }).catch(function(e) {
       cb(e);
     }).then(function(paths) {
-      console.log(paths);
       map(paths, function(path) {
         archive.file(path, { src : path });
       })
