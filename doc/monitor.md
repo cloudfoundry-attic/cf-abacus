@@ -239,10 +239,11 @@ There are several issues with Eureka, Turbine and Hystrix Dashboard when running
   To secure Eureka one needs to use a JWT valve such as https://github.com/andreacomo/tomcat-jwt-security. Using valve requires a fork of the Java Buildpack to include the valve in Tomcat `lib` directory. An easier approach would be to use Spring Boot and to pack Eureka as a single JAR file. This allows us to add anything to the Tomcat directories by using the [Java Main container](https://github.com/cloudfoundry/java-buildpack/blob/master/docs/container-java_main.md) of the buildpack. Howerver the [example Eureka server](https://github.com/spring-cloud-samples/eureka) cannot be used as a drop-in replacement due to a [problem](https://github.com/spring-cloud/spring-cloud-netflix/issues/913) with the URL paths used by Spring Cloud Netflix implementation.
 
 * Turbine has to be secured via [system token](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/security.md#system-token)
+* Turbine does not support HTTPS with SSE as described in this [Turbine issue](https://github.com/Netflix/Turbine/issues/87)
 * Dashboard is not secured with [system token](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/security.md#system-token)
 
 Luckilly the `/hystrix.stream` endpoints of the Abacus applications are still usable by following the security recomendations in the [security document](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/security.md#cloud-foundry). 
 
 The system integrator can:
 * use the original Hystrix Dashboard (https://github.com/Netflix/Hystrix) with basic authentication or 
-* the metrics can be sent to Graphite using the idea in this [DZone article](https://dzone.com/articles/storing-months-historical)
+* send metrics to Graphite using the idea in this [DZone article](https://dzone.com/articles/storing-months-historical)
