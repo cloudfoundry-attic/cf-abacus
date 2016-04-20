@@ -241,4 +241,8 @@ There are several issues with Eureka, Turbine and Hystrix Dashboard when running
 * Turbine has to be secured via [system token](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/security.md#system-token)
 * Dashboard is not secured with [system token](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/security.md#system-token)
 
-Luckilly the `/hystrix.stream` endpoints of the Abacus applications are still usable by following the security recomendations in the [security document](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/security.md#cloud-foundry). The system integrator can use Hystrix Dashboard with basic authentication or the metrics can be sent to Graphite using the idea in this [DZone article](https://dzone.com/articles/storing-months-historical).
+Luckilly the `/hystrix.stream` endpoints of the Abacus applications are still usable by following the security recomendations in the [security document](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/security.md#cloud-foundry). 
+
+The system integrator can:
+* use the original Hystrix Dashboard (https://github.com/Netflix/Hystrix) with basic authentication or 
+* the metrics can be sent to Graphite using the idea in this [DZone article](https://dzone.com/articles/storing-months-historical)
