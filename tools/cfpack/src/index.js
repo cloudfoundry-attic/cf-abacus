@@ -8,8 +8,9 @@
 var _ = require('underscore');
 var fs = require('fs');
 var path = require('path');
-var cp = require('child_process');
 var commander = require('commander');
+var archiver = require('archiver');
+require('shelljs/global');
 
 var map = _.map;
 var pairs = _.pairs;
@@ -58,24 +59,37 @@ var zip = function(ignore, cb) {
   fs.unlink(path.resolve('.cfpack', 'app.zip'), function(err) {
     if(err) noop();
 
-    // We're using the system zip command here, may be better to use a
-    // Javascript zip library instead
-    var files = '-type f -not -regex "\\./\\.cfpack/package\\.json" ' +
-      '-not -regex ".*/\\.git"';
-    var ex = cp.exec('(find . .cfpack/lib/* ' + files + ' | zip -q -x@' +
-      ignore + ' -@ .cfpack/app.zip) && ' +
-      '(zip -q -j .cfpack/app.zip .cfpack/package.json)', {
-        cwd: process.cwd()
+    var packageInfo = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+
+    var output = fs.createWriteStream('./.cfpack/app.zip');
+
+    var archive = archiver('zip');
+    output.on('close', function() {
+      console.log(archive.pointer() + ' byte(s)');
+      cb(0);
+    });
+
+    archive.on('error', function(err) {
+      cb(err);
+    });
+
+    archive.pipe(output);
+
+    const files = find(['.cfpack/lib'].concat(packageInfo.files))
+      .filter(function(file) {
+        return file.match(/^\.$/) || file.match(/\.git/) ||
+          file.match(/\.cfpack\/(package\.json|app\.zip)/) ||
+          file.match(/\.cfpack\/\S+\/node_modules/) ? false : true;
+      }).filter(function(file) {
+        return !fs.statSync(file).isDirectory()
       });
-    ex.stdout.on('data', function(data) {
-      process.stdout.write(data);
-    });
-    ex.stderr.on('data', function(data) {
-      process.stderr.write(data);
-    });
-    ex.on('close', function(code) {
-      cb(code);
-    });
+
+    archive.bulk([ { expand: true, cwd: '.', src: files }])
+      .append(fs.createReadStream('.cfpack/package.json'),
+      { name : 'package.json' });
+
+
+    archive.finalize();
   });
 };
 
@@ -131,4 +145,3 @@ var runCLI = function() {
 
 // Export our CLI
 module.exports.runCLI = runCLI;
-
