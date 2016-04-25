@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e -x
+
+echo "Environment:"
+env
+
+echo "Starting CouchDB"
+/usr/local/bin/couchdb start &
+
+pushd abacus
+  echo "Building Abacus ..."
+  npm run prepare
+
+  TIMEOUT=$(expr ${CI_START_TIMEOUT:-10000} / 1000)
+  echo "Using start timeout of $TIMEOUT seconds"
+
+  echo "Running demo ..."
+  npm start
+  sleep $TIMEOUT
+  npm run demo -t $CI_START_TIMEOUT -x $CI_PIPELINE_TIMEOUT
+popd

@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e -x
+
+echo "Environment:"
+env
+
+echo "Starting MongoDB"
+/etc/init.d/mongodb start
+
+pushd abacus
+  echo "Building Abacus ..."
+  npm run prepare
+
+  TIMEOUT=$(expr ${CI_START_TIMEOUT:-10000} / 1000)
+  echo "Using start timeout of $TIMEOUT seconds"
+
+  echo "Running performance test without security ..."
+  npm start
+  sleep $TIMEOUT
+  npm run perf -- -o 1 -i 1 -u 1 -t $CI_START_TIMEOUT -x $CI_PIPELINE_TIMEOUT
+  npm stop
+
+  echo "Running performance test with security ..."
+  export SECURED=true
+  export JWTKEY=encode
+  export JWTALGO=HS256
+  npm start
+  sleep $TIMEOUT
+  npm run perf -- -o 4 -i 4 -u 4 -t $CI_START_TIMEOUT -x $CI_PIPELINE_TIMEOUT
+  npm stop
+popd

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e -x
+
+echo "Environment:"
+env
+
+echo "Starting CouchDB"
+/usr/local/bin/couchdb start &
+
+pushd abacus
+  echo "Running unit tests ..."
+  npm run build
+popd
