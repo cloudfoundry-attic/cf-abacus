@@ -12,18 +12,19 @@ CF-Abacus Concourse Pipeline
 
 2. Download `fly` CLI:
 
+   Mac OSX:
    ```bash
-   # Mac OSX:
    curl 'http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=darwin' --compressed -o fly
    chmod +x fly
-   
-   # Linux:
+   ```
+   Linux:
+   ```bash
    curl 'http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=linux' --compressed -o fly
    chmod +x fly
-   
-   # Windows - Go to 
-   http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=windows
    ```
+   
+   Windows:
+   Go to http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=windows
 
 3. Upload the pipeline
    ```bash

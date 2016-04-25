@@ -1,0 +1,12 @@
+#!/bin/bash
+
+echo "Environment:"
+env | sort
+
+pushd abacus
+  echo "Building Abacus ..."
+  npm run prepare
+
+  echo "Starting CF test ..."
+  npm run cftest
+popd
