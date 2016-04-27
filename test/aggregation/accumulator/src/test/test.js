@@ -325,7 +325,7 @@ describe('abacus-usage-accumulator-itest', () => {
           try {
             expect(clone(omit(val.rows[0].doc,
               ['processed', 'processed_id',
-              '_rev', '_id', 'id', 'metered-usage_id']),
+              '_rev', '_id', 'id', 'metered_usage_id']),
                 pruneWindows)).to.deep.equal(expected);
             done();
           }
@@ -333,7 +333,7 @@ describe('abacus-usage-accumulator-itest', () => {
             if(Date.now() >= processingDeadline)
               expect(clone(omit(val.rows[0].doc,
                 ['processed', 'processed_id',
-                '_rev', '_id', 'id', 'metered-usage_id']),
+                '_rev', '_id', 'id', 'metered_usage_id']),
                   pruneWindows)).to.deep.equal(expected);
             else
               setTimeout(function() {
