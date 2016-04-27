@@ -11,7 +11,7 @@ of January 1, 2015 at 12:30 A.M.
 abacus-timewindow works with UTC time. It works in the dimensions of a
 second, minute, hour, day, and month. The notation for these is as follows:
 ```
-[M = month, D = day, h = hour, m = minute, s = second]
+[M = month, W = week, D = day, h = hour, m = minute, s = second]
 ```
 
 Calculating the number of time windows between two dates
