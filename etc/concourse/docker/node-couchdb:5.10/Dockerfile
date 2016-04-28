@@ -14,6 +14,7 @@ RUN apt-get install -y erlang-dev=1:17.5.3 erlang-base=1:17.5.3 erlang-crypto=1:
                         erlang-webtool=1:17.5.3 erlang-eldap=1:17.5.3 erlang-tools=1:17.5.3 \
                         erlang-eunit=1:17.5.3 erlang-ic=1:17.5.3 erlang-odbc=1:17.5.3 \
                         erlang-parsetools=1:17.5.3
+RUN apt-get install -y zip
 
 RUN useradd -d /var/lib/couchdb couchdb
 RUN mkdir -p /usr/local/{lib,etc}/couchdb /usr/local/var/{lib,log,run}/couchdb /var/lib/couchdb

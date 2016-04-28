@@ -1,7 +1,0 @@
-#!/bin/bash
-
-set -e -x
-
-pushd abacus
-  npm run build
-popd

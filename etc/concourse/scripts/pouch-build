@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e -x
+
+echo "Environment:"
+env | sort
+
+echo "Building Abacus ..."
+pushd abacus
+  npm run build
+popd
+
+echo "Copying built project ..."
+cp -R abacus/* built-project

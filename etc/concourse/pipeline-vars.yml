@@ -1,0 +1,23 @@
+# Cloud Foundry domain without the "api." prefix
+cf-api: cf.mycompany.com
+
+# Organization for the Abacus apps
+cf-org: abacus
+
+# Space used to host Abacus pipeline apps
+cf-space: abacus
+
+# Domain that will host the Abacus applications
+cf-domain: cfapps.mycompany.com
+
+# User that has SpaceDeveloper permissions for the Abacus' org
+cf-user: abacus
+
+# Password of the Abacus user
+cf-password: abacus123
+
+# Admin user. Should be able to create orgs, users, quotas
+cf-admin-user: admin
+
+# Password of the admin user
+cf-admin-password: admin

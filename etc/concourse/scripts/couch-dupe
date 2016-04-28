@@ -3,15 +3,12 @@
 set -e -x
 
 echo "Environment:"
-env
+env | sort
 
-echo "Starting CouchDB"
-/usr/local/bin/couchdb start &
+echo "Starting CouchDB ..."
+/usr/local/bin/couchdb -b
 
-pushd abacus
-  echo "Building Abacus ..."
-  npm run prepare
-
+pushd built-project
   TIMEOUT=$(expr ${CI_START_TIMEOUT:-10000} / 1000)
   echo "Using start timeout of $TIMEOUT seconds"
 
@@ -19,4 +16,13 @@ pushd abacus
   npm start
   sleep $TIMEOUT
   npm run dupe -t $CI_START_TIMEOUT -x $CI_PIPELINE_TIMEOUT
+
+  echo "Stopping Abacus ..."
+  npm stop
 popd
+
+echo "Deleting DB files ..."
+/usr/local/bin/couchdb -d
+set +e
+pkill -9 erlang
+rm -rf /var/lib/couchdb

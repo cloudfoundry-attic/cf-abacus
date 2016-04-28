@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -e -x
+
+echo "Environment:"
+env | sort
+
+echo "Starting MongoDB ..."
+/etc/init.d/mongodb start
+
+TIMEOUT=$(expr ${CI_START_TIMEOUT:-10000} / 1000)
+echo "Sleeping $TIMEOUT seconds to allow DB to start"
+sleep $TIMEOUT
+
+echo "Building Abacus ..."
+pushd abacus
+  npm run build
+popd
+
+echo "Copying built project ..."
+cp -R abacus/* built-project
+
+echo "Deleting DB files ..."
+set +e
+pkill -9 mongod
+rm -rf /var/lib/mongodb

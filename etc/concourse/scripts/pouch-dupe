@@ -3,12 +3,9 @@
 set -e -x
 
 echo "Environment:"
-env
+env | sort
 
-pushd abacus
-  echo "Building Abacus ..."
-  npm run prepare
-
+pushd built-project
   TIMEOUT=$(expr ${CI_START_TIMEOUT:-10000} / 1000)
   echo "Using start timeout of $TIMEOUT seconds"
 
@@ -16,4 +13,7 @@ pushd abacus
   npm start
   sleep $TIMEOUT
   npm run dupe -t $CI_START_TIMEOUT -x $CI_PIPELINE_TIMEOUT
+
+  echo "Stopping Abacus ..."
+  npm stop
 popd
