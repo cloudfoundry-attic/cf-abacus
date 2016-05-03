@@ -8,14 +8,17 @@ if [ -n "$1" ]; then
   export CONF=$1
 fi
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $DIR/cfutil
+
 for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
   APPNAME=$(node_modules/abacus-etc/appname $MODULE)
   APPS=$(( $(node_modules/abacus-etc/apprc node_modules/$APPNAME/.apprc $CONF APPS) - 1 ))
   if [ "$APPS" == "0" ]; then
-    (cf start $APPNAME)&
+    startAsync "(cf start $APPNAME)"
   else
     for I in $(seq 0 $APPS); do
-      (cf start $APPNAME-$I)&
+      startAsync "(cf start $APPNAME-$I)"
     done
   fi
 done

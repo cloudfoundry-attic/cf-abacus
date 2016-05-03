@@ -1,0 +1,16 @@
+MAX_PROCESSES=$(node -e "console.log(require('os').cpus().length)")
+if [ -n "$JOBS" ]; then
+  echo "JOBS environment variable set to $JOBS"
+  MAX_PROCESSES=$JOBS
+fi
+echo "Using $MAX_PROCESSES parallel processes"
+
+function startAsync {
+  JOBLIST=($(jobs -pr))
+  while (( ${#JOBLIST[*]} >= MAX_PROCESSES ))
+  do
+    sleep 1
+    JOBLIST=($(jobs -pr))
+  done
+  $* &
+}
