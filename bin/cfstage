@@ -8,8 +8,14 @@ if [ -n "$1" ]; then
   export CONF=$1
 fi
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source $DIR/cfutil
+MAX_PROCESSES=$(node -e "console.log(require('os').cpus().length)")
+if [ -n "$JOBS" ]; then
+  echo "JOBS environment variable set to $JOBS"
+  MAX_PROCESSES=$JOBS
+fi
+echo "Using $MAX_PROCESSES parallel processes"
+
+COMMANDS=()
 
 for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
   APPNAME=$(node_modules/abacus-etc/appname $MODULE)
@@ -17,12 +23,19 @@ for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $C
   APPS=$(( $(node_modules/abacus-etc/apprc node_modules/$APPNAME/.apprc $CONF APPS) - 1 ))
   (cd $MODULE && npm run cfpack)
   if [ "$APPS" == "0" ]; then
-    (cd $MODULE && startAsync "npm run cfpush -- -n $APPNAME -i $INSTANCES -c $CONF")
+    COMMANDS+=("(cd $MODULE && npm run cfpush -- -n $APPNAME -i $INSTANCES -c $CONF)")
   else
     for I in $(seq 0 $APPS); do
-      (cd $MODULE && startAsync "npm run cfpush -- -n $APPNAME-$I -i $INSTANCES -c $CONF")
+      COMMANDS+=("(cd $MODULE && npm run cfpush -- -n $APPNAME-$I -i $INSTANCES -c $CONF)")
     done
   fi
 done
+
+CMD_STRING=""
+for i in "${COMMANDS[@]}"; do
+  CMD_STRING+=$(printf '%q ' "$i")
+done
+
+echo $CMD_STRING | xargs -n 1 -P $MAX_PROCESSES /bin/bash -c
 
 wait
