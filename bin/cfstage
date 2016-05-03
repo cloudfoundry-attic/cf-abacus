@@ -2,7 +2,7 @@
 
 set -e
 
-# Push all the Abacus apps to Cloud Foundry
+# Push all the Abacus apps to Cloud Foundry, without starting them
 export CONF=default
 if [ -n "$1" ]; then
   export CONF=$1
@@ -17,10 +17,10 @@ for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $C
   APPS=$(( $(node_modules/abacus-etc/apprc node_modules/$APPNAME/.apprc $CONF APPS) - 1 ))
   (cd $MODULE && npm run cfpack)
   if [ "$APPS" == "0" ]; then
-    startAsync "(cd $MODULE && npm run cfpush -- -n $APPNAME -i $INSTANCES -c $CONF)"
+    (cd $MODULE && startAsync "npm run cfpush -- -n $APPNAME -i $INSTANCES -c $CONF")
   else
     for I in $(seq 0 $APPS); do
-      startAsync "(cd $MODULE && npm run cfpush -- -n $APPNAME-$I -i $INSTANCES -c $CONF)"
+      (cd $MODULE && startAsync "npm run cfpush -- -n $APPNAME-$I -i $INSTANCES -c $CONF")
     done
   fi
 done

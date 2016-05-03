@@ -12,5 +12,5 @@ function startAsync {
     sleep 1
     JOBLIST=($(jobs -pr))
   done
-  $* &
+  ($*)&
 }

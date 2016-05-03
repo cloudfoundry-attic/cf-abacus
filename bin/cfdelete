@@ -15,10 +15,10 @@ for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $C
   APPNAME=$(node_modules/abacus-etc/appname $MODULE)
   APPS=$(( $(node_modules/abacus-etc/apprc node_modules/$APPNAME/.apprc $CONF APPS) - 1 ))
   if [ "$APPS" == "0" ]; then
-    startAsync "(cf delete -f -r $APPNAME)"
+    startAsync "cf delete -f -r $APPNAME"
   else
     for I in $(seq 0 $APPS); do
-      startAsync "(cf delete -f -r $APPNAME-$I)"
+      startAsync "cf delete -f -r $APPNAME-$I"
     done
   fi
 done
