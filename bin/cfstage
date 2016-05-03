@@ -8,19 +8,21 @@ if [ -n "$1" ]; then
   export CONF=$1
 fi
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $DIR/cfutil
+
 for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
   APPNAME=$(node_modules/abacus-etc/appname $MODULE)
   INSTANCES=$(node_modules/abacus-etc/apprc $MODULE/.apprc $CONF INSTANCES)
   APPS=$(( $(node_modules/abacus-etc/apprc node_modules/$APPNAME/.apprc $CONF APPS) - 1 ))
   (cd $MODULE && npm run cfpack)
   if [ "$APPS" == "0" ]; then
-    (cd $MODULE && npm run cfpush -- -n $APPNAME -i $INSTANCES -c $CONF)&
+    startAsync "(cd $MODULE && npm run cfpush -- -n $APPNAME -i $INSTANCES -c $CONF)"
   else
     for I in $(seq 0 $APPS); do
-      (cd $MODULE && npm run cfpush -- -n $APPNAME-$I -i $INSTANCES -c $CONF)&
+      startAsync "(cd $MODULE && npm run cfpush -- -n $APPNAME-$I -i $INSTANCES -c $CONF)"
     done
   fi
 done
 
 wait
-
