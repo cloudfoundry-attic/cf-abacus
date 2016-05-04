@@ -31,5 +31,3 @@ done
 
 echo ${APP_NAMES[*]} | xargs -n 1 -P $MAX_PROCESSES cf delete -f -r
 
-wait
-

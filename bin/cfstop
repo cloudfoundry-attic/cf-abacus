@@ -30,6 +30,3 @@ for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $C
 done
 
 echo ${APP_NAMES[*]} | xargs -n 1 -P $MAX_PROCESSES cf stop
-
-wait
-

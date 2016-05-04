@@ -37,5 +37,3 @@ for i in "${COMMANDS[@]}"; do
 done
 
 echo $CMD_STRING | xargs -n 1 -P $MAX_PROCESSES /bin/bash -c
-
-wait

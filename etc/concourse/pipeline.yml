@@ -661,6 +661,7 @@ jobs:
             path: abacus/etc/concourse/scripts/cf-test
           params:
             CF_TEST: true
+            JOBS: 2
             CF_API: {{cf-api}}
             CF_USER: {{cf-user}}
             CF_PASSWORD: {{cf-password}}
