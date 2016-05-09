@@ -33,7 +33,7 @@ CF-Abacus Concourse Pipeline
 5. Upload the pipeline
    ```bash
    fly --target=lite login --concourse-url=http://192.168.100.4:8080
-   fly --target=lite set-pipeline --pipeline=abacus --config=pipeline.yml --load-vars-from=pipeline-vars.yml ---non-interactive
+   echo "y" | fly --target=lite set-pipeline --pipeline=abacus --config=pipeline.yml --load-vars-from=pipeline-vars.yml ---non-interactive
    fly --target=lite unpause-pipeline --pipeline=abacus
    ```
 
