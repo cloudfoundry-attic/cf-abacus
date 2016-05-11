@@ -73,6 +73,21 @@ The [Reporting settings](https://github.com/cloudfoundry-incubator/cf-abacus/blo
 * `default`: 1 application / 1 instance / 1 db partition
 * `small`: 1 app / 2 instances / 2 db partitions
 * `medium`: 1 app / 2 instances / 4 db partitions
-* `large`: 1 apps / 6 instances / 6 db partitions
+* `large`: 1 app / 6 instances / 6 db partitions
 
 You can modify the profiles or add additional ones to comply with the needs of your own installation.
+
+## Extending Abacus pipeline
+
+To extend the Abacus pipeline, configure the aggregator's application sink, using the following variables:
+* `SINK` specifies the host to post to
+* `AGGREGATOR_SINK_APPS` is required if you are distributing the requests based on they key. This parameter is optional.
+The path to which the data will be posted is `/v1/metering/aggregated/usage`
+
+To post the documents to `http://example.com/v1/metering/aggregated/usage` export the `SINK` variable and start Abacus:
+```bash
+export SINK=http://example.com
+npm run start
+```
+
+For Cloud Foundry deployment you need to add `SINK` and `AGGREGATOR_SINK_APPS` variables to the aggregator's [manifest](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/lib/aggregation/aggregator/manifest.yml).
