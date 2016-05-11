@@ -6,11 +6,24 @@ resources:
       uri: https://github.com/cloudfoundry-incubator/cf-abacus.git
       branch: master
 
+  - name: abacus-release-develop
+    type: git
+    source:
+      uri: https://github.com/cloudfoundry-incubator/cf-abacus.git
+      branch: develop
+
+  - name: abacus-release-master
+    type: git
+    source:
+      uri: https://github.com/cloudfoundry-incubator/cf-abacus.git
+      branch: master
+
+
 jobs:
 
 ################################# POUCH ########################################
 
-  - name: pouchdb-5.10
+  - name: pouchdb-5.11.1
     plan:
       - aggregate:
         - get: abacus
@@ -18,7 +31,7 @@ jobs:
       - task: build
         config:
           platform: linux
-          image: docker:///node#5.10
+          image: docker:///node#5.11.1
           inputs:
             - name: abacus
           outputs:
@@ -28,7 +41,7 @@ jobs:
       - task: it
         config:
           platform: linux
-          image: docker:///node#5.10
+          image: docker:///node#5.11.1
           inputs:
             - name: built-project
           run:
@@ -39,7 +52,7 @@ jobs:
       - task: demo
         config:
           platform: linux
-          image: docker:///node#5.10
+          image: docker:///node#5.11.1
           inputs:
             - name: built-project
           run:
@@ -49,7 +62,7 @@ jobs:
       - task: dupe
         config:
           platform: linux
-          image: docker:///node#5.10
+          image: docker:///node#5.11.1
           inputs:
             - name: built-project
           run:
@@ -60,7 +73,7 @@ jobs:
       - task: perf
         config:
           platform: linux
-          image: docker:///node#5.10
+          image: docker:///node#5.11.1
           inputs:
             - name: built-project
           run:
@@ -187,16 +200,16 @@ jobs:
 
 ################################# COUCH ########################################
 
-  - name: couchdb-5.10
+  - name: couchdb-5.11.1
     plan:
       - aggregate:
         - get: abacus
-          passed: [pouchdb-5.10]
+          passed: [pouchdb-5.11.1]
           trigger: true
       - task: build
         config:
           platform: linux
-          image: docker:///godofcontainers/node-couchdb#5.10
+          image: docker:///godofcontainers/node-couchdb#5.11.1
           inputs:
             - name: abacus
           outputs:
@@ -209,7 +222,7 @@ jobs:
       - task: it
         config:
           platform: linux
-          image: docker:///godofcontainers/node-couchdb#5.10
+          image: docker:///godofcontainers/node-couchdb#5.11.1
           inputs:
             - name: built-project
           run:
@@ -222,7 +235,7 @@ jobs:
       - task: demo
         config:
           platform: linux
-          image: docker:///godofcontainers/node-couchdb#5.10
+          image: docker:///godofcontainers/node-couchdb#5.11.1
           inputs:
             - name: built-project
           run:
@@ -234,7 +247,7 @@ jobs:
       - task: dupe
         config:
           platform: linux
-          image: docker:///godofcontainers/node-couchdb#5.10
+          image: docker:///godofcontainers/node-couchdb#5.11.1
           inputs:
             - name: built-project
           run:
@@ -247,7 +260,7 @@ jobs:
       - task: perf
         config:
           platform: linux
-          image: docker:///godofcontainers/node-couchdb#5.10
+          image: docker:///godofcontainers/node-couchdb#5.11.1
           inputs:
             - name: built-project
           run:
@@ -400,16 +413,16 @@ jobs:
 
 ################################# MONGO ########################################
 
-  - name: mongodb-5.10
+  - name: mongodb-5.11.1
     plan:
       - aggregate:
         - get: abacus
-          passed: [couchdb-5.10]
+          passed: [couchdb-5.11.1]
           trigger: true
       - task: build
         config:
           platform: linux
-          image: docker:///godofcontainers/node-mongodb#5.10
+          image: docker:///godofcontainers/node-mongodb#5.11.1
           inputs:
             - name: abacus
           outputs:
@@ -423,7 +436,7 @@ jobs:
       - task: it
         config:
           platform: linux
-          image: docker:///godofcontainers/node-mongodb#5.10
+          image: docker:///godofcontainers/node-mongodb#5.11.1
           inputs:
             - name: built-project
           run:
@@ -437,7 +450,7 @@ jobs:
       - task: demo
         config:
           platform: linux
-          image: docker:///godofcontainers/node-mongodb#5.10
+          image: docker:///godofcontainers/node-mongodb#5.11.1
           inputs:
             - name: built-project
           run:
@@ -450,7 +463,7 @@ jobs:
       - task: dupe
         config:
           platform: linux
-          image: docker:///godofcontainers/node-mongodb#5.10
+          image: docker:///godofcontainers/node-mongodb#5.11.1
           inputs:
             - name: built-project
           run:
@@ -464,7 +477,7 @@ jobs:
       - task: perf
         config:
           platform: linux
-          image: docker:///godofcontainers/node-mongodb#5.10
+          image: docker:///godofcontainers/node-mongodb#5.11.1
           inputs:
             - name: built-project
           run:
@@ -632,41 +645,49 @@ jobs:
     plan:
       - aggregate:
         - get: abacus
-          passed: [mongodb-0.12,mongodb-4.4,mongodb-5.10]
+          passed: [mongodb-0.12,mongodb-4.4,mongodb-5.11.1]
           trigger: true
       - task: infra
-        config:
-          platform: linux
-          image: docker:///godofcontainers/ubuntu-14.04.4-cf#latest
-          inputs:
-            - name: abacus
-          run:
-            path: abacus/etc/concourse/scripts/cf-setup
-          params:
-            CF_API: {{cf-api}}
-            CF_USER: {{cf-user}}
-            CF_PASSWORD: {{cf-password}}
-            CF_ADMIN_USER: {{cf-admin-password}}
-            CF_ADMIN_PASSWORD: {{cf-admin-password}}
-            CF_ORG: {{cf-org}}
-            CF_SPACE: {{cf-space}}
-            CF_DOMAIN: {{cf-domain}}
+        file: abacus/etc/concourse/tasks/cf-infra.yml
+        params:
+          CF_API: {{cf-api}}
+          CF_USER: {{cf-user}}
+          CF_PASSWORD: {{cf-password}}
+          CF_ADMIN_USER: {{cf-admin-user}}
+          CF_ADMIN_PASSWORD: {{cf-admin-password}}
+          CF_ORG: {{cf-org}}
+          CF_SPACE: {{cf-space}}
+          CF_DOMAIN: {{cf-domain}}
       - task: deploy
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-mongodb#5.10
-          inputs:
-            - name: abacus
-          run:
-            path: abacus/etc/concourse/scripts/cf-test
-          params:
-            CF_TEST: true
-            JOBS: 2
-            CF_API: {{cf-api}}
-            CF_USER: {{cf-user}}
-            CF_PASSWORD: {{cf-password}}
-            CF_ORG: {{cf-org}}
-            CF_SPACE: {{cf-space}}
-            CF_DOMAIN: {{cf-domain}}
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
+        file: abacus/etc/concourse/tasks/cf-deploy-medium.yml
+        params:
+          CF_TEST: true
+          JOBS: 2
+          CF_API: {{cf-api}}
+          CF_USER: {{cf-user}}
+          CF_PASSWORD: {{cf-password}}
+          CF_ADMIN_USER: {{cf-admin-user}}
+          CF_ADMIN_PASSWORD: {{cf-admin-password}}
+          CF_ORG: {{cf-org}}
+          CF_SPACE: {{cf-space}}
+          CF_DOMAIN: {{cf-domain}}
+
+################################## MERGE #######################################
+
+#  - name: abacus-merge-master
+#    plan:
+#      - aggregate:
+#        - get: abacus-release-master
+#          params:
+#            submodules: none
+#            fetch: [develop]
+#          passed: [cf-medium]
+#          trigger: true
+#        - get: abacus-release-develop # for build scripts
+#          params:
+#            submodules: none
+#      - task: merge-master
+#        file: abacus-release-develop/etc/concourse/tasks/merge-master.yml
+#      - put: abacus-release-develop
+#        params:
+#          repository: release-merged

@@ -1,0 +1,19 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: concourse/git-resource
+    tag: 'latest'
+
+inputs:
+  - name: abacus-release-develop
+  - name: abacus-release-master
+
+outputs:
+  - name: release-merged
+
+run:
+  path: abacus-release-develop/etc/concourse/scripts/merge-master
+

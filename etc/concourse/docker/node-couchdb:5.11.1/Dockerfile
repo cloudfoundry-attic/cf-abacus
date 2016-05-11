@@ -1,4 +1,4 @@
-FROM node:5.10
+FROM node:5.11.1
 
 RUN echo "deb http://packages.erlang-solutions.com/debian jessie contrib" > /etc/apt/sources.list.d/erlang-solutions.list
 RUN wget -qO - http://packages.erlang-solutions.com/debian/erlang_solutions.asc | apt-key add -
@@ -31,3 +31,5 @@ RUN chown couchdb:couchdb /usr/local/etc/couchdb/local.ini
 RUN ln -s /usr/local/etc/init.d/couchdb /etc/init.d/couchdb
 RUN ln -s /usr/local/etc/couchdb /etc
 RUN /etc/init.d/couchdb start
+
+RUN cd /usr/bin && curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx
