@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+echo "Environment:"
+env | sort
+
+echo "Copying custom settings ..."
+cp -r abacus-config/* abacus
+
+pushd abacus
+  echo "Building Abacus ..."
+  npm run prepare
+popd
+
+echo "Copying built project ..."
+cp -R abacus/ built-project
+echo "Done."

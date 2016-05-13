@@ -1,7 +1,7 @@
 # abacus-pipeline
 CF-Abacus Concourse Pipeline
 
-## Running the pipeline
+## Running the testing pipeline
 
 1. Start Concourse:
 
@@ -28,16 +28,73 @@ CF-Abacus Concourse Pipeline
 
 3. Add `fly` to your path
 
-4. Change the entries in the `pipeline-vars.yml` file to reflect the actual users, passwords and domains of your Cloud Foundry landscape.
+4. Change the entries in the `test-pipeline-vars.yml` file to reflect the actual users, passwords and domains of your Cloud Foundry landscape.
 
 5. Upload the pipeline
    ```bash
    fly --target=lite login --concourse-url=http://192.168.100.4:8080
-   echo "y" | fly --target=lite set-pipeline --pipeline=abacus-test --config=pipeline.yml --load-vars-from=pipeline-vars.yml ---non-interactive
+   echo "y" | fly --target=lite set-pipeline --pipeline=abacus-test --config=test-pipeline.yml --load-vars-from=test-pipeline-vars.yml ---non-interactive
    fly --target=lite unpause-pipeline --pipeline=abacus
    ```
 
 6. Check the pipeline at http://192.168.100.4:8080/
+
+## Running the deployment pipeline
+
+You should have the Concourse running by now. To run the deployment pipeline follow these steps:
+
+1. Create a repo that holds any changes to:
+   * application manifests: `manifest.yml`
+   * number of applications and instances in `.apprc` for each Abacus pipeline stage (often needed for collector and reporting)
+   * profiles in `etc/apps.rc` (to add additional apps such as `cf-bridge`)
+
+   The file structure should be the same as the abacus project:
+    ```
+    .
+    |____deploy-pipeline-vars.yml
+    |____etc
+    | |____apps.rc
+    |____lib
+    | |____aggregation
+    | | |____accumulator
+    | | | |____manifest.yml
+    | | |____aggregator
+    | | | |____manifest.yml
+    | | |____reporting
+    | | | |____.apprc
+    | | | |____manifest.yml
+    | |____cf
+    | | |____bridge
+    | | | |____manifest.yml
+    | |____metering
+    | | |____collector
+    | | | |____.apprc
+    | | | |____manifest.yml
+    | | |____meter
+    | | | |____manifest.yml
+    | |____plugins
+    | | |____account
+    | | | |____manifest.yml
+    | | |____authserver
+    | | | |____manifest.yml
+    | | |____eureka
+    | | | |____manifest.yml
+    | | |____provisioning
+    | | | |____manifest.yml
+    | |____utils
+    | | |____pouchserver
+    | | | |____manifest.yml
+    ```
+
+2. Customize the `deploy-pipeline-vars.yml` file
+
+3. Upload the pipeline:
+   ```bash
+   echo "y" | fly --target=lite set-pipeline --pipeline=abacus-deploy --config=deploy-pipeline.yml --load-vars-from=deploy-pipeline-vars.yml ---non-interactive
+   fly --target=lite unpause-pipeline --pipeline=abacus
+   ```
+4. Check the pipeline at http://192.168.100.4:8080/
+
 
 ## Docker files
 

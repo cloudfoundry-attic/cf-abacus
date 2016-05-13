@@ -1,0 +1,102 @@
+---
+resources:
+  - name: abacus
+    type: git
+    source:
+      uri: https://github.com/cloudfoundry-incubator/cf-abacus.git
+      branch: master
+
+  - name: abacus-config
+    type: git
+    source:
+      uri: {{custom_settings_git_repo}}
+      branch: {{custom_settings_git_repo_branch}}
+      private_key: {{custom_settings_git_repo_private_key}}
+      skip-ssl-verification: true
+
+jobs:
+
+################################### CF #########################################
+
+  - name: abacus-deploy
+    plan:
+      - aggregate:
+        - get: abacus
+          trigger: true
+        - get: abacus-config
+          trigger: true
+      - task: setup-abacus-infra
+        file: abacus/etc/concourse/tasks/cf-deploy-infra.yml
+        config:
+          params:
+            CF_API: {{cf-api}}
+            CF_USER: {{cf-user}}
+            CF_PASSWORD: {{cf-password}}
+            CF_ADMIN_USER: {{cf-admin-user}}
+            CF_ADMIN_PASSWORD: {{cf-admin-password}}
+            CF_ORG: {{cf-org}}
+            CF_SPACE: {{cf-space}}
+            CF_DOMAIN: {{cf-domain}}
+            UAA_ADMIN: {{uaa-admin}}
+            UAA_SECRET: {{uaa-secret}}
+            SYSTEM_CLIENT_ID: {{system-client-id}}
+            SYSTEM_CLIENT_SECRET: {{system-client-secret}}
+            BRIDGE_CLIENT_ID: {{bridge-client-id}}
+            BRIDGE_CLIENT_SECRET: {{bridge-client-secret}}
+            CF_CLIENT_ID: {{cf-client-id}}
+            CF_CLIENT_SECRET: {{cf-client-secret}}
+            CONTAINER_CLIENT_ID: {{container-client-id}}
+            CONTAINER_CLIENT_SECRET: {{container-client-secret}}
+            OBJECT_STORAGE_CLIENT_ID: {{object-storage-client-id}}
+            OBJECT_STORAGE_CLIENT_SECRET: {{object-storage-client-secret}}
+            HYSTRIX_CLIENT_ID: {{hystrix-client-id}}
+            HYSTRIX_CLIENT_SECRET: {{hystrix-client-secret}}
+      - task: build-abacus
+        file: abacus/etc/concourse/tasks/cf-deploy-build.yml
+      - task: deploy-abacus
+        file: abacus/etc/concourse/tasks/cf-deploy-deploy.yml
+        on_failure:
+          task: abacus-cleanup
+          file: abacus/etc/concourse/tasks/cf-deploy-cleanup.yml
+          config:
+            params:
+              CF_API: {{cf-api}}
+              CF_USER: {{cf-user}}
+              CF_PASSWORD: {{cf-password}}
+              CF_ORG: {{cf-org}}
+              CF_SPACE: {{cf-space}}
+        config:
+          params:
+            CF_API: {{cf-api}}
+            CF_USER: {{cf-user}}
+            CF_PASSWORD: {{cf-password}}
+            CF_ADMIN_USER: {{cf-admin-user}}
+            CF_ADMIN_PASSWORD: {{cf-admin-password}}
+            CF_ORG: {{cf-org}}
+            CF_SPACE: {{cf-space}}
+            CF_DOMAIN: {{cf-domain}}
+            DB_SERVICE_NAME: {{db-service-name}}
+            DB_PLAN_NAME: {{db-plan-name}}
+            JOBS: 2
+      - task: test-abacus
+        file: abacus/etc/concourse/tasks/cf-deploy-test.yml
+        ensure:
+          task: abacus-cleanup
+          file: abacus/etc/concourse/tasks/cf-deploy-cleanup.yml
+          config:
+            params:
+              CF_API: {{cf-api}}
+              CF_USER: {{cf-user}}
+              CF_PASSWORD: {{cf-password}}
+              CF_ORG: {{cf-org}}
+              CF_SPACE: {{cf-space}}
+              FAIL_ON_ERROR: true
+        config:
+          params:
+            CF_API: {{cf-api}}
+            CF_DOMAIN: {{cf-domain}}
+            SECURED: true
+            CLIENT_ID: {{object-storage-client-id}}
+            CLIENT_SECRET: {{object-storage-client-secret}}
+            CI_START_TIMEOUT: 50000
+            CI_PIPELINE_TIMEOUT: 100000

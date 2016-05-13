@@ -1,0 +1,42 @@
+#!/bin/bash
+
+set -x
+
+echo "Environment:"
+env | sort
+
+if [ -z ${FAIL_ON_ERROR+x} ]; then
+  echo "Will NOT fail on error"
+else
+  echo "Will fail on error"
+  set -e
+fi
+
+echo "Logging to $CF_API ..."
+cf api --skip-ssl-validation https://api.$CF_API
+cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+
+APPS=($(cf apps | tail -n +5 | grep "$1" | awk '{print $1}'))
+echo "Found ${#APPS[@]} applications ..."
+
+echo "Unbind services ..."
+echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf unbind-service {} db
+
+echo "Delete apps in parallel. We expect errors due to missing routes ..."
+set +e
+echo ${APPS[@]} | xargs -n1 -P 5 cf delete -f -r
+if [ -z ${FAIL_ON_ERROR+x} ]; then
+  echo "Will NOT fail on error"
+else
+  echo "Will fail on error"
+  set -e
+fi
+
+APPS=($(cf apps | tail -n +5 | grep "$1" | awk '{print $1}'))
+echo "Delete the left apps in parallel. No errors are expected ..."
+echo ${APPS[@]} | xargs -n1 -P 5 -r cf delete -f -r
+
+echo "Dropping database ..."
+cf delete-service db -f
+
+echo "Cleanup finished"

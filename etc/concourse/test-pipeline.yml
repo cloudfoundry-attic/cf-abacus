@@ -648,7 +648,7 @@ jobs:
           passed: [mongodb-0.12,mongodb-4.4,mongodb-5.11.1]
           trigger: true
       - task: infra
-        file: abacus/etc/concourse/tasks/cf-infra.yml
+        file: abacus/etc/concourse/tasks/cf-test-infra.yml
         params:
           CF_API: {{cf-api}}
           CF_USER: {{cf-user}}
@@ -659,7 +659,7 @@ jobs:
           CF_SPACE: {{cf-space}}
           CF_DOMAIN: {{cf-domain}}
       - task: deploy
-        file: abacus/etc/concourse/tasks/cf-deploy-medium.yml
+        file: abacus/etc/concourse/tasks/cf-test-deploy.yml
         params:
           CF_TEST: true
           JOBS: 2

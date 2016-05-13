@@ -9,6 +9,10 @@ image_resource:
 
 inputs:
   - name: abacus
+  - name: abacus-config
+
+outputs:
+  - name: built-project
 
 run:
-  path: abacus/etc/concourse/scripts/cf-test
+  path: abacus/etc/concourse/scripts/cf-deploy-build

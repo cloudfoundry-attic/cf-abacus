@@ -1,0 +1,116 @@
+#!/bin/bash
+
+set -e -x
+
+echo "Environment:"
+env | sort
+
+function mapRoutes {
+  if [ -z "$1" ]; then
+     echo "Cannot map app without a name !"
+     exit 1
+  fi
+  if [ -z "$2" ]; then
+    echo "Unknown number of instances !"
+    exit 1
+  fi
+
+  local APP_NAME=$1
+  local INSTANCES=$(expr $2 - 1)
+  local APP_URL=$(cf app $APP_NAME-0 | awk '{if (NR == 7) {print $2}}')
+  local APP_DOMAIN=${APP_URL/$APP_NAME-0./}
+
+  if [ -z "$APP_DOMAIN" ]; then
+    echo "Unknown domain !"
+    exit 1
+  fi
+
+  echo "Mapping $2 (0-$INSTANCES) instances of $APP_NAME in $APP_DOMAIN domain ..."
+  for i in `seq 0 $INSTANCES`;
+  do
+    cf map-route "$APP_NAME-$i" $APP_DOMAIN --hostname "$APP_NAME"
+  done
+}
+
+APPS=()
+function getApps {
+  local LINE=$(cf apps | awk '{if (NR == 4) {print}}')
+
+  if [ "$LINE" == "No apps found" ]; then
+    echo "No apps found"
+    APPS=()
+  else
+    APPS=($(cf apps | tail -n +5 | grep "$1" | awk '{print $1}'))
+    echo "Found ${#APPS[@]} applications ..."
+  fi
+}
+
+echo "Logging to $CF_API ..."
+cf api --skip-ssl-validation https://api.$CF_API
+cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+
+#
+# Disable error checks
+#
+set +e
+
+getApps
+
+if [ ${#APPS[@]} != 0 ]; then
+  echo "Unbind services ..."
+  echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf unbind-service {} db
+
+  echo "Delete apps in parallel. We expect errors due to missing routes ..."
+  echo ${APPS[@]} | xargs -n1 -P 5 cf delete -f -r
+
+  echo "Dropping database ..."
+  cf delete-service db -f
+fi
+
+#
+# Enable error checks
+#
+set -e
+
+getApps
+
+echo "Delete apps (this time errors are NOT ok) ..."
+echo ${APPS[@]} | xargs -n1 -P 5 -r cf delete -f -r
+
+echo "Pushing LARGE Abacus installation ..."
+pushd built-project/abacus
+  npm run cfstage -- large
+popd
+
+echo "Deleting redundant apps ..."
+cf delete -r -f abacus-pouchserver
+cf delete -r -f abacus-authserver-plugin
+
+echo "Mapping routes ..."
+mapRoutes abacus-usage-collector 6
+mapRoutes abacus-usage-reporting 6
+
+echo "Creating new DB service instance ..."
+cf create-service "$DB_SERVICE_NAME" "$DB_PLAN_NAME"  db
+
+getApps
+
+echo "Binding services ..."
+echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf bind-service {} db
+
+echo "Starting applications ..."
+echo ${APPS[@]} | xargs -n1 -P 5 cf start
+
+echo "Applications:"
+cf apps
+
+echo "Restarting failed apps ..."
+getApps '?'
+echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+getApps '0/'
+echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+
+echo "Applications:"
+cf apps
+
+echo "Deploy finished"
