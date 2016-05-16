@@ -11,4 +11,4 @@ inputs:
   - name: abacus
 
 run:
-  path: abacus/etc/concourse/scripts/cf-medium-infra
+  path: abacus/etc/concourse/scripts/cf-test-infra

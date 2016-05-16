@@ -34,7 +34,7 @@ CF-Abacus Concourse Pipeline
    ```bash
    fly --target=lite login --concourse-url=http://192.168.100.4:8080
    echo "y" | fly --target=lite set-pipeline --pipeline=abacus-test --config=test-pipeline.yml --load-vars-from=test-pipeline-vars.yml ---non-interactive
-   fly --target=lite unpause-pipeline --pipeline=abacus
+   fly --target=lite unpause-pipeline --pipeline=abacus-test
    ```
 
 6. Check the pipeline at http://192.168.100.4:8080/
@@ -91,7 +91,7 @@ You should have the Concourse running by now. To run the deployment pipeline fol
 3. Upload the pipeline:
    ```bash
    echo "y" | fly --target=lite set-pipeline --pipeline=abacus-deploy --config=deploy-pipeline.yml --load-vars-from=deploy-pipeline-vars.yml ---non-interactive
-   fly --target=lite unpause-pipeline --pipeline=abacus
+   fly --target=lite unpause-pipeline --pipeline=abacus-deploy
    ```
 4. Check the pipeline at http://192.168.100.4:8080/
 
