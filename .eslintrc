@@ -16,11 +16,14 @@ globals:
   spy: true
   stub: true
 
+parserOptions:
+  sourceType: "module"
+
 rules:
   # ERRORS
   space-before-blocks: 2
   indent: [2, 2, { "SwitchCase": 1 }]
-  strict: [2, "global"]
+  #strict: [2, "global"]
   comma-dangle: [2, "never"]
   no-unused-expressions: 2
   block-scoped-var: 2
