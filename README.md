@@ -28,7 +28,7 @@ The Abacus FAQ can be found in [doc/faq.md](doc/faq.md).
 Building
 ---
 
-Abacus requires Npm >= 3.x and Node.js >= 4.3.2
+Abacus requires Npm >= 3.x and Node.js >= 4.4.3
 
 ```sh
 cd cf-abacus
@@ -56,7 +56,7 @@ Deploying to Cloud Foundry
 
 Abacus runs as a set of applications deployed to Cloud Foundry. Each application is configured to run in multiple instances for availability and performance. Service usage data is stored in CouchDB databases.
 
-The following steps assume a local Cloud Foundry deployment created using [Bosh-lite](https://github.com/cloudfoundry/bosh-lite), running on the default local IP assigned by the Bosh-lite CF installation script, and have been tested on CF v221. Please adjust to your particular Cloud Foundry deployment environment.
+The following steps assume a local Cloud Foundry deployment created using [Bosh-lite](https://github.com/cloudfoundry/bosh-lite), running on the default local IP assigned by the Bosh-lite CF installation script, and have been tested on CF v226.4. Please adjust to your particular Cloud Foundry deployment environment.
 
 ```sh
 cd cf-abacus
