@@ -102,6 +102,7 @@
     "abacus-lock": "file:lib/utils/lock",
     "abacus-lrucache": "file:lib/utils/lrucache",
     "abacus-lrudown": "file:lib/utils/lrudown",
+    "abacus-matrix": "file:lib/utils/matrix",
     "abacus-partition": "file:lib/utils/partition",
     "abacus-perf": "file:lib/utils/perf",
     "abacus-rc": "file:lib/utils/rc",
