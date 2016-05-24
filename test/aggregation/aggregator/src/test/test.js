@@ -60,7 +60,7 @@ const usage = commander.usagedocs || 1;
 const tshift = commander.day * 24 * 60 * 60 * 1000 || 0;
 
 // External Abacus processes start timeout
-const startTimeout = commander.startTimeout || 10000;
+const startTimeout = commander.startTimeout || 30000;
 
 // This test timeout
 const totalTimeout = commander.totalTimeout || 60000;

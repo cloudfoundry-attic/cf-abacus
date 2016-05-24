@@ -52,7 +52,7 @@ const authServer = /:/.test(commander.authServer) ? commander.authServer :
 'https://abacus-authserver-plugin.' + commander.authServer;
 
 // External Abacus processes start timeout
-const startTimeout = commander.startTimeout || 10000;
+const startTimeout = commander.startTimeout || 30000;
 
 // Submitted usage time
 const usageTime = commander.usageTime || Date.now();
