@@ -24,7 +24,7 @@ describe('abacus-coverage', function() {
     process.exit = exit;
   });
 
-  it('reports overall code coverage', function(done) {
+  xit('reports overall code coverage', function(done) {
 
     // Spy on the Istanbul coverage reporter
     var reporters = [];
