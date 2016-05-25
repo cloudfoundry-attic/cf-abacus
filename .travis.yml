@@ -1,11 +1,9 @@
 matrix:
   include:
     - os: "linux"
-      env: NODE_VERSION="5.10.1" CI_TEST="true" CF_TEST="false"
+      env: NODE_VERSION="5.11.1" CI_TEST="true" CF_TEST="false"
     - os: "linux"
-      env: NODE_VERSION="4.4.3" CI_TEST="true" CF_TEST="false"
-    - os: "linux"
-      env: NODE_VERSION="4.4.3" CI_TEST="false" CF_TEST="true"
+      env: NODE_VERSION="5.11.1" CI_TEST="false" CF_TEST="true"
 
 before_install:
   - rm -rf ~/.nvm

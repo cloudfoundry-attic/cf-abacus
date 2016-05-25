@@ -61,7 +61,7 @@
     "abacus-webapp": "file:../../utils/webapp"
   },
   "engines": {
-    "node": ">=0.12.0",
-    "npm": ">=2.0.0"
+    "node": ">=5.11.1",
+    "npm": ">=3.8.6"
   }
 }
