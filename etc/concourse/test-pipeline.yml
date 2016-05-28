@@ -23,6 +23,64 @@ jobs:
 
 ################################# POUCH ########################################
 
+  - name: pouchdb-6.2.0
+    plan:
+      - aggregate:
+        - get: abacus
+          trigger: true
+      - task: build
+        config:
+          platform: linux
+          image: docker:///node#6.2.0
+          inputs:
+            - name: abacus
+          outputs:
+            - name: built-project
+          run:
+            path: abacus/etc/concourse/scripts/pouch-build
+      - task: it
+        config:
+          platform: linux
+          image: docker:///node#6.2.0
+          inputs:
+            - name: built-project
+          run:
+            path: built-project/etc/concourse/scripts/pouch-it
+          params:
+            CI_START_TIMEOUT: 50000
+            CI_PIPELINE_TIMEOUT: 100000
+      - task: demo
+        config:
+          platform: linux
+          image: docker:///node#6.2.0
+          inputs:
+            - name: built-project
+          run:
+            path: built-project/etc/concourse/scripts/pouch-demo
+          params:
+            CI_START_TIMEOUT: 50000
+      - task: dupe
+        config:
+          platform: linux
+          image: docker:///node#6.2.0
+          inputs:
+            - name: built-project
+          run:
+            path: built-project/etc/concourse/scripts/noop
+          params:
+            CI_START_TIMEOUT: 50000
+            CI_PIPELINE_TIMEOUT: 100000
+      - task: perf
+        config:
+          platform: linux
+          image: docker:///node#6.2.0
+          inputs:
+            - name: built-project
+          run:
+            path: built-project/etc/concourse/scripts/pouch-perf
+          params:
+            CI_START_TIMEOUT: 50000
+            CI_PIPELINE_TIMEOUT: 100000
   - name: pouchdb-5.11.1
     plan:
       - aggregate:
@@ -81,125 +139,79 @@ jobs:
           params:
             CI_START_TIMEOUT: 50000
             CI_PIPELINE_TIMEOUT: 100000
-  - name: pouchdb-4.4
-    plan:
-      - aggregate:
-        - get: abacus
-          trigger: true
-      - task: build
-        config:
-          platform: linux
-          image: docker:///node#4.4
-          inputs:
-            - name: abacus
-          outputs:
-            - name: built-project
-          run:
-            path: abacus/etc/concourse/scripts/pouch-build
-      - task: it
-        config:
-          platform: linux
-          image: docker:///node#4.4
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/pouch-it
-          params:
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
-      - task: demo
-        config:
-          platform: linux
-          image: docker:///node#4.4
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/pouch-demo
-          params:
-            CI_START_TIMEOUT: 50000
-      - task: dupe
-        config:
-          platform: linux
-          image: docker:///node#4.4
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/noop
-          params:
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
-      - task: perf
-        config:
-          platform: linux
-          image: docker:///node#4.4
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/pouch-perf
-          params:
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
-  - name: pouchdb-0.12
-    plan:
-      - aggregate:
-        - get: abacus
-          trigger: true
-      - task: build
-        config:
-          platform: linux
-          image: docker:///node#0.12
-          inputs:
-            - name: abacus
-          outputs:
-            - name: built-project
-          run:
-            path: abacus/etc/concourse/scripts/pouch-build
-      - task: it
-        config:
-          platform: linux
-          image: docker:///node#0.12
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/pouch-it
-          params:
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
-      - task: demo
-        config:
-          platform: linux
-          image: docker:///node#0.12
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/pouch-demo
-          params:
-            CI_START_TIMEOUT: 50000
-      - task: dupe
-        config:
-          platform: linux
-          image: docker:///node#0.12
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/noop
-          params:
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
-      - task: perf
-        config:
-          platform: linux
-          image: docker:///node#0.12
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/pouch-perf
-          params:
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
 
 ################################# COUCH ########################################
 
+  - name: couchdb-6.2.0
+    plan:
+      - aggregate:
+        - get: abacus
+          passed: [pouchdb-6.2.0]
+          trigger: true
+      - task: build
+        config:
+          platform: linux
+          image: docker:///godofcontainers/node-couchdb#6.2.0
+          inputs:
+            - name: abacus
+          outputs:
+            - name: built-project
+          run:
+            path: abacus/etc/concourse/scripts/couch-build
+          params:
+            JOBS: 1
+            DB: http://localhost:5984
+      - task: it
+        config:
+          platform: linux
+          image: docker:///godofcontainers/node-couchdb#6.2.0
+          inputs:
+            - name: built-project
+          run:
+            path: built-project/etc/concourse/scripts/couch-it
+          params:
+            JOBS: 1
+            DB: http://localhost:5984
+            CI_START_TIMEOUT: 50000
+            CI_PIPELINE_TIMEOUT: 100000
+      - task: demo
+        config:
+          platform: linux
+          image: docker:///godofcontainers/node-couchdb#6.2.0
+          inputs:
+            - name: built-project
+          run:
+            path: built-project/etc/concourse/scripts/couch-demo
+          params:
+            JOBS: 1
+            DB: http://localhost:5984
+            CI_START_TIMEOUT: 50000
+      - task: dupe
+        config:
+          platform: linux
+          image: docker:///godofcontainers/node-couchdb#6.2.0
+          inputs:
+            - name: built-project
+          run:
+            path: built-project/etc/concourse/scripts/noop
+          params:
+            JOBS: 1
+            DB: http://localhost:5984
+            CI_START_TIMEOUT: 50000
+            CI_PIPELINE_TIMEOUT: 100000
+      - task: perf
+        config:
+          platform: linux
+          image: docker:///godofcontainers/node-couchdb#6.2.0
+          inputs:
+            - name: built-project
+          run:
+            path: built-project/etc/concourse/scripts/couch-perf
+          params:
+            JOBS: 1
+            DB: http://localhost:5984
+            CI_START_TIMEOUT: 50000
+            CI_PIPELINE_TIMEOUT: 100000
   - name: couchdb-5.11.1
     plan:
       - aggregate:
@@ -270,149 +282,84 @@ jobs:
             DB: http://localhost:5984
             CI_START_TIMEOUT: 50000
             CI_PIPELINE_TIMEOUT: 100000
-  - name: couchdb-4.4
-    plan:
-      - aggregate:
-        - get: abacus
-          passed: [pouchdb-4.4]
-          trigger: true
-      - task: build
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-couchdb#4.4
-          inputs:
-            - name: abacus
-          outputs:
-            - name: built-project
-          run:
-            path: abacus/etc/concourse/scripts/couch-build
-          params:
-            JOBS: 1
-            DB: http://localhost:5984
-      - task: it
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-couchdb#4.4
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/couch-it
-          params:
-            JOBS: 1
-            DB: http://localhost:5984
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
-      - task: demo
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-couchdb#4.4
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/couch-demo
-          params:
-            JOBS: 1
-            DB: http://localhost:5984
-            CI_START_TIMEOUT: 50000
-      - task: dupe
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-couchdb#4.4
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/noop
-          params:
-            JOBS: 1
-            DB: http://localhost:5984
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
-      - task: perf
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-couchdb#4.4
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/couch-perf
-          params:
-            JOBS: 1
-            DB: http://localhost:5984
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
-  - name: couchdb-0.12
-    plan:
-      - aggregate:
-        - get: abacus
-          passed: [pouchdb-0.12]
-          trigger: true
-      - task: build
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-couchdb#0.12
-          inputs:
-            - name: abacus
-          outputs:
-            - name: built-project
-          run:
-            path: abacus/etc/concourse/scripts/couch-build
-          params:
-            JOBS: 1
-            DB: http://localhost:5984
-      - task: it
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-couchdb#0.12
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/couch-it
-          params:
-            JOBS: 1
-            DB: http://localhost:5984
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
-      - task: demo
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-couchdb#0.12
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/couch-demo
-          params:
-            JOBS: 1
-            DB: http://localhost:5984
-            CI_START_TIMEOUT: 50000
-      - task: dupe
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-couchdb#0.12
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/noop
-          params:
-            JOBS: 1
-            DB: http://localhost:5984
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
-      - task: perf
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-couchdb#0.12
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/couch-perf
-          params:
-            JOBS: 1
-            DB: http://localhost:5984
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
 
 ################################# MONGO ########################################
 
+  - name: mongodb-6.2.0
+    plan:
+      - aggregate:
+        - get: abacus
+          passed: [couchdb-6.2.0]
+          trigger: true
+      - task: build
+        config:
+          platform: linux
+          image: docker:///godofcontainers/node-mongodb#6.2.0
+          inputs:
+            - name: abacus
+          outputs:
+            - name: built-project
+          run:
+            path: abacus/etc/concourse/scripts/mongo-build
+          params:
+            JOBS: 1
+            DB: mongodb://localhost:27017
+            DBCLIENT: abacus-mongoclient
+      - task: it
+        config:
+          platform: linux
+          image: docker:///godofcontainers/node-mongodb#6.2.0
+          inputs:
+            - name: built-project
+          run:
+            path: built-project/etc/concourse/scripts/mongo-it
+          params:
+            JOBS: 1
+            DB: mongodb://localhost:27017
+            DBCLIENT: abacus-mongoclient
+            CI_START_TIMEOUT: 50000
+            CI_PIPELINE_TIMEOUT: 100000
+      - task: demo
+        config:
+          platform: linux
+          image: docker:///godofcontainers/node-mongodb#6.2.0
+          inputs:
+            - name: built-project
+          run:
+            path: built-project/etc/concourse/scripts/mongo-demo
+          params:
+            JOBS: 1
+            DB: mongodb://localhost:27017
+            DBCLIENT: abacus-mongoclient
+            CI_START_TIMEOUT: 50000
+      - task: dupe
+        config:
+          platform: linux
+          image: docker:///godofcontainers/node-mongodb#6.2.0
+          inputs:
+            - name: built-project
+          run:
+            path: built-project/etc/concourse/scripts/noop
+          params:
+            JOBS: 1
+            DB: mongodb://localhost:27017
+            DBCLIENT: abacus-mongoclient
+            CI_START_TIMEOUT: 50000
+            CI_PIPELINE_TIMEOUT: 100000
+      - task: perf
+        config:
+          platform: linux
+          image: docker:///godofcontainers/node-mongodb#6.2.0
+          inputs:
+            - name: built-project
+          run:
+            path: built-project/etc/concourse/scripts/mongo-perf
+          params:
+            JOBS: 1
+            DB: mongodb://localhost:27017
+            DBCLIENT: abacus-mongoclient
+            CI_START_TIMEOUT: 50000
+            CI_PIPELINE_TIMEOUT: 100000
   - name: mongodb-5.11.1
     plan:
       - aggregate:
@@ -488,156 +435,6 @@ jobs:
             DBCLIENT: abacus-mongoclient
             CI_START_TIMEOUT: 50000
             CI_PIPELINE_TIMEOUT: 100000
-  - name: mongodb-4.4
-    plan:
-      - aggregate:
-        - get: abacus
-          passed: [couchdb-4.4]
-          trigger: true
-      - task: build
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-mongodb#4.4
-          inputs:
-            - name: abacus
-          outputs:
-            - name: built-project
-          run:
-            path: abacus/etc/concourse/scripts/mongo-build
-          params:
-            JOBS: 1
-            DB: mongodb://localhost:27017
-            DBCLIENT: abacus-mongoclient
-      - task: it
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-mongodb#4.4
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/mongo-it
-          params:
-            JOBS: 1
-            DB: mongodb://localhost:27017
-            DBCLIENT: abacus-mongoclient
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
-      - task: demo
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-mongodb#4.4
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/mongo-demo
-          params:
-            JOBS: 1
-            DB: mongodb://localhost:27017
-            DBCLIENT: abacus-mongoclient
-            CI_START_TIMEOUT: 50000
-      - task: dupe
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-mongodb#4.4
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/noop
-          params:
-            JOBS: 1
-            DB: mongodb://localhost:27017
-            DBCLIENT: abacus-mongoclient
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
-      - task: perf
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-mongodb#4.4
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/mongo-perf
-          params:
-            JOBS: 1
-            DB: mongodb://localhost:27017
-            DBCLIENT: abacus-mongoclient
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
-  - name: mongodb-0.12
-    plan:
-      - aggregate:
-        - get: abacus
-          passed: [couchdb-0.12]
-          trigger: true
-      - task: build
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-mongodb#0.12
-          inputs:
-            - name: abacus
-          outputs:
-            - name: built-project
-          run:
-            path: abacus/etc/concourse/scripts/mongo-build
-          params:
-            JOBS: 1
-            DB: mongodb://localhost:27017
-            DBCLIENT: abacus-mongoclient
-      - task: it
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-mongodb#0.12
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/mongo-it
-          params:
-            JOBS: 1
-            DB: mongodb://localhost:27017
-            DBCLIENT: abacus-mongoclient
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
-      - task: demo
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-mongodb#0.12
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/mongo-demo
-          params:
-            JOBS: 1
-            DB: mongodb://localhost:27017
-            DBCLIENT: abacus-mongoclient
-            CI_START_TIMEOUT: 50000
-      - task: dupe
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-mongodb#0.12
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/noop
-          params:
-            JOBS: 1
-            DB: mongodb://localhost:27017
-            DBCLIENT: abacus-mongoclient
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
-      - task: perf
-        config:
-          platform: linux
-          image: docker:///godofcontainers/node-mongodb#0.12
-          inputs:
-            - name: built-project
-          run:
-            path: built-project/etc/concourse/scripts/mongo-perf
-          params:
-            JOBS: 1
-            DB: mongodb://localhost:27017
-            DBCLIENT: abacus-mongoclient
-            CI_START_TIMEOUT: 50000
-            CI_PIPELINE_TIMEOUT: 100000
 
 ################################### CF #########################################
 
@@ -645,7 +442,7 @@ jobs:
     plan:
       - aggregate:
         - get: abacus
-          passed: [mongodb-0.12,mongodb-4.4,mongodb-5.11.1]
+          passed: [mongodb-5.11.1,mongodb-6.2.0]
           trigger: true
       - task: infra
         file: abacus/etc/concourse/tasks/cf-test-infra.yml

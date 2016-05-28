@@ -20,7 +20,10 @@ echo ""
 for dir in $SCRIPT_DIR/*/
 do
     dir=${dir%*/}
-    tag="$REPO/${dir##*/}"
+    image="$REPO/${dir##*/}"
+
+    # Replace '#' with ':', to allow git-clone on Windows
+    tag=${image/\#/:}
 
     echo ""
     echo "Entering $dir"

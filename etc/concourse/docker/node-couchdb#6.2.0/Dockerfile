@@ -1,4 +1,4 @@
-FROM node:0.12
+FROM node:6.2.0
 
 RUN echo "deb http://packages.erlang-solutions.com/debian jessie contrib" > /etc/apt/sources.list.d/erlang-solutions.list
 RUN wget -qO - http://packages.erlang-solutions.com/debian/erlang_solutions.asc | apt-key add -
