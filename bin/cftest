@@ -33,9 +33,9 @@ if [ "$CF_TEST" == "true" ]; then
     mkdir -p bin/.cf
     UNAME=$(uname)
     if [ "$UNAME" == "Darwin" ]; then
-      (cd bin/.cf && curl -L "https://cli.run.pivotal.io/stable?release=macosx64-binary&source=github" | tar -zx)
+      (cd bin/.cf && curl -L -C - "https://cli.run.pivotal.io/stable?release=macosx64-binary&source=github" --connect-timeout 3 | tar -zx)
     else
-      (cd bin/.cf && curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx)
+      (cd bin/.cf && curl -L -C - "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" --connect-timeout 3 | tar -zx)
     fi
     export PATH=$PATH:$(pwd)/bin/.cf
 

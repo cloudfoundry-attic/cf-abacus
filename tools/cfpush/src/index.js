@@ -25,8 +25,25 @@ var mkdirs = function(cb) {
   });
 };
 
-// Adjust manifest.yml env variables and write new manifest.yml
-var remanifest = function(root, name, instances, conf, cb) {
+// Adjust manifest.yml env variables
+var adjustManifest = function(app, name, instances, conf, buildpack) {
+  if (app) {
+    app.name = name;
+    app.host = name;
+    if (instances)
+      app.instances = parseInt(instances);
+    app.path = '../' + app.path;
+    if (conf) {
+      if (!app.env) app.env = {};
+      app.env.CONF = conf;
+    }
+    if (buildpack)
+      app.buildpack = buildpack
+  }
+};
+
+// Write new manifest.yml
+var remanifest = function(root, name, instances, conf, buildpack, cb) {
   fs.readFile(
     path.join(process.cwd(), 'manifest.yml'), function(err, content) {
       if(err) {
@@ -35,17 +52,9 @@ var remanifest = function(root, name, instances, conf, cb) {
       }
       var yml = yaml.load(content);
       var app = yml.applications[0];
-      if(app) {
-        app.name = name;
-        app.host = name;
-        if(instances)
-          app.instances = parseInt(instances);
-        app.path = '../' + app.path;
-        if(conf) {
-          if(!app.env) app.env = {};
-          app.env.CONF = conf;
-        }
-      }
+
+      adjustManifest(app, name, instances, conf, buildpack);
+
       fs.writeFile(
         path.join('.cfpush', [name, 'manifest.yml'].join('-')),
         yaml.dump(yml), cb);
@@ -82,6 +91,8 @@ var runCLI = function() {
     .option('-i, --instances <nb>', 'nb of instances')
     .option('-c, --conf <value>',
       'configuration name', process.env.CONF)
+    .option('-b, --buildpack <value>',
+      'buildpack name or location', process.env.BUILDPACK)
     .option('-s, --start',
       'start an app after pushing')
     .parse(process.argv);
@@ -94,8 +105,8 @@ var runCLI = function() {
     }
 
     // Generate the updated manifest.yml
-    remanifest(commander.root,
-      commander.name, commander.instances, commander.conf, function(err) {
+    remanifest(commander.root, commander.name, commander.instances,
+      commander.conf, commander.buildpack, function(err) {
         if(err) {
           console.log('Couldn\'t write manifest.yml -', err);
           process.exit(1);
