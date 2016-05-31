@@ -460,8 +460,13 @@ jobs:
         file: abacus/etc/concourse/tasks/cf-test-deploy.yml
         config:
           params:
+            # Enable tests on CF (used in cftest script)
             CF_TEST: true
+            # Save file handlers and offload CF stagers
             JOBS: 2
+            # Use latest node.js buildpack to enable 5.11.1
+            BUILDPACK: https://github.com/cloudfoundry/nodejs-buildpack.git
+            # Cloud Foundry infrastructure
             CF_API: {{cf-api}}
             CF_USER: {{cf-user}}
             CF_PASSWORD: {{cf-password}}
@@ -470,23 +475,3 @@ jobs:
             CF_ORG: {{cf-org}}
             CF_SPACE: {{cf-space}}
             CF_DOMAIN: {{cf-domain}}
-
-################################## MERGE #######################################
-
-#  - name: abacus-merge-master
-#    plan:
-#      - aggregate:
-#        - get: abacus-release-master
-#          params:
-#            submodules: none
-#            fetch: [develop]
-#          passed: [cf-medium]
-#          trigger: true
-#        - get: abacus-release-develop # for build scripts
-#          params:
-#            submodules: none
-#      - task: merge-master
-#        file: abacus-release-develop/etc/concourse/tasks/merge-master.yml
-#      - put: abacus-release-develop
-#        params:
-#          repository: release-merged
