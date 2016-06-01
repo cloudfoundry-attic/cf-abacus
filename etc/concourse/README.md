@@ -86,15 +86,19 @@ You should have the Concourse running by now. To run the deployment pipeline fol
     | | | |____manifest.yml
     ```
 
-2. Customize the `deploy-pipeline-vars.yml` file
+2. Create a "landscape" repository that contains submodules for:
+   * Abacus
+   * the configuration from the previous step
+   * anything else specific for the landscape (Cloud Foundry, DB, ...)
 
-3. Upload the pipeline:
+3. Customize the `deploy-pipeline-vars.yml` file with the location of the landscape repository
+
+4. Upload the pipeline:
    ```bash
    echo "y" | fly --target=lite set-pipeline --pipeline=abacus-deploy --config=deploy-pipeline.yml --load-vars-from=deploy-pipeline-vars.yml ---non-interactive
    fly --target=lite unpause-pipeline --pipeline=abacus-deploy
    ```
-4. Check the pipeline at http://192.168.100.4:8080/
-
+5. Check the pipeline at http://192.168.100.4:8080/
 
 ## Docker files
 

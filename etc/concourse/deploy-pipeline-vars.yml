@@ -70,8 +70,15 @@ hystrix-client-id: abacus-hystrix
 # UAA client: Client secret for Abacus Hystrix streams
 hystrix-client-secret: secret
 
-# Abacus custom configuration repo private key
-git_user_private_key: |
+# Abacus repo URI (or landscape project URI)
+landscape-git-repo: https://github.com/cloudfoundry-incubator/cf-abacus.git
+
+# Abacus repo branch
+landscape-git-repo-branch: master
+
+# Abacus repo (or landscape project repo) private key.
+# Leave it as it is for mainstream github.com Abacus repo
+landscape-git-repo-private-key: |
   -----BEGIN RSA PRIVATE KEY-----
      ... insert key here ...
   -----END RSA PRIVATE KEY-----

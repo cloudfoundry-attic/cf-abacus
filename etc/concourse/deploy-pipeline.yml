@@ -1,17 +1,12 @@
 ---
 resources:
-  - name: abacus
+  - name: landscape
     type: git
     source:
-      uri: https://github.com/cloudfoundry-incubator/cf-abacus.git
-      branch: master
-
-  - name: abacus-config
-    type: git
-    source:
-      uri: {{custom_settings_git_repo}}
-      branch: {{custom_settings_git_repo_branch}}
-      private_key: {{custom_settings_git_repo_private_key}}
+      uri: {{landscape-git-repo}}
+      branch: {{landscape-git-repo-branch}}
+      paths: [cf-abacus,abacus-config]
+      private_key: {{landscape-git-repo-private-key}}
       skip-ssl-verification: true
 
 jobs:
@@ -21,12 +16,12 @@ jobs:
   - name: abacus-deploy
     plan:
       - aggregate:
-        - get: abacus
+        - get: landscape
           trigger: true
-        - get: abacus-config
-          trigger: true
+      - task: build-abacus
+        file: landscape/cf-abacus/etc/concourse/tasks/cf-deploy-build.yml
       - task: setup-abacus-infra
-        file: abacus/etc/concourse/tasks/cf-deploy-infra.yml
+        file: built-project/etc/concourse/tasks/cf-deploy-infra.yml
         config:
           params:
             CF_API: {{cf-api}}
@@ -51,13 +46,11 @@ jobs:
             OBJECT_STORAGE_CLIENT_SECRET: {{object-storage-client-secret}}
             HYSTRIX_CLIENT_ID: {{hystrix-client-id}}
             HYSTRIX_CLIENT_SECRET: {{hystrix-client-secret}}
-      - task: build-abacus
-        file: abacus/etc/concourse/tasks/cf-deploy-build.yml
       - task: deploy-abacus
-        file: abacus/etc/concourse/tasks/cf-deploy-deploy.yml
+        file: built-project/etc/concourse/tasks/cf-deploy-deploy.yml
         on_failure:
           task: abacus-cleanup
-          file: abacus/etc/concourse/tasks/cf-deploy-cleanup.yml
+          file: built-project/etc/concourse/tasks/cf-deploy-cleanup.yml
           config:
             params:
               CF_API: {{cf-api}}
@@ -79,10 +72,10 @@ jobs:
             DB_PLAN_NAME: {{db-plan-name}}
             JOBS: 2
       - task: test-abacus
-        file: abacus/etc/concourse/tasks/cf-deploy-test.yml
+        file: built-project/etc/concourse/tasks/cf-deploy-test.yml
         ensure:
           task: abacus-cleanup
-          file: abacus/etc/concourse/tasks/cf-deploy-cleanup.yml
+          file: built-project/etc/concourse/tasks/cf-deploy-cleanup.yml
           config:
             params:
               CF_API: {{cf-api}}

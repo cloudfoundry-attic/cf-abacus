@@ -8,11 +8,10 @@ image_resource:
     tag: '5.11.1'
 
 inputs:
-  - name: abacus
-  - name: abacus-config
+  - name: landscape
 
 outputs:
   - name: built-project
 
 run:
-  path: abacus/etc/concourse/scripts/cf-deploy-build
+  path: landscape/cf-abacus/etc/concourse/scripts/cf-deploy-build

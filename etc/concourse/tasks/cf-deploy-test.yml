@@ -11,4 +11,4 @@ inputs:
   - name: built-project
 
 run:
-  path: built-project/abacus/etc/concourse/scripts/cf-deploy-test
+  path: built-project/etc/concourse/scripts/cf-deploy-test

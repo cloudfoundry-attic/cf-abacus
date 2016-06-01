@@ -78,7 +78,7 @@ echo "Delete apps (this time errors are NOT ok) ..."
 echo ${APPS[@]} | xargs -n1 -P 5 -r cf delete -f -r
 
 echo "Pushing LARGE Abacus installation ..."
-pushd built-project/abacus
+pushd built-project
   npm run cfstage -- large
 popd
 

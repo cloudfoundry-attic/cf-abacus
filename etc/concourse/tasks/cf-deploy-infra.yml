@@ -8,7 +8,7 @@ image_resource:
     tag: 'latest'
 
 inputs:
-  - name: abacus
+  - name: built-project
 
 run:
-  path: abacus/etc/concourse/scripts/cf-deploy-infra
+  path: built-project/etc/concourse/scripts/cf-deploy-infra
