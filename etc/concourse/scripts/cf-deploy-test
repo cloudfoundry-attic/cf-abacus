@@ -5,7 +5,7 @@ set -e -x
 echo "Environment:"
 env | sort
 
-pushd built-project/abacus
+pushd built-project
   npm run demo -- --collector https://abacus-usage-collector.$CF_DOMAIN --reporting https://abacus-usage-reporting.$CF_DOMAIN --auth-server https://api.$CF_API --start-timeout $CI_START_TIMEOUT --total-timeout $CI_PIPELINE_TIMEOUT
 popd
 
