@@ -16,6 +16,9 @@ default:
   JWTKEY:
   JWTALGO:
 
+smalldb:
+  OUPUT_DB: false
+
 small:
   APPS: 1
   INSTANCES: 2
