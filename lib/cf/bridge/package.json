@@ -42,6 +42,7 @@
     "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-oauth": "file:../../utils/oauth",
+    "abacus-paging": "file:../../utils/paging",
     "abacus-partition": "file:../../utils/partition",
     "abacus-perf": "file:../../utils/perf",
     "abacus-request": "file:../../utils/request",
