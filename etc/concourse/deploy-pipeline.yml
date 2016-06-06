@@ -70,6 +70,9 @@ jobs:
             CF_DOMAIN: {{cf-domain}}
             DB_SERVICE_NAME: {{db-service-name}}
             DB_PLAN_NAME: {{db-plan-name}}
+            # Use latest node.js buildpack to enable 5.11.1
+            BUILDPACK: https://github.com/cloudfoundry/nodejs-buildpack.git
+            # Save file handlers and offload CF stagers
             JOBS: 2
       - task: test-abacus
         file: built-project/etc/concourse/tasks/cf-deploy-test.yml
