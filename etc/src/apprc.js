@@ -6,7 +6,7 @@
 /* eslint no-var: 0 */
 
 var _ = require('underscore');
-var strip = require('strip-json-comments')
+var strip = require('strip-json-comments');
 var yaml = require('js-yaml');
 var commander = require('commander');
 var fs = require('fs');
@@ -17,7 +17,7 @@ var map = _.map;
 // Parse JSON and Yaml
 var parse = function(content) {
   if(/^\s*{/.test(content))
-    return JSON.parse(strip(content))
+    return JSON.parse(strip(content));
   return yaml.load(content);
 };
 

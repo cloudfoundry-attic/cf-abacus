@@ -340,7 +340,7 @@ describe('abacus-usage-accumulator-itest', () => {
                 verifyAggregator(done);
               }, 250);
           }
-        })
+        });
     };
 
     // Wait for usage accumulator to start

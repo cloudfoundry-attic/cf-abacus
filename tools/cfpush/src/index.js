@@ -38,7 +38,7 @@ var adjustManifest = function(app, name, instances, conf, buildpack) {
       app.env.CONF = conf;
     }
     if (buildpack)
-      app.buildpack = buildpack
+      app.buildpack = buildpack;
   }
 };
 

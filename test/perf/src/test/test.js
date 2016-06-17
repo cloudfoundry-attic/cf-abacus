@@ -340,7 +340,7 @@ describe('abacus-perf-test', () => {
       if(!val)
         return val;
       if(val.windows)
-        val.windows = [[first(last(val.windows))]]
+        val.windows = [[first(last(val.windows))]];
       map(keys(val), (k) => {
         if(typeof val[k] === 'object')
           fixup(val[k]);

@@ -144,7 +144,7 @@ describe('abacus-dupe', function() {
           quantity: 1
         }
       ]
-    }
+    };
 
     // Submit usage for sample resource with 10 GB, 1000 light API calls,
     // and 100 heavy API calls
@@ -165,7 +165,7 @@ describe('abacus-dupe', function() {
             expect(val).to.equal(undefined);
           }
           else {
-            expect(err).to.equal(undefined)
+            expect(err).to.equal(undefined);
             if(organization !== 'test_status_code_404') {
               expect(val.statusCode).to.equal(201);
               expect(val.headers.location).to.not.equal(undefined);

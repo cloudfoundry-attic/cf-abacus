@@ -115,7 +115,7 @@ const addWindows = (u) => {
     map(s.consumers, (c) => {
       if(c.resources)
         c.resources = map(c.resources, addResourceWindows);
-    })
+    });
   });
   return u;
 };
@@ -164,7 +164,7 @@ const addCharge = (k, v) => {
 
       // Total charge for a plan
       p.windows = map(zip.apply(_, map(p.aggregated_usage, (u) => {
-        return u.windows
+        return u.windows;
       })),
         (zu) => {
           return map(unzip(zu), (uu) => {
@@ -189,7 +189,7 @@ const addCharge = (k, v) => {
 
     // Total charges for a resource
     r.windows = map(zip.apply(_, map(r.plans, (p) => {
-      return p.windows
+      return p.windows;
     })),
       (zu) => {
         return map(unzip(zu), (uu) => {
@@ -583,7 +583,7 @@ describe('abacus-usage-reporting-itest', () => {
 
       // Add charge at organization, space and consumer levels
       report.windows = map(zip.apply(_, map(report.resources, (r) => {
-        return r.windows
+        return r.windows;
       })), (zr) => {
         return map(unzip(zr), (uu) => {
           return reduce(uu, sumCharges, { charge: 0 });
@@ -591,7 +591,7 @@ describe('abacus-usage-reporting-itest', () => {
       });
       report.spaces = map(report.spaces, (s) => {
         s.windows = map(zip.apply(_, map(s.resources, (r) => {
-          return r.windows
+          return r.windows;
         })), (zr) => {
           return map(unzip(zr), (uu) => {
             return reduce(uu, sumCharges, { charge: 0 });
@@ -599,7 +599,7 @@ describe('abacus-usage-reporting-itest', () => {
         });
         s.consumers = map(s.consumers, (c) => {
           c.windows = map(zip.apply(_, map(c.resources, (r) => {
-            return r.windows
+            return r.windows;
           })), (zr) => {
             return map(unzip(zr), (uu) => {
               return reduce(uu, sumCharges, { charge: 0 });
