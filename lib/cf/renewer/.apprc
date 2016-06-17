@@ -1,0 +1,25 @@
+default:
+  PORT: 9501
+  APPS: 1
+  INSTANCES: 1
+  DB_PARTITIONS: 1
+  COLLECTOR: 9080
+  EUREKA: 9990
+  DB: 5984
+  UAA:
+  API:
+
+small:
+  APPS: 1
+  INSTANCES: 1
+  DB_PARTITIONS: 2
+
+medium:
+  APPS: 1
+  INSTANCES: 1
+  DB_PARTITIONS: 4
+
+large:
+  APPS: 1
+  INSTANCES: 1
+  DB_PARTITIONS: 6
