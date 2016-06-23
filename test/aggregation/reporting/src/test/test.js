@@ -332,7 +332,7 @@ describe('abacus-usage-reporting-itest', () => {
 
     // One of the two plans based on resource instance index
     const pid = (ri) => ri % 4 < 2 ? 'basic' : 'standard';
-    
+
     // The metering plan id
     const mpid = (ri) => 'test-metering-plan';
 
@@ -452,10 +452,8 @@ describe('abacus-usage-reporting-itest', () => {
       if(c)
         return cagg(o, ri, u, s);
       return create(consumers, (i) => ({
-        consumer_id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
-        space_id: sid(o, s),
-        doc_id: ['k', oid(o), sid(o, s), cid(o, i === 0 ? s : s === 0 ? 4 : 5),
-          't', dbclient.pad16(end + u)].join('/')
+        id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
+        t: dbclient.pad16(end + u)
       }));
     };
 
