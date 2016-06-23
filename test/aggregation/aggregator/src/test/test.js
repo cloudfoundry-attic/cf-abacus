@@ -84,7 +84,7 @@ const pruneWindows = (v, k) => {
     return nwin;
   }
   if(k === 'consumers')
-    return map(v, (c) => omit(c, 'processed', 'doc_id'));
+    return map(v, (c) => omit(c, 't'));
   if(k === 'resource_instances')
     return map(v, (ri) => omit(ri, 'processed'));
   return v;
@@ -386,8 +386,7 @@ describe('abacus-usage-aggregator-itest', () => {
 
       // Create resource aggregations
       return create(consumers, (i) => ({
-        consumer_id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
-        space_id: sid(o, s)
+        id: cid(o, i === 0 ? s : s === 0 ? 4 : 5)
       }));
     };
 
