@@ -17,7 +17,7 @@ default:
   JWTALGO:
 
 smalldb:
-  OUPUT_DB: false
+  OUTPUT_DB: false
 
 small:
   APPS: 1

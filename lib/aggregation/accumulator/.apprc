@@ -17,6 +17,7 @@ default:
 
 smalldb:
   INPUT_DB: false
+  SAMPLING: 3600000
 
 small:
   APPS: 2
