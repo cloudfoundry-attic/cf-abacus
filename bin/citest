@@ -20,6 +20,13 @@ if [ "$CI_TEST" != "false" ]; then
   npm run perf -- -o 1 -i 1 -u 1
   npm stop
 
+  # Run demo and perf test with the smalldb config
+  npm start smalldb
+  sleep 10s
+  npm run demo
+  npm run perf -- -o 1 -i 1 -u 1
+  npm stop
+
   # Run perf test with security
   export SECURED=true
   export JWTKEY=encode
