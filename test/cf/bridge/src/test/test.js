@@ -65,10 +65,8 @@ const totalTimeout = commander.totalTimeout || 60000;
 
 // Token setup
 process.env.API = 'http://localhost:4321';
-
 process.env.CF_CLIENT_ID = 'abacus-cf-bridge';
 process.env.CF_CLIENT_SECRET = 'secret';
-
 process.env.CLIENT_ID = 'abacus-linux-container';
 process.env.CLIENT_SECRET = 'secret';
 const tokenSecret = 'secret';
@@ -144,6 +142,10 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
   expiresIn: 43200
 });
 
+// Set slack window to 5 days
+process.env.SLACK = '5D';
+const sixDaysInMilliseconds = 6 * 24 * 60 * 60 * 1000;
+
 const test = (secured) => {
   const submittime = Date.now();
   let server;
@@ -184,11 +186,39 @@ const test = (secured) => {
       }
 
       response.status(200).send({
-        total_results: 1,
+        total_results: 2,
         total_pages: 1,
         prev_url: null,
         next_url: null,
         resources: [
+          {
+            metadata: {
+              guid: '904419c3',
+              url: '/v2/app_usage_events/904419c3',
+              created_at:
+                new Date(submittime - sixDaysInMilliseconds).toISOString()
+            },
+            entity: {
+              state: 'STARTED',
+              previous_state: 'STOPPED',
+              memory_in_mb_per_instance: 256,
+              previous_memory_in_mb_per_instance: 0,
+              instance_count: 1,
+              previous_instance_count: 0,
+              app_guid: '35c4ff2e',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'diego',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: null,
+              buildpack_name: null,
+              package_state: 'PENDING',
+              previous_package_state: 'PENDING',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web'
+            }
+          },
           {
             metadata: {
               guid: '904419c4',
