@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const request = require('abacus-request');
 const router = require('abacus-router');
 const express = require('abacus-express');
+const dbclient = require('abacus-dbclient');
 
 const clone = _.clone;
 
@@ -150,7 +151,7 @@ const test = (secured) => {
   const submittime = Date.now();
   let server;
 
-  beforeEach(() => {
+  beforeEach((done) => {
     // Enable/disable the oAuth token authorization
     process.env.SECURED = secured ? 'true' : 'false';
     debug('Set SECURED = %s', process.env.SECURED);
@@ -270,18 +271,32 @@ const test = (secured) => {
     app.use(router.batch(routes));
     server = app.listen(4321);
 
-    if (!process.env.DB)
+    const services = () => {
+      // Start all Abacus services
+      start('abacus-eureka-plugin');
+      start('abacus-authserver-plugin');
+      start('abacus-provisioning-plugin');
+      start('abacus-account-plugin');
+      start('abacus-usage-collector');
+      start('abacus-usage-meter');
+      start('abacus-usage-accumulator');
+      start('abacus-usage-aggregator');
+      start('abacus-usage-reporting');
+      start('abacus-cf-bridge');
+
+      done();
+    };
+
+    // Start local database server
+    if (!process.env.DB) {
       start('abacus-pouchserver');
-    start('abacus-eureka-plugin');
-    start('abacus-authserver-plugin');
-    start('abacus-provisioning-plugin');
-    start('abacus-account-plugin');
-    start('abacus-usage-collector');
-    start('abacus-usage-meter');
-    start('abacus-usage-accumulator');
-    start('abacus-usage-aggregator');
-    start('abacus-usage-reporting');
-    start('abacus-cf-bridge');
+      services();
+    }
+    else
+      // Delete test dbs on the configured db server
+      dbclient.drop(process.env.DB, /^abacus-/, () => {
+        services();
+      });
   });
 
   afterEach((done) => {

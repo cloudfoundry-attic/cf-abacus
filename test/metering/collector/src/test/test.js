@@ -10,6 +10,7 @@ const throttle = require('abacus-throttle');
 const request = require('abacus-request');
 const router = require('abacus-router');
 const express = require('abacus-express');
+const dbclient = require('abacus-dbclient');
 
 const map = _.map;
 const range = _.range;
@@ -63,7 +64,7 @@ const moduleDir = (module) => {
 };
 
 describe('abacus-usage-collector-itest', () => {
-  before(() => {
+  before((done) => {
     const start = (module) => {
       const c = cp.spawn('npm', ['run', 'start'],
         { cwd: moduleDir(module), env: clone(process.env) });
@@ -75,18 +76,29 @@ describe('abacus-usage-collector-itest', () => {
       c.on('exit', (c) => debug('Application exited with code %d', c));
     };
 
+    const services = () => {
+      // Start provisioning plugin
+      start('abacus-provisioning-plugin');
+
+      // Start account plugin
+      start('abacus-account-plugin');
+
+      // Start usage collector
+      start('abacus-usage-collector');
+
+      done();
+    };
+
     // Start local database server
-    if (!process.env.DB)
+    if (!process.env.DB) {
       start('abacus-pouchserver');
-
-    // Start provisioning plugin
-    start('abacus-provisioning-plugin');
-
-    // Start account plugin
-    start('abacus-account-plugin');
-
-    // Start usage collector
-    start('abacus-usage-collector');
+      services();
+    }
+    else
+      // Delete test dbs on the configured db server
+      dbclient.drop(process.env.DB, /^abacus-collector-/, () => {
+        services();
+      });
   });
 
   after(() => {

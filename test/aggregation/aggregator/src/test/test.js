@@ -135,7 +135,7 @@ const buildAggregatedWindows = (p, u, ri, tri, count, end, f, price) => {
 };
 
 describe('abacus-usage-aggregator-itest', () => {
-  before(() => {
+  before((done) => {
     const start = (module) => {
       const c = cp.spawn('npm', ['run', 'start'],
         { cwd: moduleDir(module), env: clone(process.env) });
@@ -147,15 +147,26 @@ describe('abacus-usage-aggregator-itest', () => {
       c.on('exit', (c) => debug('Application exited with code %d', c));
     };
 
+    const services = () => {
+      // Start account plugin
+      start('abacus-account-plugin');
+
+      // Start usage aggregator
+      start('abacus-usage-aggregator');
+
+      done();
+    };
+
     // Start local database server
-    if (!process.env.DB)
+    if (!process.env.DB) {
       start('abacus-pouchserver');
-
-    // Start account plugin
-    start('abacus-account-plugin');
-
-    // Start usage aggregator
-    start('abacus-usage-aggregator');
+      services();
+    }
+    else
+      // Delete test dbs on the configured db server
+      dbclient.drop(process.env.DB, /^abacus-aggregator-/, () => {
+        services();
+      });
   });
 
   after(() => {

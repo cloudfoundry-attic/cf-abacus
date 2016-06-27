@@ -21,6 +21,7 @@ const request = require('abacus-request');
 const throttle = require('abacus-throttle');
 const jwt = require('jsonwebtoken');
 const util = require('util');
+const dbclient = require('abacus-dbclient');
 
 // BigNumber
 const BigNumber = require('bignumber.js');
@@ -72,6 +73,11 @@ const delta = commander.delta || 0;
 const totalTimeout = commander.totalTimeout || 60000;
 
 describe('abacus-perf-test', () => {
+  before((done) => {
+    // Delete test dbs on the configured db server
+    dbclient.drop(process.env.DB, /^abacus-/, done);
+  });
+
   it('measures performance of concurrent usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs or
     // a preset timeout
