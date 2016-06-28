@@ -1,6 +1,6 @@
 {
   "name": "abacus-cf-bridge-itest",
-  "description": "CF Bridge integration and performance tests",
+  "description": "CF Bridge integration tests",
   "license": "Apache-2.0",
   "version": "0.0.6-dev.2",
   "private": true,

@@ -271,8 +271,8 @@ const test = (secured) => {
     app.use(router.batch(routes));
     server = app.listen(4321);
 
+    // Start all Abacus services
     const services = () => {
-      // Start all Abacus services
       start('abacus-eureka-plugin');
       start('abacus-authserver-plugin');
       start('abacus-provisioning-plugin');
