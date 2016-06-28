@@ -69,6 +69,9 @@ const usage = commander.usagedocs || 1;
 // Usage time window shift in milli-seconds
 const delta = commander.delta || 0;
 
+// External Abacus processes start timeout
+const startTimeout = commander.startTimeout || 10000;
+
 // This test timeout
 const totalTimeout = commander.totalTimeout || 60000;
 
@@ -408,7 +411,14 @@ describe('abacus-perf-test', () => {
       });
     };
 
-    // Run the above steps
-    submit(() => wait(done));
+    // Wait for usage reporter to start
+    request.waitFor('http://localhost:9088' + '/batch', {}, startTimeout,
+      (err, value) => {
+        // Failed to ping usage reporter before timing out
+        if (err) throw err;
+
+        // Run the above steps
+        submit(() => wait(done));
+      });
   });
 });
