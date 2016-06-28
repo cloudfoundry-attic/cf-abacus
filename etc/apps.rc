@@ -30,4 +30,4 @@ bridge:
     - lib/aggregation/aggregator
     - lib/aggregation/reporting
     - lib/cf/bridge
-
+    - lib/cf/renewer
