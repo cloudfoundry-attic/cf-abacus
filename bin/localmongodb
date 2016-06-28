@@ -10,4 +10,4 @@ set -e
 
 export DBCLIENT=abacus-mongoclient
 export DB=mongodb://localhost:27017
-
+export JOBS=1
