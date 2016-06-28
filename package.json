@@ -131,6 +131,7 @@
     "abacus-usage-aggregator-itest": "file:test/aggregation/aggregator",
     "abacus-usage-reporting-itest": "file:test/aggregation/reporting",
     "abacus-cf-bridge-itest": "file:test/cf/bridge",
+    "abacus-cf-renewer-itest": "file:test/cf/renewer",
     "abacus-demo-client": "file:demo/client",
     "abacus-doc": "file:doc",
     "abacus-etc": "file:etc",
