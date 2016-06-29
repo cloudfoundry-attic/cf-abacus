@@ -449,7 +449,7 @@ describe('abacus-usage-reporting-itest', () => {
           }]
         };
         if(id)
-          consumer.id = dbclient.kturi([oid(o), sid(o, s),
+          consumer.id = dbclient.kturi([oid(o),
             cid(o, i === 0 ? s : s === 0 ? 4 : 5)].join('/'), end + u);
         return consumer;
       });
