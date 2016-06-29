@@ -15,7 +15,8 @@ const clone = _.clone;
 
 // Setup the debug log
 const debug = require('abacus-debug')('abacus-cf-bridge-itest');
-const rdebug = require('abacus-debug')('abacus-cf-bridge-itest-response');
+const requestDebug = require('abacus-debug')('abacus-cf-bridge-itest-response');
+const responseDebug = require('abacus-debug')('abacus-cf-bridge-itest-result');
 
 // Module directory
 const moduleDir = (module) => {
@@ -374,13 +375,16 @@ const test = (secured) => {
           const aggregatedUsage = resources[0].aggregated_usage[0];
           checkAllTimeWindows(aggregatedUsage, reporttime);
 
+          responseDebug('All usage report checks are successful for: %s',
+            JSON.stringify(response.body, null, 2));
+
           cb();
         }
         catch (e) {
           const message = util.format('Check failed with %s.\n' +
             'Usage report:\n', e.stack,
             response ? JSON.stringify(response.body, null, 2) : undefined);
-          rdebug(message);
+          requestDebug(message);
           cb(new Error(message), e);
         }
       });
