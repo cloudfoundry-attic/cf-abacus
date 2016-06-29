@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 # Configure the Abacus env to use a local test CouchDB server (which you
 # must have set up and started separately)
 
