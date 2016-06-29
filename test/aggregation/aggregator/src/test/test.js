@@ -614,10 +614,10 @@ describe('abacus-usage-aggregator-itest', () => {
       const endDate = Date.UTC(new Date().getUTCFullYear(),
         new Date().getUTCMonth(), 1);
       const sid = dbclient.kturi([expectedConsumer.organization_id,
-        expectedConsumer.consumer_id].join('/'),
+        expectedConsumer.space_id, expectedConsumer.consumer_id].join('/'),
         seqid.pad16(startDate));
       const eid = dbclient.kturi([expectedConsumer.organization_id,
-        expectedConsumer.consumer_id].join('/'),
+        expectedConsumer.space_id, expectedConsumer.consumer_id].join('/'),
         seqid.pad16(endDate));
       debug('%o', expectedConsumer);
       debug('comparing latest consumer record within %s and %s', sid, eid);
