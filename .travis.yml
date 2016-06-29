@@ -10,8 +10,8 @@ matrix:
       env: NODE_VERSION="6.2.0" CI_TEST="true" CF_TEST="false" JOBS=1 DBCLIENT=abacus-mongoclient DB=mongodb://localhost:27017
       services:
         - mongodb
-    - os: "linux"
-      env: NODE_VERSION="6.2.0" CI_TEST="false" CF_TEST="true"
+    # - os: "linux"
+    #   env: NODE_VERSION="6.2.0" CI_TEST="false" CF_TEST="true"
 
 before_install:
   - rm -rf ~/.nvm
