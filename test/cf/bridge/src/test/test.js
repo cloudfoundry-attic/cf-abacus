@@ -66,15 +66,8 @@ const startTimeout = commander.startTimeout || 30000;
 const totalTimeout = commander.totalTimeout || 60000;
 
 // Token setup
-process.env.API = 'http://localhost:4321';
-process.env.CF_CLIENT_ID = 'abacus-cf-bridge';
-process.env.CF_CLIENT_SECRET = 'secret';
-process.env.CLIENT_ID = 'abacus-linux-container';
-process.env.CLIENT_SECRET = 'secret';
 const tokenSecret = 'secret';
 const tokenAlgorithm = 'HS256';
-process.env.JWTKEY = tokenSecret;
-process.env.JWTALGO = tokenAlgorithm;
 const resourceToken = {
   header: {
     alg: tokenAlgorithm
@@ -144,8 +137,6 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
   expiresIn: 43200
 });
 
-// Set slack window to 5 days
-process.env.SLACK = '5D';
 const sixDaysInMilliseconds = 6 * 24 * 60 * 60 * 1000;
 
 const test = (secured) => {
@@ -156,6 +147,21 @@ const test = (secured) => {
     // Enable/disable the oAuth token authorization
     process.env.SECURED = secured ? 'true' : 'false';
     debug('Set SECURED = %s', process.env.SECURED);
+
+    // Security setup
+    process.env.API = 'http://localhost:4321';
+    process.env.CF_CLIENT_ID = 'abacus-cf-bridge';
+    process.env.CF_CLIENT_SECRET = 'secret';
+    process.env.CLIENT_ID = 'abacus-linux-container';
+    process.env.CLIENT_SECRET = 'secret';
+    process.env.JWTKEY = tokenSecret;
+    process.env.JWTALGO = tokenAlgorithm;
+
+    // Set slack window to 5 days
+    process.env.SLACK = '5D';
+
+    // Disable wait for correct app-event ordering
+    process.env.GUID_MIN_AGE = 1;
 
     const start = (module) => {
       debug('Starting %s in directory %s', module, moduleDir(module));
@@ -193,6 +199,7 @@ const test = (secured) => {
         prev_url: null,
         next_url: null,
         resources: [
+          // Usage that will be rejected because of the slack window
           {
             metadata: {
               guid: '904419c3',
@@ -221,6 +228,7 @@ const test = (secured) => {
               process_type: 'web'
             }
           },
+          // Usage that has to be processed by the pipeline
           {
             metadata: {
               guid: '904419c4',
@@ -294,7 +302,7 @@ const test = (secured) => {
       services();
     }
     else
-      // Delete test dbs on the configured db server
+    // Delete test dbs on the configured db server
       dbclient.drop(process.env.DB, /^abacus-/, () => {
         services();
       });
@@ -337,6 +345,16 @@ const test = (secured) => {
     stop('abacus-pouchserver', finishCb);
 
     server.close();
+
+    delete process.env.API;
+    delete process.env.CF_CLIENT_ID;
+    delete process.env.CF_CLIENT_SECRET;
+    delete process.env.CLIENT_ID;
+    delete process.env.CLIENT_SECRET;
+    delete process.env.JWTKEY;
+    delete process.env.JWTALGO;
+    delete process.env.SLACK;
+    delete process.env.GUID_MIN_AGE;
   });
 
   const checkAllTimeWindows = (usage, reporttime) => {
