@@ -21,6 +21,8 @@ const map = _.map;
 const range = _.range;
 const extend = _.extend;
 const omit = _.omit;
+const filter = _.filter;
+const pick = _.pick;
 
 // Batch the requests
 const brequest = batch(request);
@@ -334,8 +336,24 @@ describe('abacus-usage-aggregator-itest', () => {
           addCost ? p === 0 ? 0.15 : 0.18 : undefined) }
     ];
 
+    const riagg = (o, ri, u, conid, planid) => {
+      const instances = () => ri + 1;
+      return map(filter(create(instances, (i) => {
+        const time = map([end + u, end + u], (t) => seqid.pad16(t)).join('/');
+        return {
+          id: riid(o, i),
+          t: dbclient.pad16(time),
+          conid: cid(o, i),
+          planid: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2),
+            rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/')
+        };
+      }), (c) => {
+        return c.conid === conid && c.planid === planid;
+      }), (p) => pick(p, 't', 'id'));
+    };
+
     // Resource plan level aggregations for a given consumer at given space
-    const scpagg = (o, ri, u, s, c) => {
+    const scpagg = (o, ri, u, s, c, conid) => {
       // Resource instance index shift to locate a value at count number
       // sequence specified below
       const shift = (p) =>
@@ -359,7 +377,10 @@ describe('abacus-usage-aggregator-itest', () => {
         metering_plan_id: mpid(i === 0 ? 0 : 2),
         rating_plan_id: rpid(i === 0 ? 0 : 2),
         pricing_plan_id: ppid(i === 0 ? 0 : 2),
-        aggregated_usage: a(ri, u, i, count, true)
+        aggregated_usage: a(ri, u, i, count, true),
+        resource_instances: riagg(o, ri, u, conid, [pid(i === 0 ? 0 : 2),
+          mpid(i === 0 ? 0 : 2), rpid(i === 0 ? 0 : 2),
+          ppid(i === 0 ? 0 : 2)].join('/'))
       }));
     };
 
@@ -385,7 +406,7 @@ describe('abacus-usage-aggregator-itest', () => {
         resources: [{
           resource_id: 'test-resource',
           aggregated_usage: a(ri, u, i, count, false),
-          plans: scpagg(o, ri, u, s, i)
+          plans: scpagg(o, ri, u, s, i, cid(o, i === 0 ? s : s === 0 ? 4 : 5))
         }]
       }));
     };
@@ -476,19 +497,6 @@ describe('abacus-usage-aggregator-itest', () => {
       }));
     };
 
-    const riagg = (o, ri, u) => {
-      const instances = () => ri + 1;
-      return create(instances, (i) => {
-        const key = [oid(o), riid(o, i), cid(o, i), pid(i), mpid(i),
-          rpid(i), ppid(i)].join('/');
-        const time = map([end + u, end + u], (t) => seqid.pad16(t)).join('/');
-        return {
-          key: key,
-          id: dbclient.kturi(key, time)
-        };
-      });
-    };
-
     // Aggregated usage for a given org, resource instance, usage indices
     // TODO check the values of the accumulated usage
     const aggregatedTemplate = (o, ri, u) => ({
@@ -501,8 +509,7 @@ describe('abacus-usage-aggregator-itest', () => {
         aggregated_usage: a(ri, u, undefined, (n) => n + 1, false),
         plans: opagg(o, ri, u)
       }],
-      spaces: osagg(o, ri, u),
-      resource_instances: riagg(o, ri, u)
+      spaces: osagg(o, ri, u)
     });
 
     // Aggregated usage for a given consumer
@@ -625,6 +632,13 @@ describe('abacus-usage-aggregator-itest', () => {
         include_docs: true },
         (err, val) => {
           try {
+            map(val.rows[0].doc.resources, (r) => {
+              map(r.plans, (p) => {
+                p.resource_instances = map(p.resource_instances, (ri) => {
+                  return omit(ri, 'p');
+                });
+              });
+            });
             expect(clone(omit(val.rows[0].doc, ['id',
               'processed', 'processed_id',
               '_id', '_rev', 'accumulated_usage_id', 'start']),
