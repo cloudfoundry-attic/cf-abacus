@@ -138,6 +138,7 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
 });
 
 const sixDaysInMilliseconds = 6 * 24 * 60 * 60 * 1000;
+const twentySecondsInMilliseconds = 20 * 1000;
 
 const test = (secured) => {
   const submittime = Date.now();
@@ -161,7 +162,7 @@ const test = (secured) => {
     process.env.SLACK = '5D';
 
     // Disable wait for correct app-event ordering
-    process.env.GUID_MIN_AGE = 1;
+    process.env.GUID_MIN_AGE = twentySecondsInMilliseconds;
 
     const start = (module) => {
       debug('Starting %s in directory %s', module, moduleDir(module));
@@ -233,7 +234,8 @@ const test = (secured) => {
             metadata: {
               guid: '904419c4',
               url: '/v2/app_usage_events/904419c4',
-              created_at: new Date(submittime).toISOString()
+              created_at:
+                new Date(submittime - twentySecondsInMilliseconds).toISOString()
             },
             entity: {
               state: 'STARTED',
