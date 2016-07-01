@@ -292,7 +292,7 @@ describe('abacus-usage-accumulator-itest', () => {
 
             expect(omit(
               val.body, 'id', 'processed',
-              'processed_id', 'processed_usage_id'))
+              'processed_id', 'metered_usage_id'))
               .to.deep.equal(omit(
                 meteredTemplate(o, ri, u), 'id', 'processed', 'processed_id'));
 
