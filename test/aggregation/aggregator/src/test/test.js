@@ -252,7 +252,9 @@ describe('abacus-usage-aggregator-itest', () => {
       o + 1, ri + 1].join('-');
 
     // Usage and usage batch ids
-    const uid = (o, ri, u) => [start, o + 1, ri + 1, u + 1].join('-');
+    const utime = Date.now();
+    const uid = (o, ri, u) => dbclient.kturi(
+      [start, o + 1, ri + 1, u + 1].join('-'), utime + u + 1);
     const bid = (u) => [start, u + 1].join('-');
 
     // Accumulated usage for given org, resource instance and usage #s
@@ -339,10 +341,9 @@ describe('abacus-usage-aggregator-itest', () => {
     const riagg = (o, ri, u, conid, planid) => {
       const instances = () => ri + 1;
       return map(filter(create(instances, (i) => {
-        const time = map([end + u, end + u], (t) => seqid.pad16(t)).join('/');
         return {
           id: riid(o, i),
-          t: dbclient.pad16(time),
+          t: dbclient.t(uid(o, ri, u)),
           conid: cid(o, i),
           planid: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2),
             rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/')
@@ -551,7 +552,8 @@ describe('abacus-usage-aggregator-itest', () => {
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(200);
 
-            expect(omit(val.body, 'id', 'processed', 'processed_id'))
+            expect(omit(val.body,
+              'id', 'processed', 'processed_id', 'accumulated_usage_id'))
               .to.deep.equal(omit(
                 accumulatedTemplate(o, ri, u),
                 'id', 'processed', 'processed_id'));
