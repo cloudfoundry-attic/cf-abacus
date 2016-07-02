@@ -2,7 +2,7 @@
   "name": "abacus-dupe-test",
   "description": "End to end duplicate usage detection test",
   "license": "Apache-2.0",
-  "version": "0.0.6-dev.2",
+  "version": "0.0.6-dev.3",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/dupe",
   "bugs": {
