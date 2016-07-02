@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Set the version of the Abacus packages
+
+find . -name "package.json" | grep -v "node_modules" | xargs sed -i "" -e "s/\"version\": \".*\"/\"version\": \"$1\"/g"
+
