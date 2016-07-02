@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Configure the Abacus env to use a local test in-memory PouchDB server
+
+# Run this script with . ./localpouchdb to configure your shell env
+# before running Abacus
+
+unset DBCLIENT
+unset DB
+unset JOBS
