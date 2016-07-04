@@ -9,6 +9,7 @@ applications:
     CONF: default
     DEBUG: e-abacus-*
     COLLECTOR: abacus-usage-collector
+    PROVISIONING: abacus-provisioning-plugin
     EUREKA: abacus-eureka-plugin
     API: api
     DB: abacus-pouchserver
@@ -16,11 +17,10 @@ applications:
     NODE_MODULES_CACHE: false
     SECURED: false
     AUTH_SERVER: api
-    CLIENT_ID: abacus-linux-container
-    CLIENT_SECRET: secret
+    ABACUS_CLIENT_ID: abacus
+    ABACUS_CLIENT_SECRET: secret
     JWTKEY: |+
       -----BEGIN PUBLIC KEY-----
       ... <UAA public key in PEM format> ...
       -----END PUBLIC KEY-----
     JWTALGO: RS256
-    THROTTLE: 2
