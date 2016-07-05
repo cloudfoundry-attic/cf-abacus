@@ -2,7 +2,7 @@
   "name": "abacus-matrix",
   "description": "Minimal implementation of dense and sparse matrices",
   "license": "Apache-2.0",
-  "version": "0.0.6-dev.3",
+  "version": "0.0.6-dev.4",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/matrix",
   "bugs": {
