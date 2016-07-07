@@ -10,5 +10,15 @@ image_resource:
 inputs:
   - name: abacus
 
+params:
+  CF_API: {{cf-api}}
+  CF_USER: {{cf-user}}
+  CF_PASSWORD: {{cf-password}}
+  CF_ADMIN_USER: {{cf-admin-user}}
+  CF_ADMIN_PASSWORD: {{cf-admin-password}}
+  CF_ORG: {{cf-org}}
+  CF_SPACE: {{cf-space}}
+  CF_DOMAIN: {{cf-domain}}
+
 run:
   path: abacus/etc/concourse/scripts/cf-test-infra

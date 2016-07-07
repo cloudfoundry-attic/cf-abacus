@@ -33,3 +33,5 @@ RUN ln -s /usr/local/etc/couchdb /etc
 RUN /etc/init.d/couchdb start
 
 RUN cd /usr/bin && curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx
+
+ENV NPM_CONFIG_LOGLEVEL=warn

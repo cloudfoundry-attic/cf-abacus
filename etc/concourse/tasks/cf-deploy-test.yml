@@ -5,10 +5,19 @@ image_resource:
   type: docker-image
   source:
     repository: godofcontainers/node-mongodb
-    tag: '5.11.1'
+    tag: '6.2.0'
 
 inputs:
   - name: built-project
+
+params:
+  CF_API: {{cf-api}}
+  CF_DOMAIN: {{cf-domain}}
+  SECURED: true
+  CLIENT_ID: {{object-storage-client-id}}
+  CLIENT_SECRET: {{object-storage-client-secret}}
+  CI_START_TIMEOUT: 50000
+  CI_PIPELINE_TIMEOUT: 100000
 
 run:
   path: built-project/etc/concourse/scripts/cf-deploy-test
