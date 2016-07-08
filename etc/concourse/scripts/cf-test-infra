@@ -22,5 +22,11 @@ cf set-org-role $CF_USER $CF_ORG OrgManager
 cf set-space-role $CF_USER $CF_ORG $CF_SPACE SpaceManager
 cf set-space-role $CF_USER $CF_ORG $CF_SPACE SpaceDeveloper
 
+echo "Creating security group for CF API access ..."
+API_IP=$(dig +short api.$CF_API)
+echo "[{\"protocol\":\"tcp\",\"destination\":\"$API_IP\",\"ports\":\"443\"}]" > abacus-sec-group.json
+cf create-security-group abacus abacus-sec-group.json
+cf bind-security-group abacus $CF_ORG $CF_SPACE
+
 echo ""
 echo "Finished setting up infrastructure."

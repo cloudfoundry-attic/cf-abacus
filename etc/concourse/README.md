@@ -114,7 +114,7 @@ To build & push changes in a single image (for example `node-mongodb-0.12`), exe
 
 ```bash
 cd docker/node-mongodb-0.12
-docker build -t godofcontainers/node-mongodb:0.12 .
+docker build -t myrepository/node-mongodb:0.12 .
 docker login
-docker push godofcontainers/node-mongodb:0.12
+docker push myrepository/node-mongodb:0.12
 ```
