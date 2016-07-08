@@ -242,6 +242,51 @@ jobs:
           passed: [mongodb-6.2.0]
           trigger: true
       - task: infra
-        file: abacus/etc/concourse/tasks/cf-test-infra.yml
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: godofcontainers/ubuntu-14.04.4-cf
+              tag: 'latest'
+          inputs:
+            - name: abacus
+          params:
+            CF_API: {{cf-api}}
+            CF_USER: {{cf-user}}
+            CF_PASSWORD: {{cf-password}}
+            CF_ADMIN_USER: {{cf-admin-user}}
+            CF_ADMIN_PASSWORD: {{cf-admin-password}}
+            CF_ORG: {{cf-org}}
+            CF_SPACE: {{cf-space}}
+            CF_DOMAIN: {{cf-domain}}
+          run:
+            path: abacus/etc/concourse/scripts/cf-test-infra
       - task: deploy
-        file: abacus/etc/concourse/tasks/cf-test-deploy.yml
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: godofcontainers/node-mongodb
+              tag: '6.2.0'
+          inputs:
+            - name: abacus
+          params:
+            # Enable tests on CF (used in cftest script)
+            CF_TEST: true
+            # Save file handlers and offload CF stagers
+            JOBS: 2
+            # Use latest node.js buildpack to enable 5.11.1
+            BUILDPACK: https://github.com/cloudfoundry/nodejs-buildpack.git
+            # Cloud Foundry infrastructure
+            CF_API: {{cf-api}}
+            CF_USER: {{cf-user}}
+            CF_PASSWORD: {{cf-password}}
+            CF_ADMIN_USER: {{cf-admin-user}}
+            CF_ADMIN_PASSWORD: {{cf-admin-password}}
+            CF_ORG: {{cf-org}}
+            CF_SPACE: {{cf-space}}
+            CF_DOMAIN: {{cf-domain}}
+          run:
+            path: abacus/etc/concourse/scripts/cf-test-test
