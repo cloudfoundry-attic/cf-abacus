@@ -64,10 +64,10 @@ commander
   .parse(argv);
 
 // External Abacus processes start timeout
-const startTimeout = commander.startTimeout || 30000;
+const startTimeout = commander.startTimeout || 100000;
 
 // This test timeout
-const totalTimeout = commander.totalTimeout || 60000;
+const totalTimeout = commander.totalTimeout || 200000;
 
 // Token setup
 const tokenSecret = 'secret';
