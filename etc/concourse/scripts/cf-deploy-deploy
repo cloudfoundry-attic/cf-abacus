@@ -90,13 +90,17 @@ echo "Mapping routes ..."
 mapRoutes abacus-usage-collector 6
 mapRoutes abacus-usage-reporting 6
 
-echo "Creating new DB service instance ..."
-cf create-service "$DB_SERVICE_NAME" "$DB_PLAN_NAME"  db
-until cf service db | grep -q 'Status: create succeeded'
-do
-  sleep 2s
-done
-echo "DB created"
+if [ "$CREATE_DB_SERVICE" == "true" ]; then
+  echo "Creating new DB service instance ..."
+  cf create-service "$DB_SERVICE_NAME" "$DB_PLAN_NAME"  db
+  until cf service db | grep -q 'Status: create succeeded'
+  do
+    sleep 2s
+  done
+  echo "DB created"
+else
+  echo "Using DB URL provided in abacus-config !"
+fi
 
 getApps
 

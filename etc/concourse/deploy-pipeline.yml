@@ -12,9 +12,8 @@ resources:
 jobs:
   - name: abacus-deploy
     plan:
-      - aggregate:
-        - get: landscape
-          trigger: true
+      - get: landscape
+        trigger: true
       - task: build-abacus
         file: landscape/cf-abacus/etc/concourse/tasks/cf-deploy-build.yml
       - task: setup-abacus-infra
@@ -72,6 +71,7 @@ jobs:
             CF_ORG: {{cf-org}}
             CF_SPACE: {{cf-space}}
             CF_DOMAIN: {{cf-domain}}
+            CREATE_DB_SERVICE: {{create-db-service}}
             DB_SERVICE_NAME: {{db-service-name}}
             DB_PLAN_NAME: {{db-plan-name}}
             # Use latest node.js buildpack to enable 5.11.1
