@@ -36,22 +36,6 @@ const timeWindows = {
   'month'  : 4
 };
 
-// Checks if the difference between start and end time fall within a window
-const isWithinWindow = (start, end, timeWindow) => {
-  // [Second, Minute, Hour, Day, Month]
-  const timescale = [1, 100, 10000, 1000000, 100000000];
-  // Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
-  const dateUTCNumbify = (t) => {
-    const d = new Date(t);
-    return d.getUTCFullYear() * 10000000000 + d.getUTCMonth() * timescale[4]
-      + d.getUTCDate() * timescale[3] + d.getUTCHours() * timescale[2]
-      + d.getUTCMinutes() * timescale[1] + d.getUTCSeconds();
-  };
-
-  return Math.floor(dateUTCNumbify(end) / timescale[timeWindow]) -
-    Math.floor(dateUTCNumbify(start) / timescale[timeWindow]) === 0;
-};
-
 // Parse command line options
 const argv = clone(process.argv);
 argv.splice(1, 1, 'usage-collector-itest');
@@ -67,7 +51,7 @@ commander
 const startTimeout = commander.startTimeout || 100000;
 
 // This test timeout
-const totalTimeout = commander.totalTimeout || 300000;
+const totalTimeout = commander.totalTimeout || 200000;
 
 // Token setup
 const tokenSecret = 'secret';
@@ -144,7 +128,6 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
 const lastMonthInMilliseconds = moment().utc().subtract(1, 'months').valueOf();
 
 const test = (secured) => {
-  const submittime = Date.now();
   let server;
 
   beforeEach((done) => {
@@ -345,15 +328,18 @@ const test = (secured) => {
     delete process.env.RETRY_INTERVAL;
   });
 
-  const checkAllTimeWindows = (usage, reporttime) => {
-    for (const windowType in timeWindows)
-      if(isWithinWindow(submittime, reporttime, timeWindows[windowType])) {
-        const windowUsage = usage.windows[timeWindows[windowType]];
-        if (windowUsage[0]) {
-          expect(windowUsage[0].quantity.consuming).to.equal(0.5);
-          expect(windowUsage[0].charge).to.be.above(0);
-        }
-      }
+  const checkAllTimeWindows = (usage) => {
+    const windowUsage = usage.windows[timeWindows.month];
+    let found;
+
+    for (const windowEntry of windowUsage) {
+      found = windowEntry &&
+        windowEntry.quantity.consuming === 0.5 &&
+        windowEntry.charge > 0;
+      if (found)
+        break;
+    }
+    expect(found).to.equal(true);
   };
 
   const checkReport = (cb) => {
@@ -372,16 +358,15 @@ const test = (secured) => {
           const resources = response.body.resources;
           expect(resources.length).to.equal(1);
           expect(response.body.spaces.length).to.equal(1);
-          const reporttime = Date.now();
 
           expect(resources[0]).to.contain.all.keys(
             'plans', 'aggregated_usage');
 
           const planUsage = resources[0].plans[0].aggregated_usage[0];
-          checkAllTimeWindows(planUsage, reporttime);
+          checkAllTimeWindows(planUsage);
 
           const aggregatedUsage = resources[0].aggregated_usage[0];
-          checkAllTimeWindows(aggregatedUsage, reporttime);
+          checkAllTimeWindows(aggregatedUsage);
 
           responseDebug('All usage report checks are successful for: %s',
             JSON.stringify(response.body, null, 2));
@@ -423,7 +408,7 @@ const test = (secured) => {
     fn(doneCallback);
   };
 
-  it('submit runtime usage to usage collector', function(done) {
+  it('submits runtime usage to usage collector', function(done) {
     this.timeout(totalTimeout + 2000);
 
     // Wait for renewer to start

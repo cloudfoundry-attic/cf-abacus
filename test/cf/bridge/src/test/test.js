@@ -435,7 +435,7 @@ const test = (secured) => {
     fn(doneCallback);
   };
 
-  it('submit runtime usage to usage collector', function(done) {
+  it('submits runtime usage to usage collector', function(done) {
     this.timeout(totalTimeout + 2000);
 
     // Wait for bridge to start
