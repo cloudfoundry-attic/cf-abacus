@@ -53,6 +53,7 @@ jobs:
           run:
             path: built-project/etc/concourse/scripts/cf-deploy-infra
       - task: deploy-abacus
+        attempts: 3
         config:
           platform: linux
           image_resource:

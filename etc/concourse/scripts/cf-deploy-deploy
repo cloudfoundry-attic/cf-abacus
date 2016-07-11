@@ -92,6 +92,11 @@ mapRoutes abacus-usage-reporting 6
 
 echo "Creating new DB service instance ..."
 cf create-service "$DB_SERVICE_NAME" "$DB_PLAN_NAME"  db
+until cf service db | grep -q 'Status: create succeeded'
+do
+  sleep 2s
+done
+echo "DB created"
 
 getApps
 
