@@ -67,7 +67,7 @@ commander
 const startTimeout = commander.startTimeout || 100000;
 
 // This test timeout
-const totalTimeout = commander.totalTimeout || 200000;
+const totalTimeout = commander.totalTimeout || 300000;
 
 // Token setup
 const tokenSecret = 'secret';
