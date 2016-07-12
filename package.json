@@ -74,6 +74,7 @@
     "abacus-usage-aggregator": "file:lib/aggregation/aggregator",
     "abacus-usage-reporting": "file:lib/aggregation/reporting",
     "abacus-usage-collector": "file:lib/metering/collector",
+    "abacus-usage-analyzer": "file:lib/metering/analyzer",
     "abacus-usage-meter": "file:lib/metering/meter",
     "abacus-account-plugin": "file:lib/plugins/account",
     "abacus-authserver-plugin": "file:lib/plugins/authserver",
