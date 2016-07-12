@@ -1,0 +1,20 @@
+applications:
+- name: abacus-usage-analyzer
+  host: abacus-usage-analyzer
+  path: .cfpack/app.zip
+  instances: 1
+  memory: 512M
+  disk_quota: 512M
+  env:
+    CONF: default
+    DEBUG: e-abacus-*
+    METER: abacus-usage-meter
+    DB: abacus-pouchserver
+    EUREKA: abacus-eureka-plugin
+    NODE_MODULES_CACHE: false
+    SECURED: false
+    # AUTH_SERVER:
+    # CLIENT_ID:
+    # CLIENT_SECRET:
+    # JWTKEY:
+    # JWTALGO:
