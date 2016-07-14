@@ -52,6 +52,60 @@ To enable `abacus-breaker` and `abacus-retry` for example:
 curl http://<host><:port>/debug?config=abacus-breaker,abacus-retry
 ```
 
+## Database
+
+Abacus supports [CouchDB](http://couchdb.apache.org/) and [MongoDB](https://www.mongodb.com/). You can also use the in-memory [PouchDB](https://pouchdb.com/) for development and testing.
+
+Abacus has two database clients:
+* [couchclient](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/couchclient) - supports CouchDB and the development/testing PouchDB 
+* [mongoclient](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/mongoclient) - supports MongoDB
+
+The DB is configured using these environemnt variables:
+* `DB` - URL of the database. By default Abacus uses local PouchDB if this variable is missing
+* `DBCLIENT` - DB client to use. The default one is the `couchclient`. 
+
+### Local configuration
+
+To select the DB:
+* start Couch or Mongo on your machine
+* use the `bin/local*` scripts to set the proper environment
+* start Abacus
+
+```bash
+. ./bin/localcouchdb
+npm run build
+npm start
+npm run demo
+```
+
+*Note:* The `local*` scripts sets `JOBS=1` to force serial execution of tests and prevent multiple tests working with the same DB.
+
+## Cloud Foundry configuration
+Modify all of the application manifests (`manifest.yml`) to include the DB environment variables:
+```yml
+  env:
+    DB: mongodb://mydbhost.com:27017
+    DBCLIENT: abacus-mongoclient
+```
+
+You can use Cloud Foundry service instance, instead of hard-coded DB URL. To do so omit the `DB` environment variable above, create a DB service instance (we'll call it `db`) and execute:
+* Linux:
+
+   ```bash
+   npm cfpush cfstage -- large
+   cf apps | tail -n +5 | awk '{print $1}' | xargs -n1 | xargs -P 5 -i cf bind-service {} db
+   npm run cfstart -- large
+   ```
+* OS X:
+
+   ```bash
+   npm cfpush cfstage -- large
+   cf apps | tail -n +5 | awk '{print $1}' | xargs -n1 | xargs -P 5 -n 1 -J {} cf bind-service {} db
+   npm run cfstart -- large
+   ```
+
+This will stage all Abacus applications without starting them. Then we'll bind the `db` service instance to all of them, and finally we'll start the applications so they can make use of the bound service instance.
+
 ## Scaling Abacus
 
 Abacus supports several profiles defined in https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/etc/apps.rc. You can use these profiles when starting, stopping or deploying Abacus to Cloud Foundry. 
