@@ -49,6 +49,9 @@ echo "Logging to $CF_API ..."
 cf api --skip-ssl-validation https://api.$CF_API
 cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
 
+# Get platform info
+unamestr=`uname`
+
 #
 # Disable error checks
 #
@@ -58,7 +61,11 @@ getApps
 
 if [ ${#APPS[@]} != 0 ]; then
   echo "Unbind services ..."
-  echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf unbind-service {} db
+  if [[ "$unamestr" == 'Linux' ]]; then
+    echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf unbind-service {} db
+  else
+    echo ${APPS[@]} | xargs -n1 | xargs -P 5 -n 1 -J {} cf unbind-service {} db
+  fi
 
   echo "Delete apps in parallel. We expect errors due to missing routes ..."
   echo ${APPS[@]} | xargs -n1 -P 5 cf delete -f -r
@@ -75,7 +82,11 @@ set -e
 getApps
 
 echo "Delete apps (this time errors are NOT ok) ..."
-echo ${APPS[@]} | xargs -n1 -P 5 -r cf delete -f -r
+if [[ "$unamestr" == 'Linux' ]]; then
+  echo ${APPS[@]} | xargs -n1 -P 5 -r cf delete -f -r
+else
+  echo ${APPS[@]} | xargs -n1 -P 5 cf delete -f -r
+fi
 
 echo "Pushing LARGE Abacus installation ..."
 pushd built-project
@@ -105,7 +116,11 @@ fi
 getApps
 
 echo "Binding services ..."
-echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf bind-service {} db
+if [[ "$unamestr" == 'Linux' ]]; then
+  echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf bind-service {} db
+else
+  echo ${APPS[@]} | xargs -n1 | xargs -P 5 -n 1 -J {} cf bind-service {} db
+fi
 
 echo "Starting applications ..."
 echo ${APPS[@]} | xargs -n1 -P 5 cf start
@@ -115,9 +130,17 @@ cf apps
 
 echo "Restarting failed apps ..."
 getApps '?'
-echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+if [[ "$unamestr" == 'Linux' ]]; then
+  echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+else
+  echo ${APPS[@]} | xargs -n1 -P 5 cf restart
+fi
 getApps '0/'
-echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+if [[ "$unamestr" == 'Linux' ]]; then
+  echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+else
+  echo ${APPS[@]} | xargs -n1 -P 5 cf restart
+fi
 
 echo "Applications:"
 cf apps
