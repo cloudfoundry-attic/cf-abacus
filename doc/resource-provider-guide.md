@@ -1,6 +1,6 @@
-# Abacus
+# Resource Provider Guide
 
-## Overview
+## Abacus Overview
 Abacus provides usage metering and aggregation for [Cloud Foundry (CF)](https://www.cloudfoundry.org) services. It is implemented as a set of REST micro-services that collect usage data, apply metering formulas, and aggregate usage at several levels within a Cloud Foundry organization.
 
 Abacus provides a REST API allowing Cloud service providers to submit usage data, and a REST API allowing usage dashboards, and billing systems to retrieve usage reports. The Abacus REST API is described in [doc/api.md](doc/api.md).
@@ -407,17 +407,147 @@ If we assume that with each submission, the quantity for the month is incremente
 * the 1st point has an x-axis of value 1467331200000 and y-axis of value 1
 * the last point has an x-axis value of 1470009600000 and y-axis value of 186
 
+## Slack window
+
+As discussed in the time-window section Abacus integrator can configure the pipeline to reject usage older than a predefined amount of time. The time interval that allows submission of late usage is called Slack Window.
+
+Contact your Abacus integrator for the exact value of the slack window.
+
 # How to submit a usage?
 
-## Example clients
+To submit usage document use the [insert method](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/api.md#method-insert) described in the API doc with the URL of the Abacus usage collector.
+
+The collector is usually accessed via `https://abacus-usage-collector.<cf-domain>`. Contact your Abacus integrator to obtain the exact URL.
+
 ## Security
+Abacus can work in secured and non-secured modes. Please contact your Abacus integrator to check if Abacus is secured.
+
+Secured Abacus would require [resource token](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/security.md#resource-tokens) for the submission of every usage document. We can obtain the token from [token issuer](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/security.md#token-issuer).
+
+*Note:* Abacus provides the [oauth module](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/oauth) to help us obtain the needed token. To see how to use it consult the [Demo client](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/demo/client/src/test/test.js) example.
+
+## Examples
+Abacus provides several examples on how to submit usage:
+* [Post usage](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/demo/client/src/test/post.js)
+
+   Submits usage to non-secured Abacus.
+
+* [Demo client](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/demo/client/src/test/test.js)
+
+   Simulates a Service Provider and Report Consumer. Submits usage and verifies the submission by retrieving a usage report. Works with secured Abacus.
+
+We can run Post example with:
+```bash
+cd ~/workspace/cf-abacus
+npm restart
+cd node_modules/abacus-demo-client && node src/test/report.js
+```
+
+To run the demo client:
+```bash
+cd ~/workspace/cf-abacus
+npm restart
+npm run demo
+```
 
 ## Dealing with network issues
-### Batching requests
-### Retrying requests
-### Throttling requests
+Submitting usage document involves network operations. As with every network, failure is inevitable and the Resource Provider need to take care of all network issues.
 
-# Usage report
+In this section we'll present several ways to deal with unreliable network (circuit breaker, retry) and bandwidth and latency problems (batching, throttling).
+
+### Retrying requests
+Retrying a failed request is the easiest way to deal with network problems.
+
+It is mandatory for Resource Providers to implement retry since reporting usage might rather fail than succeed, due to a number of reasons (including but not limited to network and hardware issues, Abacus problems, CloudOps & DevOps updates).
+
+Retrying a report puts some requirements to Resource Providers. They need to persistently store the usage that was not successfully reported to guarantee that it is not lost.
+
+Of course not all request can be retried. For example response 409/Conflict in most cases means:
+* we already submitted that usage
+* we are trying to submit usage outside of the slack window
+
+Another example, where we cannot simply retry, is the 404 error code. It usually means that Abacus does not know about certain entity and retrying won't help to resolve the issue.
+
+Abacus has the [retry module](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/retry) that can help us with the retry task.
+
+### Circuit breakers
+Making a Resource Provider resilient requires us to isolate parts of our Resource Provider, to isolate from failing Abacus installation or to simply avoid failure cascades in a graph of function calls.
+
+We can do that with the help of the [breaker module](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/breaker). Java-based Resource providers can use the [Hystrix library](https://github.com/Netflix/Hystrix)
+
+Abacus itself provides hystrix compatible streams for all its micro-services, built with the help of [perf](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/perf) and [hystrix](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/hystrix) modules.
+
+### Batching requests
+If we are submitting a lot of usage documents we can make use of the [batch module](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/batch) that will wrap all requests into a batch (very similar to the way DBs use batching).
+
+This technique allows us to reduce the bandwidth and the latency, compared to using hundreds or thousands of single usage requests.
+
+### Throttling requests
+Even with batching the number of requests is not limited and can grow beyond the abilities of the physical machine. This in turn results in network failures or VM/engine errors and crashes, depending on the used stack.
+
+You can use connection pools, dedicated client (that basically does the pooling) or with Node.js you can use the [throttle module](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/throttle).
+
+### Chaining modules
+
+Abacus modules can be chained. For example to get a request that is throttled, retries, has breaker and batches simply use:
+```javascript
+const batch = require('abacus-batch');
+const retry = require('abacus-retry');
+const breaker = require('abacus-breaker');
+const throttle = require('abacus-throttle');
+const request = require('abacus-request');
+
+const reliableRequest = throttle(retry(breaker(batch(request))));
+````
+
+# Usage reports
+Using get methods we can obtain:
+* [summary usage report](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/api.md#usage-summary-report)
+* [resource instance report](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/api.md#resource-instance-usage-summary-report)
+* [aggregated usage](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/api.md#graphql-usage-query)
+
+All reports are requested from Abacus Usage Reporting micro-service, with URL like `https://abacus-usage-reporting.<cf domain>`. Contact your Abacus integrator for the exact URL.
+
+## GraphQL
+[GraphQL](https://github.com/facebook/graphql) is query language used by Abacus to allow users to navigate and query the graph of aggregated usage.
+
+There are [several examples](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/api.md#graphql-usage-query) in the [API doc](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/api.md) of Abacus on how to use GraphQL. [GraphiQL IDE](https://github.com/graphql/graphiql) can be used to aid in designing new queries.
+
+## Examples
+Abacus provides several examples on how to submit usage:
+* [Usage report](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/demo/client/src/test/report.js)
+
+   Obtains summary usage report for an organization.
+
+* [GraphQL](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/demo/client/src/test/post.js)
+
+   Submits usage to non-secured Abacus.
+
+* [Demo client](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/demo/client/src/test/test.js)
+
+   Simulates a Service Provider and Report Consumer. Submits usage and verifies the submission by retrieving a usage report. Works with secured Abacus.
+
+Run the report example with:
+```bash
+cd ~/workspace/cf-abacus
+npm restart
+cd node_modules/abacus-demo-client && node src/test/report.js
+```
+
+
+We can run GraphQL example with:
+```bash
+cd ~/workspace/cf-abacus
+npm restart
+cd node_modules/abacus-demo-client && node src/test/graphql.js
+```
+
+To run the demo client:
+```bash
+cd ~/workspace/cf-abacus
+npm restart
+npm run demo
+```
 
 
 References
@@ -425,4 +555,3 @@ References
 [1] Michell, J. (1999). Measurement in psychology: a critical history of a methodological concept. New York: Cambridge University Press.
 
 [2] http://www.dictionary.com/browse/measure
-   
