@@ -18,10 +18,6 @@ function getApps {
   fi
 }
 
-echo "Logging to $CF_API ..."
-cf api --skip-ssl-validation https://api.$CF_API
-echo "" | cf login -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD
-
 #
 # Get platform info
 #
@@ -32,26 +28,38 @@ unamestr=`uname`
 #
 set +e
 
-echo "Unbinding service instance db ..."
-if [[ "$unamestr" == 'Linux' ]]; then
-  echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf unbind-service {} db
-else
-  echo ${APPS[@]} | xargs -n1 | xargs -P 5 -n 1 -J {} cf unbind-service {} db
+echo "Logging to $CF_ORG/$CF_SPACE @ $CF_API ..."
+cf login -a https://api.$CF_API --skip-ssl-validation -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD -o $CF_ORG -s $CF_SPACE
+abacus_login=$?
+
+if [ $abacus_login = 0 ]; then
+  echo "Unbinding service instance db ..."
+  if [[ "$unamestr" == 'Linux' ]]; then
+    echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf unbind-service {} db
+  else
+    echo ${APPS[@]} | xargs -n1 | xargs -P 5 -n 1 -J {} cf unbind-service {} db
+  fi
+  echo "Deleting service instance db ..."
+  cf delete-service -f db
 fi
-echo "Deleting service instance db ..."
-cf delete-service -f db
 
 #
 # Enable error checks
 #
 set -e
 
-echo "Waiting for db service instance deletion ..."
-until cf service db | grep -q "Service instance db not found"
-do
-  sleep 2s
-done
-echo "Done."
+if [ $abacus_login = 0 ]; then
+  echo "Waiting for db service instance deletion ..."
+  until cf service db | grep -q "Service instance db not found"
+  do
+    sleep 2s
+  done
+  echo "Done."
+fi
+
+echo "Logging to $CF_API ..."
+cf api --skip-ssl-validation https://api.$CF_API
+echo "" | cf login -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD
 
 echo "Recreating organization and space ..."
 cf delete-org -f $CF_ORG
