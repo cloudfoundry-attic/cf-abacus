@@ -86,6 +86,7 @@ jobs:
           run:
             path: built-project/etc/concourse/scripts/cf-deploy-deploy
       - task: test-abacus
+        attempts: 2
         timeout: 20m
         config:
           platform: linux
