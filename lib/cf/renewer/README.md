@@ -19,4 +19,4 @@ To do this the `cf-renewer` executes the following steps:
 * re-submit the active usage for the current month
 
 :warning: **Warning:** :warning:   
-The `cf-renewer` app supports only plans with "pure" time-based metrics. This means that any usage docs with metering plan that has both discrete and time-based metrics will be ignored !
+The cf-renewer app supports only plans with "pure" time-based metrics. This means that any usage documents with a metering plan that has both discrete and time-based metrics will be ignored !
