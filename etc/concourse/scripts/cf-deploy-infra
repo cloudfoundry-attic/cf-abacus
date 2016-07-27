@@ -33,6 +33,8 @@ cf login -a https://api.$CF_API --skip-ssl-validation -u $CF_ADMIN_USER -p $CF_A
 abacus_login=$?
 
 if [ $abacus_login = 0 ]; then
+  getApps
+
   echo "Unbinding service instance db ..."
   if [[ "$unamestr" == 'Linux' ]]; then
     echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf unbind-service {} db
