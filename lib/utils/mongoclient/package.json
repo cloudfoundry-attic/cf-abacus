@@ -2,7 +2,7 @@
   "name": "abacus-mongoclient",
   "description": "Subset of the MongoDB API over a set of DB partitions",
   "license": "Apache-2.0",
-  "version": "0.0.6-dev.6",
+  "version": "0.0.6-dev.7",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/mongoclient",
   "bugs": {
