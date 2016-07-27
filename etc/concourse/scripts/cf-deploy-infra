@@ -31,7 +31,7 @@ function unmapRoutes {
   local APP_NAME=$1
   local INSTANCES=$(expr $2 - 1)
 
-  echo "Mapping $2 (0-$INSTANCES) instances of $APP_NAME in $CF_DOMAIN domain ..."
+  echo "Unmapping $2 (0-$INSTANCES) instances of $APP_NAME in $CF_DOMAIN domain ..."
   for i in `seq 0 $INSTANCES`;
   do
     cf unmap-route "$APP_NAME-$i" $CF_DOMAIN --hostname "$APP_NAME"
