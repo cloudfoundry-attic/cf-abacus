@@ -18,6 +18,26 @@ function getApps {
   fi
 }
 
+function unmapRoutes {
+  if [ -z "$1" ]; then
+     echo "Cannot map app without a name !"
+     exit 1
+  fi
+  if [ -z "$2" ]; then
+    echo "Unknown number of instances !"
+    exit 1
+  fi
+
+  local APP_NAME=$1
+  local INSTANCES=$(expr $2 - 1)
+
+  echo "Mapping $2 (0-$INSTANCES) instances of $APP_NAME in $CF_DOMAIN domain ..."
+  for i in `seq 0 $INSTANCES`;
+  do
+    cf unmap-route "$APP_NAME-$i" $CF_DOMAIN --hostname "$APP_NAME"
+  done
+}
+
 #
 # Get platform info
 #
@@ -33,6 +53,7 @@ cf login -a https://api.$CF_API --skip-ssl-validation -u $CF_ADMIN_USER -p $CF_A
 abacus_login=$?
 
 if [ $abacus_login = 0 ]; then
+  echo "Cleaning up $CF_ORG/$CF_SPACE ..."
   getApps
 
   echo "Unbinding service instance db ..."
@@ -41,8 +62,13 @@ if [ $abacus_login = 0 ]; then
   else
     echo ${APPS[@]} | xargs -n1 | xargs -P 5 -n 1 -J {} cf unbind-service {} db
   fi
+
   echo "Deleting service instance db ..."
   cf delete-service -f db
+
+  echo "Unmapping routes ..."
+  unmapRoutes abacus-usage-collector 6
+  unmapRoutes abacus-usage-reporting 6
 fi
 
 #
@@ -58,6 +84,8 @@ if [ $abacus_login = 0 ]; then
   done
   echo "Done."
 fi
+
+
 
 echo "Logging to $CF_API ..."
 cf api --skip-ssl-validation https://api.$CF_API
