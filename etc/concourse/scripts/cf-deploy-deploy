@@ -17,18 +17,11 @@ function mapRoutes {
 
   local APP_NAME=$1
   local INSTANCES=$(expr $2 - 1)
-  local APP_URL=$(cf app $APP_NAME-0 | awk '{if (NR == 7) {print $2}}')
-  local APP_DOMAIN=${APP_URL/$APP_NAME-0./}
 
-  if [ -z "$APP_DOMAIN" ]; then
-    echo "Unknown domain !"
-    exit 1
-  fi
-
-  echo "Mapping $2 (0-$INSTANCES) instances of $APP_NAME in $APP_DOMAIN domain ..."
+  echo "Mapping $2 (0-$INSTANCES) instances of $APP_NAME in $CF_DOMAIN domain ..."
   for i in `seq 0 $INSTANCES`;
   do
-    cf map-route "$APP_NAME-$i" $APP_DOMAIN --hostname "$APP_NAME"
+    cf map-route "$APP_NAME-$i" $CF_DOMAIN --hostname "$APP_NAME"
   done
 }
 
@@ -52,10 +45,6 @@ echo "Pushing LARGE Abacus installation ..."
 pushd built-project
   npm run cfstage -- large
 popd
-
-echo "Deleting redundant apps ..."
-cf delete -r -f abacus-pouchserver
-cf delete -r -f abacus-authserver-plugin
 
 echo "Mapping routes ..."
 mapRoutes abacus-usage-collector 6
