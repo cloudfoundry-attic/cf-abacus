@@ -41,9 +41,9 @@ function getApps {
 echo "Logging to $CF_API ..."
 cf login -a https://api.$CF_API -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE --skip-ssl-validation
 
-echo "Pushing LARGE Abacus installation ..."
+echo "Pushing $ABACUS_PROFILE Abacus installation ..."
 pushd built-project
-  npm run cfstage -- large
+  npm run cfstage -- $ABACUS_PROFILE
 popd
 
 echo "Mapping routes ..."
