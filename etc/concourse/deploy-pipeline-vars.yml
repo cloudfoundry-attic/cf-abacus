@@ -22,6 +22,9 @@ cf-admin-user: admin
 # Password of the admin user
 cf-admin-password: admin
 
+# Abacus profile (default, small, medium, large)
+abacus-profile: large
+
 # Create DB service instance or use hard-coded DB URL
 create-db-service: true
 

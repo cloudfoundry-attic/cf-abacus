@@ -76,6 +76,7 @@ jobs:
             CF_ORG: {{cf-org}}
             CF_SPACE: {{cf-space}}
             CF_DOMAIN: {{cf-domain}}
+            ABACUS_PROFILE: {{abacus-profile}}
             CREATE_DB_SERVICE: {{create-db-service}}
             DB_SERVICE_NAME: {{db-service-name}}
             DB_PLAN_NAME: {{db-plan-name}}
