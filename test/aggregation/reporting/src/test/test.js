@@ -24,6 +24,7 @@ const zip = _.zip;
 const unzip = _.unzip;
 const flatten = _.flatten;
 const omit = _.omit;
+const contains = _.contains;
 
 // Batch the requests
 const brequest = batch(request);
@@ -151,9 +152,12 @@ const sumCharges = (a, m) => {
 // all plan levels
 const addCharge = (k, v) => {
   if (k === 'resources') map(v, (r) => {
+    let metrics = [];
     // Calculate plan level charges
     r.plans = map(r.plans, (p) => {
       p.aggregated_usage = map(p.aggregated_usage, (u) => {
+        if(!contains(metrics, u.metric))
+          metrics.push(u.metric);
         map(u.windows, (w) => {
           map(w, (wi) => {
             wi.charge = wi.cost;
@@ -175,17 +179,20 @@ const addCharge = (k, v) => {
       return p;
     });
 
-    // Calculate resource level charges using plan level charges
-    map(r.aggregated_usage, (u) => {
-      map(u.windows, (w, i) => {
-        map(w, (wi, j) => {
-          wi.charge = reduce(r.plans, (a, p) =>
-            new BigNumber(a).add(reduce(p.aggregated_usage, (a1, u1) =>
-              new BigNumber(a1).add(u1.metric === u.metric ?
-                u1.windows[i][j].charge : 0).toNumber(),
-                  0)).toNumber(), 0);
-        });
-      });
+    r.aggregated_usage = map(metrics, (m) => {
+      return {
+        metric: m,
+        windows: map(r.plans[0].windows, (w, i) => {
+          return map(w, (wi, j) => {
+            return {
+              charge: reduce(r.plans, (a, p) =>
+                new BigNumber(a).add(reduce(p.aggregated_usage, (a1, u1) =>
+                  new BigNumber(a1).add(u1.metric === m ?
+                    u1.windows[i][j].charge : 0).toNumber(), 0)).toNumber(), 0)
+            }; 
+          });
+        })
+      };
     });
 
     // Total charges for a resource
@@ -425,17 +432,6 @@ describe('abacus-usage-reporting-itest', () => {
 
     // Consumer level resource aggregations for a given space
     const cagg = (o, ri, u, s, id) => {
-      // Resource instance index shift
-      const shift = (c) => (s === 0 ? 6 : 5) - (c === 0 ? 0 : 4);
-
-      // Number sequence of count
-      // 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4, 4,
-      // 5, 5, 6, .....
-      const count = (n, c) => {
-        const nri = n + shift(c);
-        return 2 * Math.round(nri / 8 - 0.50) + (nri % 8 < 6 ? 0 : 1);
-      };
-
       // Number of consumers at a given resource instance and space indices
       const consumers = () => u === 0 && ri <= 3 + s || tri <= 3 + s ? 1 : 2;
 
@@ -449,7 +445,6 @@ describe('abacus-usage-reporting-itest', () => {
           consumer_id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
           resources: [{
             resource_id: 'test-resource',
-            aggregated_usage: a(ri, u, i, count),
             plans: scpagg(o, ri, u, s, i)
           }]
         };
@@ -505,13 +500,6 @@ describe('abacus-usage-reporting-itest', () => {
 
     // Space level resource aggregations for a given organization
     const osagg = (o, ri, u, c) => {
-      // Resource instance index shift
-      const shift = (s) => s === 0 ? 1 : 0;
-
-      // Number sequence of count
-      // 0, 1, 1, 2, 2, 3, 3, 4, 4,.....
-      const count = (n, s) => Math.round((n + shift(s)) / 2);
-
       // Number of spaces at a given resource index
       const spaces = () => u === 0 && ri === 0 || tri === 0 ? 1 : 2;
 
@@ -520,7 +508,6 @@ describe('abacus-usage-reporting-itest', () => {
         space_id: sid(o, i),
         resources: [{
           resource_id: 'test-resource',
-          aggregated_usage: a(ri, u, i, count),
           plans: spagg(o, ri, u, i)
         }],
         consumers: scagg(o, ri, u, i, c)
@@ -574,7 +561,6 @@ describe('abacus-usage-reporting-itest', () => {
       processed: end + u,
       resources: cextend([{
         resource_id: 'test-resource',
-        aggregated_usage: a(ri, u, undefined, (n) => n + 1),
         plans: opagg(o, ri, u)
       }], addCost),
       spaces: cextend(osagg(o, ri, u, c), addCost)

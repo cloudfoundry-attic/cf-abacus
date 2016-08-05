@@ -328,13 +328,13 @@ const test = (secured) => {
     delete process.env.RETRY_INTERVAL;
   });
 
-  const checkAllTimeWindows = (usage) => {
+  const checkAllTimeWindows = (usage, level) => {
     const windowUsage = usage.windows[timeWindows.month];
     let found;
 
     for (const windowEntry of windowUsage) {
-      found = windowEntry &&
-        windowEntry.quantity.consuming === 0.5 &&
+      found = windowEntry && (level !== 'resource' ?
+        windowEntry.quantity.consuming === 0.5 : true) &&
         windowEntry.charge > 0;
       if (found)
         break;
@@ -366,7 +366,7 @@ const test = (secured) => {
           checkAllTimeWindows(planUsage);
 
           const aggregatedUsage = resources[0].aggregated_usage[0];
-          checkAllTimeWindows(aggregatedUsage);
+          checkAllTimeWindows(aggregatedUsage, 'resource');
 
           responseDebug('All usage report checks are successful for: %s',
             JSON.stringify(response.body, null, 2));
