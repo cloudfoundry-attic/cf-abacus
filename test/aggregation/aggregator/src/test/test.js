@@ -387,17 +387,6 @@ describe('abacus-usage-aggregator-itest', () => {
 
     // Consumer-level Resource Aggregation
     const cagg = (o, ri, u, s) => {
-      // Resource instance index shift
-      const shift = (c) => (s === 0 ? 6 : 5) - (c === 0 ? 0 : 4);
-
-      // Number sequence of count
-      // 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4, 4,
-      // 5, 5, 6, .....
-      const count = (n, c) => {
-        const nri = n + shift(c);
-        return 2 * Math.round(nri / 8 - 0.50) + (nri % 8 < 6 ? 0 : 1);
-      };
-
       // Number of consumers at a given resource instance and space indices
       const consumers = () => u === 0 && ri <= 3 + s || tri <= 3 + s ? 1 : 2;
 
@@ -406,7 +395,6 @@ describe('abacus-usage-aggregator-itest', () => {
         consumer_id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
         resources: [{
           resource_id: 'test-resource',
-          aggregated_usage: a(ri, u, i, count, false),
           plans: scpagg(o, ri, u, s, i, cid(o, i === 0 ? s : s === 0 ? 4 : 5))
         }]
       }));
@@ -448,13 +436,6 @@ describe('abacus-usage-aggregator-itest', () => {
 
     // Space level resource aggregations for a given organization
     const osagg = (o, ri, u) => {
-      // Resource instance index shift
-      const shift = (s) => s === 0 ? 1 : 0;
-
-      // Number sequnce of count
-      // 0, 1, 1, 2, 2, 3, 3, 4, 4,.....
-      const count = (n, s) => Math.round((n + shift(s)) / 2);
-
       // Number of spaces at a given resource index
       const spaces = () => u === 0 && ri === 0 || tri === 0 ? 1 : 2;
 
@@ -463,7 +444,6 @@ describe('abacus-usage-aggregator-itest', () => {
         space_id: sid(o, i),
         resources: [{
           resource_id: 'test-resource',
-          aggregated_usage: a(ri, u, i, count, false),
           plans: spagg(o, ri, u, i)
         }],
         consumers: scagg(o, ri, u, i)
@@ -507,7 +487,6 @@ describe('abacus-usage-aggregator-itest', () => {
       end: end + u,
       resources: [{
         resource_id: 'test-resource',
-        aggregated_usage: a(ri, u, undefined, (n) => n + 1, false),
         plans: opagg(o, ri, u)
       }],
       spaces: osagg(o, ri, u)
