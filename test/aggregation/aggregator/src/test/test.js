@@ -404,6 +404,8 @@ describe('abacus-usage-aggregator-itest', () => {
       // Create resource aggregations
       return create(consumers, (i) => ({
         consumer_id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
+        resource_id: 'test-resource',
+        plan_id: pid(ri),
         resources: [{
           resource_id: 'test-resource',
           aggregated_usage: a(ri, u, i, count, false),
@@ -503,6 +505,8 @@ describe('abacus-usage-aggregator-itest', () => {
     const aggregatedTemplate = (o, ri, u) => ({
       organization_id: oid(o),
       account_id: '1234',
+      resource_id: 'test-resource',
+      plan_id: pid(ri),
       start: end + u,
       end: end + u,
       resources: [{
