@@ -1,0 +1,38 @@
+default:
+  PORT: 9500
+  APPS: 1
+  INSTANCES: 1
+  DB_PARTITIONS: 1
+  METER: 9100
+  METE_APPS: 1
+  DB: 5984
+  EUREKA: 9990
+  SECURED: false
+  AUTH_SERVER: 9882
+  CLIENT_ID:
+  CLIENT_SECRET:
+  JWTKEY:
+  JWTALGO:
+
+smalldb:
+  INPUT_DB: false
+  OUTPUT_DB: false
+
+small:
+  APPS: 2
+  INSTANCES: 1
+  DB_PARTITIONS: 2
+  METER_APPS: 2
+
+medium:
+  APPS: 4
+  INSTANCES: 1
+  DB_PARTITIONS: 4
+  METER_APPS: 4
+
+large:
+  APPS: 6
+  INSTANCES: 1
+  DB_PARTITIONS: 6
+  METER_APPS: 6
+

@@ -60,10 +60,10 @@ commander
   .parse(argv);
 
 // External Abacus processes start timeout
-const startTimeout = commander.startTimeout || 30000;
+const startTimeout = commander.startTimeout || 100000;
 
 // This test timeout
-const totalTimeout = commander.totalTimeout || 60000;
+const totalTimeout = commander.totalTimeout || 200000;
 
 // Token setup
 const tokenSecret = 'secret';
@@ -435,7 +435,7 @@ const test = (secured) => {
     fn(doneCallback);
   };
 
-  it('submit runtime usage to usage collector', function(done) {
+  it('submits runtime usage to usage collector', function(done) {
     this.timeout(totalTimeout + 2000);
 
     // Wait for bridge to start

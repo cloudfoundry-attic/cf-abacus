@@ -22,10 +22,18 @@ cf-admin-user: admin
 # Password of the admin user
 cf-admin-password: admin
 
+# Abacus profile (default, small, medium, large)
+abacus-profile: large
+
+# Create DB service instance or use hard-coded DB URL
+create-db-service: true
+
 # DB service (Couch or Mongo) to use for storing Abacus data
+# Note: Not used if create-db-service is false, but still required
 db-service-name: service-name
 
 # DB service plan
+# Note: Not used if create-db-service is false, but still required
 db-plan-name: plan-name
 
 # UAA admin user

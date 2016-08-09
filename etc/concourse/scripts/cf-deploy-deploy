@@ -17,19 +17,21 @@ function mapRoutes {
 
   local APP_NAME=$1
   local INSTANCES=$(expr $2 - 1)
-  local APP_URL=$(cf app $APP_NAME-0 | awk '{if (NR == 7) {print $2}}')
-  local APP_DOMAIN=${APP_URL/$APP_NAME-0./}
 
-  if [ -z "$APP_DOMAIN" ]; then
-    echo "Unknown domain !"
-    exit 1
+  set +e # Disable error checks
+  cf app abacus-usage-collector
+  single_app=$?
+  set -e # Enable error checks
+
+  if [ $single_app = 0 ]; then
+    echo "Found single $APP_NAME instance. Will not map route !!!"
+  else
+    echo "Mapping $2 (0-$INSTANCES) instances of $APP_NAME in $CF_DOMAIN domain ..."
+    for i in `seq 0 $INSTANCES`;
+    do
+      cf map-route "$APP_NAME-$i" $CF_DOMAIN --hostname "$APP_NAME"
+    done
   fi
-
-  echo "Mapping $2 (0-$INSTANCES) instances of $APP_NAME in $APP_DOMAIN domain ..."
-  for i in `seq 0 $INSTANCES`;
-  do
-    cf map-route "$APP_NAME-$i" $APP_DOMAIN --hostname "$APP_NAME"
-  done
 }
 
 APPS=()
@@ -46,57 +48,42 @@ function getApps {
 }
 
 echo "Logging to $CF_API ..."
-cf api --skip-ssl-validation https://api.$CF_API
-cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+cf login -a https://api.$CF_API -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE --skip-ssl-validation
 
-#
-# Disable error checks
-#
-set +e
-
-getApps
-
-if [ ${#APPS[@]} != 0 ]; then
-  echo "Unbind services ..."
-  echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf unbind-service {} db
-
-  echo "Delete apps in parallel. We expect errors due to missing routes ..."
-  echo ${APPS[@]} | xargs -n1 -P 5 cf delete -f -r
-
-  echo "Dropping database ..."
-  cf delete-service db -f
-fi
-
-#
-# Enable error checks
-#
-set -e
-
-getApps
-
-echo "Delete apps (this time errors are NOT ok) ..."
-echo ${APPS[@]} | xargs -n1 -P 5 -r cf delete -f -r
-
-echo "Pushing LARGE Abacus installation ..."
+echo "Pushing $ABACUS_PROFILE Abacus installation ..."
 pushd built-project
-  npm run cfstage -- large
+  npm run cfstage -- $ABACUS_PROFILE
 popd
-
-echo "Deleting redundant apps ..."
-cf delete -r -f abacus-pouchserver
-cf delete -r -f abacus-authserver-plugin
 
 echo "Mapping routes ..."
 mapRoutes abacus-usage-collector 6
 mapRoutes abacus-usage-reporting 6
 
-echo "Creating new DB service instance ..."
-cf create-service "$DB_SERVICE_NAME" "$DB_PLAN_NAME"  db
+if [ "$CREATE_DB_SERVICE" == "true" ]; then
+  echo "Creating new DB service instance ..."
+  cf create-service "$DB_SERVICE_NAME" "$DB_PLAN_NAME" db
+  until cf service db | grep -q 'Status: create succeeded\|Status: create failed'
+  do
+    sleep 2s
+  done
+  echo "DB creation finished."
+else
+  echo "Using DB URL provided in abacus-config !"
+fi
 
 getApps
 
+#
+# Get platform info
+#
+unamestr=`uname`
+
 echo "Binding services ..."
-echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf bind-service {} db
+if [[ "$unamestr" == 'Linux' ]]; then
+  echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf bind-service {} db
+else
+  echo ${APPS[@]} | xargs -n1 | xargs -P 5 -n 1 -J {} cf bind-service {} db
+fi
 
 echo "Starting applications ..."
 echo ${APPS[@]} | xargs -n1 -P 5 cf start
@@ -106,9 +93,17 @@ cf apps
 
 echo "Restarting failed apps ..."
 getApps '?'
-echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+if [[ "$unamestr" == 'Linux' ]]; then
+  echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+else
+  echo ${APPS[@]} | xargs -n1 -P 5 cf restart
+fi
 getApps '0/'
-echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+if [[ "$unamestr" == 'Linux' ]]; then
+  echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+else
+  echo ${APPS[@]} | xargs -n1 -P 5 cf restart
+fi
 
 echo "Applications:"
 cf apps

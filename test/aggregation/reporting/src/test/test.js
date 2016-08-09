@@ -23,6 +23,7 @@ const clone = _.clone;
 const zip = _.zip;
 const unzip = _.unzip;
 const flatten = _.flatten;
+const omit = _.omit;
 
 // Batch the requests
 const brequest = batch(request);
@@ -441,6 +442,10 @@ describe('abacus-usage-reporting-itest', () => {
       // Create resource aggregations
       return create(consumers, (i) => {
         const consumer = {
+          organization_id: oid(o),
+          resource_instance_id: 'rid',
+          start: end + u,
+          end: end + u,
           consumer_id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
           resources: [{
             resource_id: 'test-resource',
@@ -562,6 +567,8 @@ describe('abacus-usage-reporting-itest', () => {
       id: dbclient.kturi(oid(o), end + u),
       organization_id: oid(o),
       account_id: '1234',
+      resource_instance_id: 'rid',
+      consumer_id: 'cid',
       start: end + u,
       end: end + u,
       processed: end + u,
@@ -615,11 +622,12 @@ describe('abacus-usage-reporting-itest', () => {
               return reduce(uu, sumCharges, { charge: 0 });
             });
           });
-          return c;
+          return omit(c, 'resource_instance_id', 'organization_id', 'start',
+            'end');
         });
         return s;
       });
-      return report;
+      return omit(report, 'resource_instance_id', 'consumer_id');
     };
 
 

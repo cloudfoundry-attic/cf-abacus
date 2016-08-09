@@ -19,9 +19,10 @@ if [ "$CI_TEST" != "false" ]; then
   npm run demo
   npm stop
 
-  npm start
-  sleep 3s
-  npm run perf -- -o 4 -i 4 -u 4
+  # Tests for concurrency
+  npm start small
+  sleep 6s
+  npm run perf -- -o 1 -i 8 -u 8
   npm stop
 
   # Run demo and perf test with the smalldb config
@@ -45,4 +46,3 @@ if [ "$CI_TEST" != "false" ]; then
   npm stop
 
 fi
-

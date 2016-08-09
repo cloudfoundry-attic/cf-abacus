@@ -43,10 +43,16 @@ CF-Abacus Concourse Pipeline
 
 You should have the Concourse running by now. To run the deployment pipeline follow these steps:
 
-1. Create a repo that holds any changes to:
+1. Create a "landscape" repository that contains submodules for:
+   * anything else specific for the landscape (Cloud Foundry, DBs, ...)
+   * Abacus
+   * `abacus-config` directory with custom Abacus settings (see next step)
+
+2. The Abacus configuration `abacus-config`, should contain:
+   * pipeline configuration in `deploy-pipeline-vars.yml`
    * application manifests: `manifest.yml`
    * number of applications and instances in `.apprc` for each Abacus pipeline stage (often needed for collector and reporting)
-   * profiles in `etc/apps.rc` (to add additional apps such as `cf-bridge`)
+   * profiles in `etc/apps.rc` (to add additional apps such as `cf-bridge` and `cf-renewer`)
 
    The file structure should be the same as the abacus project:
     ```
@@ -86,11 +92,6 @@ You should have the Concourse running by now. To run the deployment pipeline fol
     | | | |____manifest.yml
     ```
 
-2. Create a "landscape" repository that contains submodules for:
-   * Abacus
-   * the configuration from the previous step
-   * anything else specific for the landscape (Cloud Foundry, DB, ...)
-
 3. Customize the `deploy-pipeline-vars.yml` file with the location of the landscape repository
 
 4. Upload the pipeline:
@@ -114,7 +115,7 @@ To build & push changes in a single image (for example `node-mongodb-0.12`), exe
 
 ```bash
 cd docker/node-mongodb-0.12
-docker build -t godofcontainers/node-mongodb:0.12 .
+docker build -t myrepository/node-mongodb:0.12 .
 docker login
-docker push godofcontainers/node-mongodb:0.12
+docker push myrepository/node-mongodb:0.12
 ```

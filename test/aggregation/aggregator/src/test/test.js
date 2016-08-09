@@ -252,7 +252,9 @@ describe('abacus-usage-aggregator-itest', () => {
       o + 1, ri + 1].join('-');
 
     // Usage and usage batch ids
-    const uid = (o, ri, u) => [start, o + 1, ri + 1, u + 1].join('-');
+    const utime = Date.now();
+    const uid = (o, ri, u) => dbclient.kturi(
+      [start, o + 1, ri + 1, u + 1].join('-'), utime + u + 1);
     const bid = (u) => [start, u + 1].join('-');
 
     // Accumulated usage for given org, resource instance and usage #s
@@ -339,10 +341,9 @@ describe('abacus-usage-aggregator-itest', () => {
     const riagg = (o, ri, u, conid, planid) => {
       const instances = () => ri + 1;
       return map(filter(create(instances, (i) => {
-        const time = map([end + u, end + u], (t) => seqid.pad16(t)).join('/');
         return {
           id: riid(o, i),
-          t: dbclient.pad16(time),
+          t: dbclient.t(uid(o, ri, u)),
           conid: cid(o, i),
           planid: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2),
             rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/')
@@ -403,6 +404,8 @@ describe('abacus-usage-aggregator-itest', () => {
       // Create resource aggregations
       return create(consumers, (i) => ({
         consumer_id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
+        resource_id: 'test-resource',
+        plan_id: pid(ri),
         resources: [{
           resource_id: 'test-resource',
           aggregated_usage: a(ri, u, i, count, false),
@@ -502,6 +505,8 @@ describe('abacus-usage-aggregator-itest', () => {
     const aggregatedTemplate = (o, ri, u) => ({
       organization_id: oid(o),
       account_id: '1234',
+      resource_id: 'test-resource',
+      plan_id: pid(ri),
       start: end + u,
       end: end + u,
       resources: [{
@@ -551,7 +556,8 @@ describe('abacus-usage-aggregator-itest', () => {
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(200);
 
-            expect(omit(val.body, 'id', 'processed', 'processed_id'))
+            expect(omit(val.body,
+              'id', 'processed', 'processed_id', 'accumulated_usage_id'))
               .to.deep.equal(omit(
                 accumulatedTemplate(o, ri, u),
                 'id', 'processed', 'processed_id'));
@@ -590,10 +596,10 @@ describe('abacus-usage-aggregator-itest', () => {
         include_docs: true },
         (err, val) => {
           try {
-            expect(clone(omit(val.rows[0].doc, ['id',
-              'processed', 'processed_id',
+            expect(clone(omit(val.rows[0].doc, ['id', 'processed',
+              'processed_id', 'consumer_id', 'resource_instance_id',
               '_id', '_rev', 'accumulated_usage_id', 'start']),
-                pruneWindows)).to.deep.equal(omit(expected, ['start']));
+              pruneWindows)).to.deep.equal(omit(expected, ['start']));
             done();
           }
           catch (e) {
@@ -601,10 +607,10 @@ describe('abacus-usage-aggregator-itest', () => {
             // data within the giveup time, forward the exception
             if(Date.now() >= processingDeadline) {
               debug('Unable to properly verify the last record');
-              expect(clone(omit(val.rows[0].doc, ['id',
-                'processed', 'processed_id',
+              expect(clone(omit(val.rows[0].doc, ['id', 'processed',
+                'processed_id', 'consumer_id', 'resource_instance_id',
                 '_id', '_rev', 'accumulated_usage_id', 'start']),
-                  pruneWindows)).to.deep.equal(omit(expected, ['start']));
+                pruneWindows)).to.deep.equal(omit(expected, ['start']));
             }
             else
               // Try the expected test again
@@ -639,11 +645,11 @@ describe('abacus-usage-aggregator-itest', () => {
                 });
               });
             });
-            expect(clone(omit(val.rows[0].doc, ['id',
-              'processed', 'processed_id',
-              '_id', '_rev', 'accumulated_usage_id', 'start']),
+            expect(clone(omit(val.rows[0].doc, ['id', 'processed', '_id',
+              '_rev', 'processed_id', 'resource_instance_id', 'organization_id',
+              'accumulated_usage_id', 'start', 'end']),
                 pruneWindows)).to.deep.equal(omit(expectedConsumer, ['start',
-                  'organization_id', 'space_id']));
+                  'end', 'organization_id', 'space_id' ]));
             done();
           }
           catch (e) {
@@ -651,11 +657,11 @@ describe('abacus-usage-aggregator-itest', () => {
             // data within the giveup time, forward the exception
             if(Date.now() >= processingDeadline) {
               debug('Unable to properly verify the last record');
-              expect(clone(omit(val.rows[0].doc,
-                ['id', 'processed', 'processed_id',
-                '_id', '_rev', 'accumulated_usage_id', 'start']),
+              expect(clone(omit(val.rows[0].doc, ['id', 'processed', '_id',
+                '_rev', 'processed_id', 'resource_instance_id',
+                'organization_id', 'accumulated_usage_id', 'start', 'end']),
                   pruneWindows)).to.deep.equal(omit(expectedConsumer, ['start',
-                    'organization_id', 'space_id']));
+                    'end', 'organization_id', 'space_id']));
             }
             else
               // Try the expected test again

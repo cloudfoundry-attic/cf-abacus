@@ -5,13 +5,95 @@ set -e -x
 echo "Environment:"
 env | sort
 
+APPS=()
+function getApps {
+  local LINE=$(cf apps | awk '{if (NR == 4) {print}}')
+
+  if [ "$LINE" == "No apps found" ]; then
+    echo "No apps found"
+    APPS=()
+  else
+    APPS=($(cf apps | tail -n +5 | grep "$1" | awk '{print $1}'))
+    echo "Found ${#APPS[@]} applications ..."
+  fi
+}
+
+function unmapRoutes {
+  if [ -z "$1" ]; then
+     echo "Cannot map app without a name !"
+     exit 1
+  fi
+  if [ -z "$2" ]; then
+    echo "Unknown number of instances !"
+    exit 1
+  fi
+
+  local APP_NAME=$1
+  local INSTANCES=$(expr $2 - 1)
+
+  echo "Unmapping $2 (0-$INSTANCES) instances of $APP_NAME in $CF_DOMAIN domain ..."
+  for i in `seq 0 $INSTANCES`;
+  do
+    cf unmap-route "$APP_NAME-$i" $CF_DOMAIN --hostname "$APP_NAME"
+  done
+}
+
+#
+# Get platform info
+#
+unamestr=`uname`
+
+#
+# Disable error checks
+#
+set +e
+
+echo "Logging to $CF_ORG/$CF_SPACE @ $CF_API ..."
+cf login -a https://api.$CF_API --skip-ssl-validation -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD -o $CF_ORG -s $CF_SPACE
+abacus_login=$?
+
+if [ $abacus_login = 0 ]; then
+  echo "Cleaning up $CF_ORG/$CF_SPACE ..."
+  getApps
+
+  echo "Unbinding service instance db ..."
+  if [[ "$unamestr" == 'Linux' ]]; then
+    echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf unbind-service {} db
+  else
+    echo ${APPS[@]} | xargs -n1 | xargs -P 5 -n 1 -J {} cf unbind-service {} db
+  fi
+
+  echo "Deleting service instance db ..."
+  cf delete-service -f db
+
+  echo "Unmapping routes ..."
+  unmapRoutes abacus-usage-collector 6
+  unmapRoutes abacus-usage-reporting 6
+fi
+
+#
+# Enable error checks
+#
+set -e
+
+if [ $abacus_login = 0 ]; then
+  echo "Waiting for db service instance deletion ..."
+  until cf service db | grep -q "Service instance db not found"
+  do
+    sleep 2s
+  done
+  echo "Done."
+fi
+
+
+
 echo "Logging to $CF_API ..."
 cf api --skip-ssl-validation https://api.$CF_API
 echo "" | cf login -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD
 
 echo "Recreating organization and space ..."
 cf delete-org -f $CF_ORG
-cf create-quota $CF_ORG -m 40g -r 40
+cf create-quota $CF_ORG -m 40g -r 40 -s 1 --allow-paid-service-plans
 cf create-org $CF_ORG -q $CF_ORG
 cf create-space $CF_SPACE -o $CF_ORG
 

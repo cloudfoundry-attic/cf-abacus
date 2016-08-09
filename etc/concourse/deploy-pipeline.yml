@@ -10,55 +10,63 @@ resources:
       skip-ssl-verification: true
 
 jobs:
-
-################################### CF #########################################
-
   - name: abacus-deploy
     plan:
+      - get: landscape
+        trigger: true
       - aggregate:
-        - get: landscape
-          trigger: true
-      - task: build-abacus
-        file: landscape/cf-abacus/etc/concourse/tasks/cf-deploy-build.yml
-      - task: setup-abacus-infra
-        file: built-project/etc/concourse/tasks/cf-deploy-infra.yml
-        config:
-          params:
-            CF_API: {{cf-api}}
-            CF_USER: {{cf-user}}
-            CF_PASSWORD: {{cf-password}}
-            CF_ADMIN_USER: {{cf-admin-user}}
-            CF_ADMIN_PASSWORD: {{cf-admin-password}}
-            CF_ORG: {{cf-org}}
-            CF_SPACE: {{cf-space}}
-            CF_DOMAIN: {{cf-domain}}
-            UAA_ADMIN: {{uaa-admin}}
-            UAA_SECRET: {{uaa-secret}}
-            SYSTEM_CLIENT_ID: {{system-client-id}}
-            SYSTEM_CLIENT_SECRET: {{system-client-secret}}
-            BRIDGE_CLIENT_ID: {{bridge-client-id}}
-            BRIDGE_CLIENT_SECRET: {{bridge-client-secret}}
-            CF_CLIENT_ID: {{cf-client-id}}
-            CF_CLIENT_SECRET: {{cf-client-secret}}
-            CONTAINER_CLIENT_ID: {{container-client-id}}
-            CONTAINER_CLIENT_SECRET: {{container-client-secret}}
-            OBJECT_STORAGE_CLIENT_ID: {{object-storage-client-id}}
-            OBJECT_STORAGE_CLIENT_SECRET: {{object-storage-client-secret}}
-            HYSTRIX_CLIENT_ID: {{hystrix-client-id}}
-            HYSTRIX_CLIENT_SECRET: {{hystrix-client-secret}}
-      - task: deploy-abacus
-        file: built-project/etc/concourse/tasks/cf-deploy-deploy.yml
-        on_failure:
-          task: abacus-cleanup
-          file: built-project/etc/concourse/tasks/cf-deploy-cleanup.yml
+        - task: build-abacus
+          file: landscape/cf-abacus/etc/concourse/tasks/cf-deploy-build.yml
+          timeout: 30m
+        - task: setup-abacus-infra
+          attempts: 2
+          timeout: 35m
           config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: godofcontainers/ubuntu-14.04.4-cf
+                tag: 'latest'
+            inputs:
+              - name: landscape
             params:
               CF_API: {{cf-api}}
               CF_USER: {{cf-user}}
               CF_PASSWORD: {{cf-password}}
+              CF_ADMIN_USER: {{cf-admin-user}}
+              CF_ADMIN_PASSWORD: {{cf-admin-password}}
               CF_ORG: {{cf-org}}
               CF_SPACE: {{cf-space}}
+              CF_DOMAIN: {{cf-domain}}
+              UAA_ADMIN: {{uaa-admin}}
+              UAA_SECRET: {{uaa-secret}}
+              SYSTEM_CLIENT_ID: {{system-client-id}}
+              SYSTEM_CLIENT_SECRET: {{system-client-secret}}
+              BRIDGE_CLIENT_ID: {{bridge-client-id}}
+              BRIDGE_CLIENT_SECRET: {{bridge-client-secret}}
+              CF_CLIENT_ID: {{cf-client-id}}
+              CF_CLIENT_SECRET: {{cf-client-secret}}
+              CONTAINER_CLIENT_ID: {{container-client-id}}
+              CONTAINER_CLIENT_SECRET: {{container-client-secret}}
+              OBJECT_STORAGE_CLIENT_ID: {{object-storage-client-id}}
+              OBJECT_STORAGE_CLIENT_SECRET: {{object-storage-client-secret}}
+              HYSTRIX_CLIENT_ID: {{hystrix-client-id}}
+              HYSTRIX_CLIENT_SECRET: {{hystrix-client-secret}}
+            run:
+              path: landscape/cf-abacus/etc/concourse/scripts/cf-deploy-infra
+      - task: deploy-abacus
+        attempts: 3
+        timeout: 1h
         config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: godofcontainers/node-mongodb
+              tag: '6.2.0'
+          inputs:
+            - name: built-project
           params:
             CF_API: {{cf-api}}
             CF_USER: {{cf-user}}
@@ -68,26 +76,28 @@ jobs:
             CF_ORG: {{cf-org}}
             CF_SPACE: {{cf-space}}
             CF_DOMAIN: {{cf-domain}}
+            ABACUS_PROFILE: {{abacus-profile}}
+            CREATE_DB_SERVICE: {{create-db-service}}
             DB_SERVICE_NAME: {{db-service-name}}
             DB_PLAN_NAME: {{db-plan-name}}
             # Use latest node.js buildpack to enable 5.11.1
             BUILDPACK: https://github.com/cloudfoundry/nodejs-buildpack.git
             # Save file handlers and offload CF stagers
             JOBS: 2
+          run:
+            path: built-project/etc/concourse/scripts/cf-deploy-deploy
       - task: test-abacus
-        file: built-project/etc/concourse/tasks/cf-deploy-test.yml
-        ensure:
-          task: abacus-cleanup
-          file: built-project/etc/concourse/tasks/cf-deploy-cleanup.yml
-          config:
-            params:
-              CF_API: {{cf-api}}
-              CF_USER: {{cf-user}}
-              CF_PASSWORD: {{cf-password}}
-              CF_ORG: {{cf-org}}
-              CF_SPACE: {{cf-space}}
-              FAIL_ON_ERROR: true
+        attempts: 2
+        timeout: 20m
         config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: godofcontainers/node-mongodb
+              tag: '6.2.0'
+          inputs:
+            - name: built-project
           params:
             CF_API: {{cf-api}}
             CF_DOMAIN: {{cf-domain}}
@@ -96,3 +106,5 @@ jobs:
             CLIENT_SECRET: {{object-storage-client-secret}}
             CI_START_TIMEOUT: 50000
             CI_PIPELINE_TIMEOUT: 100000
+          run:
+            path: built-project/etc/concourse/scripts/cf-deploy-test
