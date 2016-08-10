@@ -142,7 +142,10 @@ const twentySecondsInMilliseconds = 20 * 1000;
 
 const test = (secured) => {
   const submittime = Date.now();
+
   let server;
+  let appUsageEvents;
+  let expectedConsuming;
 
   beforeEach((done) => {
     // Enable/disable the oAuth token authorization
@@ -195,70 +198,11 @@ const test = (secured) => {
       }
 
       response.status(200).send({
-        total_results: 2,
+        total_results: appUsageEvents.length,
         total_pages: 1,
         prev_url: null,
         next_url: null,
-        resources: [
-          // Usage that will be rejected because of the slack window
-          {
-            metadata: {
-              guid: '904419c3',
-              url: '/v2/app_usage_events/904419c3',
-              created_at:
-                new Date(submittime - sixDaysInMilliseconds).toISOString()
-            },
-            entity: {
-              state: 'STARTED',
-              previous_state: 'STOPPED',
-              memory_in_mb_per_instance: 256,
-              previous_memory_in_mb_per_instance: 0,
-              instance_count: 1,
-              previous_instance_count: 0,
-              app_guid: '35c4ff2e',
-              app_name: 'app',
-              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
-              space_name: 'diego',
-              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
-              buildpack_guid: null,
-              buildpack_name: null,
-              package_state: 'PENDING',
-              previous_package_state: 'PENDING',
-              parent_app_guid: null,
-              parent_app_name: null,
-              process_type: 'web'
-            }
-          },
-          // Usage that has to be processed by the pipeline
-          {
-            metadata: {
-              guid: '904419c4',
-              url: '/v2/app_usage_events/904419c4',
-              created_at:
-                new Date(submittime - twentySecondsInMilliseconds).toISOString()
-            },
-            entity: {
-              state: 'STARTED',
-              previous_state: 'STOPPED',
-              memory_in_mb_per_instance: 512,
-              previous_memory_in_mb_per_instance: 0,
-              instance_count: 1,
-              previous_instance_count: 0,
-              app_guid: '35c4ff2f',
-              app_name: 'app',
-              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
-              space_name: 'diego',
-              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
-              buildpack_guid: null,
-              buildpack_name: null,
-              package_state: 'PENDING',
-              previous_package_state: 'PENDING',
-              parent_app_guid: null,
-              parent_app_name: null,
-              process_type: 'web'
-            }
-          }
-        ]
+        resources: appUsageEvents
       });
     });
     routes.get('/v2/info',
@@ -304,7 +248,7 @@ const test = (secured) => {
       services();
     }
     else
-    // Delete test dbs on the configured db server
+      // Delete test dbs on the configured db server
       dbclient.drop(process.env.DB, /^abacus-/, () => {
         services();
       });
@@ -363,7 +307,7 @@ const test = (secured) => {
     for (const windowType in timeWindows)
       if(isWithinWindow(submittime, reporttime, timeWindows[windowType])) {
         const windowUsage = usage.windows[timeWindows[windowType]];
-        expect(windowUsage[0].quantity.consuming).to.equal(0.5);
+        expect(windowUsage[0].quantity.consuming).to.equal(expectedConsuming);
         expect(windowUsage[0].charge).to.be.above(0);
       }
   };
@@ -435,33 +379,325 @@ const test = (secured) => {
     fn(doneCallback);
   };
 
-  it('submits runtime usage to usage collector', function(done) {
-    this.timeout(totalTimeout + 2000);
-
-    // Wait for bridge to start
-    const startWaitTime = Date.now();
-    request.waitFor('http://localhost::p/v1/cf/bridge', { p: 9500 },
-      startTimeout, (err, uri, opts) => {
-        // Failed to ping bridge before timing out
-        if (err) throw err;
-
-        // Check report
-        request.get(uri, {
-          headers: {
-            authorization: secured ? 'bearer ' + signedSystemToken : ''
+  context('when submitting out of slack usage', () => {
+    beforeEach(() => {
+      appUsageEvents = [
+        // Usage that will be rejected because of the slack window
+        {
+          metadata: {
+            guid: '904419c3',
+            url: '/v2/app_usage_events/904419c3',
+            created_at:
+              new Date(submittime - sixDaysInMilliseconds).toISOString()
+          },
+          entity: {
+            state: 'STARTED',
+            previous_state: 'STOPPED',
+            memory_in_mb_per_instance: 256,
+            previous_memory_in_mb_per_instance: 0,
+            instance_count: 1,
+            previous_instance_count: 0,
+            app_guid: '35c4ff2f',
+            app_name: 'app',
+            space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+            space_name: 'abacus',
+            org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+            buildpack_guid: null,
+            buildpack_name: null,
+            package_state: 'PENDING',
+            previous_package_state: 'PENDING',
+            parent_app_guid: null,
+            parent_app_name: null,
+            process_type: 'web'
           }
-        }, (err, response) => {
-          expect(err).to.equal(undefined);
-          expect(response.statusCode).to.equal(200);
+        },
+        // Usage that has to be processed by the pipeline
+        {
+          metadata: {
+            guid: '904419c4',
+            url: '/v2/app_usage_events/904419c4',
+            created_at:
+              new Date(submittime - twentySecondsInMilliseconds).toISOString()
+          },
+          entity: {
+            state: 'STARTED',
+            previous_state: 'STOPPED',
+            memory_in_mb_per_instance: 512,
+            previous_memory_in_mb_per_instance: 0,
+            instance_count: 1,
+            previous_instance_count: 0,
+            app_guid: '35c4ff2f',
+            app_name: 'app',
+            space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+            space_name: 'abacus',
+            org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+            buildpack_guid: null,
+            buildpack_name: null,
+            package_state: 'PENDING',
+            previous_package_state: 'PENDING',
+            parent_app_guid: null,
+            parent_app_name: null,
+            process_type: 'web'
+          }
+        }
+      ];
 
-          poll(checkReport, done,
-            totalTimeout - (Date.now() - startWaitTime), 1000);
-        });
-      }
-    );
+      // first start is ignored - out of slack window
+      // second start: 0.5 GB
+      expectedConsuming = 0.5;
+    });
+
+    it('usage is rejected', function(done) {
+      this.timeout(totalTimeout + 2000);
+
+      // Wait for bridge to start
+      const startWaitTime = Date.now();
+      request.waitFor('http://localhost::p/v1/cf/bridge', { p: 9500 },
+        startTimeout, (err, uri, opts) => {
+          // Failed to ping bridge before timing out
+          if (err) throw err;
+
+          // Check report
+          request.get(uri, {
+            headers: {
+              authorization: secured ? 'bearer ' + signedSystemToken : ''
+            }
+          }, (err, response) => {
+            expect(err).to.equal(undefined);
+            expect(response.statusCode).to.equal(200);
+
+            poll(checkReport, done,
+              totalTimeout - (Date.now() - startWaitTime), 1000);
+          });
+        }
+      );
+    });
+  });
+
+  context('with a single app', () => {
+
+    context('start, stop, start, scale out', () => {
+      beforeEach(() => {
+        appUsageEvents = [
+          {
+            metadata: {
+              guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
+              url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
+              created_at: new Date(submittime -
+                twentySecondsInMilliseconds).toISOString()
+            },
+            entity: {
+              state: 'STARTED',
+              previous_state: 'STOPPED',
+              memory_in_mb_per_instance: 512,
+              previous_memory_in_mb_per_instance: 512,
+              instance_count: 1,
+              previous_instance_count: 1,
+              app_guid: '35c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: null,
+              buildpack_name: null,
+              package_state: 'PENDING',
+              previous_package_state: 'PENDING',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
+          },
+          {
+            metadata: {
+              guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
+              url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
+              created_at: new Date(submittime -
+                twentySecondsInMilliseconds + 1).toISOString()
+            },
+            entity: {
+              state: 'BUILDPACK_SET',
+              previous_state: 'STARTED',
+              memory_in_mb_per_instance: 1024,
+              previous_memory_in_mb_per_instance: 1024,
+              instance_count: 1,
+              previous_instance_count: 1,
+              app_guid: '35c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
+              buildpack_name: 'staticfile_buildpack',
+              package_state: 'STAGED',
+              previous_package_state: 'STAGED',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
+          },
+          {
+            metadata: {
+              guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
+              url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
+              created_at: new Date(submittime -
+                twentySecondsInMilliseconds + 3).toISOString()
+            },
+            entity: {
+              state: 'STOPPED',
+              previous_state: 'STARTED',
+              memory_in_mb_per_instance: 1024,
+              previous_memory_in_mb_per_instance: 512,
+              instance_count: 2,
+              previous_instance_count: 1,
+              app_guid: '35c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
+              buildpack_name: 'staticfile_buildpack',
+              package_state: 'STAGED',
+              previous_package_state: 'STAGED',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
+          },
+          {
+            metadata: {
+              guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
+              url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
+              created_at: new Date(submittime -
+                twentySecondsInMilliseconds + 4).toISOString()
+            },
+            entity: {
+              state: 'STARTED',
+              previous_state: 'STOPPED',
+              memory_in_mb_per_instance: 256,
+              previous_memory_in_mb_per_instance: 256,
+              instance_count: 1,
+              previous_instance_count: 1,
+              app_guid: '35c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: null,
+              buildpack_name: null,
+              package_state: 'PENDING',
+              previous_package_state: 'PENDING',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
+          },
+          {
+            metadata: {
+              guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
+              url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
+              created_at: new Date(submittime -
+                twentySecondsInMilliseconds + 5).toISOString()
+            },
+            entity: {
+              state: 'BUILDPACK_SET',
+              previous_state: 'STARTED',
+              memory_in_mb_per_instance: 256,
+              previous_memory_in_mb_per_instance: 256,
+              instance_count: 1,
+              previous_instance_count: 1,
+              app_guid: '35c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
+              buildpack_name: 'staticfile_buildpack',
+              package_state: 'STAGED',
+              previous_package_state: 'STAGED',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
+          },
+          {
+            metadata: {
+              guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
+              url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
+              created_at: new Date(submittime -
+                twentySecondsInMilliseconds + 6).toISOString()
+            },
+            entity: {
+              state: 'STARTED',
+              previous_state: 'STARTED',
+              memory_in_mb_per_instance: 1024,
+              previous_memory_in_mb_per_instance: 256,
+              instance_count: 2,
+              previous_instance_count: 1,
+              app_guid: '35c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
+              buildpack_name: 'staticfile_buildpack',
+              package_state: 'STAGED',
+              previous_package_state: 'STAGED',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
+          }
+        ];
+
+        // first start: 0.5 GB
+        // second start: 0.25 GB
+        // buildpack_set events are ignored
+        // scale out: 2 x 1 GB = 2GB
+        expectedConsuming = 2;
+      });
+
+      it('submits usage and gets expected report back', function(done) {
+        this.timeout(totalTimeout + 2000);
+
+        // Wait for bridge to start
+        const startWaitTime = Date.now();
+        request.waitFor('http://localhost::p/v1/cf/bridge', { p: 9500 },
+          startTimeout, (err, uri, opts) => {
+            // Failed to ping bridge before timing out
+            if (err) throw err;
+
+            // Check report
+            request.get(uri, {
+              headers: {
+                authorization: secured ? 'bearer ' + signedSystemToken : ''
+              }
+            }, (err, response) => {
+              expect(err).to.equal(undefined);
+              expect(response.statusCode).to.equal(200);
+
+              poll(checkReport, done,
+                totalTimeout - (Date.now() - startWaitTime), 1000);
+            });
+          }
+        );
+      });
+    });
+
   });
 };
 
 describe('abacus-cf-bridge-itest without oAuth', () => test(false));
 
-describe('abacus-cf-bridge-itest with oAuth', () => test(true));
+// describe('abacus-cf-bridge-itest with oAuth', () => test(true));
