@@ -85,7 +85,7 @@ if [ $abacus_login = 0 ]; then
   echo "Done."
 fi
 
-echo "Logging to $CF_API ..."
+echo "Logging to $CF_API as admin ..."
 cf api --skip-ssl-validation https://api.$CF_API
 echo "" | cf login -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD
 
@@ -101,6 +101,9 @@ cf create-user $CF_USER $CF_PASSWORD
 cf set-org-role $CF_USER $CF_ORG OrgManager
 cf set-space-role $CF_USER $CF_ORG $CF_SPACE SpaceManager
 cf set-space-role $CF_USER $CF_ORG $CF_SPACE SpaceDeveloper
+
+echo "Logging to $CF_API as abacus user ..."
+cf login -a https://api.$CF_API -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE --skip-ssl-validation
 
 if [ "$CREATE_DB_SERVICE" == "true" ]; then
   echo "Creating new DB service instance ..."
