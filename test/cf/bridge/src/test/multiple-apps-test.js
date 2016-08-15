@@ -389,7 +389,7 @@ const test = (secured) => {
     fn(doneCallback);
   };
 
-  context('with a single app', () => {
+  context('with multiple apps', () => {
 
     context('start, stop, start, scale out', () => {
       beforeEach(() => {
@@ -436,8 +436,8 @@ const test = (secured) => {
             entity: {
               state: 'BUILDPACK_SET',
               previous_state: 'STARTED',
-              memory_in_mb_per_instance: 1024,
-              previous_memory_in_mb_per_instance: 1024,
+              memory_in_mb_per_instance: 512,
+              previous_memory_in_mb_per_instance: 512,
               instance_count: 1,
               previous_instance_count: 1,
               app_guid: '35c4ff2f',
@@ -498,9 +498,9 @@ const test = (secured) => {
             entity: {
               state: 'STOPPED',
               previous_state: 'STARTED',
-              memory_in_mb_per_instance: 1024,
+              memory_in_mb_per_instance: 512,
               previous_memory_in_mb_per_instance: 512,
-              instance_count: 2,
+              instance_count: 1,
               previous_instance_count: 1,
               app_guid: '35c4ff2f',
               app_name: 'app',
@@ -529,8 +529,8 @@ const test = (secured) => {
             entity: {
               state: 'BUILDPACK_SET',
               previous_state: 'STARTED',
-              memory_in_mb_per_instance: 1024,
-              previous_memory_in_mb_per_instance: 1024,
+              memory_in_mb_per_instance: 512,
+              previous_memory_in_mb_per_instance: 512,
               instance_count: 1,
               previous_instance_count: 1,
               app_guid: '45c4ff2f',
@@ -592,7 +592,7 @@ const test = (secured) => {
               state: 'STARTED',
               previous_state: 'STARTED',
               memory_in_mb_per_instance: 1024,
-              previous_memory_in_mb_per_instance: 256,
+              previous_memory_in_mb_per_instance: 512,
               instance_count: 2,
               previous_instance_count: 1,
               app_guid: '45c4ff2f',
@@ -784,7 +784,7 @@ const test = (secured) => {
               guid: 'b557f9e6-19f6-4263-9ffe-be39feccd577',
               url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
               created_at: new Date(submittime -
-                twentySecondsInMilliseconds).toISOString()
+                twentySecondsInMilliseconds + 2).toISOString()
             },
             entity: {
               state: 'STARTED',
@@ -815,7 +815,7 @@ const test = (secured) => {
               guid: '1f2336af-1866-4d2b-8845-0efb14c1a389',
               url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
               created_at: new Date(submittime -
-                twentySecondsInMilliseconds + 1).toISOString()
+                twentySecondsInMilliseconds + 3).toISOString()
             },
             entity: {
               state: 'BUILDPACK_SET',
@@ -846,7 +846,7 @@ const test = (secured) => {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
               created_at: new Date(submittime -
-                twentySecondsInMilliseconds + 2).toISOString()
+                twentySecondsInMilliseconds + 4).toISOString()
             },
             entity: {
               state: 'STARTED',
@@ -877,7 +877,7 @@ const test = (secured) => {
               guid: '458ea444-943d-4a6e-9928-786a5bb93dfb',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
               created_at: new Date(submittime -
-                twentySecondsInMilliseconds + 3).toISOString()
+                twentySecondsInMilliseconds + 5).toISOString()
             },
             entity: {
               state: 'STOPPED',
@@ -908,7 +908,7 @@ const test = (secured) => {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
               created_at: new Date(submittime -
-                twentySecondsInMilliseconds + 3).toISOString()
+                twentySecondsInMilliseconds + 6).toISOString()
             },
             entity: {
               state: 'STOPPED',
