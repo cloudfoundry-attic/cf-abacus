@@ -394,6 +394,7 @@ const test = (secured) => {
     context('start, stop, start, scale out', () => {
       beforeEach(() => {
         appUsageEvents = [
+          // app1 start
           {
             metadata: {
               guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
@@ -424,6 +425,7 @@ const test = (secured) => {
               task_guid: null
             }
           },
+          // app1 buildpack set
           {
             metadata: {
               guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
@@ -454,12 +456,44 @@ const test = (secured) => {
               task_guid: null
             }
           },
+          // app2 start
+          {
+            metadata: {
+              guid: 'b557f9e6-19f6-4263-9ffe-be39feccd577',
+              url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
+              created_at: new Date(submittime -
+                twentySecondsInMilliseconds + 2).toISOString()
+            },
+            entity: {
+              state: 'STARTED',
+              previous_state: 'STOPPED',
+              memory_in_mb_per_instance: 512,
+              previous_memory_in_mb_per_instance: 512,
+              instance_count: 1,
+              previous_instance_count: 1,
+              app_guid: '45c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: null,
+              buildpack_name: null,
+              package_state: 'PENDING',
+              previous_package_state: 'PENDING',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
+          },
+          // app1 stop
           {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
               created_at: new Date(submittime -
-                twentySecondsInMilliseconds + 2).toISOString()
+                twentySecondsInMilliseconds + 3).toISOString()
             },
             entity: {
               state: 'STOPPED',
@@ -484,12 +518,44 @@ const test = (secured) => {
               task_guid: null
             }
           },
+          // app2 buildpack set
+          {
+            metadata: {
+              guid: '1f2336af-1866-4d2b-8845-0efb14c1a389',
+              url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
+              created_at: new Date(submittime -
+                twentySecondsInMilliseconds + 4).toISOString()
+            },
+            entity: {
+              state: 'BUILDPACK_SET',
+              previous_state: 'STARTED',
+              memory_in_mb_per_instance: 1024,
+              previous_memory_in_mb_per_instance: 1024,
+              instance_count: 1,
+              previous_instance_count: 1,
+              app_guid: '45c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
+              buildpack_name: 'staticfile_buildpack',
+              package_state: 'STAGED',
+              previous_package_state: 'STAGED',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
+          },
+          // app1 start #2
           {
             metadata: {
               guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
               url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
               created_at: new Date(submittime -
-                twentySecondsInMilliseconds + 3).toISOString()
+                twentySecondsInMilliseconds + 5).toISOString()
             },
             entity: {
               state: 'STARTED',
@@ -514,12 +580,44 @@ const test = (secured) => {
               task_guid: null
             }
           },
+          // app2 scale
+          {
+            metadata: {
+              guid: '358ea444-943d-4a6e-9928-786a5bb93dfb',
+              url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
+              created_at: new Date(submittime -
+                twentySecondsInMilliseconds + 6).toISOString()
+            },
+            entity: {
+              state: 'STARTED',
+              previous_state: 'STARTED',
+              memory_in_mb_per_instance: 1024,
+              previous_memory_in_mb_per_instance: 256,
+              instance_count: 2,
+              previous_instance_count: 1,
+              app_guid: '45c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
+              buildpack_name: 'staticfile_buildpack',
+              package_state: 'STAGED',
+              previous_package_state: 'STAGED',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
+          },
+          // app1 buildpack set #2
           {
             metadata: {
               guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
               url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
               created_at: new Date(submittime -
-                twentySecondsInMilliseconds + 4).toISOString()
+                twentySecondsInMilliseconds + 7).toISOString()
             },
             entity: {
               state: 'BUILDPACK_SET',
@@ -544,12 +642,13 @@ const test = (secured) => {
               task_guid: null
             }
           },
+          // app1 scale
           {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
               created_at: new Date(submittime -
-                twentySecondsInMilliseconds + 5).toISOString()
+                twentySecondsInMilliseconds + 8).toISOString()
             },
             entity: {
               state: 'STARTED',
@@ -576,11 +675,15 @@ const test = (secured) => {
           }
         ];
 
-        // first start: 0.5 GB
-        // second start: 0.25 GB
+        // app1 first start: 0.5 GB
+        // app1 second start: 0.25 GB
+        // app1 scale out: 2 x 1 GB = 2GB
+        // app2 first start: 0.5 GB
+        // app2 second start: 0.25 GB
+        // app1 scale out: 2 x 1 GB = 2GB
+        //
         // buildpack_set events are ignored
-        // scale out: 2 x 1 GB = 2GB
-        expectedConsuming = 2;
+        expectedConsuming = 4;
       });
 
       it('submits usage and gets expected report back', function(done) {
@@ -613,6 +716,7 @@ const test = (secured) => {
     context('start, scale out, stop', () => {
       beforeEach(() => {
         appUsageEvents = [
+          // app1 start
           {
             metadata: {
               guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
@@ -643,6 +747,7 @@ const test = (secured) => {
               task_guid: null
             }
           },
+          // app1 buildpack set
           {
             metadata: {
               guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
@@ -673,6 +778,69 @@ const test = (secured) => {
               task_guid: null
             }
           },
+          // app2 start
+          {
+            metadata: {
+              guid: 'b557f9e6-19f6-4263-9ffe-be39feccd577',
+              url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
+              created_at: new Date(submittime -
+                twentySecondsInMilliseconds).toISOString()
+            },
+            entity: {
+              state: 'STARTED',
+              previous_state: 'STOPPED',
+              memory_in_mb_per_instance: 1024,
+              previous_memory_in_mb_per_instance: 1024,
+              instance_count: 1,
+              previous_instance_count: 1,
+              app_guid: '45c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: null,
+              buildpack_name: null,
+              package_state: 'PENDING',
+              previous_package_state: 'PENDING',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
+          },
+          // app2 buildpack set
+          {
+            metadata: {
+              guid: '1f2336af-1866-4d2b-8845-0efb14c1a389',
+              url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
+              created_at: new Date(submittime -
+                twentySecondsInMilliseconds + 1).toISOString()
+            },
+            entity: {
+              state: 'BUILDPACK_SET',
+              previous_state: 'STARTED',
+              memory_in_mb_per_instance: 1024,
+              previous_memory_in_mb_per_instance: 1024,
+              instance_count: 1,
+              previous_instance_count: 1,
+              app_guid: '45c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
+              buildpack_name: 'staticfile_buildpack',
+              package_state: 'STAGED',
+              previous_package_state: 'STAGED',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
+          },
+          // app1 scale out
           {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
@@ -703,6 +871,38 @@ const test = (secured) => {
               task_guid: null
             }
           },
+          // app2 stop
+          {
+            metadata: {
+              guid: '458ea444-943d-4a6e-9928-786a5bb93dfb',
+              url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
+              created_at: new Date(submittime -
+                twentySecondsInMilliseconds + 3).toISOString()
+            },
+            entity: {
+              state: 'STOPPED',
+              previous_state: 'STARTED',
+              memory_in_mb_per_instance: 1024,
+              previous_memory_in_mb_per_instance: 1024,
+              instance_count: 1,
+              previous_instance_count: 1,
+              app_guid: '45c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
+              buildpack_name: 'staticfile_buildpack',
+              package_state: 'STAGED',
+              previous_package_state: 'STAGED',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
+          },
+          // app1 stop
           {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
@@ -735,10 +935,13 @@ const test = (secured) => {
           }
         ];
 
-        // first start: 1 GB
-        // scale: 2x2GB = 4GB
+        // app1 start: 1 GB
+        // app1 scale: 2x2GB = 4GB
+        // app1 stop: 0GB
+        // app2 start: 1 GB
+        // app2 stop: 0GB
+        //
         // buildpack_set events are ignored
-        // stop: 0GB
         expectedConsuming = 0;
       });
 
@@ -772,6 +975,8 @@ const test = (secured) => {
   });
 };
 
-describe('abacus-cf-bridge single-app-test without oAuth', () => test(false));
+describe('abacus-cf-bridge multiple-apps-test without oAuth',
+  () => test(false));
 
-describe('abacus-cf-bridge single-app-test with oAuth', () => test(true));
+describe('abacus-cf-bridge multiple-apps-test with oAuth',
+  () => test(true));
