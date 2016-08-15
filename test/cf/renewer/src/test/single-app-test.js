@@ -416,8 +416,8 @@ const test = (secured) => {
             entity: {
               state: 'BUILDPACK_SET',
               previous_state: 'STARTED',
-              memory_in_mb_per_instance: 1024,
-              previous_memory_in_mb_per_instance: 1024,
+              memory_in_mb_per_instance: 512,
+              previous_memory_in_mb_per_instance: 512,
               instance_count: 1,
               previous_instance_count: 1,
               app_guid: '35c4ff2f',
@@ -445,7 +445,7 @@ const test = (secured) => {
             entity: {
               state: 'STOPPED',
               previous_state: 'STARTED',
-              memory_in_mb_per_instance: 1024,
+              memory_in_mb_per_instance: 512,
               previous_memory_in_mb_per_instance: 512,
               instance_count: 2,
               previous_instance_count: 1,
