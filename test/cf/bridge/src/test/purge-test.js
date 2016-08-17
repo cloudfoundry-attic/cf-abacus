@@ -390,6 +390,32 @@ const test = (secured) => {
     fn(doneCallback);
   };
 
+  const waitForStartAndPoll = (component, port, done) => {
+    // Wait for bridge to start
+    let startWaitTime = Date.now();
+    request.waitFor('http://localhost::p/v1/cf/:component',
+      { component: component, p: port },
+      startTimeout, (err, uri, opts) => {
+        // Failed to ping component before timing out
+        if (err) throw err;
+
+        // Check report
+        request.get(uri, {
+          headers: {
+            authorization: secured ? 'bearer ' + signedSystemToken : ''
+          }
+        }, (err, response) => {
+          expect(err).to.equal(undefined);
+          expect(response.statusCode).to.equal(200);
+
+          poll(checkReport, (error) => {
+            done(error);
+          }, totalTimeout - (Date.now() - startWaitTime), 1000);
+        });
+      }
+    );
+  };
+
   context('purged event stream', () => {
     beforeEach(() => {
       appUsageEvents = [
@@ -405,8 +431,8 @@ const test = (secured) => {
             previous_state: 'STARTED',
             memory_in_mb_per_instance: 1024,
             previous_memory_in_mb_per_instance: 1024,
-            instance_count: 1,
-            previous_instance_count: 1,
+            instance_count: 3,
+            previous_instance_count: 3,
             app_guid: '35c4ff2f',
             app_name: 'app',
             space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
@@ -428,34 +454,14 @@ const test = (secured) => {
       // purge event is similar to scale out event,
       // but with the same current and similar values
       //
-      // purge event: 1 x 1 GB = 1GB
-      expectedConsuming = 1;
+      // purge event: 3 x 1 GB = 3GB
+      expectedConsuming = 3;
     });
 
     it('submits usage and gets expected report back', function(done) {
       this.timeout(totalTimeout + 2000);
 
-      // Wait for bridge to start
-      const startWaitTime = Date.now();
-      request.waitFor('http://localhost::p/v1/cf/bridge', { p: 9500 },
-        startTimeout, (err, uri, opts) => {
-          // Failed to ping bridge before timing out
-          if (err) throw err;
-
-          // Check report
-          request.get(uri, {
-            headers: {
-              authorization: secured ? 'bearer ' + signedSystemToken : ''
-            }
-          }, (err, response) => {
-            expect(err).to.equal(undefined);
-            expect(response.statusCode).to.equal(200);
-
-            poll(checkReport, done,
-              totalTimeout - (Date.now() - startWaitTime), 1000);
-          });
-        }
-      );
+      waitForStartAndPoll('bridge', 9500, done);
     });
   });
 };

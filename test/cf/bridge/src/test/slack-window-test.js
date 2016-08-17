@@ -221,7 +221,7 @@ const test = (secured) => {
     process.env.SECURED = secured ? 'true' : 'false';
     debug('Set SECURED = %s', process.env.SECURED);
 
-    // Security setup
+    // Set environment variables
     process.env.API = 'http://localhost:' + serverPort;
     process.env.AUTH_SERVER = 'http://localhost:' + serverPort;
     process.env.CF_CLIENT_ID = 'abacus-cf-bridge';
@@ -390,6 +390,32 @@ const test = (secured) => {
     fn(doneCallback);
   };
 
+  const waitForStartAndPoll = (component, port, done) => {
+    // Wait for bridge to start
+    let startWaitTime = Date.now();
+    request.waitFor('http://localhost::p/v1/cf/:component',
+      { component: component, p: port },
+      startTimeout, (err, uri, opts) => {
+        // Failed to ping component before timing out
+        if (err) throw err;
+
+        // Check report
+        request.get(uri, {
+          headers: {
+            authorization: secured ? 'bearer ' + signedSystemToken : ''
+          }
+        }, (err, response) => {
+          expect(err).to.equal(undefined);
+          expect(response.statusCode).to.equal(200);
+
+          poll(checkReport, (error) => {
+            done(error);
+          }, totalTimeout - (Date.now() - startWaitTime), 1000);
+        });
+      }
+    );
+  };
+
   context('when submitting out of slack usage', () => {
     beforeEach(() => {
       appUsageEvents = [
@@ -461,27 +487,7 @@ const test = (secured) => {
     it('usage is rejected', function(done) {
       this.timeout(totalTimeout + 2000);
 
-      // Wait for bridge to start
-      const startWaitTime = Date.now();
-      request.waitFor('http://localhost::p/v1/cf/bridge', { p: 9500 },
-        startTimeout, (err, uri, opts) => {
-          // Failed to ping bridge before timing out
-          if (err) throw err;
-
-          // Check report
-          request.get(uri, {
-            headers: {
-              authorization: secured ? 'bearer ' + signedSystemToken : ''
-            }
-          }, (err, response) => {
-            expect(err).to.equal(undefined);
-            expect(response.statusCode).to.equal(200);
-
-            poll(checkReport, done,
-              totalTimeout - (Date.now() - startWaitTime), 1000);
-          });
-        }
-      );
+      waitForStartAndPoll('bridge', 9500, done);
     });
   });
 
