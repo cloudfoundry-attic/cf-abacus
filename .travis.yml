@@ -22,10 +22,8 @@ before_install:
 install: echo "install"
 
 script:
-  - npm run prepare
-  - cd lib/utils/dataflow
   - export DEBUG=e-abacus*,abacus-dataflow,abacus-mongoclient
-  - npm install && npm run babel && npm run lint && npm test
+  - npm run cibuild
 
 after_script:
   - npm run coveralls
