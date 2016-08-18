@@ -22,7 +22,6 @@ before_install:
 install: echo "install"
 
 script:
-  - export DEBUG=e-abacus*,abacus-dataflow,abacus-mongoclient
   - npm run cibuild
 
 after_script:
