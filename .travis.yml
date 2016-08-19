@@ -1,23 +1,17 @@
+language: node_js
+
 matrix:
   include:
-    - os: "linux"
-      env: NODE_VERSION="6.2.0" CI_TEST="true" CF_TEST="false"
-    - os: "linux"
-      env: NODE_VERSION="6.2.0" CI_TEST="true" CF_TEST="false" JOBS=1 DBCLIENT=abacus-couchclient DB=http://localhost:5984
+    - node_js: "6.2.0"
+      env: CI_TEST="true" CF_TEST="false"
+    - node_js: "6.2.0"
+      env: CI_TEST="true" CF_TEST="false" JOBS=1 DBCLIENT=abacus-couchclient DB=http://localhost:5984
       services:
         - couchdb
-    - os: "linux"
-      env: NODE_VERSION="6.2.0" CI_TEST="true" CF_TEST="false" JOBS=1 DBCLIENT=abacus-mongoclient DB=mongodb://localhost:27017
+    - node_js: "6.2.0"
+      env: CI_TEST="true" CF_TEST="false" JOBS=1 DBCLIENT=abacus-mongoclient DB=mongodb://localhost:27017
       services:
         - mongodb
-    # - os: "linux"
-    #   env: NODE_VERSION="6.2.0" CI_TEST="false" CF_TEST="true"
-
-before_install:
-  - rm -rf ~/.nvm
-  - git clone https://github.com/creationix/nvm.git ~/.nvm
-  -  source ~/.nvm/nvm.sh
-  -  nvm install $NODE_VERSION
 
 install: echo "install"
 
@@ -36,4 +30,3 @@ notifications:
     - chat.freenode.net#cf-abacus
   slack:
     secure: ZanKYSBhluB1KMzd003+7PiASbgKKwNKl3Ucc4B3wuFWdpdNp/K4/AxPnjGTIRvFtyMtvHf+392bURxBWQMypyW+FMQXGOnJD+bVrVhzxAVc10smkT59NcemWry4gwHQlPF22MB+EoYqnsqXLFltMalEzRC+sjiXED7ZguUD7SJquRmydIlBHkU8hqbGwLg78oNS9WarhvikjsrKchNfSLe3pOMCspgpNQ4KAY+KdrUB4hAqlaul+WdUz3ivaazQZXtV4Rq9i9ADHh7WgyF1SYSWrqAQXuiM5KnwaD/m3lL01F9wxfK/NbuPH6gYg1XZhxhGBw4uT+udWZ3YFQy/G3YRu8URx1er+evI8JMhjjO+BIO1K3geEQ1Kmu1FdCeuhtbWVo0fokLkQGISVc0llgjIC1PR8NMMtDHTvUiK44F8GRONnT9tmKTyJBfRCwD23NV6oWPH2LL6uCya4CmveaKSz1G3IjulGGCdxCkIMjraw/J7fkg8INc9lhEl8Uim7pIJkDjuNp8zf4AGOTUpX1O9RMMvQkWqmpkf4Gug/JFcMAiX1WEQ6/5M3Q3HBLW3fe2DEp1H+A9RakA/QMGIytFm9oAnUGhad20wmvPlAaWxY+UpLHH/VNx7X5k/DhygSKnORuHLuR821LXCuLROEh5dtxdZckxXWFJH11xXhlw=
-
