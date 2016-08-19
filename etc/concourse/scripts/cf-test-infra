@@ -29,6 +29,7 @@ for line in $(dig +short api.$CF_API); do
 done
 group+="]"
 echo "${group/,]/]}" > abacus-sec-group.json
+cf delete-security-group -f abacus
 cf create-security-group abacus abacus-sec-group.json
 cf bind-security-group abacus $CF_ORG $CF_SPACE
 
