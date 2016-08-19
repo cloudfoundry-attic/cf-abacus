@@ -25,7 +25,8 @@ var runCLI = function() {
     '--presets', 'es2015', 
     /* '--auxiliary-comment-before', 'istanbul ignore next', */
     '--source-maps', 'inline',
-    '--out-dir', 'lib', 'src'
+    '--out-dir', 'lib', 'src',
+    '--copy-files'
   ].concat(commander.dir ? [commander.dir] : []);
   var babel = cp.spawn(path.resolve(
     __dirname, '../node_modules/.bin/babel'), args, {
