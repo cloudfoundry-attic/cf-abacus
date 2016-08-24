@@ -318,7 +318,7 @@ const test = (secured) => {
       if(isWithinWindow(submittime, reporttime, timeWindows[windowType])) {
         const windowUsage = usage.windows[timeWindows[windowType]];
         if(level !== 'resource')
-        expect(windowUsage[0].quantity.consuming).to.equal(expectedConsuming);
+          expect(windowUsage[0].quantity.consuming).to.equal(expectedConsuming);
         expect(windowUsage[0].charge).to.be.above(0);
       }
   };
