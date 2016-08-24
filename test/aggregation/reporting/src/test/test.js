@@ -442,6 +442,21 @@ describe('abacus-usage-reporting-itest', () => {
           resource_instance_id: 'rid',
           start: end + u,
           end: end + u,
+          resource_id: 'test-resource',
+          plan_id: 'basic',
+          pricing_country: 'USA',
+          prices: {
+            metrics: [
+              { name: 'storage',
+                price: 1 },
+              { name: 'thousand_light_api_calls',
+                price: 0.03 },
+              { name: 'heavy_api_calls',
+                price: 0.15 },
+              { name: 'memory',
+                price: 0.00014 }
+            ]
+          },
           consumer_id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
           resources: [{
             resource_id: 'test-resource',
@@ -556,6 +571,21 @@ describe('abacus-usage-reporting-itest', () => {
       account_id: '1234',
       resource_instance_id: 'rid',
       consumer_id: 'cid',
+      resource_id: 'test-resource',
+      plan_id: 'basic',
+      pricing_country: 'USA',
+      prices: {
+        metrics: [
+          { name: 'storage',
+            price: 1 },
+          { name: 'thousand_light_api_calls',
+            price: 0.03 },
+          { name: 'heavy_api_calls',
+            price: 0.15 },
+          { name: 'memory',
+            price: 0.00014 }
+        ]
+      },
       start: end + u,
       end: end + u,
       processed: end + u,
@@ -609,11 +639,12 @@ describe('abacus-usage-reporting-itest', () => {
             });
           });
           return omit(c, 'resource_instance_id', 'organization_id', 'start',
-            'end');
+            'end', 'resource_id', 'plan_id', 'prices', 'pricing_country');
         });
         return s;
       });
-      return omit(report, 'resource_instance_id', 'consumer_id');
+      return omit(report, 'resource_instance_id', 'consumer_id',
+        'resource_id', 'plan_id', 'prices', 'pricing_country');
     };
 
 

@@ -26,7 +26,7 @@ jobs:
             image_resource:
               type: docker-image
               source:
-                repository: godofcontainers/ubuntu-14.04.4-cf
+                repository: godofcontainers/ubuntu-14.04-cf
                 tag: 'latest'
             inputs:
               - name: landscape
@@ -39,6 +39,9 @@ jobs:
               CF_ORG: {{cf-org}}
               CF_SPACE: {{cf-space}}
               CF_DOMAIN: {{cf-domain}}
+              CREATE_DB_SERVICE: {{create-db-service}}
+              DB_SERVICE_NAME: {{db-service-name}}
+              DB_PLAN_NAME: {{db-plan-name}}
               UAA_ADMIN: {{uaa-admin}}
               UAA_SECRET: {{uaa-secret}}
               SYSTEM_CLIENT_ID: {{system-client-id}}
@@ -53,6 +56,7 @@ jobs:
               OBJECT_STORAGE_CLIENT_SECRET: {{object-storage-client-secret}}
               HYSTRIX_CLIENT_ID: {{hystrix-client-id}}
               HYSTRIX_CLIENT_SECRET: {{hystrix-client-secret}}
+              PURGE_APP_USAGE_EVENTS: {{purge-app-usage-events}}
             run:
               path: landscape/cf-abacus/etc/concourse/scripts/cf-deploy-infra
       - task: deploy-abacus
@@ -76,10 +80,8 @@ jobs:
             CF_ORG: {{cf-org}}
             CF_SPACE: {{cf-space}}
             CF_DOMAIN: {{cf-domain}}
+            BIND_DB_SERVICE: {{bind-db-service}}
             ABACUS_PROFILE: {{abacus-profile}}
-            CREATE_DB_SERVICE: {{create-db-service}}
-            DB_SERVICE_NAME: {{db-service-name}}
-            DB_PLAN_NAME: {{db-plan-name}}
             # Use latest node.js buildpack to enable 5.11.1
             BUILDPACK: https://github.com/cloudfoundry/nodejs-buildpack.git
             # Save file handlers and offload CF stagers

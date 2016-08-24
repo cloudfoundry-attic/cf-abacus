@@ -313,20 +313,12 @@ const test = (secured) => {
     delete process.env.GUID_MIN_AGE;
   });
 
-<<<<<<< HEAD
   const checkAllTimeWindows = (usage, reporttime, level) => {
     for (const windowType in timeWindows)
       if(isWithinWindow(submittime, reporttime, timeWindows[windowType])) {
         const windowUsage = usage.windows[timeWindows[windowType]];
         if(level !== 'resource')
           expect(windowUsage[0].quantity.consuming).to.equal(expectedConsuming);
-=======
-  const checkAllTimeWindows = (usage, reporttime) => {
-    for (const windowType in timeWindows)
-      if(isWithinWindow(submittime, reporttime, timeWindows[windowType])) {
-        const windowUsage = usage.windows[timeWindows[windowType]];
-        expect(windowUsage[0].quantity.consuming).to.equal(expectedConsuming);
->>>>>>> upstream/master
         expect(windowUsage[0].charge).to.be.above(0);
       }
   };
@@ -356,11 +348,7 @@ const test = (secured) => {
           checkAllTimeWindows(planUsage, reporttime);
 
           const aggregatedUsage = resources[0].aggregated_usage[0];
-<<<<<<< HEAD
           checkAllTimeWindows(aggregatedUsage, reporttime, 'resource');
-=======
-          checkAllTimeWindows(aggregatedUsage, reporttime);
->>>>>>> upstream/master
 
           resultDebug('All usage report checks are successful for: %s',
             JSON.stringify(response.body, null, 2));

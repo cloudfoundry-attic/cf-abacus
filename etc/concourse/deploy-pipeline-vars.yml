@@ -25,8 +25,17 @@ cf-admin-password: admin
 # Abacus profile (default, small, medium, large)
 abacus-profile: large
 
-# Create DB service instance or use hard-coded DB URL
+# (Re-)create DB service instance or use already provisioned DB
+# WARNING: Setting this to "true" will destroy your DB
 create-db-service: true
+
+# Bind to a service instance or use hard-coded URL
+# Note: If you want to connect to already provisioned DB you should use "false" here
+bind-db-service: true
+
+# Purge app usage events to start a new billing epoch
+# WARNING: Purging events requires you to drop your DB content
+purge-app-usage-events: false
 
 # DB service (Couch or Mongo) to use for storing Abacus data
 # Note: Not used if create-db-service is false, but still required

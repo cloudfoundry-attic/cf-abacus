@@ -80,14 +80,12 @@ if [ $abacus_login = 0 ]; then
   echo "Waiting for db service instance deletion ..."
   until cf service db | grep -q "Service instance db not found"
   do
-    sleep 2s
+    sleep 3s
   done
   echo "Done."
 fi
 
-
-
-echo "Logging to $CF_API ..."
+echo "Logging to $CF_API as admin ..."
 cf api --skip-ssl-validation https://api.$CF_API
 echo "" | cf login -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD
 
@@ -103,6 +101,21 @@ cf create-user $CF_USER $CF_PASSWORD
 cf set-org-role $CF_USER $CF_ORG OrgManager
 cf set-space-role $CF_USER $CF_ORG $CF_SPACE SpaceManager
 cf set-space-role $CF_USER $CF_ORG $CF_SPACE SpaceDeveloper
+
+echo "Logging to $CF_API as abacus user ..."
+cf login -a https://api.$CF_API -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE --skip-ssl-validation
+
+if [ "$CREATE_DB_SERVICE" == "true" ]; then
+  echo "Creating new DB service instance ..."
+  cf create-service "$DB_SERVICE_NAME" "$DB_PLAN_NAME" db
+  until cf service db | grep -q 'Status: create succeeded\|Status: create failed'
+  do
+    sleep 3s
+  done
+  echo "DB creation finished."
+else
+  echo "Using DB URL provided in abacus-config !"
+fi
 
 echo "Logging to UAA ..."
 uaac target uaa.$CF_API
@@ -123,6 +136,22 @@ uaac client add "$BRIDGE_CLIENT_ID" --name "$BRIDGE_CLIENT_ID" --authorized_gran
 uaac client add "$CONTAINER_CLIENT_ID" --name "$CONTAINER_CLIENT_ID" --authorized_grant_types client_credentials --authorities abacus.usage.linux-container.write,abacus.usage.linux-container.read --scope abacus.usage.linux-container.write,abacus.usage.linux-container.read --secret "$CONTAINER_CLIENT_SECRET"
 uaac client add "$OBJECT_STORAGE_CLIENT_ID" --name "$OBJECT_STORAGE_CLIENT_ID" --authorized_grant_types client_credentials --authorities abacus.usage.object-storage.write,abacus.usage.object-storage.read --scope abacus.usage.object-storage.write,abacus.usage.object-storage.read --secret "$OBJECT_STORAGE_CLIENT_SECRET"
 uaac client add "$HYSTRIX_CLIENT_ID" --name "$HYSTRIX_CLIENT_ID" --authorized_grant_types client_credentials --authorities abacus.system.read --scope abacus.system.read --secret "$HYSTRIX_CLIENT_SECRET"
+
+if [ "$PURGE_APP_USAGE_EVENTS" == "true" ]; then
+  echo "Purging app-usage events ..."
+  TOKEN=$(curl --user $BRIDGE_CLIENT_ID:$BRIDGE_CLIENT_SECRET -s "https://uaa.$CF_API/oauth/token?grant_type=client_credentials" | jq -r .access_token)
+  if [ "$TOKEN" == "null" -o -z "$TOKEN" ]; then
+    echo "Cannot obtain token for access to CF API !"
+    exit 1
+  fi
+  RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Authorization: bearer $TOKEN" -i "https://api.$CF_API/v2/app_usage_events/destructively_purge_all_and_reseed_started_apps")
+  if [ "$RESPONSE_CODE" == "204" ]; then
+    echo "App events purged successfully"
+  else
+    echo "Purging failed with reposnse code: $RESPONSE_CODE"
+    exit 1
+  fi
+fi
 
 echo ""
 echo "Finished setting up infrastructure."

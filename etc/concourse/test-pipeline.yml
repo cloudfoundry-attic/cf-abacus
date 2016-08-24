@@ -247,7 +247,7 @@ jobs:
           image_resource:
             type: docker-image
             source:
-              repository: godofcontainers/ubuntu-14.04.4-cf
+              repository: godofcontainers/ubuntu-14.04-cf
               tag: 'latest'
           inputs:
             - name: abacus

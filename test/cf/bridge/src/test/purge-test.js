@@ -318,12 +318,8 @@ const test = (secured) => {
     for (const windowType in timeWindows)
       if(isWithinWindow(submittime, reporttime, timeWindows[windowType])) {
         const windowUsage = usage.windows[timeWindows[windowType]];
-<<<<<<< HEAD:test/cf/bridge/src/test/purge-test.js
         if(level !== 'resource')
           expect(windowUsage[0].quantity.consuming).to.equal(expectedConsuming);
-=======
-        expect(windowUsage[0].quantity.consuming).to.equal(expectedConsuming);
->>>>>>> upstream/master:test/cf/bridge/src/test/purge-test.js
         expect(windowUsage[0].charge).to.be.above(0);
       }
   };
