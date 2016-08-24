@@ -2,21 +2,26 @@
 
 const commander = require('commander');
 const cp = require('child_process');
-const _ = require('underscore');
-const util = require('util');
 const jwt = require('jsonwebtoken');
+const util = require('util');
 
-const request = require('abacus-request');
-const router = require('abacus-router');
-const express = require('abacus-express');
-const dbclient = require('abacus-dbclient');
-
+const _ = require('underscore');
 const clone = _.clone;
 
+const dbclient = require('abacus-dbclient');
+const express = require('abacus-express');
+const request = require('abacus-request');
+const router = require('abacus-router');
+
 // Setup the debug log
-const debug = require('abacus-debug')('abacus-cf-bridge-itest');
-const requestDebug = require('abacus-debug')('abacus-cf-bridge-itest-response');
-const responseDebug = require('abacus-debug')('abacus-cf-bridge-itest-result');
+const debug =
+  require('abacus-debug')('abacus-cf-bridge-itest');
+const responseDebug =
+  require('abacus-debug')('abacus-cf-bridge-itest-response');
+const resultDebug =
+  require('abacus-debug')('abacus-cf-bridge-itest-result');
+const oAuthDebug =
+  require('abacus-debug')('abacus-cf-bridge-itest-oauth');
 
 // Module directory
 const moduleDir = (module) => {
@@ -137,33 +142,17 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
   expiresIn: 43200
 });
 
-const sixDaysInMilliseconds = 6 * 24 * 60 * 60 * 1000;
 const twentySecondsInMilliseconds = 20 * 1000;
 
 const test = (secured) => {
   const submittime = Date.now();
+
   let server;
+  let serverPort;
+  let appUsageEvents;
+  let expectedConsuming;
 
   beforeEach((done) => {
-    // Enable/disable the oAuth token authorization
-    process.env.SECURED = secured ? 'true' : 'false';
-    debug('Set SECURED = %s', process.env.SECURED);
-
-    // Security setup
-    process.env.API = 'http://localhost:4321';
-    process.env.CF_CLIENT_ID = 'abacus-cf-bridge';
-    process.env.CF_CLIENT_SECRET = 'secret';
-    process.env.CLIENT_ID = 'abacus-linux-container';
-    process.env.CLIENT_SECRET = 'secret';
-    process.env.JWTKEY = tokenSecret;
-    process.env.JWTALGO = tokenAlgorithm;
-
-    // Set slack window to 5 days
-    process.env.SLACK = '5D';
-
-    // Disable wait for correct app-event ordering
-    process.env.GUID_MIN_AGE = twentySecondsInMilliseconds;
-
     const start = (module) => {
       debug('Starting %s in directory %s', module, moduleDir(module));
       const c = cp.spawn('npm', ['run', 'start'], {
@@ -181,6 +170,7 @@ const test = (secured) => {
 
     const app = express();
     const routes = router();
+
     routes.get('/v2/app_usage_events', (request, response) => {
       if (request.url.indexOf('after_guid') !== -1) {
         debug('Returning empty list of usage events');
@@ -195,97 +185,61 @@ const test = (secured) => {
       }
 
       response.status(200).send({
-        total_results: 2,
+        total_results: appUsageEvents.length,
         total_pages: 1,
         prev_url: null,
         next_url: null,
-        resources: [
-          // Usage that will be rejected because of the slack window
-          {
-            metadata: {
-              guid: '904419c3',
-              url: '/v2/app_usage_events/904419c3',
-              created_at:
-                new Date(submittime - sixDaysInMilliseconds).toISOString()
-            },
-            entity: {
-              state: 'STARTED',
-              previous_state: 'STOPPED',
-              memory_in_mb_per_instance: 256,
-              previous_memory_in_mb_per_instance: 0,
-              instance_count: 1,
-              previous_instance_count: 0,
-              app_guid: '35c4ff2e',
-              app_name: 'app',
-              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
-              space_name: 'diego',
-              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
-              buildpack_guid: null,
-              buildpack_name: null,
-              package_state: 'PENDING',
-              previous_package_state: 'PENDING',
-              parent_app_guid: null,
-              parent_app_name: null,
-              process_type: 'web'
-            }
-          },
-          // Usage that has to be processed by the pipeline
-          {
-            metadata: {
-              guid: '904419c4',
-              url: '/v2/app_usage_events/904419c4',
-              created_at:
-                new Date(submittime - twentySecondsInMilliseconds).toISOString()
-            },
-            entity: {
-              state: 'STARTED',
-              previous_state: 'STOPPED',
-              memory_in_mb_per_instance: 512,
-              previous_memory_in_mb_per_instance: 0,
-              instance_count: 1,
-              previous_instance_count: 0,
-              app_guid: '35c4ff2f',
-              app_name: 'app',
-              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
-              space_name: 'diego',
-              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
-              buildpack_guid: null,
-              buildpack_name: null,
-              package_state: 'PENDING',
-              previous_package_state: 'PENDING',
-              parent_app_guid: null,
-              parent_app_name: null,
-              process_type: 'web'
-            }
-          }
-        ]
+        resources: appUsageEvents
       });
     });
-    routes.get('/v2/info',
-      (request, response) => {
-        response.status(200).send({
-          token_endpoint: 'http://localhost:4321'
-        });
+    routes.get('/v2/info', (request, response) => {
+      oAuthDebug('Requested API info');
+      response.status(200).send({
+        token_endpoint: 'http://localhost:' + serverPort
       });
-    routes.get('/oauth/token',
-      (request, response) => {
-        response.status(200).send({
-          token_type: 'bearer',
-          access_token: signedResourceToken,
-          expires_in: 100000,
-          scope: 'abacus.usage.linux-container.read ' +
-          'abacus.usage.linux-container.write',
-          jti: '254abca5-1c25-40c5-99d7-2cc641791517'
-        });
+    });
+    routes.get('/oauth/token', (request, response) => {
+      oAuthDebug('Requested oAuth token with %j', request.query);
+      const scope = request.query.scope;
+      const containerToken = scope && scope.indexOf('container') > 0;
+      response.status(200).send({
+        token_type: 'bearer',
+        access_token: containerToken ? signedResourceToken : signedSystemToken,
+        expires_in: 100000,
+        scope: scope ? scope.split(' ') : '',
+        authorities: scope ? scope.split(' ') : '',
+        jti: '254abca5-1c25-40c5-99d7-2cc641791517'
       });
+    });
     app.use(routes);
     app.use(router.batch(routes));
-    server = app.listen(4321);
+    server = app.listen(0); // Listen on an ephemeral port
+    serverPort = server.address().port;
+    debug('Test resources server listening on port %d', serverPort);
+
+    // Enable/disable the oAuth token authorization
+    process.env.SECURED = secured ? 'true' : 'false';
+    debug('Set SECURED = %s', process.env.SECURED);
+
+    // Security setup
+    process.env.API = 'http://localhost:' + serverPort;
+    process.env.AUTH_SERVER = 'http://localhost:' + serverPort;
+    process.env.CF_CLIENT_ID = 'abacus-cf-bridge';
+    process.env.CF_CLIENT_SECRET = 'secret';
+    process.env.CLIENT_ID = 'abacus-linux-container';
+    process.env.CLIENT_SECRET = 'secret';
+    process.env.JWTKEY = tokenSecret;
+    process.env.JWTALGO = tokenAlgorithm;
+
+    // Set slack window to 5 days
+    process.env.SLACK = '5D';
+
+    // Disable wait for correct app-event ordering
+    process.env.GUID_MIN_AGE = twentySecondsInMilliseconds;
 
     // Start all Abacus services
     const services = () => {
       start('abacus-eureka-plugin');
-      start('abacus-authserver-plugin');
       start('abacus-provisioning-plugin');
       start('abacus-account-plugin');
       start('abacus-usage-collector');
@@ -304,14 +258,14 @@ const test = (secured) => {
       services();
     }
     else
-    // Delete test dbs on the configured db server
+      // Delete test dbs on the configured db server
       dbclient.drop(process.env.DB, /^abacus-/, () => {
         services();
       });
   });
 
   afterEach((done) => {
-    let counter = 11;
+    let counter = 10;
     const finishCb = (module, code) => {
       counter--;
       debug('Module %s exited with code %d. Left %d modules',
@@ -342,13 +296,14 @@ const test = (secured) => {
     stop('abacus-usage-collector', finishCb);
     stop('abacus-account-plugin', finishCb);
     stop('abacus-provisioning-plugin', finishCb);
-    stop('abacus-authserver-plugin', finishCb);
     stop('abacus-eureka-plugin', finishCb);
     stop('abacus-pouchserver', finishCb);
 
     server.close();
 
+    delete process.env.SECURED;
     delete process.env.API;
+    delete process.env.AUTH_SERVER;
     delete process.env.CF_CLIENT_ID;
     delete process.env.CF_CLIENT_SECRET;
     delete process.env.CLIENT_ID;
@@ -364,7 +319,7 @@ const test = (secured) => {
       if(isWithinWindow(submittime, reporttime, timeWindows[windowType])) {
         const windowUsage = usage.windows[timeWindows[windowType]];
         if(level !== 'resource')
-          expect(windowUsage[0].quantity.consuming).to.equal(0.5);
+          expect(windowUsage[0].quantity.consuming).to.equal(expectedConsuming);
         expect(windowUsage[0].charge).to.be.above(0);
       }
   };
@@ -396,7 +351,7 @@ const test = (secured) => {
           const aggregatedUsage = resources[0].aggregated_usage[0];
           checkAllTimeWindows(aggregatedUsage, reporttime, 'resource');
 
-          responseDebug('All usage report checks are successful for: %s',
+          resultDebug('All usage report checks are successful for: %s',
             JSON.stringify(response.body, null, 2));
 
           cb();
@@ -405,7 +360,7 @@ const test = (secured) => {
           const message = util.format('Check failed with %s.\n' +
             'Usage report:\n', e.stack,
             response ? JSON.stringify(response.body, null, 2) : undefined);
-          requestDebug(message);
+          responseDebug(message);
           cb(new Error(message), e);
         }
       });
@@ -436,14 +391,13 @@ const test = (secured) => {
     fn(doneCallback);
   };
 
-  it('submits runtime usage to usage collector', function(done) {
-    this.timeout(totalTimeout + 2000);
-
+  const waitForStartAndPoll = (component, port, done) => {
     // Wait for bridge to start
-    const startWaitTime = Date.now();
-    request.waitFor('http://localhost::p/v1/cf/bridge', { p: 9500 },
+    let startWaitTime = Date.now();
+    request.waitFor('http://localhost::p/v1/cf/:component',
+      { component: component, p: port },
       startTimeout, (err, uri, opts) => {
-        // Failed to ping bridge before timing out
+        // Failed to ping component before timing out
         if (err) throw err;
 
         // Check report
@@ -455,14 +409,64 @@ const test = (secured) => {
           expect(err).to.equal(undefined);
           expect(response.statusCode).to.equal(200);
 
-          poll(checkReport, done,
-            totalTimeout - (Date.now() - startWaitTime), 1000);
+          poll(checkReport, (error) => {
+            done(error);
+          }, totalTimeout - (Date.now() - startWaitTime), 1000);
         });
       }
     );
+  };
+
+  context('purged event stream', () => {
+    beforeEach(() => {
+      appUsageEvents = [
+        {
+          metadata: {
+            guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
+            url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
+            created_at: new Date(submittime -
+              twentySecondsInMilliseconds).toISOString()
+          },
+          entity: {
+            state: 'STARTED',
+            previous_state: 'STARTED',
+            memory_in_mb_per_instance: 1024,
+            previous_memory_in_mb_per_instance: 1024,
+            instance_count: 3,
+            previous_instance_count: 3,
+            app_guid: '35c4ff2f',
+            app_name: 'app',
+            space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+            space_name: 'abacus',
+            org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+            buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
+            buildpack_name: 'staticfile_buildpack',
+            package_state: 'STAGED',
+            previous_package_state: 'STAGED',
+            parent_app_guid: null,
+            parent_app_name: null,
+            process_type: 'web',
+            task_name: null,
+            task_guid: null
+          }
+        }
+      ];
+
+      // purge event is similar to scale out event,
+      // but with the same current and similar values
+      //
+      // purge event: 3 x 1 GB = 3GB
+      expectedConsuming = 3;
+    });
+
+    it('submits usage and gets expected report back', function(done) {
+      this.timeout(totalTimeout + 2000);
+
+      waitForStartAndPoll('bridge', 9500, done);
+    });
   });
 };
 
-describe('abacus-cf-bridge-itest without oAuth', () => test(false));
+describe('abacus-cf-bridge purge-test without oAuth', () => test(false));
 
-describe('abacus-cf-bridge-itest with oAuth', () => test(true));
+describe('abacus-cf-bridge purge-test with oAuth', () => test(true));

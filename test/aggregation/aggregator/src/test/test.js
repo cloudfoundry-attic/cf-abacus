@@ -393,6 +393,21 @@ describe('abacus-usage-aggregator-itest', () => {
       // Create resource aggregations
       return create(consumers, (i) => ({
         consumer_id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
+        resource_id: 'test-resource',
+        plan_id: pid(ri),
+        pricing_country: 'USA',
+        prices: {
+          metrics: [
+            { name: 'storage',
+              price: pid(ri) === 'basic' ? 1 : 0.5 },
+            { name: 'thousand_light_api_calls',
+              price: pid(ri) === 'basic' ? 0.03 : 0.04 },
+            { name: 'heavy_api_calls',
+              price: pid(ri) === 'basic' ? 0.15 : 0.18 },
+            { name: 'memory',
+              price: pid(ri) === 'basic' ? 0.00014 : 0.00028 }
+          ]
+        },
         resources: [{
           resource_id: 'test-resource',
           plans: scpagg(o, ri, u, s, i, cid(o, i === 0 ? s : s === 0 ? 4 : 5))
@@ -483,6 +498,21 @@ describe('abacus-usage-aggregator-itest', () => {
     const aggregatedTemplate = (o, ri, u) => ({
       organization_id: oid(o),
       account_id: '1234',
+      resource_id: 'test-resource',
+      plan_id: pid(ri),
+      pricing_country: 'USA',
+      prices: {
+        metrics: [
+          { name: 'storage',
+            price: pid(ri) === 'basic' ? 1 : 0.5 },
+          { name: 'thousand_light_api_calls',
+            price: pid(ri) === 'basic' ? 0.03 : 0.04 },
+          { name: 'heavy_api_calls',
+            price: pid(ri) === 'basic' ? 0.15 : 0.18 },
+          { name: 'memory',
+            price: pid(ri) === 'basic' ? 0.00014 : 0.00028 }
+        ]
+      },
       start: end + u,
       end: end + u,
       resources: [{

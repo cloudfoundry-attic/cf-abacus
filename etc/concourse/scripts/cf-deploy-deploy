@@ -59,18 +59,6 @@ echo "Mapping routes ..."
 mapRoutes abacus-usage-collector 6
 mapRoutes abacus-usage-reporting 6
 
-if [ "$CREATE_DB_SERVICE" == "true" ]; then
-  echo "Creating new DB service instance ..."
-  cf create-service "$DB_SERVICE_NAME" "$DB_PLAN_NAME" db
-  until cf service db | grep -q 'Status: create succeeded\|Status: create failed'
-  do
-    sleep 2s
-  done
-  echo "DB creation finished."
-else
-  echo "Using DB URL provided in abacus-config !"
-fi
-
 getApps
 
 #
@@ -78,11 +66,13 @@ getApps
 #
 unamestr=`uname`
 
-echo "Binding services ..."
-if [[ "$unamestr" == 'Linux' ]]; then
-  echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf bind-service {} db
-else
-  echo ${APPS[@]} | xargs -n1 | xargs -P 5 -n 1 -J {} cf bind-service {} db
+if [ "$BIND_DB_SERVICE" == "true" ]; then
+  echo "Binding services ..."
+  if [[ "$unamestr" == 'Linux' ]]; then
+    echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf bind-service {} db
+  else
+    echo ${APPS[@]} | xargs -n1 | xargs -P 5 -n 1 -J {} cf bind-service {} db
+  fi
 fi
 
 echo "Starting applications ..."

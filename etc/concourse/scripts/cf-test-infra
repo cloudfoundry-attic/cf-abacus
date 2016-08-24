@@ -23,8 +23,13 @@ cf set-space-role $CF_USER $CF_ORG $CF_SPACE SpaceManager
 cf set-space-role $CF_USER $CF_ORG $CF_SPACE SpaceDeveloper
 
 echo "Creating security group for CF API access ..."
-API_IP=$(dig +short api.$CF_API)
-echo "[{\"protocol\":\"tcp\",\"destination\":\"$API_IP\",\"ports\":\"443\"}]" > abacus-sec-group.json
+group="["
+for line in $(dig +short api.$CF_API); do
+  group+="{\"protocol\":\"tcp\",\"destination\":\"$line\",\"ports\":\"80,443\"},"
+done
+group+="]"
+echo "${group/,]/]}" > abacus-sec-group.json
+cf delete-security-group -f abacus
 cf create-security-group abacus abacus-sec-group.json
 cf bind-security-group abacus $CF_ORG $CF_SPACE
 
