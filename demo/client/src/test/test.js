@@ -207,13 +207,13 @@ describe('abacus-demo-client', function() {
         windows: buildWindow(46.09),
         aggregated_usage: [{
           metric: 'storage',
-          windows: buildWindow(1, undefined, 1)
+          windows: buildWindow(1)
         }, {
           metric: 'thousand_light_api_calls',
-          windows: buildWindow(0.09, undefined, 3)
+          windows: buildWindow(0.09)
         }, {
           metric: 'heavy_api_calls',
-          windows: buildWindow(45, undefined, 300)
+          windows: buildWindow(45)
         }],
         plans: [{
           plan_id: 'basic/basic-object-storage/' +
@@ -242,13 +242,13 @@ describe('abacus-demo-client', function() {
           windows: buildWindow(46.09),
           aggregated_usage: [{
             metric: 'storage',
-            windows: buildWindow(1, undefined, 1)
+            windows: buildWindow(1)
           }, {
             metric: 'thousand_light_api_calls',
-            windows: buildWindow(0.09, undefined, 3)
+            windows: buildWindow(0.09)
           }, {
             metric: 'heavy_api_calls',
-            windows: buildWindow(45, undefined, 300)
+            windows: buildWindow(45)
           }],
           plans: [{
             plan_id: 'basic/basic-object-storage/' +
@@ -277,13 +277,13 @@ describe('abacus-demo-client', function() {
             windows: buildWindow(46.09),
             aggregated_usage: [{
               metric: 'storage',
-              windows: buildWindow(1, undefined, 1)
+              windows: buildWindow(1)
             }, {
               metric: 'thousand_light_api_calls',
-              windows: buildWindow(0.09, undefined, 3)
+              windows: buildWindow(0.09)
             }, {
               metric: 'heavy_api_calls',
-              windows: buildWindow(45, undefined, 300)
+              windows: buildWindow(45)
             }],
             plans: [{
               plan_id: 'basic/basic-object-storage/' +
@@ -334,7 +334,8 @@ describe('abacus-demo-client', function() {
     // report for our test resource
     const processed = (val) => {
       try {
-        return val.body.resources[0].aggregated_usage[1].windows[4][0].quantity;
+        return val.body.resources[0].plans[0].
+          aggregated_usage[1].windows[4][0].quantity;
       }
       catch (e) {
         // The response doesn't contain a valid report

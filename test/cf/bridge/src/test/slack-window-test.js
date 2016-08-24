@@ -314,6 +314,20 @@ const test = (secured) => {
     delete process.env.GUID_MIN_AGE;
   });
 
+<<<<<<< HEAD:test/cf/renewer/src/test/test.js
+  const checkAllTimeWindows = (usage, level) => {
+    const windowUsage = usage.windows[timeWindows.month];
+    let found;
+
+    for (const windowEntry of windowUsage) {
+      found = windowEntry && (level !== 'resource' ?
+        windowEntry.quantity.consuming === 0.5 : true) &&
+        windowEntry.charge > 0;
+      if (found)
+        break;
+    }
+    expect(found).to.equal(true);
+=======
   const checkAllTimeWindows = (usage, reporttime) => {
     for (const windowType in timeWindows)
       if(isWithinWindow(submittime, reporttime, timeWindows[windowType])) {
@@ -321,6 +335,7 @@ const test = (secured) => {
         expect(windowUsage[0].quantity.consuming).to.equal(expectedConsuming);
         expect(windowUsage[0].charge).to.be.above(0);
       }
+>>>>>>> upstream/master:test/cf/bridge/src/test/slack-window-test.js
   };
 
   const checkReport = (cb) => {
@@ -348,7 +363,7 @@ const test = (secured) => {
           checkAllTimeWindows(planUsage, reporttime);
 
           const aggregatedUsage = resources[0].aggregated_usage[0];
-          checkAllTimeWindows(aggregatedUsage, reporttime);
+          checkAllTimeWindows(aggregatedUsage, 'resource');
 
           resultDebug('All usage report checks are successful for: %s',
             JSON.stringify(response.body, null, 2));
