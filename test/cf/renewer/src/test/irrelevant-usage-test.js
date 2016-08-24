@@ -303,19 +303,24 @@ const test = (secured) => {
     delete process.env.RETRY_INTERVAL;
   });
 
-  const checkTwoMonthsAgoWindows = (windowName, usage) => {
+  const checkTwoMonthsAgoWindows = (windowName, usage, level) => {
     const windowUsage = usage.windows[timeWindows.month];
     const previousMonth = windowUsage[2];
-    expect(previousMonth).to.contain.all.keys('quantity', 'charge');
-    debug('%s month window; Expected: consuming=%d, charge>0; ' +
-      'Actual: consuming=%d, charge=%d', windowName,
-      expectedConsuming, previousMonth.quantity.consuming,
-      previousMonth.charge.charge);
-    expect(previousMonth.quantity.consuming).to.equal(expectedConsuming);
+    if (level !== 'resource') {
+      expect(previousMonth).to.contain.all.keys('quantity', 'charge');
+      debug('%s month window; Expected: consuming=%d, charge>0; ' +
+        'Actual: consuming=%d, charge=%d', windowName,
+        expectedConsuming, previousMonth.quantity.consuming,
+        previousMonth.charge.charge);
+      expect(previousMonth.quantity.consuming).to.equal(expectedConsuming);
+    }
+    expect(previousMonth).to.contain.all.keys('charge');
+    debug('%s month window; Expected: charge>0; ' +
+      'Actual: charge=%d', windowName, previousMonth.charge.charge);
     expect(previousMonth.charge).to.be.above(0);
   };
 
-  const checkCurrentMonthWindows = (windowName, usage) => {
+  const checkCurrentMonthWindows = (windowName, usage, level) => {
     const windowUsage = usage.windows[timeWindows.month];
     const currentMonth = windowUsage[0];
 
@@ -325,12 +330,17 @@ const test = (secured) => {
       expect(currentMonth).to.equal(null);
       return;
     }
-
-    expect(currentMonth).to.contain.all.keys('quantity', 'charge');
-    debug('%s window; Expected: consuming=%d, charge>0; ' +
-      'Actual: consuming=%d, charge=%d', windowName,
-      expectedConsuming, currentMonth.quantity.consuming, currentMonth.charge);
-    expect(currentMonth.quantity.consuming).to.equal(expectedConsuming);
+    
+    if (level !== 'resource') {
+      expect(currentMonth).to.contain.all.keys('quantity', 'charge');
+      debug('%s window; Expected: consuming=%d, charge>0; ' +
+        'Actual: consuming=%d, charge=%d', windowName, expectedConsuming,
+        currentMonth.quantity.consuming, currentMonth.charge);
+      expect(currentMonth.quantity.consuming).to.equal(expectedConsuming);
+    }
+    expect(currentMonth).to.contain.all.keys('charge');
+    debug('%s window; Expected:  charge>0; ' +
+        'Actual: charge=%d', windowName, currentMonth.charge);
     expect(currentMonth.charge).to.be.above(0);
   };
 
@@ -358,7 +368,7 @@ const test = (secured) => {
           checkFn('Plans aggregated usage', planUsage);
 
           const aggregatedUsage = resources[0].aggregated_usage[0];
-          checkFn('Aggregated usage', aggregatedUsage);
+          checkFn('Aggregated usage', aggregatedUsage, 'resource');
 
           resultDebug('All usage report checks are successful for: %s',
             JSON.stringify(response.body, null, 2));
