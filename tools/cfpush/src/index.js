@@ -29,7 +29,6 @@ var mkdirs = function(cb) {
 var adjustManifest = function(app, name, instances, conf, buildpack) {
   if (app) {
     app.name = name;
-    app.host = name;
     if (instances)
       app.instances = parseInt(instances);
     app.path = '../' + app.path;
