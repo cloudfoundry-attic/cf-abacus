@@ -359,14 +359,13 @@ describe('abacus-demo-client', function() {
 
         // Compare the usage report we got with the expected report
         console.log('Processed %d usage docs', processed(val));
-        if(val.body)
-          val.body.spaces[0].consumers[0].resources[0].plans[0]
-            .resource_instances[0] = omit(val.body.spaces[0].consumers[0]
-            .resources[0].plans[0].resource_instances[0], 't', 'p');
         const actual = clone(omit(val.body,
           'id', 'processed', 'processed_id', 'start', 'end'), prune);
 
         try {
+          actual.spaces[0].consumers[0].resources[0].plans[0]
+            .resource_instances[0] = omit(actual.spaces[0].consumers[0]
+            .resources[0].plans[0].resource_instances[0], 't', 'p');
           expect(actual).to.deep.equal(report);
           console.log('\n', util.inspect(val.body, {
             depth: 20

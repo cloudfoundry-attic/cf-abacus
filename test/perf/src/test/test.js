@@ -372,6 +372,10 @@ describe('abacus-perf-test', () => {
           console.log('Processed %d usage docs for org%d',
             processed(val), o + 1);
           try {
+            // Can't check the dynamic time in resource_instances
+            val.body.spaces[0].consumers[0].resources[0].plans[0] =
+              omit(val.body.spaces[0].consumers[0]
+              .resources[0].plans[0], 'resource_instances');
             expect(fixup(omit(
               val.body, 'id', 'processed', 'processed_id', 'start', 'end')))
                 .to.deep.equal(fixup(report(o, resourceInstances, usage)));
