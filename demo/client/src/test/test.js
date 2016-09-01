@@ -292,6 +292,9 @@ describe('abacus-demo-client', function() {
               rating_plan_id: 'object-rating-plan',
               pricing_plan_id: 'object-pricing-basic',
               windows: buildWindow(46.09),
+              resource_instances: [{
+                id: '0b39fa70-a65f-4183-bae8-385633ca5c87'
+              }],
               aggregated_usage: [{
                 metric: 'storage',
                 windows: buildWindow(1, 1, 1, 1)
@@ -356,6 +359,10 @@ describe('abacus-demo-client', function() {
 
         // Compare the usage report we got with the expected report
         console.log('Processed %d usage docs', processed(val));
+        if(val.body)
+          val.body.spaces[0].consumers[0].resources[0].plans[0]
+            .resource_instances[0] = omit(val.body.spaces[0].consumers[0]
+            .resources[0].plans[0].resource_instances[0], 't', 'p');
         const actual = clone(omit(val.body,
           'id', 'processed', 'processed_id', 'start', 'end'), prune);
 
