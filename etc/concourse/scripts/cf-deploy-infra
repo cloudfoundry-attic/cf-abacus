@@ -91,6 +91,7 @@ echo "" | cf login -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD
 
 echo "Recreating organization and space ..."
 cf delete-org -f $CF_ORG
+cf delete-quota -f $CF_ORG
 cf create-quota $CF_ORG -m 80g -r 80 -s 2 --allow-paid-service-plans
 cf create-org $CF_ORG -q $CF_ORG
 cf create-space $CF_SPACE -o $CF_ORG
