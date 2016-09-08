@@ -29,6 +29,7 @@ var mkdirs = function(cb) {
 var adjustManifest = function(app, name, instances, conf, buildpack) {
   if (app) {
     app.name = name;
+    app.host = name;
     if (instances)
       app.instances = parseInt(instances);
     app.path = '../' + app.path;
@@ -42,7 +43,7 @@ var adjustManifest = function(app, name, instances, conf, buildpack) {
 };
 
 // Write new manifest.yml
-var remanifest = function(root, name, instances, conf, buildpack, cb) {
+var remanifest = function(root, name, instances, conf, buildpack, suffix, cb) {
   fs.readFile(
     path.join(process.cwd(), 'manifest.yml'), function(err, content) {
       if(err) {
@@ -51,8 +52,9 @@ var remanifest = function(root, name, instances, conf, buildpack, cb) {
       }
       var yml = yaml.load(content);
       var app = yml.applications[0];
+      var appName = suffix ? [name, suffix].join('-') : name;
 
-      adjustManifest(app, name, instances, conf, buildpack);
+      adjustManifest(app, appName, instances, conf, buildpack);
 
       fs.writeFile(
         path.join('.cfpush', [name, 'manifest.yml'].join('-')),
@@ -92,6 +94,8 @@ var runCLI = function() {
       'configuration name', process.env.CONF)
     .option('-b, --buildpack <value>',
       'buildpack name or location', process.env.BUILDPACK)
+    .option('-x, --suffix <value>',
+      'host suffix (like \"dev\", \"prod\")', process.env.SUFFIX)
     .option('-s, --start',
       'start an app after pushing')
     .parse(process.argv);
@@ -105,7 +109,7 @@ var runCLI = function() {
 
     // Generate the updated manifest.yml
     remanifest(commander.root, commander.name, commander.instances,
-      commander.conf, commander.buildpack, function(err) {
+      commander.conf, commander.buildpack, commander.suffix, function(err) {
         if(err) {
           console.log('Couldn\'t write manifest.yml -', err);
           process.exit(1);
