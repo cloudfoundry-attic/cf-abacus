@@ -49,6 +49,7 @@ A user that wants to get a report for a resource should present a token that has
 
 For example the `linux-container` resource provider should have scope `abacus.usage.linux-container.write` to submit usage.  To get a report an user should present token with the `abacus.usage.linux-container.read` scope to the Abacus reporting component.
 
+Additionally the resource usage document must contain `resource_id`, as specified in the [API doc](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/api.md#json-representation).
 
 #### System token
  
