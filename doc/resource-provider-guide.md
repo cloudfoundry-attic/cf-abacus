@@ -8,42 +8,42 @@ Abacus provides a REST API allowing cloud service providers to submit usage data
 ## Roles
 The roles used in this guide are listed below:
 
-* **Cloud Foundry Operator**
+### Cloud Foundry Operator
 
-   The Cloud Foundry Operator is responsible for the day-to-day operation of Cloud Foundry. The responsibilities of the operator include, but are not limited to:
-   * Create/modify resources (organizations, spaces, quotas, services) needed for Abacus or the Resource providers
-   * Scale Cloud Foundry installation to fit usage requirements
-   * Update parts of the Cloud Foundry landscape:
-       * Buildpacks (new runtimes)
-       * Stemcells (OS or security fixes)
-       * Infrastructure services (Diego, ELK)
-       * Marketplace services
+The Cloud Foundry Operator is responsible for the day-to-day operation of Cloud Foundry. The responsibilities of the operator include, but are not limited to:
+* Create/modify resources (organizations, spaces, quotas, services) needed for Abacus or the Resource providers
+* Scale Cloud Foundry installation to fit usage requirements
+* Update parts of the Cloud Foundry landscape:
+    * Buildpacks (new runtimes)
+    * Stemcells (OS or security fixes)
+    * Infrastructure services (Diego, ELK)
+    * Marketplace services
 
-   The operator's responsibilities are often shared between several teams, organizations and even companies. For example you might have:
-   * CloudOps (Amazon, Google Cloud, Azure, OpenStack operation)
-   * Cloud Foundry operators (CF operation)
-   * DevOps teams (operating infra and user-facing services)
+The operator's responsibilities are often shared between several teams, organizations and even companies. For example you might have:
+* CloudOps (Amazon, Google Cloud, Azure, OpenStack operation)
+* Cloud Foundry operators (CF operation)
+* DevOps teams (operating infra and user-facing services)
 
-* **User**
+### User
 
-   User is the customer who uses software (SaaS), applications (PaaS) or resources (IaaS) from the Cloud Foundry system. The user is charged for the consumed resources.
+User is the customer who uses software (SaaS), applications (PaaS) or resources (IaaS) from the Cloud Foundry system. The user is charged for the consumed resources.
 
-* **Abacus Integrator**
+### Abacus Integrator
 
-   The Abacus Integrator is responsible for the correct functioning of the Abacus components. The integrator is also responsible for the integration and functioning of the Abacus pipeline with Cloud Foundry. The integrator is responsible for requesting (from the CF operators), monitoring and provisioning the needed memory, network and database resources for Abacus.
-   The integrator also takes care of any integrations with services you can deploy along with Abacus, such as monitoring, logging, auditing, BPEM processes, billing system and usage analytics.
+The Abacus Integrator is responsible for the correct functioning of the Abacus components. The integrator is also responsible for the integration and functioning of the Abacus pipeline with Cloud Foundry. The integrator is responsible for requesting (from the CF operators), monitoring and provisioning the needed memory, network and database resources for Abacus.
+The integrator also takes care of any integrations with services you can deploy along with Abacus, such as monitoring, logging, auditing, BPEM processes, billing system and usage analytics.
 
-* **Resource Provider**
+### Resource Provider
 
-   The Resource Provider is responsible for providing resources to the users. To meter the resource usage, each Resource Provider must submit usage documents to Abacus.
+The Resource Provider is responsible for providing resources to the users. To meter the resource usage, each Resource Provider must submit usage documents to Abacus.
 
-* **Report Consumer**
+### Report Consumer
 
-   The Report Consumer can request a usage report from Abacus. This report can be presented directly to the User or used to feed external systems like monitoring or billing.
+The Report Consumer can request a usage report from Abacus. This report can be presented directly to the User or used to feed external systems like monitoring or billing.
 
-   The following diagram shows the Resource Provider and Resource Consumer roles:
+The following diagram shows the Resource Provider and Resource Consumer roles:
 
-   ![Resource Provider diagram](provider-consumer.png)
+![Resource Provider diagram](provider-consumer.png)
 
 
 # Abacus Pipeline Concepts
