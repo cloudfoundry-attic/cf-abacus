@@ -463,14 +463,15 @@ To create a resource provider you need to define the following Abacus entities:
 
 We should start with the measures, then define the metrics and finally decide on what type of plans to use. Once all of the above is defined we can create a plan. 
 
-Abacus provides an example implementation of the [provisioning plugin](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/plugins/provisioning) for demo and test purposes. Abacus Integrators must replace this implementation with a custom one to satisfy the requirements, processes and product standards in your organization. 
+Abacus provides an example implementations of the [provisioning](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/plugins/provisioning) and [account](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/plugins/account) plugins for demo and test purposes. Abacus Integrators must replace this implementations with custom code to satisfy the requirements, processes and product standards in your organization. 
 
 Check with your [Abacus Integrator](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/resource-provider-guide.md#abacus-integrator) on how to create a plan. 
 
-If you want to experiment with the [example provisioning plugin](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/plugins/provisioning) for local development follow these steps: 
+If you want to experiment with the example provisioning and account plugins for local development follow these steps: 
 * add the plan files under [plans directory](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/plugins/provisioning/src/plans)
 * change the provisioning plug-in mapping in the [code](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/lib/plugins/provisioning/src/index.js#L75-L92) of the provisioning-plugin
-* rebuild, test and deploy the new version of the provisioning plugin
+* change the account plug-in [mapping](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/lib/plugins/account/src/index.js#L49-L67)
+* rebuild, test and deploy the new versions of the account and provisioning plugins
 
 The example provisioning plugin will return `404` with `"x-app-name":"abacus-provisioning-plugin"` in case it cannot find a plan by `resource_type` and provisioning `plan_id`:
 ```
