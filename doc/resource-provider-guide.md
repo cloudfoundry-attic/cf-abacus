@@ -454,55 +454,45 @@ npm restart
 npm run demo
 ```
 
-## Dealing with network issues
-Submitting usage document involves network operations. As with every network, failure is inevitable and the Resource Provider need to take care of all network issues.
+## Creating a Resource Provider
 
-In this section we will present several ways to deal with unreliable network (circuit breaker, retry) and bandwidth and latency problems (batching, throttling).
+To create a resource provider you need to define the following Abacus entities:
+* [measures](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/resource-provider-guide.md#measure)
+* [metrics](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/resource-provider-guide.md#metric)
+* [plans](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/resource-provider-guide.md#plan)
 
-### Retrying requests
-Retrying a failed request is the easiest way to deal with network problems.
+We should start with the measures, then define the metrics and finally decide on what type of plans to use. Once all of the above is defined we can create a plan. 
 
-It is mandatory for Resource Providers to implement retry since reporting usage might rather fail than succeed due to a number of reasons (including but not limited to network and hardware issues, Abacus problems, CloudOps & DevOps updates).
+Abacus provides an example implementation of the [provisioning plugin](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/plugins/provisioning) for demo and test purposes. Abacus Integrators must replace this implementation with a custom one to satisfy the requirements, processes and product standards in your organization. 
 
-Retrying a report puts some requirements on the Resource Providers. They need to persistently store the usage that was not successfully reported to guarantee that it is not lost.
+Check with your [Abacus Integrator](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/resource-provider-guide.md#abacus-integrator) on how to create a plan. 
 
-Of course not all of the requests can be retried. For example, response 409/Conflict in most cases means:
-* we already submitted that usage
-* we are trying to submit usage outside of the slack window
+If you want to experiment with the [example provisioning plugin](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/plugins/provisioning) for local development follow these steps: 
+* add the plan files under [plans directory](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/plugins/provisioning/src/plans)
+* change the provisioning plug-in mapping in the [code](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/lib/plugins/provisioning/src/index.js#L75-L92) of the provisioning-plugin
+* rebuild, test and deploy the new version of the provisioning plugin
 
-Another example, where we cannot simply retry, is the 404 error code. It usually means that Abacus does not know about certain entity and retrying won't help to resolve the issue.
+The example provisioning plugin will return `404` with `"x-app-name":"abacus-provisioning-plugin"` in case it cannot find a plan by `resource_type` and provisioning `plan_id`:
+```
+{
+  "message": {
+    "statusCode": 404,
+    "headers": {
+      ... headers ...
+      "x-app-name": "abacus-provisioning-plugin",
+      ... more headers ...
+    }
+  },
+  "statusCode": 404,
+  "headers": {
+    ... headers ...
+    "x-app-name": "abacus-provisioning-plugin",
+    ... more headers ...
+  }
+}
+```
 
-Abacus has the [retry module](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/retry) that can help us with the retry task.
-
-### Circuit breakers
-Making a Resource Provider resilient requires you to isolate parts of your Resource Provider, to isolate from failing Abacus installation or to simply avoid failure cascades in a graph of function calls.
-
-You can do that with the help of the [breaker module](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/breaker). Java-based Resource providers can use the [Hystrix library](https://github.com/Netflix/Hystrix)
-
-Abacus itself provides hystrix compatible streams for all its micro-services built with the help of [perf](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/perf) and [hystrix](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/hystrix) modules.
-
-### Batching requests
-If you are submitting a lot of usage documents, you can make use of the [batch module](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/batch) that will wrap all requests into a batch (very similar to the way DBs use batching).
-
-This technique allows you to reduce the bandwidth and the latency, compared to using hundreds or thousands of single usage requests.
-
-### Throttling requests
-Even with batching, the number of requests is not limited and it can grow beyond the capabilities of the physical machine. This, in turn, results in network failures or VM/engine errors and crashes, depending on the used stack.
-
-You can use connection pools, a dedicated client (that basically does the pooling) or with Node.js you can use the [throttle module](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/throttle).
-
-### Chaining modules
-
-Abacus modules can be chained. For example to get a request that is throttled, retries, has breaker and batches, simply use:
-```javascript
-const batch = require('abacus-batch');
-const retry = require('abacus-retry');
-const breaker = require('abacus-breaker');
-const throttle = require('abacus-throttle');
-const request = require('abacus-request');
-
-const reliableRequest = throttle(retry(breaker(batch(request))));
-````
+Please check the [network issues](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/resource-provider-guide.md#dealing-with-network-issues) section for hints on how to implement the network connectivity to Abacus.
 
 # Usage reports
 Using get methods we can obtain:
@@ -553,9 +543,57 @@ npm restart
 npm run demo
 ```
 
+# Dealing with network issues
+Submitting usage document or getting usage report involves network operations. As with every network, failure is inevitable and the Resource Provider need to take care of all network issues.
 
-References
----
+In this section we will present several ways to deal with unreliable network (circuit breaker, retry) and bandwidth and latency problems (batching, throttling).
+
+## Retrying requests
+Retrying a failed request is the easiest way to deal with network problems.
+
+It is mandatory for Resource Providers to implement retry since reporting usage might rather fail than succeed due to a number of reasons (including but not limited to network and hardware issues, Abacus problems, CloudOps & DevOps updates).
+
+Retrying a report puts some requirements on the Resource Providers. They need to persistently store the usage that was not successfully reported to guarantee that it is not lost.
+
+Of course not all of the requests can be retried. For example, response 409/Conflict in most cases means:
+* we already submitted that usage
+* we are trying to submit usage outside of the slack window
+
+Another example, where we cannot simply retry, is the 404 error code. It usually means that Abacus does not know about certain entity and retrying won't help to resolve the issue.
+
+Abacus has the [retry module](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/retry) that can help us with the retry task.
+
+## Circuit breakers
+Making a Resource Provider resilient requires you to isolate parts of your Resource Provider, to isolate from failing Abacus installation or to simply avoid failure cascades in a graph of function calls.
+
+You can do that with the help of the [breaker module](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/breaker). Java-based Resource providers can use the [Hystrix library](https://github.com/Netflix/Hystrix)
+
+Abacus itself provides hystrix compatible streams for all its micro-services built with the help of [perf](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/perf) and [hystrix](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/hystrix) modules.
+
+## Batching requests
+If you are submitting a lot of usage documents, you can make use of the [batch module](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/batch) that will wrap all requests into a batch (very similar to the way DBs use batching).
+
+This technique allows you to reduce the bandwidth and the latency, compared to using hundreds or thousands of single usage requests.
+
+## Throttling requests
+Even with batching, the number of requests is not limited and it can grow beyond the capabilities of the physical machine. This, in turn, results in network failures or VM/engine errors and crashes, depending on the used stack.
+
+You can use connection pools, a dedicated client (that basically does the pooling) or with Node.js you can use the [throttle module](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/throttle).
+
+## Chaining modules
+
+Abacus modules can be chained. For example to get a request that is throttled, retries, has breaker and batches, simply use:
+```javascript
+const batch = require('abacus-batch');
+const retry = require('abacus-retry');
+const breaker = require('abacus-breaker');
+const throttle = require('abacus-throttle');
+const request = require('abacus-request');
+
+const reliableRequest = throttle(retry(breaker(batch(request))));
+````
+
+# References
 [1] Michell, J. (1999). Measurement in psychology: a critical history of a methodological concept. New York: Cambridge University Press.
 
 [2] http://www.dictionary.com/browse/measure
