@@ -5,26 +5,41 @@ set -e
 # Setup CF for use with Abacus
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}"  )" && pwd  )"
 
-CF_ORG_DEFAULT=$(cf target | cut -d ':' -f 2 | tr -d ' ' | sed '4q;d')
-CF_SPACE_DEFAULT=$(cf target | cut -d ':' -f 2 | tr -d ' ' | sed '5q;d')
+CF_API_DEFAULT=$(cf target |  awk '{if (NR == 2) {print $3}}')
+CF_USER_DEFAULT=$(cf target |  awk '{if (NR == 3) {print $2}}')
+CF_ORG_DEFAULT=$(cf target | awk '{if (NR == 4) {print $2}}')
+CF_SPACE_DEFAULT=$(cf target | awk '{if (NR == 5) {print $2}}')
+
+read -p "Enter your API URL [$CF_API_DEFAULT]: " CF_API
+CF_API="${CF_API:-$CF_API_DEFAULT}"
+if [[ -z $CF_API ]]; then
+  echo 'Missing API URL! Did you login?'
+  exit 1
+fi
+
+read -p "Enter your user name [$CF_USER_DEFAULT]: " CF_USER
+CF_USER="${CF_USER:-$CF_USER_DEFAULT}"
+if [[ -z $CF_USER ]]; then
+  echo 'Missing user name! Did you login?'
+  exit 1
+fi
 
 read -p "Enter your organization [$CF_ORG_DEFAULT]: " CF_ORG
 CF_ORG="${CF_ORG:-$CF_ORG_DEFAULT}"
 if [[ -z $CF_ORG ]]; then
-  echo 'Missing organization'
+  echo 'Missing organization; Did you target an org?'
   exit 1
 fi
 
 read -p "Enter your space [$CF_SPACE_DEFAULT]: " CF_SPACE
 CF_SPACE="${CF_SPACE:-$CF_SPACE_DEFAULT}"
 if [[ -z $CF_SPACE ]]; then
-  echo 'Missing space'
+  echo 'Missing space! Did you target a space?'
   exit 1
 fi
 
 # Point the CF CLI to your local Cloud Foundry deployment
-cf api --skip-ssl-validation https://api.bosh-lite.com
-cf login -o $CF_ORG -s $CF_SPACE
+cf login --skip-ssl-validation -a $CF_API -u $CF_USER -o $CF_ORG -s $CF_SPACE
 
 # Create a CF security group for the Abacus apps
 cf create-security-group abacus $SCRIPT_DIR/../node_modules/abacus-etc/secgroup.json
