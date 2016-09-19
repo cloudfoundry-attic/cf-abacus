@@ -1,0 +1,18 @@
+#!/bin/bash
+set -e
+
+if [ -z "$1" ]; then
+	echo "You must specify abacus config directory. Exiting..."
+	exit 1
+fi
+
+echo "Abacus path given: $1"
+
+abacus_config_path=$(dirname $0)/../../../../../$1
+abacus_config_dir=$(cd "$abacus_config_path"; pwd)
+
+echo "Running manifest substitution in $abacus_config_dir"
+pushd $(dirname $0)/../tools
+  npm install && npm run babel
+  ./replace-template $abacus_config_dir
+popd

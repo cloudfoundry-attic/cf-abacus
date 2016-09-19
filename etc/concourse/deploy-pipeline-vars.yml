@@ -57,6 +57,12 @@ system-client-id: abacus
 # UAA client: Abacus system user secret
 system-client-secret: secret
 
+# UAA client: Cloud Controller user ID for administrative tasks
+cc-client-id: abacus-cc-client
+
+# UAA client: Cloud Controller user secret for administrative tasks
+cc-client-secret: secret
+
 # UAA client: Abacus CF-Bridge user ID
 bridge-client-id: abacus-cf-bridge
 
@@ -89,6 +95,33 @@ hystrix-client-id: abacus-hystrix
 
 # UAA client: Client secret for Abacus Hystrix streams
 hystrix-client-secret: secret
+
+# Authentication server: api.<cf-api>:443
+auth-server: http://auth-server.com
+
+# UAA client: "Abacus" client id
+abacus-client-id: client
+
+# UAA client: "Abacus" client secret
+abacus-client-secret: secret
+
+# JWT Key
+jwtkey: |
+      -----BEGIN PUBLIC KEY-----
+      ... insert key here ...
+      -----END PUBLIC KEY-----
+
+# JWT Algorithm
+jwtalgo: algo
+
+# Use templates true/false
+abacus-configure: true
+
+# UAA client: "Renewer" client id
+renewer-client-id: renewer-client
+
+# UAA client: "Renewer" client secret
+renewer-client-secret: secret
 
 # Abacus repo URI (or landscape project URI)
 landscape-git-repo: https://github.com/cloudfoundry-incubator/cf-abacus.git

@@ -6,7 +6,7 @@ CF-Abacus Concourse Pipeline
 1. Start Concourse:
 
   ```bash
-   cd ~/workspace/cf-abacus/etc/concourse 
+   cd ~/workspace/cf-abacus/etc/concourse
    vagrant up
    ```
 
@@ -22,7 +22,7 @@ CF-Abacus Concourse Pipeline
    curl 'http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=linux' --compressed -o fly
    chmod +x fly
    ```
-   
+
    Windows:
    Go to http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=windows
 
@@ -50,46 +50,48 @@ You should have the Concourse running by now. To run the deployment pipeline fol
 
 2. The Abacus configuration `abacus-config`, should contain:
    * pipeline configuration in `deploy-pipeline-vars.yml`
-   * application manifests: `manifest.yml`
+   * application manifest templates: `manifest.yml.template`.
+   Templates can contain environment variables. The pipeline will replace them and generate the `manifest.yml` files in the proper directories.
    * number of applications and instances in `.apprc` for each Abacus pipeline stage (often needed for collector and reporting)
    * profiles in `etc/apps.rc` (to add additional apps such as `cf-bridge` and `cf-renewer`)
 
    The file structure should be the same as the abacus project:
     ```
     .
-    |____deploy-pipeline-vars.yml
-    |____etc
-    | |____apps.rc
-    |____lib
-    | |____aggregation
-    | | |____accumulator
-    | | | |____manifest.yml
-    | | |____aggregator
-    | | | |____manifest.yml
-    | | |____reporting
-    | | | |____.apprc
-    | | | |____manifest.yml
-    | |____cf
-    | | |____bridge
-    | | | |____manifest.yml
-    | |____metering
-    | | |____collector
-    | | | |____.apprc
-    | | | |____manifest.yml
-    | | |____meter
-    | | | |____manifest.yml
-    | |____plugins
-    | | |____account
-    | | | |____manifest.yml
-    | | |____authserver
-    | | | |____manifest.yml
-    | | |____eureka
-    | | | |____manifest.yml
-    | | |____provisioning
-    | | | |____manifest.yml
-    | |____utils
-    | | |____pouchserver
-    | | | |____manifest.yml
+    ├── deploy-pipeline-vars.yml
+    ├── README.md
+    ├── etc
+    │   └── apps.rc
+    ├── lib
+    │   ├── aggregation
+    │   │   ├── accumulator
+    │   │   │   └── manifest.yml.template
+    │   │   ├── aggregator
+    │   │   │   └── manifest.yml.template
+    │   │   └── reporting
+    │   │       └── manifest.yml.template
+    │   ├── cf
+    │   │   ├── bridge
+    │   │   │   └── manifest.yml.template
+    │   │   └── renewer
+    │   │       └── manifest.yml.template
+    │   ├── metering
+    │   │   ├── collector
+    │   │   │   └── manifest.yml.template
+    │   │   └── meter
+    │   │       └── manifest.yml.template
+    │   ├── plugins
+    │   │   ├── account
+    │   │   │   └── manifest.yml.template
+    │   │   ├── authserver
+    │   │   │   └── manifest.yml.template
+    │   │   ├── eureka
+    │   │   │   └── manifest.yml.template
+    │   │   └── provisioning
+    │   │       └── manifest.yml.template
+    │   └── utils
+    │       └── pouchserver
+    │           └── manifest.yml.template
     ```
 
 3. Customize the `deploy-pipeline-vars.yml` file with the location of the landscape repository

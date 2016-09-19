@@ -16,8 +16,34 @@ jobs:
         trigger: true
       - aggregate:
         - task: build-abacus
-          file: landscape/cf-abacus/etc/concourse/tasks/cf-deploy-build.yml
           timeout: 30m
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: godofcontainers/node-mongodb
+                tag: '6.2.0'
+            inputs:
+              - name: landscape
+            outputs:
+              - name: built-project
+            run:
+              path: landscape/cf-abacus/etc/concourse/scripts/cf-deploy-build
+            params:
+              AUTH_SERVER: {{auth-server}}
+              ABACUS_CLIENT_ID: {{abacus-client-id}}
+              ABACUS_CLIENT_SECRET: {{abacus-client-secret}}
+              JWTKEY: {{jwtkey}}
+              JWTALGO: {{jwtalgo}}
+              CONFIGURE: {{abacus-configure}}
+              BRIDGE_CLIENT_ID: {{bridge-client-id}}
+              BRIDGE_CLIENT_SECRET: {{bridge-client-secret}}
+              RENEWER_CLIENT_ID: {{renewer-client-id}}
+              RENEWER_CLIENT_SECRET: {{renewer-client-secret}}
+              CONTAINER_CLIENT_ID: {{container-client-id}}
+              CONTAINER_CLIENT_SECRET: {{container-client-secret}}
+
         - task: setup-abacus-infra
           attempts: 2
           timeout: 35m
@@ -46,6 +72,8 @@ jobs:
               UAA_SECRET: {{uaa-secret}}
               SYSTEM_CLIENT_ID: {{system-client-id}}
               SYSTEM_CLIENT_SECRET: {{system-client-secret}}
+              CC_CLIENT_ID: {{cc-client-id}}
+              CC_CLIENT_SECRET: {{cc-client-secret}}
               BRIDGE_CLIENT_ID: {{bridge-client-id}}
               BRIDGE_CLIENT_AUTHORITIES: {{bridge-client-authorities}}
               BRIDGE_CLIENT_SECRET: {{bridge-client-secret}}
