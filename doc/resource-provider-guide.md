@@ -469,9 +469,13 @@ Check with your [Abacus Integrator](https://github.com/cloudfoundry-incubator/cf
 
 If you want to experiment with the example provisioning and account plugins for local development follow these steps: 
 * add the plan files under [plans directory](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/plugins/provisioning/src/plans)
-* change the provisioning plug-in mapping in the [code](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/lib/plugins/provisioning/src/index.js#L75-L92) of the provisioning-plugin
-* change the account plug-in [mapping](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/lib/plugins/account/src/index.js#L49-L67)
-* rebuild, test and deploy the new versions of the account and provisioning plugins
+* change the provisioning plug-in mapping in the [code](https://github.com/cloudfoundry-incubator/cf-abacus/blob/6c97fc8782693998c8b3a82376213152d7d2f906/lib/plugins/provisioning/src/index.js#L74-L92) of the provisioning-plugin
+* change the account plug-in [mapping](https://github.com/cloudfoundry-incubator/cf-abacus/blob/6c97fc8782693998c8b3a82376213152d7d2f906/lib/plugins/account/src/index.js)
+
+Make sure you have added your plans in all:
+  1. [Metering mapping](https://github.com/cloudfoundry-incubator/cf-abacus/blob/6c97fc8782693998c8b3a82376213152d7d2f906/lib/plugins/account/src/index.js#L49-L67)
+  1. [Rating mapping](https://github.com/cloudfoundry-incubator/cf-abacus/blob/6c97fc8782693998c8b3a82376213152d7d2f906/lib/plugins/account/src/index.js#L74-L92)
+  1. [Pricing mapping](https://github.com/cloudfoundry-incubator/cf-abacus/blob/6c97fc8782693998c8b3a82376213152d7d2f906/lib/plugins/account/src/index.js#L99-L120)
 
 The example provisioning plugin will return `404` with `"x-app-name":"abacus-provisioning-plugin"` in case it cannot find a plan by `resource_type` and provisioning `plan_id`:
 ```
