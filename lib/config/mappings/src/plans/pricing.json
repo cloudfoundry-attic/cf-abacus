@@ -1,0 +1,21 @@
+{
+  "analytics": {
+    "basic": "analytics-pricing-basic",
+    "standard": "analytics-pricing-standard"
+  },
+  "linux-container": {
+    "basic": "linux-pricing-basic",
+    "standard": "linux-pricing-standard"
+  },
+  "object-storage": {
+    "basic": "object-pricing-basic",
+    "standard": "object-pricing-standard"
+  },
+  "test-resource": {
+    "basic": "test-pricing-basic",
+    "standard": "test-pricing-standard"
+  },
+  "test-db": {
+    "basic": "test-db-basic"
+  }
+}

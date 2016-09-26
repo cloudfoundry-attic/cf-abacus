@@ -1,0 +1,18 @@
+{
+  "analytics": {
+    "basic": "analytics-rating-plan",
+    "standard": "analytics-rating-plan"
+  },
+  "linux-container": {
+    "basic": "linux-rating-plan",
+    "standard": "linux-rating-plan"
+  },
+  "object-storage": {
+    "basic": "object-rating-plan",
+    "standard": "object-rating-plan"
+  },
+  "test-resource": {
+    "basic": "test-rating-plan",
+    "standard": "test-rating-plan-standard"
+  }
+}

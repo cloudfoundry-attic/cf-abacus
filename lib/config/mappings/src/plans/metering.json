@@ -1,0 +1,19 @@
+{
+  "analytics": {
+    "basic": "basic-analytics",
+    "standard": "basic-analytics"
+  },
+  "linux-container": {
+    "basic": "basic-linux-container",
+    "standard": "standard-linux-container"
+  },
+  "object-storage": {
+    "basic": "basic-object-storage",
+    "standard": "standard-object-storage"
+  },
+  "test-resource": {
+    "basic": "test-metering-plan",
+    "standard": "test-metering-plan"
+  }
+}
+
