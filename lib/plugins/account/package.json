@@ -44,6 +44,7 @@
     "abacus-lrucache": "file:../../utils/lrucache",
     "abacus-oauth": "file:../../utils/oauth",
     "abacus-partition": "file:../../utils/partition",
+    "abacus-plan-mappings": "file:../../config/mappings",
     "abacus-retry": "file:../../utils/retry",
     "abacus-router": "file:../../utils/router",
     "abacus-urienv": "file:../../utils/urienv",
