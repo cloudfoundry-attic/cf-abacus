@@ -470,6 +470,13 @@ Check with your [Abacus Integrator](https://github.com/cloudfoundry-incubator/cf
 If you want to experiment with the example provisioning and account plugins for local development follow these steps: 
 * add the plan files under [plans directory](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/plugins/provisioning/src/plans)
 * change the [plan mappings](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/config/mappings/src/plans)
+* rebuild the project with:
+
+   ```bash
+   cd ~/workspace/cf-abacus
+   npm run rebuild
+   npm start
+   ```
 
 The example provisioning plugin will return `404` with `"x-app-name":"abacus-provisioning-plugin"` in case it cannot find a plan by `resource_type` and provisioning `plan_id`:
 ```
