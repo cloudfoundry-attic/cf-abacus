@@ -35,7 +35,9 @@ matrix:
 install: echo "install"
 
 script:
-  - travis_retry npm run cibuild
+  - npm run build
+  - travis_retry npm run citest
+  - travis_retry npm run cftest
 
 after_script:
   - npm run coveralls
