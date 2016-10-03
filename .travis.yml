@@ -10,13 +10,32 @@ matrix:
         - couchdb
     - node_js: "6.2.0"
       env: CI_TEST="true" CF_TEST="false" JOBS=1 DBCLIENT=abacus-mongoclient DB=mongodb://localhost:27017
-      services:
-        - mongodb
+      addons:
+        apt:
+          sources:
+            - mongodb-upstart
+          packages:
+            - mongodb-org-server
+            - mongodb-org-shell
+      before_script:
+        - sleep 15
+    - node_js: "6.2.0"
+      env: CI_TEST="true" CF_TEST="false" JOBS=1 DBCLIENT=abacus-mongoclient DB=mongodb://localhost:27017
+      addons:
+        apt:
+          sources:
+            - mongodb-upstart
+            - mongodb-3.2-precise
+          packages:
+            - mongodb-org-server
+            - mongodb-org-shell
+      before_script:
+        - sleep 15
 
 install: echo "install"
 
 script:
-  - npm run cibuild
+  - travis_retry npm run cibuild
 
 after_script:
   - npm run coveralls
