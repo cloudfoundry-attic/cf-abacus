@@ -7,11 +7,13 @@ set -e
 # Skip the following steps if CI_TEST is false
 if [ "$CI_TEST" != "false" ]; then
 
+  echo "CI Test parameters: $@"
+
   # Based on default limits in throttle and batch processing and
   # integration test matrix, we would need 2197 (= 13 * 13 * 13)
   # usage submissions to get above 90 percent regression coverage
 
-  npm run itest -- -o 4 -i 4 -u 4
+  npm run itest -- -o 4 -i 4 -u 4 $@
 
   # Run demo and perf test without security
   npm start
@@ -22,7 +24,7 @@ if [ "$CI_TEST" != "false" ]; then
   # Tests for concurrency
   npm start small
   sleep 6s
-  npm run perf -- -o 1 -i 8 -u 8
+  npm run perf -- -o 1 -i 8 -u 8 $@
   npm stop
 
   # Run demo and perf test with the smalldb config
@@ -33,7 +35,7 @@ if [ "$CI_TEST" != "false" ]; then
 
   npm start
   sleep 3s
-  npm run perf -- -o 4 -i 4 -u 4
+  npm run perf -- -o 4 -i 4 -u 4 $@
   npm stop
 
   # Run perf test with security
@@ -42,7 +44,7 @@ if [ "$CI_TEST" != "false" ]; then
   export JWTALGO=HS256
   npm start
   sleep 3s
-  npm run perf -- -o 4 -i 4 -u 4
+  npm run perf -- -o 4 -i 4 -u 4 $@
   npm stop
 
 fi
