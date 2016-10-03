@@ -3,20 +3,41 @@ language: node_js
 matrix:
   include:
     - node_js: "6.2.0"
-      env: CI_TEST="true" CF_TEST="false"
+      env: DESCRIPTION="pouchdb" CI_TEST="true" CF_TEST="false" START_TIMEOUT=10000 TOTAL_TIMEOUT=60000
     - node_js: "6.2.0"
-      env: CI_TEST="true" CF_TEST="false" JOBS=1 DBCLIENT=abacus-couchclient DB=http://localhost:5984
+      env: DESCRIPTION="couchdb" CI_TEST="true" CF_TEST="false" JOBS=1 DBCLIENT=abacus-couchclient DB=http://localhost:5984 START_TIMEOUT=10000 TOTAL_TIMEOUT=60000
       services:
         - couchdb
     - node_js: "6.2.0"
-      env: CI_TEST="true" CF_TEST="false" JOBS=1 DBCLIENT=abacus-mongoclient DB=mongodb://localhost:27017
-      services:
-        - mongodb
+      env: DESCRIPTION="mongodb 2.6" CI_TEST="true" CF_TEST="false" JOBS=1 DBCLIENT=abacus-mongoclient DB=mongodb://localhost:27017 START_TIMEOUT=20000 TOTAL_TIMEOUT=120000
+      addons:
+        apt:
+          sources:
+            - mongodb-upstart
+          packages:
+            - mongodb-org-server
+            - mongodb-org-shell
+      before_script:
+        - sleep 15
+    - node_js: "6.2.0"
+      env: DESCRIPTION="mongodb 3.2" CI_TEST="true" CF_TEST="false" JOBS=1 DBCLIENT=abacus-mongoclient DB=mongodb://localhost:27017 START_TIMEOUT=20000 TOTAL_TIMEOUT=120000
+      addons:
+        apt:
+          sources:
+            - mongodb-upstart
+            - mongodb-3.2-precise
+          packages:
+            - mongodb-org-server
+            - mongodb-org-shell
+      before_script:
+        - sleep 15
 
 install: echo "install"
 
 script:
-  - npm run cibuild
+  - npm run build
+  - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+  - travis_retry npm run cftest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
 
 after_script:
   - npm run coveralls
