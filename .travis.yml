@@ -46,7 +46,7 @@ script:
   - travis_retry npm run cftest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
 
 after_script:
-  - npm run coveralls
+  - travis_retry npm run coveralls
 
 notifications:
   irc:
