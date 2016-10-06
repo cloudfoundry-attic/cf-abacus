@@ -57,6 +57,12 @@ system-client-id: abacus
 # UAA client: Abacus system user secret
 system-client-secret: secret
 
+# UAA client: Cloud Controller user ID for administrative tasks
+cc-client-id: abacus-cc-client
+
+# UAA client: Cloud Controller user secret for administrative tasks
+cc-client-secret: secret
+
 # UAA client: Abacus CF-Bridge user ID
 bridge-client-id: abacus-cf-bridge
 
