@@ -60,6 +60,9 @@ system-client-secret: secret
 # UAA client: Abacus CF-Bridge user ID
 bridge-client-id: abacus-cf-bridge
 
+# UAA client: Abacus CF-Bridge authorities. Use "cloud_controller.admin" for CF prior v241
+bridge-client-authorities: cloud_controller.admin_read_only
+
 # UAA client: Abacus CF-Bridge user secret
 bridge-client-secret: secret
 

@@ -133,7 +133,7 @@ set -e
 
 echo "Creating UAA clients ..."
 uaac client add "$SYSTEM_CLIENT_ID" --name "$SYSTEM_CLIENT_ID" --authorized_grant_types client_credentials --authorities abacus.usage.write,abacus.usage.read --scope abacus.usage.write,abacus.usage.read --secret "$SYSTEM_CLIENT_SECRET"
-uaac client add "$BRIDGE_CLIENT_ID" --name "$BRIDGE_CLIENT_ID" --authorized_grant_types client_credentials --authorities cloud_controller.admin --secret "$BRIDGE_CLIENT_SECRET"
+uaac client add "$BRIDGE_CLIENT_ID" --name "$BRIDGE_CLIENT_ID" --authorized_grant_types client_credentials --authorities "$BRIDGE_CLIENT_AUTHORITIES" --secret "$BRIDGE_CLIENT_SECRET"
 uaac client add "$CONTAINER_CLIENT_ID" --name "$CONTAINER_CLIENT_ID" --authorized_grant_types client_credentials --authorities abacus.usage.linux-container.write,abacus.usage.linux-container.read --scope abacus.usage.linux-container.write,abacus.usage.linux-container.read --secret "$CONTAINER_CLIENT_SECRET"
 uaac client add "$OBJECT_STORAGE_CLIENT_ID" --name "$OBJECT_STORAGE_CLIENT_ID" --authorized_grant_types client_credentials --authorities abacus.usage.object-storage.write,abacus.usage.object-storage.read --scope abacus.usage.object-storage.write,abacus.usage.object-storage.read --secret "$OBJECT_STORAGE_CLIENT_SECRET"
 uaac client add "$HYSTRIX_CLIENT_ID" --name "$HYSTRIX_CLIENT_ID" --authorized_grant_types client_credentials --authorities abacus.system.read --scope abacus.system.read --secret "$HYSTRIX_CLIENT_SECRET"
