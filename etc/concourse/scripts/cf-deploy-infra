@@ -125,6 +125,7 @@ uaac token client get "$UAA_ADMIN" -s "$UAA_SECRET"
 echo "Trying to delete existing UAA clients ..."
 set +e
 uaac client delete "$SYSTEM_CLIENT_ID"
+uaac client delete "$CC_CLIENT_ID"
 uaac client delete "$BRIDGE_CLIENT_ID"
 uaac client delete "$CONTAINER_CLIENT_ID"
 uaac client delete "$OBJECT_STORAGE_CLIENT_ID"
