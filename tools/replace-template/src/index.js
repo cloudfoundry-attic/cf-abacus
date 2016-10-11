@@ -1,9 +1,25 @@
 'use strict';
 
+// Replace manifest.yml template using credentials file or environment variables
+
 const commander = require('commander');
-const glob = require('glob');
 const fs = require('fs');
+const glob = require('glob');
+const path = require('path');
 const yaml = require('js-yaml');
+
+let credentialsFile;
+let abacusConfigDir;
+
+const parseCommandLineArgs = (args) => {
+  commander
+    .arguments('<abacus-config-directory> [credentials-file]')
+    .action(function(configDir, credentials) {
+      abacusConfigDir = configDir;
+      credentialsFile = credentials;
+    })
+    .parse(args);
+};
 
 const replaceEnvironmentValues = (environment, credentials, credentialsKey) => {
   if (!environment)
@@ -19,6 +35,7 @@ const replaceEnvironmentValues = (environment, credentials, credentialsKey) => {
 };
 
 const replaceFiles = (credentials, files) => {
+  console.log('Substituting in:');
   for (let templateFile of files)
     fs.readFile(templateFile, 'utf8', function(err, content) {
       if (err)
@@ -31,39 +48,37 @@ const replaceFiles = (credentials, files) => {
           replaceEnvironmentValues(application.env,
             credentials, credentialsKey);
 
+      const templatePath = path.dirname(templateFile);
+      const templateBaseName = path.basename(templateFile);
+      const manifestBaseName = templateBaseName.replace(/\.template/g, '');
+      const manifestFile = path.join(templatePath, manifestBaseName);
+
       const manifestContent = yaml.dump(templateYml);
-      const manifestFile = templateFile.replace(/.template/g, '')
-      fs.writeFile(manifestFile, manifestContent, 'utf8',
-        (err) => {
-          if (err)
-            throw err;
-        }
-      );
-      console.log('Substituting in %s', manifestFile);
+      fs.writeFile(manifestFile, manifestContent, 'utf8', (err) => {
+        if (err)
+          throw err;
+      });
+      console.log('   %s', manifestFile);
     });
 };
 
 const runCLI = () => {
-  let credentialsFile;
-  let abacusConfigDir;
-
-  // Parse command line options
-  commander
-    .arguments('<abacus-config-directory> [credentials-file]')
-    .action(function(configDir, credentials) {
-      abacusConfigDir = configDir;
-      credentialsFile = credentials;
-    })
-    .parse(process.argv);
+  parseCommandLineArgs(process.argv);
 
   if (typeof abacusConfigDir === 'undefined') {
     console.error('No abacus-config directory specified!');
     process.exit(1);
   }
+  if (!fs.statSync(abacusConfigDir).isDirectory()) {
+    console.error('Invalid abacus-config directory %s specified!',
+      abacusConfigDir);
+    process.exit(1);
+  }
   console.log('Abacus config: %s', abacusConfigDir);
+
   const credentials = [];
   if (credentialsFile) {
-    console.log('Using credentials file %s', credentialsFile);
+    console.log('Using credentials file: %s', credentialsFile);
     fs.readFile(credentialsFile, 'utf8', (err, content) => {
       if (err)
         throw err;

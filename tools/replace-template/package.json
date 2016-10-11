@@ -24,19 +24,22 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "babel": "true",
-    "test": "eslint",
+    "babel": "babel",
+    "test": "eslint && mocha",
     "lint": "eslint",
     "pub": "publish"
   },
   "dependencies": {
     "commander": "^2.8.1",
     "js-yaml": "^3.4.3",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "mkdirp": "^0.5.1"
   },
   "devDependencies": {
-    "abacus-eslint": "file:../../../tools/eslint",
-    "abacus-publish": "file:../../../tools/publish"
+    "abacus-eslint": "file:../eslint",
+    "abacus-mocha": "file:../mocha",
+    "abacus-publish": "file:../publish",
+    "abacus-babel": "file:../babel"
   },
   "engines": {
     "node": ">=5.11.1",
