@@ -244,7 +244,7 @@ describe('abacus-usage-accumulator-itest', () => {
     // TODO check the values of the accumulated usage
     const accumulatedTemplate = (o, ri, u) => extend(
       omit(meteredTemplate(o, ri, u), ['id', 'metered_usage',
-        'measured_usage', 'start']), {
+        'measured_usage']), {
           accumulated_usage: [
             {
               metric: 'storage',
@@ -261,8 +261,7 @@ describe('abacus-usage-accumulator-itest', () => {
               windows: buildQuantityWindows(end, u, 100, (m, u) => m * u,
                 pid() === 'basic' ? 0.15 : 0.18)
             }
-          ],
-          start: meteredTemplate(o, ri, 0).start
+          ]
         }
     );
 
