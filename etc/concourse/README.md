@@ -51,7 +51,6 @@ You should have the Concourse running by now. To run the deployment pipeline fol
 2. The Abacus configuration `abacus-config`, should contain:
    * pipeline configuration in `deploy-pipeline-vars.yml`
    * application manifest templates: `manifest.yml.template`.
-   Templates can contain environment variables. The pipeline will replace them and generate the `manifest.yml` files in the proper directories.
    * number of applications and instances in `.apprc` for each Abacus pipeline stage (often needed for collector and reporting)
    * profiles in `etc/apps.rc` (to add additional apps such as `cf-bridge` and `cf-renewer`)
 
@@ -102,6 +101,51 @@ You should have the Concourse running by now. To run the deployment pipeline fol
    fly --target=lite unpause-pipeline --pipeline=abacus-deploy
    ```
 5. Check the pipeline at http://192.168.100.4:8080/
+
+## Templates
+
+Manifest templates can contain environment variables. The pipeline will replace them and generate the `manifest.yml` files in the proper directories.
+
+An example template can look like this:
+
+```yml
+applications:
+- name: abacus-usage-accumulator
+  host: abacus-usage-accumulator
+  path: .cfpack/app.zip
+  instances: 1
+  memory: 512M
+  disk_quota: 512M
+  env:
+    CONF: default
+    DEBUG: e-abacus-*
+    DBCLIENT: abacus-mongoclient
+    AGGREGATOR: abacus-usage-aggregator
+    PROVISIONING: abacus-provisioning-plugin
+    ACCOUNT: abacus-account-plugin
+    EUREKA: abacus-eureka-plugin
+    NODE_MODULES_CACHE: false
+    SLACK: 5D
+    SECURED: true
+    AUTH_SERVER: $AUTH_SERVER
+    CLIENT_ID: $ABACUS_CLIENT_ID
+    CLIENT_SECRET: $ABACUS_CLIENT_SECRET
+    JWTALGO: $JWTALGO
+    JWTKEY: |+
+      $JWTKEY
+```
+
+All variables in the format: $&lt;VARIABLE&gt; will be substituted with the value that is given to the pipeline (with the [deploy-pipeline-vars.yml](https://github.com/cloudfoundry-incubator/cf-abacus/blob/3cb401215f8ae7b66450c48328316afbf2b669f8/etc/concourse/deploy-pipeline-vars.yml)) as:
+```yml
+auth-server: http://auth-server.com
+abacus-client-id: client
+abacus-client-secret: secret
+jwtkey: |
+      -----BEGIN PUBLIC KEY-----
+      ... insert key here ...
+      -----END PUBLIC KEY-----
+jwtalgo: algo
+```
 
 ## Docker files
 
