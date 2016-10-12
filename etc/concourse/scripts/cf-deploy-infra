@@ -113,7 +113,13 @@ if [ "$CREATE_DB_SERVICE" == "true" ]; then
   do
     sleep 3s
   done
-  echo "DB creation finished."
+  serivice_creation_status=$(cf service db)
+  cf service db
+  if grep -q 'Status: create succeeded' <<< $serivice_creation_status ; then
+    echo "DB creation finished successfully."
+  else
+    echo "DB creation failed."
+  fi
 else
   echo "Using DB URL provided in abacus-config !"
 fi

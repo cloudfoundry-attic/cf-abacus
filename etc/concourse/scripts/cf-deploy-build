@@ -7,6 +7,13 @@ env | sort
 
 echo "Copying Abacus ..."
 cp -r landscape/cf-abacus/. built-project
+
+if [[ $CONFIGURE = true ]]; then
+  echo "Runnining custom configuration ..."
+  abacus_config_dir="landscape/abacus-config"
+  ./landscape/cf-abacus/etc/concourse/scripts/configure $abacus_config_dir
+fi
+
 echo "Copying custom settings ..."
 cp -r landscape/abacus-config/. built-project
 

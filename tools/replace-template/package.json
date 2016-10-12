@@ -1,0 +1,48 @@
+{
+  "name": "replace-template",
+  "description": "Replace environment variables in templates.",
+  "license": "Apache-2.0",
+  "version": "0.0.6-dev.8",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/etc/concourse/tools",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "replace-template",
+    "lib/",
+    "src/"
+  ],
+  "main": "src/index.js",
+  "scripts": {
+    "babel": "babel",
+    "test": "eslint && mocha",
+    "lint": "eslint",
+    "pub": "publish"
+  },
+  "dependencies": {
+    "commander": "^2.8.1",
+    "js-yaml": "^3.4.3",
+    "underscore": "^1.8.3",
+    "mkdirp": "^0.5.1"
+  },
+  "devDependencies": {
+    "abacus-eslint": "file:../eslint",
+    "abacus-mocha": "file:../mocha",
+    "abacus-publish": "file:../publish",
+    "abacus-babel": "file:../babel"
+  },
+  "engines": {
+    "node": ">=5.11.1",
+    "npm": ">=3.8.6"
+  }
+}

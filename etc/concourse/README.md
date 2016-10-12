@@ -6,7 +6,7 @@ CF-Abacus Concourse Pipeline
 1. Start Concourse:
 
   ```bash
-   cd ~/workspace/cf-abacus/etc/concourse 
+   cd ~/workspace/cf-abacus/etc/concourse
    vagrant up
    ```
 
@@ -22,7 +22,7 @@ CF-Abacus Concourse Pipeline
    curl 'http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=linux' --compressed -o fly
    chmod +x fly
    ```
-   
+
    Windows:
    Go to http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=windows
 
@@ -50,46 +50,47 @@ You should have the Concourse running by now. To run the deployment pipeline fol
 
 2. The Abacus configuration `abacus-config`, should contain:
    * pipeline configuration in `deploy-pipeline-vars.yml`
-   * application manifests: `manifest.yml`
+   * application manifest templates: `manifest.yml.template`.
    * number of applications and instances in `.apprc` for each Abacus pipeline stage (often needed for collector and reporting)
    * profiles in `etc/apps.rc` (to add additional apps such as `cf-bridge` and `cf-renewer`)
 
    The file structure should be the same as the abacus project:
     ```
     .
-    |____deploy-pipeline-vars.yml
-    |____etc
-    | |____apps.rc
-    |____lib
-    | |____aggregation
-    | | |____accumulator
-    | | | |____manifest.yml
-    | | |____aggregator
-    | | | |____manifest.yml
-    | | |____reporting
-    | | | |____.apprc
-    | | | |____manifest.yml
-    | |____cf
-    | | |____bridge
-    | | | |____manifest.yml
-    | |____metering
-    | | |____collector
-    | | | |____.apprc
-    | | | |____manifest.yml
-    | | |____meter
-    | | | |____manifest.yml
-    | |____plugins
-    | | |____account
-    | | | |____manifest.yml
-    | | |____authserver
-    | | | |____manifest.yml
-    | | |____eureka
-    | | | |____manifest.yml
-    | | |____provisioning
-    | | | |____manifest.yml
-    | |____utils
-    | | |____pouchserver
-    | | | |____manifest.yml
+    ├── deploy-pipeline-vars.yml
+    ├── README.md
+    ├── etc
+    │   └── apps.rc
+    ├── lib
+    │   ├── aggregation
+    │   │   ├── accumulator
+    │   │   │   └── manifest.yml.template
+    │   │   ├── aggregator
+    │   │   │   └── manifest.yml.template
+    │   │   └── reporting
+    │   │       └── manifest.yml.template
+    │   ├── cf
+    │   │   ├── bridge
+    │   │   │   └── manifest.yml.template
+    │   │   └── renewer
+    │   │       └── manifest.yml.template
+    │   ├── metering
+    │   │   ├── collector
+    │   │   │   └── manifest.yml.template
+    │   │   └── meter
+    │   │       └── manifest.yml.template
+    │   ├── plugins
+    │   │   ├── account
+    │   │   │   └── manifest.yml.template
+    │   │   ├── authserver
+    │   │   │   └── manifest.yml.template
+    │   │   ├── eureka
+    │   │   │   └── manifest.yml.template
+    │   │   └── provisioning
+    │   │       └── manifest.yml.template
+    │   └── utils
+    │       └── pouchserver
+    │           └── manifest.yml.template
     ```
 
 3. Customize the `deploy-pipeline-vars.yml` file with the location of the landscape repository
@@ -100,6 +101,51 @@ You should have the Concourse running by now. To run the deployment pipeline fol
    fly --target=lite unpause-pipeline --pipeline=abacus-deploy
    ```
 5. Check the pipeline at http://192.168.100.4:8080/
+
+## Templates
+
+Manifest templates can contain environment variables. The pipeline will replace them and generate the `manifest.yml` files in the proper directories.
+
+An example template can look like this:
+
+```yml
+applications:
+- name: abacus-usage-accumulator
+  host: abacus-usage-accumulator
+  path: .cfpack/app.zip
+  instances: 1
+  memory: 512M
+  disk_quota: 512M
+  env:
+    CONF: default
+    DEBUG: e-abacus-*
+    DBCLIENT: abacus-mongoclient
+    AGGREGATOR: abacus-usage-aggregator
+    PROVISIONING: abacus-provisioning-plugin
+    ACCOUNT: abacus-account-plugin
+    EUREKA: abacus-eureka-plugin
+    NODE_MODULES_CACHE: false
+    SLACK: 5D
+    SECURED: true
+    AUTH_SERVER: $AUTH_SERVER
+    CLIENT_ID: $ABACUS_CLIENT_ID
+    CLIENT_SECRET: $ABACUS_CLIENT_SECRET
+    JWTALGO: $JWTALGO
+    JWTKEY: |+
+      $JWTKEY
+```
+
+All variables in the format: $&lt;VARIABLE&gt; will be substituted with the value that is given to the pipeline (with the [deploy-pipeline-vars.yml](https://github.com/cloudfoundry-incubator/cf-abacus/blob/3cb401215f8ae7b66450c48328316afbf2b669f8/etc/concourse/deploy-pipeline-vars.yml)) as:
+```yml
+auth-server: http://auth-server.com
+abacus-client-id: client
+abacus-client-secret: secret
+jwtkey: |
+      -----BEGIN PUBLIC KEY-----
+      ... insert key here ...
+      -----END PUBLIC KEY-----
+jwtalgo: algo
+```
 
 ## Docker files
 
