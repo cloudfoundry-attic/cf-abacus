@@ -95,18 +95,36 @@ describe('abacus-usage-meter-itest', () => {
       });
   });
 
-  after(() => {
-    const stop = (module) => {
-      cp.spawn('npm', ['run', 'stop'],
+  after((done) => {
+    let counter = process.env.DB ? 1 : 2;
+    const finishCb = (module, code) => {
+      counter--;
+      debug('Module %s exited with code %d. Left %d modules',
+        module, code, counter);
+      if (counter === 0) {
+        debug('All modules stopped. Exiting test');
+        done();
+      }
+    };
+
+    const stop = (module, cb) => {
+      debug('Stopping %s in directory %s', module, moduleDir(module));
+      const c = cp.spawn('npm', ['run', 'stop'],
         { cwd: moduleDir(module), env: clone(process.env) });
+
+      // Add listeners to stdout, stderr and exit message and forward the
+      // messages to debug logs
+      c.stdout.on('data', (data) => process.stdout.write(data));
+      c.stderr.on('data', (data) => process.stderr.write(data));
+      c.on('exit', (code) => cb(module, code));
     };
 
     // Stop usage meter
-    stop('abacus-usage-meter');
+    stop('abacus-usage-meter', finishCb);
 
     // Stop local database server
     if (!process.env.DB)
-      stop('abacus-pouchserver');
+      stop('abacus-pouchserver', finishCb);
   });
 
   it('meter normalized usage submissions', function(done) {

@@ -144,21 +144,39 @@ describe('abacus-usage-accumulator-itest', () => {
       });
   });
 
-  after(() => {
-    const stop = (module) => {
-      cp.spawn('npm', ['run', 'stop'],
+  after((done) => {
+    let counter = process.env.DB ? 2 : 3;
+    const finishCb = (module, code) => {
+      counter--;
+      debug('Module %s exited with code %d. Left %d modules',
+        module, code, counter);
+      if (counter === 0) {
+        debug('All modules stopped. Exiting test');
+        done();
+      }
+    };
+
+    const stop = (module, cb) => {
+      debug('Stopping %s in directory %s', module, moduleDir(module));
+      const c = cp.spawn('npm', ['run', 'stop'],
         { cwd: moduleDir(module), env: clone(process.env) });
+
+      // Add listeners to stdout, stderr and exit message and forward the
+      // messages to debug logs
+      c.stdout.on('data', (data) => process.stdout.write(data));
+      c.stderr.on('data', (data) => process.stderr.write(data));
+      c.on('exit', (code) => cb(module, code));
     };
 
     // Stop usage accumulator
-    stop('abacus-usage-accumulator');
+    stop('abacus-usage-accumulator', finishCb);
 
     // Stop account plugin
-    stop('abacus-account-plugin');
+    stop('abacus-account-plugin', finishCb);
 
     // Stop local database server
     if (!process.env.DB)
-      stop('abacus-pouchserver');
+      stop('abacus-pouchserver', finishCb);
   });
 
   it('accumulate metered usage submissions', function(done) {
