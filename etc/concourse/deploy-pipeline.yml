@@ -23,7 +23,7 @@ jobs:
               type: docker-image
               source:
                 repository: godofcontainers/node-mongodb
-                tag: '6.2.0'
+                tag: '6.9.1'
             inputs:
               - name: landscape
             outputs:
@@ -97,7 +97,7 @@ jobs:
             type: docker-image
             source:
               repository: godofcontainers/node-mongodb
-              tag: '6.2.0'
+              tag: '6.9.1'
           inputs:
             - name: built-project
           params:
@@ -111,8 +111,6 @@ jobs:
             CF_DOMAIN: {{cf-domain}}
             BIND_DB_SERVICE: {{bind-db-service}}
             ABACUS_PROFILE: {{abacus-profile}}
-            # Use latest node.js buildpack to enable 5.11.1
-            BUILDPACK: https://github.com/cloudfoundry/nodejs-buildpack.git
             # Save file handlers and offload CF stagers
             JOBS: 2
           run:
@@ -126,7 +124,7 @@ jobs:
             type: docker-image
             source:
               repository: godofcontainers/node-mongodb
-              tag: '6.2.0'
+              tag: '6.9.1'
           inputs:
             - name: built-project
           params:

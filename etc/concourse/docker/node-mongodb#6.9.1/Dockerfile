@@ -1,4 +1,4 @@
-FROM node:6.2.0
+FROM node:6.9.1
 RUN apt-get update -y
 RUN apt-get install -y mongodb zip
 RUN apt-get clean
