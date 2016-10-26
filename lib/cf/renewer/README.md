@@ -11,12 +11,8 @@ The memory consumption metric used in the `linux-container` sample resource is t
 
 The `cf-renewer` app transfers the active resource consumption from the previous month into the current one by effectively sending the required "ping" doc.
 
-To do this the `cf-renewer` executes the following steps:
-* list the collected usage from the previous month
-* pick the last usage doc
-* check if the doc is not "stop" usage (`current_instance_memory: 0`)
-* skip/filter out the "stopped" usage
-* re-submit the active usage for the current month
-
-:warning: **Warning:** :warning:   
-The cf-renewer app supports only plans with "pure" time-based metrics. This means that any usage documents with a metering plan that has both discrete and time-based metrics will be ignored !
+To do this the following steps are executed:
+* `cf-bridge` stores a reference to start or scale usage in a special carry-over DB
+* `cf-bridge` deletes the reference on application stop
+* `cf-renewer` lists the collected usage from the previous month
+* `cf-renewer` re-submits the active usage for the current month
