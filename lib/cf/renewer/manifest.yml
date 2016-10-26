@@ -9,7 +9,6 @@ applications:
     CONF: default
     DEBUG: e-abacus-*
     COLLECTOR: abacus-usage-collector
-    PROVISIONING: abacus-provisioning-plugin
     EUREKA: abacus-eureka-plugin
     API: api
     DB: abacus-pouchserver
