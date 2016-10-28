@@ -479,8 +479,8 @@ const test = (secured) => {
       expectedConsuming = 0.5;
     });
 
-    it('renews the old usage and submits it to collector', function(done) {
-      this.timeout(totalTimeout);
+    it('usage is not duplicated', function(done) {
+      this.timeout(totalTimeout + 2000);
 
       waitForStartAndPoll('bridge', 9500, checkCurrentMonthWindows, (error) => {
         if (error) {
@@ -489,7 +489,12 @@ const test = (secured) => {
         }
 
         start('abacus-cf-renewer');
-        waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindows, done);
+        waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindows, () =>
+          // Allow the renewer to kick-in
+          setTimeout(() =>
+            waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindows, done)
+          , 2000)
+        );
       });
     });
   });
