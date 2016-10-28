@@ -134,6 +134,7 @@ const test = (secured) => {
   let appUsageEvents;
 
   let expectedConsuming;
+  let noReportExpected;
 
   const start = (module) => {
     debug('Starting %s in directory %s', module, moduleDir(module));
@@ -221,6 +222,8 @@ const test = (secured) => {
 
     // Trigger renewer every 2 seconds
     process.env.RETRY_INTERVAL = 2000;
+
+    noReportExpected = false;
 
     // Start all Abacus services
     const startServices = () => {
@@ -338,6 +341,13 @@ const test = (secured) => {
 
           expect(response.body).to.contain.all.keys('resources', 'spaces');
           const resources = response.body.resources;
+
+          if (noReportExpected) {
+            expect(resources.length).to.equal(0);
+            cb();
+            return;
+          }
+
           expect(resources.length).to.equal(1);
           expect(response.body.spaces.length).to.equal(1);
 
@@ -471,6 +481,60 @@ const test = (secured) => {
       });
     });
   });
+
+  context('with app started 3 months ago outside slack window', () => {
+    beforeEach(() => {
+      const threeMonthsAgo = moment().utc().subtract(3, 'months').valueOf();
+      appUsageEvents = [
+        {
+          metadata: {
+            guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
+            url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
+            created_at: new Date(threeMonthsAgo).toISOString()
+          },
+          entity: {
+            state: 'STARTED',
+            previous_state: 'STOPPED',
+            memory_in_mb_per_instance: 512,
+            previous_memory_in_mb_per_instance: 512,
+            instance_count: 1,
+            previous_instance_count: 1,
+            app_guid: '35c4ff2f',
+            app_name: 'app',
+            space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+            space_name: 'abacus',
+            org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+            buildpack_guid: null,
+            buildpack_name: null,
+            package_state: 'PENDING',
+            previous_package_state: 'PENDING',
+            parent_app_guid: null,
+            parent_app_name: null,
+            process_type: 'web',
+            task_name: null,
+            task_guid: null
+          }
+        }
+      ];
+
+      // expect no usage to be aggregated/accumulated
+      noReportExpected = true;
+    });
+
+    it('does not submit usage', function(done) {
+      this.timeout(totalTimeout + 2000);
+
+      waitForStartAndPoll('bridge', 9500, () => {}, (error) => {
+        if (error) {
+          done(error);
+          return;
+        }
+        start('abacus-cf-renewer');
+        waitForStartAndPoll('renewer', 9501, () => {}, done);
+      });
+    });
+  });
+
 };
 
 describe('abacus-cf-renewer irrelevant-usage-test with oAuth',
