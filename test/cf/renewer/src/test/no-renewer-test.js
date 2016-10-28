@@ -304,17 +304,24 @@ const test = (secured) => {
   const checkLastMonthWindow = (windowName, usage, level) => {
     const windowUsage = usage.windows[timeWindows.month];
     const previousMonth = windowUsage[1];
+
+    expect(previousMonth).to.not.equal(undefined);
+
     if (level !== 'resource') {
       expect(previousMonth).to.contain.all.keys('quantity', 'charge');
       debug('%s month window; Expected: consuming=%d, charge>0; ' +
-        'Actual: consuming=%d, charge=%d', windowName,
+        'Actual: consuming=%d, charge=%d; Month window: %o', windowName,
         expectedConsuming, previousMonth.quantity.consuming,
-        previousMonth.charge.charge);
+        previousMonth.charge, previousMonth);
       expect(previousMonth.quantity.consuming).to.equal(expectedConsuming);
     }
+    else
+      debug('%s month window; Expected: charge>0; ' +
+        'Actual: charge=%o; Month window: %o',
+        windowName, previousMonth.charge, previousMonth);
+
     expect(previousMonth).to.contain.all.keys('charge');
-    debug('%s month window; Expected: charge>0; ' +
-      'Actual: charge=%d', windowName, previousMonth.charge.charge);
+    expect(previousMonth.charge).to.not.equal(undefined);
     expect(previousMonth.charge).to.be.above(0);
   };
 
@@ -608,14 +615,14 @@ const test = (secured) => {
       });
 
       it('does not submit current month usage to collector', function(done) {
-        this.timeout(totalTimeout + 2000);
+        this.timeout(totalTimeout);
 
         waitForStartAndPoll('bridge', 9500, checkLastMonthWindow, (error) => {
           if (error) {
             done(error);
             return;
           }
-          setTimeout(() => checkReport(done, checkCurrentMonthWindows), 1000);
+          setTimeout(() => checkReport(done, checkCurrentMonthWindows), 2000);
         });
       });
     });

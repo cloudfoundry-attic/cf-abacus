@@ -133,7 +133,6 @@ const test = (secured) => {
 
   let appUsageEvents;
 
-  let noUsageExpected;
   let expectedConsuming;
 
   const start = (module) => {
@@ -147,8 +146,8 @@ const test = (secured) => {
     // messages to debug logs
     c.stdout.on('data', (data) => process.stdout.write(data));
     c.stderr.on('data', (data) => process.stderr.write(data));
-    c.on('exit', (code) => debug('Module %s started with code %d',
-      module, code));
+    c.on('exit', (code) =>
+      debug('Module %s started with code %d', module, code));
   };
 
   beforeEach((done) => {
@@ -222,8 +221,6 @@ const test = (secured) => {
 
     // Trigger renewer every 2 seconds
     process.env.RETRY_INTERVAL = 2000;
-
-    noUsageExpected = false;
 
     // Start all Abacus services
     const startServices = () => {
@@ -306,17 +303,24 @@ const test = (secured) => {
   const checkTwoMonthsAgoWindows = (windowName, usage, level) => {
     const windowUsage = usage.windows[timeWindows.month];
     const previousMonth = windowUsage[2];
+
+    expect(previousMonth).to.not.equal(undefined);
+
     if (level !== 'resource') {
       expect(previousMonth).to.contain.all.keys('quantity', 'charge');
       debug('%s month window; Expected: consuming=%d, charge>0; ' +
-        'Actual: consuming=%d, charge=%d', windowName,
+        'Actual: consuming=%d, charge=%d; Month window: %o', windowName,
         expectedConsuming, previousMonth.quantity.consuming,
-        previousMonth.charge.charge);
+        previousMonth.charge, previousMonth);
       expect(previousMonth.quantity.consuming).to.equal(expectedConsuming);
     }
+    else
+      debug('%s month window; Expected: charge>0; ' +
+        'Actual: charge=%o; Month window: %o',
+        windowName, previousMonth.charge, previousMonth);
+
     expect(previousMonth).to.contain.all.keys('charge');
-    debug('%s month window; Expected: charge>0; ' +
-      'Actual: charge=%d', windowName, previousMonth.charge.charge);
+    expect(previousMonth.charge).to.not.equal(undefined);
     expect(previousMonth.charge).to.be.above(0);
   };
 
@@ -324,23 +328,23 @@ const test = (secured) => {
     const windowUsage = usage.windows[timeWindows.month];
     const currentMonth = windowUsage[0];
 
-    if (noUsageExpected) {
-      debug('%s window; Expected: no usage; Actual: %j',
-        windowName, currentMonth);
-      expect(currentMonth).to.equal(null);
-      return;
-    }
-    
+    expect(currentMonth).to.not.equal(undefined);
+
     if (level !== 'resource') {
       expect(currentMonth).to.contain.all.keys('quantity', 'charge');
       debug('%s window; Expected: consuming=%d, charge>0; ' +
-        'Actual: consuming=%d, charge=%d', windowName, expectedConsuming,
-        currentMonth.quantity.consuming, currentMonth.charge);
+        'Actual: consuming=%d, charge=%d; Month window: %o',
+        windowName, expectedConsuming, currentMonth.quantity.consuming,
+        currentMonth.charge, currentMonth);
       expect(currentMonth.quantity.consuming).to.equal(expectedConsuming);
     }
+    else
+      debug('%s window; Expected:  charge>0; ' +
+        'Actual: charge=%o; Month window: %o',
+        windowName, currentMonth.charge, currentMonth);
+
     expect(currentMonth).to.contain.all.keys('charge');
-    debug('%s window; Expected:  charge>0; ' +
-        'Actual: charge=%d', windowName, currentMonth.charge);
+    expect(currentMonth.charge).not.to.equal(undefined);
     expect(currentMonth.charge).to.be.above(0);
   };
 
@@ -475,8 +479,8 @@ const test = (secured) => {
       expectedConsuming = 0.5;
     });
 
-    it('submits runtime usage to usage collector', function(done) {
-      this.timeout(totalTimeout + 2000);
+    it('renews the old usage and submits it to collector', function(done) {
+      this.timeout(totalTimeout);
 
       waitForStartAndPoll('bridge', 9500, checkCurrentMonthWindows, (error) => {
         if (error) {
@@ -485,10 +489,7 @@ const test = (secured) => {
         }
 
         start('abacus-cf-renewer');
-
-        // Wait for renewer to kick-in, before polling the results
-        setTimeout(() => waitForStartAndPoll('renewer', 9501,
-          checkCurrentMonthWindows, done), 2000);
+        waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindows, done);
       });
     });
   });
@@ -532,7 +533,7 @@ const test = (secured) => {
       expectedConsuming = 0.5;
     });
 
-    it('submits runtime usage to usage collector', function(done) {
+    it('renews the old usage and submits it to collector', function(done) {
       this.timeout(totalTimeout + 2000);
 
       waitForStartAndPoll('bridge', 9500, checkTwoMonthsAgoWindows, (error) => {
@@ -540,12 +541,8 @@ const test = (secured) => {
           done(error);
           return;
         }
-
         start('abacus-cf-renewer');
-
-        // Wait for renewer to kick-in, before polling the results
-        setTimeout(() => waitForStartAndPoll('renewer', 9501,
-          checkTwoMonthsAgoWindows, done), 2000);
+        waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindows, done);
       });
     });
   });
