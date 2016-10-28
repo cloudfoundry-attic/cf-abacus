@@ -127,13 +127,14 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
   expiresIn: 43200
 });
 
+const lastMonthInMilliseconds = moment().utc().subtract(1, 'months').valueOf();
+
 const test = (secured) => {
   let server;
   let serverPort;
 
   let appUsageEvents;
 
-  let noUsageExpected;
   let expectedConsuming;
 
   const start = (module) => {
@@ -217,13 +218,11 @@ const test = (secured) => {
     process.env.JWTKEY = tokenSecret;
     process.env.JWTALGO = tokenAlgorithm;
 
-    // Change slack window to be able to submit usage for last 2 months
-    process.env.SLACK = '63D';
+    // Change slack window to be able to submit usage for last month
+    process.env.SLACK = '32D';
 
     // Trigger renewer every 2 seconds
     process.env.RETRY_INTERVAL = 2000;
-
-    noUsageExpected = false;
 
     // Start all Abacus services
     const startServices = () => {
@@ -253,7 +252,7 @@ const test = (secured) => {
   });
 
   afterEach((done) => {
-    let counter = 11;
+    let counter = 10;
     const finishCb = (module, code) => {
       counter--;
       debug('Module %s exited with code %d. Left %d modules',
@@ -276,7 +275,6 @@ const test = (secured) => {
       c.on('exit', (code) => cb(module, code));
     };
 
-    stop('abacus-cf-renewer', finishCb);
     stop('abacus-cf-bridge', finishCb);
     stop('abacus-usage-reporting', finishCb);
     stop('abacus-usage-aggregator', finishCb);
@@ -303,9 +301,9 @@ const test = (secured) => {
     delete process.env.RETRY_INTERVAL;
   });
 
-  const checkTwoMonthsAgoWindows = (windowName, usage, level) => {
+  const checkLastMonthWindow = (windowName, usage, level) => {
     const windowUsage = usage.windows[timeWindows.month];
-    const previousMonth = windowUsage[2];
+    const previousMonth = windowUsage[1];
     if (level !== 'resource') {
       expect(previousMonth).to.contain.all.keys('quantity', 'charge');
       debug('%s month window; Expected: consuming=%d, charge>0; ' +
@@ -324,24 +322,9 @@ const test = (secured) => {
     const windowUsage = usage.windows[timeWindows.month];
     const currentMonth = windowUsage[0];
 
-    if (noUsageExpected) {
-      debug('%s window; Expected: no usage; Actual: %j',
-        windowName, currentMonth);
-      expect(currentMonth).to.equal(null);
-      return;
-    }
-    
-    if (level !== 'resource') {
-      expect(currentMonth).to.contain.all.keys('quantity', 'charge');
-      debug('%s window; Expected: consuming=%d, charge>0; ' +
-        'Actual: consuming=%d, charge=%d', windowName, expectedConsuming,
-        currentMonth.quantity.consuming, currentMonth.charge);
-      expect(currentMonth.quantity.consuming).to.equal(expectedConsuming);
-    }
-    expect(currentMonth).to.contain.all.keys('charge');
-    debug('%s window; Expected:  charge>0; ' +
-        'Actual: charge=%d', windowName, currentMonth.charge);
-    expect(currentMonth.charge).to.be.above(0);
+    debug('%s window; Expected: no usage; Actual: %j',
+      windowName, currentMonth);
+    expect(currentMonth).to.equal(null);
   };
 
   const checkReport = (cb, checkFn) => {
@@ -436,123 +419,209 @@ const test = (secured) => {
     );
   };
 
-  context('start app in current month', () => {
-    beforeEach(() => {
-      const today = moment().utc().valueOf();
-      appUsageEvents = [
-        {
-          metadata: {
-            guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
-            url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-            created_at: new Date(today).toISOString()
+  context('with a single app', () => {
+
+    context('start, stop, start, scale out', () => {
+      beforeEach(() => {
+        appUsageEvents = [
+          {
+            metadata: {
+              guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
+              url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
+              created_at: new Date(lastMonthInMilliseconds).toISOString()
+            },
+            entity: {
+              state: 'STARTED',
+              previous_state: 'STOPPED',
+              memory_in_mb_per_instance: 512,
+              previous_memory_in_mb_per_instance: 512,
+              instance_count: 1,
+              previous_instance_count: 1,
+              app_guid: '35c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: null,
+              buildpack_name: null,
+              package_state: 'PENDING',
+              previous_package_state: 'PENDING',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
           },
-          entity: {
-            state: 'STARTED',
-            previous_state: 'STOPPED',
-            memory_in_mb_per_instance: 512,
-            previous_memory_in_mb_per_instance: 512,
-            instance_count: 1,
-            previous_instance_count: 1,
-            app_guid: '35c4ff2f',
-            app_name: 'app',
-            space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
-            space_name: 'abacus',
-            org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
-            buildpack_guid: null,
-            buildpack_name: null,
-            package_state: 'PENDING',
-            previous_package_state: 'PENDING',
-            parent_app_guid: null,
-            parent_app_name: null,
-            process_type: 'web',
-            task_name: null,
-            task_guid: null
+          {
+            metadata: {
+              guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
+              url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
+              created_at: new Date(lastMonthInMilliseconds + 1).toISOString()
+            },
+            entity: {
+              state: 'BUILDPACK_SET',
+              previous_state: 'STARTED',
+              memory_in_mb_per_instance: 512,
+              previous_memory_in_mb_per_instance: 512,
+              instance_count: 1,
+              previous_instance_count: 1,
+              app_guid: '35c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
+              buildpack_name: 'staticfile_buildpack',
+              package_state: 'STAGED',
+              previous_package_state: 'STAGED',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
+          },
+          {
+            metadata: {
+              guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
+              url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
+              created_at: new Date(lastMonthInMilliseconds + 2).toISOString()
+            },
+            entity: {
+              state: 'STOPPED',
+              previous_state: 'STARTED',
+              memory_in_mb_per_instance: 512,
+              previous_memory_in_mb_per_instance: 512,
+              instance_count: 2,
+              previous_instance_count: 1,
+              app_guid: '35c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
+              buildpack_name: 'staticfile_buildpack',
+              package_state: 'STAGED',
+              previous_package_state: 'STAGED',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
+          },
+          {
+            metadata: {
+              guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
+              url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
+              created_at: new Date(lastMonthInMilliseconds + 3).toISOString()
+            },
+            entity: {
+              state: 'STARTED',
+              previous_state: 'STOPPED',
+              memory_in_mb_per_instance: 256,
+              previous_memory_in_mb_per_instance: 256,
+              instance_count: 1,
+              previous_instance_count: 1,
+              app_guid: '35c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: null,
+              buildpack_name: null,
+              package_state: 'PENDING',
+              previous_package_state: 'PENDING',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
+          },
+          {
+            metadata: {
+              guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
+              url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
+              created_at: new Date(lastMonthInMilliseconds + 4).toISOString()
+            },
+            entity: {
+              state: 'BUILDPACK_SET',
+              previous_state: 'STARTED',
+              memory_in_mb_per_instance: 256,
+              previous_memory_in_mb_per_instance: 256,
+              instance_count: 1,
+              previous_instance_count: 1,
+              app_guid: '35c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
+              buildpack_name: 'staticfile_buildpack',
+              package_state: 'STAGED',
+              previous_package_state: 'STAGED',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
+          },
+          {
+            metadata: {
+              guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
+              url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
+              created_at: new Date(lastMonthInMilliseconds + 5).toISOString()
+            },
+            entity: {
+              state: 'STARTED',
+              previous_state: 'STARTED',
+              memory_in_mb_per_instance: 1024,
+              previous_memory_in_mb_per_instance: 256,
+              instance_count: 2,
+              previous_instance_count: 1,
+              app_guid: '35c4ff2f',
+              app_name: 'app',
+              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+              space_name: 'abacus',
+              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+              buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
+              buildpack_name: 'staticfile_buildpack',
+              package_state: 'STAGED',
+              previous_package_state: 'STAGED',
+              parent_app_guid: null,
+              parent_app_name: null,
+              process_type: 'web',
+              task_name: null,
+              task_guid: null
+            }
           }
-        }
-      ];
+        ];
 
-      // start: 0.5 GB
-      expectedConsuming = 0.5;
-    });
-
-    it('submits runtime usage to usage collector', function(done) {
-      this.timeout(totalTimeout + 2000);
-
-      waitForStartAndPoll('bridge', 9500, checkCurrentMonthWindows, (error) => {
-        if (error) {
-          done(error);
-          return;
-        }
-
-        start('abacus-cf-renewer');
-
-        // Wait for renewer to kick-in, before polling the results
-        setTimeout(() => waitForStartAndPoll('renewer', 9501,
-          checkCurrentMonthWindows, done), 2000);
+        // first start: 0.5 GB
+        // second start: 0.25 GB
+        // buildpack_set events are ignored
+        // scale out: 2 x 1 GB = 2GB
+        expectedConsuming = 2;
       });
-    });
-  });
 
-  context('start app 2 months ago', () => {
-    beforeEach(() => {
-      const twoMonthsAgo = moment().utc().subtract(2, 'months').valueOf();
-      appUsageEvents = [
-        {
-          metadata: {
-            guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
-            url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-            created_at: new Date(twoMonthsAgo).toISOString()
-          },
-          entity: {
-            state: 'STARTED',
-            previous_state: 'STOPPED',
-            memory_in_mb_per_instance: 512,
-            previous_memory_in_mb_per_instance: 512,
-            instance_count: 1,
-            previous_instance_count: 1,
-            app_guid: '35c4ff2f',
-            app_name: 'app',
-            space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
-            space_name: 'abacus',
-            org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
-            buildpack_guid: null,
-            buildpack_name: null,
-            package_state: 'PENDING',
-            previous_package_state: 'PENDING',
-            parent_app_guid: null,
-            parent_app_name: null,
-            process_type: 'web',
-            task_name: null,
-            task_guid: null
+      it('does not submit current month usage to collector', function(done) {
+        this.timeout(totalTimeout + 2000);
+
+        waitForStartAndPoll('bridge', 9500, checkLastMonthWindow, (error) => {
+          if (error) {
+            done(error);
+            return;
           }
-        }
-      ];
-
-      // start: 0.5 GB
-      expectedConsuming = 0.5;
-    });
-
-    it('submits runtime usage to usage collector', function(done) {
-      this.timeout(totalTimeout + 2000);
-
-      waitForStartAndPoll('bridge', 9500, checkTwoMonthsAgoWindows, (error) => {
-        if (error) {
-          done(error);
-          return;
-        }
-
-        start('abacus-cf-renewer');
-
-        // Wait for renewer to kick-in, before polling the results
-        setTimeout(() => waitForStartAndPoll('renewer', 9501,
-          checkTwoMonthsAgoWindows, done), 2000);
+          setTimeout(() => checkReport(done, checkCurrentMonthWindows), 1000);
+        });
       });
     });
   });
 };
 
-describe('abacus-cf-renewer irrelevant-usage-test without oAuth',
+describe('abacus-cf-renewer no-renewer-test without oAuth',
   () => test(false));
 
-describe('abacus-cf-renewer irrelevant-usage-test with oAuth',
-  () => test(true));
