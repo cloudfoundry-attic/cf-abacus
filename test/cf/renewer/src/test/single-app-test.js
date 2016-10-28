@@ -329,7 +329,7 @@ const test = (secured) => {
     expect(previousMonth.charge).to.be.above(0);
   };
 
-  const checkCurrentMonthWindows = (windowName, usage, level) => {
+  const checkCurrentMonthWindow = (windowName, usage, level) => {
     const windowUsage = usage.windows[timeWindows.month];
     const currentMonth = windowUsage[0];
 
@@ -649,7 +649,7 @@ const test = (secured) => {
             return;
           }
           start('abacus-cf-renewer');
-          waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindows, done);
+          waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindow, done);
         });
       });
     });
@@ -792,7 +792,7 @@ const test = (secured) => {
             return;
           }
           start('abacus-cf-renewer');
-          waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindows, done);
+          waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindow, done);
         });
       });
     });

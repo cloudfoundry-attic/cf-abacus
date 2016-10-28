@@ -300,6 +300,61 @@ const test = (secured) => {
     delete process.env.RETRY_INTERVAL;
   });
 
+  const checkTwoMonthsAgoWindow = (windowName, usage, level) => {
+    const windowUsage = usage.windows[timeWindows.month];
+    const previousMonth = windowUsage[2];
+
+    expect(previousMonth).to.not.equal(undefined);
+
+    if (level !== 'resource') {
+      expect(previousMonth).to.contain.all.keys('quantity', 'charge');
+      debug('%s month window; Expected: consuming=%d, charge>0; ' +
+        'Actual: consuming=%d, charge=%d; Month window: %o', windowName,
+        expectedConsuming, previousMonth.quantity.consuming,
+        previousMonth.charge, previousMonth);
+      expect(previousMonth.quantity.consuming).to.equal(expectedConsuming);
+    }
+    else
+      debug('%s month window; Expected: charge>0; ' +
+        'Actual: charge=%o; Month window: %o',
+        windowName, previousMonth.charge, previousMonth);
+
+    expect(previousMonth).to.contain.all.keys('charge');
+    expect(previousMonth.charge).to.not.equal(undefined);
+    expect(previousMonth.charge).to.be.above(0);
+  };
+
+  const checkThreeMonthOldWindow = (windowName, usage, level) => {
+    const windowUsage = usage.windows[timeWindows.month];
+    const previousMonth = windowUsage[3];
+
+    expect(previousMonth).to.not.equal(undefined);
+
+    if (level !== 'resource') {
+      expect(previousMonth).to.contain.all.keys('quantity', 'charge');
+      debug('%s month window; Expected: consuming=%d, charge>0; ' +
+        'Actual: consuming=%d, charge=%d; Month window: %o', windowName,
+        expectedConsuming, previousMonth.quantity.consuming,
+        previousMonth.charge, previousMonth);
+      expect(previousMonth.quantity.consuming).to.equal(expectedConsuming);
+    }
+    else
+      debug('%s month window; Expected: charge>0; ' +
+        'Actual: charge=%o; Month window: %o',
+        windowName, previousMonth.charge, previousMonth);
+
+    expect(previousMonth).to.contain.all.keys('charge');
+    expect(previousMonth.charge).to.not.equal(undefined);
+    expect(previousMonth.charge).to.be.above(0);
+  };
+
+  const checkNoCurrentMonthWindow = (windowName, usage) => {
+    const windowUsage = usage.windows[timeWindows.month];
+    const currentMonth = windowUsage[0];
+
+    expect(currentMonth).to.equal(undefined);
+  };
+
   const checkCurrentMonthWindow = (windowName, usage, level) => {
     const windowUsage = usage.windows[timeWindows.month];
     const currentMonth = windowUsage[0];
@@ -416,15 +471,15 @@ const test = (secured) => {
     );
   };
 
-  context('start app in current month', () => {
+  context('start app 2 months ago', () => {
     beforeEach(() => {
-      const today = moment().utc().valueOf();
+      const twoMonthsAgo = moment().utc().subtract(2, 'months').valueOf();
       appUsageEvents = [
         {
           metadata: {
             guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
             url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-            created_at: new Date(today).toISOString()
+            created_at: new Date(twoMonthsAgo).toISOString()
           },
           entity: {
             state: 'STARTED',
@@ -455,23 +510,73 @@ const test = (secured) => {
       expectedConsuming = 0.5;
     });
 
-    it('usage is not duplicated', function(done) {
+    it('renews the old usage and submits it to collector', function(done) {
       this.timeout(totalTimeout + 2000);
 
-      waitForStartAndPoll('bridge', 9500, checkCurrentMonthWindow, (error) => {
+      waitForStartAndPoll('bridge', 9500, checkTwoMonthsAgoWindow, (error) => {
         if (error) {
           done(error);
           return;
         }
-
         start('abacus-cf-renewer');
-        // Allow the renewer to kick-in
-        setTimeout(() => waitForStartAndPoll('renewer', 9501,
-          checkCurrentMonthWindow, done), 2000);
+        waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindow, done);
+      });
+    });
+  });
+
+  context('start app 3 months ago', () => {
+    beforeEach(() => {
+      const threeMonthsAgo = moment().utc().subtract(3, 'months').valueOf();
+      appUsageEvents = [
+        {
+          metadata: {
+            guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
+            url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
+            created_at: new Date(threeMonthsAgo).toISOString()
+          },
+          entity: {
+            state: 'STARTED',
+            previous_state: 'STOPPED',
+            memory_in_mb_per_instance: 512,
+            previous_memory_in_mb_per_instance: 512,
+            instance_count: 1,
+            previous_instance_count: 1,
+            app_guid: '35c4ff2f',
+            app_name: 'app',
+            space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+            space_name: 'abacus',
+            org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+            buildpack_guid: null,
+            buildpack_name: null,
+            package_state: 'PENDING',
+            previous_package_state: 'PENDING',
+            parent_app_guid: null,
+            parent_app_name: null,
+            process_type: 'web',
+            task_name: null,
+            task_guid: null
+          }
+        }
+      ];
+
+      // start: 0.5 GB
+      expectedConsuming = 0.5;
+    });
+
+    it('does now renew the old usage', function(done) {
+      this.timeout(totalTimeout + 2000);
+
+      waitForStartAndPoll('bridge', 9500, checkThreeMonthOldWindow, (error) => {
+        if (error) {
+          done(error);
+          return;
+        }
+        start('abacus-cf-renewer');
+        waitForStartAndPoll('renewer', 9501, checkNoCurrentMonthWindow, done);
       });
     });
   });
 };
 
-describe('abacus-cf-renewer irrelevant-usage-test with oAuth',
+describe('abacus-cf-renewer slack-window-test with oAuth',
   () => test(true));

@@ -325,7 +325,7 @@ const test = (secured) => {
     expect(previousMonth.charge).to.be.above(0);
   };
 
-  const checkCurrentMonthWindows = (windowName, usage, level) => {
+  const checkCurrentMonthWindow = (windowName, usage, level) => {
     const windowUsage = usage.windows[timeWindows.month];
     const currentMonth = windowUsage[0];
 
@@ -622,7 +622,7 @@ const test = (secured) => {
             done(error);
             return;
           }
-          setTimeout(() => checkReport(done, checkCurrentMonthWindows), 2000);
+          setTimeout(() => checkReport(done, checkCurrentMonthWindow), 2000);
         });
       });
     });
