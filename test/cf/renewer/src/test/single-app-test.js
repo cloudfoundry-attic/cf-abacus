@@ -308,23 +308,32 @@ const test = (secured) => {
   const checkLastMonthWindow = (windowName, usage, level) => {
     const windowUsage = usage.windows[timeWindows.month];
     const previousMonth = windowUsage[1];
+
+    expect(previousMonth).to.not.equal(undefined);
+
     if (level !== 'resource') {
       expect(previousMonth).to.contain.all.keys('quantity', 'charge');
       debug('%s month window; Expected: consuming=%d, charge>0; ' +
-        'Actual: consuming=%d, charge=%d', windowName,
+        'Actual: consuming=%d, charge=%d; Month window: %o', windowName,
         expectedConsuming, previousMonth.quantity.consuming,
-        previousMonth.charge.charge);
+        previousMonth.charge, previousMonth);
       expect(previousMonth.quantity.consuming).to.equal(expectedConsuming);
     }
+    else
+      debug('%s month window; Expected: charge>0; ' +
+        'Actual: charge=%o; Month window: %o',
+        windowName, previousMonth.charge, previousMonth);
+
     expect(previousMonth).to.contain.all.keys('charge');
-    debug('%s month window; Expected: charge>0; ' +
-      'Actual: charge=%d', windowName, previousMonth.charge.charge);
+    expect(previousMonth.charge).to.not.equal(undefined);
     expect(previousMonth.charge).to.be.above(0);
   };
 
-  const checkCurrentMonthWindows = (windowName, usage, level) => {
+  const checkCurrentMonthWindow = (windowName, usage, level) => {
     const windowUsage = usage.windows[timeWindows.month];
     const currentMonth = windowUsage[0];
+
+    expect(currentMonth).to.not.equal(undefined);
 
     if (noUsageExpected) {
       debug('%s window; Expected: no usage; Actual: %j',
@@ -332,17 +341,22 @@ const test = (secured) => {
       expect(currentMonth).to.equal(null);
       return;
     }
-    
+
     if (level !== 'resource') {
       expect(currentMonth).to.contain.all.keys('quantity', 'charge');
       debug('%s window; Expected: consuming=%d, charge>0; ' +
-        'Actual: consuming=%d, charge=%d', windowName, expectedConsuming,
-        currentMonth.quantity.consuming, currentMonth.charge);
+        'Actual: consuming=%d, charge=%d; Month window: %o',
+        windowName, expectedConsuming, currentMonth.quantity.consuming,
+        currentMonth.charge, currentMonth);
       expect(currentMonth.quantity.consuming).to.equal(expectedConsuming);
     }
+    else
+      debug('%s window; Expected:  charge>0; ' +
+        'Actual: charge=%o; Month window: %o',
+        windowName, currentMonth.charge, currentMonth);
+
+    expect(currentMonth.charge).not.to.equal(undefined);
     expect(currentMonth).to.contain.all.keys('charge');
-    debug('%s window; Expected:  charge>0; ' +
-        'Actual: charge=%d', windowName, currentMonth.charge);
     expect(currentMonth.charge).to.be.above(0);
   };
 
@@ -627,7 +641,7 @@ const test = (secured) => {
       });
 
       it('submits runtime usage to usage collector', function(done) {
-        this.timeout(totalTimeout + 2000);
+        this.timeout(totalTimeout);
 
         waitForStartAndPoll('bridge', 9500, checkLastMonthWindow, (error) => {
           if (error) {
@@ -635,7 +649,7 @@ const test = (secured) => {
             return;
           }
           start('abacus-cf-renewer');
-          waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindows, done);
+          waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindow, done);
         });
       });
     });
@@ -770,7 +784,7 @@ const test = (secured) => {
       });
 
       it('submits runtime usage to usage collector', function(done) {
-        this.timeout(totalTimeout + 2000);
+        this.timeout(totalTimeout);
 
         waitForStartAndPoll('bridge', 9500, checkLastMonthWindow, (error) => {
           if (error) {
@@ -778,7 +792,7 @@ const test = (secured) => {
             return;
           }
           start('abacus-cf-renewer');
-          waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindows, done);
+          waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindow, done);
         });
       });
     });
