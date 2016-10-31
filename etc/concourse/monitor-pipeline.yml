@@ -1,0 +1,115 @@
+---
+resources:
+  - name: landscape
+    type: git
+    source:
+      uri: {{landscape-git-repo}}
+      branch: {{landscape-git-repo-branch}}
+      paths: [cf-abacus,abacus-config]
+      private_key: {{landscape-git-repo-private-key}}
+      skip-ssl-verification: true
+
+  - name: repetition-interval
+    type: time
+    source:
+      interval: 5m
+
+jobs:
+  - name: create-dashboards
+    serial_groups:
+    - abacus
+    plan:
+      - aggregate:
+        - get: landscape
+          trigger: true
+      - task: create-dashboards
+        timeout: 20m
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: godofcontainers/ubuntu-14.04-cf
+              tag: 'latest'
+          inputs:
+            - name: landscape
+          params:
+            UPLOAD_GRAFANA_DASHBOARD: {{upload-grafana-dashboard}}
+            GRAFANA_HOST: {{grafana-host}}
+            GRAFANA_USERNAME: {{grafana-username}}
+            GRAFANA_PASSWORD: {{grafana-password}}
+          run:
+            path: landscape/cf-abacus/etc/concourse/scripts/create-dashboards.sh
+
+  - name: monitor-abacus
+    serial_groups:
+    - abacus
+    plan:
+      - aggregate:
+        - get: landscape
+          passed: [create-dashboards]
+          trigger: true
+        - get: repetition-interval
+          trigger: true
+      - task: monitor-abacus
+        timeout: 20m
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: godofcontainers/ubuntu-14.04-cf
+              tag: 'latest'
+          inputs:
+            - name: landscape
+          params:
+            CF_API: {{cf-api}}
+            CF_ADMIN_USER: {{cf-admin-user}}
+            CF_ADMIN_PASSWORD: {{cf-admin-password}}
+            CF_ORG: {{cf-org}}
+            CF_SPACE: {{cf-space}}
+            ABACUS_CLIENT_ID: {{abacus-client-id}}
+            ABACUS_CLIENT_SECRET: {{abacus-client-secret}}
+          run:
+            path: landscape/cf-abacus/etc/concourse/scripts/cf-monitor
+        on_success:
+          task: send-success-to-riemann
+          timeout: 10m
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: godofcontainers/ubuntu-14.04-cf
+                tag: 'latest'
+            inputs:
+              - name: landscape
+            run:
+              path: landscape/cf-abacus/etc/concourse/scripts/riemann-metric-success.sh
+            params:
+              SEND_TO_RIEMANN: {{send-to-riemann}}
+              CF_DEPLOYMENT_NAME: {{cf-deployment-name}}
+              RIEMANN_ADDRESS: {{riemann-address}}
+              RIEMANN_PORT: {{riemann-port}}
+        on_failure:
+          task: send-failure-to-riemann
+          timeout: 10m
+          config:
+            platform: linux
+            image_resource:
+              type: docker-image
+              source:
+                repository: godofcontainers/ubuntu-14.04-cf
+                tag: 'latest'
+            inputs:
+              - name: landscape
+            run:
+              path: landscape/cf-abacus/etc/concourse/scripts/riemann-metric-failure.sh
+            params:
+              SEND_TO_RIEMANN: {{send-to-riemann}}
+              CF_DEPLOYMENT_NAME: {{cf-deployment-name}}
+              RIEMANN_ADDRESS: {{riemann-address}}
+              RIEMANN_PORT: {{riemann-port}}
+
+
+
