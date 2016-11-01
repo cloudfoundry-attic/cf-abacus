@@ -10,7 +10,6 @@ applications:
     DEBUG: e-abacus-*
     COLLECTOR: abacus-usage-collector
     EUREKA: abacus-eureka-plugin
-    API: api
     DB: abacus-pouchserver
     DBCLIENT: abacus-couchclient
     NODE_MODULES_CACHE: false
