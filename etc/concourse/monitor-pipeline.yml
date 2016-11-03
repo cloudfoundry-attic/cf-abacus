@@ -39,7 +39,7 @@ jobs:
             GRAFANA_USERNAME: {{grafana-username}}
             GRAFANA_PASSWORD: {{grafana-password}}
           run:
-            path: landscape/cf-abacus/etc/concourse/scripts/create-dashboards.sh
+            path: landscape/cf-abacus/etc/concourse/scripts/create-dashboards
 
   - name: monitor-abacus
     serial_groups:
@@ -85,7 +85,7 @@ jobs:
             inputs:
               - name: landscape
             run:
-              path: landscape/cf-abacus/etc/concourse/scripts/riemann-metric-success.sh
+              path: landscape/cf-abacus/etc/concourse/scripts/riemann-metric-success
             params:
               SEND_TO_RIEMANN: {{send-to-riemann}}
               CF_DEPLOYMENT_NAME: {{cf-deployment-name}}
@@ -104,7 +104,7 @@ jobs:
             inputs:
               - name: landscape
             run:
-              path: landscape/cf-abacus/etc/concourse/scripts/riemann-metric-failure.sh
+              path: landscape/cf-abacus/etc/concourse/scripts/riemann-metric-failure
             params:
               SEND_TO_RIEMANN: {{send-to-riemann}}
               CF_DEPLOYMENT_NAME: {{cf-deployment-name}}
