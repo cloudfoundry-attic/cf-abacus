@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e -u
+
+if [ "$UPLOAD_GRAFANA_DASHBOARD" = true ]
+then
+  grafana_host=$GRAFANA_HOST
+  grafana_port=$GRAFANA_PORT
+  grafana_username=$GRAFANA_USERNAME
+  grafana_password=$GRAFANA_PASSWORD
+
+  dashboard_dir="$(dirname $0)/../monitoring"
+  dashboards_url="http://${grafana_username}:${grafana_password}@${grafana_host}:${grafana_port}/api/dashboards/db"
+
+  for dashboard in ${dashboard_dir}/*.json ; do
+    dashboard_data='{"dashboard":'"$(cat $dashboard)"',"overwrite":true}'
+    curl -kf -X POST "$dashboards_url" -H 'Content-Type: application/json' -d "${dashboard_data}"
+    echo
+  done
+  echo "dashboards successfully created"
+fi

@@ -147,6 +147,22 @@ jwtkey: |
 jwtalgo: algo
 ```
 
+## Monitoring pipeline
+You can run the monitoring pipeline separately, or you can configure it to send status reports to grafana.
+For setting up grafana you can refer to the [official documentation](http://docs.grafana.org/installation/).
+
+You should have running Concourse and fly-cli installed. If not refer to `Running the testing pipeline`
+
+1. Adjust the [`monitoring-pipeline-vars.yml`](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/etc/concourse/monitor-pipeline-vars.yml) to match your configuration.
+1. Upload the pipeline:
+``` bash
+echo "y" | fly --target=lite set-pipeline --pipeline=monitor-abacus --config=monitor-pipeline.yml --load-vars-from=monitor-pipeline-vars.yml --non-interactive
+fly --target=lite unpause-pipeline --pipeline=monitor-abacus
+```
+
+
+
+
 ## Docker files
 
 The `docker` directory contains several `Dockerfile`s used to build the images used in the pipeline.
