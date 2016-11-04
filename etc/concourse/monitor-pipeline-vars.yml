@@ -52,6 +52,9 @@ upload-grafana-dashboard: false
 #Grafana host
 grafana-host: 0.0.0.0
 
+#Grafana port
+grafana-port: 3000
+
 #Grafana username
 grafana-username: admin
 

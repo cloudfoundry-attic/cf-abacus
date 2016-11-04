@@ -5,9 +5,9 @@ set -e -u
 if [ "$UPLOAD_GRAFANA_DASHBOARD" = true ]
 then
   grafana_host=$GRAFANA_HOST
+  grafana_port=$GRAFANA_PORT
   grafana_username=$GRAFANA_USERNAME
   grafana_password=$GRAFANA_PASSWORD
-  grafana_port="3000"
 
   dashboard_dir="$(dirname $0)/../monitoring"
   dashboards_url="http://${grafana_username}:${grafana_password}@${grafana_host}:${grafana_port}/api/dashboards/db"

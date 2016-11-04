@@ -36,6 +36,7 @@ jobs:
           params:
             UPLOAD_GRAFANA_DASHBOARD: {{upload-grafana-dashboard}}
             GRAFANA_HOST: {{grafana-host}}
+            GRAFANA_PORT: {{grafana-port}}
             GRAFANA_USERNAME: {{grafana-username}}
             GRAFANA_PASSWORD: {{grafana-password}}
           run:
