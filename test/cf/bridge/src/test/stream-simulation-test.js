@@ -157,7 +157,7 @@ const fixTimes = (responseBody) => {
 const appUsageEvents = fixTimes(require('./appUsageEvents.json'));
 const testDataOrgGuid = appUsageEvents.resources[0].entity.org_guid;
 
-describe('abacus-cf-bridge multiple-apps-test without oAuth', () => {
+describe('abacus-cf-bridge stream simulation', () => {
   let server;
   let serverPort;
   let expectedConsuming;
@@ -419,10 +419,13 @@ describe('abacus-cf-bridge multiple-apps-test without oAuth', () => {
 
   context('with stream of CF events', () => {
     beforeEach(() => {
-      expectedConsuming = 26.5;
+      // 37 apps consuming 512 MB
+      // one app using 4 GB
+      // total: 22.5 GB
+      expectedConsuming = 22.5;
     });
 
-    it.only('submits usage and gets expected report back', function(done) {
+    it('submits usage and gets expected report back', function(done) {
       this.timeout(totalTimeout + 2000);
 
       waitForStartAndPoll('bridge', 9500, done);
