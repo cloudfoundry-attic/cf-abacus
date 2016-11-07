@@ -71,6 +71,7 @@ jobs:
             CI_START_TIMEOUT: 100000
             CI_PIPELINE_TIMEOUT: 200000
       - task: perf
+        attempts: 3
         config:
           platform: linux
           image: docker:///node#6.9.1
@@ -142,6 +143,7 @@ jobs:
             CI_START_TIMEOUT: 100000
             CI_PIPELINE_TIMEOUT: 200000
       - task: perf
+        attempts: 3
         config:
           platform: linux
           image: docker:///godofcontainers/node-couchdb#6.9.1
@@ -219,6 +221,7 @@ jobs:
             CI_START_TIMEOUT: 100000
             CI_PIPELINE_TIMEOUT: 200000
       - task: perf
+        attempts: 3
         config:
           platform: linux
           image: docker:///godofcontainers/node-mongodb#6.9.1
@@ -242,6 +245,7 @@ jobs:
           passed: [mongodb-6.9.1]
           trigger: true
       - task: infra
+        attempts: 2
         config:
           platform: linux
           image_resource:
@@ -263,6 +267,7 @@ jobs:
           run:
             path: abacus/etc/concourse/scripts/cf-test-infra
       - task: deploy
+        attempts: 2
         config:
           platform: linux
           image_resource:
