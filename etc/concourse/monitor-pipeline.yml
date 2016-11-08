@@ -65,8 +65,8 @@ jobs:
             - name: landscape
           params:
             CF_API: {{cf-api}}
-            CF_ADMIN_USER: {{cf-admin-user}}
-            CF_ADMIN_PASSWORD: {{cf-admin-password}}
+            CF_USER: {{cf-user}}
+            CF_PASSWORD: {{cf-password}}
             CF_ORG: {{cf-org}}
             CF_SPACE: {{cf-space}}
             ABACUS_CLIENT_ID: {{abacus-client-id}}

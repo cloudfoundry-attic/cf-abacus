@@ -5,7 +5,7 @@ echo "Environment:"
 env | sort
 
 echo "Logging to $CF_API ..."
-cf login --skip-ssl-validation -a https://api.$CF_API -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD -o $CF_ORG -s $CF_SPACE
+cf login --skip-ssl-validation -a https://api.$CF_API -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
 
 if [ -z "$ABACUS_CLIENT_ID" ] || [ -z "$ABACUS_CLIENT_SECRET" ]; then
   echo "Missing ABACUS_CLIENT_ID or ABACUS_CLIENT_SECRET !"

@@ -1,11 +1,11 @@
 # Cloud Foundry domain without the "api." prefix
 cf-api: cf.mycompany.com
 
-# Admin user. Should be able to create orgs, users, quotas
-cf-admin-user: admin
+# User that has SpaceDeveloper permissions for the Abacus' org
+cf-user: abacus
 
-# Password of the admin user
-cf-admin-password: admin
+# Password of the Abacus user
+cf-password: abacus123
 
 # Organization for the Abacus apps
 cf-org: abacus
@@ -32,32 +32,32 @@ landscape-git-repo-private-key: |
      ... insert key here ...
   -----END RSA PRIVATE KEY-----
 
-#Boolean value. If set to true it will send metrics to the preconfigured riemann.
-#Defaults to false
+# Boolean value. If set to true it will send metrics to the preconfigured riemann.
+# Defaults to false
 send-to-riemann: false
 
-#Riemman address
+# Riemman address
 riemann-address: 0.0.0.0
 
-#Riemann port
+# Riemann port
 riemann-port: 2003
 
-#Riemann metrics prefix
+# Riemann metrics prefix
 cf-deployment-name: CF
 
-#Boolean value. If set to true, uploads abacus dashboards to preconfigured grafana
-#Defaults to false
+# Boolean value. If set to true, uploads abacus dashboards to preconfigured grafana
+# Defaults to false
 upload-grafana-dashboard: false
 
-#Grafana host
+# Grafana host
 grafana-host: 0.0.0.0
 
-#Grafana port
+# Grafana port
 grafana-port: 3000
 
-#Grafana username
+# Grafana username
 grafana-username: admin
 
-#Grafana password
+# Grafana password
 grafana-password: admin
 
