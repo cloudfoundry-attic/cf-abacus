@@ -60,7 +60,7 @@ system-client-secret: secret
 # UAA client: Cloud Controller user ID for administrative tasks
 cc-client-id: abacus-cc-client
 
-# UAA client: Cloud Controller user secret for administrative tasks
+# UAA client: Cloud Controller admin client secret
 cc-client-secret: secret
 
 # UAA client: Abacus CF-Bridge user ID
@@ -72,10 +72,10 @@ bridge-client-authorities: cloud_controller.admin_read_only
 # UAA client: Abacus CF-Bridge user secret
 bridge-client-secret: secret
 
-# UAA client: ID of a client that can access the Cloud Controller
+# UAA client: ID of a client that can read data from Cloud Controller
 cf-client-id: abacus-cf
 
-# UAA client: Cloud Controller client secret
+# UAA client: Cloud Controller read client secret
 cf-client-secret: secret
 
 # UAA client: "Linux Container" resource provider client ID
@@ -98,12 +98,6 @@ hystrix-client-secret: secret
 
 # Authentication server: api.<cf-api>:443
 auth-server: http://auth-server.com
-
-# UAA client: "Abacus" client id
-abacus-client-id: client
-
-# UAA client: "Abacus" client secret
-abacus-client-secret: secret
 
 # JWT Key
 jwtkey: |

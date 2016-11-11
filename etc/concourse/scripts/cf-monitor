@@ -7,18 +7,18 @@ env | sort
 echo "Logging to $CF_API ..."
 cf login --skip-ssl-validation -a https://api.$CF_API -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
 
-if [ -z "$ABACUS_CLIENT_ID" ] || [ -z "$ABACUS_CLIENT_SECRET" ]; then
-  echo "Missing ABACUS_CLIENT_ID or ABACUS_CLIENT_SECRET !"
+if [ -z "$SYSTEM_CLIENT_ID" ] || [ -z "$SYSTEM_CLIENT_SECRET" ]; then
+  echo "Missing SYSTEM_CLIENT_ID or SYSTEM_CLIENT_SECRET !"
   exit 1
 fi
 
 AUTH_SERVER=https://uaa.$CF_API
 
-echo "Getting token for $ABACUS_CLIENT_ID from $AUTH_SERVER ..."
+echo "Getting token for $SYSTEM_CLIENT_ID from $AUTH_SERVER ..."
 
-TOKEN=$(curl -k --user $ABACUS_CLIENT_ID:$ABACUS_CLIENT_SECRET -s "$AUTH_SERVER/oauth/token?grant_type=client_credentials" | jq -r .access_token)
+TOKEN=$(curl -k --user $SYSTEM_CLIENT_ID:$SYSTEM_CLIENT_SECRET -s "$AUTH_SERVER/oauth/token?grant_type=client_credentials" | jq -r .access_token)
 if [ "$TOKEN" == "null" ]; then
-  echo "No token found ! Are your credentials correct (ABACUS_CLIENT_ID and ABACUS_CLIENT_SECRET)?"
+  echo "No token found ! Are your credentials correct (SYSTEM_CLIENT_ID and SYSTEM_CLIENT_SECRET)?"
 fi
 echo "Token obtained"
 echo ""

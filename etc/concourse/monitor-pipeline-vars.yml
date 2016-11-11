@@ -14,10 +14,10 @@ cf-org: abacus
 cf-space: abacus
 
 # UAA client: "Abacus" client id
-abacus-client-id: client
+system-client-id: client
 
 # UAA client: "Abacus" client secret
-abacus-client-secret: secret
+system-client-secret: secret
 
 # Abacus repo URI (or landscape project URI)
 landscape-git-repo: https://github.com/cloudfoundry-incubator/cf-abacus.git

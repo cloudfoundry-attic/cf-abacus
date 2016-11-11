@@ -128,8 +128,8 @@ applications:
     SLACK: 5D
     SECURED: true
     AUTH_SERVER: $AUTH_SERVER
-    CLIENT_ID: $ABACUS_CLIENT_ID
-    CLIENT_SECRET: $ABACUS_CLIENT_SECRET
+    CLIENT_ID: $SYSTEM_CLIENT_ID
+    CLIENT_SECRET: $SYSTEM_CLIENT_SECRET
     JWTALGO: $JWTALGO
     JWTKEY: |+
       $JWTKEY
@@ -138,8 +138,8 @@ applications:
 All variables in the format: $&lt;VARIABLE&gt; will be substituted with the value that is given to the pipeline (with the [deploy-pipeline-vars.yml](https://github.com/cloudfoundry-incubator/cf-abacus/blob/3cb401215f8ae7b66450c48328316afbf2b669f8/etc/concourse/deploy-pipeline-vars.yml)) as:
 ```yml
 auth-server: http://auth-server.com
-abacus-client-id: client
-abacus-client-secret: secret
+system-client-id: client
+system-client-secret: secret
 jwtkey: |
       -----BEGIN PUBLIC KEY-----
       ... insert key here ...

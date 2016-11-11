@@ -69,8 +69,8 @@ jobs:
             CF_PASSWORD: {{cf-password}}
             CF_ORG: {{cf-org}}
             CF_SPACE: {{cf-space}}
-            ABACUS_CLIENT_ID: {{abacus-client-id}}
-            ABACUS_CLIENT_SECRET: {{abacus-client-secret}}
+            SYSTEM_CLIENT_ID: {{system-client-id}}
+            SYSTEM_CLIENT_SECRET: {{system-client-secret}}
           run:
             path: landscape/cf-abacus/etc/concourse/scripts/cf-monitor
         on_success:
