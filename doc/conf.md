@@ -80,7 +80,7 @@ npm run demo
 
 *Note:* The `local*` scripts sets `JOBS=1` to force serial execution of tests and prevent multiple tests working with the same DB.
 
-## Cloud Foundry configuration
+### Cloud Foundry configuration
 Modify all of the application manifests (`manifest.yml`) to include the DB environment variables:
 ```yml
   env:
