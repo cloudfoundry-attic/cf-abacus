@@ -111,12 +111,6 @@ jwtalgo: algo
 # Use templates true/false
 abacus-configure: true
 
-# UAA client: "Renewer" client id
-renewer-client-id: renewer-client
-
-# UAA client: "Renewer" client secret
-renewer-client-secret: secret
-
 # Abacus repo URI (or landscape project URI)
 landscape-git-repo: https://github.com/cloudfoundry-incubator/cf-abacus.git
 
