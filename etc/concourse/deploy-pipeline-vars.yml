@@ -25,6 +25,10 @@ cf-admin-password: admin
 # Abacus profile (default, small, medium, large)
 abacus-profile: large
 
+# Buildpack to use for pushing Abacus
+# Use name, GitHub URL or GitHuv URL and branch/tag
+nodejs-buildpack: nodejs_buildpack
+
 # (Re-)create DB service instance or use already provisioned DB
 # WARNING: Setting this to "true" will destroy your DB
 create-db-service: true

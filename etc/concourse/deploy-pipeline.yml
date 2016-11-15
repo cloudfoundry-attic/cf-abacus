@@ -109,6 +109,7 @@ jobs:
             CF_DOMAIN: {{cf-domain}}
             BIND_DB_SERVICE: {{bind-db-service}}
             ABACUS_PROFILE: {{abacus-profile}}
+            BUILDPACK: {{nodejs-buildpack}}
             # Save file handlers and offload CF stagers
             JOBS: 2
           run:
