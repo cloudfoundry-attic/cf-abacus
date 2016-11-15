@@ -86,25 +86,26 @@ if [ $abacus_login = 0 ]; then
 fi
 
 echo "Logging to $CF_API as admin ..."
-cf api --skip-ssl-validation https://api.$CF_API
-echo "" | cf login -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD
+cf api --skip-ssl-validation "https://api.$CF_API"
+echo "" | cf login -u "$CF_ADMIN_USER" -p "$CF_ADMIN_PASSWORD"
 
 echo "Recreating organization and space ..."
-cf delete-org -f $CF_ORG
-cf delete-quota -f $CF_ORG
-cf create-quota $CF_ORG -m 80g -r 80 -s 2 --allow-paid-service-plans
-cf create-org $CF_ORG -q $CF_ORG
-cf create-space $CF_SPACE -o $CF_ORG
+cf delete-org -f "$CF_ORG"
+cf delete-quota -f "$CF_ORG"
+cf create-quota "$CF_ORG" -m 80g -r 80 -s 2 --allow-paid-service-plans
+cf create-org "$CF_ORG" -q "$CF_ORG"
+cf create-space "$CF_SPACE" -o "$CF_ORG"
+cf enable-service-access "$DB_SERVICE_NAME" -p "$DB_PLAN_NAME" -o "$CF_ORG"
 
 echo "Recreating user ..."
-cf delete-user -f $CF_USER
-cf create-user $CF_USER $CF_PASSWORD
-cf set-org-role $CF_USER $CF_ORG OrgManager
-cf set-space-role $CF_USER $CF_ORG $CF_SPACE SpaceManager
-cf set-space-role $CF_USER $CF_ORG $CF_SPACE SpaceDeveloper
+cf delete-user -f "$CF_USER"
+cf create-user "$CF_USER" "$CF_PASSWORD"
+cf set-org-role "$CF_USER" "$CF_ORG" OrgManager
+cf set-space-role "$CF_USER" "$CF_ORG" "$CF_SPACE" SpaceManager
+cf set-space-role "$CF_USER" "$CF_ORG" "$CF_SPACE" SpaceDeveloper
 
 echo "Logging to $CF_API as abacus user ..."
-cf login -a https://api.$CF_API -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE --skip-ssl-validation
+cf login -a "https://api.$CF_API" -u "$CF_USER" -p "$CF_PASSWORD" -o "$CF_ORG" -s "$CF_SPACE" --skip-ssl-validation
 
 if [ "$CREATE_DB_SERVICE" == "true" ]; then
   echo "Creating new DB service instance ..."
@@ -125,7 +126,7 @@ else
 fi
 
 echo "Logging to UAA ..."
-uaac target uaa.$CF_API
+uaac target "uaa.$CF_API"
 uaac token client get "$UAA_ADMIN" -s "$UAA_SECRET"
 
 echo "Trying to delete existing UAA clients ..."
