@@ -43,7 +43,7 @@ var adjustManifest = function(app, name, instances, conf, buildpack) {
 };
 
 // Write new manifest.yml
-var remanifest = function(root, name, instances, conf, buildpack, suffix, cb) {
+var remanifest = function(root, name, instances, conf, buildpack, prefix, cb) {
   fs.readFile(
     path.join(process.cwd(), 'manifest.yml'), function(err, content) {
       if(err) {
@@ -52,7 +52,7 @@ var remanifest = function(root, name, instances, conf, buildpack, suffix, cb) {
       }
       var yml = yaml.load(content);
       var app = yml.applications[0];
-      var appName = suffix ? [name, suffix].join('-') : name;
+      var appName = prefix ? [prefix, name].join('') : name;
 
       adjustManifest(app, appName, instances, conf, buildpack);
 
@@ -94,8 +94,8 @@ var runCLI = function() {
       'configuration name', process.env.CONF)
     .option('-b, --buildpack <value>',
       'buildpack name or location', process.env.BUILDPACK)
-    .option('-x, --suffix <value>',
-      'host suffix (like \"dev\", \"prod\")', process.env.SUFFIX)
+    .option('-x, --prefix <value>',
+      'host prefix (like \"dev\", \"prod\")', process.env.ABACUS_PREFIX)
     .option('-s, --start',
       'start an app after pushing')
     .parse(process.argv);
@@ -109,7 +109,7 @@ var runCLI = function() {
 
     // Generate the updated manifest.yml
     remanifest(commander.root, commander.name, commander.instances,
-      commander.conf, commander.buildpack, commander.suffix, function(err) {
+      commander.conf, commander.buildpack, commander.prefix, function(err) {
         if(err) {
           console.log('Couldn\'t write manifest.yml -', err);
           process.exit(1);
@@ -128,4 +128,3 @@ var runCLI = function() {
 
 // Export our CLI
 module.exports.runCLI = runCLI;
-
