@@ -15,6 +15,9 @@ const clone = require('abacus-clone');
 const oauth = require('abacus-oauth');
 const dbclient = require('abacus-dbclient');
 
+const BigNumber = require('bignumber.js');
+BigNumber.config({ ERRORS: false });
+
 // Parse command line options
 const argv = clone(process.argv);
 argv.splice(1, 1, 'demo');
@@ -68,9 +71,9 @@ const token = secured() ? oauth.cache(authServer,
 // Builds the expected window value based upon the
 // charge summary, quantity, cost, and window
 const buildWindow = (ch, s, q, c) => {
-  const addProperty = (k, v, o, z) => {
-    if(typeof v !== 'undefined')
-      o[k] = z ? 0 : v;
+  const addProperty = (key, value, obj) => {
+    if(typeof value !== 'undefined')
+      obj[key] = value;
   };
   const win = {};
   addProperty('charge', ch, win);
@@ -79,6 +82,22 @@ const buildWindow = (ch, s, q, c) => {
   addProperty('cost', c, win);
   return win;
 };
+
+// Builds the expected window value based upon the
+// charge summary, quantity, cost, and window
+const addToWindow = (window, ch, s, q, c) => {
+  expect(window).to.not.equal(undefined);
+
+  const incrementValue = (key, increment, obj) => {
+    if(typeof increment !== 'undefined' && typeof obj[key] !== 'undefined')
+      obj[key] = new BigNumber(obj[key]).plus(increment).toNumber();
+  };
+  incrementValue('charge', ch, window);
+  incrementValue('summary', s, window);
+  incrementValue('quantity', q, window);
+  incrementValue('cost', c, window);
+};
+
 
 // Prunes all the windows of everything but the monthly charge
 const prune = (v, k) => {
@@ -117,8 +136,9 @@ describe('abacus-demo-client', function() {
 
     // Configure the test timeout
     const timeout = Math.max(totalTimeout, 40000);
-    this.timeout(timeout + 2000);
     const processingDeadline = Date.now() + timeout;
+    this.timeout(timeout + 2000);
+    console.log('Test will run until %s', new Date(processingDeadline));
 
     // Test usage to be submitted by the client
     const start = now.getTime();
@@ -201,19 +221,19 @@ describe('abacus-demo-client', function() {
     const report = {
       organization_id: 'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
       account_id: '1234',
-      windows: buildWindow(46.09),
+      windows: buildWindow(0),
       resources: [{
         resource_id: 'object-storage',
-        windows: buildWindow(46.09),
+        windows: buildWindow(1),
         aggregated_usage: [{
           metric: 'storage',
           windows: buildWindow(1)
         }, {
           metric: 'thousand_light_api_calls',
-          windows: buildWindow(0.09)
+          windows: buildWindow(0)
         }, {
           metric: 'heavy_api_calls',
-          windows: buildWindow(45)
+          windows: buildWindow(0)
         }],
         plans: [{
           plan_id: 'basic/basic-object-storage/' +
@@ -221,34 +241,34 @@ describe('abacus-demo-client', function() {
           metering_plan_id: 'basic-object-storage',
           rating_plan_id: 'object-rating-plan',
           pricing_plan_id: 'object-pricing-basic',
-          windows: buildWindow(46.09),
+          windows: buildWindow(1),
           aggregated_usage: [{
             metric: 'storage',
             windows: buildWindow(1, 1, 1, 1)
           }, {
             metric: 'thousand_light_api_calls',
-            windows: buildWindow(0.09, 3, 3, 0.09)
+            windows: buildWindow(0, 0, 0, 0)
           }, {
             metric: 'heavy_api_calls',
-            windows: buildWindow(45, 300, 300, 45)
+            windows: buildWindow(0, 0, 0, 0)
           }]
         }]
       }],
       spaces: [{
         space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-        windows: buildWindow(46.09),
+        windows: buildWindow(1),
         resources: [{
           resource_id: 'object-storage',
-          windows: buildWindow(46.09),
+          windows: buildWindow(0),
           aggregated_usage: [{
             metric: 'storage',
             windows: buildWindow(1)
           }, {
             metric: 'thousand_light_api_calls',
-            windows: buildWindow(0.09)
+            windows: buildWindow(0)
           }, {
             metric: 'heavy_api_calls',
-            windows: buildWindow(45)
+            windows: buildWindow(0)
           }],
           plans: [{
             plan_id: 'basic/basic-object-storage/' +
@@ -256,34 +276,34 @@ describe('abacus-demo-client', function() {
             metering_plan_id: 'basic-object-storage',
             rating_plan_id: 'object-rating-plan',
             pricing_plan_id: 'object-pricing-basic',
-            windows: buildWindow(46.09),
+            windows: buildWindow(1),
             aggregated_usage: [{
               metric: 'storage',
               windows: buildWindow(1, 1, 1, 1)
             }, {
               metric: 'thousand_light_api_calls',
-              windows: buildWindow(0.09, 3, 3, 0.09)
+              windows: buildWindow(0, 0, 0, 0)
             }, {
               metric: 'heavy_api_calls',
-              windows: buildWindow(45, 300, 300, 45)
+              windows: buildWindow(0, 0, 0, 0)
             }]
           }]
         }],
         consumers: [{
           consumer_id: 'app:bbeae239-f3f8-483c-9dd0-de6781c38bab',
-          windows: buildWindow(46.09),
+          windows: buildWindow(1),
           resources: [{
             resource_id: 'object-storage',
-            windows: buildWindow(46.09),
+            windows: buildWindow(0),
             aggregated_usage: [{
               metric: 'storage',
               windows: buildWindow(1)
             }, {
               metric: 'thousand_light_api_calls',
-              windows: buildWindow(0.09)
+              windows: buildWindow(0)
             }, {
               metric: 'heavy_api_calls',
-              windows: buildWindow(45)
+              windows: buildWindow(0)
             }],
             plans: [{
               plan_id: 'basic/basic-object-storage/' +
@@ -291,7 +311,7 @@ describe('abacus-demo-client', function() {
               metering_plan_id: 'basic-object-storage',
               rating_plan_id: 'object-rating-plan',
               pricing_plan_id: 'object-pricing-basic',
-              windows: buildWindow(46.09),
+              windows: buildWindow(1),
               resource_instances: [{
                 id: '0b39fa70-a65f-4183-bae8-385633ca5c87'
               }],
@@ -300,10 +320,10 @@ describe('abacus-demo-client', function() {
                 windows: buildWindow(1, 1, 1, 1)
               }, {
                 metric: 'thousand_light_api_calls',
-                windows: buildWindow(0.09, 3, 3, 0.09)
+                windows: buildWindow(0, 0, 0, 0)
               }, {
                 metric: 'heavy_api_calls',
-                windows: buildWindow(45, 300, 300, 45)
+                windows: buildWindow(0, 0, 0, 0)
               }]
             }]
           }]
@@ -346,8 +366,72 @@ describe('abacus-demo-client', function() {
       }
     };
 
+    const deepExtend = (target, source) => {
+      for (const prop in source)
+        if (typeof target[prop] == 'object')
+          deepExtend(target[prop], source[prop]);
+        else
+          target[prop] = source[prop];
+      return target;
+    };
+
+    const updateExpectedReport = (currentReport) => {
+      const clonedReport = extend({}, report);
+      const updatedReport = deepExtend(clonedReport, currentReport);
+
+      addToWindow(updatedReport.windows, 45.09);
+
+      addToWindow(updatedReport.resources[0].windows, 45.09);
+
+      addToWindow(updatedReport.resources[0].aggregated_usage[1].windows, 0.09);
+      addToWindow(updatedReport.resources[0].aggregated_usage[2].windows, 45);
+
+      addToWindow(updatedReport.resources[0].plans[0].windows, 45.09);
+      addToWindow(updatedReport.resources[0].plans[0]
+        .aggregated_usage[1].windows, 0.09, 3, 3, 0.09);
+      addToWindow(updatedReport.resources[0].plans[0]
+        .aggregated_usage[2].windows, 45, 300, 300, 45);
+
+      addToWindow(updatedReport.spaces[0].windows, 45.09);
+
+      addToWindow(updatedReport.spaces[0].resources[0].windows, 45.09);
+      addToWindow(updatedReport.spaces[0].resources[0]
+        .aggregated_usage[1].windows, 0.09);
+      addToWindow(updatedReport.spaces[0].resources[0]
+        .aggregated_usage[2].windows, 45);
+
+      addToWindow(updatedReport.spaces[0].resources[0].plans[0]
+        .windows, 45.09);
+      addToWindow(updatedReport.spaces[0].resources[0].plans[0]
+        .aggregated_usage[1].windows, 0.09, 3, 3, 0.09);
+      addToWindow(updatedReport.spaces[0].resources[0].plans[0]
+        .aggregated_usage[2].windows, 45, 300, 300, 45);
+
+      addToWindow(updatedReport.spaces[0].consumers[0].windows, 45.09);
+
+      addToWindow(updatedReport.spaces[0].consumers[0].resources[0]
+        .windows, 45.09);
+      addToWindow(updatedReport.spaces[0].consumers[0].resources[0]
+        .aggregated_usage[1].windows, 0.09);
+      addToWindow(updatedReport.spaces[0].consumers[0].resources[0]
+        .aggregated_usage[2].windows, 45);
+
+      addToWindow(updatedReport.spaces[0].consumers[0].resources[0].plans[0]
+        .windows, 45.09);
+      addToWindow(updatedReport.spaces[0].consumers[0].resources[0].plans[0]
+        .aggregated_usage[1].windows, 0.09, 3, 3, 0.09);
+      addToWindow(updatedReport.spaces[0].consumers[0].resources[0].plans[0]
+        .aggregated_usage[2].windows, 45, 300, 300, 45);
+
+      updatedReport.spaces[0].consumers[0].resources[0].plans[0]
+        .resource_instances[0] = omit(updatedReport.spaces[0].consumers[0]
+        .resources[0].plans[0].resource_instances[0], 't', 'p');
+
+      return updatedReport;
+    };
+
     // Get a usage report for the test organization
-    const get = (done) => {
+    const getReport = (cb) => {
       request.get([
         reporting,
         'v1/metering/organizations',
@@ -357,19 +441,23 @@ describe('abacus-demo-client', function() {
         expect(err).to.equal(undefined);
         expect(val.statusCode).to.equal(200);
 
-        // Compare the usage report we got with the expected report
-        console.log('Processed %d usage docs', processed(val));
+        console.log('%s: Processed %d usage docs', new Date(), processed(val));
         const actual = clone(omit(val.body,
           'id', 'processed', 'processed_id', 'start', 'end'), prune);
 
+        cb(actual);
+      });
+    };
+
+    // Compare the usage report we got with the expected report
+    const compareReport = (expectedReport, done) => {
+      getReport((actual) => {
         try {
           actual.spaces[0].consumers[0].resources[0].plans[0]
             .resource_instances[0] = omit(actual.spaces[0].consumers[0]
             .resources[0].plans[0].resource_instances[0], 't', 'p');
-          expect(actual).to.deep.equal(report);
-          console.log('\n', util.inspect(val.body, {
-            depth: 20
-          }), '\n');
+
+          expect(actual).to.deep.equal(expectedReport);
           done();
         }
         catch (e) {
@@ -378,21 +466,22 @@ describe('abacus-demo-client', function() {
           // if we're still not getting the expected report then
           // the processing of the submitted usage must have failed
           if(Date.now() >= processingDeadline) {
-            console.log('All submitted usage still not processed\n');
-            expect(actual).to.deep.equal(report);
+            console.log('%s: All submitted usage still not processed\n',
+              new Date());
+            expect(actual).to.deep.equal(expectedReport);
           }
           else
-            setTimeout(() => get(done), 250);
+            setTimeout(() => compareReport(expectedReport, done), 250);
         }
       });
     };
 
-    // Wait for the expected usage report, get a report every 250 msec until
+    // Wait for the expected usage report, get a report every 250 msec env until
     // we get the expected values indicating that all submitted usage has
     // been processed
-    const wait = (done) => {
-      console.log('\nRetrieving usage report');
-      get(done);
+    const wait = (expectedReport, done) => {
+      console.log('\n%s: Retrieving usage report', new Date());
+      compareReport(expectedReport, done);
     };
 
     // Wait for usage reporter to start
@@ -400,8 +489,16 @@ describe('abacus-demo-client', function() {
       // Failed to ping usage reporter before timing out
       if (err) throw err;
 
-      // Run the above steps
-      map(usage, (u) => post(u, () => wait(done)));
+      console.log('\n%s: Retrieving current report', new Date());
+      getReport((report) => {
+        const expectedReport = updateExpectedReport(report);
+        console.log('\nExpected report:\n', util.inspect(expectedReport, {
+          depth: 20
+        }), '\n');
+
+        // Post usage and wait for report
+        map(usage, (u) => post(u, () => wait(expectedReport, done)));
+      });
     });
   });
 });
