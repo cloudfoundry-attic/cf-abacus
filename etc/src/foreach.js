@@ -108,7 +108,7 @@ var runCLI = function() {
   // Running an npm command with program options requires '--'
   // before the program options
   var oidx = findIndex(commander.args, function(arg) {
-    return /^-/.test(arg) && !/^--/.test(arg);
+    return /^-/.test(arg) && /^--/.test(arg) && !/^--\s/.test(arg);
   });
   if (commander.cmd === 'npm' && oidx >= 0)
     commander.args.splice(oidx, 0, '--');
