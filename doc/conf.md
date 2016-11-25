@@ -14,8 +14,10 @@ These port numbers are used when running Abacus in a local dev environment.
 |      |                            |
 | 9100 | abacus-usage-meter         |
 | 9200 | abacus-usage-accumulator   |   
-| 9300 | abacus-usage-aggregator    |   
+| 9300 | abacus-usage-aggregator    |
+|      |                            |
 | 9500 | abacus-cf-bridge           |
+| 9501 | abacus-cf-renewer          |
 |      |                            |
 | 9880 | abacus-provisioning-plugin |  
 | 9881 | abacus-account-plugin      |
@@ -61,7 +63,7 @@ Abacus has two database clients:
 * [mongoclient](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/mongoclient) - supports MongoDB
 
 The DB is configured using these environemnt variables:
-* `DB` - URL of the database. By default Abacus uses local PouchDB if this variable is missing
+* `DB` - URL of the database. By default Abacus uses local PouchDB (`localhost:5984`) if this variable is missing
 * `DBCLIENT` - DB client to use. The default one is the `couchclient`. 
 
 ### Local configuration
