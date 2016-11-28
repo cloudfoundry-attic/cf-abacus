@@ -21,3 +21,6 @@ cf-admin-user: admin
 
 # Password of the admin user
 cf-admin-password: admin
+
+# Comma-separated debug logs
+debug:

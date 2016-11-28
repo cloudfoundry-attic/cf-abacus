@@ -38,6 +38,8 @@ jobs:
             - name: built-project
           run:
             path: abacus/etc/concourse/scripts/pouch-build
+          params:
+            DEBUG: {{debug}}
       - task: it
         config:
           platform: linux
@@ -49,6 +51,7 @@ jobs:
           params:
             CI_START_TIMEOUT: 100000
             CI_PIPELINE_TIMEOUT: 200000
+            DEBUG: {{debug}}
       - task: demo
         config:
           platform: linux
@@ -59,6 +62,7 @@ jobs:
             path: built-project/etc/concourse/scripts/pouch-demo
           params:
             CI_START_TIMEOUT: 100000
+            DEBUG: {{debug}}
       - task: dupe
         config:
           platform: linux
@@ -70,6 +74,7 @@ jobs:
           params:
             CI_START_TIMEOUT: 100000
             CI_PIPELINE_TIMEOUT: 200000
+            DEBUG: {{debug}}
       - task: perf
         attempts: 3
         config:
@@ -82,6 +87,7 @@ jobs:
           params:
             CI_START_TIMEOUT: 100000
             CI_PIPELINE_TIMEOUT: 200000
+            DEBUG: {{debug}}
 
 ################################# COUCH ########################################
 
@@ -104,6 +110,7 @@ jobs:
           params:
             JOBS: 1
             DB: http://localhost:5984
+            DEBUG: {{debug}}
       - task: it
         config:
           platform: linux
@@ -117,6 +124,7 @@ jobs:
             DB: http://localhost:5984
             CI_START_TIMEOUT: 100000
             CI_PIPELINE_TIMEOUT: 200000
+            DEBUG: {{debug}}
       - task: demo
         config:
           platform: linux
@@ -129,6 +137,7 @@ jobs:
             JOBS: 1
             DB: http://localhost:5984
             CI_START_TIMEOUT: 100000
+            DEBUG: {{debug}}
       - task: dupe
         config:
           platform: linux
@@ -142,6 +151,7 @@ jobs:
             DB: http://localhost:5984
             CI_START_TIMEOUT: 100000
             CI_PIPELINE_TIMEOUT: 200000
+            DEBUG: {{debug}}
       - task: perf
         attempts: 3
         config:
@@ -156,6 +166,7 @@ jobs:
             DB: http://localhost:5984
             CI_START_TIMEOUT: 100000
             CI_PIPELINE_TIMEOUT: 200000
+            DEBUG: {{debug}}
 
 ################################# MONGO ########################################
 
@@ -179,6 +190,7 @@ jobs:
             JOBS: 1
             DB: mongodb://localhost:27017
             DBCLIENT: abacus-mongoclient
+            DEBUG: {{debug}}
       - task: it
         config:
           platform: linux
@@ -193,6 +205,7 @@ jobs:
             DBCLIENT: abacus-mongoclient
             CI_START_TIMEOUT: 100000
             CI_PIPELINE_TIMEOUT: 200000
+            DEBUG: {{debug}}
       - task: demo
         config:
           platform: linux
@@ -206,6 +219,7 @@ jobs:
             DB: mongodb://localhost:27017
             DBCLIENT: abacus-mongoclient
             CI_START_TIMEOUT: 100000
+            DEBUG: {{debug}}
       - task: dupe
         config:
           platform: linux
@@ -220,6 +234,7 @@ jobs:
             DBCLIENT: abacus-mongoclient
             CI_START_TIMEOUT: 100000
             CI_PIPELINE_TIMEOUT: 200000
+            DEBUG: {{debug}}
       - task: perf
         attempts: 3
         config:
@@ -235,6 +250,7 @@ jobs:
             DBCLIENT: abacus-mongoclient
             CI_START_TIMEOUT: 100000
             CI_PIPELINE_TIMEOUT: 200000
+            DEBUG: {{debug}}
 
 ################################### CF #########################################
 
@@ -264,6 +280,7 @@ jobs:
             CF_ORG: {{cf-org}}
             CF_SPACE: {{cf-space}}
             CF_DOMAIN: {{cf-domain}}
+            DEBUG: {{debug}}
           run:
             path: abacus/etc/concourse/scripts/cf-test-infra
       - task: deploy
@@ -293,5 +310,6 @@ jobs:
             CF_ORG: {{cf-org}}
             CF_SPACE: {{cf-space}}
             CF_DOMAIN: {{cf-domain}}
+            DEBUG: {{debug}}
           run:
             path: abacus/etc/concourse/scripts/cf-test-test
