@@ -96,7 +96,7 @@ describe('abacus-usage-meter-itest', () => {
   });
 
   after((done) => {
-    let counter = process.env.DB ? 1 : 2;
+    let counter = 2;
     const finishCb = (module, code) => {
       counter--;
       debug('Module %s exited with code %d. Left %d modules',
@@ -123,8 +123,7 @@ describe('abacus-usage-meter-itest', () => {
     stop('abacus-usage-meter', finishCb);
 
     // Stop local database server
-    if (!process.env.DB)
-      stop('abacus-pouchserver', finishCb);
+    stop('abacus-pouchserver', finishCb);
   });
 
   it('meter normalized usage submissions', function(done) {

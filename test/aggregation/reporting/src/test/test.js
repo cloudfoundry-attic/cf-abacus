@@ -291,7 +291,7 @@ describe('abacus-usage-reporting-itest', () => {
   });
 
   after((done) => {
-    let counter = process.env.DB ? 2 : 3;
+    let counter = 3;
     const finishCb = (module, code) => {
       counter--;
       debug('Module %s exited with code %d. Left %d modules',
@@ -321,8 +321,7 @@ describe('abacus-usage-reporting-itest', () => {
     stop('abacus-account-plugin', finishCb);
 
     // Stop local database server
-    if (!process.env.DB)
-      stop('abacus-pouchserver', finishCb);
+    stop('abacus-pouchserver', finishCb);
   });
 
   it('report rated usage submissions', function(done) {
