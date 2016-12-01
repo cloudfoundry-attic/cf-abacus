@@ -68,7 +68,7 @@ const num = commander.num || 7;
 const organization = commander.organizationGuid || 'test-org';
 
 // This test timeout
-const totalTimeout = 60000 + delay * num;
+const totalTimeout = Math.max(60000 + delay * num, 65000);
 
 // Use secure routes or not
 const secured = () => process.env.SECURED === 'true' ? true : false;
@@ -100,9 +100,40 @@ const prune = (v, k) => {
   return v;
 };
 
+// Test usage to be submitted by the client
+const usage = {
+  start: usageTime,
+  end: usageTime,
+  organization_id: organization,
+  space_id: 'test-space',
+  consumer_id: 'test-consumer',
+  resource_id: 'test-resource',
+  plan_id: 'basic',
+  resource_instance_id: 'test-instance',
+  measured_usage: [
+    {
+      measure: 'previous_instance_memory',
+      quantity: 536870912
+    },
+    {
+      measure: 'previous_running_instances',
+      quantity: 0
+    },
+    {
+      measure: 'current_instance_memory',
+      quantity: 536870912
+    },
+    {
+      measure: 'current_running_instances',
+      quantity: 1
+    }
+  ]
+};
+
 describe('abacus-dupe', function() {
-  const timeout = Math.max(totalTimeout, 40000);
-  this.timeout(timeout);
+  // Configure the test timeout
+  this.timeout(totalTimeout);
+
   before((done) => {
     if (token)
       token.start();
@@ -114,74 +145,43 @@ describe('abacus-dupe', function() {
   it('submits usage for a sample resource and retrieves an aggregated ' +
     'usage report', (done) => {
 
-    // Configure the test timeout
-    this.timeout(timeout);
-
-    // Test usage to be submitted by the client
-    const start = usageTime;
-    const end = usageTime;
-
-    const usage = {
-      start: start,
-      end: end,
-      organization_id: organization,
-      space_id: 'test-space',
-      consumer_id: 'test-consumer',
-      resource_id: 'test-resource',
-      plan_id: 'basic',
-      resource_instance_id: 'test-instance',
-      measured_usage: [
-        {
-          measure: 'previous_instance_memory',
-          quantity: 536870912
-        },
-        {
-          measure: 'previous_running_instances',
-          quantity: 0
-        },
-        {
-          measure: 'current_instance_memory',
-          quantity: 536870912
-        },
-        {
-          measure: 'current_running_instances',
-          quantity: 1
-        }
-      ]
-    };
-
     // Submit usage for sample resource with 10 GB, 1000 light API calls,
     // and 100 heavy API calls
     let posts = 0;
     let previousReport;
     const post = (u, done) => {
-      console.log('Posting document', posts + 1);
-
-      const cb = () => {
-        posts++;
-        done();
-      };
+      console.log('\nPosting document', posts + 1);
 
       request.post(collector + '/v1/metering/collected/usage',
         extend({ body: u }, authHeader(token)), (err, val) => {
           if(organization === 'test_status_code_502') {
+            // Expect 502 from account plugin
             expect(err).to.not.equal(undefined);
             expect(val).to.equal(undefined);
           }
-          else {
-            expect(err).to.equal(undefined);
-            if(organization !== 'test_status_code_404') {
-              expect(val.statusCode).to.equal(posts === 0 ? 201 : 409);
-              if (!posts)
-                expect(val.headers.location).to.not.equal(undefined);
-              else
-                expect(val.headers.location).to.equal(undefined);
+          else
+            if (organization === 'test_status_code_404') {
+              // Expect 201 and error from collector
+              expect(err).to.equal(undefined);
+              expect(val.statusCode).to.equal(201);
+              expect(val.body.error).to.equal('eorgnotfound');
             }
             else
-              expect(val.statusCode).to.equal(404);
-          }
-          // Expect a 201 with the location of the accumulated usage
-          cb();
+              if (posts === 0) {
+                // Expect a 201 with the location of the accumulated usage
+                expect(err).to.equal(undefined);
+                expect(val.statusCode).to.equal(201);
+                expect(val.headers.location).to.not.equal(undefined);
+              }
+              else {
+                // Expect 409 conflict without location
+                expect(err).to.equal(undefined);
+                expect(val.statusCode).to.equal(409);
+                expect(val.headers.location).to.equal(undefined);
+              }
+
+          posts++;
+          done();
         });
     };
 
@@ -223,7 +223,7 @@ describe('abacus-dupe', function() {
           done();
         }
         else {
-          console.log('Waiting', delay, ' milliseconds before submitting');
+          console.log('Waiting', delay, 'milliseconds before submitting');
           setTimeout(() => post(u, () => get(u, done)), delay);
         }
       });
@@ -235,6 +235,8 @@ describe('abacus-dupe', function() {
       if (err) throw err;
 
       // Run the above steps
+      console.log('Will attempt %d submissions in organization %s',
+        num, organization);
       post(usage, () => get(usage, done));
     });
   });
