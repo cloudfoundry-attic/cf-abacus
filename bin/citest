@@ -13,6 +13,14 @@ if [ "$CI_TEST" != "false" ]; then
 
   npm run itest -- -o 4 -i 4 -u 4 $@
 
+  # Run dupe test without security
+  npm start
+  sleep 3s
+  npm run dupe
+  npm run dupe -- --organization=test_status_code_404
+  npm run dupe -- --organization=test_status_code_502
+  npm stop
+
   # Run demo and perf test without security
   npm start
   sleep 3s
