@@ -171,8 +171,11 @@ describe('abacus-dupe', function() {
           else {
             expect(err).to.equal(undefined);
             if(organization !== 'test_status_code_404') {
-              expect(val.statusCode).to.equal(201);
-              expect(val.headers.location).to.not.equal(undefined);
+              expect(val.statusCode).to.equal(posts === 0 ? 201 : 409);
+              if (!posts)
+                expect(val.headers.location).to.not.equal(undefined);
+              else
+                expect(val.headers.location).to.equal(undefined);
             }
             else
               expect(val.statusCode).to.equal(404);
