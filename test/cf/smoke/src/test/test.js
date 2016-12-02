@@ -89,8 +89,10 @@ const deltaCompare = (currentWindow, previousWindow, ch, s, q, c) => {
   const checkIfNear = (key, increment, current, previous) => {
     if(typeof increment !== 'undefined' &&
       typeof current[key] !== 'undefined' &&
-      typeof previous[key] !== 'undefined')
-      expect(current[key] - previous[key] - increment).to.be.below(0.01);
+      typeof previous[key] !== 'undefined') {
+      const diff = current[key] - previous[key] - increment;
+      expect(Math.abs(diff)).to.be.below(0.01);
+    }
   };
   checkIfNear('charge', ch, currentWindow, previousWindow);
   checkIfNear('summary', s, currentWindow, previousWindow);
@@ -364,15 +366,6 @@ describe('abacus-smoke-test', function() {
         // The response doesn't contain a valid report
         return 0;
       }
-    };
-
-    const deepExtend = (target, source) => {
-      for (const prop in source)
-        if (typeof target[prop] == 'object')
-          deepExtend(target[prop], source[prop]);
-        else
-          target[prop] = source[prop];
-      return target;
     };
 
     const deltaCompareReports = (currentReport, initialReport) => {
