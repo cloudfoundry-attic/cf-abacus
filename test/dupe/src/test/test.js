@@ -37,6 +37,8 @@ commander
     'number of submissions', parseInt)
   .option('-o, --organization-guid <o>',
     'organization guid to submit duplicate usage for')
+  .option('-s, --synthetic',
+    'synthetic tests (require example account-plugin and big delay)')
   .allowUnknownOption(true)
   .parse(argv);
 
@@ -101,10 +103,10 @@ const prune = (v, k) => {
 };
 
 // Test usage to be submitted by the client
-const usage = {
+const buildUsage = (orgGuid) => ({
   start: usageTime,
   end: usageTime,
-  organization_id: organization,
+  organization_id: orgGuid,
   space_id: 'test-space',
   consumer_id: 'test-consumer',
   resource_id: 'test-resource',
@@ -128,7 +130,7 @@ const usage = {
       quantity: 1
     }
   ]
-};
+});
 
 describe('abacus-dupe', function() {
   // Configure the test timeout
@@ -139,68 +141,59 @@ describe('abacus-dupe', function() {
       token.start();
 
     // Delete test dbs on the configured db server
-    dbclient.drop(process.env.DB, /^abacus-/, done);
+    dbclient.drop(process.env.DB, /^abacus-/, () => {
+
+      // Wait for usage reporter to start
+      request.waitFor(reporting + '/batch', {}, startTimeout, (err) => {
+        // Failed to ping usage reporter before timing out
+        if (err) throw err;
+
+        done();
+      });
+
+    });
   });
 
-  it('submits usage for a sample resource and retrieves an aggregated ' +
-    'usage report', (done) => {
+  context('with organization ' + organization, () => {
+    it('submits duplicated usage for a sample resource and retrieves ' +
+      'an aggregated usage report', (done) => {
 
-    // Submit usage for sample resource with 10 GB, 1000 light API calls,
-    // and 100 heavy API calls
-    let posts = 0;
-    let previousReport;
-    const post = (u, done) => {
-      console.log('\nPosting document', posts + 1);
+      // Submit usage for sample resource with 10 GB, 1000 light API calls,
+      // and 100 heavy API calls
+      let posts = 0;
+      let previousReport;
+      const post = (u, done) => {
+        console.log('\nPosting document', posts + 1);
 
-      request.post(collector + '/v1/metering/collected/usage',
-        extend({ body: u }, authHeader(token)), (err, val) => {
-          if(organization === 'test_status_code_502') {
-            // Expect 502 from account plugin
-            expect(err).to.not.equal(undefined);
-            expect(val).to.equal(undefined);
-          }
-          else
-            if (organization === 'test_status_code_404') {
-              // Expect 201 and error from collector
+        request.post(collector + '/v1/metering/collected/usage',
+          extend({ body: u }, authHeader(token)), (err, val) => {
+            if (posts === 0) {
+              // Expect a 201 with the location of the accumulated usage
               expect(err).to.equal(undefined);
               expect(val.statusCode).to.equal(201);
-              expect(val.body.error).to.equal('eorgnotfound');
+              expect(val.headers.location).to.not.equal(undefined);
             }
-            else
-              if (posts === 0) {
-                // Expect a 201 with the location of the accumulated usage
-                expect(err).to.equal(undefined);
-                expect(val.statusCode).to.equal(201);
-                expect(val.headers.location).to.not.equal(undefined);
-              }
-              else {
-                // Expect 409 conflict without location
-                expect(err).to.equal(undefined);
-                expect(val.statusCode).to.equal(409);
-                expect(val.headers.location).to.equal(undefined);
-              }
+            else {
+              // Expect 409 conflict without location
+              expect(err).to.equal(undefined);
+              expect(val.statusCode).to.equal(409);
+              expect(val.headers.location).to.equal(undefined);
+            }
 
-          posts++;
-          done();
-        });
-    };
+            posts++;
+            done();
+          });
+      };
 
-    // Get a usage report for the test organization
-    const get = (u, done) => {
-      console.log('Retrieving Usage Report');
-      request.get([
-        reporting,
-        'v1/metering/organizations',
-        organization,
-        'aggregated/usage'
-      ].join('/'), extend({}, authHeader(token)), (err, val) => {
-        if(organization === 'test_status_code_502')
-          expect(err).to.not.equal(undefined);
-        else if(organization === 'test_status_code_404') {
-          expect(err).to.equal(undefined);
-          expect(val.statusCode).to.equal(404);
-        }
-        else {
+      // Get a usage report for the test organization
+      const get = (u, done) => {
+        console.log('Retrieving Usage Report');
+        request.get([
+          reporting,
+          'v1/metering/organizations',
+          organization,
+          'aggregated/usage'
+        ].join('/'), extend({}, authHeader(token)), (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(200);
 
@@ -215,29 +208,129 @@ describe('abacus-dupe', function() {
               'id', 'processed', 'processed_id', 'start', 'end'), prune));
             console.log('No change in report');
           }
-        }
 
-        // Exit if all submissions are done, otherwise wait and post again
-        if(posts === num) {
-          console.log('No duplicates aggregated. Ending test.');
-          done();
-        }
-        else {
-          console.log('Waiting', delay, 'milliseconds before submitting');
-          setTimeout(() => post(u, () => get(u, done)), delay);
-        }
-      });
-    };
-
-    // Wait for usage reporter to start
-    request.waitFor(reporting + '/batch', {}, startTimeout, (err, value) => {
-      // Failed to ping usage reporter before timing out
-      if (err) throw err;
+          // Exit if all submissions are done, otherwise wait and post again
+          if(posts === num) {
+            console.log('No duplicates aggregated. Ending test.');
+            done();
+          }
+          else {
+            console.log('Waiting', delay, 'milliseconds before submitting');
+            setTimeout(() => post(u, () => get(u, done)), delay);
+          }
+        });
+      };
 
       // Run the above steps
       console.log('Will attempt %d submissions in organization %s',
         num, organization);
+      const usage = buildUsage(organization);
       post(usage, () => get(usage, done));
     });
   });
+
+  const synthetic = commander.synthetic ? context : context.skip;
+
+  synthetic('with organization test_status_code_502', () => {
+    it('submits duplicated usage in organization causing 502 ' +
+      'and retrieves unchanged aggregated usage report', (done) => {
+
+      // Submit usage for sample resource with 10 GB, 1000 light API calls,
+      // and 100 heavy API calls
+      let posts = 0;
+      const post = (u, done) => {
+        console.log('\nPosting document', posts + 1);
+
+        request.post(collector + '/v1/metering/collected/usage',
+          extend({ body: u }, authHeader(token)), (err, val) => {
+            // Expect 502 from account plugin
+            expect(err).to.not.equal(undefined);
+            expect(val).to.equal(undefined);
+            posts++;
+            done();
+          });
+      };
+
+      // Get a usage report for the test organization
+      const get = (u, done) => {
+        console.log('Retrieving Usage Report');
+        request.get([
+          reporting,
+          'v1/metering/organizations/test_status_code_502',
+          'aggregated/usage'
+        ].join('/'), extend({}, authHeader(token)), (err, val) => {
+          expect(err).to.not.equal(undefined);
+
+          // Exit if all submissions are done, otherwise wait and post again
+          if(posts === num) {
+            console.log('No duplicates aggregated. Ending test.');
+            done();
+          }
+          else {
+            console.log('Waiting', delay, 'milliseconds before submitting');
+            setTimeout(() => post(u, () => get(u, done)), delay);
+          }
+        });
+      };
+
+      // Run the above steps
+      console.log('Will attempt %d submissions in organization ' +
+        'test_status_code_502', num);
+      const usage = buildUsage('test_status_code_502');
+      post(usage, () => get(usage, done));
+    });
+  });
+
+  synthetic('with organization test_status_code_404', () => {
+    it('submits duplicated usage in missing organization ' +
+      'and retrieves unchanged aggregated usage report', (done) => {
+
+      // Submit usage for sample resource with 10 GB, 1000 light API calls,
+      // and 100 heavy API calls
+      let posts = 0;
+      const post = (u, done) => {
+        console.log('\nPosting document', posts + 1);
+
+        request.post(collector + '/v1/metering/collected/usage',
+          extend({ body: u }, authHeader(token)), (err, val) => {
+            // Expect 201 and error from collector
+            expect(err).to.equal(undefined);
+            expect(val.statusCode).to.equal(201);
+            expect(val.body.error).to.equal('eorgnotfound');
+            posts++;
+            done();
+          });
+      };
+
+      // Get a usage report for the test organization
+      const get = (u, done) => {
+        console.log('Retrieving Usage Report');
+        request.get([
+          reporting,
+          'v1/metering/organizations/test_status_code_404',
+          'aggregated/usage'
+        ].join('/'), extend({}, authHeader(token)), (err, val) => {
+          expect(err).to.equal(undefined);
+          expect(val.statusCode).to.equal(404);
+
+          // Exit if all submissions are done, otherwise wait and post again
+          if(posts === num) {
+            console.log('No duplicates aggregated. Ending test.');
+            done();
+          }
+          else {
+            console.log('Waiting', delay, 'milliseconds before submitting');
+            setTimeout(() => post(u, () => get(u, done)), delay);
+          }
+        });
+      };
+
+      // Run the above steps
+      console.log('Will attempt %d submissions in organization ' +
+        'test_status_code_404', num);
+      const usage = buildUsage('test_status_code_404');
+      post(usage, () => get(usage, done));
+    });
+  });
+
 });

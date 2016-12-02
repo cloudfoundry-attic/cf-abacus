@@ -16,9 +16,7 @@ if [ "$CI_TEST" != "false" ]; then
   # Run dupe test without security
   npm start
   sleep 3s
-  npm run dupe -- --delay=10000
-  npm run dupe -- --delay=10000 --organization-guid=test_status_code_404
-  npm run dupe -- --delay=10000 --organization-guid=test_status_code_502
+  npm run dupe -- --synthetic
   npm stop
 
   # Run demo and perf test without security
