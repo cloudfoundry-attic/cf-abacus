@@ -15,9 +15,6 @@ const clone = require('abacus-clone');
 const oauth = require('abacus-oauth');
 const dbclient = require('abacus-dbclient');
 
-const BigNumber = require('bignumber.js');
-BigNumber.config({ ERRORS: false });
-
 // Parse command line options
 const argv = clone(process.argv);
 argv.splice(1, 1, 'demo');
@@ -90,7 +87,7 @@ const addToWindow = (window, ch, s, q, c) => {
 
   const incrementValue = (key, increment, obj) => {
     if(typeof increment !== 'undefined' && typeof obj[key] !== 'undefined')
-      obj[key] = new BigNumber(obj[key]).plus(increment).toNumber();
+      obj[key] = obj[key] + increment;
   };
   incrementValue('charge', ch, window);
   incrementValue('summary', s, window);
@@ -122,7 +119,7 @@ const authHeader = (token) => token ? {
   }
 } : {};
 
-describe('abacus-demo-client', function() {
+describe('abacus-smoke-test', function() {
   before((done) => {
     if (token)
       token.start();
