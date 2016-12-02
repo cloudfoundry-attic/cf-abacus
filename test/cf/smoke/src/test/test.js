@@ -82,17 +82,20 @@ const buildWindow = (ch, s, q, c) => {
 
 // Builds the expected window value based upon the
 // charge summary, quantity, cost, and window
-const addToWindow = (window, ch, s, q, c) => {
-  expect(window).to.not.equal(undefined);
+const deltaCompare = (currentWindow, previousWindow, ch, s, q, c) => {
+  expect(currentWindow).to.not.equal(undefined);
+  expect(previousWindow).to.not.equal(undefined);
 
-  const incrementValue = (key, increment, obj) => {
-    if(typeof increment !== 'undefined' && typeof obj[key] !== 'undefined')
-      obj[key] = obj[key] + increment;
+  const checkIfNear = (key, increment, current, previous) => {
+    if(typeof increment !== 'undefined' &&
+      typeof current[key] !== 'undefined' &&
+      typeof previous[key] !== 'undefined')
+      expect(current[key] - previous[key] - increment).to.be.below(0.01);
   };
-  incrementValue('charge', ch, window);
-  incrementValue('summary', s, window);
-  incrementValue('quantity', q, window);
-  incrementValue('cost', c, window);
+  checkIfNear('charge', ch, currentWindow, previousWindow);
+  checkIfNear('summary', s, currentWindow, previousWindow);
+  checkIfNear('quantity', q, currentWindow, previousWindow);
+  checkIfNear('cost', c, currentWindow, previousWindow);
 };
 
 
@@ -372,59 +375,79 @@ describe('abacus-smoke-test', function() {
       return target;
     };
 
-    const updateExpectedReport = (currentReport) => {
-      const clonedReport = extend({}, report);
-      const updatedReport = deepExtend(clonedReport, currentReport);
+    const deltaCompareReports = (currentReport, initialReport) => {
+      deltaCompare(currentReport.windows, initialReport.windows, 45.09);
 
-      addToWindow(updatedReport.windows, 45.09);
+      deltaCompare(currentReport.resources[0].windows,
+        initialReport.resources[0].windows, 45.09);
 
-      addToWindow(updatedReport.resources[0].windows, 45.09);
+      deltaCompare(currentReport.resources[0].aggregated_usage[1].windows,
+        initialReport.resources[0].aggregated_usage[1].windows, 0.09);
+      deltaCompare(currentReport.resources[0].aggregated_usage[2].windows,
+        initialReport.resources[0].aggregated_usage[2].windows, 45);
 
-      addToWindow(updatedReport.resources[0].aggregated_usage[1].windows, 0.09);
-      addToWindow(updatedReport.resources[0].aggregated_usage[2].windows, 45);
-
-      addToWindow(updatedReport.resources[0].plans[0].windows, 45.09);
-      addToWindow(updatedReport.resources[0].plans[0]
+      deltaCompare(currentReport.resources[0].plans[0].windows,
+        initialReport.resources[0].plans[0].windows, 45.09);
+      deltaCompare(currentReport.resources[0].plans[0]
+        .aggregated_usage[1].windows,
+        initialReport.resources[0].plans[0]
         .aggregated_usage[1].windows, 0.09, 3, 3, 0.09);
-      addToWindow(updatedReport.resources[0].plans[0]
+      deltaCompare(currentReport.resources[0].plans[0]
+        .aggregated_usage[2].windows,
+        initialReport.resources[0].plans[0]
         .aggregated_usage[2].windows, 45, 300, 300, 45);
 
-      addToWindow(updatedReport.spaces[0].windows, 45.09);
+      deltaCompare(currentReport.spaces[0].windows,
+        initialReport.spaces[0].windows, 45.09);
 
-      addToWindow(updatedReport.spaces[0].resources[0].windows, 45.09);
-      addToWindow(updatedReport.spaces[0].resources[0]
+      deltaCompare(currentReport.spaces[0].resources[0].windows,
+        initialReport.spaces[0].resources[0].windows, 45.09);
+      deltaCompare(currentReport.spaces[0].resources[0]
+        .aggregated_usage[1].windows,
+        initialReport.spaces[0].resources[0]
         .aggregated_usage[1].windows, 0.09);
-      addToWindow(updatedReport.spaces[0].resources[0]
+      deltaCompare(currentReport.spaces[0].resources[0]
+        .aggregated_usage[2].windows,
+        initialReport.spaces[0].resources[0]
         .aggregated_usage[2].windows, 45);
 
-      addToWindow(updatedReport.spaces[0].resources[0].plans[0]
-        .windows, 45.09);
-      addToWindow(updatedReport.spaces[0].resources[0].plans[0]
+      deltaCompare(currentReport.spaces[0].resources[0].plans[0].windows,
+        initialReport.spaces[0].resources[0].plans[0].windows, 45.09);
+      deltaCompare(currentReport.spaces[0].resources[0].plans[0]
+        .aggregated_usage[1].windows,
+        initialReport.spaces[0].resources[0].plans[0]
         .aggregated_usage[1].windows, 0.09, 3, 3, 0.09);
-      addToWindow(updatedReport.spaces[0].resources[0].plans[0]
+      deltaCompare(currentReport.spaces[0].resources[0].plans[0]
+        .aggregated_usage[2].windows,
+        initialReport.spaces[0].resources[0].plans[0]
         .aggregated_usage[2].windows, 45, 300, 300, 45);
 
-      addToWindow(updatedReport.spaces[0].consumers[0].windows, 45.09);
+      deltaCompare(currentReport.spaces[0].consumers[0].windows,
+        initialReport.spaces[0].consumers[0].windows, 45.09);
 
-      addToWindow(updatedReport.spaces[0].consumers[0].resources[0]
-        .windows, 45.09);
-      addToWindow(updatedReport.spaces[0].consumers[0].resources[0]
+      deltaCompare(currentReport.spaces[0].consumers[0].resources[0].windows,
+        initialReport.spaces[0].consumers[0].resources[0].windows, 45.09);
+      deltaCompare(currentReport.spaces[0].consumers[0].resources[0]
+        .aggregated_usage[1].windows,
+        initialReport.spaces[0].consumers[0].resources[0]
         .aggregated_usage[1].windows, 0.09);
-      addToWindow(updatedReport.spaces[0].consumers[0].resources[0]
+      deltaCompare(currentReport.spaces[0].consumers[0].resources[0]
+        .aggregated_usage[2].windows,
+        initialReport.spaces[0].consumers[0].resources[0]
         .aggregated_usage[2].windows, 45);
 
-      addToWindow(updatedReport.spaces[0].consumers[0].resources[0].plans[0]
+      deltaCompare(currentReport.spaces[0].consumers[0].resources[0].plans[0]
+        .windows,
+        initialReport.spaces[0].consumers[0].resources[0].plans[0]
         .windows, 45.09);
-      addToWindow(updatedReport.spaces[0].consumers[0].resources[0].plans[0]
+      deltaCompare(currentReport.spaces[0].consumers[0].resources[0].plans[0]
+        .aggregated_usage[1].windows,
+        initialReport.spaces[0].consumers[0].resources[0].plans[0]
         .aggregated_usage[1].windows, 0.09, 3, 3, 0.09);
-      addToWindow(updatedReport.spaces[0].consumers[0].resources[0].plans[0]
+      deltaCompare(currentReport.spaces[0].consumers[0].resources[0].plans[0]
+        .aggregated_usage[2].windows,
+        initialReport.spaces[0].consumers[0].resources[0].plans[0]
         .aggregated_usage[2].windows, 45, 300, 300, 45);
-
-      updatedReport.spaces[0].consumers[0].resources[0].plans[0]
-        .resource_instances[0] = omit(updatedReport.spaces[0].consumers[0]
-        .resources[0].plans[0].resource_instances[0], 't', 'p');
-
-      return updatedReport;
     };
 
     // Get a usage report for the test organization
@@ -447,14 +470,17 @@ describe('abacus-smoke-test', function() {
     };
 
     // Compare the usage report we got with the expected report
-    const compareReport = (expectedReport, done) => {
+    const compareReport = (initialReport, done) => {
       getReport((actual) => {
         try {
           actual.spaces[0].consumers[0].resources[0].plans[0]
             .resource_instances[0] = omit(actual.spaces[0].consumers[0]
             .resources[0].plans[0].resource_instances[0], 't', 'p');
 
-          expect(actual).to.deep.equal(expectedReport);
+          deltaCompareReports(actual, initialReport);
+          console.log('\nUpdated report:\n', util.inspect(actual, {
+            depth: 20
+          }), '\n');
           done();
         }
         catch (e) {
@@ -465,10 +491,10 @@ describe('abacus-smoke-test', function() {
           if(Date.now() >= processingDeadline) {
             console.log('%s: All submitted usage still not processed\n',
               new Date());
-            expect(actual).to.deep.equal(expectedReport);
+            deltaCompareReports(actual, initialReport);
           }
           else
-            setTimeout(() => compareReport(expectedReport, done), 250);
+            setTimeout(() => compareReport(initialReport, done), 250);
         }
       });
     };
@@ -476,25 +502,24 @@ describe('abacus-smoke-test', function() {
     // Wait for the expected usage report, get a report every 250 msec env until
     // we get the expected values indicating that all submitted usage has
     // been processed
-    const wait = (expectedReport, done) => {
+    const wait = (initialReport, done) => {
       console.log('\n%s: Retrieving usage report', new Date());
-      compareReport(expectedReport, done);
+      compareReport(initialReport, done);
     };
 
     // Wait for usage reporter to start
-    request.waitFor(reporting + '/batch', {}, startTimeout, (err, value) => {
+    request.waitFor(reporting + '/batch', {}, startTimeout, (err) => {
       // Failed to ping usage reporter before timing out
       if (err) throw err;
 
-      console.log('\n%s: Retrieving current report', new Date());
+      console.log('\n%s: Retrieving initial report', new Date());
       getReport((report) => {
-        const expectedReport = updateExpectedReport(report);
-        console.log('\nExpected report:\n', util.inspect(expectedReport, {
+        console.log('\nInitial report:\n', util.inspect(report, {
           depth: 20
         }), '\n');
 
         // Post usage and wait for report
-        map(usage, (u) => post(u, () => wait(expectedReport, done)));
+        map(usage, (u) => post(u, () => wait(report, done)));
       });
     });
   });
