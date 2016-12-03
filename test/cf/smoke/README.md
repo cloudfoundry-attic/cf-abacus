@@ -1,4 +1,4 @@
 abacus-cf-smoke
 ===
 
-`abacus` smoke test.
+`abacus` recurrent smoke test.
