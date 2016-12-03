@@ -51,6 +51,8 @@ npm run lint
 npm test
 ```
 
+For a list of all available tests check [doc/tests.md](doc/tests.md).
+
 Deploying to Cloud Foundry
 ---
 
@@ -134,6 +136,12 @@ Abacus comes with a CF [bridge](lib/cf/bridge) that acts as a resource provider 
 
 In the end the Abacus CF bridge enables you to see runtime usage reports for the apps running on your Cloud Foundry instance. In order to start the CF bridge follow its [README](lib/cf/bridge/README.md).
 
+Concourse pipelines
+---
+
+You can use Concourse [pipelines](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/etc/concourse) to test, deploy and monitor Abacus.
+
+
 Layout
 ---
 
@@ -167,6 +175,8 @@ lib/ - Abacus modules
     cf/ - CF platform integration
 
         bridge - collects CF app usage data
+        
+        renewer - carries over usage from previous month
 
     config/ - Usage formula and pricing configuration
 
@@ -181,6 +191,8 @@ test/ - End to end tests
 tools/ - Build tools
 
 etc/ - Misc build scripts
+
+    concourse/ - Concourse pipelines
 
 ```
 
