@@ -17,7 +17,7 @@ const dbclient = require('abacus-dbclient');
 
 // Parse command line options
 const argv = clone(process.argv);
-argv.splice(1, 1, 'demo');
+argv.splice(1, 1, 'smoke');
 commander
   .option('-c, --collector <uri>',
     'usage collector URL or domain name [http://localhost:9080]',
