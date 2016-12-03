@@ -1,5 +1,5 @@
 # abacus-pipeline
-CF-Abacus Concourse Pipeline
+CF-Abacus [Concourse](http://concourse.ci/) Pipelines
 
 ## Running the testing pipeline
 
@@ -160,12 +160,9 @@ echo "y" | fly --target=lite set-pipeline --pipeline=monitor-abacus --config=mon
 fly --target=lite unpause-pipeline --pipeline=monitor-abacus
 ```
 
-
-
-
 ## Docker files
 
-The `docker` directory contains several `Dockerfile`s used to build the images used in the pipeline.
+The `docker` directory contains the `Dockerfile`s needed to build the custom images used in the pipeline.
 
 You can build and push the images to your own repo, using the `publish` script:
 ```bash
