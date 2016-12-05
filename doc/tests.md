@@ -53,6 +53,24 @@ export CLIENT_SECRET=<object-storage client secret>
 
 Check the security concept in [security.md](security.md) for details.
 
+Acceptance tests
+---
+
+To run the acceptance tests execute:
+```sh
+cd cf-abacus
+```
+
+Set these variables to run the test against secured Abacus on Cloud Foundry:
+```sh
+export ABACUS_PREFIX=acceptance-
+export REPORTING_APP=<reporting-app>
+export ORG_GUID=<org-guid>
+export CF_DOMAIN=<cf-domains>
+```
+
+npm run acceptance
+```
 
 Duplicate usage detection test
 ---
