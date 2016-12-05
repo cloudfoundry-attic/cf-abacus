@@ -1,6 +1,7 @@
 Abacus Tests
 ===
 
+
 Unit tests
 ---
 
@@ -53,6 +54,7 @@ export CLIENT_SECRET=<object-storage client secret>
 
 Check the security concept in [security.md](security.md) for details.
 
+
 Acceptance test
 ---
 
@@ -70,6 +72,12 @@ cd cf-abacus
 
 npm run acceptance
 ```
+
+The command line options of the acceptance test can be listed with:
+```sh
+npm run acceptance -- --help
+```
+
 
 Duplicate usage detection test
 ---
@@ -114,6 +122,7 @@ Check the command line options of the test with:
 ```sh
 npm run perf -- --help
 ```
+
 
 Pipelines
 ---
