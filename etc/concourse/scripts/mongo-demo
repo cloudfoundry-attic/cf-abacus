@@ -15,7 +15,7 @@ pushd built-project
   echo "Running demo ..."
   npm start
   sleep $TIMEOUT
-  npm run demo -t $CI_START_TIMEOUT -x $CI_PIPELINE_TIMEOUT
+  npm run demo -- --start-timeout $CI_START_TIMEOUT --total-timeout $CI_PIPELINE_TIMEOUT
 
   echo "Stopping Abacus ..."
   npm stop

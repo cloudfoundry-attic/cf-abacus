@@ -15,7 +15,7 @@ pushd built-project
   echo "Running the duplicate usage detection tests ..."
   npm start
   sleep $TIMEOUT
-  npm run dupe -t $CI_START_TIMEOUT -x $CI_PIPELINE_TIMEOUT
+  npm run dupe -- --start-timeout $CI_START_TIMEOUT --synthetic
 
   echo "Stopping Abacus ..."
   npm stop

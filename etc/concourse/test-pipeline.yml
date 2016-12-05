@@ -70,7 +70,7 @@ jobs:
           inputs:
             - name: built-project
           run:
-            path: built-project/etc/concourse/scripts/noop
+            path: built-project/etc/concourse/scripts/pouch-dupe
           params:
             CI_START_TIMEOUT: 100000
             CI_PIPELINE_TIMEOUT: 200000
@@ -145,7 +145,7 @@ jobs:
           inputs:
             - name: built-project
           run:
-            path: built-project/etc/concourse/scripts/noop
+            path: built-project/etc/concourse/scripts/couch-dupe
           params:
             JOBS: 1
             DB: http://localhost:5984
@@ -227,7 +227,7 @@ jobs:
           inputs:
             - name: built-project
           run:
-            path: built-project/etc/concourse/scripts/noop
+            path: built-project/etc/concourse/scripts/mongo-dupe
           params:
             JOBS: 1
             DB: mongodb://localhost:27017
