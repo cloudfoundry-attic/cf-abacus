@@ -1,0 +1,72 @@
+#!/bin/bash
+
+set -e -x
+
+APPS=()
+function getApps {
+  local LINE=$(cf apps | awk '{if (NR == 4) {print}}')
+
+  if [ "$LINE" == "No apps found" ]; then
+    echo "No apps found"
+    APPS=()
+  else
+    APPS=($(cf apps | tail -n +5 | grep "$1" | awk '{print $1}'))
+    echo "Found ${#APPS[@]} applications ..."
+  fi
+}
+
+function restartApps {
+  getApps '?'
+  echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+  getApps '0/'
+  echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+}
+
+echo "Environment:"
+env | sort
+
+# Download CF CLI
+mkdir -p bin/.cf
+(cd bin/.cf && curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx)
+export PATH=$PATH:$(pwd)/bin/.cf
+
+echo "Logging to CF ..."
+cf api --skip-ssl-validation https://api.$CF_API
+cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+
+export ORG_GUID=$(cf org $CF_ORG --guid)
+
+echo "Runnining custom configuration ..."
+abacus_config_dir="landscape/abacus-config/acceptance"
+abacus_dir="landscape/cf-abacus"
+./$abacus_dir/etc/concourse/scripts/configure $abacus_config_dir
+cp -R $abacus_config_dir/* $abacus_dir
+
+pushd $abacus_dir
+  echo "Building Abacus ..."
+  npm run prepare
+
+  echo "Deleting all apps in $CF_ORG/$CF_SPACE ..."
+  getApps
+  echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf delete -f -r {}
+
+  echo "Deploying Abacus ..."
+  npm run cfstage default
+
+  set +e
+  echo "Start all apps in $CF_ORG/$CF_SPACE ..."
+  getApps
+  echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf start {}
+  for i in {1..3}
+  do
+    echo "Restarting failed apps (retry $i / 5) ..."
+    restartApps
+  done
+  set -e
+
+  echo "Restarting apps ..."
+  restartApps
+
+  echo "Starting Acceptance test ..."
+  npm run acceptance -- --organization-guid=$ORG_GUID
+popd

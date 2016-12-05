@@ -39,7 +39,7 @@ CF-Abacus [Concourse](http://concourse.ci/) Pipelines
 
 6. Check the pipeline at http://192.168.100.4:8080/
 
-## Running the deployment pipeline
+## Running Concourse pipelines
 
 You should have the Concourse running by now. To run the deployment pipeline follow these steps:
 
@@ -48,7 +48,7 @@ You should have the Concourse running by now. To run the deployment pipeline fol
    * Abacus
    * `abacus-config` directory with custom Abacus settings (see next step)
 
-2. The Abacus configuration `abacus-config`, should contain:
+1. The Abacus configuration `abacus-config`, should contain:
    * pipeline configuration in `deploy-pipeline-vars.yml`
    * application manifest templates: `manifest.yml.template`.
    * number of applications and instances in `.apprc` for each Abacus pipeline stage (often needed for collector and reporting)
@@ -58,49 +58,97 @@ You should have the Concourse running by now. To run the deployment pipeline fol
     ```
     .
     ├── deploy-pipeline-vars.yml
+    ├── acceptance-test-pipeline-vars.yml
     ├── README.md
-    ├── etc
-    │   └── apps.rc
-    ├── lib
-    │   ├── aggregation
-    │   │   ├── accumulator
-    │   │   │   └── manifest.yml.template
-    │   │   ├── aggregator
-    │   │   │   └── manifest.yml.template
-    │   │   └── reporting
-    │   │       └── manifest.yml.template
-    │   ├── cf
-    │   │   ├── bridge
-    │   │   │   └── manifest.yml.template
-    │   │   └── renewer
-    │   │       └── manifest.yml.template
-    │   ├── metering
-    │   │   ├── collector
-    │   │   │   └── manifest.yml.template
-    │   │   └── meter
-    │   │       └── manifest.yml.template
-    │   ├── plugins
-    │   │   ├── account
-    │   │   │   └── manifest.yml.template
-    │   │   ├── authserver
-    │   │   │   └── manifest.yml.template
-    │   │   ├── eureka
-    │   │   │   └── manifest.yml.template
-    │   │   └── provisioning
-    │   │       └── manifest.yml.template
-    │   └── utils
-    │       └── pouchserver
-    │           └── manifest.yml.template
+    ├── acceptance
+    │   ├── etc
+    │   │   └── apps.rc
+    │   └── lib
+    │       ├── aggregation
+    │       │   ├── accumulator
+    │       │   │   └── manifest.yml.template
+    │       │   ├── aggregator
+    │       │   │   └── manifest.yml.template
+    │       │   └── reporting
+    │       │       └── manifest.yml.template
+    │       ├── cf
+    │       │   ├── bridge
+    │       │   │   └── manifest.yml.template
+    │       │   └── renewer
+    │       │       └── manifest.yml.template
+    │       ├── metering
+    │       │   ├── collector
+    │       │   │   └── manifest.yml.template
+    │       │   └── meter
+    │       │       └── manifest.yml.template
+    │       ├── plugins
+    │       │   ├── account
+    │       │   │   └── manifest.yml.template
+    │       │   ├── authserver
+    │       │   │   └── manifest.yml.template
+    │       │   ├── eureka
+    │       │   │   └── manifest.yml.template
+    │       │   └── provisioning
+    │       │       └── manifest.yml.template
+    │       └── utils
+    │           └── pouchserver
+    │               └── manifest.yml.template
+    ├── deploy
+    │   ├── etc
+    │   │   └── apps.rc
+    │   └── lib
+    │       ├── aggregation
+    │       │   ├── accumulator
+    │       │   │   └── manifest.yml.template
+    │       │   ├── aggregator
+    │       │   │   └── manifest.yml.template
+    │       │   └── reporting
+    │       │       └── manifest.yml.template
+    │       ├── cf
+    │       │   ├── bridge
+    │       │   │   └── manifest.yml.template
+    │       │   └── renewer
+    │       │       └── manifest.yml.template
+    │       ├── metering
+    │       │   ├── collector
+    │       │   │   └── manifest.yml.template
+    │       │   └── meter
+    │       │       └── manifest.yml.template
+    │       ├── plugins
+    │       │   ├── account
+    │       │   │   └── manifest.yml.template
+    │       │   ├── authserver
+    │       │   │   └── manifest.yml.template
+    │       │   ├── eureka
+    │       │   │   └── manifest.yml.template
+    │       │   └── provisioning
+    │       │       └── manifest.yml.template
+    │       └── utils
+    │           └── pouchserver
+    │               └── manifest.yml.template
     ```
 
-3. Customize the `deploy-pipeline-vars.yml` file with the location of the landscape repository
+### Deploy pipeline
 
-4. Upload the pipeline:
+1. Customize the `deploy-pipeline-vars.yml` file with the location of the landscape repository
+
+1. Upload the pipeline:
    ```bash
    echo "y" | fly --target=lite set-pipeline --pipeline=abacus-deploy --config=deploy-pipeline.yml --load-vars-from=deploy-pipeline-vars.yml ---non-interactive
    fly --target=lite unpause-pipeline --pipeline=abacus-deploy
    ```
-5. Check the pipeline at http://192.168.100.4:8080/
+1. Check the pipeline at http://192.168.100.4:8080/
+
+### Acceptance test pipeline
+
+1. Customize the `acceptance-test-pipeline-vars.yml` file with the location of the landscape repository
+
+1. Upload the pipeline:
+   ```bash
+   echo "y" | fly --target=lite set-pipeline --pipeline=abacus-acceptance --config=acceptance-test-pipeline.yml --load-vars-from=acceptance-test-pipeline-vars.yml ---non-interactive
+   fly --target=lite unpause-pipeline --pipeline=abacus-acceptance
+   ```
+1. Check the pipeline at http://192.168.100.4:8080/
 
 ## Templates
 
