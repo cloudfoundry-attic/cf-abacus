@@ -1,7 +1,7 @@
 # abacus-pipeline
 CF-Abacus [Concourse](http://concourse.ci/) Pipelines
 
-## Running the testing pipeline
+## Setting up Concourse
 
 1. Start Concourse:
 
@@ -10,7 +10,7 @@ CF-Abacus [Concourse](http://concourse.ci/) Pipelines
    vagrant up
    ```
 
-2. Download `fly` CLI:
+1. Download `fly` CLI:
 
    Mac OSX:
    ```bash
@@ -26,22 +26,7 @@ CF-Abacus [Concourse](http://concourse.ci/) Pipelines
    Windows:
    Go to http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=windows
 
-3. Add `fly` to your path
-
-4. Change the entries in the `test-pipeline-vars.yml` file to reflect the actual users, passwords and domains of your Cloud Foundry landscape.
-
-5. Upload the pipeline
-   ```bash
-   fly --target=lite login --concourse-url=http://192.168.100.4:8080
-   echo "y" | fly --target=lite set-pipeline --pipeline=abacus-test --config=test-pipeline.yml --load-vars-from=test-pipeline-vars.yml ---non-interactive
-   fly --target=lite unpause-pipeline --pipeline=abacus-test
-   ```
-
-6. Check the pipeline at http://192.168.100.4:8080/
-
-## Running Concourse pipelines
-
-You should have the Concourse running by now. To run the deployment pipeline follow these steps:
+1. Add `fly` to your path
 
 1. Create a "landscape" repository that contains submodules for:
    * anything else specific for the landscape (Cloud Foundry, DBs, ...)
@@ -127,6 +112,20 @@ You should have the Concourse running by now. To run the deployment pipeline fol
     │           └── pouchserver
     │               └── manifest.yml.template
     ```
+
+## Test pipeline
+
+1. Change the entries in the `test-pipeline-vars.yml` file to reflect the actual users, passwords and domains of your Cloud Foundry landscape.
+
+1. Upload the pipeline
+   ```bash
+   fly --target=lite login --concourse-url=http://192.168.100.4:8080
+   echo "y" | fly --target=lite set-pipeline --pipeline=abacus-test --config=test-pipeline.yml --load-vars-from=test-pipeline-vars.yml ---non-interactive
+   fly --target=lite unpause-pipeline --pipeline=abacus-test
+   ```
+
+1. Check the pipeline at http://192.168.100.4:8080/
+
 
 ### Deploy pipeline
 
