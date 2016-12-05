@@ -1,17 +1,17 @@
 # Cloud Foundry domain without the "api." prefix
 cf-api: cf.mycompany.com
 
-# Organization for the Abacus apps
-cf-org: abacus
+# Organization for the Abacus acceptance test apps
+cf-org: abacus-acceptance
 
-# Space used to host Abacus pipeline apps
-cf-space: abacus
+# Space for the Abacus acceptance test apps
+cf-space: abacus-acceptance
 
 # Domain that will host the Abacus applications
 cf-domain: cfapps.mycompany.com
 
 # User that has SpaceDeveloper permissions for the Abacus' org
-cf-user: abacus
+cf-user: abacus-acceptance
 
 # Password of the Abacus user
 cf-password: abacus123
@@ -22,32 +22,16 @@ cf-admin-user: admin
 # Password of the admin user
 cf-admin-password: admin
 
-# Abacus profile (default, small, medium, large)
-abacus-profile: large
-
 # Buildpack to use for pushing Abacus
 # Use name, GitHub URL or GitHuv URL and branch/tag
 nodejs-buildpack: nodejs_buildpack
 
-# (Re-)create DB service instance or use already provisioned DB
-# WARNING: Setting this to "true" will destroy your DB
-create-db-service: true
+# Prefix for cf app names. Used to avoid host-name conflicts
+# The reporting app name below should start with this prefix
+abacus-prefix: acceptance-
 
-# Bind to a service instance or use hard-coded URL
-# Note: If you want to connect to already provisioned DB you should use "false" here
-bind-db-service: true
-
-# Purge app usage events to start a new billing epoch
-# WARNING: Purging events requires you to drop your DB content
-purge-app-usage-events: false
-
-# DB service (Couch or Mongo) to use for storing Abacus data
-# Note: Not used if create-db-service is false, but still required
-db-service-name: service-name
-
-# DB service plan
-# Note: Not used if create-db-service is false, but still required
-db-plan-name: plan-name
+# Reporting app
+reporting-app: acceptance-abacus-usage-reporting
 
 # UAA admin user
 uaa-admin: admin
@@ -104,16 +88,10 @@ hystrix-client-secret: secret
 auth-server: https://api.cf.mycompany.com:443
 
 # JWT Key
-jwtkey: |
-      -----BEGIN PUBLIC KEY-----
-      ... insert key here ...
-      -----END PUBLIC KEY-----
+jwtkey: none
 
 # JWT Algorithm
 jwtalgo: algo
-
-# Use templates true/false
-abacus-configure: true
 
 # Abacus repo URI (or landscape project URI)
 landscape-git-repo: https://github.com/cloudfoundry-incubator/cf-abacus.git

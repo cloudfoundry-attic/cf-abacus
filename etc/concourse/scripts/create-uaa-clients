@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -e -x
+
+echo "Logging to UAA ..."
+uaac target "uaa.$CF_API"
+uaac token client get "$UAA_ADMIN" -s "$UAA_SECRET"
+
+echo "Trying to delete existing UAA clients ..."
+set +e
+uaac client delete "$SYSTEM_CLIENT_ID"
+uaac client delete "$CC_CLIENT_ID"
+uaac client delete "$BRIDGE_CLIENT_ID"
+uaac client delete "$CONTAINER_CLIENT_ID"
+uaac client delete "$OBJECT_STORAGE_CLIENT_ID"
+uaac client delete "$HYSTRIX_CLIENT_ID"
+set -e
+
+echo "Creating UAA clients ..."
+uaac client add "$SYSTEM_CLIENT_ID" --authorized_grant_types client_credentials --authorities abacus.usage.write,abacus.usage.read --scope abacus.usage.write,abacus.usage.read --secret "$SYSTEM_CLIENT_SECRET"
+if [ "$PURGE_APP_USAGE_EVENTS" == "true" ]; then
+  uaac client add "$CC_CLIENT_ID" --authorized_grant_types client_credentials --authorities cloud_controller.admin --secret "$CC_CLIENT_SECRET"
+fi
+uaac client add "$BRIDGE_CLIENT_ID" --authorized_grant_types client_credentials --authorities "$BRIDGE_CLIENT_AUTHORITIES" --secret "$BRIDGE_CLIENT_SECRET"
+uaac client add "$CONTAINER_CLIENT_ID" --authorized_grant_types client_credentials --authorities abacus.usage.linux-container.write,abacus.usage.linux-container.read --scope abacus.usage.linux-container.write,abacus.usage.linux-container.read --secret "$CONTAINER_CLIENT_SECRET"
+uaac client add "$OBJECT_STORAGE_CLIENT_ID" --authorized_grant_types client_credentials --authorities abacus.usage.object-storage.write,abacus.usage.object-storage.read --scope abacus.usage.object-storage.write,abacus.usage.object-storage.read --secret "$OBJECT_STORAGE_CLIENT_SECRET"
+uaac client add "$HYSTRIX_CLIENT_ID" --authorized_grant_types client_credentials --authorities abacus.system.read --scope abacus.system.read --secret "$HYSTRIX_CLIENT_SECRET"

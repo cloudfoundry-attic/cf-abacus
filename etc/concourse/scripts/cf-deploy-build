@@ -10,7 +10,7 @@ cp -r landscape/cf-abacus/. built-project
 
 if [[ $CONFIGURE = true ]]; then
   echo "Runnining custom configuration ..."
-  abacus_config_dir="landscape/abacus-config"
+  abacus_config_dir="landscape/abacus-config/deploy"
   ./landscape/cf-abacus/etc/concourse/scripts/configure $abacus_config_dir
 fi
 
