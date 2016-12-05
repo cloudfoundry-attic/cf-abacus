@@ -53,21 +53,20 @@ export CLIENT_SECRET=<object-storage client secret>
 
 Check the security concept in [security.md](security.md) for details.
 
-Acceptance tests
+Acceptance test
 ---
 
-To run the acceptance tests execute:
-```sh
-cd cf-abacus
-```
-
-Set these variables to run the test against secured Abacus on Cloud Foundry:
+To run the acceptance test against secured Abacus on Cloud Foundry set these variables:
 ```sh
 export ABACUS_PREFIX=acceptance-
 export REPORTING_APP=<reporting-app>
 export ORG_GUID=<org-guid>
 export CF_DOMAIN=<cf-domains>
 ```
+
+Then run the tests with
+```sh
+cd cf-abacus
 
 npm run acceptance
 ```
@@ -98,6 +97,23 @@ export CLIENT_SECRET=<object-storage client secret>
 
 Check the security concept in [security.md](security.md) for details.
 
+
+Performance test
+---
+
+You can run the `perf` test locally with:
+```sh
+cd cf-abacus
+
+npm start
+npm run perf
+npm stop
+```
+
+Check the command line options of the test with:
+```sh
+npm run perf -- --help
+```
 
 Pipelines
 ---
