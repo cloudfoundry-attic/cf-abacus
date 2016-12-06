@@ -24,3 +24,60 @@ cf-admin-password: admin
 
 # Comma-separated debug logs
 debug:
+
+# Use to skip ssl validation
+skip-ssl-validation: true
+
+# UAA admin user
+uaa-admin: admin
+
+# UAA admin user secret/password
+uaa-secret: admin-secret
+
+# UAA client: Abacus system user ID
+system-client-id: abacus
+
+# UAA client: Abacus system user secret
+system-client-secret: secret
+
+# UAA client: Cloud Controller user ID for administrative tasks
+cc-client-id: abacus-cc-client
+
+# UAA client: Cloud Controller admin client secret
+cc-client-secret: secret
+
+# UAA client: Abacus CF-Bridge user ID
+bridge-client-id: abacus-cf-bridge
+
+# UAA client: Abacus CF-Bridge authorities. Use "cloud_controller.admin" for CF prior v241
+bridge-client-authorities: cloud_controller.admin_read_only
+
+# UAA client: Abacus CF-Bridge user secret
+bridge-client-secret: secret
+
+# UAA client: ID of a client that can read data from Cloud Controller
+cf-client-id: abacus-cf
+
+# UAA client: Cloud Controller read client secret
+cf-client-secret: secret
+
+# UAA client: "Linux Container" resource provider client ID
+container-client-id: abacus-linux-container
+
+# UAA client: "Linux Container" resource provider client secret
+container-client-secret: secret
+
+# UAA client: "Object Storage" resource provider client ID
+object-storage-client-id: abacus-object-storage
+
+# UAA client: "Object Storage" resource provider client secret
+object-storage-client-secret: secret
+
+# UAA client: Client ID for monitoring Hystrix streams
+hystrix-client-id: abacus-hystrix
+
+# UAA client: Client secret for Abacus Hystrix streams
+hystrix-client-secret: secret
+
+# Authentication server: api.<cf-api>:443
+auth-server: https://api.cf.mycompany.com:443
