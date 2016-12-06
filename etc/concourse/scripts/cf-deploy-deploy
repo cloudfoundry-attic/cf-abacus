@@ -49,10 +49,10 @@ function getApps {
 
 echo "Logging to $CF_API ..."
 if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
-  cf login -a https://api.$CF_API -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE --skip-ssl-validation
-else
-  cf login -a https://api.$CF_API -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+  skip='--skip-ssl-validation'
 fi
+
+cf login -a https://api.$CF_API -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE $skip
 
 echo "Pushing $ABACUS_PROFILE Abacus installation ..."
 pushd built-project

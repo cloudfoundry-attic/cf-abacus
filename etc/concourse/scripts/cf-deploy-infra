@@ -52,10 +52,11 @@ set +e
 
 echo "Logging to $CF_ORG/$CF_SPACE @ $CF_API ..."
 if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
-  cf login -a https://api.$CF_API --skip-ssl-validation -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD -o $CF_ORG -s $CF_SPACE
-else
-  cf login -a https://api.$CF_API -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD -o $CF_ORG -s $CF_SPACE
+  skip='--skip-ssl-validation'
+  k='-k'
 fi
+cf login -a https://api.$CF_API $skip -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD -o $CF_ORG -s $CF_SPACE
+
 abacus_login=$?
 
 if [ $abacus_login = 0 ]; then
@@ -92,11 +93,8 @@ if [ $abacus_login = 0 ]; then
 fi
 
 echo "Logging to $CF_API as admin ..."
-if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
-  cf api --skip-ssl-validation "https://api.$CF_API"
-else
-  cf api "https://api.$CF_API"
-fi
+cf api $skip "https://api.$CF_API"
+
 echo "" | cf login -u "$CF_ADMIN_USER" -p "$CF_ADMIN_PASSWORD"
 
 echo "Recreating organization and space ..."
@@ -140,12 +138,12 @@ $SCRIPT_DIR/create-uaa-clients
 
 if [ "$PURGE_APP_USAGE_EVENTS" == "true" ]; then
   echo "Purging app-usage events ..."
-  TOKEN=$(curl --user $CC_CLIENT_ID:$CC_CLIENT_SECRET -s "https://uaa.$CF_API/oauth/token?grant_type=client_credentials" | jq -r .access_token)
+  TOKEN=$(curl $k --user $CC_CLIENT_ID:$CC_CLIENT_SECRET -s "https://uaa.$CF_API/oauth/token?grant_type=client_credentials" | jq -r .access_token)
   if [ "$TOKEN" == "null" -o -z "$TOKEN" ]; then
     echo "Cannot obtain token for access to CF API !"
     exit 1
   fi
-  RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Authorization: bearer $TOKEN" -i "https://api.$CF_API/v2/app_usage_events/destructively_purge_all_and_reseed_started_apps")
+  RESPONSE_CODE=$(curl $k -s -o /dev/null -w "%{http_code}" -X POST -H "Authorization: bearer $TOKEN" -i "https://api.$CF_API/v2/app_usage_events/destructively_purge_all_and_reseed_started_apps")
   if [ "$RESPONSE_CODE" == "204" ]; then
     echo "App events purged successfully"
   else

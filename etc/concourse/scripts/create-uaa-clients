@@ -4,10 +4,9 @@ set -e -x
 
 echo "Logging to UAA ..."
 if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
-  uaac target "uaa.$CF_API" --skip-ssl-validation
-else
-  uaac target "uaa.$CF_API"
+  skip='--skip-ssl-validation'
 fi
+uaac target "uaa.$CF_API" $skip
 uaac token client get "$UAA_ADMIN" -s "$UAA_SECRET"
 
 echo "Trying to delete existing UAA clients ..."
