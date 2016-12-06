@@ -49,6 +49,7 @@ jobs:
             path: built-project/etc/concourse/scripts/pouch-demo
           params:
             CI_START_TIMEOUT: 100000
+            CI_PIPELINE_TIMEOUT: 200000
             DEBUG: {{debug}}
       - task: dupe
         config:
@@ -124,6 +125,7 @@ jobs:
             JOBS: 1
             DB: http://localhost:5984
             CI_START_TIMEOUT: 100000
+            CI_PIPELINE_TIMEOUT: 200000
             DEBUG: {{debug}}
       - task: dupe
         config:
@@ -206,6 +208,7 @@ jobs:
             DB: mongodb://localhost:27017
             DBCLIENT: abacus-mongoclient
             CI_START_TIMEOUT: 100000
+            CI_PIPELINE_TIMEOUT: 200000
             DEBUG: {{debug}}
       - task: dupe
         config:
