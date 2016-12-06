@@ -8,7 +8,11 @@ echo "Environment:"
 env | sort
 
 echo "Logging to $CF_API ..."
-cf api --skip-ssl-validation https://api.$CF_API
+if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
+  skip='--skip-ssl-validation'
+fi
+
+cf api $skip https://api.$CF_API
 echo "" | cf login -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD
 
 echo "Recreating organization and space ..."

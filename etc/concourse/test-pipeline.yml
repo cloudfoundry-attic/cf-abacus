@@ -271,6 +271,24 @@ jobs:
             CF_SPACE: {{cf-space}}
             CF_DOMAIN: {{cf-domain}}
             DEBUG: {{debug}}
+            UAA_ADMIN: {{uaa-admin}}
+            UAA_SECRET: {{uaa-secret}}
+            SYSTEM_CLIENT_ID: {{system-client-id}}
+            SYSTEM_CLIENT_SECRET: {{system-client-secret}}
+            CC_CLIENT_ID: {{cc-client-id}}
+            CC_CLIENT_SECRET: {{cc-client-secret}}
+            BRIDGE_CLIENT_ID: {{bridge-client-id}}
+            BRIDGE_CLIENT_AUTHORITIES: {{bridge-client-authorities}}
+            BRIDGE_CLIENT_SECRET: {{bridge-client-secret}}
+            CF_CLIENT_ID: {{cf-client-id}}
+            CF_CLIENT_SECRET: {{cf-client-secret}}
+            CONTAINER_CLIENT_ID: {{container-client-id}}
+            CONTAINER_CLIENT_SECRET: {{container-client-secret}}
+            OBJECT_STORAGE_CLIENT_ID: {{object-storage-client-id}}
+            OBJECT_STORAGE_CLIENT_SECRET: {{object-storage-client-secret}}
+            HYSTRIX_CLIENT_ID: {{hystrix-client-id}}
+            HYSTRIX_CLIENT_SECRET: {{hystrix-client-secret}}
+            SKIP_SSL_VALIDATION: {{skip-ssl-validation}}
           run:
             path: abacus/etc/concourse/scripts/cf-test-infra
       - task: deploy
