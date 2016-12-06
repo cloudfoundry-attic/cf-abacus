@@ -19,6 +19,9 @@ system-client-id: client
 # UAA client: "Abacus" client secret
 system-client-secret: secret
 
+# Use to skip ssl validation
+skip-ssl-validation: true
+
 # Abacus repo URI (or landscape project URI)
 landscape-git-repo: https://github.com/cloudfoundry-incubator/cf-abacus.git
 
@@ -60,4 +63,3 @@ grafana-username: admin
 
 # Grafana password
 grafana-password: admin
-

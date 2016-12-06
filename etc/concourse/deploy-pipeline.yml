@@ -55,6 +55,7 @@ jobs:
             HYSTRIX_CLIENT_ID: {{hystrix-client-id}}
             HYSTRIX_CLIENT_SECRET: {{hystrix-client-secret}}
             PURGE_APP_USAGE_EVENTS: {{purge-app-usage-events}}
+            SKIP_SSL_VALIDATION: {{skip-ssl-validation}}
           run:
             path: landscape/cf-abacus/etc/concourse/scripts/cf-deploy-infra
 
@@ -88,6 +89,7 @@ jobs:
             BRIDGE_CLIENT_SECRET: {{bridge-client-secret}}
             CONTAINER_CLIENT_ID: {{container-client-id}}
             CONTAINER_CLIENT_SECRET: {{container-client-secret}}
+            SKIP_SSL_VALIDATION: {{skip-ssl-validation}}
 
       - task: deploy-abacus
         attempts: 3
@@ -113,6 +115,7 @@ jobs:
             BIND_DB_SERVICE: {{bind-db-service}}
             ABACUS_PROFILE: {{abacus-profile}}
             BUILDPACK: {{nodejs-buildpack}}
+            SKIP_SSL_VALIDATION: {{skip-ssl-validation}}
             # Save file handlers and offload CF stagers
             JOBS: 2
           run:

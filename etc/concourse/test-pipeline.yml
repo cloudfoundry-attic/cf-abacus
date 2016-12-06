@@ -271,6 +271,7 @@ jobs:
             CF_SPACE: {{cf-space}}
             CF_DOMAIN: {{cf-domain}}
             DEBUG: {{debug}}
+            SKIP_SSL_VALIDATION: {{skip-ssl-validation}}
           run:
             path: abacus/etc/concourse/scripts/cf-test-infra
       - task: deploy

@@ -5,7 +5,11 @@ echo "Environment:"
 env | sort
 
 echo "Logging to $CF_API ..."
-cf login --skip-ssl-validation -a https://api.$CF_API -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
+  cf login --skip-ssl-validation -a https://api.$CF_API -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+else
+  cf login -a https://api.$CF_API -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+fi
 
 if [ -z "$SYSTEM_CLIENT_ID" ] || [ -z "$SYSTEM_CLIENT_SECRET" ]; then
   echo "Missing SYSTEM_CLIENT_ID or SYSTEM_CLIENT_SECRET !"

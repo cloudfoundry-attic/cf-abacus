@@ -71,6 +71,7 @@ jobs:
             CF_SPACE: {{cf-space}}
             SYSTEM_CLIENT_ID: {{system-client-id}}
             SYSTEM_CLIENT_SECRET: {{system-client-secret}}
+            SKIP_SSL_VALIDATION: {{skip-ssl-validation}}
           run:
             path: landscape/cf-abacus/etc/concourse/scripts/cf-monitor
         on_success:
@@ -111,6 +112,3 @@ jobs:
               CF_DEPLOYMENT_NAME: {{cf-deployment-name}}
               RIEMANN_ADDRESS: {{riemann-address}}
               RIEMANN_PORT: {{riemann-port}}
-
-
-

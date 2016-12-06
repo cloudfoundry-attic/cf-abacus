@@ -51,7 +51,11 @@ unamestr=`uname`
 set +e
 
 echo "Logging to $CF_ORG/$CF_SPACE @ $CF_API ..."
-cf login -a https://api.$CF_API --skip-ssl-validation -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD -o $CF_ORG -s $CF_SPACE
+if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
+  cf login -a https://api.$CF_API --skip-ssl-validation -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD -o $CF_ORG -s $CF_SPACE
+else
+  cf login -a https://api.$CF_API -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD -o $CF_ORG -s $CF_SPACE
+fi
 abacus_login=$?
 
 if [ $abacus_login = 0 ]; then
@@ -88,7 +92,11 @@ if [ $abacus_login = 0 ]; then
 fi
 
 echo "Logging to $CF_API as admin ..."
-cf api --skip-ssl-validation "https://api.$CF_API"
+if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
+  cf api --skip-ssl-validation "https://api.$CF_API"
+else
+  cf api "https://api.$CF_API"
+fi
 echo "" | cf login -u "$CF_ADMIN_USER" -p "$CF_ADMIN_PASSWORD"
 
 echo "Recreating organization and space ..."

@@ -33,6 +33,9 @@ abacus-prefix: acceptance-
 # Reporting app
 reporting-app: acceptance-abacus-usage-reporting
 
+# Use to skip ssl validation
+skip-ssl-validation: true
+
 # UAA admin user
 uaa-admin: admin
 

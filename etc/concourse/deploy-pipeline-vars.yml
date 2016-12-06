@@ -29,6 +29,9 @@ abacus-profile: large
 # Use name, GitHub URL or GitHuv URL and branch/tag
 nodejs-buildpack: nodejs_buildpack
 
+# Use to skip ssl validation
+skip-ssl-validation: true
+
 # (Re-)create DB service instance or use already provisioned DB
 # WARNING: Setting this to "true" will destroy your DB
 create-db-service: true
