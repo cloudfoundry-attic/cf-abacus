@@ -6,19 +6,6 @@ resources:
       uri: https://github.com/cloudfoundry-incubator/cf-abacus.git
       branch: master
 
-  - name: abacus-release-develop
-    type: git
-    source:
-      uri: https://github.com/cloudfoundry-incubator/cf-abacus.git
-      branch: develop
-
-  - name: abacus-release-master
-    type: git
-    source:
-      uri: https://github.com/cloudfoundry-incubator/cf-abacus.git
-      branch: master
-
-
 jobs:
 
 ################################# POUCH ########################################
