@@ -15,7 +15,7 @@ if [[ $CONFIGURE = true ]]; then
 fi
 
 echo "Copying custom settings ..."
-cp -r landscape/abacus-config/. built-project
+cp -r $abacus_config_dir/. built-project
 
 echo "Building Abacus ..."
 pushd built-project
