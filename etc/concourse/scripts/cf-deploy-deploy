@@ -5,6 +5,11 @@ set -e -x
 echo "Environment:"
 env | sort
 
+#
+# Get platform info
+#
+unamestr=`uname`
+
 function mapRoutes {
   if [ -z "$1" ]; then
      echo "Cannot map app without a name !"
@@ -47,6 +52,21 @@ function getApps {
   fi
 }
 
+function restartApps {
+  getApps '?'
+  if [[ "$unamestr" == 'Linux' ]]; then
+    echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+  else
+    echo ${APPS[@]} | xargs -n1 -P 5 cf restart
+  fi
+  getApps '0/'
+  if [[ "$unamestr" == 'Linux' ]]; then
+    echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+  else
+    echo ${APPS[@]} | xargs -n1 -P 5 cf restart
+  fi
+}
+
 echo "Logging to $CF_API ..."
 if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
   skip='--skip-ssl-validation'
@@ -65,11 +85,6 @@ mapRoutes abacus-usage-reporting 6
 
 getApps
 
-#
-# Get platform info
-#
-unamestr=`uname`
-
 if [ "$BIND_DB_SERVICE" == "true" ]; then
   echo "Binding services ..."
   if [[ "$unamestr" == 'Linux' ]]; then
@@ -79,6 +94,7 @@ if [ "$BIND_DB_SERVICE" == "true" ]; then
   fi
 fi
 
+set +e
 echo "Starting applications ..."
 echo ${APPS[@]} | xargs -n1 -P 5 cf start
 
@@ -86,18 +102,15 @@ echo "Applications:"
 cf apps
 
 echo "Restarting failed apps ..."
-getApps '?'
-if [[ "$unamestr" == 'Linux' ]]; then
-  echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
-else
-  echo ${APPS[@]} | xargs -n1 -P 5 cf restart
-fi
-getApps '0/'
-if [[ "$unamestr" == 'Linux' ]]; then
-  echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
-else
-  echo ${APPS[@]} | xargs -n1 -P 5 cf restart
-fi
+for i in {1..3}
+do
+  echo "Restarting failed apps (retry $i / 5) ..."
+  restartApps
+done
+set -e
+
+echo "Restarting failed apps ..."
+restartApps
 
 echo "Applications:"
 cf apps
