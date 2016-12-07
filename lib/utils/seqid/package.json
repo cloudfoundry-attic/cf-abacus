@@ -37,7 +37,8 @@
     "abacus-babel": "file:../../../tools/babel",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-publish": "file:../../../tools/publish"
+    "abacus-publish": "file:../../../tools/publish",
+    "underscore": "^1.8.3"
   },
   "engines": {
     "node": ">=5.11.1",
