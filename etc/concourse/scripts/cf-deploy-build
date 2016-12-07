@@ -8,9 +8,10 @@ env | sort
 echo "Copying Abacus ..."
 cp -r landscape/cf-abacus/. built-project
 
+abacus_config_dir="landscape/abacus-config/deploy"
+
 if [[ $CONFIGURE = true ]]; then
   echo "Runnining custom configuration ..."
-  abacus_config_dir="landscape/abacus-config/deploy"
   ./landscape/cf-abacus/etc/concourse/scripts/configure $abacus_config_dir
 fi
 
