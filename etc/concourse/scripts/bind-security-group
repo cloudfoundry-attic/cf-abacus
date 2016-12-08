@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e -x
+
+echo "Creating security group for CF API access ..."
+group="["
+for line in $(host api.$CF_API | awk '/has address/ { print $4 }'); do
+  group+="{\"protocol\":\"tcp\",\"destination\":\"$line\",\"ports\":\"80,443\"},"
+done
+group+="]"
+echo "${group/,]/]}" > abacus-sec-group.json
+cf delete-security-group -f $CF_ORG
+cf create-security-group $CF_ORG abacus-sec-group.json
+cf bind-security-group $CF_ORG $CF_ORG $CF_SPACE

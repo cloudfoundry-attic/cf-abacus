@@ -100,5 +100,7 @@ jobs:
             HYSTRIX_CLIENT_ID: {{hystrix-client-id}}
             HYSTRIX_CLIENT_SECRET: {{hystrix-client-secret}}
             SKIP_SSL_VALIDATION: {{skip-ssl-validation}}
+            CI_START_TIMEOUT: 50000
+            CI_PIPELINE_TIMEOUT: 1000000
           run:
             path: landscape/cf-abacus/etc/concourse/scripts/cf-acceptance-test

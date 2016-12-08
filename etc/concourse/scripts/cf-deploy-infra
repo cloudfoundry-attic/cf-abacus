@@ -116,6 +116,10 @@ cf set-org-role "$CF_USER" "$CF_ORG" OrgManager
 cf set-space-role "$CF_USER" "$CF_ORG" "$CF_SPACE" SpaceManager
 cf set-space-role "$CF_USER" "$CF_ORG" "$CF_SPACE" SpaceDeveloper
 
+if [ "$BIND_SECURITY_GROUP" == "true" ]; then
+  $SCRIPT_DIR/bind-security-group
+fi
+
 echo "Logging to $CF_API as abacus user ..."
 cf login -a "https://api.$CF_API" -u "$CF_USER" -p "$CF_PASSWORD" -o "$CF_ORG" -s "$CF_SPACE" --skip-ssl-validation
 

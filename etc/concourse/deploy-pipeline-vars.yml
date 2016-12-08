@@ -103,6 +103,9 @@ hystrix-client-id: abacus-hystrix
 # UAA client: Client secret for Abacus Hystrix streams
 hystrix-client-secret: secret
 
+# Set to true to enable Abacus to be deployed on landscape without load-balancer
+bind-security-group: false
+
 # Authentication server: api.<cf-api>:443
 auth-server: https://api.cf.mycompany.com:443
 
