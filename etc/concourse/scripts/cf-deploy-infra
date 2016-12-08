@@ -89,11 +89,19 @@ set -e
 
 if [ $abacus_login = 0 ]; then
   echo "Waiting for db service instance deletion ..."
-  until cf service db | grep -q "Service instance db not found"
+  until cf service db | grep -q "Service instance db not found\|status code: 409"
   do
     sleep 3s
   done
   echo "Done."
+  service_deletion_status=$(cf service db)
+  cf service db
+  if grep -q 'Service instance db not found' <<< $service_deletion_status ; then
+    echo "DB deletion finished successfully."
+  else
+    echo "DB deletion failed!"
+    exit 1
+  fi
 fi
 
 echo "Logging to $CF_API as admin ..."
@@ -130,12 +138,12 @@ if [ "$CREATE_DB_SERVICE" == "true" ]; then
   do
     sleep 3s
   done
-  serivice_creation_status=$(cf service db)
+  service_creation_status=$(cf service db)
   cf service db
-  if grep -q 'Status: create succeeded' <<< $serivice_creation_status ; then
+  if grep -q 'Status: create succeeded' <<< $service_creation_status ; then
     echo "DB creation finished successfully."
   else
-    echo "DB creation failed."
+    echo "DB creation failed!"
     exit 1
   fi
 else
