@@ -30,7 +30,7 @@ cf set-space-role $CF_USER $CF_ORG $CF_SPACE SpaceDeveloper
 
 echo "Creating security group for CF API access ..."
 group="["
-for line in $(dig +short api.$CF_API); do
+for line in $(host api.$CF_API | awk '/has address/ { print $4 }'); do
   group+="{\"protocol\":\"tcp\",\"destination\":\"$line\",\"ports\":\"80,443\"},"
 done
 group+="]"
