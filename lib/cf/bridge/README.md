@@ -98,6 +98,7 @@ applications:
     DB: abacus-pouchserver
     EUREKA: abacus-eureka-plugin
     API: https://api.bosh-lite.com:443
+    AUTH_SERVER: https://api.bosh-lite.com:443
     NODE_MODULES_CACHE: false
     CF_CLIENT_ID: abacus-cf-bridge
     CF_CLIENT_SECRET: secret
@@ -106,7 +107,6 @@ applications:
 In case you are running a secured Abacus installation, add the following entries:
 ```yml
     SECURED: true
-    AUTH_SERVER: https://api.bosh-lite.com:443
     CLIENT_ID: abacus-linux-container
     CLIENT_SECRET: secret
     JWTKEY: |+
