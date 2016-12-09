@@ -9,17 +9,17 @@ These port numbers are used when running Abacus in a local dev environment.
 |:-----|:---------------------------|
 | 5984 | abacus-pouchserver         |
 |      |                            |
-| 9080 | abacus-usage-collector     |   
-| 9088 | abacus-usage-reporting     |  
+| 9080 | abacus-usage-collector     |
+| 9088 | abacus-usage-reporting     |
 |      |                            |
 | 9100 | abacus-usage-meter         |
-| 9200 | abacus-usage-accumulator   |   
+| 9200 | abacus-usage-accumulator   |
 | 9300 | abacus-usage-aggregator    |
 |      |                            |
 | 9500 | abacus-cf-bridge           |
 | 9501 | abacus-cf-renewer          |
 |      |                            |
-| 9880 | abacus-provisioning-plugin |  
+| 9880 | abacus-provisioning-plugin |
 | 9881 | abacus-account-plugin      |
 | 9882 | abacus-authserver-plugin   |
 | 9990 | abacus-eureka-plugin       |
@@ -45,7 +45,7 @@ The logs are DEBUG logs so they will produce a lot of entries in production. Usu
 
 **Dynamic/Remote configuration**
 
-The debug log can be configured dynamically (remotely). To get the current debug log config: 
+The debug log can be configured dynamically (remotely). To get the current debug log config:
 ```
 curl http://<host><:port>/debug
 ```
@@ -59,12 +59,12 @@ curl http://<host><:port>/debug?config=abacus-breaker,abacus-retry
 Abacus supports [CouchDB](http://couchdb.apache.org/) and [MongoDB](https://www.mongodb.com/). You can also use the in-memory [PouchDB](https://pouchdb.com/) for development and testing.
 
 Abacus has two database clients:
-* [couchclient](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/couchclient) - supports CouchDB and the development/testing PouchDB 
+* [couchclient](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/couchclient) - supports CouchDB and the development/testing PouchDB
 * [mongoclient](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/mongoclient) - supports MongoDB
 
 The DB is configured using these environemnt variables:
 * `DB` - URL of the database. By default Abacus uses local PouchDB (`localhost:5984`) if this variable is missing
-* `DBCLIENT` - DB client to use. The default one is the `couchclient`. 
+* `DBCLIENT` - DB client to use. The default one is the `couchclient`.
 
 ### Local configuration
 
@@ -94,7 +94,7 @@ You can use Cloud Foundry service instance, instead of hard-coded DB URL. To do 
 * Linux:
 
    ```bash
-   npm cfpush cfstage -- large
+   npm run cfstage -- large
    cf apps | tail -n +5 | awk '{print $1}' | xargs -n1 | xargs -P 5 -i cf bind-service {} db
    npm run cfstart -- large
    ```
@@ -110,14 +110,14 @@ This will stage all Abacus applications without starting them. Then we'll bind t
 
 ## Scaling Abacus
 
-Abacus supports several profiles defined in https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/etc/apps.rc. You can use these profiles when starting, stopping or deploying Abacus to Cloud Foundry. 
+Abacus supports several profiles defined in https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/etc/apps.rc. You can use these profiles when starting, stopping or deploying Abacus to Cloud Foundry.
 
 For example you can push Abacus pipeline meant to handle more load by pushing it with profile `large`:
 ```
 npm run cfpush -- large
 ```
 
-The profiles inherit from the `default` profile. This allows the profiles to specify only the settings that are specific for this profile. All Abacus applications have an `.apprc` file. This file details the application settings for each profile. 
+The profiles inherit from the `default` profile. This allows the profiles to specify only the settings that are specific for this profile. All Abacus applications have an `.apprc` file. This file details the application settings for each profile.
 
 The settings overriden in the profiles most often include the number of instances, applications and db partitions for the application. For example the [Accumulator settings](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/lib/aggregation/accumulator/.apprc) defines the following profiles:
 * `default` with 1 application / 1 instance
