@@ -94,7 +94,7 @@ You can use Cloud Foundry service instance, instead of hard-coded DB URL. To do 
 * Linux:
 
    ```bash
-   npm cfpush cfstage -- large
+   npm run cfstage -- large
    cf apps | tail -n +5 | awk '{print $1}' | xargs -n1 | xargs -P 5 -i cf bind-service {} db
    npm run cfstart -- large
    ```
