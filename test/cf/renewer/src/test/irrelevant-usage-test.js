@@ -400,8 +400,7 @@ const test = (secured) => {
     fn(doneCallback, checkFn);
   };
 
-  const waitForStartAndPoll = (component, port, checkFn, done) => {
-    // Wait for bridge to start
+  const waitForStartAndPoll = (component, port, checkFn, timeout, done) => {
     let startWaitTime = Date.now();
     request.waitFor('http://localhost::p/v1/cf/:component',
       { component: component, p: port },
@@ -418,9 +417,11 @@ const test = (secured) => {
           expect(err).to.equal(undefined);
           expect(response.statusCode).to.equal(200);
 
+          const t = timeout - (Date.now() - startWaitTime);
+          debug('Time left for executing test: %d ms', t);
           poll(checkReport, checkFn, (error) => {
             done(error);
-          }, totalTimeout - (Date.now() - startWaitTime), 1000);
+          }, t, 1000);
         });
       }
     );
@@ -468,17 +469,20 @@ const test = (secured) => {
     it('usage is not duplicated', function(done) {
       this.timeout(totalTimeout + 2000);
 
-      waitForStartAndPoll('bridge', 9500, checkCurrentMonthWindow, (error) => {
-        if (error) {
-          done(error);
-          return;
+      const startTestTime = Date.now();
+      waitForStartAndPoll('bridge', 9500, checkCurrentMonthWindow, totalTimeout,
+        (error) => {
+          if (error) {
+            done(error);
+            return;
+          }
+          start('abacus-cf-renewer');
+          // Allow the renewer to kick-in
+          setTimeout(() => waitForStartAndPoll('renewer', 9501,
+            checkCurrentMonthWindow,
+            totalTimeout - (Date.now() - startTestTime), done), 2000);
         }
-
-        start('abacus-cf-renewer');
-        // Allow the renewer to kick-in
-        setTimeout(() => waitForStartAndPoll('renewer', 9501,
-          checkCurrentMonthWindow, done), 2000);
-      });
+      );
     });
   });
 
@@ -524,14 +528,18 @@ const test = (secured) => {
     it('does not submit usage', function(done) {
       this.timeout(totalTimeout + 2000);
 
-      waitForStartAndPoll('bridge', 9500, () => {}, (error) => {
-        if (error) {
-          done(error);
-          return;
+      const startTestTime = Date.now();
+      waitForStartAndPoll('bridge', 9502, () => {}, totalTimeout,
+        (error) => {
+          if (error) {
+            done(error);
+            return;
+          }
+          start('abacus-cf-renewer');
+          waitForStartAndPoll('renewer', 9501, () => {},
+            totalTimeout - (Date.now() - startTestTime), done);
         }
-        start('abacus-cf-renewer');
-        waitForStartAndPoll('renewer', 9501, () => {}, done);
-      });
+      );
     });
   });
 

@@ -1,18 +1,17 @@
 'use strict';
 
-const cp = require('child_process');
 const commander = require('commander');
+const cp = require('child_process');
 const jwt = require('jsonwebtoken');
+const moment = require('moment');
 const util = require('util');
 
 const _ = require('underscore');
 const clone = _.clone;
 
-const dbclient = require('abacus-dbclient');
 const express = require('abacus-express');
 const request = require('abacus-request');
 const router = require('abacus-router');
-const moment = require('moment');
 
 // Setup the debug log
 const debug =
@@ -64,7 +63,7 @@ const resourceToken = {
   },
   payload: {
     jti: '254abca5-1c25-40c5-99d7-2cc641791517',
-    sub: 'abacus-cf-renewer',
+    sub: 'abacus-cf-bridge',
     authorities: [
       'abacus.usage.linux-container.write',
       'abacus.usage.linux-container.read'
@@ -73,9 +72,9 @@ const resourceToken = {
       'abacus.usage.linux-container.read',
       'abacus.usage.linux-container.write'
     ],
-    client_id: 'abacus-cf-renewer',
-    cid: 'abacus-cf-renewer',
-    azp: 'abacus-cf-renewer',
+    client_id: 'abacus-cf-bridge',
+    cid: 'abacus-cf-bridge',
+    azp: 'abacus-cf-bridge',
     grant_type: 'client_credentials',
     rev_sig: '2cf89595',
     iat: 1456147679,
@@ -83,11 +82,11 @@ const resourceToken = {
     iss: 'https://localhost:1234/oauth/token',
     zid: 'uaa',
     aud: [
-      'abacus-cf-renewer',
+      'abacus-cf-bridge',
       'abacus.usage.linux-container'
     ]
   },
-  signature: '7BVRprw-yySpW7lSkM8KPZoUIw2w61bs87l0YXqUT8E'
+  signature: 'irxoV230hkDJenXoTSHQFfqzoUl353lS2URo1fJm21Y'
 };
 const systemToken = {
   header: {
@@ -95,7 +94,7 @@ const systemToken = {
   },
   payload: {
     jti: '254abca5-1c25-40c5-99d7-2cc641791517',
-    sub: 'abacus-cf-renewer',
+    sub: 'abacus-cf-bridge',
     authorities: [
       'abacus.usage.write',
       'abacus.usage.read'
@@ -104,9 +103,9 @@ const systemToken = {
       'abacus.usage.write',
       'abacus.usage.read'
     ],
-    client_id: 'abacus-cf-renewer',
-    cid: 'abacus-cf-renewer',
-    azp: 'abacus-cf-renewer',
+    client_id: 'abacus-cf-bridge',
+    cid: 'abacus-cf-bridge',
+    azp: 'abacus-cf-bridge',
     grant_type: 'client_credentials',
     rev_sig: '2cf89595',
     iat: 1456147679,
@@ -114,11 +113,11 @@ const systemToken = {
     iss: 'https://localhost:1234/oauth/token',
     zid: 'uaa',
     aud: [
-      'abacus-cf-renewer',
+      'abacus-cf-bridge',
       'abacus.usage'
     ]
   },
-  signature: '1J3_hBJBUgwRO9fzg25sdDYj6DqCVWCNB3veyIBsklM'
+  signature: 'OVNTKTvu-yHI6QXmYxtPeJZofNddX36Mx1q4PDWuYQE'
 };
 const signedResourceToken = jwt.sign(resourceToken.payload, tokenSecret, {
   expiresIn: 43200
@@ -127,30 +126,41 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
   expiresIn: 43200
 });
 
-const lastMonthInMilliseconds = moment().utc().subtract(1, 'months').valueOf();
+const twentySecondsInMilliseconds = 20 * 1000;
 
-const test = (secured) => {
+const fixTimes = (responseBody) => {
+  const lastMonthInMilliseconds =
+    moment().utc().subtract(1, 'months').valueOf();
+  for(let resource of responseBody.resources)
+    resource.metadata.created_at =
+      new Date(lastMonthInMilliseconds +
+        resource.metadata.created_at).toISOString();
+
+  return responseBody;
+};
+
+const appUsageEvents = fixTimes(require('./appUsageEvents.json'));
+const testDataOrgGuid = appUsageEvents.resources[0].entity.org_guid;
+
+const start = (module) => {
+  debug('Starting %s in directory %s', module, moduleDir(module));
+  const c = cp.spawn('npm', ['run', 'start'], {
+    cwd: moduleDir(module),
+    env: clone(process.env)
+  });
+
+  // Add listeners to stdout, stderr and exit message and forward the
+  // messages to debug logs
+  c.stdout.on('data', (data) => process.stdout.write(data));
+  c.stderr.on('data', (data) => process.stderr.write(data));
+  c.on('exit', (code) => debug('Module %s started with code %d',
+    module, code));
+};
+
+describe('abacus-cf-renewer stream simulation', () => {
   let server;
   let serverPort;
-
-  let appUsageEvents;
-
   let expectedConsuming;
-
-  const start = (module) => {
-    debug('Starting %s in directory %s', module, moduleDir(module));
-    const c = cp.spawn('npm', ['run', 'start'], {
-      cwd: moduleDir(module),
-      env: clone(process.env)
-    });
-
-    // Add listeners to stdout, stderr and exit message and forward the
-    // messages to debug logs
-    c.stdout.on('data', (data) => process.stdout.write(data));
-    c.stderr.on('data', (data) => process.stderr.write(data));
-    c.on('exit', (code) => debug('Module %s started with code %d',
-      module, code));
-  };
 
   beforeEach((done) => {
     const app = express();
@@ -168,14 +178,7 @@ const test = (secured) => {
         return;
       }
 
-      responseDebug('Returning events %j', appUsageEvents);
-      response.status(200).send({
-        total_results: appUsageEvents.length,
-        total_pages: 1,
-        prev_url: null,
-        next_url: null,
-        resources: appUsageEvents
-      });
+      response.status(200).send(appUsageEvents);
     });
     routes.get('/v2/info', (request, response) => {
       oAuthDebug('Requested API info');
@@ -202,24 +205,21 @@ const test = (secured) => {
     serverPort = server.address().port;
     debug('Test resources server listening on port %d', serverPort);
 
-    // Enable/disable the oAuth token authorization
-    process.env.SECURED = secured ? 'true' : 'false';
-    debug('Set SECURED = %s', process.env.SECURED);
-
     // Set environment variables
     process.env.API = 'http://localhost:' + serverPort;
     process.env.AUTH_SERVER = 'http://localhost:' + serverPort;
-    process.env.CF_CLIENT_ID = 'abacus-cf-renewer';
+    process.env.CF_CLIENT_ID = 'abacus-cf-bridge';
     process.env.CF_CLIENT_SECRET = 'secret';
     process.env.CLIENT_ID = 'abacus-linux-container';
     process.env.CLIENT_SECRET = 'secret';
-    process.env.ABACUS_CLIENT_ID = 'abacus-cf-renewer';
-    process.env.ABACUS_CLIENT_SECRET = 'secret';
     process.env.JWTKEY = tokenSecret;
     process.env.JWTALGO = tokenAlgorithm;
 
     // Change slack window to be able to submit usage for last month
     process.env.SLACK = '32D';
+
+    // Disable wait for correct app-event ordering
+    process.env.GUID_MIN_AGE = twentySecondsInMilliseconds;
 
     // Trigger renewer every 2 seconds
     process.env.RETRY_INTERVAL = 2000;
@@ -245,7 +245,7 @@ const test = (secured) => {
       startServices();
     }
     else
-      // Delete test dbs on the configured db server
+    // Delete test dbs on the configured db server
       dbclient.drop(process.env.DB, /^abacus-/, () => {
         startServices();
       });
@@ -275,6 +275,7 @@ const test = (secured) => {
       c.on('exit', (code) => cb(module, code));
     };
 
+    stop('abacus-cf-renewer', finishCb);
     stop('abacus-cf-bridge', finishCb);
     stop('abacus-usage-reporting', finishCb);
     stop('abacus-usage-aggregator', finishCb);
@@ -288,7 +289,6 @@ const test = (secured) => {
 
     server.close();
 
-    delete process.env.SECURED;
     delete process.env.API;
     delete process.env.AUTH_SERVER;
     delete process.env.CF_CLIENT_ID;
@@ -298,7 +298,7 @@ const test = (secured) => {
     delete process.env.JWTKEY;
     delete process.env.JWTALGO;
     delete process.env.SLACK;
-    delete process.env.RETRY_INTERVAL;
+    delete process.env.GUID_MIN_AGE;
   });
 
   const checkLastMonthWindow = (windowName, usage, level) => {
@@ -329,20 +329,31 @@ const test = (secured) => {
     const windowUsage = usage.windows[timeWindows.month];
     const currentMonth = windowUsage[0];
 
-    debug('%s window; Expected: no usage; Actual: %j',
-      windowName, currentMonth);
-    expect(currentMonth).to.equal(null);
+    expect(currentMonth).to.not.equal(undefined);
+
+    if (level !== 'resource') {
+      expect(currentMonth).to.contain.all.keys('quantity', 'charge');
+      debug('%s window; Expected: consuming=%d, charge>0; ' +
+        'Actual: consuming=%d, charge=%d; Month window: %o',
+        windowName, expectedConsuming, currentMonth.quantity.consuming,
+        currentMonth.charge, currentMonth);
+      expect(currentMonth.quantity.consuming).to.equal(expectedConsuming);
+    }
+    else
+      debug('%s window; Expected:  charge>0; ' +
+        'Actual: charge=%o; Month window: %o',
+        windowName, currentMonth.charge, currentMonth);
+
+    expect(currentMonth.charge).not.to.equal(undefined);
+    expect(currentMonth).to.contain.all.keys('charge');
+    expect(currentMonth.charge).to.be.above(0);
   };
 
   const checkReport = (cb, checkFn) => {
     request.get('http://localhost:9088/v1/metering/organizations' +
       '/:organization_id/aggregated/usage', {
-        organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
-        headers: {
-          authorization: 'bearer ' + signedResourceToken
-        }
-      },
-      (error, response) => {
+        organization_id: testDataOrgGuid
+      }, (error, response) => {
         try {
           expect(error).to.equal(undefined);
 
@@ -409,11 +420,7 @@ const test = (secured) => {
         if (err) throw err;
 
         // Check report
-        request.get(uri, {
-          headers: {
-            authorization: secured ? 'bearer ' + signedSystemToken : ''
-          }
-        }, (err, response) => {
+        request.get(uri, {}, (err, response) => {
           expect(err).to.equal(undefined);
           expect(response.statusCode).to.equal(200);
 
@@ -427,211 +434,29 @@ const test = (secured) => {
     );
   };
 
-  context('with a single app', () => {
+  context('with stream of CF events', () => {
+    beforeEach(() => {
+      // 37 apps consuming 512 MB
+      // one app using 4 GB
+      // total: 22.5 GB
+      expectedConsuming = 22.5;
+    });
 
-    context('start, stop, start, scale out', () => {
-      beforeEach(() => {
-        appUsageEvents = [
-          {
-            metadata: {
-              guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
-              url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-              created_at: new Date(lastMonthInMilliseconds).toISOString()
-            },
-            entity: {
-              state: 'STARTED',
-              previous_state: 'STOPPED',
-              memory_in_mb_per_instance: 512,
-              previous_memory_in_mb_per_instance: 512,
-              instance_count: 1,
-              previous_instance_count: 1,
-              app_guid: '35c4ff2f',
-              app_name: 'app',
-              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
-              space_name: 'abacus',
-              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
-              buildpack_guid: null,
-              buildpack_name: null,
-              package_state: 'PENDING',
-              previous_package_state: 'PENDING',
-              parent_app_guid: null,
-              parent_app_name: null,
-              process_type: 'web',
-              task_name: null,
-              task_guid: null
-            }
-          },
-          {
-            metadata: {
-              guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
-              url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
-              created_at: new Date(lastMonthInMilliseconds + 1).toISOString()
-            },
-            entity: {
-              state: 'BUILDPACK_SET',
-              previous_state: 'STARTED',
-              memory_in_mb_per_instance: 512,
-              previous_memory_in_mb_per_instance: 512,
-              instance_count: 1,
-              previous_instance_count: 1,
-              app_guid: '35c4ff2f',
-              app_name: 'app',
-              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
-              space_name: 'abacus',
-              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
-              buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
-              buildpack_name: 'staticfile_buildpack',
-              package_state: 'STAGED',
-              previous_package_state: 'STAGED',
-              parent_app_guid: null,
-              parent_app_name: null,
-              process_type: 'web',
-              task_name: null,
-              task_guid: null
-            }
-          },
-          {
-            metadata: {
-              guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
-              url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: new Date(lastMonthInMilliseconds + 2).toISOString()
-            },
-            entity: {
-              state: 'STOPPED',
-              previous_state: 'STARTED',
-              memory_in_mb_per_instance: 512,
-              previous_memory_in_mb_per_instance: 512,
-              instance_count: 2,
-              previous_instance_count: 1,
-              app_guid: '35c4ff2f',
-              app_name: 'app',
-              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
-              space_name: 'abacus',
-              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
-              buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
-              buildpack_name: 'staticfile_buildpack',
-              package_state: 'STAGED',
-              previous_package_state: 'STAGED',
-              parent_app_guid: null,
-              parent_app_name: null,
-              process_type: 'web',
-              task_name: null,
-              task_guid: null
-            }
-          },
-          {
-            metadata: {
-              guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
-              url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-              created_at: new Date(lastMonthInMilliseconds + 3).toISOString()
-            },
-            entity: {
-              state: 'STARTED',
-              previous_state: 'STOPPED',
-              memory_in_mb_per_instance: 256,
-              previous_memory_in_mb_per_instance: 256,
-              instance_count: 1,
-              previous_instance_count: 1,
-              app_guid: '35c4ff2f',
-              app_name: 'app',
-              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
-              space_name: 'abacus',
-              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
-              buildpack_guid: null,
-              buildpack_name: null,
-              package_state: 'PENDING',
-              previous_package_state: 'PENDING',
-              parent_app_guid: null,
-              parent_app_name: null,
-              process_type: 'web',
-              task_name: null,
-              task_guid: null
-            }
-          },
-          {
-            metadata: {
-              guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
-              url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
-              created_at: new Date(lastMonthInMilliseconds + 4).toISOString()
-            },
-            entity: {
-              state: 'BUILDPACK_SET',
-              previous_state: 'STARTED',
-              memory_in_mb_per_instance: 256,
-              previous_memory_in_mb_per_instance: 256,
-              instance_count: 1,
-              previous_instance_count: 1,
-              app_guid: '35c4ff2f',
-              app_name: 'app',
-              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
-              space_name: 'abacus',
-              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
-              buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
-              buildpack_name: 'staticfile_buildpack',
-              package_state: 'STAGED',
-              previous_package_state: 'STAGED',
-              parent_app_guid: null,
-              parent_app_name: null,
-              process_type: 'web',
-              task_name: null,
-              task_guid: null
-            }
-          },
-          {
-            metadata: {
-              guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
-              url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: new Date(lastMonthInMilliseconds + 5).toISOString()
-            },
-            entity: {
-              state: 'STARTED',
-              previous_state: 'STARTED',
-              memory_in_mb_per_instance: 1024,
-              previous_memory_in_mb_per_instance: 256,
-              instance_count: 2,
-              previous_instance_count: 1,
-              app_guid: '35c4ff2f',
-              app_name: 'app',
-              space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
-              space_name: 'abacus',
-              org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
-              buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
-              buildpack_name: 'staticfile_buildpack',
-              package_state: 'STAGED',
-              previous_package_state: 'STAGED',
-              parent_app_guid: null,
-              parent_app_name: null,
-              process_type: 'web',
-              task_name: null,
-              task_guid: null
-            }
+    it('submits usage and gets expected report back', function(done) {
+      this.timeout(totalTimeout + 2000);
+
+      const startTestTime = Date.now();
+      waitForStartAndPoll('bridge', 9500, checkLastMonthWindow, totalTimeout,
+        (error) => {
+          if (error) {
+            done(error);
+            return;
           }
-        ];
-
-        // first start: 0.5 GB
-        // second start: 0.25 GB
-        // buildpack_set events are ignored
-        // scale out: 2 x 1 GB = 2GB
-        expectedConsuming = 2;
-      });
-
-      it('does not submit current month usage to collector', function(done) {
-        this.timeout(totalTimeout);
-
-        waitForStartAndPoll('bridge', 9500, checkLastMonthWindow, totalTimeout,
-          (error) => {
-            if (error) {
-              done(error);
-              return;
-            }
-            setTimeout(() => checkReport(done, checkCurrentMonthWindow), 2000);
-          }
-        );
-      });
+          start('abacus-cf-renewer');
+          waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindow,
+            totalTimeout - (Date.now() - startTestTime), done);
+        }
+      );
     });
   });
-};
-
-describe('abacus-cf-renewer no-renewer-test without oAuth',
-  () => test(false));
-
+});
