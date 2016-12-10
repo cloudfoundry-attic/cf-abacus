@@ -529,7 +529,7 @@ const test = (secured) => {
       this.timeout(totalTimeout + 2000);
 
       const startTestTime = Date.now();
-      waitForStartAndPoll('bridge', 9502, () => {}, totalTimeout,
+      waitForStartAndPoll('bridge', 9500, () => {}, totalTimeout,
         (error) => {
           if (error) {
             done(error);
