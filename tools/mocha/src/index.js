@@ -176,8 +176,7 @@ var runCLI = function() {
   // Configure Mocha
   var mocha = new Mocha({
     timeout: 60000,
-    useColors: colorify(commander),
-    bail: true
+    useColors: colorify(commander)
   });
 
   // Install Chai expect and Sinon spy and stub as globals
