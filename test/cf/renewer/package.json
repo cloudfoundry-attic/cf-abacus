@@ -58,7 +58,6 @@
     "abacus-lock": "file:../../../lib/utils/lock",
     "abacus-partition": "file:../../../lib/utils/partition",
     "abacus-perf": "file:../../../lib/utils/perf",
-    "abacus-renewer": "file:../../../lib/cf/renewer",
     "abacus-request": "file:../../../lib/utils/request",
     "abacus-retry": "file:../../../lib/utils/retry",
     "abacus-router": "file:../../../lib/utils/router",

@@ -15,11 +15,6 @@ const partition = require('abacus-partition');
 const request = require('abacus-request');
 const urienv = require('abacus-urienv');
 
-// Configure URLs
-process.env.AUTH_SERVER = 'http://api';
-process.env.COLLECTOR = 'http://collector';
-process.env.PROVISIONING = 'http://provisioning';
-
 // Resolve service URIs
 const uris = memoize(() => urienv({
   db: 5984
@@ -41,6 +36,8 @@ const tests = (secured) => {
     delete require.cache[require.resolve('abacus-batch')];
     delete require.cache[require.resolve('abacus-cf-renewer')];
     delete require.cache[require.resolve('abacus-dbclient')];
+    delete require.cache[require.resolve('abacus-couchclient')];
+    delete require.cache[require.resolve('abacus-mongoclient')];
     delete require.cache[require.resolve('abacus-partition')];
     delete require.cache[require.resolve('abacus-breaker')];
     delete require.cache[require.resolve('abacus-request')];
@@ -113,6 +110,11 @@ const tests = (secured) => {
   beforeEach((done) => {
     deleteModules();
 
+    // Configure URLs
+    process.env.AUTH_SERVER = 'http://api';
+    process.env.COLLECTOR = 'http://collector';
+    process.env.PROVISIONING = 'http://provisioning';
+
     process.env.SECURED = secured ? 'true' : 'false';
     process.env.PAGE_SIZE = '10';
 
@@ -146,6 +148,9 @@ const tests = (secured) => {
     deleteModules();
 
     // Unset the env variables
+    delete process.env.AUTH_SERVER;
+    delete process.env.COLLECTOR;
+    delete process.env.PROVISIONING;
     delete process.env.SECURED;
     delete process.env.PAGE_SIZE;
 
@@ -386,6 +391,6 @@ const tests = (secured) => {
 
 };
 
-describe.only('Usage paging without security', () => tests(false));
+describe('Usage paging without security', () => tests(false));
 
 describe('Usage paging with security', () => tests(true));
