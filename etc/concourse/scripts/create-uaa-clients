@@ -2,29 +2,48 @@
 
 set -e -x
 
+function create_or_update_client() {
+   client_id="$1"
+   secret="$2"
+   shift 2
+   uaac_parameters="$@"
+
+   echo "Checking if UAA client \"$client_id\" exists ..."
+   set +e
+   uaac client get "$client_id"
+   client_found=$?
+   set -e
+
+   if [[ "$client_found" != 0 ]]; then
+     echo "Creating new UAA client \"$client_id\""
+     uaac client add "$client_id" --secret "$secret" ${uaac_parameters}
+   else
+     echo "Updating existing UAA client \"$client_id\""
+     set +e
+     update_result=$(uaac client update "$client_id" ${uaac_parameters})
+     set -e
+     if [[ "$?" != 0 ]] && [[ "$update_result" != "Nothing to update*" ]]; then
+       echo "Failed to update UAA client due to $update_result"
+       exit 1
+     fi
+     uaac secret set "$client_id" --secret "$secret"
+   fi
+}
+
 echo "Logging to UAA ..."
 if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
   skip='--skip-ssl-validation'
 fi
+
 uaac target "uaa.$CF_API" $skip
 uaac token client get "$UAA_ADMIN" -s "$UAA_SECRET"
 
-echo "Trying to delete existing UAA clients ..."
-set +e
-uaac client delete "$SYSTEM_CLIENT_ID"
-uaac client delete "$CC_CLIENT_ID"
-uaac client delete "$BRIDGE_CLIENT_ID"
-uaac client delete "$CONTAINER_CLIENT_ID"
-uaac client delete "$OBJECT_STORAGE_CLIENT_ID"
-uaac client delete "$HYSTRIX_CLIENT_ID"
-set -e
-
 echo "Creating UAA clients ..."
-uaac client add "$SYSTEM_CLIENT_ID" --authorized_grant_types client_credentials --authorities abacus.usage.write,abacus.usage.read --scope abacus.usage.write,abacus.usage.read --secret "$SYSTEM_CLIENT_SECRET"
+create_or_update_client "$SYSTEM_CLIENT_ID" "$SYSTEM_CLIENT_SECRET" --authorized_grant_types client_credentials --authorities abacus.usage.write,abacus.usage.read --scope abacus.usage.write,abacus.usage.read
 if [ "$PURGE_APP_USAGE_EVENTS" == "true" ]; then
-  uaac client add "$CC_CLIENT_ID" --authorized_grant_types client_credentials --authorities cloud_controller.admin --secret "$CC_CLIENT_SECRET"
+  create_or_update_client "$CC_CLIENT_ID" "$CC_CLIENT_SECRET" --authorized_grant_types client_credentials --authorities cloud_controller.admin
 fi
-uaac client add "$BRIDGE_CLIENT_ID" --authorized_grant_types client_credentials --authorities "$BRIDGE_CLIENT_AUTHORITIES" --secret "$BRIDGE_CLIENT_SECRET"
-uaac client add "$CONTAINER_CLIENT_ID" --authorized_grant_types client_credentials --authorities abacus.usage.linux-container.write,abacus.usage.linux-container.read --scope abacus.usage.linux-container.write,abacus.usage.linux-container.read --secret "$CONTAINER_CLIENT_SECRET"
-uaac client add "$OBJECT_STORAGE_CLIENT_ID" --authorized_grant_types client_credentials --authorities abacus.usage.object-storage.write,abacus.usage.object-storage.read --scope abacus.usage.object-storage.write,abacus.usage.object-storage.read --secret "$OBJECT_STORAGE_CLIENT_SECRET"
-uaac client add "$HYSTRIX_CLIENT_ID" --authorized_grant_types client_credentials --authorities abacus.system.read --scope abacus.system.read --secret "$HYSTRIX_CLIENT_SECRET"
+create_or_update_client "$BRIDGE_CLIENT_ID" "$BRIDGE_CLIENT_SECRET" --authorized_grant_types client_credentials --authorities "$BRIDGE_CLIENT_AUTHORITIES"
+create_or_update_client "$CONTAINER_CLIENT_ID"  "$CONTAINER_CLIENT_SECRET" --authorized_grant_types client_credentials --authorities abacus.usage.linux-container.write,abacus.usage.linux-container.read --scope abacus.usage.linux-container.write,abacus.usage.linux-container.read
+create_or_update_client "$OBJECT_STORAGE_CLIENT_ID" "$OBJECT_STORAGE_CLIENT_SECRET" --authorized_grant_types client_credentials --authorities abacus.usage.object-storage.write,abacus.usage.object-storage.read --scope abacus.usage.object-storage.write,abacus.usage.object-storage.read
+create_or_update_client "$HYSTRIX_CLIENT_ID" "$HYSTRIX_CLIENT_SECRET" --authorized_grant_types client_credentials --authorities abacus.system.read --scope abacus.system.read
