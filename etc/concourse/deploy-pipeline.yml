@@ -95,6 +95,7 @@ jobs:
               CONTAINER_CLIENT_ID: {{container-client-id}}
               CONTAINER_CLIENT_SECRET: {{container-client-secret}}
               SKIP_SSL_VALIDATION: {{skip-ssl-validation}}
+              SLACK: {{slack}}
         - task: update-uaa-clients
           timeout: 10m
           config:
