@@ -121,6 +121,9 @@ jwtalgo: algo
 # Use templates true/false
 abacus-configure: true
 
+# Slack interval
+slack: 10m
+
 # Abacus repo URI (or landscape project URI)
 landscape-git-repo: https://github.com/cloudfoundry-incubator/cf-abacus.git
 
