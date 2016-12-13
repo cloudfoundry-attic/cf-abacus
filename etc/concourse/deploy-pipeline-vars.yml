@@ -122,7 +122,7 @@ jwtalgo: algo
 abacus-configure: true
 
 # Slack interval
-slack: 10m
+slack: 5D
 
 # Abacus repo URI (or landscape project URI)
 landscape-git-repo: https://github.com/cloudfoundry-incubator/cf-abacus.git
