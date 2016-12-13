@@ -148,6 +148,8 @@ else
 fi
 
 if [ "$PURGE_APP_USAGE_EVENTS" == "true" ]; then
+  $SCRIPT_DIR/create-uaa-clients
+
   echo "Purging app-usage events ..."
   TOKEN=$(curl $k --user $CC_CLIENT_ID:$CC_CLIENT_SECRET -s "https://uaa.$CF_API/oauth/token?grant_type=client_credentials" | jq -r .access_token)
   if [ "$TOKEN" == "null" -o -z "$TOKEN" ]; then
