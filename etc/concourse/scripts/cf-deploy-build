@@ -10,8 +10,8 @@ cp -r landscape/cf-abacus/. built-project
 
 abacus_config_dir="landscape/abacus-config/deploy"
 
-if [[ -e bin/pre-build ]]; then
-  ./bin/pre-build $abacus_config_dir
+if [ -e $abacus_config_dir/bin/pre-build ]; then
+  $abacus_config_dir/bin/pre-build
 fi
 
 if [[ $CONFIGURE = true ]]; then
