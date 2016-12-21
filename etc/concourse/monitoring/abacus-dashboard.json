@@ -99,12 +99,12 @@
             {
               "op": "=",
               "text": "Down",
-              "value": "0"
+              "value": "100"
             },
             {
               "op": "=",
               "text": "UP",
-              "value": "100"
+              "value": "0"
             }
           ],
           "valueName": "current"
