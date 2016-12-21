@@ -2,7 +2,7 @@
 
 if [ "$SEND_TO_RIEMANN" = true ]
 then
-  testresult=100 #test failed
+  testresult=-100 #test failed
   testmetric="$CF_DEPLOYMENT_NAME.abacus.uptime $testresult $(date +%s)"
 
   echo "Reporting metric: $testmetric to $RIEMANN_ADDRESS"
