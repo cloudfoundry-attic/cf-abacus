@@ -1,5 +1,5 @@
 {
-  "id": null,
+  "id": 22,
   "title": "Abacus",
   "originalTitle": "Abacus",
   "tags": [],
@@ -19,9 +19,9 @@
           "colorBackground": true,
           "colorValue": false,
           "colors": [
-            "rgba(245, 54, 54, 0.9)",
+            "rgba(50, 172, 45, 0.97)",
             "rgba(255, 215, 10, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
+            "rgba(245, 54, 54, 0.9)"
           ],
           "datasource": "influxdb_blue",
           "decimals": 0,
@@ -150,6 +150,6 @@
   },
   "refresh": "5s",
   "schemaVersion": 12,
-  "version": 5,
+  "version": 2,
   "links": []
 }
