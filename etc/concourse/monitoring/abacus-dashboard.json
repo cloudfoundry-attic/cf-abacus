@@ -71,7 +71,7 @@
               ],
               "measurement": "CF.abacus.uptime",
               "policy": "default",
-              "query": "SELECT last(\"value\") FROM \"CF.logsearch.elasticsearch.cluster_aggregated_status\" WHERE $timeFilter GROUP BY time($interval) fill(null)",
+              "query": "SELECT last(\"value\") FROM \"CF.abacus.uptime\" WHERE $timeFilter GROUP BY time($interval) fill(null)",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
