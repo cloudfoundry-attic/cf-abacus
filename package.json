@@ -35,8 +35,8 @@
   "scripts": {
     "bootstrap": "npm install etc tools/babel tools/eslint tools/mocha tools/publish tools/cfpack tools/cfpush babel-preset-es2015",
     "babel": "foreach abacus :path npm run babel",
-    "build": "etc/versions && npm run bootstrap && npm run babel && npm install && npm test",
     "prepare": "etc/versions && npm run bootstrap && npm run babel && npm install",
+    "build": "npm run prepare && npm test",
     "clean": "git clean -df",
     "rebuild": "npm run clean && npm run build",
     "lint": "foreach abacus :path npm run lint",
