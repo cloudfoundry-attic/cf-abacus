@@ -9,18 +9,6 @@ Dependencies
 The module is using `mongodb` [native NodeJS driver](https://github.com/mongodb/node-mongodb-native).
 
 
-Configuration
--------------
-The DB connections can be configured using `MONGO_OPTS` environment variable. It accepts JSON with [connection settings](http://mongodb.github.io/node-mongodb-native/2.2/reference/connecting/connection-settings/).
-
-To enable auto reconnect on error and reduce reconnect retries:
-```bash
-export MONGO_OPTS='{"autoReconnect": "false", "reconnectTries": 5}'
-```
-
-For Cloud Foundry you should set `MONGO_OPTS` as application environment variable by modifying the `manifest.yml` files of the Abacus applications.
-
-
 Differences between Couch and Mongo
 -----------------------------------
 
