@@ -150,6 +150,46 @@ var colorify = memoize(function(opt) {
   return tty.isatty(process.stdout) || opt.color;
 });
 
+// Delete all MongoDB databases.
+var dropMongoDatabases = function(cb) {
+
+  // The db drop is executed only when:
+  // - we use external/standalone DB
+  // - the DB is set to mongodb
+  // - no parallel execution is active (JOBS === 1)
+  if (!process.env.COUCHDB)
+    return cb();
+  if (!process.env.COUCHDB.startsWith('mongodb'))
+    return cb();
+  if (process.env.JOBS !== '1')
+    throw new Error('Parallel execution with MongoDB is not supported');
+
+  var mongoShellScript =
+    'db.adminCommand("listDatabases").databases.forEach(function(d) {' +
+    '  if(d.name != "admin" && d.name != "local" && d.name != "config") {' +
+    '    db.getSiblingDB(d.name).dropDatabase();' +
+    '    print("Dropping database " + d.name);' +
+    '  }' +
+    '});';
+
+  var spawn = require('child_process').spawn;
+  var ls = spawn('mongo', ['admin', '--eval', mongoShellScript]);
+  ls.stdout.on('data', function(data) {
+    process.stdout.write(`mongo stdout: ${data}`);
+  });
+  ls.stderr.on('data', function(data) {
+    process.stderr.write(`mongo stderr: ${data}`);
+  });
+  ls.on('close', function(code) {
+    process.stdout.write(`mongo shell exited with code ${code}\n`);
+    if (code === 0)
+      cb();
+  });
+  ls.on('error', function(err) {
+    process.stdout.write(`failed to launch mongo shell ${err}\n`);
+  });
+};
+
 // Run Mocha with Istanbul
 var runCLI = function() {
   process.stdout.write('Testing...\n');
@@ -203,40 +243,42 @@ var runCLI = function() {
   }).forEach(function(file) {
     mocha.addFile(path.join(testDir, file));
   });
-  mocha.run(function(failures) {
-    var t1 = Date.now();
+  dropMongoDatabases(function() {
+    mocha.run(function(failures) {
+      var t1 = Date.now();
 
-    // Print the test execution time
-    var time = function() {
-      process.stdout.write(util.format('\nRun time %dms\n', t1 - t0));
-    };
+      // Print the test execution time
+      var time = function() {
+        process.stdout.write(util.format('\nRun time %dms\n', t1 - t0));
+      };
 
-    if(!global.__coverage) {
-      time();
-      process.exit(failures);
-    }
+      if (!global.__coverage) {
+        time();
+        process.exit(failures);
+      }
 
-    // Remap the generated source coverage maps using the collected source
-    // maps
-    remap(global.__coverage, maps);
+      // Remap the generated source coverage maps using the collected source
+      // maps
+      remap(global.__coverage, maps);
 
-    // Write the JSON and LCOV coverage reports
-    var collector = new istanbul.Collector();
-    collector.add(global.__coverage);
-    var coverage = collector.getFinalCoverage();
-    var reporter = new istanbul.Reporter(undefined, '.coverage');
-    reporter.addAll(['lcovonly']);
-    reporter.write(collector, false, function() {
-      fs.writeFileSync('.coverage/coverage.json', JSON.stringify(coverage));
+      // Write the JSON and LCOV coverage reports
+      var collector = new istanbul.Collector();
+      collector.add(global.__coverage);
+      var coverage = collector.getFinalCoverage();
+      var reporter = new istanbul.Reporter(undefined, '.coverage');
+      reporter.addAll(['lcovonly']);
+      reporter.write(collector, false, function() {
+        fs.writeFileSync('.coverage/coverage.json', JSON.stringify(coverage));
 
-      // Print a detailed source coverage text report and the test
-      // execution time
-      textcov(coverage, sources, {
-        color: colorify(commander)
+        // Print a detailed source coverage text report and the test
+        // execution time
+        textcov(coverage, sources, {
+          color: colorify(commander)
+        });
+        time();
+
+        process.exit(failures);
       });
-      time();
-
-      process.exit(failures);
     });
   });
 };
