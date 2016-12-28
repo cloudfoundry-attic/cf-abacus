@@ -1,5 +1,13 @@
 ---
 resources:
+  - name: landscape
+    type: git
+    source:
+      uri: {{landscape-git-repo}}
+      branch: {{landscape-git-repo-branch}}
+      paths: [cf-abacus,abacus-config]
+      private_key: {{landscape-git-repo-private-key}}
+      skip-ssl-verification: true
   - name: abacus
     type: git
     source:
@@ -250,6 +258,8 @@ jobs:
         - get: abacus
           passed: [mongodb-6.9.1]
           trigger: true
+        - get: landscape
+          trigger: true
       - task: infra
         attempts: 2
         config:
@@ -302,6 +312,7 @@ jobs:
               tag: '6.9.1'
           inputs:
             - name: abacus
+            - name: landscape
           params:
             # Enable tests on CF (used in cftest script)
             CF_TEST: true
@@ -319,5 +330,7 @@ jobs:
             CF_SPACE: {{cf-space}}
             CF_DOMAIN: {{cf-domain}}
             DEBUG: {{debug}}
+            ABACUS_PREFIX: {{abacus-prefix}}
+            SKIP_SSL_VALIDATION: {{skip-ssl-validation}}
           run:
             path: abacus/etc/concourse/scripts/cf-test-test
