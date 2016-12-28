@@ -62,9 +62,10 @@ Abacus has two database clients:
 * [couchclient](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/couchclient) - supports CouchDB and the development/testing PouchDB
 * [mongoclient](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/mongoclient) - supports MongoDB
 
-The DB is configured using these environemnt variables:
+The DB is configured using these environment variables:
 * `DB` - URL of the database. By default Abacus uses local PouchDB (`localhost:5984`) if this variable is missing
 * `DBCLIENT` - DB client to use. The default one is the `couchclient`.
+* `DB_OPTS` - DB-specific connections configuration. Accepts JSON with either [Mongo](http://mongodb.github.io/node-mongodb-native/2.2/reference/connecting/connection-settings/) or [Couch/Pouch](https://pouchdb.com/api.html#create_database) connection settings.
 
 ### Local configuration
 
