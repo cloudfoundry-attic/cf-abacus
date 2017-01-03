@@ -9,6 +9,9 @@
 //   cd workspace/cf-abacus/test/cf/renewer
 //   npm install && npm run babel && npm run lint && npm run itest
 //
+//   # Submit usage for space with another GUID
+//   npm run itest -- -s my -i 2
+//
 //   # Shift the time one month in the future. For Ubuntu:
 //   timedatectl set-ntp false && timedatectl set-time "2017-01-01 23:05"
 //
@@ -82,14 +85,21 @@ const noUsageFn = () => {
 const argv = clone(process.argv);
 argv.splice(1, 1, 'usage-collector-itest');
 commander
+  .option('-s, --guid-suffix <suffix>',
+    'guid suffix used to change event, space and app GUIDs')
+  .option('-i, --invocations <number>',
+    'number or test invocations', parseInt)
   .option('-u, --no-usage',
-    'do not mock usage events', noUsageFn)
+    'do not mock any usage events', noUsageFn)
   .option('-t, --start-timeout <n>',
     'external processes start timeout in milliseconds', parseInt)
   .option('-x, --total-timeout <n>',
     'test timeout in milliseconds', parseInt)
   .allowUnknownOption(true)
   .parse(argv);
+
+// Number of invocations
+const invocations = commander.invocations || 1;
 
 // External Abacus processes start timeout
 const startTimeout = commander.startTimeout || 100000;
@@ -171,11 +181,19 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
 
 const twentySecondsInMilliseconds = 20 * 1000;
 
-const fixTimes = (responseBody) => {
+const modifyEvents = (responseBody) => {
   const startTime = Date.now() - twentySecondsInMilliseconds;
-  for(let resource of responseBody.resources)
+  for(let resource of responseBody.resources) {
     resource.metadata.created_at =
       new Date(startTime + resource.metadata.created_at).toISOString();
+    if (commander.guidSuffix) {
+      const suffix = '-' + commander.guidSuffix;
+      resource.entity.space_guid = resource.entity.space_guid + suffix;
+      resource.entity.app_guid = resource.entity.app_guid + suffix;
+      resource.metadata.guid = resource.metadata.guid + suffix;
+      resource.metadata.url = resource.metadata.url + suffix;
+    }
+  }
 
   return responseBody;
 };
@@ -186,7 +204,12 @@ const appUsageEvents = noUsage ? {
   prev_url: null,
   next_url: null,
   resources: []
-} : fixTimes(require('./appUsageEvents.json'));
+} : modifyEvents(require('./appUsageEvents.json'));
+
+const numberOfEvents = appUsageEvents.resources.length;
+const lastEventGuid = appUsageEvents.resources[numberOfEvents - 1].
+  metadata.guid;
+
 const testDataOrgGuid =
   require('./appUsageEvents.json').resources[0].entity.org_guid;
 
@@ -218,7 +241,7 @@ describe('abacus-cf-renewer stream simulation', () => {
     const app = express();
     const routes = router();
     routes.get('/v2/app_usage_events', (request, response) => {
-      if (request.url.indexOf('after_guid') !== -1) {
+      if (request.query.after_guid === lastEventGuid) {
         debug('Returning empty list of usage events');
         response.status(200).send({
           total_results: 0,
@@ -364,7 +387,7 @@ describe('abacus-cf-renewer stream simulation', () => {
           expect(response.body).to.contain.all.keys('resources', 'spaces');
           const resources = response.body.resources;
           expect(resources.length).to.equal(1);
-          expect(response.body.spaces.length).to.equal(1);
+          expect(response.body.spaces.length).to.equal(invocations);
           const reporttime = Date.now();
 
           expect(resources[0]).to.contain.all.keys(
@@ -439,7 +462,9 @@ describe('abacus-cf-renewer stream simulation', () => {
       // 37 apps consuming 512 MB
       // one app using 4 GB
       // total: 22.5 GB
-      expectedConsuming = 22.5;
+
+      // multiply by the number of text invocations
+      expectedConsuming = 22.5 * invocations;
     });
 
     // Skipping the test until issue #228 enables time travel
