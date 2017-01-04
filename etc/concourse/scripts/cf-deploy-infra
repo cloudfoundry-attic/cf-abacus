@@ -7,7 +7,7 @@ SCRIPT_DIR="${BASH_SOURCE%/*}"
 echo "Environment:"
 env | sort
 
-source build-project/etc/concourse/scripts/common-functions
+source built-project/etc/concourse/scripts/common-functions
 
 function unmapRoutes {
   if [ -z "$1" ]; then
