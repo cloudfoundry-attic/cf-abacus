@@ -2,7 +2,8 @@
 
 set -e -x
 
-source built-project/etc/concourse/scripts/common-functions
+SCRIPT_DIR="${BASH_SOURCE%/*}"
+source $SCRIPT_DIR/common-functions
 
 echo "Environment:"
 env | sort
