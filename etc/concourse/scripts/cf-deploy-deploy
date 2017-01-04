@@ -39,7 +39,7 @@ function mapRoutes {
   fi
 }
 
-source build-project/etc/concourse/scripts
+source build-project/etc/concourse/scripts/common-functions
 
 echo "Logging to $CF_API ..."
 if [ "$SKIP_SSL_VALIDATION" == "true" ]; then

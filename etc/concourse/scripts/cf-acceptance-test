@@ -2,7 +2,7 @@
 
 set -e -x
 
-source build-project/etc/concourse/scripts
+source build-project/etc/concourse/scripts/common-functions
 
 echo "Environment:"
 env | sort
