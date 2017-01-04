@@ -7,18 +7,7 @@ SCRIPT_DIR="${BASH_SOURCE%/*}"
 echo "Environment:"
 env | sort
 
-APPS=()
-function getApps {
-  local LINE=$(cf apps | awk '{if (NR == 4) {print}}')
-
-  if [ "$LINE" == "No apps found" ]; then
-    echo "No apps found"
-    APPS=()
-  else
-    APPS=($(cf apps | tail -n +5 | grep "$1" | awk '{print $1}'))
-    echo "Found ${#APPS[@]} applications ..."
-  fi
-}
+source build-project/etc/concourse/scripts
 
 function unmapRoutes {
   if [ -z "$1" ]; then

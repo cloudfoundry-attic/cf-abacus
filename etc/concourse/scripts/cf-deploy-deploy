@@ -39,33 +39,7 @@ function mapRoutes {
   fi
 }
 
-APPS=()
-function getApps {
-  local LINE=$(cf apps | awk '{if (NR == 4) {print}}')
-
-  if [ "$LINE" == "No apps found" ]; then
-    echo "No apps found"
-    APPS=()
-  else
-    APPS=($(cf apps | tail -n +5 | grep "$1" | awk '{print $1}'))
-    echo "Found ${#APPS[@]} applications ..."
-  fi
-}
-
-function restartApps {
-  getApps '?'
-  if [[ "$unamestr" == 'Linux' ]]; then
-    echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
-  else
-    echo ${APPS[@]} | xargs -n1 -P 5 cf restart
-  fi
-  getApps '0/'
-  if [[ "$unamestr" == 'Linux' ]]; then
-    echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
-  else
-    echo ${APPS[@]} | xargs -n1 -P 5 cf restart
-  fi
-}
+source build-project/etc/concourse/scripts
 
 echo "Logging to $CF_API ..."
 if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
