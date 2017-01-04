@@ -461,15 +461,15 @@ To create a resource provider you need to define the following Abacus entities:
 * [metrics](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/resource-provider-guide.md#metric)
 * [plans](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/resource-provider-guide.md#plan)
 
-We should start with the measures, then define the metrics and finally decide on what type of plans to use. Once all of the above is defined we can create a plan. 
+We should start with the measures, then define the metrics and finally decide on what type of plans to use. Once all of the above is defined we can create plans. 
 
 Abacus provides an example implementations of the [provisioning](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/plugins/provisioning) and [account](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/plugins/account) plugins for demo and test purposes. Abacus Integrators must replace this implementations with custom code to satisfy the requirements, processes and product standards in your organization. 
 
 Check with your [Abacus Integrator](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/resource-provider-guide.md#abacus-integrator) on how to create a plan. 
 
 If you want to experiment with the example provisioning and account plugins for local development follow these steps: 
-* add the plan files under [plans directory](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/plugins/provisioning/src/plans)
-* change the [plan mappings](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/config/mappings/src/plans)
+* add the metering, rating and pricing plan files under [plans directory](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/plugins/provisioning/src/plans)
+* change the [plan mappings](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/config/mappings/src/plans) for the three plans
 * rebuild the project with:
 
    ```bash
