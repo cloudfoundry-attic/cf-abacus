@@ -39,7 +39,7 @@ pushd $abacus_dir
   echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf delete -f -r {}
 
   echo "Deploying Abacus ..."
-  npm run cfstage default
+  npm run cfstage medium
 
   set +e
   echo "Start all apps in $CF_ORG/$CF_SPACE ..."
