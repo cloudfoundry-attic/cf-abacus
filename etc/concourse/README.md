@@ -111,6 +111,32 @@ CF-Abacus [Concourse](http://concourse.ci/) Pipelines
     │       └── utils
     │           └── pouchserver
     │               └── manifest.yml.template
+    └── test
+        └── lib
+            ├── aggregation
+            │   ├── accumulator
+            │   │   └── manifest.yml.template
+            │   ├── aggregator
+            │   │   └── manifest.yml.template
+            │   └── reporting
+            │       └── manifest.yml.template
+            ├── metering
+            │   ├── collector
+            │   │   └── manifest.yml.template
+            │   └── meter
+            │       └── manifest.yml.template
+            ├── plugins
+            │   ├── account
+            │   │   └── manifest.yml.template
+            │   ├── authserver
+            │   │   └── manifest.yml.template
+            │   ├── eureka
+            │   │   └── manifest.yml.template
+            │   └── provisioning
+            │       └── manifest.yml.template
+            └── utils
+                └── pouchserver
+                    └── manifest.yml.template
     ```
 
 ## Test pipeline
