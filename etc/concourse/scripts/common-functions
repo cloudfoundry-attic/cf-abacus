@@ -34,5 +34,9 @@ function restartAppsWithRetry {
     fi
     echo "Restarting failed apps (retry $i / $retries) ..."
     restartApps
+
+    if [[ $? -eq 0 ]]; then
+      return
+    fi
   done
 }
