@@ -332,5 +332,6 @@ jobs:
             DEBUG: {{debug}}
             ABACUS_PREFIX: {{abacus-prefix}}
             SKIP_SSL_VALIDATION: {{skip-ssl-validation}}
+            RESTART_RETRIES: {{restart-retries}}
           run:
             path: abacus/etc/concourse/scripts/cf-test-test

@@ -158,6 +158,7 @@ jobs:
             SKIP_SSL_VALIDATION: {{skip-ssl-validation}}
             # Save file handlers and offload CF stagers
             JOBS: 2
+            RESTART_RETRIES: {{restart-retries}}
           run:
             path: built-project/etc/concourse/scripts/cf-deploy-deploy
 
