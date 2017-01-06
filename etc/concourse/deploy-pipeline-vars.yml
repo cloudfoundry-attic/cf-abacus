@@ -109,7 +109,7 @@ bind-security-group: false
 # Authentication server: api.<cf-api>:443
 auth-server: https://api.cf.mycompany.com:443
 
-# How many times the script will try to restart all the failing applications until it fails. If no value is provided, the default one is 5.
+# How many times the script will try to restart all the failing applications. If no value is provided, the default one is 5.
 restart-retries: 3
 
 # JWT Key

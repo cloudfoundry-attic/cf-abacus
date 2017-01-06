@@ -87,7 +87,7 @@ hystrix-client-id: abacus-hystrix
 # UAA client: Client secret for Abacus Hystrix streams
 hystrix-client-secret: secret
 
-# How many times the script will try to restart all the failing applications until it fails. If no value is provided, the default one is 5.
+# How many times the script will try to restart all the failing applications. If no value is provided, the default one is 5.
 restart-retries: 3
 
 # Authentication server: api.<cf-api>:443
