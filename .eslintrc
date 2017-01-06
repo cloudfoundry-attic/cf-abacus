@@ -1,4 +1,7 @@
 ---
+plugins:
+  - mocha
+
 parser: espree
 
 env:
@@ -58,6 +61,7 @@ rules:
   max-len: [2, 80]
   complexity: [2, 6]
   arrow-parens: [2, "always"]
+  mocha/no-exclusive-tests: 1
 
   # WARNINGS
   # We use this for functions that reference each other
