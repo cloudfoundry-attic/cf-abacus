@@ -18,3 +18,21 @@ function restartApps {
   getApps '0/'
   echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
 }
+
+function restartAppsWithRetry {
+  retries=$RESTART_RETRIES
+  if [[ -z "$retries" ]]; then
+    retries=5
+  elif [[ $retries -eq 0 ]]; then
+    return
+  fi
+
+  for (( i=1; i<=$retries ; i++ ))
+  do
+    if [[ $i -eq $retries ]]; then
+      set -e
+    fi
+    echo "Restarting failed apps (retry $i / $retries) ..."
+    restartApps
+  done
+}

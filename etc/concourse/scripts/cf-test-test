@@ -45,15 +45,9 @@ pushd $abacus_dir
   echo "Start all apps in $CF_ORG/$CF_SPACE ..."
   getApps
   echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf start {}
-  for i in {1..3}
-  do
-    echo "Restarting failed apps (retry $i / 5) ..."
-    restartApps
-  done
-  set -e
 
-  echo "Restarting apps ..."
-  restartApps
+  echo "Restarting failed apps ..."
+  restartAppsWithRetry
 
   echo "Starting Demo ..."
   npm run demo -- \

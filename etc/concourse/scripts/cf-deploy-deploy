@@ -77,15 +77,7 @@ echo "Applications:"
 cf apps
 
 echo "Restarting failed apps ..."
-for i in {1..3}
-do
-  echo "Restarting failed apps (retry $i / 5) ..."
-  restartApps
-done
-set -e
-
-echo "Restarting failed apps ..."
-restartApps
+restartAppsWithRetry
 
 echo "Applications:"
 cf apps
