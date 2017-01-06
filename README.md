@@ -132,7 +132,7 @@ npm stop
 Metering Cloud Foundry app usage
 ---
 
-Abacus comes with a CF [bridge](lib/cf/bridge) that acts as a resource provider for Cloud Foundry app runtime usage, reads Cloud Foundry [app usage events](http://apidocs.cloudfoundry.org/runtime-passed/app_usage_events/list_all_app_usage_events.html) and reports usage to the Abacus usage [collector](lib/metering/collector).
+Abacus comes with a CF [bridge](lib/cf/bridge) that acts as a resource provider for Cloud Foundry app runtime usage, reads Cloud Foundry [app usage events](https://docs.cloudfoundry.org/running/managing-cf/usage-events.html) and reports usage to the Abacus usage [collector](lib/metering/collector).
 
 In the end the Abacus CF bridge enables you to see runtime usage reports for the apps running on your Cloud Foundry instance. In order to start the CF bridge follow its [README](lib/cf/bridge/README.md).
 
