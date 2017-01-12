@@ -37,7 +37,7 @@
     "convert-source-map": "^1.1.1",
     "istanbul": "^0.4.0",
     "longjohn": "^0.2.9",
-    "mocha": "^2.3.3",
+    "mocha": "^3.2.0",
     "sinon": "^1.14.1",
     "source-map": "^0.5.3",
     "underscore": "^1.8.3"
