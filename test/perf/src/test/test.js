@@ -169,10 +169,10 @@ describe('abacus-perf-test', () => {
           metric: 'thousand_light_api_calls',
           windows: rwindow(nri, n, nri * n, 1, lightCost)
         },
-          {
-            metric: 'heavy_api_calls',
-            windows: rwindow(nri, n, nri * n, 100, heavyCost)
-          }],
+        {
+          metric: 'heavy_api_calls',
+          windows: rwindow(nri, n, nri * n, 100, heavyCost)
+        }],
         plans: [{
           plan_id: 'basic/basic-object-storage/' +
             'object-rating-plan/object-pricing-basic',
@@ -187,10 +187,10 @@ describe('abacus-perf-test', () => {
             metric: 'thousand_light_api_calls',
             windows: pwindow(nri, n, nri * n, 1, lightCost)
           },
-            {
-              metric: 'heavy_api_calls',
-              windows: pwindow(nri, n, nri * n, 100, heavyCost)
-            }]
+          {
+            metric: 'heavy_api_calls',
+            windows: pwindow(nri, n, nri * n, 100, heavyCost)
+          }]
         }]
       }],
       spaces: [{
@@ -206,10 +206,10 @@ describe('abacus-perf-test', () => {
             metric: 'thousand_light_api_calls',
             windows: rwindow(nri, n, nri * n, 1, lightCost)
           },
-            {
-              metric: 'heavy_api_calls',
-              windows: rwindow(nri, n, nri * n, 100, heavyCost)
-            }],
+          {
+            metric: 'heavy_api_calls',
+            windows: rwindow(nri, n, nri * n, 100, heavyCost)
+          }],
           plans: [{
             plan_id: 'basic/basic-object-storage/' +
               'object-rating-plan/object-pricing-basic',
@@ -224,10 +224,10 @@ describe('abacus-perf-test', () => {
               metric: 'thousand_light_api_calls',
               windows: pwindow(nri, n, nri * n, 1, lightCost)
             },
-              {
-                metric: 'heavy_api_calls',
-                windows: pwindow(nri, n, nri * n, 100, heavyCost)
-              }]
+            {
+              metric: 'heavy_api_calls',
+              windows: pwindow(nri, n, nri * n, 100, heavyCost)
+            }]
           }]
         }],
         consumers: [{
@@ -243,10 +243,10 @@ describe('abacus-perf-test', () => {
               metric: 'thousand_light_api_calls',
               windows: rwindow(nri, n, nri * n, 1, lightCost)
             },
-              {
-                metric: 'heavy_api_calls',
-                windows: rwindow(nri, n, nri * n, 100, heavyCost)
-              }],
+            {
+              metric: 'heavy_api_calls',
+              windows: rwindow(nri, n, nri * n, 100, heavyCost)
+            }],
             plans: [{
               plan_id: 'basic/basic-object-storage/' +
                 'object-rating-plan/object-pricing-basic',
@@ -261,10 +261,10 @@ describe('abacus-perf-test', () => {
                 metric: 'thousand_light_api_calls',
                 windows: pwindow(nri, n, nri * n, 1, lightCost)
               },
-                {
-                  metric: 'heavy_api_calls',
-                  windows: pwindow(nri, n, nri * n, 100, heavyCost)
-                }]
+              {
+                metric: 'heavy_api_calls',
+                windows: pwindow(nri, n, nri * n, 100, heavyCost)
+              }]
             }]
           }]
         }]

@@ -130,9 +130,8 @@ const buildAggregatedWindows = (p, u, ri, tri, count, end, f, price) => {
 
     const q = f(p, Math.min(time.getTime() - windowTime.getTime(), u),
       ri, tri, count);
-    return price === undefined ? [{ quantity: q }] :
-      [{ quantity: q,
-        cost: new BigNumber(q).mul(price).toNumber() }];
+    return price === undefined ? [{ quantity: q }] : [{ quantity: q,
+      cost: new BigNumber(q).mul(price).toNumber() }];
   });
 };
 

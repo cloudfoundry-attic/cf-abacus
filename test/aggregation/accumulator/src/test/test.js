@@ -339,12 +339,12 @@ describe('abacus-usage-accumulator-itest', () => {
         new Date().getUTCMonth(), 1);
       const sid = dbclient.kturi([expected.organization_id,
         expected.resource_instance_id, expected.consumer_id,
-          expected.plan_id, expected.metering_plan_id, expected.rating_plan_id,
-          expected.pricing_plan_id].join('/'), seqid.pad16(startDate));
+        expected.plan_id, expected.metering_plan_id, expected.rating_plan_id,
+        expected.pricing_plan_id].join('/'), seqid.pad16(startDate));
       const eid = dbclient.kturi([expected.organization_id,
         expected.resource_instance_id, expected.consumer_id,
-          expected.plan_id, expected.metering_plan_id, expected.rating_plan_id,
-          expected.pricing_plan_id].join('/'), seqid.pad16(endDate));
+        expected.plan_id, expected.metering_plan_id, expected.rating_plan_id,
+        expected.pricing_plan_id].join('/'), seqid.pad16(endDate));
       debug('comparing latest record within %s and %s', sid, eid);
       db.allDocs({ limit: 1, startkey: sid, endkey: eid, descending: true,
         include_docs: true },
@@ -352,7 +352,7 @@ describe('abacus-usage-accumulator-itest', () => {
           try {
             expect(clone(omit(val.rows[0].doc,
               ['processed', 'processed_id',
-              '_rev', '_id', 'id', 'metered_usage_id']),
+                '_rev', '_id', 'id', 'metered_usage_id']),
                 pruneWindows)).to.deep.equal(expected);
             done();
           }
@@ -360,7 +360,7 @@ describe('abacus-usage-accumulator-itest', () => {
             if(Date.now() >= processingDeadline)
               expect(clone(omit(val.rows[0].doc,
                 ['processed', 'processed_id',
-                '_rev', '_id', 'id', 'metered_usage_id']),
+                  '_rev', '_id', 'id', 'metered_usage_id']),
                   pruneWindows)).to.deep.equal(expected);
             else
               setTimeout(function() {
