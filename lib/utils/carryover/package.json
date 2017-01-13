@@ -1,10 +1,10 @@
 {
-  "name": "abacus-cf-bridge",
-  "description": "CF App Usage reporter",
+  "name": "abacus-carryover",
+  "description": "Time-based events carry-over helpers",
   "license": "Apache-2.0",
   "version": "0.0.6-dev.8",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/cf/bridge",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/carryover",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -14,53 +14,40 @@
   },
   "keywords": [
     "cf",
+    "paging",
     "abacus"
   ],
   "files": [
-    ".apprc",
     ".npmrc",
-    "manifest.yml",
     "lib/",
     "src/"
   ],
   "main": "lib/index.js",
   "scripts": {
-    "start": "launch webapp start",
-    "stop": "webapp stop",
     "babel": "babel",
     "test": "eslint && mocha",
     "lint": "eslint",
-    "pub": "publish",
-    "cfpack": "cfpack",
-    "cfpush": "cfpush"
+    "pub": "publish"
   },
   "dependencies": {
     "abacus-batch": "file:../../utils/batch",
     "abacus-breaker": "file:../../utils/breaker",
     "abacus-carryover": "file:../../utils/carryover",
-    "abacus-cluster": "file:../../utils/cluster",
     "abacus-debug": "file:../../utils/debug",
     "abacus-dbclient": "file:../../utils/dbclient",
-    "abacus-launcher": "file:../../utils/launcher",
-    "abacus-oauth": "file:../../utils/oauth",
-    "abacus-paging": "file:../../utils/paging",
     "abacus-partition": "file:../../utils/partition",
     "abacus-perf": "file:../../utils/perf",
-    "abacus-request": "file:../../utils/request",
     "abacus-retry": "file:../../utils/retry",
-    "abacus-router": "file:../../utils/router",
     "abacus-throttle": "file:../../utils/throttle",
     "abacus-urienv": "file:../../utils/urienv",
-    "abacus-webapp": "file:../../utils/webapp",
     "babel-preset-es2015": "^6.6.0",
-    "jsonwebtoken": "^5.0.5",
+    "moment": "^2.12.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-babel": "file:../../../tools/babel",
-    "abacus-cfpack": "file:../../../tools/cfpack",
-    "abacus-cfpush": "file:../../../tools/cfpush",
     "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-express": "file:../express",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish"
   },
