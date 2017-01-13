@@ -6,6 +6,10 @@
 //
 // To run the test:
 //
+//   1. Use persistent DB
+//   2. Make this test exclusive by adding ".only" to the describe
+//
+//   # Suppose now is December 2016. Let's populate data:
 //   cd workspace/cf-abacus/test/cf/renewer
 //   npm install && npm run babel && npm run lint && npm run itest
 //
@@ -15,11 +19,19 @@
 //   # Shift the time one month in the future. For Ubuntu:
 //   timedatectl set-ntp false && timedatectl set-time "2017-01-01 23:05"
 //
-//   # Run renewer
+//   # Run renewer to check if usage is transfered in next month
 //   npm run itest -- --no-usage -i 2
 //
-//   # Submitting usage in the future would fail due to different
-//   # time-window quantities
+//   # Shift the time one month in the future. For Ubuntu:
+//   timedatectl set-ntp false && timedatectl set-time "2017-02-01 23:05"
+//
+//   # Run renewer to check if usage is transfered in next month
+//   npm run itest -- --no-usage -i 2
+//
+//
+//   # !!! NOTE !!! Submitting usage in the future would fail due to different
+//   # time-window quantities. Current month would have 22.5*3 GB, while the
+//   # last month would be with only 22.5*2 GB
 //   npm run itest -- -s 3 -i 3
 //
 //   # Restore the time
