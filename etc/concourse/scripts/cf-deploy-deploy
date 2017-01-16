@@ -69,6 +69,11 @@ if [ "$BIND_DB_SERVICE" == "true" ]; then
   fi
 fi
 
+if [ -e "built-project/bin/pre-start" ]; then
+  echo "Running pre-start script ..."
+  ./built-project/bin/pre-start
+fi
+
 set +e
 echo "Starting applications ..."
 echo ${APPS[@]} | xargs -n1 -P 5 cf start
