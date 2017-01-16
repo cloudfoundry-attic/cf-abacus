@@ -1900,7 +1900,7 @@ The _resource instance usage summary report_ API can be used to retrieve aggrega
 ### Method: get
 _HTTP request_:
 ```
-GET /v1/metering/organizations/:organization_id/resource_instances/:resource_instance_id/consumers/:consumer_id/plans/:plan_id/metering_plans/:metering_plan_id/rating_plans/:rating_plan_id/pricing_plans/:pricing_plan_id/aggregated/usage/:time
+GET /v1/metering/organizations/:organization_id/resource_instances/:resource_instance_id/consumers/:consumer_id/plans/:plan_id/metering_plans/:metering_plan_id/rating_plans/:rating_plan_id/pricing_plans/:pricing_plan_id/t/:t/aggregated/usage/:time
 ```
 
 _Description_: Retrieves a usage report document containing a summary of the aggregated Cloud resource usage incurred by the specified resource instance within an organization and the specific set of plans at the specified time.
