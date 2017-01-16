@@ -61,7 +61,7 @@ var zip = function(ignore, cb) {
     // We're using the system zip command here, may be better to use a
     // Javascript zip library instead
     var files = '-type f -not -regex "\\./\\.cfpack/package\\.json" ' +
-      '-not -regex ".*/\\.git"';
+      '-not -regex ".*/\\.git"  -not -regex ".*test\\.js"';
     var ex = cp.exec('(find . .cfpack/lib/* ' + files + ' | zip -q -x@' +
       ignore + ' -@ .cfpack/app.zip) && ' +
       '(zip -q -j .cfpack/app.zip .cfpack/package.json)', {
