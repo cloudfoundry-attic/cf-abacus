@@ -71,7 +71,7 @@ fi
 
 if [ -e "built-project/bin/pre-start" ]; then
   echo "Running pre-start script ..."
-  ./build-project/bin/pre-start
+  ./built-project/bin/pre-start
 fi
 
 set +e
