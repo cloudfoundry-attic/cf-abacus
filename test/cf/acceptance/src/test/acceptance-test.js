@@ -162,11 +162,10 @@ describe('abacus-acceptance test', () => {
 
   context('with stream of CF events', () => {
     beforeEach(() => {
-      // 9 apps consuming 512 MB
-      // one app using 1 GB
-      // one app using 4 GB
+      // 10 apps consuming 512 MB
+      // pouchserver using 1 GB
       // total: 9.5 GB
-      expectedConsuming = 9.5;
+      expectedConsuming = 6;
     });
 
     it('submits usage and gets expected report back', function(done) {

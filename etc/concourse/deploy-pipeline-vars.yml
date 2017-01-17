@@ -32,8 +32,8 @@ nodejs-buildpack: nodejs_buildpack
 # Use to skip ssl validation
 skip-ssl-validation: true
 
-# (Re-)create DB service instance or use already provisioned DB
-# WARNING: Setting this to "true" will destroy your DB
+# Create/update DB service instance or use already provisioned DB
+# Note: If you want to connect to already provisioned DB you should use "false" here
 create-db-service: true
 
 # Bind to a service instance or use hard-coded URL

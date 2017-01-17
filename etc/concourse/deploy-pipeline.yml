@@ -11,9 +11,11 @@ resources:
 
 jobs:
   - name: abacus-setup
-    serial: true
+    serial_groups: [abacus-deploy]
     plan:
       - get: landscape
+        trigger: true
+
       - task: setup-abacus-infra
         attempts: 2
         timeout: 35m
@@ -62,9 +64,10 @@ jobs:
             path: landscape/cf-abacus/etc/concourse/scripts/cf-deploy-infra
 
   - name: abacus-deploy
-    serial: true
+    serial_groups: [abacus-deploy]
     plan:
       - get: landscape
+        passed: [abacus-setup]
         trigger: true
 
       - aggregate:
