@@ -131,7 +131,7 @@ jobs:
               PURGE_APP_USAGE_EVENTS: {{purge-app-usage-events}}
               SKIP_SSL_VALIDATION: {{skip-ssl-validation}}
 
-      - task: deploy-abacus
+      - task: stage-abacus
         attempts: 3
         timeout: 1h
         config:
@@ -160,7 +160,33 @@ jobs:
             JOBS: 2
             RESTART_RETRIES: {{restart-retries}}
           run:
-            path: built-project/etc/concourse/scripts/cf-deploy-deploy
+            path: built-project/etc/concourse/scripts/cf-deploy-stage
+
+      - task: start-abacus
+        attempts: 3
+        timeout: 1h
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: godofcontainers/node-mongodb
+              tag: '6.9.1'
+          inputs:
+            - name: built-project
+          params:
+            CF_API: {{cf-api}}
+            CF_USER: {{cf-user}}
+            CF_PASSWORD: {{cf-password}}
+            CF_ORG: {{cf-org}}
+            CF_SPACE: {{cf-space}}
+            SKIP_SSL_VALIDATION: {{skip-ssl-validation}}
+            # Save file handlers and offload CF stagers
+            JOBS: 2
+            RESTART_RETRIES: {{restart-retries}}
+          run:
+            path: built-project/etc/concourse/scripts/cf-deploy-start
+
 
       - task: test-abacus
         attempts: 2
