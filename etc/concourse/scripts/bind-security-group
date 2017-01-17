@@ -9,6 +9,6 @@ for line in $(host api.$CF_API | awk '/has address/ { print $4 }'); do
 done
 group+="]"
 echo "${group/,]/]}" > abacus-sec-group.json
-cf delete-security-group -f $CF_ORG
 cf create-security-group $CF_ORG abacus-sec-group.json
+cf update-security-group $CF_ORG abacus-sec-group.json
 cf bind-security-group $CF_ORG $CF_ORG $CF_SPACE
