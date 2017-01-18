@@ -97,9 +97,10 @@ if [ "$PURGE_APP_USAGE_EVENTS" == "true" ]; then
   fi
 fi
 
-if [ -e "built-project/bin/post-infra" ]; then
+abacus_config_dir="landscape/abacus-config"
+if [ -e "${abacus_config_dir}/deploy/bin/post-infra" ]; then
   echo "Running post-infra script ..."
-  ./built-project/bin/post-infra
+  $abacus_config_dir/deploy/bin/post-infra
 fi
 
 echo ""
