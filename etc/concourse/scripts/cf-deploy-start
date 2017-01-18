@@ -8,6 +8,11 @@ env | sort
 SCRIPT_DIR="${BASH_SOURCE%/*}"
 source $SCRIPT_DIR/common-functions
 
+if [ -e "built-project/bin/pre-start" ]; then
+  echo "Running pre-start script ..."
+  ./built-project/bin/pre-start
+fi
+
 echo "Logging to $CF_API ..."
 if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
   skip='--skip-ssl-validation'
