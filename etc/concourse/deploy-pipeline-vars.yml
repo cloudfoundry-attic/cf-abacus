@@ -52,6 +52,10 @@ db-service-name: service-name
 # Note: Not used if create-db-service is false, but still required
 db-plan-name: plan-name
 
+# Enable the service plan. Change this to "true" if the plan is paid for instance
+# Note: Not used if create-db-service is false, but still required
+enable-service-access: false
+
 # UAA admin user
 uaa-admin: admin
 

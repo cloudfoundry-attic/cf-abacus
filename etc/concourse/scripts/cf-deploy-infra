@@ -30,7 +30,9 @@ cf create-quota "$CF_ORG" -m 80g -i 4g -r 80 -s 2 --allow-paid-service-plans
 cf update-quota "$CF_ORG" -m 80g -i 4g -r 80 -s 2 --allow-paid-service-plans
 cf create-org "$CF_ORG" -q "$CF_ORG"
 cf create-space "$CF_SPACE" -o "$CF_ORG"
-cf enable-service-access "$DB_SERVICE_NAME" -p "$DB_PLAN_NAME" -o "$CF_ORG"
+if [ "$ENABLE_SERVICE_ACCESS" == "true" ]; then
+  cf enable-service-access "$DB_SERVICE_NAME" -p "$DB_PLAN_NAME" -o "$CF_ORG"
+fi
 
 echo "Recreating user ..."
 cf create-user "$CF_USER" "$CF_PASSWORD"
