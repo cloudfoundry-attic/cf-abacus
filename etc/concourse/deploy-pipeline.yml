@@ -182,6 +182,8 @@ jobs:
             CF_API: {{cf-api}}
             CF_USER: {{cf-user}}
             CF_PASSWORD: {{cf-password}}
+            CF_ADMIN_USER: {{cf-admin-user}}
+            CF_ADMIN_PASSWORD: {{cf-admin-password}}
             CF_ORG: {{cf-org}}
             CF_SPACE: {{cf-space}}
             SKIP_SSL_VALIDATION: {{skip-ssl-validation}}
