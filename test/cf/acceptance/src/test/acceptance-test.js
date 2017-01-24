@@ -2,6 +2,7 @@
 
 const commander = require('commander');
 const util = require('util');
+const moment = require('abacus-moment');
 
 const _ = require('underscore');
 const clone = _.clone;
@@ -30,6 +31,7 @@ const isWithinWindow = (start, end, timeWindow) => {
   const timescale = [1, 100, 10000, 1000000, 100000000];
   // Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
   const dateUTCNumbify = (t) => {
+    // eslint-disable-next-line nodate/nonewdate, nodate/nodate
     const d = new Date(t);
     return d.getUTCFullYear() * 10000000000 + d.getUTCMonth() * timescale[4]
       + d.getUTCDate() * timescale[3] + d.getUTCHours() * timescale[2]
@@ -62,7 +64,7 @@ const startTimeout = commander.startTimeout || 100000;
 
 // This test timeout
 const totalTimeout = commander.totalTimeout || 200000;
-const submitTime = Date.now();
+const submitTime = moment.now();
 
 describe('abacus-acceptance test', () => {
   let expectedConsuming;
@@ -92,7 +94,7 @@ describe('abacus-acceptance test', () => {
           const resources = response.body.resources;
           expect(resources.length).to.equal(1);
           expect(response.body.spaces.length).to.equal(1);
-          const reporttime = Date.now();
+          const reporttime = moment.now();
 
           expect(resources[0]).to.contain.all.keys(
             'plans', 'aggregated_usage');
@@ -119,7 +121,7 @@ describe('abacus-acceptance test', () => {
   };
 
   const poll = (fn, done, timeout = 1000, interval = 100) => {
-    const startTimestamp = Date.now();
+    const startTimestamp = moment.now();
 
     const doneCallback = (err) => {
       if (!err) {
@@ -128,7 +130,7 @@ describe('abacus-acceptance test', () => {
         return;
       }
 
-      if (Date.now() - startTimestamp > timeout) {
+      if (moment.now() - startTimestamp > timeout) {
         debug('Expectation not met for %d ms. Error: %o', timeout, err);
         setImmediate(() => done(new Error(err)));
       }
@@ -144,7 +146,7 @@ describe('abacus-acceptance test', () => {
   };
 
   const waitForStartAndPoll = (done) => {
-    let startWaitTime = Date.now();
+    let startWaitTime = moment.now();
     request.waitFor('https://:reportingApp.:cfDomain/batch', {
       reportingApp: commander.reportingApp,
       cfDomain: commander.cfDomain
@@ -155,7 +157,7 @@ describe('abacus-acceptance test', () => {
 
         poll(checkReport, (error) => {
           done(error);
-        }, totalTimeout - (Date.now() - startWaitTime), 1000);
+        }, totalTimeout - (moment.now() - startWaitTime), 1000);
       }
     );
   };

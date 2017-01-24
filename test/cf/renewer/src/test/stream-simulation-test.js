@@ -45,7 +45,7 @@
 const commander = require('commander');
 const cp = require('child_process');
 const jwt = require('jsonwebtoken');
-const moment = require('moment');
+const moment = require('abacus-moment');
 const util = require('util');
 
 const _ = require('underscore');
@@ -85,7 +85,7 @@ const isWithinWindow = (start, end, timeWindow) => {
   const timescale = [1, 100, 10000, 1000000, 100000000];
   // Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
   const dateUTCNumbify = (t) => {
-    const d = new Date(t);
+    const d = moment(t).valueOf();
     return d.getUTCFullYear() * 10000000000 + d.getUTCMonth() * timescale[4]
       + d.getUTCDate() * timescale[3] + d.getUTCHours() * timescale[2]
       + d.getUTCMinutes() * timescale[1] + d.getUTCSeconds();
@@ -201,10 +201,10 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
 const twentySecondsInMilliseconds = 20 * 1000;
 
 const modifyEvents = (responseBody) => {
-  const startTime = Date.now() - twentySecondsInMilliseconds;
+  const startTime = moment.now() - twentySecondsInMilliseconds;
   for(let resource of responseBody.resources) {
     resource.metadata.created_at =
-      new Date(startTime + resource.metadata.created_at).toISOString();
+      moment(startTime + resource.metadata.created_at).toISOString();
     if (commander.guidSuffix) {
       const suffix = '-' + commander.guidSuffix;
       resource.entity.space_guid = resource.entity.space_guid + suffix;
@@ -325,7 +325,7 @@ describe('abacus-cf-renewer stream simulation', () => {
     start('abacus-usage-reporting');
 
     submittime = noUsage ? moment().utc().startOf('month').valueOf() :
-      Date.now();
+      moment.now();
     start('abacus-cf-bridge');
   });
 
@@ -407,7 +407,7 @@ describe('abacus-cf-renewer stream simulation', () => {
           const resources = response.body.resources;
           expect(resources.length).to.equal(1);
           expect(response.body.spaces.length).to.equal(invocations);
-          const reporttime = Date.now();
+          const reporttime = moment.now();
 
           expect(resources[0]).to.contain.all.keys(
             'plans', 'aggregated_usage');
@@ -434,7 +434,7 @@ describe('abacus-cf-renewer stream simulation', () => {
   };
 
   const poll = (fn, done, timeout = 1000, interval = 100) => {
-    const startTimestamp = Date.now();
+    const startTimestamp = moment.now();
 
     const doneCallback = (err) => {
       if (!err) {
@@ -443,7 +443,7 @@ describe('abacus-cf-renewer stream simulation', () => {
         return;
       }
 
-      if (Date.now() - startTimestamp > timeout) {
+      if (moment.now() - startTimestamp > timeout) {
         debug('Expectation not met for %d ms. Error: %o', timeout, err);
         setImmediate(() => done(new Error(err)));
       }
@@ -490,12 +490,12 @@ describe('abacus-cf-renewer stream simulation', () => {
     it.skip('submits usage and gets expected report back', function(done) {
       this.timeout(totalTimeout + 2000);
 
-      let startWaitTime = Date.now();
+      let startWaitTime = moment.now();
       waitForStart('bridge', 9500, () => {
         start('abacus-cf-renewer');
         waitForStart('renewer', 9501, () => {
           poll(checkReport, done,
-            totalTimeout - (Date.now() - startWaitTime), 1000);
+            totalTimeout - (moment.now() - startWaitTime), 1000);
         });
       });
     });

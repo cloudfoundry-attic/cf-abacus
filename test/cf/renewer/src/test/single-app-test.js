@@ -12,7 +12,7 @@ const dbclient = require('abacus-dbclient');
 const express = require('abacus-express');
 const request = require('abacus-request');
 const router = require('abacus-router');
-const moment = require('moment');
+const moment = require('abacus-moment');
 
 // Setup the debug log
 const debug =
@@ -402,7 +402,7 @@ const test = (secured) => {
   };
 
   const poll = (fn, checkFn, done, timeout = 1000, interval = 100) => {
-    const startTimestamp = Date.now();
+    const startTimestamp = moment.now();
 
     const doneCallback = (err) => {
       if (!err) {
@@ -411,7 +411,7 @@ const test = (secured) => {
         return;
       }
 
-      if (Date.now() - startTimestamp > timeout) {
+      if (moment.now() - startTimestamp > timeout) {
         debug('Expectation not met for %d ms. Error: %o', timeout, err);
         setImmediate(() => done(new Error(err)));
       }
@@ -427,7 +427,7 @@ const test = (secured) => {
   };
 
   const waitForStartAndPoll = (component, port, checkFn, timeout, done) => {
-    let startWaitTime = Date.now();
+    let startWaitTime = moment.now();
     request.waitFor('http://localhost::p/v1/cf/:component',
       { component: component, p: port },
       startTimeout, (err, uri, opts) => {
@@ -443,7 +443,7 @@ const test = (secured) => {
           expect(err).to.equal(undefined);
           expect(response.statusCode).to.equal(200);
 
-          const t = timeout - (Date.now() - startWaitTime);
+          const t = timeout - (moment.now() - startWaitTime);
           debug('Time left for executing test: %d ms', t);
           poll(checkReport, checkFn, (error) => {
             done(error);
@@ -462,7 +462,7 @@ const test = (secured) => {
             metadata: {
               guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
               url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-              created_at: new Date(lastMonthInMilliseconds).toISOString()
+              created_at: moment(lastMonthInMilliseconds).toISOString()
             },
             entity: {
               state: 'STARTED',
@@ -491,7 +491,7 @@ const test = (secured) => {
             metadata: {
               guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
               url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
-              created_at: new Date(lastMonthInMilliseconds + 1).toISOString()
+              created_at: moment(lastMonthInMilliseconds + 1).toISOString()
             },
             entity: {
               state: 'BUILDPACK_SET',
@@ -520,7 +520,7 @@ const test = (secured) => {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: new Date(lastMonthInMilliseconds + 2).toISOString()
+              created_at: moment(lastMonthInMilliseconds + 2).toISOString()
             },
             entity: {
               state: 'STOPPED',
@@ -549,7 +549,7 @@ const test = (secured) => {
             metadata: {
               guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
               url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-              created_at: new Date(lastMonthInMilliseconds + 3).toISOString()
+              created_at: moment(lastMonthInMilliseconds + 3).toISOString()
             },
             entity: {
               state: 'STARTED',
@@ -578,7 +578,7 @@ const test = (secured) => {
             metadata: {
               guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
               url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
-              created_at: new Date(lastMonthInMilliseconds + 4).toISOString()
+              created_at: moment(lastMonthInMilliseconds + 4).toISOString()
             },
             entity: {
               state: 'BUILDPACK_SET',
@@ -607,7 +607,7 @@ const test = (secured) => {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: new Date(lastMonthInMilliseconds + 5).toISOString()
+              created_at: moment(lastMonthInMilliseconds + 5).toISOString()
             },
             entity: {
               state: 'STARTED',
@@ -644,7 +644,7 @@ const test = (secured) => {
       it('submits runtime usage to usage collector', function(done) {
         this.timeout(totalTimeout);
 
-        const startTestTime = Date.now();
+        const startTestTime = moment.now();
         waitForStartAndPoll('bridge', 9500, checkLastMonthWindow, totalTimeout,
           (error) => {
             if (error) {
@@ -653,7 +653,7 @@ const test = (secured) => {
             }
             start('abacus-cf-renewer');
             waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindow,
-              totalTimeout - (Date.now() - startTestTime), done);
+              totalTimeout - (moment.now() - startTestTime), done);
           }
         );
       });
@@ -666,7 +666,7 @@ const test = (secured) => {
             metadata: {
               guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
               url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-              created_at: new Date(lastMonthInMilliseconds).toISOString()
+              created_at: moment(lastMonthInMilliseconds).toISOString()
             },
             entity: {
               state: 'STARTED',
@@ -695,7 +695,7 @@ const test = (secured) => {
             metadata: {
               guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
               url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
-              created_at: new Date(lastMonthInMilliseconds + 1).toISOString()
+              created_at: moment(lastMonthInMilliseconds + 1).toISOString()
             },
             entity: {
               state: 'BUILDPACK_SET',
@@ -724,7 +724,7 @@ const test = (secured) => {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: new Date(lastMonthInMilliseconds + 2).toISOString()
+              created_at: moment(lastMonthInMilliseconds + 2).toISOString()
             },
             entity: {
               state: 'STARTED',
@@ -753,7 +753,7 @@ const test = (secured) => {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: new Date(lastMonthInMilliseconds + 3).toISOString()
+              created_at: moment(lastMonthInMilliseconds + 3).toISOString()
             },
             entity: {
               state: 'STOPPED',
@@ -791,7 +791,7 @@ const test = (secured) => {
       it('submits runtime usage to usage collector', function(done) {
         this.timeout(totalTimeout);
 
-        const startTestTime = Date.now();
+        const startTestTime = moment.now();
         waitForStartAndPoll('bridge', 9500, checkLastMonthWindow, totalTimeout,
           (error) => {
             if (error) {
@@ -800,7 +800,7 @@ const test = (secured) => {
             }
             start('abacus-cf-renewer');
             waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindow,
-              totalTimeout - (Date.now() - startTestTime), done);
+              totalTimeout - (moment.now() - startTestTime), done);
           }
         );
       });

@@ -14,6 +14,7 @@ const commander = require('commander');
 const clone = require('abacus-clone');
 const oauth = require('abacus-oauth');
 const dbclient = require('abacus-dbclient');
+const moment = require('abacus-moment');
 
 // Parse command line options
 const argv = clone(process.argv);
@@ -53,8 +54,8 @@ const startTimeout = commander.startTimeout || 10000;
 // This test timeout
 const totalTimeout = commander.totalTimeout || 60000;
 
-// The current time + 1 hour into the future
-const now = new Date(Date.now());
+// The current time
+const now = moment().toDate();
 
 // Use secure routes or not
 const secured = () => process.env.SECURED === 'true' ? true : false;
@@ -138,9 +139,9 @@ describe('abacus-smoke-test', function() {
 
     // Configure the test timeout
     const timeout = Math.max(totalTimeout, 40000);
-    const processingDeadline = Date.now() + timeout;
+    const processingDeadline = moment.now() + timeout;
     this.timeout(timeout + 2000);
-    console.log('Test will run until %s', new Date(processingDeadline));
+    console.log('Test will run until %s', moment(processingDeadline).toDate());
 
     // Test usage to be submitted by the client
     const start = now.getTime();
@@ -483,9 +484,9 @@ describe('abacus-smoke-test', function() {
           // after 250 msec, give up after the configured timeout as
           // if we're still not getting the expected report then
           // the processing of the submitted usage must have failed
-          if(Date.now() >= processingDeadline) {
+          if(moment.now() >= processingDeadline) {
             console.log('%s: All submitted usage still not processed\n',
-              new Date());
+              moment().toDate());
             if (processedDocs != 0)
               deltaCompareReports(updatedReport, previousReport);
             else
@@ -501,7 +502,7 @@ describe('abacus-smoke-test', function() {
     // we get the expected values indicating that all submitted usage has
     // been processed
     const wait = (previousReport, processedDocs, done) => {
-      console.log('\n%s: Retrieving usage report', new Date());
+      console.log('\n%s: Retrieving usage report', moment().toDate());
       compareReport(previousReport, processedDocs, done);
     };
 
@@ -510,10 +511,10 @@ describe('abacus-smoke-test', function() {
       // Failed to ping usage reporter before timing out
       if (err) throw err;
 
-      console.log('\n%s: Retrieving current report', new Date());
+      console.log('\n%s: Retrieving current report', moment().toDate());
       getReport((report, processed) => {
         console.log('\n%s: Report after %d processed usage docs:\n%s\n',
-          new Date(), processed, util.inspect(report, { depth: 20 }));
+          moment().toDate(), processed, util.inspect(report, { depth: 20 }));
 
         // Post usage and wait for report
         map(usage, (u) => post(u, () => wait(report, processed, done)));

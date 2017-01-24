@@ -15,6 +15,7 @@ const router = require('abacus-router');
 const express = require('abacus-express');
 const clone = require('abacus-clone');
 const timewindow = require('abacus-timewindow');
+const moment = require('abacus-moment');
 
 const BigNumber = require('bignumber.js');
 BigNumber.config({ ERRORS: false });
@@ -83,10 +84,10 @@ const pruneWindows = (v, k) => {
 // Calculates the accumulated quantity given an end time, u, window size,
 // and multiplier factor of the usage
 const calculateQuantityByWindow = (e, u, w, m, f) => {
-  const time = new Date(e + u);
+  const time = moment(e + u);
   // Get the millisecond equivalent of the very start of the given window
-  return f(m, Math.min(time.getTime() -
-    timewindow.zeroLowerTimeDimensions(time, w).getTime(), u));
+  return f(m, Math.min(time.valueOf() -
+    timewindow.zeroLowerTimeDimensions(time.toDate(), w).getTime(), u));
 };
 
 // Builds the quantity array in the accumulated usage
@@ -184,7 +185,7 @@ describe('abacus-usage-accumulator-itest', () => {
     const timeout = Math.max(totalTimeout,
       100 * orgs * resourceInstances * usage);
     this.timeout(timeout + 2000);
-    const processingDeadline = Date.now() + timeout;
+    const processingDeadline = moment.now() + timeout;
 
     // Setup aggregator spy
     const aggregator = spy((req, res, next) => {
@@ -200,8 +201,8 @@ describe('abacus-usage-accumulator-itest', () => {
     app.listen(9300);
 
     // Initialize usage doc properties with unique values
-    const start = Date.now() + tshift;
-    const end = Date.now() + tshift;
+    const start = moment.now() + tshift;
+    const end = moment.now() + tshift;
 
     const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
       o + 1].join('-');
@@ -333,10 +334,8 @@ describe('abacus-usage-accumulator-itest', () => {
     };
 
     const verifyAggregator = (done) => {
-      const startDate = Date.UTC(new Date().getUTCFullYear(),
-        new Date().getUTCMonth() + 1) - 1;
-      const endDate = Date.UTC(new Date().getUTCFullYear(),
-        new Date().getUTCMonth(), 1);
+      const startDate = moment().utc().endOf('month').valueOf();
+      const endDate = moment().utc().startOf('month').valueOf();
       const sid = dbclient.kturi([expected.organization_id,
         expected.resource_instance_id, expected.consumer_id,
         expected.plan_id, expected.metering_plan_id, expected.rating_plan_id,
@@ -357,7 +356,7 @@ describe('abacus-usage-accumulator-itest', () => {
             done();
           }
           catch (e) {
-            if(Date.now() >= processingDeadline)
+            if(moment.now() >= processingDeadline)
               expect(clone(omit(val.rows[0].doc,
                 ['processed', 'processed_id',
                   '_rev', '_id', 'id', 'metered_usage_id']),
