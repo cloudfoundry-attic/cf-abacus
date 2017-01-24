@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint-disable nodate/nomoment, nodate/nonewdate, nodate/nodate */
+
 // Test a module using Istanbul and Mocha
 
 // Implemented in ES5 for now
@@ -243,4 +245,3 @@ var runCLI = function() {
 
 // Export our public functions
 module.exports.runCLI = runCLI;
-
