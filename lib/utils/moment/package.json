@@ -1,0 +1,46 @@
+{
+  "name": "abacus-moment",
+  "description": "",
+  "license": "Apache-2.0",
+  "version": "0.0.6-dev.8",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/moment",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus",
+    "moment"
+  ],
+  "files": [
+    ".npmrc",
+    "lib/",
+    "src/"
+  ],
+  "main": "lib/index.js",
+  "scripts": {
+    "babel": "babel",
+    "test": "eslint && mocha",
+    "lint": "eslint",
+    "pub": "publish"
+  },
+  "dependencies": {
+    "moment": "^2.17.1"
+  },
+  "devDependencies": {
+    "abacus-babel": "file:../../../tools/babel",
+    "abacus-batch": "file:../batch",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-publish": "file:../../../tools/publish"
+  },
+  "engines": {
+    "node": ">=5.11.1",
+    "npm": ">=3.8.6"
+  }
+}
