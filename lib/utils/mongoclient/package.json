@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "abacus-debug": "file:../debug",
+    "abacus-moment": "file:../../utils/moment",
     "abacus-partition": "file:../partition",
     "abacus-perf": "file:../perf",
     "abacus-request": "file:../request",

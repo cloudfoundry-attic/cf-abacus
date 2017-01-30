@@ -40,6 +40,7 @@
     "abacus-eureka": "file:../eureka",
     "abacus-lock": "file:../lock",
     "abacus-lrucache": "file:../lrucache",
+    "abacus-moment": "file:../../utils/moment",
     "abacus-partition": "file:../partition",
     "abacus-request": "file:../request",
     "abacus-retry": "file:../retry",
