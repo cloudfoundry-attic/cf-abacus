@@ -62,6 +62,10 @@ rules:
   max-len: [2, 80]
   complexity: [2, 6]
   arrow-parens: [2, "always"]
+  # use of Date instead of abacus-moment
+  nodate/nodate: 2
+  nodate/nonewdate: 2
+  nodate/nomoment: 2
 
   # WARNINGS
   # We use this for functions that reference each other
@@ -69,11 +73,6 @@ rules:
 
   # warn for exclusive (.only) tests
   mocha/no-exclusive-tests: 1
-
-  # warn for use of Date instead of our abacus-moment
-  nodate/nodate: 1
-  nodate/nonewdate: 1
-  nodate/nomoment: 1
 
   # WISHLIST.
   # valid-jsdoc: 1
