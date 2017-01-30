@@ -1,5 +1,6 @@
 'use strict';
 
+//
 // The test simulates a stream of usage events, submitted in the previous
 // month by the bridge. The renewer should transfer the same usage to the
 // current and next months.
