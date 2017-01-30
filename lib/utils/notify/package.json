@@ -35,6 +35,7 @@
     "abacus-dbclient": "file:../dbclient",
     "abacus-debug": "file:../debug",
     "abacus-lrucache": "file:../lrucache",
+    "abacus-moment": "file:../moment",
     "abacus-partition": "file:../partition",
     "abacus-request": "file:../request",
     "abacus-retry": "file:../retry",

@@ -39,6 +39,7 @@
     "abacus-babel": "file:../../../tools/babel",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-moment": "file:../../utils/moment",
     "abacus-publish": "file:../../../tools/publish"
   },
   "engines": {
