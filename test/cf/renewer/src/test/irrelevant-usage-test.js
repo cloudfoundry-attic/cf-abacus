@@ -12,7 +12,8 @@ const dbclient = require('abacus-dbclient');
 const express = require('abacus-express');
 const request = require('abacus-request');
 const router = require('abacus-router');
-const moment = require('moment');
+const moment = require('abacus-moment');
+
 
 // Setup the debug log
 const debug =
@@ -376,7 +377,7 @@ const test = (secured) => {
   };
 
   const poll = (fn, checkFn, done, timeout = 1000, interval = 100) => {
-    const startTimestamp = Date.now();
+    const startTimestamp = moment.now();
 
     const doneCallback = (err) => {
       if (!err) {
@@ -385,7 +386,7 @@ const test = (secured) => {
         return;
       }
 
-      if (Date.now() - startTimestamp > timeout) {
+      if (moment.now() - startTimestamp > timeout) {
         debug('Expectation not met for %d ms. Error: %o', timeout, err);
         setImmediate(() => done(new Error(err)));
       }
@@ -401,7 +402,7 @@ const test = (secured) => {
   };
 
   const waitForStartAndPoll = (component, port, checkFn, timeout, done) => {
-    let startWaitTime = Date.now();
+    let startWaitTime = moment.now();
     request.waitFor('http://localhost::p/v1/cf/:component',
       { component: component, p: port },
       startTimeout, (err, uri, opts) => {
@@ -417,7 +418,7 @@ const test = (secured) => {
           expect(err).to.equal(undefined);
           expect(response.statusCode).to.equal(200);
 
-          const t = timeout - (Date.now() - startWaitTime);
+          const t = timeout - (moment.now() - startWaitTime);
           debug('Time left for executing test: %d ms', t);
           poll(checkReport, checkFn, (error) => {
             done(error);
@@ -435,7 +436,7 @@ const test = (secured) => {
           metadata: {
             guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
             url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-            created_at: new Date(today).toISOString()
+            created_at: moment(today).toISOString()
           },
           entity: {
             state: 'STARTED',
@@ -469,7 +470,7 @@ const test = (secured) => {
     it('usage is not duplicated', function(done) {
       this.timeout(totalTimeout + 2000);
 
-      const startTestTime = Date.now();
+      const startTestTime = moment.now();
       waitForStartAndPoll('bridge', 9500, checkCurrentMonthWindow, totalTimeout,
         (error) => {
           if (error) {
@@ -480,7 +481,7 @@ const test = (secured) => {
           // Allow the renewer to kick-in
           setTimeout(() => waitForStartAndPoll('renewer', 9501,
             checkCurrentMonthWindow,
-            totalTimeout - (Date.now() - startTestTime), done), 2000);
+            totalTimeout - (moment.now() - startTestTime), done), 2000);
         }
       );
     });
@@ -494,7 +495,7 @@ const test = (secured) => {
           metadata: {
             guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
             url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-            created_at: new Date(threeMonthsAgo).toISOString()
+            created_at: moment(threeMonthsAgo).toISOString()
           },
           entity: {
             state: 'STARTED',
@@ -528,7 +529,7 @@ const test = (secured) => {
     it('does not submit usage', function(done) {
       this.timeout(totalTimeout + 2000);
 
-      const startTestTime = Date.now();
+      const startTestTime = moment.now();
       waitForStartAndPoll('bridge', 9500, () => {}, totalTimeout,
         (error) => {
           if (error) {
@@ -537,7 +538,7 @@ const test = (secured) => {
           }
           start('abacus-cf-renewer');
           waitForStartAndPoll('renewer', 9501, () => {},
-            totalTimeout - (Date.now() - startTestTime), done);
+            totalTimeout - (moment.now() - startTestTime), done);
         }
       );
     });

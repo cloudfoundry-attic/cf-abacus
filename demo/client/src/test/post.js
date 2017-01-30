@@ -4,6 +4,7 @@
 
 const request = require('abacus-request');
 const commander = require('commander');
+const moment = require('abacus-moment');
 
 // Parse command line options
 commander
@@ -19,7 +20,7 @@ const collector = /:/.test(commander.collector) ? commander.collector :
   'https://abacus-usage-collector.' + commander.collector;
 
 // Usage time in milli-seconds
-const time = commander.time || Date.now();
+const time = commander.time || moment.now();
 
 // Post usage for a resource
 const usage = {
@@ -57,4 +58,3 @@ request.post(collector + '/v1/metering/collected/usage', {
       console.log('Body', val.body);
   }
 });
-

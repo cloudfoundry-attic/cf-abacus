@@ -13,6 +13,7 @@ const commander = require('commander');
 const clone = require('abacus-clone');
 const oauth = require('abacus-oauth');
 const dbclient = require('abacus-dbclient');
+const moment = require('abacus-moment');
 
 // Parse command line options
 const argv = clone(process.argv);
@@ -58,7 +59,7 @@ const authServer = /:/.test(commander.authServer) ? commander.authServer :
 const startTimeout = commander.startTimeout || 30000;
 
 // Submitted usage time
-const usageTime = commander.usageTime || Date.now();
+const usageTime = commander.usageTime || moment.now();
 
 // Delay in milliseconds between each submission
 const delay = commander.delay || 20000;

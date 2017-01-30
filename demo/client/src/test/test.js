@@ -13,6 +13,7 @@ const util = require('util');
 const commander = require('commander');
 const clone = require('abacus-clone');
 const oauth = require('abacus-oauth');
+const moment = require('abacus-moment');
 const dbclient = require('abacus-dbclient');
 
 // Parse command line options
@@ -53,8 +54,8 @@ const startTimeout = commander.startTimeout || 10000;
 // This test timeout
 const totalTimeout = commander.totalTimeout || 60000;
 
-// The current time + 1 hour into the future
-const now = new Date(Date.now());
+// The current time
+const now = moment().toDate();
 
 // Use secure routes or not
 const secured = () => process.env.SECURED === 'true' ? true : false;
@@ -118,7 +119,7 @@ describe('abacus-demo-client', function() {
     // Configure the test timeout
     const timeout = Math.max(totalTimeout, 40000);
     this.timeout(timeout + 2000);
-    const processingDeadline = Date.now() + timeout;
+    const processingDeadline = moment.now() + timeout;
 
     // Test usage to be submitted by the client
     const start = now.getTime();
@@ -377,7 +378,7 @@ describe('abacus-demo-client', function() {
           // after 250 msec, give up after the configured timeout as
           // if we're still not getting the expected report then
           // the processing of the submitted usage must have failed
-          if(Date.now() >= processingDeadline) {
+          if(moment.now() >= processingDeadline) {
             console.log('All submitted usage still not processed\n');
             expect(actual).to.deep.equal(report);
           }

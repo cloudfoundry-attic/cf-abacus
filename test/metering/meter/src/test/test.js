@@ -11,6 +11,7 @@ const request = require('abacus-request');
 const router = require('abacus-router');
 const express = require('abacus-express');
 const dbclient = require('abacus-dbclient');
+const moment = require('abacus-moment');
 
 const map = _.map;
 const range = _.range;
@@ -132,7 +133,7 @@ describe('abacus-usage-meter-itest', () => {
     const timeout = Math.max(totalTimeout,
       100 * orgs * resourceInstances * usage);
     this.timeout(timeout + 2000);
-    const processingDeadline = Date.now() + timeout;
+    const processingDeadline = moment.now() + timeout;
 
     // Setup accumulator spy
     const accumulate = spy((req, res, next) => {
@@ -274,7 +275,7 @@ describe('abacus-usage-meter-itest', () => {
       catch (e) {
         // If the comparison fails we'll be called again to retry
         // after 250 msec, but give up after deadline
-        if(Date.now() >= processingDeadline) throw e;
+        if(moment.now() >= processingDeadline) throw e;
 
         debug('Retry#%d', retries);
       }

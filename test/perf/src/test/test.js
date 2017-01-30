@@ -22,6 +22,7 @@ const throttle = require('abacus-throttle');
 const jwt = require('jsonwebtoken');
 const util = require('util');
 const dbclient = require('abacus-dbclient');
+const moment = require('abacus-moment');
 
 // BigNumber
 const BigNumber = require('bignumber.js');
@@ -89,13 +90,13 @@ describe('abacus-perf-test', () => {
     const timeout = Math.max(totalTimeout,
       100 * orgs * resourceInstances * usage);
     this.timeout(timeout + 2000);
-    const processingDeadline = Date.now() + timeout;
+    const processingDeadline = moment.now() + timeout;
 
     console.log('Timeout %d', timeout);
 
     // Return a usage with unique start and end time based on a number
-    const start = Date.now() + delta;
-    const end = Date.now() + delta;
+    const start = moment.now() + delta;
+    const end = moment.now() + delta;
     const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87',
       o + 1, ri + 1].join('-');
     const orgid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
@@ -389,7 +390,7 @@ describe('abacus-perf-test', () => {
           catch (e) {
             // If the comparison fails we'll be called again to retry
             // after 250 msec, but give up after the computed timeout
-            if(Date.now() >= processingDeadline) {
+            if(moment.now() >= processingDeadline) {
               console.log('\n', util.inspect(val.body, {
                 depth: 20
               }), '\n');

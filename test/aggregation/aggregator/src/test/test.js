@@ -12,6 +12,7 @@ const dbclient = require('abacus-dbclient');
 const seqid = require('abacus-seqid');
 const request = require('abacus-request');
 const clone = require('abacus-clone');
+const moment = require('abacus-moment');
 const timewindow = require('abacus-timewindow');
 
 const BigNumber = require('bignumber.js');
@@ -95,7 +96,7 @@ const pruneWindows = (v, k) => {
 // Calculates the accumulated quantity given an end time, u, window size,
 // and multiplier factor of the usage
 const calculateQuantityByWindow = (e, u, w, m, f) => {
-  const time = new Date(e + u);
+  const time = moment(e + u).toDate();
 
   // Get the millisecond equivalent of the very start of the given window
   return f(m, Math.min(time.getTime() -
@@ -125,7 +126,7 @@ const buildAccumulatedWindows = (e, u, m, f, price) => {
 // Builds the quantity array in the aggregated usage
 const buildAggregatedWindows = (p, u, ri, tri, count, end, f, price) => {
   return map(dimensions, (d) => {
-    const time = new Date(end + u);
+    const time = moment(end + u).toDate();
     const windowTime = timewindow.zeroLowerTimeDimensions(time, d);
 
     const q = f(p, Math.min(time.getTime() - windowTime.getTime(), u),
@@ -210,11 +211,11 @@ describe('abacus-usage-aggregator-itest', () => {
     const timeout = Math.max(totalTimeout,
       100 * orgs * resourceInstances * usage);
     this.timeout(timeout + 2000);
-    const processingDeadline = Date.now() + timeout;
+    const processingDeadline = moment.now() + timeout;
 
     // Initialize usage doc properties with unique values
-    const start = Date.now() + tshift;
-    const end = Date.now() + tshift;
+    const start = moment.now() + tshift;
+    const end = moment.now() + tshift;
 
     // Produce usage for two spaces in an organization, two consumers
     // in a space and create resource instances using two resource plans
@@ -268,7 +269,7 @@ describe('abacus-usage-aggregator-itest', () => {
       o + 1, ri + 1].join('-');
 
     // Usage and usage batch ids
-    const utime = Date.now();
+    const utime = moment.now();
     const uid = (o, ri, u) => dbclient.kturi(
       [start, o + 1, ri + 1, u + 1].join('-'), utime + u + 1);
     const bid = (u) => [start, u + 1].join('-');
@@ -604,10 +605,9 @@ describe('abacus-usage-aggregator-itest', () => {
     };
 
     const verifyRating = (done) => {
-      const startDate = Date.UTC(new Date().getUTCFullYear(),
-        new Date().getUTCMonth() + 1) - 1;
-      const endDate = Date.UTC(new Date().getUTCFullYear(),
-        new Date().getUTCMonth(), 1);
+      const startDate = moment().utc().endOf('month').valueOf();
+      const endDate = moment().utc().startOf('month').valueOf();
+
       const sid = dbclient.kturi(expected.organization_id,
         seqid.pad16(startDate));
       const eid = dbclient.kturi(expected.organization_id,
@@ -626,7 +626,7 @@ describe('abacus-usage-aggregator-itest', () => {
           catch (e) {
             // If the test cannot verify the actual data with the expected
             // data within the giveup time, forward the exception
-            if(Date.now() >= processingDeadline) {
+            if(moment.now() >= processingDeadline) {
               debug('Unable to properly verify the last record');
               expect(clone(omit(val.rows[0].doc, ['id', 'processed',
                 'processed_id', 'consumer_id', 'resource_instance_id',
@@ -643,10 +643,9 @@ describe('abacus-usage-aggregator-itest', () => {
     };
 
     const verifyConsumerRating = (done) => {
-      const startDate = Date.UTC(new Date().getUTCFullYear(),
-        new Date().getUTCMonth() + 1) - 1;
-      const endDate = Date.UTC(new Date().getUTCFullYear(),
-        new Date().getUTCMonth(), 1);
+      const startDate = moment().utc().endOf('month').valueOf();
+      const endDate = moment().utc().startOf('month').valueOf();
+
       const sid = dbclient.kturi([expectedConsumer.organization_id,
         expectedConsumer.space_id, expectedConsumer.consumer_id].join('/'),
         seqid.pad16(startDate));
@@ -676,7 +675,7 @@ describe('abacus-usage-aggregator-itest', () => {
           catch (e) {
             // If the test cannot verify the actual data with the expected
             // data within the giveup time, forward the exception
-            if(Date.now() >= processingDeadline) {
+            if(moment.now() >= processingDeadline) {
               debug('Unable to properly verify the last record');
               expect(clone(omit(val.rows[0].doc, ['id', 'processed', '_id',
                 '_rev', 'processed_id', 'resource_instance_id',

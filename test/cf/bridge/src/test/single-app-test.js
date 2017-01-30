@@ -4,6 +4,7 @@ const commander = require('commander');
 const cp = require('child_process');
 const jwt = require('jsonwebtoken');
 const util = require('util');
+const moment = require('abacus-moment');
 
 const _ = require('underscore');
 const clone = _.clone;
@@ -36,14 +37,15 @@ const timeWindows = {
   'day'    : 3,
   'month'  : 4
 };
+
 // Checks if the difference between start and end time fall within a window
 const isWithinWindow = (start, end, timeWindow) => {
-  // [Second, Minute, Hour, Day, Month]
-  const timescale = [1, 100, 10000, 1000000, 100000000];
+  // [Second, Minute, Hour, Day, Month, Year]
+  const timescale = [1, 100, 10000, 1000000, 100000000, 10000000000];
   // Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
   const dateUTCNumbify = (t) => {
-    const d = new Date(t);
-    return d.getUTCFullYear() * 10000000000 + d.getUTCMonth() * timescale[4]
+    const d = moment(t).toDate();
+    return d.getUTCFullYear() * timescale[5] + d.getUTCMonth() * timescale[4]
       + d.getUTCDate() * timescale[3] + d.getUTCHours() * timescale[2]
       + d.getUTCMinutes() * timescale[1] + d.getUTCSeconds();
   };
@@ -51,7 +53,6 @@ const isWithinWindow = (start, end, timeWindow) => {
   return Math.floor(dateUTCNumbify(end) / timescale[timeWindow]) -
     Math.floor(dateUTCNumbify(start) / timescale[timeWindow]) === 0;
 };
-
 
 // Parse command line options
 const argv = clone(process.argv);
@@ -145,7 +146,7 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
 const twentySecondsInMilliseconds = 20 * 1000;
 
 const test = (secured) => {
-  const submittime = Date.now();
+  const submittime = moment.now();
 
   let server;
   let serverPort;
@@ -339,7 +340,7 @@ const test = (secured) => {
           const resources = response.body.resources;
           expect(resources.length).to.equal(1);
           expect(response.body.spaces.length).to.equal(1);
-          const reporttime = Date.now();
+          const reporttime = moment.now();
 
           expect(resources[0]).to.contain.all.keys(
             'plans', 'aggregated_usage');
@@ -366,7 +367,7 @@ const test = (secured) => {
   };
 
   const poll = (fn, done, timeout = 1000, interval = 100) => {
-    const startTimestamp = Date.now();
+    const startTimestamp = moment.now();
 
     const doneCallback = (err) => {
       if (!err) {
@@ -375,7 +376,7 @@ const test = (secured) => {
         return;
       }
 
-      if (Date.now() - startTimestamp > timeout) {
+      if (moment.now() - startTimestamp > timeout) {
         debug('Expectation not met for %d ms. Error: %o', timeout, err);
         setImmediate(() => done(new Error(err)));
       }
@@ -392,7 +393,7 @@ const test = (secured) => {
 
   const waitForStartAndPoll = (component, port, done) => {
     // Wait for bridge to start
-    let startWaitTime = Date.now();
+    let startWaitTime = moment.now();
     request.waitFor('http://localhost::p/v1/cf/:component',
       { component: component, p: port },
       startTimeout, (err, uri, opts) => {
@@ -410,7 +411,7 @@ const test = (secured) => {
 
           poll(checkReport, (error) => {
             done(error);
-          }, totalTimeout - (Date.now() - startWaitTime), 1000);
+          }, totalTimeout - (moment.now() - startWaitTime), 1000);
         });
       }
     );
@@ -425,7 +426,7 @@ const test = (secured) => {
             metadata: {
               guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
               url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-              created_at: new Date(submittime -
+              created_at: moment(submittime -
                 twentySecondsInMilliseconds).toISOString()
             },
             entity: {
@@ -455,7 +456,7 @@ const test = (secured) => {
             metadata: {
               guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
               url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
-              created_at: new Date(submittime -
+              created_at: moment(submittime -
                 twentySecondsInMilliseconds + 1).toISOString()
             },
             entity: {
@@ -485,7 +486,7 @@ const test = (secured) => {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: new Date(submittime -
+              created_at: moment(submittime -
                 twentySecondsInMilliseconds + 2).toISOString()
             },
             entity: {
@@ -515,7 +516,7 @@ const test = (secured) => {
             metadata: {
               guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
               url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-              created_at: new Date(submittime -
+              created_at: moment(submittime -
                 twentySecondsInMilliseconds + 3).toISOString()
             },
             entity: {
@@ -545,7 +546,7 @@ const test = (secured) => {
             metadata: {
               guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
               url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
-              created_at: new Date(submittime -
+              created_at: moment(submittime -
                 twentySecondsInMilliseconds + 4).toISOString()
             },
             entity: {
@@ -575,7 +576,7 @@ const test = (secured) => {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: new Date(submittime -
+              created_at: moment(submittime -
                 twentySecondsInMilliseconds + 5).toISOString()
             },
             entity: {
@@ -624,7 +625,7 @@ const test = (secured) => {
             metadata: {
               guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
               url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-              created_at: new Date(submittime -
+              created_at: moment(submittime -
                 twentySecondsInMilliseconds).toISOString()
             },
             entity: {
@@ -654,7 +655,7 @@ const test = (secured) => {
             metadata: {
               guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
               url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
-              created_at: new Date(submittime -
+              created_at: moment(submittime -
                 twentySecondsInMilliseconds + 1).toISOString()
             },
             entity: {
@@ -684,7 +685,7 @@ const test = (secured) => {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: new Date(submittime -
+              created_at: moment(submittime -
                 twentySecondsInMilliseconds + 2).toISOString()
             },
             entity: {
@@ -714,7 +715,7 @@ const test = (secured) => {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: new Date(submittime -
+              created_at: moment(submittime -
                 twentySecondsInMilliseconds + 3).toISOString()
             },
             entity: {

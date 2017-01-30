@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint-disable nodate/nomoment, nodate/nonewdate, nodate/nodate */
+
 const cp = require('child_process');
 const _ = require('underscore');
 
@@ -189,7 +191,7 @@ const addCharge = (k, v) => {
                 new BigNumber(a).add(reduce(p.aggregated_usage, (a1, u1) =>
                   new BigNumber(a1).add(u1.metric === m ?
                     u1.windows[i][j].charge : 0).toNumber(), 0)).toNumber(), 0)
-            }; 
+            };
           });
         })
       };
