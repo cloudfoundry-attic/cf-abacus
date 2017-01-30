@@ -35,6 +35,7 @@
     "abacus-carryover": "file:../../utils/carryover",
     "abacus-debug": "file:../../utils/debug",
     "abacus-dbclient": "file:../../utils/dbclient",
+    "abacus-moment": "file:../../utils/moment",
     "abacus-partition": "file:../../utils/partition",
     "abacus-perf": "file:../../utils/perf",
     "abacus-retry": "file:../../utils/retry",
