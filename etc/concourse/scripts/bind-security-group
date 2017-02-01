@@ -12,3 +12,4 @@ echo "${group/,]/]}" > abacus-sec-group.json
 cf create-security-group $CF_ORG abacus-sec-group.json
 cf update-security-group $CF_ORG abacus-sec-group.json
 cf bind-security-group $CF_ORG $CF_ORG $CF_SPACE
+rm -f abacus-sec-group.json
