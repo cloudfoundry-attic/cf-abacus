@@ -486,16 +486,7 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
 
   context('start of next month', () => {
 
-    beforeEach(() => {
-      // Shift time 1 month, 2 days and 3 hours
-      const offset = moment(startOfNextMonth).add(2, 'days').add(3, 'hours').
-        diff(moment.now());
-      process.env.ABACUS_TIME_OFFSET = offset;
-      debug('Time offset set to %d (%s)',
-        offset, moment.duration(offset).humanize());
-    });
-
-    context('on the first run', () => {
+    context('outside slack window', () => {
       beforeEach((done) => {
         // 1 space with:
         //   37 apps consuming 512 MB
@@ -504,6 +495,13 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
         numberOfSpaces = 1;
         expectedConsuming = 22.5;
 
+        const offset = moment(startOfNextMonth).
+          add(2, 'days').add(3, 'hours').diff(moment.now());
+        process.env.ABACUS_TIME_OFFSET = offset;
+        debug('Time offset set to %d (%s)',
+          offset, moment.duration(offset).humanize());
+
+        deleteAllAbacusModules();
         buildAppUsageEvents();
         startAbacus(done);
       });
@@ -520,7 +518,7 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
       });
     });
 
-    context('on the second run', () => {
+    context('inside slack window', () => {
       beforeEach((done) => {
         // 2 spaces with:
         //   37 apps consuming 512 MB
@@ -529,6 +527,13 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
         numberOfSpaces = 2;
         expectedConsuming = 45;
 
+        const offset = moment(afterTwoMonths).
+          subtract(2, 'days').subtract(3, 'hours').diff(moment.now());
+        process.env.ABACUS_TIME_OFFSET = offset;
+        debug('Time offset set to %d (%s)',
+          offset, moment.duration(offset).humanize());
+
+        deleteAllAbacusModules();
         buildAppUsageEvents();
         startAbacus(done);
       });
