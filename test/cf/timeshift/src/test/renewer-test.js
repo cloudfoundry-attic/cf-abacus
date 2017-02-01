@@ -216,6 +216,7 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
   };
 
   const buildAppUsageEvents = () => {
+    deleteAllAbacusModules();
     // Load moment with offset
     moment = require('abacus-moment');
 
@@ -501,7 +502,6 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
         debug('Time offset set to %d (%s)',
           offset, moment.duration(offset).humanize());
 
-        deleteAllAbacusModules();
         buildAppUsageEvents();
         startAbacus(done);
       });
@@ -533,7 +533,6 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
         debug('Time offset set to %d (%s)',
           offset, moment.duration(offset).humanize());
 
-        deleteAllAbacusModules();
         buildAppUsageEvents();
         startAbacus(done);
       });
@@ -606,6 +605,7 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
       debug('Time offset set to %d (%s)',
         offset, moment.duration(offset).humanize());
 
+      buildAppUsageEvents();
       startAbacus(done);
     });
 
