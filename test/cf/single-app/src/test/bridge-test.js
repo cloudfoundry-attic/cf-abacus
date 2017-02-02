@@ -16,13 +16,13 @@ const router = require('abacus-router');
 
 // Setup the debug log
 const debug =
-  require('abacus-debug')('abacus-cf-bridge-itest');
+  require('abacus-debug')('abacus-cf-single-app-itest');
 const responseDebug =
-  require('abacus-debug')('abacus-cf-bridge-itest-response');
+  require('abacus-debug')('abacus-cf-single-app-itest-response');
 const resultDebug =
-  require('abacus-debug')('abacus-cf-bridge-itest-result');
+  require('abacus-debug')('abacus-cf-single-app-itest-result');
 const oAuthDebug =
-  require('abacus-debug')('abacus-cf-bridge-itest-oauth');
+  require('abacus-debug')('abacus-cf-single-app-itest-oauth');
 
 // Module directory
 const moduleDir = (module) => {
@@ -145,7 +145,7 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
 
 const twentySecondsInMilliseconds = 20 * 1000;
 
-const test = (secured) => {
+describe('abacus-cf-bridge single-app-test without oAuth', () => {
   const submittime = moment.now();
 
   let server;
@@ -216,10 +216,6 @@ const test = (secured) => {
     server = app.listen(0);
     serverPort = server.address().port;
     debug('Test resources server listening on port %d', serverPort);
-
-    // Enable/disable the oAuth token authorization
-    process.env.SECURED = secured ? 'true' : 'false';
-    debug('Set SECURED = %s', process.env.SECURED);
 
     // Set environment variables
     process.env.API = 'http://localhost:' + serverPort;
@@ -401,11 +397,7 @@ const test = (secured) => {
         if (err) throw err;
 
         // Check report
-        request.get(uri, {
-          headers: {
-            authorization: secured ? 'bearer ' + signedSystemToken : ''
-          }
-        }, (err, response) => {
+        request.get(uri, {}, (err, response) => {
           expect(err).to.equal(undefined);
           expect(response.statusCode).to.equal(200);
 
@@ -758,8 +750,4 @@ const test = (secured) => {
     });
 
   });
-};
-
-describe('abacus-cf-bridge single-app-test without oAuth', () => test(false));
-
-describe('abacus-cf-bridge single-app-test with oAuth', () => test(true));
+});

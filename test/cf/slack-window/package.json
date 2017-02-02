@@ -1,10 +1,10 @@
 {
-  "name": "abacus-cf-bridge-itest",
-  "description": "CF Bridge integration tests",
+  "name": "abacus-cf-slack-window-itest",
+  "description": "CF Bridge & Renewer slack window tests",
   "license": "Apache-2.0",
   "version": "0.0.6-dev.8",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/cf/bridge",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/cf/slack-window",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },

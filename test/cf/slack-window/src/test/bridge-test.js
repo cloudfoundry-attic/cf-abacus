@@ -16,13 +16,13 @@ const router = require('abacus-router');
 
 // Setup the debug log
 const debug =
-  require('abacus-debug')('abacus-cf-bridge-itest');
+  require('abacus-debug')('abacus-cf-bridge-slack-window-itest');
 const responseDebug =
-  require('abacus-debug')('abacus-cf-bridge-itest-response');
+  require('abacus-debug')('abacus-cf-bridge-slack-window-itest-response');
 const resultDebug =
-  require('abacus-debug')('abacus-cf-bridge-itest-result');
+  require('abacus-debug')('abacus-cf-bridge-slack-window-itest-result');
 const oAuthDebug =
-  require('abacus-debug')('abacus-cf-bridge-itest-oauth');
+  require('abacus-debug')('abacus-cf-bridge-slack-window-itest-oauth');
 
 // Module directory
 const moduleDir = (module) => {
