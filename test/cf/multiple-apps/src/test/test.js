@@ -791,7 +791,6 @@ describe('abacus-cf multiple-apps-test with oAuth', () => {
               done(error);
               return;
             }
-            process.env.slack = '5D';
             start('abacus-cf-renewer');
             waitForStartAndPoll('renewer', 9501, checkThisMonth,
               totalTimeout - (moment.now() - startTestTime), done);
