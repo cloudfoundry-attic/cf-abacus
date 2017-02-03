@@ -18,7 +18,8 @@
 //   # Run renewer
 //   npm run itest -- --no-usage -i 2
 //
-//   # Submit usage in the future
+//   # Submitting usage in the future would fail due to different
+//   # time-window quantities
 //   npm run itest -- -s 3 -i 3
 //
 //   # Restore the time
@@ -26,6 +27,8 @@
 //
 // TODO: DB cleanup flag
 // TODO: set custom time provider (#228)
+// TODO: max interval context: start of month, start of next month
+// TODO: slack window context: end of month, start of next month
 
 const commander = require('commander');
 const cp = require('child_process');
@@ -364,13 +367,13 @@ describe('abacus-cf-renewer stream simulation', () => {
     delete process.env.GUID_MIN_AGE;
   });
 
-  const checkAllTimeWindows = (usage, reporttime, noQuantity) => {
+  const checkAllTimeWindows = (usage, reporttime, checkQuantity) => {
     for (const windowType in timeWindows)
       if(isWithinWindow(submittime, reporttime, timeWindows[windowType])) {
         debug('Checking time window type: %s', windowType);
         const windowUsage = usage.windows[timeWindows[windowType]];
         expect(windowUsage[0]).to.not.equal(null);
-        if(noQuantity)
+        if(checkQuantity)
           expect(windowUsage[0].quantity.consuming).to.equal(expectedConsuming);
         expect(windowUsage[0].charge).to.be.above(0);
       }
