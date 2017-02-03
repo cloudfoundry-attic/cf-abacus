@@ -5,7 +5,6 @@
 // month by the bridge. The renewer should transfer the same usage to the
 // current and next months.
 //
-// TODO: slack window context: end of month, start of next month
 
 const commander = require('commander');
 const cp = require('child_process');
@@ -124,15 +123,10 @@ let moment = require('abacus-moment');
 const startOfNextMonth = moment().add(1, 'months').startOf('month').valueOf();
 const afterTwoMonths = moment().add(2, 'months').startOf('month').valueOf();
 const afterThreeMonths = moment().add(3, 'months').startOf('month').valueOf();
-delete require.cache[require.resolve('abacus-moment')];
 
 const deleteAllAbacusModules = () => {
-  const pathToNodeModules = path.normalize(path.format({
-    dir: __dirname,
-    base: '../../node_modules/abacus-'
-  }));
   for (let moduleKey of Object.keys(require.cache))
-    if (moduleKey.startsWith(pathToNodeModules)) {
+    if (moduleKey.includes('/node_modules/abacus-')) {
       delete require.cache[moduleKey];
       debug('Deleted module %s from require cache', moduleKey);
     }
@@ -217,8 +211,10 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
 
   const buildAppUsageEvents = () => {
     deleteAllAbacusModules();
+
     // Load moment with offset
     moment = require('abacus-moment');
+    debug('Time now is %s', moment().format());
 
     const pathToEventsFile = path.format({
       dir: __dirname,
