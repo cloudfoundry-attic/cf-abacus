@@ -254,11 +254,13 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
     start('abacus-usage-accumulator');
     start('abacus-usage-aggregator');
     start('abacus-usage-reporting');
-    start('abacus-cf-bridge');
 
-    waitForStart('http://localhost:9080/batch', {}, startTimeout, () =>
-      waitForStart('http://localhost:9500/v1/cf/bridge',
-        {}, startTimeout, done));
+    debug('Waiting for collector ...');
+    waitForStart('http://localhost:9080/batch', {}, startTimeout, () => {
+      start('abacus-cf-bridge');
+      start('abacus-cf-renewer');
+      done();
+    });
   };
 
   const checkMonthWindow = (windowName, monthIndex, usage, level) => {
@@ -267,14 +269,14 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
 
     if (level !== 'resource') {
       expect(monthWindow).to.contain.all.keys('quantity', 'charge');
-      debug('%s window; Expected: consuming=%d, charge>0; ' +
+      debug('%s; Expected: consuming=%d, charge>0; ' +
         'Actual: consuming=%d, charge=%d; Month window: %o',
         windowName, expectedConsuming, monthWindow.quantity.consuming,
         monthWindow.charge, monthWindow);
       expect(monthWindow.quantity.consuming).to.equal(expectedConsuming);
     }
     else
-      debug('%s window; Expected:  charge>0; ' +
+      debug('%s; Expected:  charge>0; ' +
         'Actual: charge=%o; Month window: %o',
         windowName, monthWindow.charge, monthWindow);
 
@@ -284,12 +286,12 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
   };
 
   const checkThisMonth = (windowName, usage, level) => {
-    checkMonthWindow(windowName, 0, usage, level);
+    checkMonthWindow(windowName + ' for this month', 0, usage, level);
   };
 
   const checkThisAndPreviousMonths = (windowName, usage, level) => {
-    checkMonthWindow(windowName, 0, usage, level);
-    checkMonthWindow(windowName, 1, usage, level);
+    checkMonthWindow(windowName + ' for this month', 0, usage, level);
+    checkMonthWindow(windowName + ' for last month', 0, usage, level);
   };
 
   const checkReport = (checkFn, cb) => {
@@ -425,8 +427,8 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
     // Set slack window to 5 days
     process.env.SLACK = '5D';
 
-    // Trigger renewer every 10 seconds
-    process.env.RETRY_INTERVAL = 10000;
+    // Trigger renewer every 5 seconds
+    process.env.RETRY_INTERVAL = 5000;
 
     // Disable wait for correct app-event ordering
     process.env.GUID_MIN_AGE = twentySecondsInMilliseconds;
@@ -485,9 +487,9 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
     noUsage = false;
   });
 
-  context('start of next month', () => {
+  context('next month', () => {
 
-    context('outside slack window', () => {
+    context('at the start', () => {
       beforeEach((done) => {
         // 1 space with:
         //   37 apps consuming 512 MB
@@ -510,7 +512,6 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
         this.timeout(totalTimeout + 2000);
 
         let startWaitTime = moment.now();
-        start('abacus-cf-renewer');
         waitForStart('http://localhost:9501/v1/cf/renewer', {},
           startTimeout, () => poll(checkThisMonth, done,
             totalTimeout - (moment.now() - startWaitTime), 1000)
@@ -528,7 +529,7 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
         expectedConsuming = 45;
 
         const offset = moment(afterTwoMonths).
-          subtract(2, 'days').subtract(3, 'hours').diff(moment.now());
+          add(2, 'days').add(3, 'hours').diff(moment.now());
         process.env.ABACUS_TIME_OFFSET = offset;
         debug('Time offset set to %d (%s)',
           offset, moment.duration(offset).humanize());
@@ -541,7 +542,6 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
         this.timeout(totalTimeout + 2000);
 
         let startWaitTime = moment.now();
-        start('abacus-cf-renewer');
         waitForStart('http://localhost:9501/v1/cf/renewer', {},
           startTimeout, () => poll(checkThisMonth, done,
             totalTimeout - (moment.now() - startWaitTime), 1000)
@@ -578,7 +578,6 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
       this.timeout(totalTimeout + 2000);
 
       let startWaitTime = moment.now();
-      start('abacus-cf-renewer');
       waitForStart('http://localhost:9501/v1/cf/renewer', {},
         startTimeout, () => poll(checkThisAndPreviousMonths, done,
           totalTimeout - (moment.now() - startWaitTime), 1000)
@@ -613,7 +612,6 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
       this.timeout(totalTimeout + 2000);
 
       let startWaitTime = moment.now();
-      start('abacus-cf-renewer');
       waitForStart('http://localhost:9501/v1/cf/renewer', {},
         startTimeout, () => poll(checkThisAndPreviousMonths, done,
           totalTimeout - (moment.now() - startWaitTime), 1000)
