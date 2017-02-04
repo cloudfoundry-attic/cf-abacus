@@ -4121,6 +4121,64 @@
         "task_name": null,
         "task_guid": null
       }
+    },
+    {
+      "metadata": {
+        "guid": "143",
+        "url": "/v2/app_usage_events/143",
+        "created_at": 143
+      },
+      "entity": {
+        "state": "STOPPED",
+        "previous_state": "STARTED",
+        "memory_in_mb_per_instance": 4096,
+        "previous_memory_in_mb_per_instance": 4096,
+        "instance_count": 1,
+        "previous_instance_count": 1,
+        "app_guid": "22d4147b-4503-41e6-81c7-b8cbbc45a696",
+        "app_name": "abacus-cf-renewer",
+        "space_guid": "f057fe03-0713-4896-94c7-24b71c6882c2",
+        "space_name": "abacus",
+        "org_guid": "640257fa-d7aa-4aa4-9a77-08ec60aae4f5",
+        "buildpack_guid": null,
+        "buildpack_name": "https://github.com/cloudfoundry/nodejs-buildpack.git",
+        "package_state": "STAGED",
+        "previous_package_state": "UNKNOWN",
+        "parent_app_guid": "22d4147b-4503-41e6-81c7-b8cbbc45a696",
+        "parent_app_name": "abacus-cf-renewer",
+        "process_type": "web",
+        "task_name": null,
+        "task_guid": null
+      }
+    },
+    {
+      "metadata": {
+        "guid": "144",
+        "url": "/v2/app_usage_events/144",
+        "created_at": 144
+      },
+      "entity": {
+        "state": "STARTED",
+        "previous_state": "STOPPED",
+        "memory_in_mb_per_instance": 4096,
+        "previous_memory_in_mb_per_instance": 4096,
+        "instance_count": 1,
+        "previous_instance_count": 1,
+        "app_guid": "22d4147b-4503-41e6-81c7-b8cbbc45a696",
+        "app_name": "abacus-cf-renewer",
+        "space_guid": "f057fe03-0713-4896-94c7-24b71c6882c2",
+        "space_name": "abacus",
+        "org_guid": "640257fa-d7aa-4aa4-9a77-08ec60aae4f5",
+        "buildpack_guid": null,
+        "buildpack_name": "https://github.com/cloudfoundry/nodejs-buildpack.git",
+        "package_state": "STAGED",
+        "previous_package_state": "UNKNOWN",
+        "parent_app_guid": "22d4147b-4503-41e6-81c7-b8cbbc45a696",
+        "parent_app_name": "abacus-cf-renewer",
+        "process_type": "web",
+        "task_name": null,
+        "task_guid": null
+      }
     }
   ]
 }

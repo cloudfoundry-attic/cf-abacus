@@ -10,12 +10,16 @@
 //   npm install && npm run babel && npm run lint && npm run itest
 //
 //   # Submit usage for space with another GUID
-//   npm run itest -- -s my -i 2
+//   npm run itest -- -s 2 -i 2
 //
 //   # Shift the time one month in the future. For Ubuntu:
 //   timedatectl set-ntp false && timedatectl set-time "2017-01-01 23:05"
 //
-//   npm run itest -- --no-usage
+//   # Run renewer
+//   npm run itest -- --no-usage -i 2
+//
+//   # Submit usage in the future
+//   npm run itest -- -s 3 -i 3
 //
 //   # Restore the time
 //   timedatectl set-ntp true
@@ -207,8 +211,8 @@ const appUsageEvents = noUsage ? {
 } : modifyEvents(require('./appUsageEvents.json'));
 
 const numberOfEvents = appUsageEvents.resources.length;
-const lastEventGuid = appUsageEvents.resources[numberOfEvents - 1].
-  metadata.guid;
+const lastEventGuid = noUsage ? undefined :
+  appUsageEvents.resources[numberOfEvents - 1].metadata.guid;
 
 const testDataOrgGuid =
   require('./appUsageEvents.json').resources[0].entity.org_guid;
@@ -241,7 +245,7 @@ describe('abacus-cf-renewer stream simulation', () => {
     const app = express();
     const routes = router();
     routes.get('/v2/app_usage_events', (request, response) => {
-      if (request.query.after_guid === lastEventGuid) {
+      if (noUsage || request.query.after_guid === lastEventGuid) {
         debug('Returning empty list of usage events');
         response.status(200).send({
           total_results: 0,
