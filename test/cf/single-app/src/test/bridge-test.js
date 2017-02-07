@@ -44,7 +44,7 @@ const isWithinWindow = (start, end, timeWindow) => {
   const timescale = [1, 100, 10000, 1000000, 100000000, 10000000000];
   // Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
   const dateUTCNumbify = (t) => {
-    const d = moment(t).toDate();
+    const d = moment.utc(t).toDate();
     return d.getUTCFullYear() * timescale[5] + d.getUTCMonth() * timescale[4]
       + d.getUTCDate() * timescale[3] + d.getUTCHours() * timescale[2]
       + d.getUTCMinutes() * timescale[1] + d.getUTCSeconds();
@@ -418,7 +418,7 @@ describe('abacus-cf-bridge single-app-test without oAuth', () => {
             metadata: {
               guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
               url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-              created_at: moment(submittime -
+              created_at: moment.utc(submittime -
                 twentySecondsInMilliseconds).toISOString()
             },
             entity: {
@@ -448,7 +448,7 @@ describe('abacus-cf-bridge single-app-test without oAuth', () => {
             metadata: {
               guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
               url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
-              created_at: moment(submittime -
+              created_at: moment.utc(submittime -
                 twentySecondsInMilliseconds + 1).toISOString()
             },
             entity: {
@@ -478,7 +478,7 @@ describe('abacus-cf-bridge single-app-test without oAuth', () => {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: moment(submittime -
+              created_at: moment.utc(submittime -
                 twentySecondsInMilliseconds + 2).toISOString()
             },
             entity: {
@@ -508,7 +508,7 @@ describe('abacus-cf-bridge single-app-test without oAuth', () => {
             metadata: {
               guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
               url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-              created_at: moment(submittime -
+              created_at: moment.utc(submittime -
                 twentySecondsInMilliseconds + 3).toISOString()
             },
             entity: {
@@ -538,7 +538,7 @@ describe('abacus-cf-bridge single-app-test without oAuth', () => {
             metadata: {
               guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
               url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
-              created_at: moment(submittime -
+              created_at: moment.utc(submittime -
                 twentySecondsInMilliseconds + 4).toISOString()
             },
             entity: {
@@ -568,7 +568,7 @@ describe('abacus-cf-bridge single-app-test without oAuth', () => {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: moment(submittime -
+              created_at: moment.utc(submittime -
                 twentySecondsInMilliseconds + 5).toISOString()
             },
             entity: {
@@ -617,7 +617,7 @@ describe('abacus-cf-bridge single-app-test without oAuth', () => {
             metadata: {
               guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
               url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-              created_at: moment(submittime -
+              created_at: moment.utc(submittime -
                 twentySecondsInMilliseconds).toISOString()
             },
             entity: {
@@ -647,7 +647,7 @@ describe('abacus-cf-bridge single-app-test without oAuth', () => {
             metadata: {
               guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
               url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
-              created_at: moment(submittime -
+              created_at: moment.utc(submittime -
                 twentySecondsInMilliseconds + 1).toISOString()
             },
             entity: {
@@ -677,7 +677,7 @@ describe('abacus-cf-bridge single-app-test without oAuth', () => {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: moment(submittime -
+              created_at: moment.utc(submittime -
                 twentySecondsInMilliseconds + 2).toISOString()
             },
             entity: {
@@ -707,7 +707,7 @@ describe('abacus-cf-bridge single-app-test without oAuth', () => {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: moment(submittime -
+              created_at: moment.utc(submittime -
                 twentySecondsInMilliseconds + 3).toISOString()
             },
             entity: {

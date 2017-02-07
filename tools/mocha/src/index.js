@@ -1,6 +1,6 @@
 'use strict';
 
-/* eslint-disable nodate/nomoment, nodate/nonewdate, nodate/nodate */
+/* eslint-disable nodate/no-moment, nodate/no-new-date, nodate/no-date */
 
 // Test a module using Istanbul and Mocha
 
