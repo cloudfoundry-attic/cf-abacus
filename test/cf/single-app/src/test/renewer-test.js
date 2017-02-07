@@ -128,7 +128,7 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
   expiresIn: 43200
 });
 
-const lastMonthInMilliseconds = moment().subtract(1, 'months').valueOf();
+const lastMonthInMilliseconds = moment.utc().subtract(1, 'months').valueOf();
 
 describe('abacus-cf-renewer single-app-test without oAuth', () => {
   let server;
@@ -455,7 +455,7 @@ describe('abacus-cf-renewer single-app-test without oAuth', () => {
             metadata: {
               guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
               url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-              created_at: moment(lastMonthInMilliseconds).toISOString()
+              created_at: moment.utc(lastMonthInMilliseconds).toISOString()
             },
             entity: {
               state: 'STARTED',
@@ -484,7 +484,7 @@ describe('abacus-cf-renewer single-app-test without oAuth', () => {
             metadata: {
               guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
               url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
-              created_at: moment(lastMonthInMilliseconds + 1).toISOString()
+              created_at: moment.utc(lastMonthInMilliseconds + 1).toISOString()
             },
             entity: {
               state: 'BUILDPACK_SET',
@@ -513,7 +513,7 @@ describe('abacus-cf-renewer single-app-test without oAuth', () => {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: moment(lastMonthInMilliseconds + 2).toISOString()
+              created_at: moment.utc(lastMonthInMilliseconds + 2).toISOString()
             },
             entity: {
               state: 'STOPPED',
@@ -542,7 +542,7 @@ describe('abacus-cf-renewer single-app-test without oAuth', () => {
             metadata: {
               guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
               url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-              created_at: moment(lastMonthInMilliseconds + 3).toISOString()
+              created_at: moment.utc(lastMonthInMilliseconds + 3).toISOString()
             },
             entity: {
               state: 'STARTED',
@@ -571,7 +571,7 @@ describe('abacus-cf-renewer single-app-test without oAuth', () => {
             metadata: {
               guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
               url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
-              created_at: moment(lastMonthInMilliseconds + 4).toISOString()
+              created_at: moment.utc(lastMonthInMilliseconds + 4).toISOString()
             },
             entity: {
               state: 'BUILDPACK_SET',
@@ -600,7 +600,7 @@ describe('abacus-cf-renewer single-app-test without oAuth', () => {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: moment(lastMonthInMilliseconds + 5).toISOString()
+              created_at: moment.utc(lastMonthInMilliseconds + 5).toISOString()
             },
             entity: {
               state: 'STARTED',
@@ -659,7 +659,7 @@ describe('abacus-cf-renewer single-app-test without oAuth', () => {
             metadata: {
               guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
               url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-              created_at: moment(lastMonthInMilliseconds).toISOString()
+              created_at: moment.utc(lastMonthInMilliseconds).toISOString()
             },
             entity: {
               state: 'STARTED',
@@ -688,7 +688,7 @@ describe('abacus-cf-renewer single-app-test without oAuth', () => {
             metadata: {
               guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
               url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
-              created_at: moment(lastMonthInMilliseconds + 1).toISOString()
+              created_at: moment.utc(lastMonthInMilliseconds + 1).toISOString()
             },
             entity: {
               state: 'BUILDPACK_SET',
@@ -717,7 +717,7 @@ describe('abacus-cf-renewer single-app-test without oAuth', () => {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: moment(lastMonthInMilliseconds + 2).toISOString()
+              created_at: moment.utc(lastMonthInMilliseconds + 2).toISOString()
             },
             entity: {
               state: 'STARTED',
@@ -746,7 +746,7 @@ describe('abacus-cf-renewer single-app-test without oAuth', () => {
             metadata: {
               guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
               url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-              created_at: moment(lastMonthInMilliseconds + 3).toISOString()
+              created_at: moment.utc(lastMonthInMilliseconds + 3).toISOString()
             },
             entity: {
               state: 'STOPPED',

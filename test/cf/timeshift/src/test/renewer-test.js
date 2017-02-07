@@ -120,9 +120,12 @@ const twentySecondsInMilliseconds = 20 * 1000;
 
 // calculate the time according to the actual Data without offset
 let moment = require('abacus-moment');
-const startOfNextMonth = moment().add(1, 'months').startOf('month').valueOf();
-const afterTwoMonths = moment().add(2, 'months').startOf('month').valueOf();
-const afterThreeMonths = moment().add(3, 'months').startOf('month').valueOf();
+const startOfNextMonth = moment.utc().add(1, 'months').startOf('month')
+  .valueOf();
+const afterTwoMonths = moment.utc().add(2, 'months').startOf('month')
+  .valueOf();
+const afterThreeMonths = moment.utc().add(3, 'months').startOf('month')
+  .valueOf();
 
 const deleteAllAbacusModules = () => {
   for (let moduleKey of Object.keys(require.cache))
@@ -196,7 +199,7 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
     const startTime = moment.now() - twentySecondsInMilliseconds;
     for(let resource of responseBody.resources) {
       resource.metadata.created_at =
-        moment(startTime + resource.metadata.created_at).toISOString();
+        moment.utc(startTime + resource.metadata.created_at).toISOString();
       if (numberOfSpaces) {
         const suffix = '-' + numberOfSpaces;
         resource.entity.space_guid = resource.entity.space_guid + suffix;
@@ -214,7 +217,7 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
 
     // Load moment with offset
     moment = require('abacus-moment');
-    debug('Time now is %s', moment().format());
+    debug('Time now is %s', moment.utc().format());
 
     const pathToEventsFile = path.format({
       dir: __dirname,
@@ -494,7 +497,7 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
         numberOfSpaces = 1;
         expectedConsuming = 22.5;
 
-        const offset = moment(startOfNextMonth).
+        const offset = moment.utc(startOfNextMonth).
           add(2, 'days').add(3, 'hours').diff(moment.now());
         process.env.ABACUS_TIME_OFFSET = offset;
         debug('Time offset set to %d (%s)',
@@ -524,7 +527,7 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
         numberOfSpaces = 2;
         expectedConsuming = 45;
 
-        const offset = moment(afterTwoMonths).
+        const offset = moment.utc(afterTwoMonths).
           add(2, 'days').add(3, 'hours').diff(moment.now());
         process.env.ABACUS_TIME_OFFSET = offset;
         debug('Time offset set to %d (%s)',
@@ -560,7 +563,7 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
       expectedConsuming = 45;
 
       // Shift time 2 months, 2 days and 3 hours
-      const offset = moment(afterTwoMonths).add(2, 'days').add(3, 'hours').
+      const offset = moment.utc(afterTwoMonths).add(2, 'days').add(3, 'hours').
         diff(moment.now());
       process.env.ABACUS_TIME_OFFSET = offset;
       debug('Time offset set to %d (%s)',
@@ -594,8 +597,8 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
       expectedConsuming = 45;
 
       // Shift time 3 months, 2 days and 3 hours
-      const offset = moment(afterThreeMonths).add(2, 'days').add(3, 'hours').
-        diff(moment.now());
+      const offset = moment.utc(afterThreeMonths)
+        .add(2, 'days').add(3, 'hours').diff(moment.now());
       process.env.ABACUS_TIME_OFFSET = offset;
       debug('Time offset set to %d (%s)',
         offset, moment.duration(offset).humanize());

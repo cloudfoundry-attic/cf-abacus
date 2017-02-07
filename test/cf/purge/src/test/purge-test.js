@@ -44,7 +44,7 @@ const isWithinWindow = (start, end, timeWindow) => {
   const timescale = [1, 100, 10000, 1000000, 100000000, 10000000000];
   // Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
   const dateUTCNumbify = (t) => {
-    const d = moment(t).toDate();
+    const d = moment.utc(t).toDate();
     return d.getUTCFullYear() * timescale[5] + d.getUTCMonth() * timescale[4]
       + d.getUTCDate() * timescale[3] + d.getUTCHours() * timescale[2]
       + d.getUTCMinutes() * timescale[1] + d.getUTCSeconds();
@@ -425,7 +425,7 @@ const test = (secured) => {
           metadata: {
             guid: '258ea444-943d-4a6e-9928-786a5bb93dfa',
             url: '/v2/app_usage_events/258ea444-943d-4a6e-9928-786a5bb93dfa',
-            created_at: moment(submittime -
+            created_at: moment.utc(submittime -
               twentySecondsInMilliseconds).toISOString()
           },
           entity: {

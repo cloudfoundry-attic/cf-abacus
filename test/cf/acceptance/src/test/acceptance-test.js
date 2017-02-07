@@ -31,7 +31,7 @@ const isWithinWindow = (start, end, timeWindow) => {
   const timescale = [1, 100, 10000, 1000000, 100000000];
   // Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
   const dateUTCNumbify = (t) => {
-    // eslint-disable-next-line nodate/nonewdate, nodate/nodate
+    // eslint-disable-next-line nodate/no-new-date, nodate/no-date
     const d = new Date(t);
     return d.getUTCFullYear() * 10000000000 + d.getUTCMonth() * timescale[4]
       + d.getUTCDate() * timescale[3] + d.getUTCHours() * timescale[2]

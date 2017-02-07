@@ -96,7 +96,7 @@ const pruneWindows = (v, k) => {
 // Calculates the accumulated quantity given an end time, u, window size,
 // and multiplier factor of the usage
 const calculateQuantityByWindow = (e, u, w, m, f) => {
-  const time = moment(e + u).toDate();
+  const time = moment.utc(e + u).toDate();
 
   // Get the millisecond equivalent of the very start of the given window
   return f(m, Math.min(time.getTime() -
@@ -126,7 +126,7 @@ const buildAccumulatedWindows = (e, u, m, f, price) => {
 // Builds the quantity array in the aggregated usage
 const buildAggregatedWindows = (p, u, ri, tri, count, end, f, price) => {
   return map(dimensions, (d) => {
-    const time = moment(end + u).toDate();
+    const time = moment.utc(end + u).toDate();
     const windowTime = timewindow.zeroLowerTimeDimensions(time, d);
 
     const q = f(p, Math.min(time.getTime() - windowTime.getTime(), u),
@@ -605,8 +605,8 @@ describe('abacus-usage-aggregator-itest', () => {
     };
 
     const verifyRating = (done) => {
-      const startDate = moment().utc().endOf('month').valueOf();
-      const endDate = moment().utc().startOf('month').valueOf();
+      const startDate = moment.utc().endOf('month').valueOf();
+      const endDate = moment.utc().startOf('month').valueOf();
 
       const sid = dbclient.kturi(expected.organization_id,
         seqid.pad16(startDate));
@@ -643,8 +643,8 @@ describe('abacus-usage-aggregator-itest', () => {
     };
 
     const verifyConsumerRating = (done) => {
-      const startDate = moment().utc().endOf('month').valueOf();
-      const endDate = moment().utc().startOf('month').valueOf();
+      const startDate = moment.utc().endOf('month').valueOf();
+      const endDate = moment.utc().startOf('month').valueOf();
 
       const sid = dbclient.kturi([expectedConsumer.organization_id,
         expectedConsumer.space_id, expectedConsumer.consumer_id].join('/'),

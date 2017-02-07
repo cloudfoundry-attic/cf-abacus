@@ -55,7 +55,7 @@ const startTimeout = commander.startTimeout || 10000;
 const totalTimeout = commander.totalTimeout || 60000;
 
 // The current time
-const now = moment().toDate();
+const now = moment.utc().toDate();
 
 // Use secure routes or not
 const secured = () => process.env.SECURED === 'true' ? true : false;
@@ -141,7 +141,8 @@ describe('abacus-smoke-test', function() {
     const timeout = Math.max(totalTimeout, 40000);
     const processingDeadline = moment.now() + timeout;
     this.timeout(timeout + 2000);
-    console.log('Test will run until %s', moment(processingDeadline).toDate());
+    console.log('Test will run until %s',
+      moment.utc(processingDeadline).toDate());
 
     // Test usage to be submitted by the client
     const start = now.getTime();
@@ -486,7 +487,7 @@ describe('abacus-smoke-test', function() {
           // the processing of the submitted usage must have failed
           if(moment.now() >= processingDeadline) {
             console.log('%s: All submitted usage still not processed\n',
-              moment().toDate());
+              moment.utc().toDate());
             if (processedDocs != 0)
               deltaCompareReports(updatedReport, previousReport);
             else
@@ -502,7 +503,7 @@ describe('abacus-smoke-test', function() {
     // we get the expected values indicating that all submitted usage has
     // been processed
     const wait = (previousReport, processedDocs, done) => {
-      console.log('\n%s: Retrieving usage report', moment().toDate());
+      console.log('\n%s: Retrieving usage report', moment.utc().toDate());
       compareReport(previousReport, processedDocs, done);
     };
 
@@ -511,10 +512,11 @@ describe('abacus-smoke-test', function() {
       // Failed to ping usage reporter before timing out
       if (err) throw err;
 
-      console.log('\n%s: Retrieving current report', moment().toDate());
+      console.log('\n%s: Retrieving current report', moment.utc().toDate());
       getReport((report, processed) => {
         console.log('\n%s: Report after %d processed usage docs:\n%s\n',
-          moment().toDate(), processed, util.inspect(report, { depth: 20 }));
+          moment.utc().toDate(), processed,
+          util.inspect(report, { depth: 20 }));
 
         // Post usage and wait for report
         map(usage, (u) => post(u, () => wait(report, processed, done)));

@@ -443,13 +443,13 @@ const test = (secured) => {
 
   context('start app 2 months ago', () => {
     beforeEach(() => {
-      const twoMonthsAgo = moment().utc().subtract(2, 'months').valueOf();
+      const twoMonthsAgo = moment.utc().subtract(2, 'months').valueOf();
       appUsageEvents = [
         {
           metadata: {
             guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
             url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-            created_at: moment(twoMonthsAgo).toISOString()
+            created_at: moment.utc(twoMonthsAgo).toISOString()
           },
           entity: {
             state: 'STARTED',
