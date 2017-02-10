@@ -43,7 +43,7 @@
     "body-parser": "^1.4.3",
     "commander": "^2.8.1",
     "compression": "^1.0.8",
-    "express": "^4.9.4",
+    "express": "^4.14.1",
     "method-override": "^2.0.2",
     "morgan": "^1.1.1",
     "response-time": "^2.0.0",

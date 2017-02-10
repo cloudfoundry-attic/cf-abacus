@@ -42,7 +42,7 @@
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish",
     "levelup": "^1.2.1",
-    "pouchdb": "^5.3.2"
+    "pouchdb": "^6.1.2"
   },
   "engines": {
     "node": ">=5.11.1",
