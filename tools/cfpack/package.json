@@ -26,7 +26,6 @@
     "cfpack": "./cfpack"
   },
   "scripts": {
-    "babel": "true",
     "test": "eslint",
     "lint": "eslint",
     "pub": "publish"

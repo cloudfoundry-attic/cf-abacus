@@ -34,7 +34,6 @@
     "versions": "./versions"
   },
   "scripts": {
-    "babel": "true",
     "test": "eslint",
     "lint": "eslint",
     "pub": "publish"

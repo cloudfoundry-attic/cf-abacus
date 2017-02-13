@@ -21,10 +21,9 @@
     "lib/",
     "src/"
   ],
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "scripts": {
     "itest": "mocha --command",
-    "babel": "babel",
     "test": "eslint",
     "lint": "eslint",
     "pub": "publish"
@@ -42,12 +41,10 @@
     "abacus-account-plugin": "file:../../../lib/plugins/account",
     "abacus-usage-collector": "file:../../../lib/metering/collector",
     "abacus-debug": "file:../../../lib/utils/debug",
-    "babel-preset-es2015": "^6.6.0",
     "underscore": "^1.8.3",
     "commander": "2.8.1"
   },
   "devDependencies": {
-    "abacus-babel": "file:../../../tools/babel",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-publish": "file:../../../tools/publish"
   },

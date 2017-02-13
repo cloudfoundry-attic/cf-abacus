@@ -21,15 +21,13 @@
     "lib/",
     "src/"
   ],
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "scripts": {
-    "babel": "babel",
     "test": "eslint && mocha",
     "lint": "eslint",
     "pub": "publish"
   },
   "dependencies": {
-    "babel-preset-es2015": "^6.6.0",
     "abacus-debug": "file:../debug",
     "abacus-transform": "file:../transform",
     "abacus-yieldable": "file:../yieldable",
@@ -37,7 +35,6 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "abacus-babel": "file:../../../tools/babel",
     "abacus-batch": "file:../batch",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",

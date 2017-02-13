@@ -26,7 +26,6 @@
     "mocha": "./mocha"
   },
   "scripts": {
-    "babel": "true",
     "test": "eslint && ./mocha",
     "lint": "eslint",
     "pub": "publish"

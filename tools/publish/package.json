@@ -26,7 +26,6 @@
     "publish": "./publish"
   },
   "scripts": {
-    "babel": "true",
     "test": "eslint",
     "lint": "eslint",
     "pub": "npm install && ./publish"

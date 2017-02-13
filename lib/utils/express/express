@@ -2,5 +2,5 @@
 'use strict';
 
 // Run our Express shell
-require('./lib/index.js').runCLI();
+require('./src/index.js').runCLI();
 

@@ -1,6 +1,0 @@
-{
-    "compact": false,
-    "presets": ["es2015"],
-    "auxiliaryCommentBefore": "istanbul ignore next",
-    "sourceMaps": "inline"
-}

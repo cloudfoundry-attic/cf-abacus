@@ -33,9 +33,8 @@
     "tools/"
   ],
   "scripts": {
-    "bootstrap": "npm install etc tools/babel tools/eslint tools/mocha tools/publish tools/cfpack tools/cfpush babel-preset-es2015",
-    "babel": "foreach abacus :path npm run babel",
-    "provision": "etc/versions && npm run bootstrap && npm run babel && npm install",
+    "bootstrap": "npm install etc tools/eslint tools/mocha tools/publish tools/cfpack tools/cfpush",
+    "provision": "etc/versions && npm run bootstrap && npm install",
     "build": "npm run provision && npm test",
     "clean": "git clean -df",
     "rebuild": "npm run clean && npm run build",
@@ -57,7 +56,7 @@
     "itest": "export JOBS=1 && foreach itest node_modules/:name npm run itest --",
     "smoke": "export JOBS=1 && foreach smoke node_modules/:name npm run smoke --",
     "acceptance": "export JOBS=1 && foreach acceptance node_modules/:name npm run acceptance --",
-    "pub": "npm run babel && foreach abacus :path npm run pub && publish",
+    "pub": "foreach abacus :path npm run pub && publish",
     "cfpush": "bin/cfpush",
     "cfstage": "bin/cfstage",
     "cfdelete": "bin/cfdelete",
@@ -149,11 +148,9 @@
     "abacus-webhook": "file:lib/utils/webhook",
     "abacus-webproxy": "file:lib/utils/webproxy",
     "abacus-yieldable": "file:lib/utils/yieldable",
-    "babel-preset-es2015": "^6.6.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "abacus-babel": "file:tools/babel",
     "abacus-cfpack": "file:tools/cfpack",
     "abacus-cfpush": "file:tools/cfpush",
     "abacus-coverage": "file:tools/coverage",

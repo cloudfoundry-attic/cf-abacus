@@ -27,7 +27,6 @@
     "eslint": "./eslint"
   },
   "scripts": {
-    "babel": "true",
     "lint": "eslint -f stylish -c .eslintrc src",
     "test": "eslint -f stylish -c .eslintrc src",
     "pub": "publish"

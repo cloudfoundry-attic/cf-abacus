@@ -264,9 +264,6 @@ At this point your development cycle boils down to:
 ```sh
 cd cf-abacus/lib/metering/collector
 
-# Run Babel.js to translate EcmaScript6 Javascript to ES5
-npm run babel
-
 # Run ESLint on your code and run the module's unit tests
 npm test
 ```

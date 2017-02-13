@@ -26,7 +26,6 @@
     "cfpush": "./cfpush"
   },
   "scripts": {
-    "babel": "true",
     "test": "eslint",
     "lint": "eslint",
     "pub": "publish"

@@ -27,7 +27,6 @@
     "faqdoc": "cat faq.md | mddoc >faq.html",
     "confdoc": "cat conf.md | mddoc >conf.html",
     "designdoc": "cat design.md | mddoc >design.html",
-    "babel": "true",
     "test": "true",
     "lint": "true",
     "pub": "publish"
