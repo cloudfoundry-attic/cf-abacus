@@ -430,13 +430,13 @@ const test = (secured) => {
 
   context('start app in current month', () => {
     beforeEach(() => {
-      const today = moment().utc().valueOf();
+      const today = moment.utc().valueOf();
       appUsageEvents = [
         {
           metadata: {
             guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
             url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-            created_at: moment(today).toISOString()
+            created_at: moment.utc(today).toISOString()
           },
           entity: {
             state: 'STARTED',
@@ -489,13 +489,13 @@ const test = (secured) => {
 
   context('with app started 3 months ago outside slack window', () => {
     beforeEach(() => {
-      const threeMonthsAgo = moment().utc().subtract(3, 'months').valueOf();
+      const threeMonthsAgo = moment.utc().subtract(3, 'months').valueOf();
       appUsageEvents = [
         {
           metadata: {
             guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
             url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-            created_at: moment(threeMonthsAgo).toISOString()
+            created_at: moment.utc(threeMonthsAgo).toISOString()
           },
           entity: {
             state: 'STARTED',

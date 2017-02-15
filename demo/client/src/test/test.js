@@ -55,7 +55,7 @@ const startTimeout = commander.startTimeout || 10000;
 const totalTimeout = commander.totalTimeout || 60000;
 
 // The current time
-const now = moment().toDate();
+const now = moment.utc().toDate();
 
 // Use secure routes or not
 const secured = () => process.env.SECURED === 'true' ? true : false;

@@ -63,9 +63,10 @@ rules:
   complexity: [2, 6]
   arrow-parens: [2, "always"]
   # use of Date instead of abacus-moment
-  nodate/nodate: 2
-  nodate/nonewdate: 2
-  nodate/nomoment: 2
+  nodate/no-date: 2
+  nodate/no-new-date: 2
+  nodate/no-moment: 2
+  nodate/no-moment-without-utc: 2
 
   # WARNINGS
   # We use this for functions that reference each other

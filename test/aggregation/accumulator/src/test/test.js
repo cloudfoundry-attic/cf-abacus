@@ -84,7 +84,7 @@ const pruneWindows = (v, k) => {
 // Calculates the accumulated quantity given an end time, u, window size,
 // and multiplier factor of the usage
 const calculateQuantityByWindow = (e, u, w, m, f) => {
-  const time = moment(e + u);
+  const time = moment.utc(e + u);
   // Get the millisecond equivalent of the very start of the given window
   return f(m, Math.min(time.valueOf() -
     timewindow.zeroLowerTimeDimensions(time.toDate(), w).getTime(), u));
@@ -334,8 +334,8 @@ describe('abacus-usage-accumulator-itest', () => {
     };
 
     const verifyAggregator = (done) => {
-      const startDate = moment().utc().endOf('month').valueOf();
-      const endDate = moment().utc().startOf('month').valueOf();
+      const startDate = moment.utc().endOf('month').valueOf();
+      const endDate = moment.utc().startOf('month').valueOf();
       const sid = dbclient.kturi([expected.organization_id,
         expected.resource_instance_id, expected.consumer_id,
         expected.plan_id, expected.metering_plan_id, expected.rating_plan_id,
