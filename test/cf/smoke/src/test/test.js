@@ -13,7 +13,6 @@ const util = require('util');
 const commander = require('commander');
 const clone = require('abacus-clone');
 const oauth = require('abacus-oauth');
-const dbclient = require('abacus-dbclient');
 const moment = require('abacus-moment');
 
 // Parse command line options
@@ -126,12 +125,9 @@ const authHeader = (token) => token ? {
 } : {};
 
 describe('abacus-smoke-test', function() {
-  before((done) => {
+  before(() => {
     if (token)
       token.start();
-
-    // Delete test dbs on the configured db server
-    dbclient.drop(process.env.DB, /^abacus-/, done);
   });
 
   it('submits usage for a sample resource and retrieves an aggregated ' +
