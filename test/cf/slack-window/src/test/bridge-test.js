@@ -330,7 +330,7 @@ const test = (secured) => {
       '/:organization_id/aggregated/usage', {
         organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
         headers: {
-          authorization: 'bearer ' + signedResourceToken
+          authorization: 'bearer ' + signedSystemToken
         }
       },
       (error, response) => {

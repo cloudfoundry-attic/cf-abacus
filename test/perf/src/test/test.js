@@ -293,6 +293,27 @@ describe('abacus-perf-test', () => {
       ]
     };
 
+    const token2 = {
+      jti: 'fa1b29fe-76a9-4c2d-903e-dddd0563a9e3',
+      sub: 'object-storage',
+      authorities: [
+        'abacus.usage.read'
+      ],
+      scope: [
+        'abacus.usage.read'
+      ],
+      client_id: 'object-storage',
+      cid: 'object-storage',
+      azp: 'object-storage',
+      grant_type: 'client_credentials',
+      iss: 'https://uaa.cf.net/oauth/token',
+      zid: 'uaa',
+      aud: [
+        'abacus',
+        'account'
+      ]
+    };
+
     // OAuth bearer access token signed using JWTKEY and
     // default algorithm (HS256)
     const auth = process.env.SECURED === 'true' ?
@@ -300,9 +321,15 @@ describe('abacus-perf-test', () => {
         algorithm: process.env.JWTALGO,
         expiresIn: 43200
       }) : undefined;
+    const auth2 = process.env.SECURED === 'true' ?
+      jwt.sign(token2, process.env.JWTKEY, {
+        algorithm: process.env.JWTALGO,
+        expiresIn: 43200
+      }) : undefined;
 
     // Use OAuth bearer as a HTTP request header field
     const opt = auth ? { headers: { authorization: 'Bearer ' + auth } } : {};
+    const opt2 = auth2 ? { headers: { authorization: 'Bearer ' + auth2 } } : {};
 
     // Post one usage doc, throttled to 1000 concurrent requests
     const post = throttle((o, ri, i, cb) => {
@@ -363,7 +390,7 @@ describe('abacus-perf-test', () => {
     // Get a usage report for the test organization
     const get = (o, done) => {
       brequest.get('http://localhost:9088' + '/v1/metering/organizations' +
-        '/:organization_id/aggregated/usage', extend({}, opt, {
+        '/:organization_id/aggregated/usage', extend({}, opt2, {
           organization_id: orgid(o)
         }), (err, val) => {
           expect(err).to.equal(undefined);
