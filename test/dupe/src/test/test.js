@@ -76,12 +76,12 @@ const totalTimeout = Math.max(60000 + delay * num, 65000);
 // Use secure routes or not
 const secured = () => process.env.SECURED === 'true' ? true : false;
 
-// Token fetcher
-const token = secured() ? oauth.cache(authServer,
+// Token fetchers
+const objectStorageToken = secured() ? oauth.cache(authServer,
   process.env.CLIENT_ID, process.env.CLIENT_SECRET,
   'abacus.usage.object-storage.write abacus.usage.object-storage.read') :
   undefined;
-const token2 = secured() ? oauth.cache(authServer,
+const systemToken = secured() ? oauth.cache(authServer,
     process.env.CLIENT_ID, process.env.CLIENT_SECRET,
     'abacus.usage.read') :
   undefined;
@@ -142,10 +142,10 @@ describe('abacus-dupe', function() {
   this.timeout(totalTimeout);
 
   before((done) => {
-    if (token)
-      token.start();
-    if (token2)
-      token2.start();
+    if (objectStorageToken)
+      objectStorageToken.start();
+    if (systemToken)
+      systemToken.start();
 
     // Delete test dbs on the configured db server
     dbclient.drop(process.env.DB, /^abacus-/, () => {
@@ -173,7 +173,7 @@ describe('abacus-dupe', function() {
         console.log('\nPosting document', posts + 1);
 
         request.post(collector + '/v1/metering/collected/usage',
-          extend({ body: u }, authHeader(token)), (err, val) => {
+          extend({ body: u }, authHeader(objectStorageToken)), (err, val) => {
             if (posts === 0) {
               // Expect a 201 with the location of the accumulated usage
               expect(err).to.equal(undefined);
@@ -200,7 +200,7 @@ describe('abacus-dupe', function() {
           'v1/metering/organizations',
           organization,
           'aggregated/usage'
-        ].join('/'), extend({}, authHeader(token2)), (err, val) => {
+        ].join('/'), extend({}, authHeader(systemToken)), (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(200);
 
@@ -249,7 +249,7 @@ describe('abacus-dupe', function() {
         console.log('\nPosting document', posts + 1);
 
         request.post(collector + '/v1/metering/collected/usage',
-          extend({ body: u }, authHeader(token)), (err, val) => {
+          extend({ body: u }, authHeader(objectStorageToken)), (err, val) => {
             // Expect 502 from account plugin
             expect(err).to.not.equal(undefined);
             expect(val).to.equal(undefined);
@@ -265,7 +265,7 @@ describe('abacus-dupe', function() {
           reporting,
           'v1/metering/organizations/test_status_code_502',
           'aggregated/usage'
-        ].join('/'), extend({}, authHeader(token2)), (err, val) => {
+        ].join('/'), extend({}, authHeader(systemToken)), (err, val) => {
           expect(err).to.not.equal(undefined);
 
           // Exit if all submissions are done, otherwise wait and post again
@@ -299,7 +299,7 @@ describe('abacus-dupe', function() {
         console.log('\nPosting document', posts + 1);
 
         request.post(collector + '/v1/metering/collected/usage',
-          extend({ body: u }, authHeader(token)), (err, val) => {
+          extend({ body: u }, authHeader(objectStorageToken)), (err, val) => {
             // Expect 201 and error from collector
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(201);
@@ -316,7 +316,7 @@ describe('abacus-dupe', function() {
           reporting,
           'v1/metering/organizations/test_status_code_404',
           'aggregated/usage'
-        ].join('/'), extend({}, authHeader(token2)), (err, val) => {
+        ].join('/'), extend({}, authHeader(systemToken)), (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(404);
 
