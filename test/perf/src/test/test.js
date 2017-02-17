@@ -337,12 +337,12 @@ describe('abacus-perf-test', () => {
       brequest.post('http://localhost:9080/v1/metering/collected/usage',
         extend({}, opt(objectStorageToken),
           { body: usageTemplate(o, ri, i) }), (err, val) => {
-          expect(err).to.equal(undefined);
-          expect(val.statusCode).to.equal(201);
-          debug('Completed submission org%d instance%d usage%d',
-            o + 1, ri + 1, i + 1);
-          cb(err, val);
-        });
+            expect(err).to.equal(undefined);
+            expect(val.statusCode).to.equal(201);
+            debug('Completed submission org%d instance%d usage%d',
+              o + 1, ri + 1, i + 1);
+            cb(err, val);
+          });
     });
 
     // Post the requested number of usage docs
