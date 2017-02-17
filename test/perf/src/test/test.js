@@ -272,7 +272,7 @@ describe('abacus-perf-test', () => {
       }]
     });
 
-    const token = {
+    const objectStorageToken = {
       jti: 'fa1b29fe-76a9-4c2d-903e-dddd0563a9e3',
       sub: 'object-storage',
       authorities: [
@@ -293,29 +293,56 @@ describe('abacus-perf-test', () => {
       ]
     };
 
+    const systemToken = {
+      jti: 'fa1b29fe-76a9-4c2d-903e-dddd0563a9e3',
+      sub: 'object-storage',
+      authorities: [
+        'abacus.usage.read'
+      ],
+      scope: [
+        'abacus.usage.read'
+      ],
+      client_id: 'object-storage',
+      cid: 'object-storage',
+      azp: 'object-storage',
+      grant_type: 'client_credentials',
+      iss: 'https://uaa.cf.net/oauth/token',
+      zid: 'uaa',
+      aud: [
+        'abacus',
+        'account'
+      ]
+    };
+
     // OAuth bearer access token signed using JWTKEY and
     // default algorithm (HS256)
-    const auth = process.env.SECURED === 'true' ?
-      jwt.sign(token, process.env.JWTKEY, {
-        algorithm: process.env.JWTALGO,
-        expiresIn: 43200
-      }) : undefined;
+    const auth = (token) => {
+      return process.env.SECURED === 'true' ?
+        jwt.sign(token, process.env.JWTKEY, {
+          algorithm: process.env.JWTALGO,
+          expiresIn: 43200
+        }) : undefined;
+    };
 
     // Use OAuth bearer as a HTTP request header field
-    const opt = auth ? { headers: { authorization: 'Bearer ' + auth } } : {};
+    const opt = (token) => {
+      const a = auth(token);
+      return a ? { headers: { authorization: 'Bearer ' + a } } : {};
+    };
 
     // Post one usage doc, throttled to 1000 concurrent requests
     const post = throttle((o, ri, i, cb) => {
       debug('Submitting org%d instance%d usage%d',
         o + 1, ri + 1, i + 1);
       brequest.post('http://localhost:9080/v1/metering/collected/usage',
-        extend({}, opt, { body: usageTemplate(o, ri, i) }), (err, val) => {
-          expect(err).to.equal(undefined);
-          expect(val.statusCode).to.equal(201);
-          debug('Completed submission org%d instance%d usage%d',
-            o + 1, ri + 1, i + 1);
-          cb(err, val);
-        });
+        extend({}, opt(objectStorageToken),
+          { body: usageTemplate(o, ri, i) }), (err, val) => {
+            expect(err).to.equal(undefined);
+            expect(val.statusCode).to.equal(201);
+            debug('Completed submission org%d instance%d usage%d',
+              o + 1, ri + 1, i + 1);
+            cb(err, val);
+          });
     });
 
     // Post the requested number of usage docs
@@ -363,7 +390,7 @@ describe('abacus-perf-test', () => {
     // Get a usage report for the test organization
     const get = (o, done) => {
       brequest.get('http://localhost:9088' + '/v1/metering/organizations' +
-        '/:organization_id/aggregated/usage', extend({}, opt, {
+        '/:organization_id/aggregated/usage', extend({}, opt(systemToken), {
           organization_id: orgid(o)
         }), (err, val) => {
           expect(err).to.equal(undefined);

@@ -298,7 +298,7 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
       '/:organization_id/aggregated/usage', {
         organization_id: testDataOrgGuid,
         headers: {
-          authorization: 'bearer ' + signedResourceToken
+          authorization: 'bearer ' + signedSystemToken
         }
       },
       (error, response) => {
