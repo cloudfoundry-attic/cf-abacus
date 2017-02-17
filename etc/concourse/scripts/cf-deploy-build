@@ -25,7 +25,7 @@ cp -r $abacus_config_dir/. built-project
 
 echo "Building Abacus ..."
 pushd built-project
-  npm run prepare
+  npm run prebuild
 popd
 
 echo "Done."
