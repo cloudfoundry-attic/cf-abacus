@@ -29,9 +29,14 @@ var blah = function() {
   return 'boo';
 };
 
+// A function that is covered by 'another-test'
+var another = function() {
+  return 'another';
+};
+
 // Export our sum function
 module.exports.straight = straight;
 module.exports.cond = cond;
 module.exports.ifelse = ifelse;
 module.exports.blah = blah;
-
+module.exports.another = another;

@@ -32,6 +32,7 @@
     "pub": "publish"
   },
   "dependencies": {
+    "async": "^2.1.4",
     "chai": "^3.0.0",
     "commander": "^2.8.1",
     "convert-source-map": "^1.1.1",
