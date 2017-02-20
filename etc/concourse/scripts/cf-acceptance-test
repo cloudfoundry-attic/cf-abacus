@@ -32,7 +32,7 @@ cp -R $abacus_config_dir/* $abacus_dir
 
 pushd $abacus_dir
   echo "Building Abacus ..."
-  npm run prebuild
+  npm run provision
 
   echo "Deleting all apps in $CF_ORG/$CF_SPACE ..."
   getApps
