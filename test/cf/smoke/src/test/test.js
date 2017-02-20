@@ -90,8 +90,17 @@ const deltaCompare = (currentWindow, previousWindow, ch, s, q, c) => {
     if(typeof increment !== 'undefined' &&
       typeof current[key] !== 'undefined' &&
       typeof previous[key] !== 'undefined') {
-      const diff = current[key] - previous[key] - increment;
-      expect(Math.abs(diff)).to.be.below(0.01);
+
+      const currentValue = current[key];
+      const previousValue = previous[key];
+      let message = util.format('No change in %s=%d detected',
+        key, previousValue);
+      expect(currentValue).to.not.equal(previousValue, message);
+
+      const diff = currentValue - previousValue - increment;
+      message = util.format('%s=%d, expected increase %d from %d, ∆=%d',
+        key, currentValue, increment, previousValue, diff);
+      expect(Math.abs(diff)).to.be.below(0.01, message);
     }
   };
   checkIfNear('charge', ch, currentWindow, previousWindow);
@@ -99,7 +108,6 @@ const deltaCompare = (currentWindow, previousWindow, ch, s, q, c) => {
   checkIfNear('quantity', q, currentWindow, previousWindow);
   checkIfNear('cost', c, currentWindow, previousWindow);
 };
-
 
 // Prunes all the windows of everything but the monthly charge
 const prune = (v, k) => {
