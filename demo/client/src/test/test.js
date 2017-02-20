@@ -60,10 +60,15 @@ const now = moment.utc().toDate();
 // Use secure routes or not
 const secured = () => process.env.SECURED === 'true' ? true : false;
 
-// Token fetcher
-const token = secured() ? oauth.cache(authServer,
-  process.env.CLIENT_ID, process.env.CLIENT_SECRET,
-  'abacus.usage.object-storage.write abacus.usage.object-storage.read') :
+// Token fetchers
+const objectStorageToken = secured() ? oauth.cache(authServer,
+    process.env.OBJECT_STORAGE_CLIENT_ID,
+    process.env.OBJECT_STORAGE_CLIENT_SECRET,
+    'abacus.usage.object-storage.write') :
+  undefined;
+const systemToken = secured() ? oauth.cache(authServer,
+    process.env.SYSTEM_CLIENT_ID, process.env.SYSTEM_CLIENT_SECRET,
+    'abacus.usage.read') :
   undefined;
 
 // Builds the expected window value based upon the
@@ -106,8 +111,10 @@ const authHeader = (token) => token ? {
 
 describe('abacus-demo-client', function() {
   before((done) => {
-    if (token)
-      token.start();
+    if (objectStorageToken)
+      objectStorageToken.start();
+    if (systemToken)
+      systemToken.start();
 
     // Delete test dbs on the configured db server
     dbclient.drop(process.env.DB, /^abacus-/, done);
@@ -323,14 +330,15 @@ describe('abacus-demo-client', function() {
       };
 
       request.post(collector + '/v1/metering/collected/usage',
-        extend({ body: u.usage }, authHeader(token)), (err, val) => {
-          expect(err).to.equal(undefined);
+        extend({ body: u.usage }, authHeader(objectStorageToken)),
+          (err, val) => {
+            expect(err).to.equal(undefined);
 
-          // Expect a 201 with the location of the accumulated usage
-          expect(val.statusCode).to.equal(201);
-          expect(val.headers.location).to.not.equal(undefined);
-          cb();
-        });
+            // Expect a 201 with the location of the accumulated usage
+            expect(val.statusCode).to.equal(201);
+            expect(val.headers.location).to.not.equal(undefined);
+            cb();
+          });
     };
 
     // Print the number of usage docs already processed given a get report
@@ -354,7 +362,7 @@ describe('abacus-demo-client', function() {
         'v1/metering/organizations',
         'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
         'aggregated/usage'
-      ].join('/'), extend({}, authHeader(token)), (err, val) => {
+      ].join('/'), extend({}, authHeader(systemToken)), (err, val) => {
         expect(err).to.equal(undefined);
         expect(val.statusCode).to.equal(200);
 
