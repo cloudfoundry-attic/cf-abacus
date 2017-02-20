@@ -133,6 +133,7 @@ var runCLI = function() {
       'instrument matching modules with Istanbul [abacus]', 'abacus')
     .option('--no-color', 'do not colorify output')
     .option('-t, --timeout <number>', 'timeout [60000]', 60000)
+    .allowUnknownOption(true)
     .parse(process.argv);
 
   // Configure Mocha
