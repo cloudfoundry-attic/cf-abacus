@@ -359,10 +359,12 @@ describe('abacus-smoke-test', function() {
       request.post(collector + '/v1/metering/collected/usage',
         extend({ body: u.usage }, authHeader(objectStorageToken)),
           (err, val) => {
-            expect(err).to.equal(undefined);
+            expect(err).to.equal(undefined, util.format('Error: %o', err));
 
             // Expect a 201 with the location of the accumulated usage
-            expect(val.statusCode).to.equal(201);
+            expect(val.statusCode).to.equal(201,
+              util.format('Response code: %d body: %j',
+                val.statusCode, val.body));
             expect(val.headers.location).to.not.equal(undefined);
             cb();
           });
@@ -465,8 +467,9 @@ describe('abacus-smoke-test', function() {
         'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
         'aggregated/usage'
       ].join('/'), extend({}, authHeader(systemToken)), (err, val) => {
-        expect(err).to.equal(undefined);
-        expect(val.statusCode).to.equal(200);
+        expect(err).to.equal(undefined, util.format('Error: %o', err));
+        expect(val.statusCode).to.equal(200,
+          util.format('Response code: %d body: %j', val.statusCode, val.body));
 
         const actual = clone(omit(val.body,
           'id', 'processed', 'processed_id', 'start', 'end'), prune);
