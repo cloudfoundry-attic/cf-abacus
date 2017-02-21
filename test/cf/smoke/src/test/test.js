@@ -7,6 +7,7 @@ const _ = require('underscore');
 const map = _.map;
 const omit = _.omit;
 const extend = _.extend;
+const times = _.times;
 
 const request = require('abacus-request');
 const util = require('util');
@@ -88,8 +89,8 @@ const buildWindow = (ch, s, q, c) => {
 // Compares the previous and expected window values based upon the
 // charge summary, quantity, cost, and window delta
 const deltaCompare = (currentWindow, previousWindow, ch, s, q, c) => {
-  expect(currentWindow).to.not.equal(undefined);
-  expect(previousWindow).to.not.equal(undefined);
+  expect(currentWindow).to.not.equal(undefined, 'Missing current window');
+  expect(previousWindow).to.not.equal(undefined, 'Missing previous window');
 
   const checkIfNear = (key, increment, current, previous) => {
     if(typeof increment !== 'undefined' &&
@@ -156,81 +157,35 @@ describe('abacus-smoke-test', function() {
       moment.utc(processingDeadline).toDate());
 
     // Test usage to be submitted by the client
-    const start = now.getTime();
-    const end = now.getTime();
-    const usage = [
-      {
-        message:
-          'Submitting 10 GB, 1000 light API calls, 100 heavy API calls',
-        usage: {
-          start: start,
-          end: end,
-          organization_id: 'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-          space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-          consumer_id: 'app:bbeae239-f3f8-483c-9dd0-de6781c38bab',
-          resource_id: 'object-storage',
-          plan_id: 'basic',
-          resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
-          measured_usage: [{
-            measure: 'storage',
-            quantity: 1073741824
-          }, {
-            measure: 'light_api_calls',
-            quantity: 1000
-          }, {
-            measure: 'heavy_api_calls',
-            quantity: 100
-          }]
-        }
-      },
-      {
-        message:
-          'Submitting 10 GB, 1000 light API calls, 100 heavy API calls',
-        usage: {
-          start: start + 1,
-          end: end + 1,
-          organization_id: 'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-          space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-          consumer_id: 'app:bbeae239-f3f8-483c-9dd0-de6781c38bab',
-          resource_id: 'object-storage',
-          plan_id: 'basic',
-          resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
-          measured_usage: [{
-            measure: 'storage',
-            quantity: 1073741824
-          }, {
-            measure: 'light_api_calls',
-            quantity: 1000
-          }, {
-            measure: 'heavy_api_calls',
-            quantity: 100
-          }]
-        }
-      },
-      {
-        message:
-          'Submitting 10 GB, 1000 light API calls, 100 heavy API calls',
-        usage: {
-          start: start + 2,
-          end: end + 2,
-          organization_id: 'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-          space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-          consumer_id: 'app:bbeae239-f3f8-483c-9dd0-de6781c38bab',
-          resource_id: 'object-storage',
-          plan_id: 'basic',
-          resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
-          measured_usage: [{
-            measure: 'storage',
-            quantity: 1073741824
-          }, {
-            measure: 'light_api_calls',
-            quantity: 1000
-          }, {
-            measure: 'heavy_api_calls',
-            quantity: 100
-          }]
-        }
-      }];
+    const buildUsage = (time) => ({
+      message:
+        'Submitting 10 GB, 1000 light API calls, 100 heavy API calls',
+      usage: {
+        start: time,
+        end: time,
+        organization_id: 'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+        space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
+        consumer_id: 'app:bbeae239-f3f8-483c-9dd0-de6781c38bab',
+        resource_id: 'object-storage',
+        plan_id: 'basic',
+        resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
+        measured_usage: [{
+          measure: 'storage',
+          quantity: 1073741824
+        }, {
+          measure: 'light_api_calls',
+          quantity: 1000
+        }, {
+          measure: 'heavy_api_calls',
+          quantity: 100
+        }]
+      }
+    });
+
+    const usage = [];
+    _(3).times((n) => {
+      usage.push(buildUsage(now.getTime() + n));
+    });
 
     // Initial expected usage report for the test organization
     const initialExpectedReport = {
@@ -350,7 +305,7 @@ describe('abacus-smoke-test', function() {
     // and 100 heavy API calls
     let posts = 0;
     const post = (u, done) => {
-      console.log(u.message);
+      console.log('%s: %s', u.usage.start, u.message);
 
       const cb = () => {
         if(++posts === usage.length) done();
