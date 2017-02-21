@@ -82,8 +82,8 @@ const objectStorageToken = secured() ? oauth.cache(authServer,
   'abacus.usage.object-storage.write abacus.usage.object-storage.read') :
   undefined;
 const systemToken = secured() ? oauth.cache(authServer,
-    process.env.CLIENT_ID, process.env.CLIENT_SECRET,
-    'abacus.usage.read') :
+  process.env.CLIENT_ID, process.env.CLIENT_SECRET,
+  'abacus.usage.read') :
   undefined;
 
 const authHeader = (token) => token ? {
