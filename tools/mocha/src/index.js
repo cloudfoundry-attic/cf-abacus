@@ -79,11 +79,20 @@ var runCLI = function() {
   var sources = {};
   async.forEachSeries(files, function(file, callback) {
     // Collect child process arguments
-    var args = [
-      '--file', path.join(testDir, file),
-      '--istanbul-includes', commander.istanbulIncludes,
-      '--timeout', commander.timeout
-    ];
+    var args;
+    if(contains(process.argv, '--command')) {
+      args = [
+        '--file', path.join(testDir, file)
+      ];
+      var index = process.argv.indexOf('--command');
+      args = args.concat(process.argv.slice(index + 1));
+    }
+    else
+      args = [
+        '--file', path.join(testDir, file),
+        '--istanbul-includes', commander.istanbulIncludes,
+        '--timeout', commander.timeout
+      ];
     if(!commander.istanbul)
       args.push('--no-istanbul');
     if(!colorify(commander))
