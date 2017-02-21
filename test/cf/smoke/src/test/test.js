@@ -7,7 +7,6 @@ const _ = require('underscore');
 const map = _.map;
 const omit = _.omit;
 const extend = _.extend;
-const times = _.times;
 
 const request = require('abacus-request');
 const util = require('util');
