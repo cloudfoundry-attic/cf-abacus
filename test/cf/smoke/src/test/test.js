@@ -317,8 +317,8 @@ describe('abacus-smoke-test', function() {
 
             // Expect a 201 with the location of the accumulated usage
             expect(val.statusCode).to.equal(201,
-              util.format('Response code: %d body: %j',
-                val.statusCode, val.body));
+              util.format('Response code: %d; headers: %j; body: %j',
+                val.statusCode, val.headers, val.body));
             expect(val.headers.location).to.not.equal(undefined);
             cb();
           });
@@ -423,7 +423,8 @@ describe('abacus-smoke-test', function() {
       ].join('/'), extend({}, authHeader(systemToken)), (err, val) => {
         expect(err).to.equal(undefined, util.format('Error: %o', err));
         expect(val.statusCode).to.equal(200,
-          util.format('Response code: %d body: %j', val.statusCode, val.body));
+          util.format('Response code: %d; headers: %j; body: %j',
+            val.statusCode, val.headers, val.body));
 
         const actual = clone(omit(val.body,
           'id', 'processed', 'processed_id', 'start', 'end'), prune);
