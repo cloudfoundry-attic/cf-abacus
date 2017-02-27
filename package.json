@@ -119,6 +119,7 @@
     "abacus-pricing-config": "file:lib/config/pricing",
     "abacus-provisioning-plugin": "file:lib/plugins/provisioning",
     "abacus-plan-mappings": "file:lib/config/mappings",
+    "abacus-report": "file:lib/utils/report",
     "abacus-rating-config": "file:lib/config/rating",
     "abacus-rc": "file:lib/utils/rc",
     "abacus-request": "file:lib/utils/request",
