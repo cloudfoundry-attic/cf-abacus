@@ -25,12 +25,12 @@ cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
 export ORG_GUID=$(cf org $CF_ORG --guid)
 
 echo "Runnining custom configuration ..."
-abacus_config_dir="landscape/abacus-config/test"
-abacus_dir="abacus"
-./landscape/cf-abacus/etc/concourse/scripts/configure $abacus_config_dir
-cp -R $abacus_config_dir/* $abacus_dir
+config_dir=$CONFIG_DIR
+project_dir=$PROJECT_DIR
+./$project_dir/etc/concourse/scripts/configure $config_dir
+cp -R $config_dir/* $project_dir
 
-pushd $abacus_dir
+pushd $project_dir
   echo "Building Abacus ..."
   npm run provision
 

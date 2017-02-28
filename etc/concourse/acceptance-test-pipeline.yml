@@ -5,7 +5,7 @@ resources:
     source:
       uri: {{landscape-git-repo}}
       branch: {{landscape-git-repo-branch}}
-      paths: [cf-abacus,abacus-config]
+      paths: [{{paths}}]
       private_key: {{landscape-git-repo-private-key}}
       skip-ssl-verification: true
 
@@ -103,5 +103,7 @@ jobs:
             CI_START_TIMEOUT: 50000
             CI_PIPELINE_TIMEOUT: 1000000
             RESTART_RETRIES: {{restart-retries}}
+            ABACUS_PROJECT_DIR: {{abacus-project-dir}}
+            ABACUS_CONFIG_DIR: {{abacus-config-dir}}
           run:
             path: landscape/cf-abacus/etc/concourse/scripts/cf-acceptance-test

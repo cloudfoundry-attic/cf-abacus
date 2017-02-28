@@ -111,3 +111,9 @@ landscape-git-repo-private-key: |
   -----BEGIN RSA PRIVATE KEY-----
      ... insert key here ...
   -----END RSA PRIVATE KEY-----
+
+paths: cf-abacus,abacus-config
+
+abacus-project-dir: landscape/cf-abacus
+
+abacus-config-dir: landscape/abacus-config/acceptance

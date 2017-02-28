@@ -84,3 +84,9 @@ auth-server: https://api.cf.mycompany.com:443
 
 # How many times the script will try to restart all the failing applications. If no value is provided, the default one is 5.
 restart-retries: 3
+
+paths: cf-abacus,abacus-config
+
+project-dir: "abacus"
+
+config-dir: "landscape/abacus-config/test"
