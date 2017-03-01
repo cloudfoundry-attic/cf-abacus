@@ -8,8 +8,7 @@ fi
 
 echo "Abacus path given: $1"
 
-abacus_config_path=$(dirname $0)/../../../../../$1
-abacus_config_dir=$(cd "$abacus_config_path"; pwd)
+abacus_config_dir=$(cd "$1"; pwd)
 
 echo "Running manifest substitution in $abacus_config_dir"
 pushd $(dirname $0)/../../../tools/replace-template

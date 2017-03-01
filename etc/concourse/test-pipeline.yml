@@ -5,7 +5,7 @@ resources:
     source:
       uri: {{landscape-git-repo}}
       branch: {{landscape-git-repo-branch}}
-      paths: [cf-abacus,abacus-config]
+      paths: [{{paths}}]
       private_key: {{landscape-git-repo-private-key}}
       skip-ssl-verification: true
   - name: abacus
@@ -333,5 +333,7 @@ jobs:
             ABACUS_PREFIX: {{abacus-prefix}}
             SKIP_SSL_VALIDATION: {{skip-ssl-validation}}
             RESTART_RETRIES: {{restart-retries}}
+            PROJECT_DIR: {{project-dir}}
+            CONFIG_DIR: {{config-dir}}
           run:
             path: abacus/etc/concourse/scripts/cf-test-test

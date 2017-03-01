@@ -25,9 +25,9 @@ cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
 export ORG_GUID=$(cf org $CF_ORG --guid)
 
 echo "Runnining custom configuration ..."
-abacus_config_dir="landscape/abacus-config/acceptance"
-abacus_dir="landscape/cf-abacus"
-./$abacus_dir/etc/concourse/scripts/configure $abacus_config_dir
+abacus_config_dir=$ABACUS_CONFIG_DIR
+abacus_dir=$ABACUS_PROJECT_DIR
+$abacus_dir/etc/concourse/scripts/configure $abacus_config_dir
 cp -R $abacus_config_dir/* $abacus_dir
 
 pushd $abacus_dir
