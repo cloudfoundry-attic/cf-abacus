@@ -85,8 +85,11 @@ auth-server: https://api.cf.mycompany.com:443
 # How many times the script will try to restart all the failing applications. If no value is provided, the default one is 5.
 restart-retries: 3
 
+# Pipeline will trigger on changes to the specified paths
 paths: cf-abacus,abacus-config
 
+# Location of the project. Defaults to the name of the resource ("abacus")
 project-dir: "abacus"
 
+# Location of the test pipeline configuration
 config-dir: "landscape/abacus-config/test"
