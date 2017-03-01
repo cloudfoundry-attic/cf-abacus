@@ -112,8 +112,11 @@ landscape-git-repo-private-key: |
      ... insert key here ...
   -----END RSA PRIVATE KEY-----
 
+# Pipeline will trigger on changes to the specified paths
 paths: cf-abacus,abacus-config
 
+# Location of the already deployed Abacus. Defaults to the landscape dir and "cf-abacus"
 abacus-project-dir: landscape/cf-abacus
 
+# Location of the acceptance pipeline configuration
 abacus-config-dir: landscape/abacus-config/acceptance
