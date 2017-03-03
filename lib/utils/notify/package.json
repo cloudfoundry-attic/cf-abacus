@@ -18,7 +18,6 @@
   ],
   "files": [
     ".npmrc",
-    "lib/",
     "src/"
   ],
   "main": "src/index.js",
@@ -52,6 +51,6 @@
   },
   "engines": {
     "node": ">=0.10.0",
-    "npm": ">=3.8.6"
+    "npm": ">=3.10.10"
   }
 }

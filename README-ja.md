@@ -53,7 +53,7 @@ Abacusは、npm 2.10.1以上、Node.js 0.10.36以上が必要です。
 ```sh
 cd cf-abacus
 
-# Bootstrap the build environment, run Babel on the Javascript sources,
+# Bootstrap the build environment
 # install the Node.js module dependencies and run the tests
 npm run build
 ```
@@ -308,3 +308,4 @@ License
 ---
 
   [Apache License 2.0](LICENSE)
+)

@@ -18,7 +18,6 @@
   ],
   "files": [
     ".npmrc",
-    "lib/",
     "src/"
   ],
   "main": "src/index.js",
@@ -45,7 +44,7 @@
     "abacus-publish": "file:../../tools/publish"
   },
   "engines": {
-    "node": ">=5.11.1",
-    "npm": ">=3.8.6"
+    "node": ">=6.10.0",
+    "npm": ">=3.10.10"
   }
 }
