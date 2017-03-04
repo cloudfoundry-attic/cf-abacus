@@ -49,11 +49,8 @@ var sources = function(root, cov) {
 
     // Return a covered object with a relative path to the original source
     // of the covered file
-    var rel = path.join(sdir,
-      file[0].substr(mdir.length + 1)).split(':').reverse()[0].split('/');
-    var l = rel.lastIndexOf('lib');
-    var src = (l === -1 ? rel :
-      rel.slice(0, l).concat(['src']).concat(rel.slice(l + 1))).join('/');
+    var src = path.join(sdir,
+      file[0].substr(mdir.length + 1)).split(':').reverse()[0];
     return [src, extend({}, file[1], {
       path: src
     })];

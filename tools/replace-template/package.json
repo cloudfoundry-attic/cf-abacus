@@ -19,12 +19,10 @@
   "files": [
     ".npmrc",
     "replace-template",
-    "lib/",
     "src/"
   ],
   "main": "src/index.js",
   "scripts": {
-    "babel": "babel",
     "test": "eslint && mocha",
     "lint": "eslint",
     "pub": "publish"
@@ -38,11 +36,10 @@
   "devDependencies": {
     "abacus-eslint": "file:../eslint",
     "abacus-mocha": "file:../mocha",
-    "abacus-publish": "file:../publish",
-    "abacus-babel": "file:../babel"
+    "abacus-publish": "file:../publish"
   },
   "engines": {
-    "node": ">=5.11.1",
-    "npm": ">=3.8.6"
+    "node": ">=6.10.0",
+    "npm": ">=3.10.10"
   }
 }

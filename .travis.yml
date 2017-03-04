@@ -8,13 +8,13 @@ env:
 
 matrix:
   include:
-    - node_js: "6.2.0"
+    - node_js: "6.10.0"
       env: DESCRIPTION="pouchdb"
-    - node_js: "6.2.0"
+    - node_js: "6.10.0"
       env: DESCRIPTION="couchdb" JOBS=1 DBCLIENT=abacus-couchclient DB=http://localhost:5984
       services:
         - couchdb
-    - node_js: "6.2.0"
+    - node_js: "6.10.0"
       env: DESCRIPTION="mongodb 2.6" JOBS=1 DBCLIENT=abacus-mongoclient DB=mongodb://localhost:27017
       addons:
         apt:
@@ -25,7 +25,7 @@ matrix:
             - mongodb-org-shell
       before_script:
         - sleep 15
-    - node_js: "6.2.0"
+    - node_js: "6.10.0"
       env: DESCRIPTION="mongodb 3.2" JOBS=1 DBCLIENT=abacus-mongoclient DB=mongodb://localhost:27017
       addons:
         apt:

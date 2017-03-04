@@ -27,7 +27,6 @@
     "eslint": "./eslint"
   },
   "scripts": {
-    "babel": "true",
     "lint": "eslint -f stylish -c .eslintrc src",
     "test": "eslint -f stylish -c .eslintrc src",
     "pub": "publish"
@@ -41,6 +40,6 @@
     "abacus-publish": "file:../publish"
   },
   "engines": {
-    "node": ">=5.11.1"
+    "node": ">=6.10.0"
   }
 }

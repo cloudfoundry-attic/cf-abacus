@@ -28,12 +28,12 @@ The Abacus FAQ can be found in [doc/faq.md](doc/faq.md).
 Building
 ---
 
-Abacus requires Node.js >= 5.11.1 and Npm >= 3.8.6.
+Abacus requires Node.js >= 6.10.0 and Npm >= 3.10.10.
 
 ```sh
 cd cf-abacus
 
-# Bootstrap the build environment, run Babel on the Javascript sources,
+# Bootstrap the build environment
 # install the Node.js module dependencies and run the tests
 npm run build
 ```
@@ -225,9 +225,6 @@ At this point your development cycle boils down to:
 
 ```sh
 cd cf-abacus/lib/metering/collector
-
-# Run Babel.js to translate EcmaScript6 Javascript to ES5
-npm run babel
 
 # Run ESLint on your code and run the module's unit tests
 npm test

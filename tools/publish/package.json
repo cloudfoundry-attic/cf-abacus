@@ -26,7 +26,6 @@
     "publish": "./publish"
   },
   "scripts": {
-    "babel": "true",
     "test": "eslint",
     "lint": "eslint",
     "pub": "npm install && ./publish"
@@ -40,7 +39,7 @@
     "abacus-mocha": "file:../mocha"
   },
   "engines": {
-    "node": ">=5.11.1",
-    "npm": ">=3.8.6"
+    "node": ">=6.10.0",
+    "npm": ">=3.10.10"
   }
 }

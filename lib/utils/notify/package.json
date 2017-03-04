@@ -18,18 +18,15 @@
   ],
   "files": [
     ".npmrc",
-    "lib/",
     "src/"
   ],
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "scripts": {
-    "babel": "babel",
     "test": "eslint && mocha",
     "lint": "eslint",
     "pub": "publish"
   },
   "dependencies": {
-    "babel-runtime": "^5.8.19",
     "abacus-batch": "file:../batch",
     "abacus-breaker": "file:../breaker",
     "abacus-dbclient": "file:../dbclient",
@@ -47,7 +44,6 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "abacus-babel": "file:../../../tools/babel",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish",
@@ -55,6 +51,6 @@
   },
   "engines": {
     "node": ">=0.10.0",
-    "npm": ">=3.8.6"
+    "npm": ">=3.10.10"
   }
 }

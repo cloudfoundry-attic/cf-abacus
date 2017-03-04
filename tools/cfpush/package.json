@@ -26,7 +26,6 @@
     "cfpush": "./cfpush"
   },
   "scripts": {
-    "babel": "true",
     "test": "eslint",
     "lint": "eslint",
     "pub": "publish"
@@ -42,7 +41,7 @@
     "abacus-publish": "file:../publish"
   },
   "engines": {
-    "node": ">=5.11.1",
-    "npm": ">=3.8.6"
+    "node": ">=6.10.0",
+    "npm": ">=3.10.10"
   }
 }
