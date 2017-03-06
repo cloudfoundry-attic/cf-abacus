@@ -2,31 +2,28 @@
 
 // Package an app and its local npm dependencies for deployment to Cloud Foundry
 
-// Implemented in ES5 for now
-/* eslint no-var: 0 */
+const _ = require('underscore');
+const map = _.map;
+const pairs = _.pairs;
+const object = _.object;
+const extend = _.extend;
+const partial = _.partial;
+const noop = _.noop;
 
-var _ = require('underscore');
-var fs = require('fs');
-var path = require('path');
-var cp = require('child_process');
-var commander = require('commander');
-
-var map = _.map;
-var pairs = _.pairs;
-var object = _.object;
-var extend = _.extend;
-var partial = _.partial;
-var noop = _.noop;
+const fs = require('fs');
+const path = require('path');
+const cp = require('child_process');
+const commander = require('commander');
 
 /* eslint no-process-exit: 1 */
 
 // Create the directories we need
-var mkdirs = function(root, cb) {
+const mkdirs = (root, cb) => {
   // Create .cfpack directory
-  fs.mkdir('.cfpack', function(err) {
-    if(err) noop();
-    fs.unlink('.cfpack/lib', function(err) {
-      if(err) noop();
+  fs.mkdir('.cfpack', (err) => {
+    if (err) noop();
+    fs.unlink('.cfpack/lib', (err) => {
+      if (err) noop();
       fs.symlink(path.join(root, 'lib'), '.cfpack/lib', cb);
     });
   });
@@ -34,17 +31,15 @@ var mkdirs = function(root, cb) {
 
 // Adjust a file: dependency to our packed app structure, by converting
 // relative path from the module to a relative path to our package root
-var local = function(root, d) {
-  return !/file:/.test(d[1]) ? d : [d[0], path.join(
-    'file:.cfpack', path.relative(root, path.resolve(d[1].substr(5))))];
-};
+const local = (root, d) => !/file:/.test(d[1]) ? d : [d[0], path.join(
+  'file:.cfpack', path.relative(root, path.resolve(d[1].substr(5))))];
 
 // Adjust local dependencies to our packed app structure and write new
 // package.json
-var repackage = function(root, cb) {
-  var mod = require(path.join(process.cwd(), 'package.json'));
-  var loc = partial(local, root);
-  var rmod = extend({}, mod, {
+const repackage = (root, cb) => {
+  const mod = require(path.join(process.cwd(), 'package.json'));
+  const loc = partial(local, root);
+  const rmod = extend({}, mod, {
     dependencies: object(map(pairs(mod.dependencies), loc))
   }, {
     devDependencies: object(map(pairs(mod.devDependencies), loc))
@@ -54,37 +49,36 @@ var repackage = function(root, cb) {
 };
 
 // Produce the packaged app zip
-var zip = function(ignore, cb) {
-  fs.unlink(path.resolve('.cfpack', 'app.zip'), function(err) {
-    if(err) noop();
+const zip = (ignore, cb) => {
+  fs.unlink(path.resolve('.cfpack', 'app.zip'), (err) => {
+    if (err) noop();
 
     // We're using the system zip command here, may be better to use a
     // Javascript zip library instead
-    var files = '-type f -not -regex "\\./\\.cfpack/package\\.json" ' +
+    const files = '-type f -not -regex "\\./\\.cfpack/package\\.json" ' +
       '-not -regex ".*/\\.git"  -not -regex ".*test\\.js"';
-    var ex = cp.exec('(find . .cfpack/lib/* ' + files + ' | zip -q -x@' +
+    const ex = cp.exec('(find . .cfpack/lib/* ' + files + ' | zip -q -x@' +
       ignore + ' -@ .cfpack/app.zip) && ' +
-      '(zip -q -j .cfpack/app.zip .cfpack/package.json)', {
-        cwd: process.cwd()
-      });
-    ex.stdout.on('data', function(data) {
+      '(zip -q -j .cfpack/app.zip .cfpack/package.json)',
+      { cwd: process.cwd() });
+    ex.stdout.on('data', (data) => {
       process.stdout.write(data);
     });
-    ex.stderr.on('data', function(data) {
+    ex.stderr.on('data', (data) => {
       process.stderr.write(data);
     });
-    ex.on('close', function(code) {
+    ex.on('close', (code) => {
       cb(code);
     });
   });
 };
 
 // Return the Abacus root directory
-var rootDir = function(dir) {
-  if(dir === '/') return dir;
+const rootDir = (dir) => {
+  if (dir === '/') return dir;
   try {
-    if(JSON.parse(fs.readFileSync(
-      path.resolve(dir, 'package.json')).toString()).name === 'cf-abacus')
+    if (JSON.parse(fs.readFileSync(
+        path.resolve(dir, 'package.json')).toString()).name === 'cf-abacus')
       return dir;
     return rootDir(path.resolve(dir, '..'));
   }
@@ -94,33 +88,33 @@ var rootDir = function(dir) {
 };
 
 // Package an app for deployment to Cloud Foundry
-var runCLI = function() {
+const runCLI = () => {
   // Parse command line options
   commander
-    // Accept root directory of local dependencies as a parameter, default
-    // to the Abacus root directory
+  // Accept root directory of local dependencies as a parameter, default
+  // to the Abacus root directory
     .option(
       '-r, --root <dir>', 'root local dependencies directory',
       rootDir(process.cwd()))
     .parse(process.argv);
 
   // Create the directories we need
-  mkdirs(commander.root, function(err) {
-    if(err) {
+  mkdirs(commander.root, (err) => {
+    if (err) {
       console.log('Couldn\'t setup cfpack layout -', err);
       process.exit(1);
     }
 
     // Generate the repackaged package.json
-    repackage(commander.root, function(err) {
-      if(err) {
+    repackage(commander.root, (err) => {
+      if (err) {
         console.log('Couldn\'t write package.json -', err);
         process.exit(1);
       }
 
       // Produce the packaged app zip
-      zip(path.join(commander.root, '.gitignore'), function(err) {
-        if(err) {
+      zip(path.join(commander.root, '.gitignore'), (err) => {
+        if (err) {
           console.log('Couldn\'t produce .cfpack/app.zip -', err);
           process.exit(1);
         }
