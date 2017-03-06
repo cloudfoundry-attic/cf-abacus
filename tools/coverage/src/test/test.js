@@ -2,21 +2,18 @@
 
 // Report overall code coverage from Istanbul coverage files.
 
-// Implemented in ES5 for now
-/* eslint no-var: 0 */
+const _ = require('underscore');
+const istanbul = require('istanbul');
+const fs = require('fs');
 
-var _ = require('underscore');
-var istanbul = require('istanbul');
-var fs = require('fs');
+const bind = _.bind;
 
-var bind = _.bind;
-
-var coverage = require('..');
+const coverage = require('..');
 
 /* eslint handle-callback-err: 0 */
 
 describe('abacus-coverage', function() {
-  var exit;
+  let exit;
   beforeEach(function() {
     exit = process.exit;
   });
@@ -24,13 +21,13 @@ describe('abacus-coverage', function() {
     process.exit = exit;
   });
 
-  xit('reports overall code coverage', function(done) {
+  it('reports overall code coverage', function(done) {
 
     // Spy on the Istanbul coverage reporter
-    var reporters = [];
-    var Reporter = istanbul.Reporter;
+    const reporters = [];
+    const Reporter = istanbul.Reporter;
     istanbul.Reporter = function(cfg, dir) {
-      var reporter = new Reporter(cfg, dir);
+      const reporter = new Reporter(cfg, dir);
       this.addAll = spy(bind(reporter.addAll, reporter));
       this.write = spy(bind(reporter.write, reporter));
       reporters.push(this);
@@ -46,11 +43,11 @@ describe('abacus-coverage', function() {
       expect(reporters[0].addAll.args[0][0][1]).to.match(/^json$/);
 
       // Expect reporter.write to be called with a collector
-      var collector = reporters[0].write.args[0][0];
+      const collector = reporters[0].write.args[0][0];
       expect(collector).to.not.equal(undefined);
 
       // Expect the collector to contain our main index file
-      var files = collector.files();
+      const files = collector.files();
       expect(files[0]).to.equal('tools/coverage/src/index.js');
 
       done();

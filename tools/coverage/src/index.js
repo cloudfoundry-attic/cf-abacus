@@ -2,81 +2,76 @@
 
 // Report overall code coverage from Istanbul coverage files.
 
-// Implemented in ES5 for now
-/* eslint no-var: 0 */
+const _ = require('underscore');
+const path = require('path');
+const fs = require('fs');
+const util = require('util');
+const tty = require('tty');
+const istanbul = require('istanbul');
+const commander = require('commander');
 
-var _ = require('underscore');
-var path = require('path');
-var fs = require('fs');
-var util = require('util');
-var tty = require('tty');
-var istanbul = require('istanbul');
-var commander = require('commander');
-
-var map = _.map;
-var filter = _.filter;
-var pairs = _.pairs;
-var object = _.object;
-var extend = _.extend;
-var values = _.values;
-var flatten = _.flatten;
-var reduce = _.reduce;
-var identity = _.identity;
-var memoize = _.memoize;
+const map = _.map;
+const filter = _.filter;
+const pairs = _.pairs;
+const object = _.object;
+const extend = _.extend;
+const values = _.values;
+const flatten = _.flatten;
+const reduce = _.reduce;
+const identity = _.identity;
+const memoize = _.memoize;
 
 /* eslint no-process-exit: 1 */
 
 // Return the path of the Abacus module dir containing a file
-var moddir = function(file) {
-  if(file === '.' || file === '/') return undefined;
-  if(/abacus.*/.test(path.basename(file))) return file;
-  return moddir(path.dirname(file));
+const moduleDir = (file) => {
+  if (file === '.' || file === '/') return __dirname;
+  if (/abacus.*/.test(path.basename(file))) return file;
+  return moduleDir(path.dirname(file));
 };
 
 // Convert the covered file paths in the given coverage info to relative paths
 // to the original source files
-var sources = function(root, cov) {
-  return object(filter(map(pairs(cov), function(file) {
+const sources = (root, cov) => {
+  return object(filter(map(pairs(cov), (file) => {
     // Determine the build path and the name of the module containing each
     // covered file
-    var mdir = moddir(file[0]);
-    var mod = path.basename(mdir);
+    const mdir = moduleDir(file[0]);
+    const mod = path.basename(mdir);
 
     // Determine the path to the module source directory
-    var sdir = root.dependencies[mod] || root.devDependencies[mod];
-    if(!sdir)
+    const sdir = root.dependencies[mod] || root.devDependencies[mod];
+    if (!sdir)
       return [file[0], file[1]];
 
     // Return a covered object with a relative path to the original source
     // of the covered file
-    var src = path.join(sdir,
+    const src = path.join(sdir,
       file[0].substr(mdir.length + 1)).split(':').reverse()[0];
-    return [src, extend({}, file[1], {
-      path: src
-    })];
+    return [src, extend({}, file[1], { path: src })];
 
-  }), function(file) {
+  }), (file) => {
     return file[1];
   }));
 };
 
 // Return a list of all the individual json coverage files for our modules
-var covfiles = function(cb) {
-  fs.readdir('node_modules', function(err, files) {
-    cb(undefined,
-      filter([path.join('.coverage', 'coverage.json')]
-        .concat(err ? [] : map(files, function(file) {
-          return path.join('node_modules', file, '.coverage', 'coverage.json');
-        })), fs.existsSync));
+const covfiles = (cb) => {
+  fs.readdir('node_modules', (err, files) => {
+    cb(undefined, filter([path.join('.coverage', 'coverage.json')].
+      concat(err ? [] : map(files, (file) => {
+        return path.join('node_modules', file, '.coverage', 'coverage.json');
+      })), fs.existsSync)
+    );
   });
 };
 
 // Return a coverage collector loaded with all the given files
-var collect = function(root, cb) {
-  covfiles(function(err, files) {
-    if(err) cb(err);
-    var collector = new istanbul.Collector();
-    map(files, function(file) {
+const collect = (root, cb) => {
+  covfiles((err, files) => {
+    if (err) cb(err);
+    const collector = new istanbul.Collector();
+    map(files, (file) => {
       collector.add(sources(root, JSON.parse(fs.readFileSync(file))));
     });
     cb(undefined, collector);
@@ -84,12 +79,12 @@ var collect = function(root, cb) {
 };
 
 // Compute overall line and statement coverage percentages
-var percentages = function(coverage) {
+const percentages = (coverage) => {
   // Count overall covered and totals of lines, statements and branches
-  var t = reduce(values(coverage), function(a, cov) {
-    var l = values(cov.l);
-    var s = values(cov.s);
-    var b = flatten(values(cov.b));
+  const t = reduce(values(coverage), (a, cov) => {
+    const l = values(cov.l);
+    const s = values(cov.s);
+    const b = flatten(values(cov.b));
     return {
       l: {
         covered: a.l.covered + filter(l, identity).length,
@@ -123,52 +118,52 @@ var percentages = function(coverage) {
   return {
     l: t.l.covered / (t.l.total || 1) * 100,
     s: (t.s.covered + /* t.b.covered */ 0) /
-      (t.s.total + /* t.b.total */ 0 || 1) * 100
+    (t.s.total + /* t.b.total */ 0 || 1) * 100
   };
 };
 
 // Colorify the report on a tty or when requested on the command line
-var colorify = memoize(function(opt) {
+const colorify = memoize((opt) => {
   return tty.isatty(process.stdout) || opt.color;
 });
 
 // Report a failure and exit
-var fail = function(msg) {
+const fail = (msg) => {
   process.stderr.write(msg);
   process.exit(1);
 };
 
 // Report overall code coverage from Istanbul coverage files
-var runCLI = function() {
+const runCLI = () => {
   // Parse command line options
   commander
     .option(
-        '--no-color', 'do not colorify output')
+      '--no-color', 'do not colorify output')
     .parse(process.argv);
 
   // Load the root package.json from the current directory
-  var root = JSON.parse(fs.readFileSync('package.json'));
+  const root = JSON.parse(fs.readFileSync('package.json'));
 
   // Collect all the individual json coverage reports for our modules
-  collect(root, function(err, collector) {
-    if(err) fail(util.format('Couldn\'t collect coverage files', err));
+  collect(root, (err, collector) => {
+    if (err) fail(util.format('Couldn\'t collect coverage files', err));
 
     // Combine all the individual reports and write overall coverage
     // reports in LCOV and JSON formats
-    var reporter = new istanbul.Reporter(undefined, '.coverage');
+    const reporter = new istanbul.Reporter(undefined, '.coverage');
     reporter.addAll(['lcovonly', 'json']);
-    reporter.write(collector, false, function(err) {
-      if(err) fail(util.format('Couldn\'t write coverage reports', err, '\n'));
+    reporter.write(collector, false, (err) => {
+      if (err) fail(util.format('Couldn\'t write coverage reports', err, '\n'));
 
       // Compute and report overall line and statement coverage
-      var percent = percentages(collector.getFinalCoverage());
-      var fullcov = percent.l === 100 && percent.s === 100;
+      const percent = percentages(collector.getFinalCoverage());
+      const fullcov = percent.l === 100 && percent.s === 100;
 
       // Print overall code coverage percentages in green for 100%
       // coverage and red under 100%
-      var color = colorify(commander) ? fullcov ?
-        '\u001b[32m' : '\u001b[31m' : '';
-      var reset = colorify(commander) ? '\u001b[0m' : '';
+      const color = colorify(commander) ? fullcov ?
+          '\u001b[32m' : '\u001b[31m' : '';
+      const reset = colorify(commander) ? '\u001b[0m' : '';
       process.stdout.write(util.format(
         '\n%sOverall coverage lines %d\% statements %d\%%s\n\n',
         color, percent.l.toFixed(2), percent.s.toFixed(2), reset));
