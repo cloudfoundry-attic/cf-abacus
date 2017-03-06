@@ -9,27 +9,27 @@
 
 if(process.env.LONGJOHN)
   require('longjohn');
-var _ = require('underscore');
-var path = require('path');
-var util = require('util');
-var textcov = require('./textcov.js');
-var istanbul = require('istanbul');
-var fs = require('fs');
-var tty = require('tty');
-var commander = require('commander');
-var childProcess = require('child_process');
-var async = require('async');
+const _ = require('underscore');
+const path = require('path');
+const util = require('util');
+const textcov = require('./textcov.js');
+const istanbul = require('istanbul');
+const fs = require('fs');
+const tty = require('tty');
+const commander = require('commander');
+const childProcess = require('child_process');
+const async = require('async');
 
-var contains = _.contains;
-var memoize = _.memoize;
-var extend = _.extend;
+const contains = _.contains;
+const memoize = _.memoize;
+const extend = _.extend;
 
 /* eslint no-process-exit: 0 */
 /* eslint no-eval: 1 */
 /* jshint evil: true */
 
 // Return the directory containing the test target sources
-var target = function() {
+const target = () => {
   try {
     fs.lstatSync('lib');
     return 'lib';
@@ -40,16 +40,14 @@ var target = function() {
 };
 
 // Colorify the report on a tty or when requested on the command line
-var colorify = memoize(function(opt) {
-  return tty.isatty(process.stdout) || opt.color;
-});
+const colorify = memoize((opt) => tty.isatty(process.stdout) || opt.color);
 
 // Run Mocha with Istanbul
-var runCLI = function() {
+const runCLI = () => {
   process.stdout.write('Testing...\n');
 
   // Parse command line options
-  if(contains(process.argv, '--command')) {
+  if (contains(process.argv, '--command')) {
     commander.istanbul = false;
     commander.color = true;
   }
@@ -61,30 +59,29 @@ var runCLI = function() {
       .option('--no-color', 'do not colorify output')
       .option('-t, --timeout <number>', 'timeout [60000]', 60000)
       .parse(process.argv);
-    if(process.env.NO_ISTANBUL)
+    if (process.env.NO_ISTANBUL)
       commander.istanbul = false;
   }
 
   // Time the execution of the tests
-  var t0 = Date.now();
+  const t0 = Date.now();
 
   // Collect all test files
-  var testDir = path.join(target(), 'test');
-  var files = fs.readdirSync(testDir).filter(function(file) {
-    return file.substr(-7) === 'test.js';
-  });
+  const testDir = path.join(target(), 'test');
+  const files = fs.readdirSync(testDir).filter(
+    (file) => file.substr(-7) === 'test.js');
 
   // Execute all test files in child processes sequentially
-  var collector = new istanbul.Collector();
-  var sources = {};
-  async.forEachSeries(files, function(file, callback) {
+  const collector = new istanbul.Collector();
+  let sources = {};
+  async.forEachSeries(files, (file, callback) => {
     // Collect child process arguments
-    var args;
-    if(contains(process.argv, '--command')) {
+    let args;
+    if (contains(process.argv, '--command')) {
       args = [
         '--file', path.join(testDir, file)
       ];
-      var index = process.argv.indexOf('--command');
+      const index = process.argv.indexOf('--command');
       args = args.concat(process.argv.slice(index + 1));
     }
     else
@@ -93,22 +90,22 @@ var runCLI = function() {
         '--istanbul-includes', commander.istanbulIncludes,
         '--timeout', commander.timeout
       ];
-    if(!commander.istanbul)
+    if (!commander.istanbul)
       args.push('--no-istanbul');
-    if(!colorify(commander))
+    if (!colorify(commander))
       args.push('--no-color');
 
     // Spawn child process
-    var child = childProcess.fork(__dirname + '/mocha.js', args);
+    const child = childProcess.fork(__dirname + '/mocha.js', args);
 
     // Listen for message events from the child process
-    child.on('message', function(message) {
+    child.on('message', (message) => {
       collector.add(message.coverage);
       sources = extend(sources, message.sources);
     });
 
     // Listen for exit events from the child process
-    child.on('exit', function(code) {
+    child.on('exit', (code) => {
       if (code != 0)
         callback(new Error('Child process exited with code ' + code));
       else
@@ -116,34 +113,34 @@ var runCLI = function() {
     });
 
     // Listen for error events from the child process
-    child.on('error', function(err) {
+    child.on('error', (err) => {
       callback(err);
     });
-  }, function(err) {
+  }, (err) => {
     // Check for errors
-    if(err) {
+    if (err) {
       process.stderr.write(err.message + '\n');
       process.exit(1);
     }
 
     // Time the execution of the tests
-    var t1 = Date.now();
+    const t1 = Date.now();
 
     // Print the test execution time
-    var time = function() {
+    const time = () =>{
       process.stdout.write(util.format('\nRun time %dms\n', t1 - t0));
     };
 
-    if(!commander.istanbul) {
+    if (!commander.istanbul) {
       time();
       process.exit(0);
     }
 
     // Write the JSON and LCOV coverage reports
-    var coverage = collector.getFinalCoverage();
-    var reporter = new istanbul.Reporter(undefined, '.coverage');
+    const coverage = collector.getFinalCoverage();
+    const reporter = new istanbul.Reporter(undefined, '.coverage');
     reporter.addAll(['lcovonly']);
-    reporter.write(collector, false, function() {
+    reporter.write(collector, false, () => {
       fs.writeFileSync('.coverage/coverage.json', JSON.stringify(coverage));
 
       // Print a detailed source coverage text report and the test
