@@ -1,34 +1,31 @@
 'use strict';
 
-// Implemented in ES5 for now
-/* eslint no-var: 0 */
+const _ = require('underscore');
+const path = require('path');
+const smap = require('source-map');
+const csmap = require('convert-source-map');
+const istanbul = require('istanbul');
+const Mocha = require('mocha');
+const fs = require('fs');
+const commander = require('commander');
+const async = require('async');
 
-var _ = require('underscore');
-var path = require('path');
-var smap = require('source-map');
-var csmap = require('convert-source-map');
-var istanbul = require('istanbul');
-var Mocha = require('mocha');
-var fs = require('fs');
-var commander = require('commander');
-var async = require('async');
-
-var map = _.map;
-var values = _.values;
+const map = _.map;
+const values = _.values;
 
 /* eslint no-process-exit: 0 */
 /* eslint no-eval: 1 */
 /* jshint evil: true */
 
 // Return true if a file belongs to the current module
-var inThisModule = function(file) {
-  var rel = path.relative(process.cwd(), file);
+const inThisModule = (file) => {
+  const rel = path.relative(process.cwd(), file);
   return /^(src|lib)\/([^\/]*\/)?[^\/]*\.js$/.test(rel);
 };
 
 // Return true if a file is in a test directory
-var inTestDir = function(file) {
-  var rel = path.relative(process.cwd(), file);
+const inTestDir = (file) =>{
+  const rel = path.relative(process.cwd(), file);
   return /^(src|lib)\/test\//.test(rel);
 };
 
@@ -36,29 +33,26 @@ var inTestDir = function(file) {
 // instrumented with Istanbul. The matcher will match files in the current
 // module or any module name matching the given include pattern, excluding
 // files in test directories.
-var instrumentMatcher = function(include) {
-  var ix = new RegExp('\/' + include + '[^\/]*\/lib\/([^\/]*\/)?[^\/]*\.js$');
-  var inIncludedModule = function(file) {
-    return ix.test(file);
-  };
-  return function(file) {
-    return (inThisModule(file) || inIncludedModule(file)) && !inTestDir(file);
-  };
+const instrumentMatcher = (include) => {
+  const ix = new RegExp('\/' + include + '[^\/]*\/lib\/([^\/]*\/)?[^\/]*\.js$');
+  const inIncludedModule = (file) => ix.test(file);
+  return (file) => (inThisModule(file) || inIncludedModule(file)) &&
+    !inTestDir(file);
 };
 
 // Return a transform function that transforms a file and records the original
 // source and a source map in the given sets
-var transformer = function(sources, maps, transformers) {
+const transformer = (sources, maps, transformers) => {
   // Set up an instrument function that will instrument the relevant code
-  var instrumenter = new istanbul.Instrumenter({
+  const instrumenter = new istanbul.Instrumenter({
     coverageVariable: '__coverage',
     preserveComments: true
   });
 
   // Return the configured transform function
-  return function(code, file) {
+  return (code, file) => {
     // Skip files that contain /istanbul ignore file/
-    if(/istanbul ignore file/.test(code))
+    if (/istanbul ignore file/.test(code))
       return code;
 
     if (transformers[file])
@@ -68,12 +62,12 @@ var transformer = function(sources, maps, transformers) {
     sources[file] = fs.readFileSync(file).toString();
 
     // Record the corresponding source map
-    var sm = csmap.fromSource(code);
-    if(sm)
+    const sm = csmap.fromSource(code);
+    if (sm)
       maps[file] = new smap.SourceMapConsumer(sm.sourcemap);
 
     // Instrument with Istanbul
-    var transformer = instrumenter.instrumentSync(code, file);
+    const transformer = instrumenter.instrumentSync(code, file);
     transformers[file] = transformer;
     return transformer;
   };
@@ -81,29 +75,29 @@ var transformer = function(sources, maps, transformers) {
 
 // Remap Istanbul statement, function and branch coverage maps to the original
 // source code using the given set of source maps
-var remap = function(coverage, maps) {
-  map(values(coverage), function(cov) {
-    var m = maps[cov.path];
-    if(!m) return;
+const remap = (coverage, maps) =>{
+  map(values(coverage), (cov) => {
+    const m = maps[cov.path];
+    if (!m) return;
 
-    var reloc = function(l) {
-      var start = m.originalPositionFor(l.start);
-      if(start.line !== null)
+    const reloc = (l) => {
+      const start = m.originalPositionFor(l.start);
+      if (start.line !== null)
         l.start = start;
-      var end = m.originalPositionFor(l.end);
-      if(end.line !== null)
+      const end = m.originalPositionFor(l.end);
+      if (end.line !== null)
         l.end = end;
     };
 
-    map(values(cov.statementMap), function(s) {
+    map(values(cov.statementMap), (s) => {
       reloc(s);
     });
-    map(values(cov.fnMap), function(f) {
+    map(values(cov.fnMap), (f) => {
       reloc(f.loc);
       f.line = f.loc.start.line;
     });
-    map(values(cov.branchMap), function(b) {
-      map(b.locations, function(l) {
+    map(values(cov.branchMap), (b) => {
+      map(b.locations, (l) => {
         reloc(l);
       });
       b.line = b.locations[0].start.line;
@@ -113,7 +107,7 @@ var remap = function(coverage, maps) {
 };
 
 // Run Mocha with Istanbul
-var runCLI = function() {
+const runCLI = () => {
   // Parse command line options
   commander
     .option('-f, --file <regex>', 'test file [test.js]', 'test.js')
@@ -126,7 +120,7 @@ var runCLI = function() {
     .parse(process.argv);
 
   // Configure Mocha
-  var mocha = new Mocha({
+  const mocha = new Mocha({
     timeout: commander.timeout,
     useColors: commander.color
   });
@@ -140,21 +134,21 @@ var runCLI = function() {
 
   // Install an Istanbul require hook that will instrument files that
   // match our instrumentMatcher
-  var sources = {};
-  var maps = [];
-  var transformers = [];
-  if(commander.istanbul)
+  const sources = {};
+  const maps = [];
+  const transformers = [];
+  if (commander.istanbul)
     istanbul.hook.hookRequire(
       instrumentMatcher(commander.istanbulIncludes),
       transformer(sources, maps, transformers));
 
   // Save the original process send method as it may be mocked by the tests
-  var processSend = process.send.bind(process);
+  const processSend = process.send.bind(process);
 
   // Run the test with Mocha
   mocha.addFile(commander.file);
-  mocha.run(function(failures) {
-    if(!global.__coverage)
+  mocha.run((failures) => {
+    if (!global.__coverage)
       process.exit(failures);
 
     // Remap the generated source coverage maps using the collected source
@@ -163,15 +157,15 @@ var runCLI = function() {
 
     // Send the results to the parent process
     async.series([
-      function(callback) {
+      (callback) =>{
         processSend({
           coverage: global.__coverage,
           sources: sources
-        }, function(err) {
+        }, (err) => {
           callback(err);
         });
       }
-    ], function(err) {
+    ], (err) => {
       process.exit(failures);
     });
   });

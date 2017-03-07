@@ -2,24 +2,21 @@
 
 // Lint a module using ESLint
 
-// Implemented in ES5 for now
-/* eslint no-var: 0 */
-
-var path = require('path');
-var CLIEngine = require('eslint').CLIEngine;
-var commander = require('commander');
-var optionator = require('optionator');
+const path = require('path');
+const CLIEngine = require('eslint').CLIEngine;
+const commander = require('commander');
+const optionator = require('optionator');
 
 // We use process.exit() intentionally here
 /* eslint no-process-exit: 1 */
 
 // Run the ESLint CLI
-var runCLI = function() {
+const runCLI = () => {
   // Parse command line options
   commander
     .parse(process.argv);
 
-  var engine = new CLIEngine({
+  const engine = new CLIEngine({
     eslintrc: true,
     ext: '.js',
     parser: 'espree',
@@ -32,18 +29,18 @@ var runCLI = function() {
     fix: process.env.ESLINT_FIX !== undefined,
     configFile: path.resolve(__dirname, '../.eslintrc')
   });
-  var files = optionator({
+  const files = optionator({
     options: []
   }).parse('src');
-  var report = engine.executeOnFiles(files._);
+  const report = engine.executeOnFiles(files._);
 
   if (process.env.ESLINT_FIX)
     CLIEngine.outputFixes(report);
 
-  var formatter = engine.getFormatter('stylish');
-  var output = formatter(report.results);
+  const formatter = engine.getFormatter('stylish');
+  const output = formatter(report.results);
   console.log(output);
-  
+
   process.exit(report.errorCount ? 1 : 0);
 };
 

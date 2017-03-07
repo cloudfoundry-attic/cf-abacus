@@ -5,10 +5,10 @@
 // Implemented in ES5 for now
 /* eslint no-var: 0 */
 
-var sum = require('../tested/sum.js');
+const sum = require('../tested/sum.js');
 
-describe('another-abacus-mocha', function() {
-  it('runs tests', function(done) {
+describe('another-abacus-mocha', () => {
+  it('runs tests', (done) => {
     expect(sum.another()).to.equal('another');
     done();
   });

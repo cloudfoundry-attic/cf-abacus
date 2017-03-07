@@ -2,31 +2,28 @@
 
 // Deploy an app to Cloud Foundry
 
-// Implemented in ES5 for now
-/* eslint no-var: 0 */
+const _ = require('underscore');
+const fs = require('fs');
+const path = require('path');
+const cp = require('child_process');
+const commander = require('commander');
+const yaml = require('js-yaml');
 
-var _ = require('underscore');
-var fs = require('fs');
-var path = require('path');
-var cp = require('child_process');
-var commander = require('commander');
-var yaml = require('js-yaml');
-
-var noop = _.noop;
+const noop = _.noop;
 
 /* eslint no-process-exit: 1 */
 
 // Create the directories we need
-var mkdirs = function(cb) {
+const mkdirs = (cb) => {
   // Create .cfpush directory
-  fs.mkdir('.cfpush', function(err) {
-    if(err) noop();
+  fs.mkdir('.cfpush', (err) => {
+    if (err) noop();
     cb();
   });
 };
 
 // Adjust manifest.yml env variables
-var adjustManifest = function(app, name, instances, conf, buildpack) {
+const adjustManifest = (app, name, instances, conf, buildpack) => {
   if (app) {
     app.name = name;
     app.host = name;
@@ -43,16 +40,16 @@ var adjustManifest = function(app, name, instances, conf, buildpack) {
 };
 
 // Write new manifest.yml
-var remanifest = function(root, name, instances, conf, buildpack, prefix, cb) {
+const remanifest = (root, name, instances, conf, buildpack, prefix, cb) => {
   fs.readFile(
-    path.join(process.cwd(), 'manifest.yml'), function(err, content) {
-      if(err) {
+    path.join(process.cwd(), 'manifest.yml'), (err, content) => {
+      if (err) {
         cb(err);
         return;
       }
-      var yml = yaml.load(content);
-      var app = yml.applications[0];
-      var appName = prefix ? [prefix, name].join('') : name;
+      const yml = yaml.load(content);
+      const app = yml.applications[0];
+      const appName = prefix ? [prefix, name].join('') : name;
 
       adjustManifest(app, appName, instances, conf, buildpack);
 
@@ -63,30 +60,30 @@ var remanifest = function(root, name, instances, conf, buildpack, prefix, cb) {
 };
 
 // Push an app
-var push = function(name, start, cb) {
-  var command = 'cf push ' +
+const push = (name, start, cb) => {
+  const command = 'cf push ' +
     (start ? '' : '--no-start ') +
     '-f .cfpush/' + [name, 'manifest.yml'].join('-');
-  var ex = cp.exec(command, {
+  const ex = cp.exec(command, {
     cwd: process.cwd()
   });
-  ex.stdout.on('data', function(data) {
+  ex.stdout.on('data', (data) => {
     process.stdout.write(data);
   });
-  ex.stderr.on('data', function(data) {
+  ex.stderr.on('data', (data) => {
     process.stderr.write(data);
   });
-  ex.on('close', function(code) {
+  ex.on('close', (code) => {
     cb(code);
   });
 };
 
 // Package an app for deployment to Cloud Foundry
-var runCLI = function() {
+const runCLI = () => {
   // Parse command line options
   commander
-    // Accept root directory of local dependencies as a parameter, default
-    // to the Abacus root directory
+  // Accept root directory of local dependencies as a parameter, default
+  // to the Abacus root directory
     .option('-n, --name <name>', 'app name',
       require(path.join(process.cwd(), 'package.json')).name)
     .option('-i, --instances <nb>', 'nb of instances')
@@ -101,23 +98,23 @@ var runCLI = function() {
     .parse(process.argv);
 
   // Create the directories we need
-  mkdirs(function(err) {
-    if(err) {
+  mkdirs((err) => {
+    if (err) {
       console.log('Couldn\'t setup cfpack layout -', err);
       process.exit(1);
     }
 
     // Generate the updated manifest.yml
     remanifest(commander.root, commander.name, commander.instances,
-      commander.conf, commander.buildpack, commander.prefix, function(err) {
-        if(err) {
+      commander.conf, commander.buildpack, commander.prefix, (err) => {
+        if (err) {
           console.log('Couldn\'t write manifest.yml -', err);
           process.exit(1);
         }
 
         // Produce the packaged app zip
-        push(commander.name, commander.start, function(err) {
-          if(err) {
+        push(commander.name, commander.start, (err) => {
+          if (err) {
             console.log('Couldn\'t push app %s -', commander.name, err);
             process.exit(1);
           }
