@@ -33,8 +33,10 @@
     "abacus-perf": "file:../perf",
     "abacus-request": "file:../request",
     "abacus-transform": "file:../transform",
-    "memdown": "^1.2.4",
     "pouchdb": "^6.1.2",
+    "pouchdb-adapter-memory": "^6.1.2",
+    "pouchdb-all-dbs": "^1.0.2",
+    "pouchdb-erase": "^1.0.2",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
