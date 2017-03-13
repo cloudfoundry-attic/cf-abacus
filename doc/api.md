@@ -323,6 +323,122 @@ _HTTP response_: 200 to indicate success with the requested _metering configurat
 }
 ```
 
+### Method: post
+_HTTP request_:
+```
+POST /v1/metering/plans
+```
+
+_Description_: Creates metering plan based on the request body.
+
+_HTTP response_: 201 to indicate success with the creation of the plan, 409 to indicate the plan has a conflict, 500 to report a server error.
+
+### Body JSON representation:
+```json
+{
+  "plan_id": "basic-object-storage",
+  "measures": [
+    {
+      "name": "storage",
+      "unit": "BYTE"
+    },
+    {
+      "name": "api_calls",
+      "units": "CALL"
+    }
+  ],
+  "metrics": [
+    {
+      "name": "storage",
+      "unit": "GIGABYTE",
+      "meter": "(m) => m.storage / 1073741824",
+      "accumulate": "(a, qty) => Math.max(a, qty)"
+    },
+    {
+      "name": "thousand_api_calls",
+      "unit": "THOUSAND_CALLS",
+      "meter": "(m) => m.light_api_calls / 1000",
+      "accumulate": "(a, qty) => a ? a + qty : qty",
+      "aggregate": "(a, qty) => a ? a + qty : qty",
+      "summarize": "(t, qty) => qty"
+    }
+  ]
+}
+```
+
+### JSON schema:
+```json
+{
+  "type": "object",
+  "required": [
+    "plan_id",
+    "measures",
+    "metrics"
+  ],
+  "properties": {
+    "plan_id": {
+      "type": "string"
+    },
+    "measures": {
+      "type": "array",
+      "minItems": "1",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "unit"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "additionalItems": false
+    },
+    "metrics": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "unit"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "meter": {
+            "type": "string"
+          },
+          "accumulate": {
+            "type": "string"
+          },
+          "aggregate": {
+            "type": "string"
+          },
+          "summarize": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "additionalItems": false
+    },
+  "additionalProperties": false,
+  "title": "Metering Plan"
+}
+```
+
+
 Rating plans
 ---
 
@@ -341,6 +457,73 @@ GET /v1/rating/plans/:rating_plan_id
 _Description_: Retrieves the rating plan of the specified rating plan id.
 
 _HTTP response_: 200 to indicate success with the requested _rating plan_ document, 404 if the plan is not found, 500 to report a server error.
+
+### JSON representation:
+```json
+{
+  "plan_id": "object-rating-plan",
+  "metrics": [
+    {
+      "name": "storage"
+    },
+    {
+      "name": "thousand_api_calls",
+      "rate": "(p, qty) => p ? p * qty : 0",
+      "charge": "(t, cost) => cost"
+    }
+  ]
+}
+```
+
+### JSON schema:
+```json
+{
+  "type": "object",
+  "required": [
+    "plan_id",
+    "metrics"
+  ],
+  "properties": {
+    "plan_id": {
+      "type": "string"
+    },
+    "metrics": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "rate": {
+            "type": "string"
+          },
+          "charge": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "additionalItems": false
+    },
+  "additionalProperties": false,
+  "title": "Metering Plan"
+}
+```
+
+### Method: post
+_HTTP request_:
+```
+POST /v1/rating/plans
+```
+
+_Description_: Creates rating plan based on the request body.
+
+_HTTP response_: 201 to indicate success with the creation of the plan, 409 to indicate the plan has a conflict, 500 to report a server error.
 
 ### JSON representation:
 ```json
@@ -418,6 +601,118 @@ GET /v1/pricing/plans/:pricing_plan_id
 _Description_: Retrieves the pricing of the specified pricing plan id.
 
 _HTTP response_: 200 to indicate success with the requested _pricing plan_ data, 404 if the pricing data is not found, 500 to report a server error.
+
+### JSON representation:
+```json
+{
+  "plan_id": "object-pricing-basic",
+  "metrics": [
+    {
+      "name": "storage",
+      "prices": [
+        {
+          "country": "USA",
+          "price": 1
+        },
+        {
+          "country": "EUR",
+          "price": 0.7523
+        },
+        {
+          "country": "CAN",
+          "price": 1.06
+        }
+      ]
+    },
+    {
+      "name": "thousand_api_calls",
+      "prices": [
+        {
+          "country": "USA",
+          "price": 0.03
+        },
+        {
+          "country": "EUR",
+          "price": 0.0226
+        },
+        {
+          "country": "CAN",
+          "price": 0.0317
+        }
+      ]
+    }
+  ]
+}
+```
+
+### JSON schema:
+```json
+{
+  "title": "Price Plan",
+  "type": "object",
+  "properties": {
+    "plan_id": {
+      "type": "string"
+    },
+    "metrics": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "title": "metric",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "prices": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "title": "price",
+              "type": "object",
+              "properties": {
+                "country": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "country",
+                "price"
+              ],
+              "additionalProperties": false
+            },
+            "additionalItems": false
+          }
+        },
+        "required": [
+          "name",
+          "prices"
+        ],
+        "additionalProperties": false
+      },
+      "additionalItems": false
+    }
+  },
+  "required": [
+    "plan_id",
+    "metrics"
+  ],
+  "additionalProperties": false
+}
+
+```
+### Method: post
+_HTTP request_:
+```
+POST /v1/pricing/plans
+```
+
+_Description_: Creates pricing plan based on the request body.
+
+_HTTP response_: 201 to indicate success with the creation of the plan,409 to indicate the plan has a conflict, 500 to report a server error.
 
 ### JSON representation:
 ```json
