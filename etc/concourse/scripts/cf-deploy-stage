@@ -24,7 +24,7 @@ function mapRoutes {
   local INSTANCES=$(expr $2 - 1)
 
   set +e # Disable error checks
-  cf app abacus-usage-collector
+  cf app ${ABACUS_PREFIX}abacus-usage-collector
   single_app=$?
   set -e # Enable error checks
 
@@ -55,8 +55,8 @@ pushd built-project
 popd
 
 echo "Mapping routes ..."
-mapRoutes abacus-usage-collector 6
-mapRoutes abacus-usage-reporting 6
+mapRoutes ${ABACUS_PREFIX}abacus-usage-collector 6
+mapRoutes ${ABACUS_PREFIX}abacus-usage-reporting 6
 
 getApps
 
