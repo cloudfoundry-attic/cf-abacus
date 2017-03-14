@@ -5,48 +5,14 @@ set -e -x
 echo "Environment:"
 env | sort
 
-#
-# Get platform info
-#
-unamestr=`uname`
-
-function mapRoutes {
-  if [ -z "$1" ]; then
-     echo "Cannot map app without a name !"
-     exit 1
-  fi
-  if [ -z "$2" ]; then
-    echo "Unknown number of instances !"
-    exit 1
-  fi
-
-  local APP_NAME=$1
-  local INSTANCES=$(expr $2 - 1)
-
-  set +e # Disable error checks
-  cf app ${ABACUS_PREFIX}abacus-usage-collector
-  single_app=$?
-  set -e # Enable error checks
-
-  if [ $single_app = 0 ]; then
-    echo "Found single $APP_NAME instance. Will not map route !!!"
-  else
-    echo "Mapping $2 (0-$INSTANCES) instances of $APP_NAME in $CF_DOMAIN domain ..."
-    for i in `seq 0 $INSTANCES`;
-    do
-      cf map-route "$APP_NAME-$i" $CF_DOMAIN --hostname "$APP_NAME"
-    done
-  fi
-}
-
 SCRIPT_DIR="${BASH_SOURCE%/*}"
 source $SCRIPT_DIR/common-functions
 
-echo "Logging to $CF_API ..."
 if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
   skip='--skip-ssl-validation'
 fi
 
+echo "Logging to $CF_API ..."
 cf login -a https://api.$CF_API -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE $skip
 
 echo "Pushing $ABACUS_PROFILE Abacus installation ..."
@@ -58,13 +24,14 @@ echo "Mapping routes ..."
 mapRoutes ${ABACUS_PREFIX}abacus-usage-collector 6
 mapRoutes ${ABACUS_PREFIX}abacus-usage-reporting 6
 
-getApps
-
 if [ "$BIND_DB_SERVICE" == "true" ]; then
   echo "Binding services ..."
-  if [[ "$unamestr" == 'Linux' ]]; then
-    echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf bind-service {} db
-  else
-    echo ${APPS[@]} | xargs -n1 | xargs -P 5 -n 1 -J {} cf bind-service {} db
-  fi
+  getApps
+  bindService abacus-usage-collector $DB_COLLECTOR
+  bindService abacus-usage-meter $DB_METER
+  bindService abacus-usage-accumulator $DB_ACCUMULATOR
+  bindService abacus-usage-aggregator $DB_AGGREGATOR
+  bindService abacus-usage-reporting $DB_AGGREGATOR,$DB_ACCUMULATOR
+  bindService abacus-cf-bridge,abacus-cf-renewer $DB_BRIDGE
+  bindService abacus-provisioning-plugin,abacus-account-plugin $DB_PLUGINS
 fi

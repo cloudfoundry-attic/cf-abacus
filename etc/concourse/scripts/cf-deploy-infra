@@ -2,18 +2,11 @@
 
 set -e -x
 
-SCRIPT_DIR="${BASH_SOURCE%/*}"
-
 echo "Environment:"
 env | sort
 
 SCRIPT_DIR="${BASH_SOURCE%/*}"
 source $SCRIPT_DIR/common-functions
-
-#
-# Get platform info
-#
-unamestr=`uname`
 
 if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
   skip='--skip-ssl-validation'
@@ -26,8 +19,8 @@ cf api $skip "https://api.$CF_API"
 echo "" | cf login $skip -u "$CF_ADMIN_USER" -p "$CF_ADMIN_PASSWORD"
 
 echo "Recreating organization and space ..."
-cf create-quota "$CF_ORG" -m 80g -i 4g -r 80 -s 2 --allow-paid-service-plans
-cf update-quota "$CF_ORG" -m 80g -i 4g -r 80 -s 2 --allow-paid-service-plans
+cf create-quota "$CF_ORG" -m 80g -i 4g -r 80 -s 10 --allow-paid-service-plans
+cf update-quota "$CF_ORG" -m 80g -i 4g -r 80 -s 10 --allow-paid-service-plans
 cf create-org "$CF_ORG" -q "$CF_ORG"
 cf create-space "$CF_SPACE" -o "$CF_ORG"
 if [ "$ENABLE_SERVICE_ACCESS" == "true" ]; then
@@ -48,33 +41,13 @@ echo "Logging to $CF_API as abacus user ..."
 cf login $skip -a "https://api.$CF_API" -u "$CF_USER" -p "$CF_PASSWORD" -o "$CF_ORG" -s "$CF_SPACE"
 
 if [ "$CREATE_DB_SERVICE" == "true" ]; then
-  echo "Creating new DB service instance ..."
-  cf create-service "$DB_SERVICE_NAME" "$DB_PLAN_NAME" db
-  until cf service db | grep -q 'Status: \(create\|update\) succeeded\|Status: \(create\|update\) failed\|Service instance .* not found'
-  do
-    sleep 3s
-  done
-  service_creation_status=$(cf service db)
-  if grep -q 'Status: \(create\|update\) succeeded' <<< $service_creation_status ; then
-    echo "DB creation finished successfully."
-  else
-    echo "DB creation failed!"
-    exit 1
-  fi
-
-  echo "Updating DB service instance ..."
-  cf update-service db -p "$DB_PLAN_NAME"
-  until cf service db | grep -q 'Status: \(create\|update\) succeeded\|Status: \(create\|update\) failed\|Service instance .* not found'
-  do
-    sleep 3s
-  done
-  service_creation_status=$(cf service db)
-  if grep -q 'Status: \(create\|update\) succeeded' <<< $service_creation_status ; then
-    echo "DB update finished successfully."
-  else
-    echo "DB update failed!"
-    exit 1
-  fi
+  echo "Creating or updating DB service instances ..."
+  instances=($DB_SERVICE_INSTANCES)
+  for instance in "${instances[@]}"; do
+    args=(${instance//:/ })
+    createOrUpdateService ${args[0]} ${args[1]} &
+  done;
+  waitForServices ${#instances[@]}
 else
   echo "Using DB URL provided in abacus-config !"
 fi

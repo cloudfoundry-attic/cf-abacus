@@ -39,7 +39,13 @@ jobs:
             CF_DOMAIN: {{cf-domain}}
             CREATE_DB_SERVICE: {{create-db-service}}
             DB_SERVICE_NAME: {{db-service-name}}
-            DB_PLAN_NAME: {{db-plan-name}}
+            DB_SERVICE_INSTANCES: {{db-service-instances}}
+            DB_COLLECTOR: {{db-collector}}
+            DB_METER: {{db-meter}}
+            DB_ACCUMULATOR: {{db-accumulator}}
+            DB_AGGREGATOR: {{db-aggregator}}
+            DB_BRIDGE: {{db-bridge}}
+            DB_PLUGINS: {{db-plugins}}
             ENABLE_SERVICE_ACCESS: {{enable-service-access}}
             UAA_ADMIN: {{uaa-admin}}
             UAA_SECRET: {{uaa-secret}}

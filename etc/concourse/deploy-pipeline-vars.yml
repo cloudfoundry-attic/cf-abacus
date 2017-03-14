@@ -48,9 +48,35 @@ purge-app-usage-events: false
 # Note: Not used if create-db-service is false, but still required
 db-service-name: service-name
 
-# DB service plan
+# DB service instances
 # Note: Not used if create-db-service is false, but still required
-db-plan-name: plan-name
+db-service-instances:
+  - name: service-instance-name
+    plan: plan-name
+
+# Collector DB alias, used to identify DB service instances that belong to the collector group
+# Note: Not used if bind-db-service is false, but still required
+db-collector: db-collector
+
+# Meter DB alias, used to identify DB service instances that belong to the meter group
+# Note: Not used if bind-db-service is false, but still required
+db-meter: db-meter
+
+# Accumlator DB alias, used to identify DB service instances that belong to the accumulator group
+# Note: Not used if bind-db-service is false, but still required
+db-accumulator: db-accumulator
+
+# Aggregator DB alias, used to identify DB service instances that belong to the aggregator group
+# Note: Not used if bind-db-service is false, but still required
+db-aggregator: db-aggregator
+
+# Bridge DB alias, used to identify DB service instances that belong to the bridge / renewer group
+# Note: Not used if bind-db-service is false, but still required
+db-bridge: db-bridge
+
+# Plugins DB alias, used to identify DB service instances that belong to the plugins group
+# Note: Not used if bind-db-service is false, but still required
+db-plugins: db-plugins
 
 # Enable the service plan. Change this to "true" if the plan is paid for instance
 # Note: Not used if create-db-service is false, but still required
