@@ -110,6 +110,7 @@
     "abacus-metering-config": "file:lib/config/metering",
     "abacus-moment": "file:lib/utils/moment",
     "abacus-mongoclient": "file:lib/utils/mongoclient",
+    "abacus-cf-node-opts-itest": "file:test/cf/node-opts",
     "abacus-oauth": "file:lib/utils/oauth",
     "abacus-paging": "file:lib/utils/paging",
     "abacus-partition": "file:lib/utils/partition",
