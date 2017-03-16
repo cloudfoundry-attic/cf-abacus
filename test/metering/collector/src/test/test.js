@@ -1,10 +1,8 @@
 'use strict';
 
 const cp = require('child_process');
-const _ = require('underscore');
 
 const commander = require('commander');
-
 const batch = require('abacus-batch');
 const throttle = require('abacus-throttle');
 const request = require('abacus-request');
@@ -13,6 +11,7 @@ const express = require('abacus-express');
 const dbclient = require('abacus-dbclient');
 const moment = require('abacus-moment');
 
+const _ = require('underscore');
 const map = _.map;
 const range = _.range;
 const clone = _.clone;

@@ -1,6 +1,3 @@
-#!/usr/bin/env node
-'use strict';
+#!/bin/bash
 
-// Run our webapp shell
-require('./src/index.js').runCLI();
-
+exec node $NODE_OPTS -e "require('abacus-webapp').runCLI()" $0 $@
