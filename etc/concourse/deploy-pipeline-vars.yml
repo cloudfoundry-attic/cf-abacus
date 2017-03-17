@@ -131,6 +131,9 @@ abacus-configure: true
 # Slack interval
 slack: 5D
 
+# Each application will get that prefix in front of its name when deploying Abacus. This property enables the possibility to deploy multiple Abacus instances on a single CF instance.
+abacus-prefix: ""
+
 # Abacus repo URI (or landscape project URI)
 landscape-git-repo: https://github.com/cloudfoundry-incubator/cf-abacus.git
 

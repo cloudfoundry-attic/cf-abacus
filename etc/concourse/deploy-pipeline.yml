@@ -163,6 +163,7 @@ jobs:
             # Save file handlers and offload CF stagers
             JOBS: 2
             RESTART_RETRIES: {{restart-retries}}
+            ABACUS_PREFIX: {{abacus-prefix}}
           run:
             path: built-project/etc/concourse/scripts/cf-deploy-stage
 
@@ -214,5 +215,6 @@ jobs:
             CLIENT_SECRET: {{object-storage-client-secret}}
             CI_START_TIMEOUT: 50000
             CI_PIPELINE_TIMEOUT: 100000
+            ABACUS_PREFIX: {{abacus-prefix}}
           run:
             path: built-project/etc/concourse/scripts/cf-deploy-test
