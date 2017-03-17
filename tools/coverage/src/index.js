@@ -141,6 +141,10 @@ const runCLI = () => {
       '--no-color', 'do not colorify output')
     .parse(process.argv);
 
+  const redColor = colorify(commander) ? '\u001b[31m' : '';
+  const greenColor = colorify(commander) ? '\u001b[32m' : '';
+  const resetColor = colorify(commander) ? '\u001b[0m' : '';
+
   // Load the root package.json from the current directory
   const root = JSON.parse(fs.readFileSync('package.json'));
 
@@ -161,12 +165,16 @@ const runCLI = () => {
 
       // Print overall code coverage percentages in green for 100%
       // coverage and red under 100%
-      const color = colorify(commander) ? fullcov ?
-          '\u001b[32m' : '\u001b[31m' : '';
-      const reset = colorify(commander) ? '\u001b[0m' : '';
-      process.stdout.write(util.format(
-        '\n%sOverall coverage lines %d\% statements %d\%%s\n\n',
-        color, percent.l.toFixed(2), percent.s.toFixed(2), reset));
+      const color = fullcov ? greenColor : redColor;
+
+      if (process.env.NO_ISTANBUL)
+        process.stdout.write(util.format(
+          '\n%sCoverage is disabled via NO_ISTANBUL environment variable%s\n',
+          redColor, resetColor));
+      else
+        process.stdout.write(util.format(
+          '\n%sOverall coverage lines %d\% statements %d\% %s\n\n',
+          color, percent.l.toFixed(2), percent.s.toFixed(2), resetColor));
 
       process.exit(0);
     });
