@@ -12,16 +12,34 @@ const coverage = require('..');
 
 /* eslint handle-callback-err: 0 */
 
-describe('abacus-coverage', function() {
+const deleteFolderRecursive = (path) => {
+  if (fs.existsSync(path)) {
+    fs.readdirSync(path).forEach((file) => {
+      const curPath = `${path}/${file}`;
+      if (fs.lstatSync(curPath).isDirectory())
+        deleteFolderRecursive(curPath);
+      else
+        fs.unlinkSync(curPath);
+    });
+    fs.rmdirSync(path);
+  }
+};
+
+describe('abacus-coverage', () => {
   let exit;
-  beforeEach(function() {
+
+  beforeEach(() => {
     exit = process.exit;
   });
-  afterEach(function() {
+
+  afterEach(() => {
     process.exit = exit;
+
+    if (process.env.NO_ISTANBUL)
+      deleteFolderRecursive('.coverage');
   });
 
-  it('reports overall code coverage', function(done) {
+  it('reports overall code coverage', (done) => {
 
     // Spy on the Istanbul coverage reporter
     const reporters = [];
@@ -34,7 +52,7 @@ describe('abacus-coverage', function() {
     };
 
     // Mock process exit to get called back when the CLI exits
-    process.exit = function(code) {
+    process.exit = (code) => {
       // Expect exit code to be 0
       expect(code).to.equal(0);
 
@@ -55,9 +73,9 @@ describe('abacus-coverage', function() {
 
     // Setup a test coverage.json, expecting it to be picked up as part of
     // the overall module coverage
-    fs.mkdir('.coverage', function() {
-      fs.readFile('src/test/coverage.json', function(err, val) {
-        fs.writeFile('.coverage/coverage.json', val, function() {
+    fs.mkdir('.coverage', () => {
+      fs.readFile('src/test/coverage.json', (err, val) => {
+        fs.writeFile('.coverage/coverage.json', val, () => {
           // Run the coverage CLI
           coverage.runCLI();
         });
