@@ -1,3 +1,5 @@
+#!/bin/bash
+
 APPS=()
 
 function getApps {
@@ -39,4 +41,74 @@ function restartAppsWithRetry {
       return
     fi
   done
+}
+
+function waitForServices {
+  echo "Waiting for DB creation or update ..."
+  until [ "$(cf services | grep '\(create\|update\) succeeded\|\(create\|update\) failed' | wc -l)" == "$1" ]; do
+    sleep 3s
+  done
+  if [ "$(cf services | grep '\(create\|update\) succeeded' | wc -l)" == "$1" ]; then
+    echo "DB creation or update finished successfully."
+  else
+    echo "DB creation or update failed!"
+    exit 1
+  fi
+}
+
+function createOrUpdateService {
+  set +e
+  cf service $1
+  if [ "$?" == "1" ]; then
+    echo "Creating new DB service instance $1 with plan $2 ..."
+    cf create-service "$DB_SERVICE_NAME" $2 $1
+  else
+    echo "Updating DB service instance $1 with plan $2 ..."
+    cf update-service $1 -p $2
+  fi
+  set -e
+}
+
+function bindService {
+  instances=($DB_SERVICE_INSTANCES)
+  for dbalias in $(echo $2 | sed "s/,/ /g" | xargs -n1 | sort -u | xargs); do
+    for app_prefix in $(echo $1 | sed "s/,/ /g" | xargs -n1 | sort -u | xargs); do
+      for instance in "${instances[@]}"; do
+        instance_name=${instance%:*}
+        for app in "${APPS[@]}"; do
+          if [[ $instance_name == $dbalias* && $app == $app_prefix* ]]; then
+            cf bind-service $app $instance_name
+          fi
+        done
+      done
+    done
+  done
+}
+
+function mapRoutes {
+  if [ -z "$1" ]; then
+     echo "Cannot map app without a name !"
+     exit 1
+  fi
+  if [ -z "$2" ]; then
+    echo "Unknown number of instances !"
+    exit 1
+  fi
+
+  local APP_NAME=$1
+  local INSTANCES=$(expr $2 - 1)
+
+  set +e # Disable error checks
+  cf app $APP_NAME
+  single_app=$?
+  set -e # Enable error checks
+
+  if [ $single_app = 0 ]; then
+    echo "Found single $APP_NAME instance. Will not map route !!!"
+  else
+    echo "Mapping $2 (0-$INSTANCES) instances of $APP_NAME in $CF_DOMAIN domain ..."
+    for i in `seq 0 $INSTANCES`; do
+      cf map-route "$APP_NAME-$i" $CF_DOMAIN --hostname "$APP_NAME"
+    done
+  fi
 }
