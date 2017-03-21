@@ -272,7 +272,7 @@ jobs:
           inputs:
             - name: abacus
           params:
-            CF_API: {{cf-api}}
+            CF_SYS_DOMAIN: {{cf-sys-domain}}
             CF_USER: {{cf-user}}
             CF_PASSWORD: {{cf-password}}
             CF_ADMIN_USER: {{cf-admin-user}}
@@ -321,7 +321,7 @@ jobs:
             # Use latest node.js buildpack to enable 6.10.0
             BUILDPACK: https://github.com/cloudfoundry/nodejs-buildpack.git
             # Cloud Foundry infrastructure
-            CF_API: {{cf-api}}
+            CF_SYS_DOMAIN: {{cf-sys-domain}}
             CF_USER: {{cf-user}}
             CF_PASSWORD: {{cf-password}}
             CF_ADMIN_USER: {{cf-admin-user}}

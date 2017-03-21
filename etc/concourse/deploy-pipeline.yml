@@ -29,7 +29,7 @@ jobs:
           inputs:
             - name: landscape
           params:
-            CF_API: {{cf-api}}
+            CF_SYS_DOMAIN: {{cf-sys-domain}}
             CF_USER: {{cf-user}}
             CF_PASSWORD: {{cf-password}}
             CF_ADMIN_USER: {{cf-admin-user}}
@@ -120,7 +120,7 @@ jobs:
             run:
               path: landscape/cf-abacus/etc/concourse/scripts/create-uaa-clients
             params:
-              CF_API: {{cf-api}}
+              CF_SYS_DOMAIN: {{cf-sys-domain}}
               UAA_ADMIN: {{uaa-admin}}
               UAA_SECRET: {{uaa-secret}}
               SYSTEM_CLIENT_ID: {{system-client-id}}
@@ -154,7 +154,7 @@ jobs:
           inputs:
             - name: built-project
           params:
-            CF_API: {{cf-api}}
+            CF_SYS_DOMAIN: {{cf-sys-domain}}
             CF_USER: {{cf-user}}
             CF_PASSWORD: {{cf-password}}
             CF_ADMIN_USER: {{cf-admin-user}}
@@ -186,7 +186,7 @@ jobs:
           inputs:
             - name: built-project
           params:
-            CF_API: {{cf-api}}
+            CF_SYS_DOMAIN: {{cf-sys-domain}}
             CF_USER: {{cf-user}}
             CF_PASSWORD: {{cf-password}}
             CF_ADMIN_USER: {{cf-admin-user}}
@@ -214,7 +214,7 @@ jobs:
           inputs:
             - name: built-project
           params:
-            CF_API: {{cf-api}}
+            CF_SYS_DOMAIN: {{cf-sys-domain}}
             CF_DOMAIN: {{cf-domain}}
             SECURED: true
             CLIENT_ID: {{object-storage-client-id}}

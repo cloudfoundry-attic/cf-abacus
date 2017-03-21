@@ -1,5 +1,5 @@
-# Cloud Foundry domain without the "api." prefix
-cf-api: cf.mycompany.com
+# Cloud Foundry domain
+cf-sys-domain: cf.mycompany.com
 
 # User that has SpaceDeveloper permissions for the Abacus' org
 cf-user: abacus

@@ -1,5 +1,5 @@
-# Cloud Foundry domain without the "api." prefix
-cf-api: cf.mycompany.com
+# Cloud Foundry domain
+cf-sys-domain: cf.mycompany.com
 
 # Organization for the Abacus acceptance test apps
 cf-org: abacus-acceptance

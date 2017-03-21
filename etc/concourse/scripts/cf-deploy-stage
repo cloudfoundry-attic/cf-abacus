@@ -12,8 +12,8 @@ if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
   skip='--skip-ssl-validation'
 fi
 
-echo "Logging to $CF_API ..."
-cf login -a https://api.$CF_API -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE $skip
+echo "Logging to $CF_SYS_DOMAIN ..."
+cf login -a https://api.$CF_SYS_DOMAIN -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE $skip
 
 echo "Pushing $ABACUS_PROFILE Abacus installation ..."
 pushd built-project
