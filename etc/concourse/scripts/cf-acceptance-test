@@ -19,7 +19,7 @@ if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
   skip='--skip-ssl-validation'
 fi
 
-cf api https://api.$CF_API $skip
+cf api https://api.$CF_SYS_DOMAIN $skip
 cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
 
 export ORG_GUID=$(cf org $CF_ORG --guid)

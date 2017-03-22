@@ -44,4 +44,3 @@ cf login --skip-ssl-validation -a $CF_API -u $CF_USER -o $CF_ORG -s $CF_SPACE
 # Create a CF security group for the Abacus apps
 cf create-security-group abacus $SCRIPT_DIR/../node_modules/abacus-etc/secgroup.json
 cf bind-security-group abacus $CF_ORG $CF_SPACE
-

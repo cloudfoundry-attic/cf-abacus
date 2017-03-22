@@ -7,12 +7,12 @@ SCRIPT_DIR="${BASH_SOURCE%/*}"
 echo "Environment:"
 env | sort
 
-echo "Logging to $CF_API ..."
+echo "Logging to $CF_SYS_DOMAIN ..."
 if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
   skip='--skip-ssl-validation'
 fi
 
-cf api $skip https://api.$CF_API
+cf api $skip https://api.$CF_SYS_DOMAIN
 echo "" | cf login -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD
 
 echo "Recreating organization and space ..."

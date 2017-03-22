@@ -13,12 +13,12 @@ if [ -e "built-project/bin/pre-start" ]; then
   ./built-project/bin/pre-start
 fi
 
-echo "Logging to $CF_API ..."
+echo "Logging to $CF_SYS_DOMAIN ..."
 if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
   skip='--skip-ssl-validation'
 fi
 
-cf login -a https://api.$CF_API -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE $skip
+cf login -a https://api.$CF_SYS_DOMAIN -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE $skip
 getApps
 
 set +e

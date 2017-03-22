@@ -64,7 +64,7 @@ jobs:
           inputs:
             - name: landscape
           params:
-            CF_API: {{cf-api}}
+            CF_SYS_DOMAIN: {{cf-sys-domain}}
             CF_USER: {{cf-user}}
             CF_PASSWORD: {{cf-password}}
             CF_ORG: {{cf-org}}

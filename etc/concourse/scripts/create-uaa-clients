@@ -35,7 +35,7 @@ if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
   skip='--skip-ssl-validation'
 fi
 
-uaac target "uaa.$CF_API" $skip
+uaac target "uaa.$CF_SYS_DOMAIN" $skip
 uaac token client get "$UAA_ADMIN" -s "$UAA_SECRET"
 
 echo "Creating UAA clients ..."

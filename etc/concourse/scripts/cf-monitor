@@ -4,20 +4,20 @@ set -e -x
 echo "Environment:"
 env | sort
 
-echo "Logging to $CF_API ..."
+echo "Logging to $CF_SYS_DOMAIN ..."
 if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
   skip='--skip-ssl-validation'
   k='-k'
 fi
 
-cf login $skip -a https://api.$CF_API -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+cf login $skip -a https://api.$CF_SYS_DOMAIN -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
 
 if [ -z "$SYSTEM_CLIENT_ID" ] || [ -z "$SYSTEM_CLIENT_SECRET" ]; then
   echo "Missing SYSTEM_CLIENT_ID or SYSTEM_CLIENT_SECRET !"
   exit 1
 fi
 
-AUTH_SERVER=https://uaa.$CF_API
+AUTH_SERVER=https://uaa.$CF_SYS_DOMAIN
 
 echo "Getting token for $SYSTEM_CLIENT_ID from $AUTH_SERVER ..."
 
