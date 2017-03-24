@@ -101,7 +101,9 @@ The Abacus processing pipeline is a simple composition that can be expressed as 
 
 `charge(…, summarize(…, rate(aggregate(..., accumulate(..., meter(usage)))))))`
 
-The functions usually work with [BigNumber.js](https://github.com/MikeMcl/bignumber.js) to allow higher precision of the result.
+The functions work with:
+* [Math global object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math)
+* [BigNumber.js](https://github.com/MikeMcl/bignumber.js) to allow higher precision of the result
 
 #### meter
    A "map" function, responsible for transforming a raw measure into the unit used for metering.
@@ -134,6 +136,13 @@ The function is often implemented as a maximum value over the given period of ti
 ```javascript
 ((a, qty, start, end, from, to, twCell) => end < from || end >= to ? null : Math.max(a, qty)).toString()
 ```
+
+You can realize "average" function with the help of compound object:
+```javascript
+(a, c) => a ? { sum: a.sum + c, count: a.count + 1,avg: (a.sum + c) / (a.count + 1) } : { sum: c, count: 1, avg: c } }
+```
+
+Note that in the examples above we do not use all input arguments.
 
 #### aggregate
 "reduce" function responsible for aggregating usage in Cloud Foundry entities (space and organization), instead of time.
