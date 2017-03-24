@@ -47,6 +47,7 @@
     "abacus-perf": "file:../../utils/perf",
     "abacus-report": "file:../../utils/report",
     "abacus-retry": "file:../../utils/retry",
+    "abacus-request": "file:../../utils/request",
     "abacus-router": "file:../../utils/router",
     "abacus-throttle": "file:../../utils/throttle",
     "abacus-urienv": "file:../../utils/urienv",
@@ -60,8 +61,7 @@
     "abacus-cfpush": "file:../../../tools/cfpush",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-publish": "file:../../../tools/publish",
-    "abacus-request": "file:../../utils/request"
+    "abacus-publish": "file:../../../tools/publish"
   },
   "engines": {
     "node": ">=6.10.0",
