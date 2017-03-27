@@ -19,7 +19,7 @@ APP_NAMES=()
 
 for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
   APPNAME=$(node_modules/abacus-etc/appname $MODULE)
-  APPS=$(( $(node_modules/abacus-etc/apprc node_modules/$APPNAME/.apprc $CONF APPS) - 1 ))
+  APPS=$(( $(node_modules/abacus-etc/apprc $MODULE/.apprc $CONF APPS) - 1 ))
   if [ "$APPS" == "0" ]; then
     APP_NAMES+=("$APPNAME")
   else
