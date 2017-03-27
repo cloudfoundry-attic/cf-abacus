@@ -9,6 +9,7 @@ const object = _.object;
 const extend = _.extend;
 const partial = _.partial;
 const noop = _.noop;
+const isEmpty = _.isEmpty;
 
 const fs = require('fs');
 const path = require('path');
@@ -19,32 +20,30 @@ const commander = require('commander');
 
 const additionalDir = 'additionally_packed';
 
+const makeSymlink = (additionalDirPath, path, cb) => {
+  fs.unlink(path, (err) => {
+    if(err) noop();
+    fs.symlink(additionalDirPath, path, cb);
+  });
+};
+
 // Create the directories we need
 const mkdirs = (root, additional, cb) => {
   // Create .cfpack directory
   fs.mkdir('.cfpack', (err) => {
     if(err) noop();
-    fs.unlink('.cfpack/lib', (err) => {
+    makeSymlink(path.join(root, 'lib'), '.cfpack/lib', () => {
       if(err) noop();
-      fs.symlink(path.join(root, 'lib'), '.cfpack/lib', (err) => {
-        if(err) noop();
-        else if (additional) {
-          const additionalDirPath = path.join(root,
-            additional);
-          fs.access(additionalDirPath, (err) => {
-            if(err)
-              cb();
-            else
-              fs.unlink(path.join('.cfpack', additionalDir), (err) => {
-                if(err) noop();
-                fs.symlink(additionalDirPath,
-                  path.join('.cfpack', additionalDir), cb);
-              });
-          });
-        }
-        else
-          cb();
-      });
+      else if (isEmpty(additional)) cb();
+      else {
+        const additionalDirPath = path.join(root, additional);
+        fs.access(additionalDirPath, (err) => {
+          if(err) cb();
+          else
+          makeSymlink(additionalDirPath,
+            path.join('.cfpack', additionalDir), cb);
+        });
+      }
     });
   });
 };
