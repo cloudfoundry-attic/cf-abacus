@@ -1,10 +1,10 @@
 {
-  "name": "abacus-report",
+  "name": "abacus-client",
   "description": "Usage report helper",
   "license": "Apache-2.0",
   "version": "0.0.6-dev.8",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/report",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/client",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },

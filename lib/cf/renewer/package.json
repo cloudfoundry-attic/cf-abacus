@@ -45,7 +45,7 @@
     "abacus-paging": "file:../../utils/paging",
     "abacus-partition": "file:../../utils/partition",
     "abacus-perf": "file:../../utils/perf",
-    "abacus-report": "file:../../utils/report",
+    "abacus-client": "file:../../utils/client",
     "abacus-request": "file:../../utils/request",
     "abacus-retry": "file:../../utils/retry",
     "abacus-router": "file:../../utils/router",
