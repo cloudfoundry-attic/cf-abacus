@@ -3,6 +3,8 @@
 // Print the name of an app
 
 const commander = require('commander');
+const fs = require('fs');
+const yaml = require('js-yaml');
 const path = require('path');
 const util = require('util');
 
@@ -16,10 +18,12 @@ const runCLI = () => {
     })
     .parse(process.argv);
 
-  // Load the app's package.json and print its name
-  const mod = require(path.join(
-    path.resolve(process.cwd(), commander.dir), 'package.json'));
-  process.stdout.write(util.format('%s\n', mod.name));
+  // Load the app's manifest and print its name
+  const manifestPath = path.join(path.resolve(process.cwd(), commander.dir),
+      'manifest.yml');
+  const content = fs.readFileSync(manifestPath);
+  const manifest = yaml.load(content);
+  process.stdout.write(util.format('%s\n', manifest.applications[0].name));
 };
 
 // Export our CLI
