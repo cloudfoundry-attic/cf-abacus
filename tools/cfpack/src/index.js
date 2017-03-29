@@ -129,7 +129,7 @@ const runCLI = () => {
   // to the Abacus root directory
     .option(
       '-r, --root <dir>', 'root local dependencies directory',
-      rootDir(process.cwd()))
+        process.env.ABACUS_ROOT || rootDir(process.cwd()))
     .option(
       '-a, --additional <dir>', 'additional directory that will be packed',
     process.env.ADDITIONAL_PACK_DIR)
