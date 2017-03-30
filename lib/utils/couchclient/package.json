@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "abacus-debug": "file:../debug",
+    "abacus-dbcommons": "file:../dbcommons",
     "abacus-moment": "file:../../utils/moment",
     "abacus-partition": "file:../partition",
     "abacus-perf": "file:../perf",

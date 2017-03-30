@@ -1,10 +1,10 @@
 {
-  "name": "abacus-mongoclient",
-  "description": "Subset of the MongoDB API over a set of DB partitions",
+  "name": "abacus-dbcommons",
+  "description": "Distribute DB operations over a set of DB partitions",
   "license": "Apache-2.0",
   "version": "0.0.6-dev.8",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/mongoclient",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/dbcommons",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -27,15 +27,7 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-debug": "file:../debug",
-    "abacus-dbcommons": "file:../dbcommons",
-    "abacus-moment": "file:../../utils/moment",
-    "abacus-partition": "file:../partition",
-    "abacus-perf": "file:../perf",
-    "abacus-request": "file:../request",
-    "abacus-transform": "file:../transform",
-    "mongodb": "^2.1",
-    "underscore": "^1.8.3"
+    "abacus-transform": "file:../transform"
   },
   "devDependencies": {
     "abacus-batch": "file:../batch",
