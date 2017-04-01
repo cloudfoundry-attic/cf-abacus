@@ -27,6 +27,7 @@
     "pub": "publish"
   },
   "dependencies": {
+    "abacus-dbcommons": "file:../dbcommons",
     "abacus-couchclient": "file:../couchclient",
     "abacus-mongoclient": "file:../mongoclient"
   },

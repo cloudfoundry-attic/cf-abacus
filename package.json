@@ -87,6 +87,7 @@
     "abacus-couchclient": "file:lib/utils/couchclient",
     "abacus-dataflow": "file:lib/utils/dataflow",
     "abacus-dbclient": "file:lib/utils/dbclient",
+    "abacus-dbcommons": "file:lib/utils/dbcommons",
     "abacus-eureka-plugin": "file:lib/plugins/eureka",
     "abacus-pouchserver": "file:lib/utils/pouchserver",
     "abacus-debug": "file:lib/utils/debug",
