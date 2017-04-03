@@ -18,11 +18,14 @@ cf login -a https://api.$CF_SYS_DOMAIN -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s
 echo "Pushing $ABACUS_PROFILE Abacus installation ..."
 pushd built-project
   npm run cfstage -- $ABACUS_PROFILE
-popd
 
-echo "Mapping routes ..."
-mapRoutes ${ABACUS_PREFIX}abacus-usage-collector 6
-mapRoutes ${ABACUS_PREFIX}abacus-usage-reporting 6
+  echo "Mapping routes ..."
+  collectorApps=$(node_modules/abacus-etc/apprc lib/metering/collector/.apprc $ABACUS_PROFILE APPS)
+  mapRoutes ${ABACUS_PREFIX}abacus-usage-collector $collectorApps
+
+  reportingApps=$(node_modules/abacus-etc/apprc lib/aggregation/reporting/.apprc $ABACUS_PROFILE APPS)
+  mapRoutes ${ABACUS_PREFIX}abacus-usage-reporting $reportingApps
+popd
 
 if [ "$BIND_DB_SERVICE" == "true" ]; then
   echo "Binding services ..."
