@@ -41,7 +41,6 @@ pushd $abacus_dir
   echo "Deploying Abacus ..."
   npm run cfstage default
 
-  set +e
   echo "Start all apps in $CF_ORG/$CF_SPACE ..."
   getApps
   echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf start {}
