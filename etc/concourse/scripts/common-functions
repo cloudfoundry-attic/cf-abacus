@@ -22,10 +22,12 @@ function restartApps {
 }
 
 function restartAppsWithRetry {
+  set +e
   retries=$RESTART_RETRIES
   if [[ -z "$retries" ]]; then
     retries=5
   elif [[ $retries -eq 0 ]]; then
+    set -e
     return
   fi
 
@@ -38,6 +40,7 @@ function restartAppsWithRetry {
     restartApps
 
     if [[ $? -eq 0 ]]; then
+      set -e
       return
     fi
   done
