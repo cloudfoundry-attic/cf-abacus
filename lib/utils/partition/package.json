@@ -36,7 +36,6 @@
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-moment": "file:../../../tools/moment",
     "abacus-publish": "file:../../../tools/publish",
     "node-uuid": "^1.4.1"
   },
