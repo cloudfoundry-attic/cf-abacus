@@ -2,7 +2,7 @@
   "name": "abacus-cf-purge-itest",
   "description": "CF Bridge purge integration tests",
   "license": "Apache-2.0",
-  "version": "0.0.6-dev.8",
+  "version": "0.0.6-dev.9",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/cf/purge",
   "bugs": {
