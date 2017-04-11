@@ -1,5 +1,5 @@
 {
-  "name": "replace-template",
+  "name": "abacus-replace-template",
   "description": "Replace environment variables in templates.",
   "license": "Apache-2.0",
   "version": "0.0.6-dev.9",

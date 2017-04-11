@@ -21,16 +21,19 @@ const parseCommandLineArgs = (args) => {
     .parse(args);
 };
 
-const replaceEnvironmentValues = (environment, credentials, credentialsKey) => {
-  if (!environment)
+
+
+const replaceValues = (root, credentials, credentialsKey) => {
+  if (!root)
     return;
 
-  for (let appEnvKey in environment)
-    if (environment.hasOwnProperty(appEnvKey)) {
-      const appEnvValue = environment[appEnvKey];
-      if (typeof appEnvValue === 'string')
-        environment[appEnvKey] =
-          appEnvValue.replace(credentialsKey, credentials[credentialsKey]);
+  for (let key in root)
+    if (root.hasOwnProperty(key)) {
+      const value = root[key];
+      if (typeof value === 'string')
+        root[key] = value.replace(credentialsKey, credentials[credentialsKey]);
+      if (typeof value === 'object')
+        replaceValues(value, credentials, credentialsKey);
     }
 };
 
@@ -44,9 +47,8 @@ const replaceFiles = (credentials, files) => {
       const templateYml = yaml.load(content);
 
       for (let credentialsKey in credentials)
-        for (let application of templateYml.applications)
-          replaceEnvironmentValues(application.env,
-            credentials, credentialsKey);
+        if (credentials.hasOwnProperty(credentialsKey))
+          replaceValues(templateYml.applications, credentials, credentialsKey);
 
       const templatePath = path.dirname(templateFile);
       const templateBaseName = path.basename(templateFile);

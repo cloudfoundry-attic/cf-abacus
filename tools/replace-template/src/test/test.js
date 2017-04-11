@@ -31,8 +31,10 @@ const manifest = {
   }]
 };
 
-const createManifestContent = (testEnv) => {
+const createManifestContent = (appName, testEnv) => {
   const content = extend({}, manifest);
+
+  content.applications[0].name = appName;
 
   const env = content.applications[0].env;
   content.applications[0].env = extend(env, testEnv);
@@ -40,16 +42,19 @@ const createManifestContent = (testEnv) => {
   return yaml.dump(content);
 };
 
-const templateContent = createManifestContent({
-  TEST_VARIABLE: '$TEST_VARIABLE',
-  ANOTHER_TEST_VARIABLE: '$ANOTHER_TEST_VARIABLE'
-});
-const expectedManifestContent = createManifestContent({
-  TEST_VARIABLE: 'value1',
-  ANOTHER_TEST_VARIABLE: 'value2'
-});
+const templateContent =
+  createManifestContent('$ACCUMULATOR_NAME', {
+    TEST_VARIABLE: '$TEST_VARIABLE',
+    ANOTHER_TEST_VARIABLE: '$ANOTHER_TEST_VARIABLE'
+  });
+const expectedManifestContent =
+  createManifestContent('abacus-usage-accumulator', {
+    TEST_VARIABLE: 'value1',
+    ANOTHER_TEST_VARIABLE: 'value2'
+  });
 
 const credentialsContent = '---\n' +
+  'accumulator-name: abacus-usage-accumulator\n' +
   'test-variable: value1\n' +
   'another-test-variable: value2';
 
@@ -130,6 +135,7 @@ describe('replace-templates', () => {
   context('when using environment variables', () => {
     beforeEach((done) => {
       runScript(tempConfigDir, undefined, {
+        ACCUMULATOR_NAME: 'abacus-usage-accumulator',
         TEST_VARIABLE: 'value1',
         ANOTHER_TEST_VARIABLE: 'value2'
       }, (code) => {
