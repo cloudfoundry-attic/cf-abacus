@@ -21,7 +21,11 @@ const parseCommandLineArgs = (args) => {
     .parse(args);
 };
 
+const escapeRegExp = (str) =>
+  str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
 
+const replaceAll = (str, find, replace) =>
+  str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
 
 const replaceValues = (root, credentials, credentialsKey) => {
   if (!root)
@@ -31,7 +35,8 @@ const replaceValues = (root, credentials, credentialsKey) => {
     if (root.hasOwnProperty(key)) {
       const value = root[key];
       if (typeof value === 'string')
-        root[key] = value.replace(credentialsKey, credentials[credentialsKey]);
+        root[key] = replaceAll(value,
+          credentialsKey, credentials[credentialsKey]);
       if (typeof value === 'object')
         replaceValues(value, credentials, credentialsKey);
     }

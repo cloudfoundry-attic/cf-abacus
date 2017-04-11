@@ -45,11 +45,13 @@ const createManifestContent = (appName, testEnv) => {
 const templateContent =
   createManifestContent('$ACCUMULATOR_NAME', {
     TEST_VARIABLE: '$TEST_VARIABLE',
+    TWO_TIMES_TEST_VARIABLE: '$TEST_VARIABLE$TEST_VARIABLE',
     ANOTHER_TEST_VARIABLE: '$ANOTHER_TEST_VARIABLE'
   });
 const expectedManifestContent =
   createManifestContent('abacus-usage-accumulator', {
     TEST_VARIABLE: 'value1',
+    TWO_TIMES_TEST_VARIABLE: 'value1value1',
     ANOTHER_TEST_VARIABLE: 'value2'
   });
 
