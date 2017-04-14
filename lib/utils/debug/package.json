@@ -28,13 +28,13 @@
   },
   "dependencies": {
     "abacus-events": "file:../events",
+    "abacus-moment": "file:../moment",
     "debug": "^2.4.5",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-moment": "file:../../utils/moment",
     "abacus-publish": "file:../../../tools/publish"
   },
   "engines": {
