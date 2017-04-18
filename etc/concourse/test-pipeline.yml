@@ -18,7 +18,7 @@ jobs:
 
 ################################# POUCH ########################################
 
-  - name: pouchdb-6.9.1
+  - name: pouchdb-6.10.2
     plan:
       - aggregate:
         - get: abacus
@@ -26,7 +26,7 @@ jobs:
       - task: build
         config:
           platform: linux
-          image: docker:///node#6.9.1
+          image: docker:///node#6.10.2
           inputs:
             - name: abacus
           outputs:
@@ -38,7 +38,7 @@ jobs:
       - task: it
         config:
           platform: linux
-          image: docker:///node#6.9.1
+          image: docker:///node#6.10.2
           inputs:
             - name: built-project
           run:
@@ -50,7 +50,7 @@ jobs:
       - task: demo
         config:
           platform: linux
-          image: docker:///node#6.9.1
+          image: docker:///node#6.10.2
           inputs:
             - name: built-project
           run:
@@ -62,7 +62,7 @@ jobs:
       - task: dupe
         config:
           platform: linux
-          image: docker:///node#6.9.1
+          image: docker:///node#6.10.2
           inputs:
             - name: built-project
           run:
@@ -75,7 +75,7 @@ jobs:
         attempts: 3
         config:
           platform: linux
-          image: docker:///node#6.9.1
+          image: docker:///node#6.10.2
           inputs:
             - name: built-project
           run:
@@ -87,16 +87,16 @@ jobs:
 
 ################################# COUCH ########################################
 
-  - name: couchdb-6.9.1
+  - name: couchdb-6.10.2
     plan:
       - aggregate:
         - get: abacus
-          passed: [pouchdb-6.9.1]
+          passed: [pouchdb-6.10.2]
           trigger: true
       - task: build
         config:
           platform: linux
-          image: docker:///godofcontainers/node-couchdb#6.9.1
+          image: docker:///godofcontainers/node-couchdb#6.10.2
           inputs:
             - name: abacus
           outputs:
@@ -110,7 +110,7 @@ jobs:
       - task: it
         config:
           platform: linux
-          image: docker:///godofcontainers/node-couchdb#6.9.1
+          image: docker:///godofcontainers/node-couchdb#6.10.2
           inputs:
             - name: built-project
           run:
@@ -124,7 +124,7 @@ jobs:
       - task: demo
         config:
           platform: linux
-          image: docker:///godofcontainers/node-couchdb#6.9.1
+          image: docker:///godofcontainers/node-couchdb#6.10.2
           inputs:
             - name: built-project
           run:
@@ -138,7 +138,7 @@ jobs:
       - task: dupe
         config:
           platform: linux
-          image: docker:///godofcontainers/node-couchdb#6.9.1
+          image: docker:///godofcontainers/node-couchdb#6.10.2
           inputs:
             - name: built-project
           run:
@@ -153,7 +153,7 @@ jobs:
         attempts: 3
         config:
           platform: linux
-          image: docker:///godofcontainers/node-couchdb#6.9.1
+          image: docker:///godofcontainers/node-couchdb#6.10.2
           inputs:
             - name: built-project
           run:
@@ -167,16 +167,16 @@ jobs:
 
 ################################# MONGO ########################################
 
-  - name: mongodb-6.9.1
+  - name: mongodb-6.10.2
     plan:
       - aggregate:
         - get: abacus
-          passed: [couchdb-6.9.1]
+          passed: [couchdb-6.10.2]
           trigger: true
       - task: build
         config:
           platform: linux
-          image: docker:///godofcontainers/node-mongodb#6.9.1
+          image: docker:///godofcontainers/node-mongodb#6.10.2
           inputs:
             - name: abacus
           outputs:
@@ -191,7 +191,7 @@ jobs:
       - task: it
         config:
           platform: linux
-          image: docker:///godofcontainers/node-mongodb#6.9.1
+          image: docker:///godofcontainers/node-mongodb#6.10.2
           inputs:
             - name: built-project
           run:
@@ -206,7 +206,7 @@ jobs:
       - task: demo
         config:
           platform: linux
-          image: docker:///godofcontainers/node-mongodb#6.9.1
+          image: docker:///godofcontainers/node-mongodb#6.10.2
           inputs:
             - name: built-project
           run:
@@ -221,7 +221,7 @@ jobs:
       - task: dupe
         config:
           platform: linux
-          image: docker:///godofcontainers/node-mongodb#6.9.1
+          image: docker:///godofcontainers/node-mongodb#6.10.2
           inputs:
             - name: built-project
           run:
@@ -237,7 +237,7 @@ jobs:
         attempts: 3
         config:
           platform: linux
-          image: docker:///godofcontainers/node-mongodb#6.9.1
+          image: docker:///godofcontainers/node-mongodb#6.10.2
           inputs:
             - name: built-project
           run:
@@ -256,7 +256,7 @@ jobs:
     plan:
       - aggregate:
         - get: abacus
-          passed: [mongodb-6.9.1]
+          passed: [mongodb-6.10.2]
           trigger: true
         - get: landscape
           trigger: true
@@ -309,7 +309,7 @@ jobs:
             type: docker-image
             source:
               repository: godofcontainers/node-mongodb
-              tag: '6.9.1'
+              tag: '6.10.2'
           inputs:
             - name: abacus
             - name: landscape

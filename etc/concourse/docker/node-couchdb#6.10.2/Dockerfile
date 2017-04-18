@@ -1,4 +1,4 @@
-FROM node:6.9.1
+FROM node:6.10.2
 
 RUN echo "deb http://packages.erlang-solutions.com/debian jessie contrib" > /etc/apt/sources.list.d/erlang-solutions.list
 RUN wget -qO - http://packages.erlang-solutions.com/debian/erlang_solutions.asc | apt-key add -
@@ -32,6 +32,7 @@ RUN ln -s /usr/local/etc/init.d/couchdb /etc/init.d/couchdb
 RUN ln -s /usr/local/etc/couchdb /etc
 RUN /etc/init.d/couchdb start
 
-RUN cd /usr/bin && curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx
+WORKDIR /usr/bin
+RUN curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx
 
 ENV NPM_CONFIG_LOGLEVEL=warn

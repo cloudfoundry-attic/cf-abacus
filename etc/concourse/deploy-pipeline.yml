@@ -86,7 +86,7 @@ jobs:
               type: docker-image
               source:
                 repository: godofcontainers/node-mongodb
-                tag: '6.9.1'
+                tag: '6.10.2'
             inputs:
               - name: landscape
             outputs:
@@ -150,7 +150,7 @@ jobs:
             type: docker-image
             source:
               repository: godofcontainers/node-mongodb
-              tag: '6.9.1'
+              tag: '6.10.2'
           inputs:
             - name: built-project
           params:
@@ -182,7 +182,7 @@ jobs:
             type: docker-image
             source:
               repository: godofcontainers/node-mongodb
-              tag: '6.9.1'
+              tag: '6.10.2'
           inputs:
             - name: built-project
           params:
@@ -210,7 +210,7 @@ jobs:
             type: docker-image
             source:
               repository: godofcontainers/node-mongodb
-              tag: '6.9.1'
+              tag: '6.10.2'
           inputs:
             - name: built-project
           params:
