@@ -33,7 +33,7 @@ const moduleDir = (module) => {
 
 describe('webapp', function() {
 
-  let errOutput;
+  let errOutput = '';
 
   this.timeout(startTimeout);
 
@@ -48,7 +48,7 @@ describe('webapp', function() {
     // messages to debug logs
     c.stdout.on('data', (data) => process.stdout.write(data));
     c.stderr.on('data', (data) => {
-      errOutput = data.toString();
+      errOutput += data.toString();
       process.stderr.write(data);
     });
     c.on('exit', (code) => {
@@ -151,6 +151,7 @@ describe('webapp', function() {
   context('with incorrect options', () => {
     before((done) => {
       process.env.NODE_OPTS = '-foobar';
+      errOutput = '';
 
       start('abacus-eureka-plugin', done);
     });
@@ -160,7 +161,7 @@ describe('webapp', function() {
     });
 
     it('fails to start apps', () => {
-      expect(errOutput).to.match(/^node: bad option: -foobar/);
+      expect(errOutput).to.match(/.*node: bad option: -foobar.*/);
     });
   });
 
