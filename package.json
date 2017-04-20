@@ -33,8 +33,7 @@
     "tools/"
   ],
   "scripts": {
-    "bootstrap": "npm install etc tools/eslint tools/mocha tools/publish tools/cfpack tools/cfpush",
-    "provision": "etc/versions && npm run bootstrap && npm install",
+    "provision": "etc/versions && npm install",
     "build": "npm run provision && npm test",
     "clean": "git clean -df",
     "rebuild": "npm run clean && npm run build",
