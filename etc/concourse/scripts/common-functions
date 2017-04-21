@@ -60,16 +60,18 @@ function waitForServices {
 }
 
 function createOrUpdateService {
-  set +e
+  set +e # Disable error checks
   cf service $1
-  if [ "$?" == "1" ]; then
+  return_code=$?
+  set -e # Enable error checks
+  
+  if [ "$return_code" == "1" ]; then
     echo "Creating new DB service instance $1 with plan $2 ..."
     cf create-service "$DB_SERVICE_NAME" $2 $1
   else
     echo "Updating DB service instance $1 with plan $2 ..."
     cf update-service $1 -p $2
   fi
-  set -e
 }
 
 function bindService {
