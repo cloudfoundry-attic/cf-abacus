@@ -38,6 +38,7 @@
     "abacus-hystrix": "file:../hystrix",
     "abacus-perf": "file:../perf",
     "abacus-rc": "file:../rc",
+    "abacus-urienv": "file:../urienv",
     "abacus-vcapenv": "file:../vcapenv",
     "commander": "^2.8.1",
     "underscore": "^1.8.3"
