@@ -131,6 +131,7 @@ const runCLI = () => {
   global.sinon = require('sinon');
   global.spy = global.sinon.spy;
   global.stub = global.sinon.stub;
+  global.assert = global.sinon.assert;
 
   // Install an Istanbul require hook that will instrument files that
   // match our instrumentMatcher
