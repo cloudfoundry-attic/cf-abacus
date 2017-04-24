@@ -16,13 +16,13 @@ const moment = require('abacus-moment');
 
 // Setup the debug log
 const debug =
-  require('abacus-debug')('abacus-cf-single-app-itest');
+  require('abacus-debug')('abacus-cf-single-app-renewer-itest');
 const responseDebug =
-  require('abacus-debug')('abacus-cf-single-app-itest-response');
+  require('abacus-debug')('abacus-cf-single-app-renewer-itest-response');
 const resultDebug =
-  require('abacus-debug')('abacus-cf-single-app-itest-result');
+  require('abacus-debug')('abacus-cf-single-app-renewer-itest-result');
 const oAuthDebug =
-  require('abacus-debug')('abacus-cf-single-app-itest-oauth');
+  require('abacus-debug')('abacus-cf-single-app-renewer-itest-oauth');
 
 
 // Module directory
@@ -130,7 +130,7 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
 
 const lastMonthInMilliseconds = moment.utc().subtract(1, 'months').valueOf();
 
-describe('abacus-cf-renewer single-app-test without oAuth', () => {
+describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
   let server;
   let serverPort;
 

@@ -16,13 +16,13 @@ const router = require('abacus-router');
 
 // Setup the debug log
 const debug =
-  require('abacus-debug')('abacus-cf-single-app-itest');
+  require('abacus-debug')('abacus-cf-single-app-bridge-itest');
 const responseDebug =
-  require('abacus-debug')('abacus-cf-single-app-itest-response');
+  require('abacus-debug')('abacus-cf-single-app-bridge-itest-response');
 const resultDebug =
-  require('abacus-debug')('abacus-cf-single-app-itest-result');
+  require('abacus-debug')('abacus-cf-single-app-bridge-itest-result');
 const oAuthDebug =
-  require('abacus-debug')('abacus-cf-single-app-itest-oauth');
+  require('abacus-debug')('abacus-cf-single-app-bridge-itest-oauth');
 
 // Module directory
 const moduleDir = (module) => {
@@ -145,7 +145,7 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
 
 const twentySecondsInMilliseconds = 20 * 1000;
 
-describe('abacus-cf-bridge single-app-test without oAuth', () => {
+describe('abacus-cf-single-app-bridge-itest without oAuth', () => {
   const submittime = moment.now();
 
   let server;

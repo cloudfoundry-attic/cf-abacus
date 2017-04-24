@@ -1,0 +1,467 @@
+'use strict';
+
+const commander = require('commander');
+const cp = require('child_process');
+const jwt = require('jsonwebtoken');
+const util = require('util');
+
+const _ = require('underscore');
+const clone = _.clone;
+const invert = _.invert;
+
+const dbclient = require('abacus-dbclient');
+const express = require('abacus-express');
+const request = require('abacus-request');
+const router = require('abacus-router');
+
+// Setup the debug log
+const debug =
+  require('abacus-debug')('abacus-cf-single-app-accuracy-itest');
+const responseDebug =
+  require('abacus-debug')('abacus-cf-single-app-accuracy-itest-response');
+const resultDebug =
+  require('abacus-debug')('abacus-cf-single-app-accuracy-itest-result');
+const oAuthDebug =
+  require('abacus-debug')('abacus-cf-single-app-accuracy-itest-oauth');
+
+
+const moment = require('abacus-moment');
+const twoDaysInNextMonth = moment.utc().startOf('month').
+  add(1, 'month').add(2, 'days').add(6, 'hours').valueOf();
+
+// Module directory
+const moduleDir = (module) => {
+  const path = require.resolve(module);
+  return path.substr(0, path.indexOf(module + '/') + module.length);
+};
+
+const timeWindows = {
+  second : 0,
+  minute : 1,
+  hour   : 2,
+  day    : 3,
+  month  : 4
+};
+
+// Parse command line options
+const argv = clone(process.argv);
+argv.splice(1, 1, 'usage-collector-itest');
+commander
+  .option('-t, --start-timeout <n>',
+    'external processes start timeout in milliseconds', parseInt)
+  .option('-x, --total-timeout <n>',
+    'test timeout in milliseconds', parseInt)
+  .allowUnknownOption(true)
+  .parse(argv);
+
+// External Abacus processes start timeout
+const startTimeout = commander.startTimeout || 100000;
+
+// This test timeout
+const totalTimeout = commander.totalTimeout || 200000;
+
+// Token setup
+const tokenSecret = 'secret';
+const tokenAlgorithm = 'HS256';
+const resourceToken = {
+  header: {
+    alg: tokenAlgorithm
+  },
+  payload: {
+    jti: '254abca5-1c25-40c5-99d7-2cc641791517',
+    sub: 'abacus-cf-bridge',
+    authorities: [
+      'abacus.usage.linux-container.write',
+      'abacus.usage.linux-container.read'
+    ],
+    scope: [
+      'abacus.usage.linux-container.read',
+      'abacus.usage.linux-container.write'
+    ],
+    client_id: 'abacus-cf-bridge',
+    cid: 'abacus-cf-bridge',
+    azp: 'abacus-cf-bridge',
+    grant_type: 'client_credentials',
+    rev_sig: '2cf89595',
+    iat: 1456147679,
+    exp: 1456190879,
+    iss: 'https://localhost:1234/oauth/token',
+    zid: 'uaa',
+    aud: [
+      'abacus-cf-bridge',
+      'abacus.usage.linux-container'
+    ]
+  },
+  signature: 'irxoV230hkDJenXoTSHQFfqzoUl353lS2URo1fJm21Y'
+};
+const systemToken = {
+  header: {
+    alg: tokenAlgorithm
+  },
+  payload: {
+    jti: '254abca5-1c25-40c5-99d7-2cc641791517',
+    sub: 'abacus-cf-bridge',
+    authorities: [
+      'abacus.usage.write',
+      'abacus.usage.read'
+    ],
+    scope: [
+      'abacus.usage.write',
+      'abacus.usage.read'
+    ],
+    client_id: 'abacus-cf-bridge',
+    cid: 'abacus-cf-bridge',
+    azp: 'abacus-cf-bridge',
+    grant_type: 'client_credentials',
+    rev_sig: '2cf89595',
+    iat: 1456147679,
+    exp: 1456190879,
+    iss: 'https://localhost:1234/oauth/token',
+    zid: 'uaa',
+    aud: [
+      'abacus-cf-bridge',
+      'abacus.usage'
+    ]
+  },
+  signature: 'OVNTKTvu-yHI6QXmYxtPeJZofNddX36Mx1q4PDWuYQE'
+};
+const signedResourceToken = jwt.sign(resourceToken.payload, tokenSecret, {
+  expiresIn: 43200
+});
+const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
+  expiresIn: 43200
+});
+
+const twentySecondsInMilliseconds = 20 * 1000;
+
+describe('abacus-cf-single-app-accuracy-itest', () => {
+  let server;
+  let serverPort;
+  let appUsageEvents;
+  let expectedGBh;
+
+  beforeEach((done) => {
+    const start = (module) => {
+      debug('Starting %s in directory %s', module, moduleDir(module));
+      const c = cp.spawn('npm', ['run', 'start'], {
+        cwd: moduleDir(module),
+        env: clone(process.env)
+      });
+
+      // Add listeners to stdout, stderr and exit message and forward the
+      // messages to debug logs
+      c.stdout.on('data', (data) => process.stdout.write(data));
+      c.stderr.on('data', (data) => process.stderr.write(data));
+      c.on('exit', (code) => debug('Module %s started with code %d',
+        module, code));
+    };
+
+    const app = express();
+    const routes = router();
+    routes.get('/v2/app_usage_events', (request, response) => {
+      if (request.url.indexOf('after_guid') !== -1) {
+        debug('Returning empty list of usage events');
+        response.status(200).send({
+          total_results: 0,
+          total_pages: 0,
+          prev_url: null,
+          next_url: null,
+          resources: []
+        });
+        return;
+      }
+
+      response.status(200).send({
+        total_results: appUsageEvents.length,
+        total_pages: 1,
+        prev_url: null,
+        next_url: null,
+        resources: appUsageEvents
+      });
+    });
+    routes.get('/v2/info', (request, response) => {
+      oAuthDebug('Requested API info');
+      response.status(200).send({
+        token_endpoint: 'http://localhost:' + serverPort
+      });
+    });
+    routes.get('/oauth/token', (request, response) => {
+      oAuthDebug('Requested oAuth token with %j', request.query);
+      const scope = request.query.scope;
+      const containerToken = scope && scope.indexOf('container') > 0;
+      response.status(200).send({
+        token_type: 'bearer',
+        access_token: containerToken ? signedResourceToken : signedSystemToken,
+        expires_in: 100000,
+        scope: scope ? scope.split(' ') : '',
+        authorities: scope ? scope.split(' ') : '',
+        jti: '254abca5-1c25-40c5-99d7-2cc641791517'
+      });
+    });
+    app.use(routes);
+    app.use(router.batch(routes));
+    server = app.listen(0);
+    serverPort = server.address().port;
+    debug('Test resources server listening on port %d', serverPort);
+
+    // Set environment variables
+    process.env.API = 'http://localhost:' + serverPort;
+    process.env.AUTH_SERVER = 'http://localhost:' + serverPort;
+    process.env.CF_CLIENT_ID = 'abacus-cf-bridge';
+    process.env.CF_CLIENT_SECRET = 'secret';
+    process.env.CLIENT_ID = 'abacus-linux-container';
+    process.env.CLIENT_SECRET = 'secret';
+    process.env.JWTKEY = tokenSecret;
+    process.env.JWTALGO = tokenAlgorithm;
+
+    // Set slack window to 5 days
+    process.env.SLACK = '5D';
+
+    process.env.ABACUS_TIME_OFFSET =
+      moment.utc(twoDaysInNextMonth).diff(moment.now());
+
+    // Disable wait for correct app-event ordering
+    process.env.GUID_MIN_AGE = twentySecondsInMilliseconds;
+
+    // Start all Abacus services
+    const services = () => {
+      start('abacus-eureka-plugin');
+      start('abacus-provisioning-plugin');
+      start('abacus-account-plugin');
+      start('abacus-usage-collector');
+      start('abacus-usage-meter');
+      start('abacus-usage-accumulator');
+      start('abacus-usage-aggregator');
+      start('abacus-usage-reporting');
+      start('abacus-cf-bridge');
+
+      done();
+    };
+
+    // Start local database server
+    if (!process.env.DB) {
+      start('abacus-pouchserver');
+      services();
+    }
+    else
+      // Delete test dbs on the configured db server
+      dbclient.drop(process.env.DB, /^abacus-/, () => {
+        services();
+      });
+  });
+
+  afterEach((done) => {
+    let counter = 10;
+    const finishCb = (module, code) => {
+      counter--;
+      debug('Module %s exited with code %d. Left %d modules',
+        module, code, counter);
+      if (counter === 0) {
+        debug('All modules stopped. Exiting test');
+        done();
+      }
+    };
+
+    const stop = (module, cb) => {
+      debug('Stopping %s in directory %s', module, moduleDir(module));
+      const c = cp.spawn('npm', ['run', 'stop'],
+        { cwd: moduleDir(module), env: clone(process.env) });
+
+      // Add listeners to stdout, stderr and exit message and forward the
+      // messages to debug logs
+      c.stdout.on('data', (data) => process.stdout.write(data));
+      c.stderr.on('data', (data) => process.stderr.write(data));
+      c.on('exit', (code) => cb(module, code));
+    };
+
+    stop('abacus-cf-bridge', finishCb);
+    stop('abacus-usage-reporting', finishCb);
+    stop('abacus-usage-aggregator', finishCb);
+    stop('abacus-usage-accumulator', finishCb);
+    stop('abacus-usage-meter', finishCb);
+    stop('abacus-usage-collector', finishCb);
+    stop('abacus-account-plugin', finishCb);
+    stop('abacus-provisioning-plugin', finishCb);
+    stop('abacus-eureka-plugin', finishCb);
+    stop('abacus-pouchserver', finishCb);
+
+    server.close();
+
+    delete process.env.SECURED;
+    delete process.env.API;
+    delete process.env.AUTH_SERVER;
+    delete process.env.CF_CLIENT_ID;
+    delete process.env.CF_CLIENT_SECRET;
+    delete process.env.CLIENT_ID;
+    delete process.env.CLIENT_SECRET;
+    delete process.env.JWTKEY;
+    delete process.env.JWTALGO;
+    delete process.env.SLACK;
+    delete process.env.GUID_MIN_AGE;
+    delete process.env.ABACUS_TIME_OFFSET;
+  });
+
+  const checkTimeWindows = (usage, timeWindow) => {
+    const window = usage.windows[timeWindow];
+
+    debug('Checking %j window %j ',
+      invert(timeWindows)[timeWindow], usage.windows[timeWindow]);
+
+    expect(window[0].charge).to.be.above(0);
+    expect(window[0].summary).to.be.closeTo(expectedGBh, 0.1);
+  };
+
+  const checkReport = (cb) => {
+    request.get('http://localhost:9088/v1/metering/organizations' +
+      '/:organization_id/aggregated/usage', {
+        organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+        headers: {
+          authorization: 'bearer ' + signedSystemToken
+        }
+      },
+      (error, response) => {
+        try {
+          expect(error).to.equal(undefined);
+
+          expect(response.body).to.contain.all.keys('resources', 'spaces');
+          const resources = response.body.resources;
+          expect(resources.length).to.equal(1);
+          expect(response.body.spaces.length).to.equal(1);
+
+          expect(resources[0]).to.contain.all.keys(
+            'plans', 'aggregated_usage');
+
+          const planUsage = resources[0].plans[0].aggregated_usage[0];
+          checkTimeWindows(planUsage, timeWindows.day);
+          checkTimeWindows(planUsage, timeWindows.month);
+
+          resultDebug('All usage report checks are successful for: %s',
+            JSON.stringify(response.body, null, 2));
+
+          cb();
+        }
+        catch (e) {
+          const message = util.format('Check failed with %s.\n' +
+            'Usage report:\n', e.stack,
+            response ? JSON.stringify(response.body, null, 2) : undefined);
+          responseDebug(message);
+          cb(new Error(message), e);
+        }
+      });
+  };
+
+  const poll = (fn, done, timeout = 1000, interval = 100) => {
+    const startTimestamp = moment.now();
+
+    const doneCallback = (err) => {
+      if (!err) {
+        debug('Expectation in %s met', fn.name);
+        setImmediate(() => done());
+        return;
+      }
+
+      if (moment.now() - startTimestamp > timeout) {
+        debug('Expectation not met for %d ms. Error: %o', timeout, err);
+        setImmediate(() => done(new Error(err)));
+      }
+      else
+        setTimeout(() => {
+          debug('Calling %s after >= %d ms...', fn.name, interval);
+          fn(doneCallback);
+        }, interval);
+    };
+
+    debug('Calling %s for the first time...', fn.name);
+    fn(doneCallback);
+  };
+
+  const waitForStartAndPoll = (component, port, done) => {
+    // Wait for bridge to start
+    let startWaitTime = moment.now();
+    request.waitFor('http://localhost::p/v1/cf/:component',
+      { component: component, p: port },
+      startTimeout, (err, uri, opts) => {
+        // Failed to ping component before timing out
+        if (err) throw err;
+
+        // Check report
+        request.get(uri, {}, (err, response) => {
+          expect(err).to.equal(undefined);
+          expect(response.statusCode).to.equal(200);
+
+          poll(checkReport, (error) => {
+            done(error);
+          }, totalTimeout - (moment.now() - startWaitTime), 1000);
+        });
+      }
+    );
+  };
+
+  const generatePastAppUsage = (value, timeUnit) => [
+    {
+      metadata: {
+        guid: '0f2336af-1866-4d2b-8845-0efb14c1a388',
+        url: '/v2/app_usage_events/0f2336af-1866-4d2b-8845-0efb14c1a388',
+        created_at: moment.utc(twoDaysInNextMonth).
+          subtract(value, timeUnit).toISOString()
+      },
+      entity: {
+        state: 'STARTED',
+        previous_state: 'STOPPED',
+        memory_in_mb_per_instance: 512,
+        previous_memory_in_mb_per_instance: 512,
+        instance_count: 1,
+        previous_instance_count: 1,
+        app_guid: '35c4ff2f',
+        app_name: 'app',
+        space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+        space_name: 'abacus',
+        org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+        buildpack_guid: '30429b05-745e-4474-a39f-267afa365d69',
+        buildpack_name: 'staticfile_buildpack',
+        package_state: 'STAGED',
+        previous_package_state: 'STAGED',
+        parent_app_guid: null,
+        parent_app_name: null,
+        process_type: 'web',
+        task_name: null,
+        task_guid: null
+      }
+    }
+  ];
+
+  context('with an app started 1 hour before', () => {
+
+    beforeEach(() => {
+      appUsageEvents = generatePastAppUsage(1, 'hour');
+
+      // 512MB * 1h = 0.5 GBh
+      expectedGBh = 0.5;
+    });
+
+    it('submits usage and gets expected report back', function(done) {
+      this.timeout(totalTimeout + 2000);
+
+      waitForStartAndPoll('bridge', 9500, done);
+    });
+
+  });
+
+  context('with an app started 2 hours before', () => {
+
+    beforeEach(() => {
+      appUsageEvents = generatePastAppUsage(2, 'hours');
+
+      // 512MB * 2h = 1 GBh
+      expectedGBh = 1;
+    });
+
+    it('submits usage and gets expected report back', function(done) {
+      this.timeout(totalTimeout + 2000);
+
+      waitForStartAndPoll('bridge', 9500, done);
+    });
+
+  });
+
+});
