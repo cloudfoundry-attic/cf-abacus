@@ -28,8 +28,6 @@
   },
   "dependencies": {
     "abacus-debug": "file:../debug",
-    "abacus-oauth": "file:../oauth",
-    "abacus-perf": "file:../perf",
     "abacus-request": "file:../request",
     "abacus-urienv": "file:../urienv"
   },
