@@ -166,8 +166,8 @@ jobs:
             ABACUS_PROFILE: {{abacus-profile}}
             BUILDPACK: {{nodejs-buildpack}}
             SKIP_SSL_VALIDATION: {{skip-ssl-validation}}
-            # Save file handlers and offload CF stagers
-            JOBS: 2
+            # Uncomment to save file handlers and offload CF stagers
+            # JOBS: 2
             RESTART_RETRIES: {{restart-retries}}
             ABACUS_PREFIX: {{abacus-prefix}}
           run:
@@ -194,8 +194,8 @@ jobs:
             CF_ORG: {{cf-org}}
             CF_SPACE: {{cf-space}}
             SKIP_SSL_VALIDATION: {{skip-ssl-validation}}
-            # Save file handlers and offload CF stagers
-            JOBS: 2
+            # Uncomment to save file handlers and offload CF stagers
+            # JOBS: 2
             RESTART_RETRIES: {{restart-retries}}
           run:
             path: built-project/etc/concourse/scripts/cf-deploy-start
