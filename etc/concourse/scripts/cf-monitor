@@ -12,25 +12,14 @@ fi
 
 cf login $skip -a https://api.$CF_SYS_DOMAIN -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
 
-if [ -z "$SYSTEM_CLIENT_ID" ] || [ -z "$SYSTEM_CLIENT_SECRET" ]; then
-  echo "Missing SYSTEM_CLIENT_ID or SYSTEM_CLIENT_SECRET !"
+if [ -z "$HYSTRIX_CLIENT_ID" ] || [ -z "$HYSTRIX_CLIENT_SECRET" ]; then
+  echo "Missing HYSTRIX_CLIENT_ID or HYSTRIX_CLIENT_SECRET !"
   exit 1
 fi
 
-AUTH_SERVER=https://uaa.$CF_SYS_DOMAIN
-
-echo "Getting token for $SYSTEM_CLIENT_ID from $AUTH_SERVER ..."
-
-TOKEN=$(curl $k --user $SYSTEM_CLIENT_ID:$SYSTEM_CLIENT_SECRET -s "$AUTH_SERVER/oauth/token?grant_type=client_credentials" | jq -r .access_token)
-if [ "$TOKEN" == "null" ]; then
-  echo "No token found ! Are your credentials correct (SYSTEM_CLIENT_ID and SYSTEM_CLIENT_SECRET)?"
-fi
-echo "Token obtained"
-echo ""
-
 for url in $(cf apps | tail -n +5 | tr -d , | awk  '{for(i=6;i<=NF;++i)print $i}' )
 do
-  response=$(curl $k -H "Authorization: bearer $TOKEN" -X OPTIONS --write-out "\nHTTP_CODE: %{http_code}" --silent https://$url)
+  response=$(curl $k --user $HYSTRIX_CLIENT_ID:$HYSTRIX_CLIENT_SECRET --write-out "\nHTTP_CODE: %{http_code}" --silent https://$url/healthcheck)
   response_status=$(echo $response | sed -n -e 's/^.*HTTP_CODE: //p')
   if [ $response_status != 200 ]
   then

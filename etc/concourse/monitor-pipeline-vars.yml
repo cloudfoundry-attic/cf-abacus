@@ -13,11 +13,11 @@ cf-org: abacus
 # Space used to host Abacus pipeline apps
 cf-space: abacus
 
-# UAA client: "Abacus" client id
-system-client-id: client
+# UAA client id for checking the Eureka-style healthcheck endpoints
+hystrix-client-id: client
 
-# UAA client: "Abacus" client secret
-system-client-secret: secret
+# UAA client secret for checking the Eureka-style healthcheck endpoints
+hystrix-client-secret: secret
 
 # Use to skip ssl validation
 skip-ssl-validation: true
