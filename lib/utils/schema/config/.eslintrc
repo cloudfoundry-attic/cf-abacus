@@ -1,0 +1,10 @@
+---
+parser: espree
+
+env:
+  es6: true
+
+parserOptions:
+  sourceType: "script"
+
+extends: "eslint:recommended"
