@@ -11,3 +11,6 @@ parserOptions:
   sourceType: "script"
 
 extends: "eslint:recommended"
+
+rules:
+  no-unused-vars: ["error", { "args": "none" }]
