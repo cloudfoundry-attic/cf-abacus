@@ -43,11 +43,13 @@ cf login $skip -a "https://api.$CF_SYS_DOMAIN" -u "$CF_USER" -p "$CF_PASSWORD" -
 if [ "$CREATE_DB_SERVICE" == "true" ]; then
   echo "Creating or updating DB service instances ..."
   instances=($DB_SERVICE_INSTANCES)
+  shouldWaitFor=()
   for instance in "${instances[@]}"; do
     args=(${instance//:/ })
     createOrUpdateService ${args[0]} ${args[1]} &
+    shouldWaitFor+=(${args[0]})
   done;
-  waitForServices ${#instances[@]}
+  waitForServices $shouldWaitFor
 else
   echo "Using DB URL provided in abacus-config !"
 fi

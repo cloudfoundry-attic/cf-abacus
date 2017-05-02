@@ -48,15 +48,19 @@ function restartAppsWithRetry {
 
 function waitForServices {
   echo "Waiting for DB creation or update ..."
-  until [ "$(cf services | grep '\(create\|update\) succeeded\|\(create\|update\) failed' | wc -l)" == "$1" ]; do
-    sleep 3s
+  services=$1
+  for service in "${services[@]}"
+  do
+    while [[ -z $(cf service $service | grep '\(create\|update\) succeeded\|\(create\|update\) failed') ]]; do
+      sleep 3s
+    done
+    if [[ -n $(cf service $service | grep '\(create\|update\) succeeded') ]]; then
+      echo "Creation or update of $service finished successfully."
+    else
+      echo "Creation or update of $service failed!"
+      exit 1
+    fi
   done
-  if [ "$(cf services | grep '\(create\|update\) succeeded' | wc -l)" == "$1" ]; then
-    echo "DB creation or update finished successfully."
-  else
-    echo "DB creation or update failed!"
-    exit 1
-  fi
 }
 
 function createOrUpdateService {
@@ -64,7 +68,7 @@ function createOrUpdateService {
   cf service $1
   return_code=$?
   set -e # Enable error checks
-  
+
   if [ "$return_code" == "1" ]; then
     echo "Creating new DB service instance $1 with plan $2 ..."
     cf create-service "$DB_SERVICE_NAME" $2 $1
