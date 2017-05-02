@@ -18,7 +18,8 @@
   ],
   "files": [
     ".npmrc",
-    "src/"
+    "src/",
+    "config/"
   ],
   "main": "src/index.js",
   "scripts": {

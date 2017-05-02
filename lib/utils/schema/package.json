@@ -18,7 +18,8 @@
   ],
   "files": [
     ".npmrc",
-    "src/"
+    "src/",
+    "config/"
   ],
   "main": "src/index.js",
   "scripts": {
@@ -28,6 +29,7 @@
   },
   "dependencies": {
     "abacus-debug": "file:../debug",
+    "eslint": "^3.19.0",
     "graphql": "^0.4.14",
     "is-my-json-valid": "^2.12.0"
   },
