@@ -114,27 +114,6 @@ const deltaCompare = (currentWindow, previousWindow, ch, s, q, c) => {
   checkIfNear('cost', c, currentWindow, previousWindow);
 };
 
-// Prunes all the windows of everything but the monthly charge
-const prune = (v, k) => {
-  if(k === 'windows') {
-    const nwin = {};
-    const sumWindowValue = (w1, w2, k) => {
-      nwin[k] = 0;
-      if(w1 && typeof w1[k] !== 'undefined')
-        nwin[k] += w1[k];
-      if(w2 && typeof w2[k] !== 'undefined')
-        nwin[k] += w2[k];
-    };
-
-    sumWindowValue(v[4][0], v[4][1], 'charge');
-    sumWindowValue(v[4][0], v[4][1], 'summary');
-    sumWindowValue(v[4][0], v[4][1], 'cost');
-    sumWindowValue(v[4][0], v[4][1], 'quantity');
-    return nwin;
-  }
-  return v;
-};
-
 const authHeader = (token) => token ? {
   headers: {
     authorization: token()
@@ -431,7 +410,8 @@ describe('abacus-smoke-test', function() {
             val.statusCode, val.headers, val.body));
 
         const actual = clone(omit(val.body,
-          'id', 'processed', 'processed_id', 'start', 'end'), prune);
+          'id', 'processed', 'processed_id', 'start', 'end'),
+          (arg) => arg);
 
         cb(actual, processed(val));
       });
