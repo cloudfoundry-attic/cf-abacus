@@ -1,16 +1,19 @@
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
+const util = require('util');
+
 const commander = require('commander');
 const cp = require('child_process');
 const jwt = require('jsonwebtoken');
-const util = require('util');
-const moment = require('abacus-moment');
 
 const _ = require('underscore');
 const clone = _.clone;
 
 const dbclient = require('abacus-dbclient');
 const express = require('abacus-express');
+const moment = require('abacus-moment');
 const request = require('abacus-request');
 const router = require('abacus-router');
 
@@ -740,6 +743,43 @@ describe('abacus-cf-single-app-bridge-itest without oAuth', () => {
         // buildpack_set events are ignored
         // stop: 0GB
         expectedConsuming = 0;
+      });
+
+      it('submits usage and gets expected report back', function(done) {
+        this.timeout(totalTimeout + 2000);
+
+        waitForStartAndPoll('bridge', 9500, done);
+      });
+    });
+
+    const modifyEvents = (responseBody) => {
+      const startTime = moment.now() - twentySecondsInMilliseconds;
+      for(let resource of responseBody.resources)
+        resource.metadata.created_at =
+          moment.utc(startTime + resource.metadata.created_at).toISOString();
+
+      return responseBody;
+    };
+
+    const buildAppUsageEvents = () => {
+      const pathToEventsFile = path.format({
+        dir: __dirname,
+        base: 'appUsageEvents.json'
+      });
+
+      const events =
+        modifyEvents(JSON.parse(fs.readFileSync(pathToEventsFile, 'utf-8')));
+      debug('Built %d events', events.resources.length);
+
+      return events.resources;
+    };
+
+    context('start, restart, restage', () => {
+      beforeEach(() => {
+        appUsageEvents = buildAppUsageEvents();
+
+        // app uses 512MB
+        expectedConsuming = 0.5;
       });
 
       it('submits usage and gets expected report back', function(done) {
