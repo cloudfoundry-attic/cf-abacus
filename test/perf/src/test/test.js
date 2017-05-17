@@ -19,10 +19,10 @@ const commander = require('commander');
 const batch = require('abacus-batch');
 const request = require('abacus-request');
 const throttle = require('abacus-throttle');
-const jwt = require('jsonwebtoken');
 const util = require('util');
 const dbclient = require('abacus-dbclient');
 const moment = require('abacus-moment');
+const oauth = require('abacus-oauth');
 
 // BigNumber
 const BigNumber = require('bignumber.js');
@@ -42,6 +42,8 @@ const brequest = batch(request);
 // Setup the debug log
 const debug = require('abacus-debug')('abacus-perf-test');
 
+process.env.DB = process.env.DB || 'test';
+
 // Parse command line options
 const argv = clone(process.argv);
 argv.splice(1, 1, 'perf');
@@ -55,6 +57,15 @@ commander
     'external processes start timeout in milliseconds', parseInt)
   .option('-x, --total-timeout <n>',
     'test timeout in milliseconds', parseInt)
+  .option('-c, --collector <uri>',
+    'usage collector URL or domain name [http://localhost:9080]',
+    'http://localhost:9080')
+  .option('-r, --reporting <uri>',
+    'usage reporting URL or domain name [http://localhost:9088]',
+    'http://localhost:9088')
+  .option('-a, --auth-server <uri>',
+    'authentication server URL or domain name [http://localhost:9882]',
+    'http://localhost:9882')
   .allowUnknownOption(true)
   .parse(argv);
 
@@ -76,10 +87,40 @@ const startTimeout = commander.startTimeout || 10000;
 // This test timeout
 const totalTimeout = commander.totalTimeout || 60000;
 
+// Collector service URL
+const collector = commander.collector;
+
+// Reporting service URL
+const reporting = commander.reporting;
+
+// Auth server URL
+const authServer = commander.authServer;
+
+// Use secure routes or not
+const secured = () => process.env.SECURED === 'true' ? true : false;
+
+const objectStorageToken = secured() ? oauth.cache(authServer,
+    process.env.OBJECT_STORAGE_CLIENT_ID,
+    process.env.OBJECT_STORAGE_CLIENT_SECRET,
+    'abacus.usage.object-storage.write') :
+  undefined;
+
+const systemToken = secured() ? oauth.cache(authServer,
+    process.env.SYSTEM_CLIENT_ID, process.env.SYSTEM_CLIENT_SECRET,
+    'abacus.usage.read') :
+  undefined;
+
 describe('abacus-perf-test', () => {
   before((done) => {
-    // Delete test dbs on the configured db server
-    dbclient.drop(process.env.DB, /^abacus-/, done);
+    if (objectStorageToken)
+      objectStorageToken.start();
+    if (systemToken)
+      systemToken.start();
+    if (/.*localhost.*/.test(collector))
+      // Delete test dbs on the configured db server
+      dbclient.drop(process.env.DB, /^abacus-/, done);
+    else
+      done();
   });
 
   it('measures performance of concurrent usage submissions', function(done) {
@@ -272,70 +313,18 @@ describe('abacus-perf-test', () => {
       }]
     });
 
-    const objectStorageToken = {
-      jti: 'fa1b29fe-76a9-4c2d-903e-dddd0563a9e3',
-      sub: 'object-storage',
-      authorities: [
-        'abacus.usage.object-storage.write'
-      ],
-      scope: [
-        'abacus.usage.object-storage.write'
-      ],
-      client_id: 'object-storage',
-      cid: 'object-storage',
-      azp: 'object-storage',
-      grant_type: 'client_credentials',
-      iss: 'https://uaa.cf.net/oauth/token',
-      zid: 'uaa',
-      aud: [
-        'abacus',
-        'account'
-      ]
-    };
-
-    const systemToken = {
-      jti: 'fa1b29fe-76a9-4c2d-903e-dddd0563a9e3',
-      sub: 'object-storage',
-      authorities: [
-        'abacus.usage.read'
-      ],
-      scope: [
-        'abacus.usage.read'
-      ],
-      client_id: 'object-storage',
-      cid: 'object-storage',
-      azp: 'object-storage',
-      grant_type: 'client_credentials',
-      iss: 'https://uaa.cf.net/oauth/token',
-      zid: 'uaa',
-      aud: [
-        'abacus',
-        'account'
-      ]
-    };
-
-    // OAuth bearer access token signed using JWTKEY and
-    // default algorithm (HS256)
-    const auth = (token) => {
-      return process.env.SECURED === 'true' ?
-        jwt.sign(token, process.env.JWTKEY, {
-          algorithm: process.env.JWTALGO,
-          expiresIn: 43200
-        }) : undefined;
-    };
-
-    // Use OAuth bearer as a HTTP request header field
-    const opt = (token) => {
-      const a = auth(token);
-      return a ? { headers: { authorization: 'Bearer ' + a } } : {};
-    };
+    const authHeader = (token) => token ? {
+      headers: {
+        authorization: token()
+      }
+    } : {};
 
     // Post one usage doc, throttled to 1000 concurrent requests
     const post = throttle((o, ri, i, cb) => {
       debug('Submitting org%d instance%d usage%d',
         o + 1, ri + 1, i + 1);
-      brequest.post('http://localhost:9080/v1/metering/collected/usage',
-        extend({}, opt(objectStorageToken),
+      brequest.post(collector + '/v1/metering/collected/usage',
+        extend({}, authHeader(objectStorageToken),
           { body: usageTemplate(o, ri, i) }), (err, val) => {
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(201);
@@ -360,7 +349,7 @@ describe('abacus-perf-test', () => {
     // report for our test resource
     const processed = (val) => {
       try {
-        return val.body.resources[0].aggregated_usage[1]
+        return val.body.resources[0].plans[0].aggregated_usage[1]
           .windows[4][0].summary;
       }
       catch (e) {
@@ -388,9 +377,10 @@ describe('abacus-perf-test', () => {
 
 
     // Get a usage report for the test organization
-    const get = (o, done) => {
-      brequest.get('http://localhost:9088' + '/v1/metering/organizations' +
-        '/:organization_id/aggregated/usage', extend({}, opt(systemToken), {
+    const get = throttle((o, done) => {
+      brequest.get(reporting + '/v1/metering/organizations' +
+        '/:organization_id/aggregated/usage',
+        extend({}, authHeader(systemToken), {
           organization_id: orgid(o)
         }), (err, val) => {
           expect(err).to.equal(undefined);
@@ -404,9 +394,10 @@ describe('abacus-perf-test', () => {
             val.body.spaces[0].consumers[0].resources[0].plans[0] =
               omit(val.body.spaces[0].consumers[0]
               .resources[0].plans[0], 'resource_instances');
-            expect(fixup(omit(
-              val.body, 'id', 'processed', 'processed_id', 'start', 'end')))
-                .to.deep.equal(fixup(report(o, resourceInstances, usage)));
+            const x = fixup(omit(val.body, 'id', 'processed', 'processed_id',
+              'start', 'end'));
+            const expected = fixup(report(o, resourceInstances, usage));
+            expect(x).to.deep.equal(expected);
 
             console.log('\n', util.inspect(val.body, {
               depth: 20
@@ -425,7 +416,7 @@ describe('abacus-perf-test', () => {
             }
           }
         });
-    };
+    });
 
     // Wait for the expected usage report for all organizations, get an
     // organization usage report every 250 msec until we get the expected
@@ -443,8 +434,8 @@ describe('abacus-perf-test', () => {
     };
 
     // Wait for usage reporter to start
-    request.waitFor('http://localhost:9088' + '/batch', {}, startTimeout,
-      (err, value) => {
+    request.waitFor(reporting + '/batch', extend({}, authHeader(systemToken)),
+      startTimeout, (err, value) => {
         // Failed to ping usage reporter before timing out
         if (err) throw err;
 

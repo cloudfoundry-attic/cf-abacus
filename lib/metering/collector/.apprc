@@ -27,7 +27,7 @@ small:
 
 medium:
   APPS: 1
-  INSTANCES: 2
+  INSTANCES: 4
   DB_PARTITIONS: 4
   METER_APPS: 4
 
