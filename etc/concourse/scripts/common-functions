@@ -121,3 +121,12 @@ function mapRoutes {
     done
   fi
 }
+
+function deleteObsoleteApps {
+  local APP_NAME=$1
+  local MAX_INSTANCES=$(expr $2 + 4)
+
+  for i in `seq $2 $MAX_INSTANCES`; do
+    cf delete $APP_NAME-$i -f
+  done
+}

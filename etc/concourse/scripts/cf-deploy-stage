@@ -19,12 +19,22 @@ echo "Pushing $ABACUS_PROFILE Abacus installation ..."
 pushd built-project
   npm run cfstage -- $ABACUS_PROFILE
 
-  echo "Mapping routes ..."
   collectorApps=$(node_modules/abacus-etc/apprc lib/metering/collector/.apprc $ABACUS_PROFILE APPS)
-  mapRoutes ${ABACUS_PREFIX}abacus-usage-collector $collectorApps
-
+  meterApps=$(node_modules/abacus-etc/apprc lib/metering/meter/.apprc $ABACUS_PROFILE APPS)
+  accumulatorApps=$(node_modules/abacus-etc/apprc lib/aggregation/accumulator/.apprc $ABACUS_PROFILE APPS)
+  aggregatorApps=$(node_modules/abacus-etc/apprc lib/aggregation/aggregator/.apprc $ABACUS_PROFILE APPS)
   reportingApps=$(node_modules/abacus-etc/apprc lib/aggregation/reporting/.apprc $ABACUS_PROFILE APPS)
+
+  echo "Mapping routes ..."
+  mapRoutes ${ABACUS_PREFIX}abacus-usage-collector $collectorApps
   mapRoutes ${ABACUS_PREFIX}abacus-usage-reporting $reportingApps
+
+  echo "Deleting obsolete apps ..."
+  deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-collector $collectorApps
+  deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-meter $meterApps
+  deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-accumulator $accumulatorApps
+  deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-aggregator $aggregatorApps
+  deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-reporting $reportingApps
 popd
 
 if [ "$BIND_DB_SERVICE" == "true" ]; then
