@@ -29,8 +29,7 @@
   "main": "src/index.js",
   "bin": {
     "apprc": "./apprc",
-    "foreach": "./foreach",
-    "versions": "./versions"
+    "foreach": "./foreach"
   },
   "scripts": {
     "test": "eslint",

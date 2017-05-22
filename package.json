@@ -33,7 +33,8 @@
     "tools/"
   ],
   "scripts": {
-    "provision": "etc/versions && npm install",
+    "bootstrap": "npm install check-node-version && check-node-version --package",
+    "provision": "npm run bootstrap && npm install",
     "build": "npm run provision && npm test",
     "clean": "git clean -df",
     "rebuild": "npm run clean && npm run build",
@@ -162,6 +163,7 @@
     "abacus-publish": "file:tools/publish",
     "abacus-replace-template": "file:tools/replace-template",
     "coveralls": "^2.11.3",
+    "check-node-version": "^2.1.0",
     "eslint-plugin-mocha": "^4.8.0",
     "jshint": "^2.8.0",
     "jsinspect": "^0.6.1"
