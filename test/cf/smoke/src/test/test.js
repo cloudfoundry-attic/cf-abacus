@@ -114,6 +114,9 @@ const deltaCompare = (currentWindow, previousWindow, ch, s, q, c) => {
   checkIfNear('cost', c, currentWindow, previousWindow);
 };
 
+// Leave only the current month charge in "windows"
+const prune = (v, k) => k === 'windows' ? v[4][0] : v;
+
 const authHeader = (token) => token ? {
   headers: {
     authorization: token()
@@ -410,8 +413,7 @@ describe('abacus-smoke-test', function() {
             val.statusCode, val.headers, val.body));
 
         const actual = clone(omit(val.body,
-          'id', 'processed', 'processed_id', 'start', 'end'),
-          (arg) => arg);
+          'id', 'processed', 'processed_id', 'start', 'end'), prune);
 
         cb(actual, processed(val));
       });
@@ -425,7 +427,7 @@ describe('abacus-smoke-test', function() {
             .resource_instances[0] = omit(updatedReport.spaces[0].consumers[0]
             .resources[0].plans[0].resource_instances[0], 't', 'p');
 
-          if (processedDocs != 0)
+          if (processedDocs !== 0)
             deltaCompareReports(updatedReport, previousReport);
           else
             expect(updatedReport).to.deep.equal(initialExpectedReport);
@@ -442,13 +444,14 @@ describe('abacus-smoke-test', function() {
           if(moment.now() >= processingDeadline) {
             console.log('%s: All submitted usage still not processed\n',
               moment.utc().toDate());
-            if (processedDocs != 0)
+            if (processedDocs !== 0)
               deltaCompareReports(updatedReport, previousReport);
             else
               expect(updatedReport).to.deep.equal(initialExpectedReport);
           }
           else
-            setTimeout(() => compareReport(previousReport, done), 250);
+            setTimeout(() => compareReport(previousReport, processedDocs, done),
+              250);
         }
       });
     };

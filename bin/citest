@@ -19,24 +19,26 @@ if [ "$CI_TEST" != "false" ]; then
   npm run dupe -- --synthetic
   npm stop
 
-  # Run demo and perf test without security
+  # Run smoke test
+  npm start
+  sleep 3s
+  npm run smoke
+  npm stop
+
+  # Run demo and smoke tests without security
   npm start
   sleep 3s
   npm run demo
+  npm run smoke
   npm stop
 
-  # Tests for concurrency
-  npm start small
-  sleep 6s
-  npm run perf -- -o 1 -i 8 -u 8 $@
-  npm stop
-
-  # Run demo and perf test with the smalldb config
+  # Run demo test with the smalldb config
   npm start smalldb
   sleep 3s
   npm run demo
   npm stop
 
+  # Run perf test without security
   npm start
   sleep 3s
   npm run perf -- -o 4 -i 4 -u 4 $@
@@ -49,6 +51,12 @@ if [ "$CI_TEST" != "false" ]; then
   npm start
   sleep 3s
   npm run perf -- -o 4 -i 4 -u 4 $@
+  npm stop
+
+  # Test for concurrency
+  npm start small
+  sleep 6s
+  npm run perf -- -o 1 -i 8 -u 8 $@
   npm stop
 
 fi
