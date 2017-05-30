@@ -28,7 +28,8 @@
   },
   "dependencies": {
     "abacus-debug": "file:../debug",
-    "vm2": "^3.4.6"
+    "vm2": "^3.4.6",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
