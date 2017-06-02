@@ -38,6 +38,7 @@
     "build": "npm run provision && npm test",
     "clean": "git clean -df",
     "rebuild": "npm run clean && npm run build",
+    "update": "rm -rf node_modules && rm npm-shrinkwrap.json && npm run provision && npm shrinkwrap",
     "lint": "foreach abacus :path npm run lint",
     "hint": "foreach abacus :path jshint src",
     "test": "foreach abacus node_modules/:name npm test && coverage",

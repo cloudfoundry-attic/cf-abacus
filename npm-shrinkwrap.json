@@ -1501,9 +1501,9 @@
       "resolved": "https://registry.npmjs.org/are-we-there-yet/-/are-we-there-yet-1.1.4.tgz",
       "dependencies": {
         "readable-stream": {
-          "version": "2.2.9",
+          "version": "2.2.10",
           "from": "readable-stream@>=2.0.6 <3.0.0",
-          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.9.tgz"
+          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.10.tgz"
         },
         "string_decoder": {
           "version": "1.0.1",
@@ -1858,9 +1858,9 @@
       "resolved": "https://registry.npmjs.org/concat-stream/-/concat-stream-1.6.0.tgz",
       "dependencies": {
         "readable-stream": {
-          "version": "2.2.9",
+          "version": "2.2.10",
           "from": "readable-stream@>=2.2.2 <3.0.0",
-          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.9.tgz"
+          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.10.tgz"
         },
         "string_decoder": {
           "version": "1.0.1",
@@ -2292,9 +2292,9 @@
       }
     },
     "es5-ext": {
-      "version": "0.10.21",
+      "version": "0.10.22",
       "from": "es5-ext@>=0.10.14 <0.11.0",
-      "resolved": "https://registry.npmjs.org/es5-ext/-/es5-ext-0.10.21.tgz"
+      "resolved": "https://registry.npmjs.org/es5-ext/-/es5-ext-0.10.22.tgz"
     },
     "es6-iterator": {
       "version": "2.0.1",
@@ -3556,9 +3556,9 @@
       "resolved": "https://registry.npmjs.org/moment/-/moment-2.18.1.tgz"
     },
     "mongodb": {
-      "version": "2.2.27",
+      "version": "2.2.28",
       "from": "mongodb@>=2.1.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/mongodb/-/mongodb-2.2.27.tgz",
+      "resolved": "https://registry.npmjs.org/mongodb/-/mongodb-2.2.28.tgz",
       "dependencies": {
         "readable-stream": {
           "version": "2.2.7",
@@ -3573,9 +3573,9 @@
       }
     },
     "mongodb-core": {
-      "version": "2.1.11",
-      "from": "mongodb-core@2.1.11",
-      "resolved": "https://registry.npmjs.org/mongodb-core/-/mongodb-core-2.1.11.tgz"
+      "version": "2.1.12",
+      "from": "mongodb-core@2.1.12",
+      "resolved": "https://registry.npmjs.org/mongodb-core/-/mongodb-core-2.1.12.tgz"
     },
     "morgan": {
       "version": "1.8.2",
@@ -3624,9 +3624,9 @@
       "dev": true
     },
     "node-gyp": {
-      "version": "3.6.1",
+      "version": "3.6.2",
       "from": "node-gyp@>=3.0.3 <4.0.0",
-      "resolved": "https://registry.npmjs.org/node-gyp/-/node-gyp-3.6.1.tgz"
+      "resolved": "https://registry.npmjs.org/node-gyp/-/node-gyp-3.6.2.tgz"
     },
     "node-ninja": {
       "version": "1.0.2",
@@ -4825,9 +4825,9 @@
       "resolved": "https://registry.npmjs.org/tar-stream/-/tar-stream-1.5.4.tgz",
       "dependencies": {
         "readable-stream": {
-          "version": "2.2.9",
+          "version": "2.2.10",
           "from": "readable-stream@>=2.0.0 <3.0.0",
-          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.9.tgz"
+          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.10.tgz"
         },
         "string_decoder": {
           "version": "1.0.1",
@@ -4852,9 +4852,9 @@
       "resolved": "https://registry.npmjs.org/through2/-/through2-2.0.3.tgz",
       "dependencies": {
         "readable-stream": {
-          "version": "2.2.9",
+          "version": "2.2.10",
           "from": "readable-stream@>=2.1.5 <3.0.0",
-          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.9.tgz"
+          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.10.tgz"
         },
         "string_decoder": {
           "version": "1.0.1",
