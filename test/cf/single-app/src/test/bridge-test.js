@@ -69,10 +69,10 @@ commander
   .parse(argv);
 
 // External Abacus processes start timeout
-const startTimeout = commander.startTimeout || 100000;
+const startTimeout = commander.startTimeout || 10000;
 
 // This test timeout
-const totalTimeout = commander.totalTimeout || 200000;
+const totalTimeout = commander.totalTimeout || 20000;
 
 // Token setup
 const tokenSecret = 'secret';
@@ -782,7 +782,7 @@ describe('abacus-cf-single-app-bridge-itest without oAuth', () => {
         expectedConsuming = 0.5;
       });
 
-      it('submits usage and gets expected report back', function(done) {
+      it.only('submits usage and gets expected report back', function(done) {
         this.timeout(totalTimeout + 2000);
 
         waitForStartAndPoll('bridge', 9500, done);

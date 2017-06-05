@@ -134,7 +134,7 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
 
 const twentySecondsInMilliseconds = 20 * 1000;
 
-describe('abacus-cf-single-app-accuracy-itest', () => {
+describe.skip('abacus-cf-single-app-accuracy-itest', () => {
   let server;
   let serverPort;
   let appUsageEvents;

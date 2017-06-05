@@ -130,7 +130,7 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
 
 const lastMonthInMilliseconds = moment.utc().subtract(1, 'months').valueOf();
 
-describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
+describe.skip('abacus-cf-single-app-renewer-itest without oAuth', () => {
   let server;
   let serverPort;
 
