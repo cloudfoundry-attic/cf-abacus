@@ -1,20 +1,30 @@
 #!/bin/bash
 
-set -e
-
 export CONF=default
 if [ -n "$1" ]; then
   export CONF=$1
 fi
 
+# fix the new dependencies on root level
+rm -rf node_modules 
+rm npm-shrinkwrap.json
+
+set -e
+
+npm run provision
+npm shrinkwrap 
+
+# fix dependencies on every app
 for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
   APPNAME=$(node_modules/abacus-etc/appname $MODULE)
   INSTANCES=$(node_modules/abacus-etc/apprc $MODULE/.apprc $CONF INSTANCES)
   APPS=$(( $(node_modules/abacus-etc/apprc $MODULE/.apprc $CONF APPS) - 1 ))
   echo $MODULE ' - ' $APPNAME ' - ' $INSTANCES ' - ' $APPS
   pushd $MODULE
+    set +e
     rm -rf node_modules
     rm npm-shrinkwrap.json
+    set -e
     npm install
     npm shrinkwrap
   popd

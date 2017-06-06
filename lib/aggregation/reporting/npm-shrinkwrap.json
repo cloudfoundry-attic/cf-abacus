@@ -2286,9 +2286,9 @@
       "resolved": "https://registry.npmjs.org/setprototypeof/-/setprototypeof-1.0.3.tgz"
     },
     "shelljs": {
-      "version": "0.7.7",
+      "version": "0.7.8",
       "from": "shelljs@>=0.7.5 <0.8.0",
-      "resolved": "https://registry.npmjs.org/shelljs/-/shelljs-0.7.7.tgz"
+      "resolved": "https://registry.npmjs.org/shelljs/-/shelljs-0.7.8.tgz"
     },
     "simple-get": {
       "version": "1.4.3",
