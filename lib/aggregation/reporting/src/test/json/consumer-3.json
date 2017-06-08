@@ -1,0 +1,172 @@
+{
+  "id": "k/610f6508-8b5d-4840-888d-0615ade33117/69d4d85b-03f7-436e-b293-94d1803b42bf/UNKNOWN/t/1448457444188",
+  "consumer_id": "UNKNOWN",
+  "organization_id": "610f6508-8b5d-4840-888d-0615ade33117",
+  "resource_instance_id": "0b39fa70-a65f-4183-bae8-385633ca5c87",
+  "start": 1448284898000,
+  "end": 1448457443000,
+  "resources": [
+    {
+      "resource_id": "test-resource-id",
+      "plans": [
+        {
+          "plan_id": "basic/test-metering-plan/test-rating-plan/test-pricing-basic",
+          "metering_plan_id": "test-metering-plan",
+          "rating_plan_id": "test-rating-plan",
+          "pricing_plan_id": "test-pricing-basic",
+          "aggregated_usage": [
+            {
+              "metric": "memory",
+              "windows": [
+                [
+                  {
+                    "quantity": 0,
+                    "cost": 0,
+                    "summary": 0,
+                    "charge": 0
+                  }
+                ],
+                [
+                  {
+                    "quantity": 0,
+                    "cost": 0,
+                    "summary": 0,
+                    "charge": 0
+                  }
+                ],
+                [
+                  {
+                    "quantity": 0,
+                    "cost": 0,
+                    "summary": 0,
+                    "charge": 0
+                  }
+                ],
+                [
+                  {
+                    "quantity": 0,
+                    "cost": 0,
+                    "summary": 0,
+                    "charge": 0
+                  }
+                ],
+                [
+                  {
+                    "quantity": {
+                      "consumed": 78616062.5,
+                      "consuming": 2.09765625
+                    },
+                    "cost": {
+                      "consumed": 78616062.5,
+                      "consuming": 2.09765625,
+                      "price": 0.00014
+                    },
+                    "summary": 80.0006135828993,
+                    "charge": 0.011200085901605903
+                  }
+                ]
+              ]
+            }
+          ],
+          "windows": [
+            [
+              {
+                "charge": 0
+              }
+            ],
+            [
+              {
+                "charge": 0
+              }
+            ],
+            [
+              {
+                "charge": 0
+              }
+            ],
+            [
+              {
+                "charge": 0
+              }
+            ],
+            [
+              {
+                "charge": 0.011200085901605903
+              }
+            ]
+          ]
+        }
+      ],
+      "aggregated_usage": [
+        {
+          "metric": "memory",
+          "windows": [
+            [
+              {
+                "charge": 0
+              }
+            ],
+            [
+              {
+                "charge": 0
+              }
+            ],
+            [
+              {
+                "charge": 0
+              }
+            ],
+            [
+              {
+                "charge": 0
+              }
+            ],
+            [
+              {
+                "charge": 0.011200085901605903
+              }
+            ]
+          ]
+        }
+      ],
+      "windows": [
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          null
+        ],
+        [
+          {
+            "charge": 0.011200085901605903
+          }
+        ]
+      ]
+    }
+  ],
+  "windows": [
+    [
+      null
+    ],
+    [
+      null
+    ],
+    [
+      null
+    ],
+    [
+      null
+    ],
+    [
+      {
+        "charge": 0.011200085901605903
+      }
+    ]
+  ]
+}
