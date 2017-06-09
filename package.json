@@ -38,6 +38,7 @@
     "build": "npm run provision && npm test",
     "clean": "git clean -df",
     "rebuild": "npm run clean && npm run build",
+    "update": "bin/module-update",
     "lint": "foreach abacus :path npm run lint",
     "hint": "foreach abacus :path jshint src",
     "test": "foreach abacus node_modules/:name npm test && coverage",
@@ -67,6 +68,8 @@
     "boshrun": "bin/boshrun"
   },
   "dependencies": {
+    "async": "^2.3.0",
+    "underscore": "^1.8.3",
     "abacus-account-plugin": "file:lib/plugins/account",
     "abacus-authserver-plugin": "file:lib/plugins/authserver",
     "abacus-batch": "file:lib/utils/batch",
@@ -149,8 +152,7 @@
     "abacus-webapp": "file:lib/utils/webapp",
     "abacus-webhook": "file:lib/utils/webhook",
     "abacus-webproxy": "file:lib/utils/webproxy",
-    "abacus-yieldable": "file:lib/utils/yieldable",
-    "underscore": "^1.8.3"
+    "abacus-yieldable": "file:lib/utils/yieldable"
   },
   "devDependencies": {
     "abacus-cfpack": "file:tools/cfpack",
