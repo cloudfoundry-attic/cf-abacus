@@ -327,10 +327,10 @@
           ]
         }
       ],
-      "consumers": {
+      "consumers": [{
         "id": "UNKNOWN",
         "t": "1448457444188"
-      },
+      }],
       "windows": [
         [
           {
@@ -514,10 +514,10 @@
           ]
         }
       ],
-      "consumers": {
+      "consumers": [{
         "id": "UNKNOWN",
         "t": "1448457444188"
-      },
+      }],
       "windows": [
         [
           {
@@ -701,10 +701,10 @@
           ]
         }
       ],
-      "consumers": {
+      "consumers": [{
         "id": "UNKNOWN",
         "t": "1448457444188"
-      },
+      }],
       "windows": [
         [
           null
@@ -890,10 +890,10 @@
           ]
         }
       ],
-      "consumers": {
+      "consumers": [{
         "id": "UNKNOWN",
         "t": "1448457444188"
-      },
+      }],
       "windows": [
         [
           null
@@ -1049,10 +1049,10 @@
           ]
         }
       ],
-      "consumers": {
+      "consumers": [{
         "id": "UNKNOWN",
         "t": "1448457444188"
-      },
+      }],
       "windows": [
         [
           null
