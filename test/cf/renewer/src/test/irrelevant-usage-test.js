@@ -339,16 +339,15 @@ const test = (secured) => {
       (error, response) => {
         try {
           expect(error).to.equal(undefined);
+         
+          if (noReportExpected) {
+            expect(response.statusCode).to.equal(404);
+            cb();
+            return;
+          } 
 
           expect(response.body).to.contain.all.keys('resources', 'spaces');
           const resources = response.body.resources;
-
-          if (noReportExpected) {
-            expect(resources.length).to.equal(0);
-            cb();
-            return;
-          }
-
           expect(resources.length).to.equal(1);
           expect(response.body.spaces.length).to.equal(1);
 
