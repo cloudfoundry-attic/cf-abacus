@@ -408,10 +408,7 @@ describe('abacus-smoke-test', function() {
         'aggregated/usage'
       ].join('/'), extend({}, authHeader(systemToken)), (err, val) => {
         expect(err).to.equal(undefined, util.format('Error: %o', err));
-        expect(val.statusCode).to.equal(200,
-          util.format('Response code: %d; headers: %j; body: %j',
-            val.statusCode, val.headers, val.body));
-
+       
         const actual = clone(omit(val.body,
           'id', 'processed', 'processed_id', 'start', 'end'), prune);
 
