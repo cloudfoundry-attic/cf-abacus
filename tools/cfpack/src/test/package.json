@@ -1,6 +1,6 @@
 {
-  "name": "abacus-cfpack",
-  "description": "CloudFoundry app package build script",
+  "name": "abacus-cfpack-test",
+  "description": "Test app package build script",
   "license": "Apache-2.0",
   "version": "0.0.6-dev.9",
   "private": true,
@@ -17,8 +17,6 @@
     "abacus"
   ],
   "files": [
-    ".npmrc",
-    "cfpack",
     "src/"
   ],
   "main": "src/index.js",
@@ -26,19 +24,19 @@
     "cfpack": "./cfpack"
   },
   "scripts": {
-    "test": "eslint && mocha",
+    "test": "eslint",
     "lint": "eslint",
     "pub": "publish"
   },
   "dependencies": {
-    "commander": "^2.8.1",
+    "abacus-batch": "file:../../../../lib/utils/batch",
+    "jsonwebtoken": "^5.0.5",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "abacus-eslint": "file:../eslint",
-    "abacus-mocha": "file:../mocha",
-    "abacus-publish": "file:../publish",
-    "rimraf": "^2.6.1"
+    "abacus-eslint": "file:../../eslint",
+    "abacus-mocha": "file:../../mocha",
+    "abacus-publish": "file:../../publish"
   },
   "engines": {
     "node": ">=6.10.0",

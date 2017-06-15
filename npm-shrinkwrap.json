@@ -2696,9 +2696,9 @@
       "resolved": "https://registry.npmjs.org/glob/-/glob-7.1.2.tgz"
     },
     "globals": {
-      "version": "9.17.0",
+      "version": "9.18.0",
       "from": "globals@>=9.14.0 <10.0.0",
-      "resolved": "https://registry.npmjs.org/globals/-/globals-9.17.0.tgz"
+      "resolved": "https://registry.npmjs.org/globals/-/globals-9.18.0.tgz"
     },
     "globby": {
       "version": "5.0.0",

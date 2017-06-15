@@ -1,0 +1,55 @@
+{
+  "name": "abacus-cf-bridge",
+  "version": "0.0.6-dev.9",
+  "dependencies": {
+    "abacus-batch": {
+      "version": "0.0.6-dev.9",
+      "from": "../../utils/batch",
+      "resolved": "file:../../utils/batch"
+    },
+    "abacus-cfpack": {
+      "version": "0.0.6-dev.9",
+      "from": "../../../tools/cfpack",
+      "resolved": "file:../../../tools/cfpack",
+      "dev": true
+    },
+    "abacus-cfpush": {
+      "version": "0.0.6-dev.9",
+      "from": "../../../tools/cfpush",
+      "resolved": "file:../../../tools/cfpush",
+      "dev": true
+    },
+    "abacus-eslint": {
+      "version": "0.0.6-dev.9",
+      "from": "../../../tools/eslint",
+      "resolved": "file:../../../tools/eslint",
+      "dev": true,
+      "dependencies": {
+        "eslint": {
+          "version": "3.19.0",
+          "from": "eslint@>=3.13.1 <4.0.0",
+          "resolved": "https://registry.npmjs.org/eslint/-/eslint-3.19.0.tgz",
+          "dev": true,
+          "dependencies": {
+            "optionator": {
+              "version": "0.8.2",
+              "from": "optionator@>=0.8.2 <0.9.0",
+              "resolved": "https://registry.npmjs.org/optionator/-/optionator-0.8.2.tgz",
+              "dev": true
+            }
+          }
+        }
+      }
+    },
+    "abbrev": {
+      "version": "1.1.0",
+      "from": "abbrev@>=1.0.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/abbrev/-/abbrev-1.1.0.tgz"
+    },
+    "abstract-leveldown": {
+      "version": "2.4.1",
+      "from": "abstract-leveldown@2.4.1",
+      "resolved": "https://registry.npmjs.org/abstract-leveldown/-/abstract-leveldown-2.4.1.tgz"
+    }
+  }
+}
