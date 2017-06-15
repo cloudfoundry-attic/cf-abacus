@@ -100,10 +100,12 @@ const executeZip = (directories, ignore, cb) => {
   // We're using the system zip command here, may be better to use a
   // Javascript zip library instead
   const files = '-type f -not -regex "\\./\\.cfpack/package\\.json" ' +
-    '-not -regex ".*/\\.git"  -not -regex ".*test\\.js"';
+    '-not -regex ".*/\\.git"  -not -regex ".*test\\.js" ' +
+    '-not -regex "\\./\\.cfpack/npm-shrinkwrap\\.json"';
   const ex = cp.exec('(find . ' + directories + ' ' + files +
     ' | zip -q -x@' + ignore + ' -@ .cfpack/app.zip) && ' +
-    '(zip -q -j .cfpack/app.zip .cfpack/package.json)', {
+    '(zip -q -j .cfpack/app.zip .cfpack/package.json ' +
+    '.cfpack/npm-shrinkwrap.json)', {
       cwd: process.cwd()
     });
   ex.stdout.on('data', (data) => {
