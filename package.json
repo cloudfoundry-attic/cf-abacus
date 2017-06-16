@@ -68,6 +68,8 @@
     "boshrun": "bin/boshrun"
   },
   "dependencies": {
+    "async": "^2.3.0",
+    "underscore": "^1.8.3",
     "abacus-account-plugin": "file:lib/plugins/account",
     "abacus-authserver-plugin": "file:lib/plugins/authserver",
     "abacus-batch": "file:lib/utils/batch",
@@ -150,8 +152,7 @@
     "abacus-webapp": "file:lib/utils/webapp",
     "abacus-webhook": "file:lib/utils/webhook",
     "abacus-webproxy": "file:lib/utils/webproxy",
-    "abacus-yieldable": "file:lib/utils/yieldable",
-    "underscore": "^1.8.3"
+    "abacus-yieldable": "file:lib/utils/yieldable"
   },
   "devDependencies": {
     "abacus-cfpack": "file:tools/cfpack",
@@ -171,6 +172,6 @@
   },
   "engines": {
     "node": ">=6.10.0",
-    "npm": ">=3.10.10"
+    "npm": "<5.0.0"
   }
 }

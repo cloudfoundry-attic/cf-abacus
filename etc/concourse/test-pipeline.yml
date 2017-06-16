@@ -26,7 +26,11 @@ jobs:
       - task: build
         config:
           platform: linux
-          image: docker:///node#6.10.2
+          image_resource:
+            type: docker-image
+            source:
+              repository: node
+              tag: 6.10.2
           inputs:
             - name: abacus
           outputs:
@@ -38,7 +42,11 @@ jobs:
       - task: it
         config:
           platform: linux
-          image: docker:///node#6.10.2
+          image_resource:
+            type: docker-image
+            source:
+              repository: node
+              tag: 6.10.2
           inputs:
             - name: built-project
           run:
@@ -50,7 +58,11 @@ jobs:
       - task: demo
         config:
           platform: linux
-          image: docker:///node#6.10.2
+          image_resource:
+            type: docker-image
+            source:
+              repository: node
+              tag: 6.10.2
           inputs:
             - name: built-project
           run:
@@ -62,7 +74,11 @@ jobs:
       - task: dupe
         config:
           platform: linux
-          image: docker:///node#6.10.2
+          image_resource:
+            type: docker-image
+            source:
+              repository: node
+              tag: 6.10.2
           inputs:
             - name: built-project
           run:
@@ -75,7 +91,11 @@ jobs:
         attempts: 3
         config:
           platform: linux
-          image: docker:///node#6.10.2
+          image_resource:
+            type: docker-image
+            source:
+              repository: node
+              tag: 6.10.2
           inputs:
             - name: built-project
           run:
@@ -96,7 +116,11 @@ jobs:
       - task: build
         config:
           platform: linux
-          image: docker:///godofcontainers/node-couchdb#6.10.2
+          image_resource:
+            type: docker-image
+            source:
+              repository: godofcontainers/node-couchdb
+              tag: 6.10.2
           inputs:
             - name: abacus
           outputs:
@@ -110,7 +134,11 @@ jobs:
       - task: it
         config:
           platform: linux
-          image: docker:///godofcontainers/node-couchdb#6.10.2
+          image_resource:
+            type: docker-image
+            source:
+              repository: godofcontainers/node-couchdb
+              tag: 6.10.2
           inputs:
             - name: built-project
           run:
@@ -124,7 +152,11 @@ jobs:
       - task: demo
         config:
           platform: linux
-          image: docker:///godofcontainers/node-couchdb#6.10.2
+          image_resource:
+            type: docker-image
+            source:
+              repository: godofcontainers/node-couchdb
+              tag: 6.10.2
           inputs:
             - name: built-project
           run:
@@ -138,7 +170,11 @@ jobs:
       - task: dupe
         config:
           platform: linux
-          image: docker:///godofcontainers/node-couchdb#6.10.2
+          image_resource:
+            type: docker-image
+            source:
+              repository: godofcontainers/node-couchdb
+              tag: 6.10.2
           inputs:
             - name: built-project
           run:
@@ -153,7 +189,11 @@ jobs:
         attempts: 3
         config:
           platform: linux
-          image: docker:///godofcontainers/node-couchdb#6.10.2
+          image_resource:
+            type: docker-image
+            source:
+              repository: godofcontainers/node-couchdb
+              tag: 6.10.2
           inputs:
             - name: built-project
           run:
@@ -176,7 +216,11 @@ jobs:
       - task: build
         config:
           platform: linux
-          image: docker:///godofcontainers/node-mongodb#6.10.2
+          image_resource:
+            type: docker-image
+            source:
+              repository: godofcontainers/node-mongodb
+              tag: 6.10.2
           inputs:
             - name: abacus
           outputs:
@@ -191,7 +235,11 @@ jobs:
       - task: it
         config:
           platform: linux
-          image: docker:///godofcontainers/node-mongodb#6.10.2
+          image_resource:
+            type: docker-image
+            source:
+              repository: godofcontainers/node-mongodb
+              tag: 6.10.2
           inputs:
             - name: built-project
           run:
@@ -206,7 +254,11 @@ jobs:
       - task: demo
         config:
           platform: linux
-          image: docker:///godofcontainers/node-mongodb#6.10.2
+          image_resource:
+            type: docker-image
+            source:
+              repository: godofcontainers/node-mongodb
+              tag: 6.10.2
           inputs:
             - name: built-project
           run:
@@ -221,7 +273,11 @@ jobs:
       - task: dupe
         config:
           platform: linux
-          image: docker:///godofcontainers/node-mongodb#6.10.2
+          image_resource:
+            type: docker-image
+            source:
+              repository: godofcontainers/node-mongodb
+              tag: 6.10.2
           inputs:
             - name: built-project
           run:
@@ -237,7 +293,11 @@ jobs:
         attempts: 3
         config:
           platform: linux
-          image: docker:///godofcontainers/node-mongodb#6.10.2
+          image_resource:
+            type: docker-image
+            source:
+              repository: godofcontainers/node-mongodb
+              tag: 6.10.2
           inputs:
             - name: built-project
           run:
