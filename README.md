@@ -46,6 +46,18 @@ cd cf-abacus
 npm run build
 ```
 
+Updating dependencies
+---
+
+Abacus uses `npm shrinkwrap` to lock down the versions of a package's dependencies.
+
+```sh
+cd cf-abacus
+
+# Generates the corresponding npm-shrinkwrap.json files
+bin/module-update
+```
+
 Testing
 ---
 
@@ -183,7 +195,7 @@ lib/ - Abacus modules
     cf/ - CF platform integration
 
         bridge - collects CF app usage data
-        
+
         renewer - carries over usage from previous month
 
     config/ - Usage formula and pricing configuration
