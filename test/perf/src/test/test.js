@@ -113,9 +113,17 @@ const systemToken = secured() ? oauth.cache(authServer,
 describe('abacus-perf-test', () => {
   before((done) => {
     if (objectStorageToken)
-      objectStorageToken.start();
+      objectStorageToken.start((err) => {
+        if (err)
+          console.log('Could not fetch object storage token due to, %o', err);
+      });
+
     if (systemToken)
-      systemToken.start();
+      systemToken.start((err) => {
+        if (err)
+          console.log('Could not fetch system token due to, %o', err);
+      });
+
     if (/.*localhost.*/.test(collector))
       // Delete test dbs on the configured db server
       dbclient.drop(process.env.DB, /^abacus-/, done);
@@ -387,7 +395,7 @@ describe('abacus-perf-test', () => {
           expect(val.statusCode).to.equal(200);
 
           // Compare the usage report we got with the expected report
-          console.log('Processed %d usage docs for org%d',
+          debug('Processed %d usage docs for org%d',
             processed(val), o + 1);
           try {
             // Can't check the dynamic time in resource_instances
