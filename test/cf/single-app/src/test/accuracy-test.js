@@ -185,7 +185,7 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
         token_endpoint: 'http://localhost:' + serverPort
       });
     });
-    routes.get('/oauth/token', (request, response) => {
+    routes.post('/oauth/token', (request, response) => {
       oAuthDebug('Requested oAuth token with %j', request.query);
       const scope = request.query.scope;
       const containerToken = scope && scope.indexOf('container') > 0;
