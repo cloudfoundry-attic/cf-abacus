@@ -43,10 +43,17 @@ cd cf-abacus
 npm run build
 ```
 
-Updating dependencies
+Dependency management
 ---
 
-Abacus uses `npm shrinkwrap` to lock down the versions of a package's dependencies.
+Abacus uses `npm shrinkwrap` to fix the versions of a package's dependencies. Fixed dependecies are
+persisted in `npm-shrinkwrap.json` file which is located at the same directory where `package.json` file
+exsists. 
+
+Updating dependencies
+* Automaticaly  
+Dependencies could be updated automatically for the whole repository by executing the steps bellow. As a result
+this script will regenerate all shrinkwrap files.
 
 ```sh
 cd cf-abacus
@@ -54,6 +61,27 @@ cd cf-abacus
 # Generates the corresponding npm-shrinkwrap.json files
 bin/module-update
 ```
+
+* Manually  
+If you prefer  to update dependencies of particular module, it is possble to do it manually with the following steps.
+
+```sh
+cd cf-abacus/lib/<module>
+
+# Delete existing dependencies
+rm -rf node_modules/
+
+# Delete existing shrinkwrap file
+rm npm-shrinkwrap.json
+
+Update dependency/cies in package.json file.
+
+# Install dependencies
+npm install
+
+# Generate shrinkwrap files
+npm shrinkwrap
+``` 
 
 Testing
 ---
