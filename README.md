@@ -74,7 +74,10 @@ rm -rf node_modules/
 # Delete existing shrinkwrap file
 rm npm-shrinkwrap.json
 
-Update dependency/cies in package.json file.
+# Install/Update dependency/cies in package.json file either manually or via npm
+npm install <dependency> --save
+or  
+npm update <dependency> --save
 
 # Install dependencies
 npm install
