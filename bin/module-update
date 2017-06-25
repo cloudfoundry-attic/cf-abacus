@@ -1,18 +1,15 @@
 #!/bin/bash
 
-export CONF=default
-if [ -n "$1" ]; then
-  export CONF=$1
-fi
+export CONF=${1:-default}
 
 # fix the new dependencies on root level
-rm -rf node_modules 
+rm -rf node_modules
 rm npm-shrinkwrap.json
 
 set -e
 
 npm run provision
-npm shrinkwrap 
+npm shrinkwrap
 
 # fix dependencies on every app
 for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do

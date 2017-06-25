@@ -3,10 +3,7 @@
 set -e
 
 # Restart all the Abacus services
-export CONF=default
-if [ -n "$1" ]; then
-  export CONF=$1
-fi
+export CONF=${1:-default}
 
 MODULES=$(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps)
 
@@ -23,4 +20,3 @@ for MODULE in $MODULES; do
 done
 
 wait
-

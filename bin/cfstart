@@ -3,10 +3,7 @@
 set -e
 
 # Start all the Abacus apps on Cloud Foundry
-export CONF=default
-if [ -n "$1" ]; then
-  export CONF=$1
-fi
+export CONF=${1:-default}
 
 MAX_PROCESSES=$(node -e "console.log(require('os').cpus().length)")
 if [ -n "$JOBS" ]; then
@@ -30,4 +27,3 @@ for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $C
 done
 
 echo ${APP_NAMES[*]} | xargs -n 1 -P $MAX_PROCESSES cf start
-
