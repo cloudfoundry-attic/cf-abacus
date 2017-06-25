@@ -3,10 +3,7 @@
 set -e
 
 # Push all the Abacus apps to Cloud Foundry
-export CONF=default
-if [ -n "$1" ]; then
-  export CONF=$1
-fi
+export CONF=${1:-default}
 
 MAX_PROCESSES=$(node -e "console.log(require('os').cpus().length)")
 if [ -n "$JOBS" ]; then
