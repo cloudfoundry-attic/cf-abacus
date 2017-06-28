@@ -130,7 +130,7 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
 
 const lastMonthInMilliseconds = moment.utc().subtract(1, 'months').valueOf();
 
-describe.skip('abacus-cf-single-app-renewer-itest without oAuth', () => {
+describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
   let server;
   let serverPort;
 
@@ -401,11 +401,21 @@ describe.skip('abacus-cf-single-app-renewer-itest without oAuth', () => {
   const poll = (fn, checkFn, done, timeout = 1000, interval = 100) => {
     const startTimestamp = moment.now();
 
+    let successCount = 0;
+
     const doneCallback = (err) => {
       if (!err) {
-        debug('Expectation in %s met', fn.name);
-        setImmediate(() => done());
-        return;
+        ++successCount;
+        debug('Expectation in %s met (%d/5)', fn.name, successCount);
+
+        if (successCount === 5) {
+          setImmediate(() => done());
+          return;
+        }
+      }
+      else {
+        successCount = 0;
+        debug('Check failed. Resetting success count to 0');
       }
 
       if (moment.now() - startTimestamp > timeout) {

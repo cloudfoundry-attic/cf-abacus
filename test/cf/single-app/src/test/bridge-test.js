@@ -34,8 +34,6 @@ const moduleDir = (module) => {
 };
 
 const timeWindows = {
-  'second' : 0,
-  'minute' : 1,
   'hour'   : 2,
   'day'    : 3,
   'month'  : 4
@@ -72,7 +70,7 @@ commander
 const startTimeout = commander.startTimeout || 10000;
 
 // This test timeout
-const totalTimeout = commander.totalTimeout || 20000;
+const totalTimeout = commander.totalTimeout || 35000;
 
 // Token setup
 const tokenSecret = 'secret';
@@ -368,11 +366,21 @@ describe('abacus-cf-single-app-bridge-itest without oAuth', () => {
   const poll = (fn, done, timeout = 1000, interval = 100) => {
     const startTimestamp = moment.now();
 
+    let successCount = 0;
+
     const doneCallback = (err) => {
       if (!err) {
-        debug('Expectation in %s met', fn.name);
-        setImmediate(() => done());
-        return;
+        ++successCount;
+        debug('Expectation in %s met (%d/5)', fn.name, successCount);
+
+        if (successCount === 5) {
+          setImmediate(() => done());
+          return;
+        }
+      }
+      else {
+        successCount = 0;
+        debug('Check failed. Resetting success count to 0');
       }
 
       if (moment.now() - startTimestamp > timeout) {
@@ -774,15 +782,15 @@ describe('abacus-cf-single-app-bridge-itest without oAuth', () => {
       return events.resources;
     };
 
-    context('start, restart, restage', () => {
+    context('start, restage, restart', () => {
       beforeEach(() => {
         appUsageEvents = buildAppUsageEvents();
 
         // app uses 512MB
-        expectedConsuming = 0.5;
+        expectedConsuming = 0.125;
       });
 
-      it.only('submits usage and gets expected report back', function(done) {
+      it('submits usage and gets expected report back', function(done) {
         this.timeout(totalTimeout + 2000);
 
         waitForStartAndPoll('bridge', 9500, done);

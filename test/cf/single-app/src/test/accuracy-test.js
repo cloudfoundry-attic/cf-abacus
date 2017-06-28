@@ -134,7 +134,7 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
 
 const twentySecondsInMilliseconds = 20 * 1000;
 
-describe.skip('abacus-cf-single-app-accuracy-itest', () => {
+describe('abacus-cf-single-app-accuracy-itest', () => {
   let server;
   let serverPort;
   let appUsageEvents;
@@ -353,11 +353,21 @@ describe.skip('abacus-cf-single-app-accuracy-itest', () => {
   const poll = (fn, done, timeout = 1000, interval = 100) => {
     const startTimestamp = moment.now();
 
+    let successCount = 0;
+
     const doneCallback = (err) => {
       if (!err) {
-        debug('Expectation in %s met', fn.name);
-        setImmediate(() => done());
-        return;
+        ++successCount;
+        debug('Expectation in %s met (%d/5)', fn.name, successCount);
+
+        if (successCount === 5) {
+          setImmediate(() => done());
+          return;
+        }
+      }
+      else {
+        successCount = 0;
+        debug('Check failed. Resetting success count to 0');
       }
 
       if (moment.now() - startTimestamp > timeout) {
@@ -430,7 +440,7 @@ describe.skip('abacus-cf-single-app-accuracy-itest', () => {
     }
   ];
 
-  context('with an app started 1 hour before', () => {
+  context('with an app started 1 hour ago', () => {
 
     beforeEach(() => {
       appUsageEvents = generatePastAppUsage(1, 'hour');
@@ -447,7 +457,7 @@ describe.skip('abacus-cf-single-app-accuracy-itest', () => {
 
   });
 
-  context('with an app started 2 hours before', () => {
+  context('with an app started 2 hours ago', () => {
 
     beforeEach(() => {
       appUsageEvents = generatePastAppUsage(2, 'hours');
