@@ -33,6 +33,7 @@
     "abacus-breaker": "file:../../../lib/utils/breaker",
     "abacus-cf-bridge": "file:../../../lib/cf/bridge",
     "abacus-cf-renewer": "file:../../../lib/cf/renewer",
+    "abacus-client": "file:../../../lib/utils/client",
     "abacus-cluster": "file:../../../lib/utils/cluster",
     "abacus-debug": "file:../../../lib/utils/debug",
     "abacus-dbclient": "file:../../../lib/utils/dbclient",

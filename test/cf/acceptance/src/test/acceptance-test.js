@@ -7,6 +7,7 @@ const moment = require('abacus-moment');
 const _ = require('underscore');
 const clone = _.clone;
 
+const client = require('abacus-client');
 const request = require('abacus-request');
 
 // Setup the debug log
@@ -18,28 +19,9 @@ const resultDebug =
   require('abacus-debug')('abacus-cf-acceptance-test-result');
 
 const timeWindows = {
-  'second' : 0,
-  'minute' : 1,
   'hour'   : 2,
   'day'    : 3,
   'month'  : 4
-};
-
-// Checks if the difference between start and end time fall within a window
-const isWithinWindow = (start, end, timeWindow) => {
-  // [Second, Minute, Hour, Day, Month]
-  const timescale = [1, 100, 10000, 1000000, 100000000];
-  // Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
-  const dateUTCNumbify = (t) => {
-    // eslint-disable-next-line nodate/no-new-date, nodate/no-date
-    const d = new Date(t);
-    return d.getUTCFullYear() * 10000000000 + d.getUTCMonth() * timescale[4]
-      + d.getUTCDate() * timescale[3] + d.getUTCHours() * timescale[2]
-      + d.getUTCMinutes() * timescale[1] + d.getUTCSeconds();
-  };
-
-  return Math.floor(dateUTCNumbify(end) / timescale[timeWindow]) -
-    Math.floor(dateUTCNumbify(start) / timescale[timeWindow]) === 0;
 };
 
 // Parse command line options
@@ -64,19 +46,17 @@ const startTimeout = commander.startTimeout || 100000;
 
 // This test timeout
 const totalTimeout = commander.totalTimeout || 200000;
-const submitTime = moment.now();
 
 describe('abacus-acceptance test', () => {
   let expectedConsuming;
 
-  const checkAllTimeWindows = (usage, reporttime, level) => {
-    for (const windowType in timeWindows)
-      if(isWithinWindow(submitTime, reporttime, timeWindows[windowType])) {
-        const windowUsage = usage.windows[timeWindows[windowType]];
-        if(level !== 'resource')
-          expect(windowUsage[0].quantity.consuming).to.equal(expectedConsuming);
-        expect(windowUsage[0].charge).to.be.above(0);
-      }
+  const checkAllTimeWindows = (usage, level) => {
+    for (const windowType in timeWindows) {
+      const windowUsage = usage.windows[timeWindows[windowType]];
+      if(level !== 'resource')
+        expect(windowUsage[0].quantity.consuming).to.equal(expectedConsuming);
+      expect(windowUsage[0].charge).to.be.above(0);
+    }
   };
 
   const checkReport = (cb) => {
@@ -94,16 +74,15 @@ describe('abacus-acceptance test', () => {
           const resources = response.body.resources;
           expect(resources.length).to.equal(1);
           expect(response.body.spaces.length).to.equal(1);
-          const reporttime = moment.now();
 
           expect(resources[0]).to.contain.all.keys(
             'plans', 'aggregated_usage');
 
           const planUsage = resources[0].plans[0].aggregated_usage[0];
-          checkAllTimeWindows(planUsage, reporttime);
+          checkAllTimeWindows(planUsage);
 
           const aggregatedUsage = resources[0].aggregated_usage[0];
-          checkAllTimeWindows(aggregatedUsage, reporttime, 'resource');
+          checkAllTimeWindows(aggregatedUsage, 'resource');
 
           resultDebug('All usage report checks are successful for: %s',
             JSON.stringify(response.body, null, 2));
@@ -120,57 +99,33 @@ describe('abacus-acceptance test', () => {
       });
   };
 
-  const poll = (fn, done, timeout = 1000, interval = 100) => {
-    const startTimestamp = moment.now();
-
-    const doneCallback = (err) => {
-      if (!err) {
-        debug('Expectation in %s met', fn.name);
-        setImmediate(() => done());
-        return;
-      }
-
-      if (moment.now() - startTimestamp > timeout) {
-        debug('Expectation not met for %d ms. Error: %o', timeout, err);
-        setImmediate(() => done(new Error(err)));
-      }
-      else
-        setTimeout(() => {
-          debug('Calling %s after >= %d ms...', fn.name, interval);
-          fn(doneCallback);
-        }, interval);
-    };
-
-    debug('Calling %s for the first time...', fn.name);
-    fn(doneCallback);
-  };
-
   const waitForStartAndPoll = (done) => {
     let startWaitTime = moment.now();
     request.waitFor('https://:reportingApp.:cfDomain/batch', {
       reportingApp: commander.reportingApp,
       cfDomain: commander.cfDomain
-    },
-      startTimeout, (err, uri, opts) => {
-        // Failed to ping component before timing out
-        if (err) throw err;
+    }, startTimeout, (err, uri, opts) => {
+      // Failed to ping component before timing out
+      if (err) throw err;
 
-        poll(checkReport, (error) => {
-          done(error);
-        }, totalTimeout - (moment.now() - startWaitTime), 1000);
-      }
-    );
+      debug('Starting to poll for report');
+      client.poll(checkReport, {
+        totalTimeout: totalTimeout - (moment.now() - startWaitTime)
+      }, (error) => {
+        done(error);
+      });
+    });
   };
 
   context('with stream of CF events', () => {
     beforeEach(() => {
       // 10 apps consuming 512 MB
       // pouchserver using 1 GB
-      // total: 9.5 GB
+      // total: 6 GB
       expectedConsuming = 6;
     });
 
-    it('submits usage and gets expected report back', function(done) {
+    it('get expected report back', function(done) {
       if (!commander.organizationGuid)
         done(new Error('Organization GUID missing'));
 
