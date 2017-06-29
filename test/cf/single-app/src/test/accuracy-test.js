@@ -220,7 +220,7 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
 
     // Start local database server
     if (!process.env.DB) {
-      npm.start(npm.modules.pouchserver);
+      npm.startModules([npm.modules.pouchserver]);
       services();
     }
     else

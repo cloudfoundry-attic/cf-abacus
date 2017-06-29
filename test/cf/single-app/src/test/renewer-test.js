@@ -220,7 +220,7 @@ describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
 
     // Start local database server
     if (!process.env.DB) {
-      npm.start('abacus-pouchserver');
+      npm.startModules([npm.modules.pouchserver]);
       startServices();
     }
     else
@@ -589,7 +589,7 @@ describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
               done(error);
               return;
             }
-            npm.start('abacus-cf-renewer');
+            npm.startModules([npm.modules.renewer]);
             waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindow,
               totalTimeout - (moment.now() - startTestTime), done);
           }
@@ -736,7 +736,7 @@ describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
               done(error);
               return;
             }
-            npm.start('abacus-cf-renewer');
+            npm.startModules([npm.modules.renewer]);
             waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindow,
               totalTimeout - (moment.now() - startTestTime), done);
           }
