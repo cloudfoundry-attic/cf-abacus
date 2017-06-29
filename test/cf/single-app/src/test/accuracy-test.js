@@ -1,7 +1,6 @@
 'use strict';
 
 const commander = require('commander');
-const cp = require('child_process');
 const jwt = require('jsonwebtoken');
 const util = require('util');
 
@@ -13,6 +12,8 @@ const dbclient = require('abacus-dbclient');
 const express = require('abacus-express');
 const request = require('abacus-request');
 const router = require('abacus-router');
+
+const npm = require('abacus-npm');
 
 // Setup the debug log
 const debug =
@@ -28,12 +29,6 @@ const oAuthDebug =
 const moment = require('abacus-moment');
 const twoDaysInNextMonth = moment.utc().startOf('month').
   add(1, 'month').add(2, 'days').add(6, 'hours').valueOf();
-
-// Module directory
-const moduleDir = (module) => {
-  const path = require.resolve(module);
-  return path.substr(0, path.indexOf(module + '/') + module.length);
-};
 
 const timeWindows = {
   second : 0,
@@ -141,21 +136,6 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
   let expectedGBh;
 
   beforeEach((done) => {
-    const start = (module) => {
-      debug('Starting %s in directory %s', module, moduleDir(module));
-      const c = cp.spawn('npm', ['run', 'start'], {
-        cwd: moduleDir(module),
-        env: clone(process.env)
-      });
-
-      // Add listeners to stdout, stderr and exit message and forward the
-      // messages to debug logs
-      c.stdout.on('data', (data) => process.stdout.write(data));
-      c.stderr.on('data', (data) => process.stderr.write(data));
-      c.on('exit', (code) => debug('Module %s started with code %d',
-        module, code));
-    };
-
     const app = express();
     const routes = router();
     routes.get('/v2/app_usage_events', (request, response) => {
@@ -225,22 +205,22 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
 
     // Start all Abacus services
     const services = () => {
-      start('abacus-eureka-plugin');
-      start('abacus-provisioning-plugin');
-      start('abacus-account-plugin');
-      start('abacus-usage-collector');
-      start('abacus-usage-meter');
-      start('abacus-usage-accumulator');
-      start('abacus-usage-aggregator');
-      start('abacus-usage-reporting');
-      start('abacus-cf-bridge');
-
+      npm.startModules([npm.modules.accountPlugin,
+        npm.modules.provisioningPlugin,
+        npm.modules.eurekaPlugin,
+        npm.modules.collector,
+        npm.modules.meter,
+        npm.modules.accumulator,
+        npm.modules.aggregator,
+        npm.modules.reporting,
+        npm.modules.bridge]);
+      
       done();
     };
 
     // Start local database server
     if (!process.env.DB) {
-      start('abacus-pouchserver');
+      npm.start(npm.modules.pouchserver);
       services();
     }
     else
@@ -251,42 +231,6 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
   });
 
   afterEach((done) => {
-    let counter = 10;
-    const finishCb = (module, code) => {
-      counter--;
-      debug('Module %s exited with code %d. Left %d modules',
-        module, code, counter);
-      if (counter === 0) {
-        debug('All modules stopped. Exiting test');
-        done();
-      }
-    };
-
-    const stop = (module, cb) => {
-      debug('Stopping %s in directory %s', module, moduleDir(module));
-      const c = cp.spawn('npm', ['run', 'stop'],
-        { cwd: moduleDir(module), env: clone(process.env) });
-
-      // Add listeners to stdout, stderr and exit message and forward the
-      // messages to debug logs
-      c.stdout.on('data', (data) => process.stdout.write(data));
-      c.stderr.on('data', (data) => process.stderr.write(data));
-      c.on('exit', (code) => cb(module, code));
-    };
-
-    stop('abacus-cf-bridge', finishCb);
-    stop('abacus-usage-reporting', finishCb);
-    stop('abacus-usage-aggregator', finishCb);
-    stop('abacus-usage-accumulator', finishCb);
-    stop('abacus-usage-meter', finishCb);
-    stop('abacus-usage-collector', finishCb);
-    stop('abacus-account-plugin', finishCb);
-    stop('abacus-provisioning-plugin', finishCb);
-    stop('abacus-eureka-plugin', finishCb);
-    stop('abacus-pouchserver', finishCb);
-
-    server.close();
-
     delete process.env.SECURED;
     delete process.env.API;
     delete process.env.AUTH_SERVER;
@@ -299,6 +243,9 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
     delete process.env.SLACK;
     delete process.env.GUID_MIN_AGE;
     delete process.env.ABACUS_TIME_OFFSET;
+
+    server.close();
+    npm.stopAllStarted(done);
   });
 
   const checkTimeWindows = (usage, timeWindow) => {
