@@ -6,9 +6,6 @@ The Abacus usage metering and aggregation service.
 [![Build Status](https://travis-ci.org/cloudfoundry-incubator/cf-abacus.svg)](https://travis-ci.org/cloudfoundry-incubator/cf-abacus)
 [![Coverage Status](https://coveralls.io/repos/cloudfoundry-incubator/cf-abacus/badge.svg?branch=master&service=github)](https://coveralls.io/github/cloudfoundry-incubator/cf-abacus?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/544255c3788840aaa2402aa7f5cc4eb9)](https://www.codacy.com/app/cf-abacus/cf-abacus?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cloudfoundry-incubator/cf-abacus&amp;utm_campaign=Badge_Grade)
-[![dependencies Status](https://david-dm.org/cloudfoundry-incubator/cf-abacus/status.svg)](https://david-dm.org/cloudfoundry-incubator/cf-abacus)
-[![devDependencies Status](https://david-dm.org/cloudfoundry-incubator/cf-abacus/dev-status.svg)](https://david-dm.org/cloudfoundry-incubator/cf-abacus?type=dev)
-
 [![Slack Team](https://abacusdev-slack.mybluemix.net/badge.svg)](https://abacusdev-slack.mybluemix.net/)
 [![Gitter Chat](https://img.shields.io/badge/gitter-join%20chat-blue.svg)](https://gitter.im/cloudfoundry-incubator/cf-abacus?utm\_source=badge)
 [![IRC Chat](https://img.shields.io/badge/irc-%23abacusdev-blue.svg)](http://webchat.freenode.net?channels=%23abacusdev)
@@ -45,6 +42,49 @@ cd cf-abacus
 # install the Node.js module dependencies and run the tests
 npm run build
 ```
+
+Dependency management
+---
+
+Abacus uses `npm shrinkwrap` to fix the versions of a package's dependencies. Fixed dependecies are
+persisted in `npm-shrinkwrap.json` file which is located at the same directory where `package.json` file
+exsists. 
+
+Updating dependencies
+* Automaticaly  
+Dependencies could be updated automatically for the whole repository by executing the steps bellow. As a result
+this script will regenerate all shrinkwrap files.
+
+```sh
+cd cf-abacus
+
+# Generates the corresponding npm-shrinkwrap.json files
+bin/module-update
+```
+
+* Manually  
+If you prefer  to update dependencies of particular module, it is possble to do it manually with the following steps.
+
+```sh
+cd cf-abacus/lib/<module>
+
+# Delete existing dependencies
+rm -rf node_modules/
+
+# Delete existing shrinkwrap file
+rm npm-shrinkwrap.json
+
+# Install/Update dependency/cies in package.json file either manually or via npm
+npm install <dependency> --save
+or  
+npm update <dependency> --save
+
+# Install dependencies
+npm install
+
+# Generate shrinkwrap files
+npm shrinkwrap
+``` 
 
 Testing
 ---
@@ -183,7 +223,7 @@ lib/ - Abacus modules
     cf/ - CF platform integration
 
         bridge - collects CF app usage data
-        
+
         renewer - carries over usage from previous month
 
     config/ - Usage formula and pricing configuration

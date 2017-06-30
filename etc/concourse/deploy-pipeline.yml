@@ -54,7 +54,6 @@ jobs:
             CC_CLIENT_ID: {{cc-client-id}}
             CC_CLIENT_SECRET: {{cc-client-secret}}
             BRIDGE_CLIENT_ID: {{bridge-client-id}}
-            BRIDGE_CLIENT_AUTHORITIES: {{bridge-client-authorities}}
             BRIDGE_CLIENT_SECRET: {{bridge-client-secret}}
             CF_CLIENT_ID: {{cf-client-id}}
             CF_CLIENT_SECRET: {{cf-client-secret}}

@@ -1,0 +1,45 @@
+{
+  "name": "abacus-cfpack-test",
+  "description": "Test app package build script",
+  "license": "Apache-2.0",
+  "version": "0.0.6-dev.9",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tools/cfpack",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    "src/"
+  ],
+  "main": "src/index.js",
+  "bin": {
+    "cfpack": "./cfpack"
+  },
+  "scripts": {
+    "test": "eslint",
+    "lint": "eslint",
+    "pub": "publish"
+  },
+  "dependencies": {
+    "abacus-batch": "file:../../../../lib/utils/batch",
+    "jsonwebtoken": "^5.0.5",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "abacus-eslint": "file:../../eslint",
+    "abacus-mocha": "file:../../mocha",
+    "abacus-publish": "file:../../publish"
+  },
+  "engines": {
+    "node": ">=6.10.0",
+    "npm": ">=3.10.10"
+  }
+}

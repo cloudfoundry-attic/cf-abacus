@@ -1,0 +1,188 @@
+{
+  "id": "k/610f6508-8b5d-4840-888d-0615ade33117/c228ecc8-15eb-446f-a4e6-a2d05a729b98/UNKNOWN/t/1448457444188",
+  "consumer_id": "UNKNOWN",
+  "organization_id": "610f6508-8b5d-4840-888d-0615ade33117",
+  "resource_instance_id": "0b39fa70-a65f-4183-bae8-385633ca5c87",
+  "start": 1448284898000,
+  "end": 1448457443000,
+  "resources": [
+    {
+      "resource_id": "test-resource-id",
+      "plans": [
+        {
+          "plan_id": "basic/test-metering-plan/test-rating-plan/test-pricing-basic",
+          "metering_plan_id": "test-metering-plan",
+          "rating_plan_id": "test-rating-plan",
+          "pricing_plan_id": "test-pricing-basic",
+          "aggregated_usage": [
+            {
+              "metric": "memory",
+              "windows": [
+                [
+                  {
+                    "quantity": 0,
+                    "cost": 0,
+                    "summary": 0,
+                    "charge": 0
+                  }
+                ],
+                [
+                  {
+                    "quantity": 0,
+                    "cost": 0,
+                    "summary": 0,
+                    "charge": 0
+                  }
+                ],
+                [
+                  {
+                    "quantity": 0,
+                    "cost": 0,
+                    "summary": 0,
+                    "charge": 0
+                  }
+                ],
+                [
+                  {
+                    "quantity": 0,
+                    "cost": 0,
+                    "summary": 0,
+                    "charge": 0
+                  }
+                ],
+                [
+                  {
+                    "quantity": {
+                      "consumed": 0,
+                      "consuming": 0.03125
+                    },
+                    "cost": {
+                      "consumed": 0,
+                      "consuming": 0.03125,
+                      "price": 0.00014
+                    },
+                    "summary": 1.5000789409722222,
+                    "charge": 0.0002100110517361111
+                  }
+                ]
+              ]
+            }
+          ],
+          "windows": [
+            [
+              {
+                "charge": 0
+              }
+            ],
+            [
+              {
+                "charge": 0
+              }
+            ],
+            [
+              {
+                "charge": 0
+              }
+            ],
+            [
+              {
+                "charge": 0
+              }
+            ],
+            [
+              {
+                "charge": 0.0002100110517361111
+              }
+            ]
+          ]
+        }
+      ],
+      "aggregated_usage": [
+        {
+          "metric": "memory",
+          "windows": [
+            [
+              {
+                "charge": 0
+              }
+            ],
+            [
+              {
+                "charge": 0
+              }
+            ],
+            [
+              {
+                "charge": 0
+              }
+            ],
+            [
+              {
+                "charge": 0
+              }
+            ],
+            [
+              {
+                "charge": 0.0002100110517361111
+              }
+            ]
+          ]
+        }
+      ],
+      "windows": [
+        [
+          {
+            "charge": 0
+          }
+        ],
+        [
+          {
+            "charge": 0
+          }
+        ],
+        [
+          {
+            "charge": 0
+          }
+        ],
+        [
+          {
+            "charge": 0
+          }
+        ],
+        [
+          {
+            "charge": 0.0002100110517361111
+          }
+        ]
+      ]
+    }
+  ],
+  "windows": [
+    [
+      {
+        "charge": 0
+      }
+    ],
+    [
+      {
+        "charge": 0
+      }
+    ],
+    [
+      {
+        "charge": 0
+      }
+    ],
+    [
+      {
+        "charge": 0
+      }
+    ],
+    [
+      {
+        "charge": 0.0002100110517361111
+      }
+    ]
+  ]
+}
