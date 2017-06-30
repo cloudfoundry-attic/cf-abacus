@@ -43,6 +43,7 @@
     "abacus-usage-aggregator": "file:../../../lib/aggregation/aggregator",
     "abacus-account-plugin": "file:../../../lib/plugins/account",
     "abacus-debug": "file:../../../lib/utils/debug",
+    "abacus-npm": "file:../../npm",
     "abacus-yieldable": "file:../../../lib/utils/yieldable",
     "bignumber.js": "^2.1.0",
     "underscore": "^1.8.3",

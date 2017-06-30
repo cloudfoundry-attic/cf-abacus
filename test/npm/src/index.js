@@ -36,9 +36,10 @@ const start = define('start');
 const stop = define('stop');
 
 const startModules = (modules, afterAllStartedCb = () => {}) => {
+  const oldStartedModulesCount = startedModules.size;
   map(modules, (module) => start(module, () => {
     startedModules.add(module);
-    if (startedModules.size === modules.length)
+    if (startedModules.size === oldStartedModulesCount + modules.length)
       afterAllStartedCb();
   }));
 };
