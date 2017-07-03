@@ -25,7 +25,7 @@ const range = _.range;
 const omit = _.omit;
 const extend = _.extend;
 
-const npm = require('abacus-npm');
+const npm = require('abacus-npm')();
 
 // Batch the requests
 const brequest = batch(request);

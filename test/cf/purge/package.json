@@ -54,6 +54,7 @@
     "abacus-hystrix": "file:../../../lib/utils/hystrix",
     "abacus-launcher": "file:../../../lib/utils/launcher",
     "abacus-lock": "file:../../../lib/utils/lock",
+    "abacus-npm": "file:../../lib/npm",
     "abacus-partition": "file:../../../lib/utils/partition",
     "abacus-perf": "file:../../../lib/utils/perf",
     "abacus-request": "file:../../../lib/utils/request",

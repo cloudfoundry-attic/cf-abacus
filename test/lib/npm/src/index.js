@@ -1,21 +1,37 @@
 'use-strict';
 
+/*
+
+Provides functionality for starting and stopping abacus modules
+
+Usage:
+// Use stdout and stderr for commands output
+const npm = require('abacus-npm')();
+npm.startModules([npm.modules.renewer], cb);
+
+// Use custom streams for commands output
+const npm = require('abacus-npm')(outStream, errStream);
+npm.startModules([npm.modules.renewer], cb);
+
+*/
+
 const _ = require('underscore');
 const clone = _.clone;
 const map = _.map;
 
 const debug = require('abacus-debug')('abacus-npm');
-
 const cp = require('child_process');
 
+
 const startedModules = new Set();
+let start, stop;
 
 const getModuleDir = (module) => {
   const path = require.resolve(module);
   return path.substr(0, path.indexOf(module + '/') + module.length);
 };
 
-const define = (operation) => (module, onExitCb) => {
+const define = (operation, out, err) =>  (module, onExitCb) => {
   const moduleDir = getModuleDir(module);
   debug('Executing "%s" operation on module "%s" in directory %s',
    operation, module, moduleDir);
@@ -25,15 +41,12 @@ const define = (operation) => (module, onExitCb) => {
     env: clone(process.env)
   });
 
-  c.stdout.on('data', (data) => process.stdout.write(data));
-  c.stderr.on('data', (data) => process.stderr.write(data));
+  c.stdout.on('data', (data) => out.write(data));
+  c.stderr.on('data', (data) => err.write(data));
   c.on('exit', (code) => {
     onExitCb();
   });
 };
-
-const start = define('start');
-const stop = define('stop');
 
 const startModules = (modules, afterAllStartedCb = () => {}) => {
   const oldStartedModulesCount = startedModules.size;
@@ -71,9 +84,13 @@ const modules = {
   pouchserver: 'abacus-pouchserver'
 };
 
+module.exports = (out = process.stdout, err = process.stderr) => {
+  start = define('start', out, err);
+  stop = define('stop', out, err);
 
-module.exports = {
-  modules,
-  startModules,
-  stopAllStarted
-};
+  return {
+    modules,
+    startModules,
+    stopAllStarted
+  }; 
+}

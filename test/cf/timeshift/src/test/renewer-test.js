@@ -7,14 +7,15 @@
 //
 
 const commander = require('commander');
-const cp = require('child_process');
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const util = require('util');
+const npm = require('abacus-npm')();
 
 const _ = require('underscore');
 const clone = _.clone;
+// const npm = require('abacus-npm')();
 
 // Setup the debug log
 const debug =
@@ -143,27 +144,6 @@ const timeWindows = {
   'month'  : 4
 };
 
-// Module directory
-const moduleDir = (module) => {
-  const path = require.resolve(module);
-  return path.substr(0, path.indexOf(module + '/') + module.length);
-};
-
-const start = (module) => {
-  debug('Starting %s in directory %s', module, moduleDir(module));
-  const c = cp.spawn('npm', ['run', 'start'], {
-    cwd: moduleDir(module),
-    env: clone(process.env)
-  });
-
-  // Add listeners to stdout, stderr and exit message and forward the
-  // messages to debug logs
-  c.stdout.on('data', (data) => process.stdout.write(data));
-  c.stderr.on('data', (data) => process.stderr.write(data));
-  c.on('exit', (code) => debug('Module %s started with code %d',
-    module, code));
-};
-
 const runWithPersistentDB = process.env.DB ? describe : describe.skip;
 
 runWithPersistentDB('abacus-cf-renewer time shift', () => {
@@ -245,20 +225,23 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
   };
 
   const startAbacus = (done) => {
-    start('abacus-eureka-plugin');
-    start('abacus-provisioning-plugin');
-    start('abacus-account-plugin');
-    start('abacus-usage-collector');
-    start('abacus-usage-meter');
-    start('abacus-usage-accumulator');
-    start('abacus-usage-aggregator');
-    start('abacus-usage-reporting');
+      npm.startModules([
+        npm.modules.eurekaPlugin,
+        npm.modules.provisioningPlugin,
+        npm.modules.accountPlugin,
+        npm.modules.collector,
+        npm.modules.meter,
+        npm.modules.accumulator,
+        npm.modules.aggregator,
+        npm.modules.reporting
+      ]);
 
     debug('Waiting for collector ...');
     waitForStart('http://localhost:9080/batch', {}, startTimeout, () => {
-      start('abacus-cf-bridge');
-      start('abacus-cf-renewer');
-      done();
+       npm.startModules([
+        npm.modules.renewer,
+        npm.modules.bridge
+      ], done);
     });
   };
 
@@ -434,43 +417,6 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
   });
 
   afterEach((done) => {
-    let counter = 10;
-    const finishCb = (module, code) => {
-      counter--;
-      debug('Module %s exited with code %d. Left %d modules',
-        module, code, counter);
-      if (counter === 0) {
-        debug('All modules stopped. Exiting test');
-        done();
-      }
-    };
-
-    const stop = (module, cb) => {
-      debug('Stopping %s in directory %s', module, moduleDir(module));
-      const c = cp.spawn('npm', ['run', 'stop'],
-        { cwd: moduleDir(module), env: clone(process.env) });
-
-      // Add listeners to stdout, stderr and exit message and forward the
-      // messages to debug logs
-      c.stdout.on('data', (data) => process.stdout.write(data));
-      c.stderr.on('data', (data) => process.stderr.write(data));
-      c.on('exit', (code) => cb(module, code));
-    };
-
-    stop('abacus-cf-renewer', finishCb);
-    stop('abacus-cf-bridge', finishCb);
-    stop('abacus-usage-reporting', finishCb);
-    stop('abacus-usage-aggregator', finishCb);
-    stop('abacus-usage-accumulator', finishCb);
-    stop('abacus-usage-meter', finishCb);
-    stop('abacus-usage-collector', finishCb);
-    stop('abacus-account-plugin', finishCb);
-    stop('abacus-provisioning-plugin', finishCb);
-    stop('abacus-eureka-plugin', finishCb);
-
-    if (server)
-      server.close();
-
     delete process.env.ABACUS_TIME_OFFSET;
     delete process.env.API;
     delete process.env.AUTH_SERVER;
@@ -482,8 +428,11 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
     delete process.env.JWTALGO;
     delete process.env.SLACK;
     delete process.env.GUID_MIN_AGE;
-
     noUsage = false;
+
+    if (server)
+      server.close();
+    npm.stopAllStarted(done);
   });
 
   context('next month', () => {

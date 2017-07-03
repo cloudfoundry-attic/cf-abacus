@@ -40,7 +40,7 @@
     "abacus-throttle": "file:../../../lib/utils/throttle",
     "abacus-urienv": "file:../../../lib/utils/urienv",
     "abacus-usage-reporting": "file:../../../lib/aggregation/reporting",
-    "abacus-npm": "file:../../npm",
+    "abacus-npm": "file:../../lib/npm",
     "abacus-yieldable": "file:../../../lib/utils/yieldable",
     "bignumber.js": "^2.1.0",
     "underscore": "^1.8.3",
