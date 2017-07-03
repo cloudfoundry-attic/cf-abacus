@@ -13,7 +13,7 @@ const express = require('abacus-express');
 const request = require('abacus-request');
 const router = require('abacus-router');
 
-const npm = require('abacus-npm');
+const npm = require('abacus-npm')();
 
 // Setup the debug log
 const debug =
@@ -231,19 +231,6 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
   });
 
   afterEach((done) => {
-    delete process.env.SECURED;
-    delete process.env.API;
-    delete process.env.AUTH_SERVER;
-    delete process.env.CF_CLIENT_ID;
-    delete process.env.CF_CLIENT_SECRET;
-    delete process.env.CLIENT_ID;
-    delete process.env.CLIENT_SECRET;
-    delete process.env.JWTKEY;
-    delete process.env.JWTALGO;
-    delete process.env.SLACK;
-    delete process.env.GUID_MIN_AGE;
-    delete process.env.ABACUS_TIME_OFFSET;
-
     server.close();
     npm.stopAllStarted(done);
   });

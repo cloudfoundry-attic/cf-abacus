@@ -232,18 +232,6 @@ describe('abacus-cf multiple-apps-test with oAuth', () => {
   });
 
   afterEach((done) => {
-    delete process.env.SECURED;
-    delete process.env.API;
-    delete process.env.AUTH_SERVER;
-    delete process.env.CF_CLIENT_ID;
-    delete process.env.CF_CLIENT_SECRET;
-    delete process.env.CLIENT_ID;
-    delete process.env.CLIENT_SECRET;
-    delete process.env.JWTKEY;
-    delete process.env.JWTALGO;
-    delete process.env.SLACK;
-    delete process.env.RETRY_INTERVAL;
-    
     server.close();
     npm.stopAllStarted(done);
   });
