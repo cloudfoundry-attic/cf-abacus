@@ -2,7 +2,6 @@
 
 /* eslint-disable nodate/no-moment, nodate/no-new-date, nodate/no-date */
 
-const cp = require('child_process');
 const _ = require('underscore');
 
 const commander = require('commander');
@@ -249,12 +248,6 @@ const buildAggregatedQuantity = (p, u, ri, tri, count, end, f) => {
     return [f(p, Math.min(time - windowTime, u), ri, tri, count)];
   });
   return quantity;
-};
-
-// Module directory
-const moduleDir = (module) => {
-  const path = require.resolve(module);
-  return path.substr(0, path.indexOf(module + '/') + module.length);
 };
 
 describe('abacus-usage-reporting-itest', () => {

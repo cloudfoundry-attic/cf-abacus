@@ -61,18 +61,17 @@ const totalTimeout = commander.totalTimeout || 60000;
 describe('abacus-usage-meter-itest', () => {
   before((done) => {
     // Start local database server
-    if (!process.env.DB) {
+    if (!process.env.DB) 
       npm.startModules([
         npm.modules.poucherver,
         npm.modules.meter
       ], done);
-    }
     else
       // Delete test dbs on the configured db server
       dbclient.drop(process.env.DB, /^abacus-meter-/, () => {
         npm.startModules([
           npm.modules.meter
-      ], done);
+        ], done);
       });
   });
 

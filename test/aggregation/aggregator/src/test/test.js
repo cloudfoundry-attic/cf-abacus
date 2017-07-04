@@ -1,6 +1,5 @@
 'use strict';
 
-const cp = require('child_process');
 const _ = require('underscore');
 
 const commander = require('commander');

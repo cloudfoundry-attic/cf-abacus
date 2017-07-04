@@ -70,12 +70,6 @@ const startTimeout = commander.startTimeout || 30000;
 // This test timeout
 const totalTimeout = commander.totalTimeout || 60000;
 
-// Module directory
-const moduleDir = (module) => {
-  const path = require.resolve(module);
-  return path.substr(0, path.indexOf(module + '/') + module.length);
-};
-
 const pruneWindows = (v, k) => {
   if(k === 'windows')
     return [v[4][0]];

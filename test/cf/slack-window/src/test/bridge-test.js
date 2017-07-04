@@ -220,7 +220,7 @@ const test = (secured) => {
 
     // Start all Abacus services
     const services = () => {
-       npm.startModules([
+      npm.startModules([
         npm.modules.eurekaPlugin,
         npm.modules.provisioningPlugin,
         npm.modules.accountPlugin,
