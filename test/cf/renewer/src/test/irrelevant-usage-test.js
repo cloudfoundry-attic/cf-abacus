@@ -13,7 +13,7 @@ const express = require('abacus-express');
 const request = require('abacus-request');
 const router = require('abacus-router');
 const moment = require('abacus-moment');
-const npm = require('abacus-npm')();
+const npm = require('abacus-npm');
 
 // Setup the debug log
 const debug =

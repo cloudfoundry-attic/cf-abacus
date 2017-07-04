@@ -12,7 +12,7 @@ const throttle = require('abacus-throttle');
 const request = require('abacus-request');
 const dbclient = require('abacus-dbclient');
 const dataflow = require('abacus-dataflow');
-const npm = require('abacus-npm')();
+const npm = require('abacus-npm');
 const yieldable = require('abacus-yieldable');
 
 // BigNumber

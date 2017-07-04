@@ -11,11 +11,11 @@ const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const util = require('util');
-const npm = require('abacus-npm')();
+const npm = require('abacus-npm');
 
 const _ = require('underscore');
 const clone = _.clone;
-// const npm = require('abacus-npm')();
+// const npm = require('abacus-npm');
 
 const client = require('abacus-client');
 

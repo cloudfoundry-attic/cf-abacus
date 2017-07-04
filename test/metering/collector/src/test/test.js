@@ -8,7 +8,7 @@ const router = require('abacus-router');
 const express = require('abacus-express');
 const dbclient = require('abacus-dbclient');
 const moment = require('abacus-moment');
-const npm = require('abacus-npm')();
+const npm = require('abacus-npm');
 
 const _ = require('underscore');
 const map = _.map;
@@ -58,17 +58,6 @@ const totalTimeout = commander.totalTimeout || 60000;
 
 describe('abacus-usage-collector-itest', () => {
   before((done) => {
-    const start = (module) => {
-      const c = cp.spawn('npm', ['run', 'start'],
-        { cwd: moduleDir(module), env: clone(process.env) });
-
-      // Add listeners to stdout, stderr and exit messsage and forward the
-      // messages to debug logs
-      c.stdout.on('data', (d) => process.stdout.write(d));
-      c.stderr.on('data', (d) => process.stderr.write(d));
-      c.on('exit', (c) => debug('Application exited with code %d', c));
-    };
-
     const services = () => {
       npm.startModules([
         npm.modules.provisioningPlugin,

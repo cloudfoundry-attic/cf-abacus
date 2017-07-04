@@ -11,7 +11,7 @@ const router = require('abacus-router');
 const express = require('abacus-express');
 const dbclient = require('abacus-dbclient');
 const moment = require('abacus-moment');
-const npm = require('abacus-npm')();
+const npm = require('abacus-npm');
 
 const map = _.map;
 const range = _.range;

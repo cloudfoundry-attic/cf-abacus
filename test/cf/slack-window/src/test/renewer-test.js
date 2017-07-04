@@ -13,7 +13,7 @@ const express = require('abacus-express');
 const request = require('abacus-request');
 const router = require('abacus-router');
 const moment = require('abacus-moment');
-const npm = require('abacus-npm')();
+const npm = require('abacus-npm');
 
 
 // Setup the debug log
@@ -130,21 +130,6 @@ const test = (secured) => {
   let appUsageEvents;
 
   let expectedConsuming;
-
-  const start = (module) => {
-    debug('Starting %s in directory %s', module, moduleDir(module));
-    const c = cp.spawn('npm', ['run', 'start'], {
-      cwd: moduleDir(module),
-      env: clone(process.env)
-    });
-
-    // Add listeners to stdout, stderr and exit message and forward the
-    // messages to debug logs
-    c.stdout.on('data', (data) => process.stdout.write(data));
-    c.stderr.on('data', (data) => process.stderr.write(data));
-    c.on('exit', (code) =>
-      debug('Module %s started with code %d', module, code));
-  };
 
   const pollOptions = (component, port, checkFn, timeout = totalTimeout) => ({
     component: component,

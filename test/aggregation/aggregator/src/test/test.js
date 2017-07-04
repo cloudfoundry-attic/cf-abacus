@@ -14,7 +14,7 @@ const request = require('abacus-request');
 const clone = require('abacus-clone');
 const moment = require('abacus-moment');
 const timewindow = require('abacus-timewindow');
-const npm = require('abacus-npm')();
+const npm = require('abacus-npm');
 
 const BigNumber = require('bignumber.js');
 BigNumber.config({ ERRORS: false });

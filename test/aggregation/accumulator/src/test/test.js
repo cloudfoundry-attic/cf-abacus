@@ -1,6 +1,5 @@
 'use strict';
 
-const cp = require('child_process');
 const _ = require('underscore');
 
 const commander = require('commander');
@@ -25,7 +24,7 @@ const range = _.range;
 const omit = _.omit;
 const extend = _.extend;
 
-const npm = require('abacus-npm')();
+const npm = require('abacus-npm');
 
 // Batch the requests
 const brequest = batch(request);

@@ -6,11 +6,14 @@ Provides functionality for starting and stopping abacus modules
 
 Usage:
 // Use stdout and stderr for commands output
-const npm = require('abacus-npm')();
+const npm = require('abacus-npm');
 npm.startModules([npm.modules.renewer], cb);
 
 // Use custom streams for commands output
-const npm = require('abacus-npm')(outStream, errStream);
+const npm = require('abacus-npm').use({
+  out: outStream,
+  err: errStream
+});
 npm.startModules([npm.modules.renewer], cb);
 
 */
@@ -24,14 +27,13 @@ const cp = require('child_process');
 
 
 const startedModules = new Set();
-let start, stop;
 
 const getModuleDir = (module) => {
   const path = require.resolve(module);
   return path.substr(0, path.indexOf(module + '/') + module.length);
 };
 
-const define = (operation, out, err) =>  (module, onExitCb) => {
+const defineNpmOperation = (operation) => (streams, module, onExitCb) => {
   const moduleDir = getModuleDir(module);
   debug('Executing "%s" operation on module "%s" in directory %s',
    operation, module, moduleDir);
@@ -41,29 +43,37 @@ const define = (operation, out, err) =>  (module, onExitCb) => {
     env: clone(process.env)
   });
 
-  c.stdout.on('data', (data) => out.write(data));
-  c.stderr.on('data', (data) => err.write(data));
+  c.stdout.on('data', (data) => streams.out.write(data));
+  c.stderr.on('data', (data) => streams.err.write(data));
   c.on('exit', (code) => {
     onExitCb();
   });
 };
 
-const startModules = (modules, afterAllStartedCb = () => {}) => {
+const start = defineNpmOperation('start');
+const stop = defineNpmOperation('stop');
+
+const startModules = (streams, modules, afterAllStartedCb = () => {}) => {
+  if (!modules || modules.length === 0) {
+    afterAllStartedCb();
+    return;
+  }
+
   const oldStartedModulesCount = startedModules.size;
-  map(modules, (module) => start(module, () => {
+  map(modules, (module) => start(streams, module, () => {
     startedModules.add(module);
     if (startedModules.size === oldStartedModulesCount + modules.length)
       afterAllStartedCb();
   }));
 };
 
-const stopAllStarted = (afterAllStoppedCb = () => {}) => {
+const stopAllStarted = (streams, afterAllStoppedCb = () => {}) => {
   if (startedModules.size === 0) {
     afterAllStoppedCb();
     return;
   }
   
-  startedModules.forEach((module) => stop(module, () => {
+  startedModules.forEach((module) => stop(streams, module, () => {
     startedModules.delete(module);
     if (!startedModules.size)
       afterAllStoppedCb();
@@ -84,13 +94,27 @@ const modules = {
   pouchserver: 'abacus-pouchserver'
 };
 
-module.exports = (out = process.stdout, err = process.stderr) => {
-  start = define('start', out, err);
-  stop = define('stop', out, err);
+const defaultStreams = {
+  out: process.stdout,
+  err: process.stderr
+};
 
-  return {
-    modules,
-    startModules,
-    stopAllStarted
-  }; 
-}
+module.exports = {
+  modules,
+
+  startModules: (modules, afterAllStartedCb) =>
+    startModules(defaultStreams, modules, afterAllStartedCb),
+  stopAllStarted: (afterAllStoppedCb) =>
+    stopAllStarted(defaultStreams, afterAllStoppedCb),
+
+  use: (streams) => {
+    return {
+      modules,
+
+      startModules: (modules, afterAllStartedCb) =>
+        startModules(streams, modules, afterAllStartedCb),
+      stopAllStarted: (afterAllStoppedCb) =>
+        stopAllStarted(streams, afterAllStoppedCb)
+    };
+  }
+};

@@ -7,10 +7,6 @@ const request = require('abacus-request');
 const _ = require('underscore');
 const clone = _.clone;
 
-// Setup the debug log
-const debug =
-  require('abacus-debug')('abacus-cf-node-options-itest');
-
 // Parse command line options
 const argv = clone(process.argv);
 argv.splice(1, 1, 'usage-collector-itest');
@@ -36,7 +32,7 @@ describe('webapp', function() {
   });
 
   context('with correct options', () => {
-    npm = require('abacus-npm')();
+    npm = require('abacus-npm');
 
     beforeEach((done) => {
       // Start all Abacus services
@@ -96,19 +92,18 @@ describe('webapp', function() {
     let errorOutput = '';
     const errorStream = {
       write: (data) => {
-        process.stderr.write(data);
         errorOutput += data;
       }
     };
-    npm = require('abacus-npm')(process.stdout, errorStream);
+
+    npm = require('abacus-npm').use({
+      out: process.stdout,
+      err: errorStream
+    });
 
     before((done) => {
       process.env.NODE_OPTS = '-foobar';
       npm.startModules([npm.modules.eurekaPlugin], done);
-    });
-
-    afterEach((done) => {
-      npm.stopAllStarted(done);
     });
 
     it('fails to start apps', () => {
