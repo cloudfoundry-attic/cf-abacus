@@ -17,6 +17,8 @@ const _ = require('underscore');
 const clone = _.clone;
 // const npm = require('abacus-npm')();
 
+const client = require('abacus-client');
+
 // Setup the debug log
 const debug =
   require('abacus-debug')('abacus-cf-renewer-time-shift-itest');
@@ -166,15 +168,6 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
   let request;
   let router;
 
-  const waitForStart = (url, opts, startTimeout, done) => {
-    request.waitFor(url, opts, startTimeout, (err) => {
-      // Failed to ping component before timing out
-      if (err) throw err;
-
-      done();
-    });
-  };
-
   const modifyEvents = (responseBody) => {
     const startTime = moment.now() - twentySecondsInMilliseconds;
     for(let resource of responseBody.resources) {
@@ -225,20 +218,23 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
   };
 
   const startAbacus = (done) => {
-      npm.startModules([
-        npm.modules.eurekaPlugin,
-        npm.modules.provisioningPlugin,
-        npm.modules.accountPlugin,
-        npm.modules.collector,
-        npm.modules.meter,
-        npm.modules.accumulator,
-        npm.modules.aggregator,
-        npm.modules.reporting
-      ]);
+    npm.startModules([
+      npm.modules.eurekaPlugin,
+      npm.modules.provisioningPlugin,
+      npm.modules.accountPlugin,
+      npm.modules.collector,
+      npm.modules.meter,
+      npm.modules.accumulator,
+      npm.modules.aggregator,
+      npm.modules.reporting
+    ]);
 
     debug('Waiting for collector ...');
-    waitForStart('http://localhost:9080/batch', {}, startTimeout, () => {
-       npm.startModules([
+    request.waitFor('http://localhost:9080/batch', {}, startTimeout, (err) => {
+      if (err)
+        done(err);
+
+      npm.startModules([
         npm.modules.renewer,
         npm.modules.bridge
       ], done);
@@ -317,30 +313,13 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
       });
   };
 
-  const poll = (checkFn, done, timeout = 1000, interval = 100) => {
-    const startTimestamp = moment.now();
-
-    const doneCallback = (err) => {
-      if (!err) {
-        debug('Expectation met');
-        setImmediate(() => done());
-        return;
-      }
-
-      if (moment.now() - startTimestamp > timeout) {
-        debug('Expectation not met for %d ms. Error: %o', timeout, err);
-        setImmediate(() => done(new Error(err)));
-      }
-      else
-        setTimeout(() => {
-          debug('Checking report after >= %d ms...', interval);
-          checkReport(checkFn, doneCallback);
-        }, interval);
-    };
-
-    debug('Checking report for the first time...');
-    checkReport(checkFn, doneCallback);
-  };
+  const pollOptions = (component, port, checkFn, timeout = totalTimeout) => ({
+    component: component,
+    p: port,
+    checkFn: checkFn,
+    startTimeout: startTimeout,
+    totalTimeout: timeout
+  });
 
   before((done) => {
     const dbclient = require('abacus-dbclient');
@@ -460,10 +439,12 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
         this.timeout(totalTimeout + 2000);
 
         let startWaitTime = moment.now();
-        waitForStart('http://localhost:9501/v1/cf/renewer', {},
-          startTimeout, () => poll(checkThisMonth, done,
-            totalTimeout - (moment.now() - startWaitTime), 1000)
-        );
+        const renewerOptions = pollOptions(
+          'renewer', 9501,
+          checkThisMonth,
+          totalTimeout - (moment.now() - startWaitTime));
+        client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+          checkReport, renewerOptions, done);
       });
     });
 
@@ -490,10 +471,12 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
         this.timeout(totalTimeout + 2000);
 
         let startWaitTime = moment.now();
-        waitForStart('http://localhost:9501/v1/cf/renewer', {},
-          startTimeout, () => poll(checkThisMonth, done,
-            totalTimeout - (moment.now() - startWaitTime), 1000)
-        );
+        const renewerOptions = pollOptions(
+          'renewer', 9501,
+          checkThisMonth,
+          totalTimeout - (moment.now() - startWaitTime));
+        client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+          checkReport, renewerOptions, done);
       });
     });
 
@@ -526,10 +509,12 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
       this.timeout(totalTimeout + 2000);
 
       let startWaitTime = moment.now();
-      waitForStart('http://localhost:9501/v1/cf/renewer', {},
-        startTimeout, () => poll(checkThisAndPreviousMonths, done,
-          totalTimeout - (moment.now() - startWaitTime), 1000)
-      );
+      const renewerOptions = pollOptions(
+        'renewer', 9501,
+        checkThisAndPreviousMonths,
+        totalTimeout - (moment.now() - startWaitTime));
+      client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+        checkReport, renewerOptions, done);
     });
   });
 
@@ -560,10 +545,12 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
       this.timeout(totalTimeout + 2000);
 
       let startWaitTime = moment.now();
-      waitForStart('http://localhost:9501/v1/cf/renewer', {},
-        startTimeout, () => poll(checkThisAndPreviousMonths, done,
-          totalTimeout - (moment.now() - startWaitTime), 1000)
-      );
+      const renewerOptions = pollOptions(
+        'renewer', 9501,
+        checkThisAndPreviousMonths,
+        totalTimeout - (moment.now() - startWaitTime));
+      client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+        checkReport, renewerOptions, done);
     });
   });
 

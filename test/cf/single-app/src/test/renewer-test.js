@@ -7,6 +7,7 @@ const util = require('util');
 const _ = require('underscore');
 const clone = _.clone;
 
+const client = require('abacus-client');
 const dbclient = require('abacus-dbclient');
 const express = require('abacus-express');
 const request = require('abacus-request');
@@ -123,6 +124,14 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
 });
 
 const lastMonthInMilliseconds = moment.utc().subtract(1, 'months').valueOf();
+
+const pollOptions = (component, port, checkFn, timeout = totalTimeout) => ({
+  component: component,
+  p: port,
+  checkFn: checkFn,
+  startTimeout: startTimeout,
+  totalTimeout: timeout
+});
 
 describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
   let server;
@@ -290,7 +299,7 @@ describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
     expect(currentMonth.charge).to.be.above(0);
   };
 
-  const checkReport = (cb, checkFn) => {
+  const checkReport = (checkFn, cb) => {
     request.get('http://localhost:9088/v1/metering/organizations' +
       '/:organization_id/aggregated/usage', {
         organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
@@ -329,54 +338,6 @@ describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
           cb(new Error(message), e);
         }
       });
-  };
-
-  const poll = (fn, checkFn, done, timeout = 1000, interval = 100) => {
-    const startTimestamp = moment.now();
-
-    const doneCallback = (err) => {
-      if (!err) {
-        debug('Expectation in %s met', fn.name);
-        setImmediate(() => done());
-        return;
-      }
-
-      if (moment.now() - startTimestamp > timeout) {
-        debug('Expectation not met for %d ms. Error: %o', timeout, err);
-        setImmediate(() => done(new Error(err)));
-      }
-      else
-        setTimeout(() => {
-          debug('Calling %s after >= %d ms...', fn.name, interval);
-          fn(doneCallback, checkFn);
-        }, interval);
-    };
-
-    debug('Calling %s for the first time...', fn.name);
-    fn(doneCallback, checkFn);
-  };
-
-  const waitForStartAndPoll = (component, port, checkFn, timeout, done) => {
-    let startWaitTime = moment.now();
-    request.waitFor('http://localhost::p/v1/cf/:component',
-      { component: component, p: port },
-      startTimeout, (err, uri, opts) => {
-        // Failed to ping component before timing out
-        if (err) throw err;
-
-        // Check report
-        request.get(uri, {}, (err, response) => {
-          expect(err).to.equal(undefined);
-          expect(response.statusCode).to.equal(200);
-
-          const t = timeout - (moment.now() - startWaitTime);
-          debug('Time left for executing test: %d ms', t);
-          poll(checkReport, checkFn, (error) => {
-            done(error);
-          }, t, 1000);
-        });
-      }
-    );
   };
 
   context('with a single app', () => {
@@ -571,15 +532,21 @@ describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
         this.timeout(totalTimeout);
 
         const startTestTime = moment.now();
-        waitForStartAndPoll('bridge', 9500, checkLastMonthWindow, totalTimeout,
-          (error) => {
+        const bridgeOptions = pollOptions('bridge', 9500, checkLastMonthWindow);
+        client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+          checkReport, bridgeOptions, (error) => {
             if (error) {
               done(error);
               return;
             }
             npm.startModules([npm.modules.renewer]);
-            waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindow,
-              totalTimeout - (moment.now() - startTestTime), done);
+            const renewerOptions = pollOptions(
+              'renewer', 9501,
+              checkCurrentMonthWindow,
+              totalTimeout - (moment.now() - startTestTime)
+            );
+            client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+              checkReport, renewerOptions, done);
           }
         );
       });
@@ -718,15 +685,21 @@ describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
         this.timeout(totalTimeout);
 
         const startTestTime = moment.now();
-        waitForStartAndPoll('bridge', 9500, checkLastMonthWindow, totalTimeout,
-          (error) => {
+        const bridgeOptions = pollOptions('bridge', 9500, checkLastMonthWindow);
+        client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+          checkReport, bridgeOptions, (error) => {
             if (error) {
               done(error);
               return;
             }
             npm.startModules([npm.modules.renewer]);
-            waitForStartAndPoll('renewer', 9501, checkCurrentMonthWindow,
-              totalTimeout - (moment.now() - startTestTime), done);
+            const renewerOptions = pollOptions(
+              'renewer', 9501,
+              checkCurrentMonthWindow,
+              totalTimeout - (moment.now() - startTestTime)
+            );
+            client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+              checkReport, renewerOptions, done);
           }
         );
       });

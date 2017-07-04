@@ -8,6 +8,7 @@ const _ = require('underscore');
 const clone = _.clone;
 const invert = _.invert;
 
+const client = require('abacus-client');
 const dbclient = require('abacus-dbclient');
 const express = require('abacus-express');
 const request = require('abacus-request');
@@ -284,52 +285,12 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
       });
   };
 
-  const poll = (fn, done, timeout = 1000, interval = 100) => {
-    const startTimestamp = moment.now();
-
-    const doneCallback = (err) => {
-      if (!err) {
-        debug('Expectation in %s met', fn.name);
-        setImmediate(() => done());
-        return;
-      }
-
-      if (moment.now() - startTimestamp > timeout) {
-        debug('Expectation not met for %d ms. Error: %o', timeout, err);
-        setImmediate(() => done(new Error(err)));
-      }
-      else
-        setTimeout(() => {
-          debug('Calling %s after >= %d ms...', fn.name, interval);
-          fn(doneCallback);
-        }, interval);
-    };
-
-    debug('Calling %s for the first time...', fn.name);
-    fn(doneCallback);
-  };
-
-  const waitForStartAndPoll = (component, port, done) => {
-    // Wait for bridge to start
-    let startWaitTime = moment.now();
-    request.waitFor('http://localhost::p/v1/cf/:component',
-      { component: component, p: port },
-      startTimeout, (err, uri, opts) => {
-        // Failed to ping component before timing out
-        if (err) throw err;
-
-        // Check report
-        request.get(uri, {}, (err, response) => {
-          expect(err).to.equal(undefined);
-          expect(response.statusCode).to.equal(200);
-
-          poll(checkReport, (error) => {
-            done(error);
-          }, totalTimeout - (moment.now() - startWaitTime), 1000);
-        });
-      }
-    );
-  };
+  const pollOptions = (component, port) => ({
+    component: component,
+    p: port,
+    startTimeout: startTimeout,
+    totalTimeout: totalTimeout
+  });
 
   const generatePastAppUsage = (value, timeUnit) => [
     {
@@ -364,7 +325,7 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
     }
   ];
 
-  context('with an app started 1 hour before', () => {
+  context('with an app started 1 hour ago', () => {
 
     beforeEach(() => {
       appUsageEvents = generatePastAppUsage(1, 'hour');
@@ -376,12 +337,13 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
     it('submits usage and gets expected report back', function(done) {
       this.timeout(totalTimeout + 2000);
 
-      waitForStartAndPoll('bridge', 9500, done);
+      client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+        checkReport, pollOptions('bridge', 9500), done);
     });
 
   });
 
-  context('with an app started 2 hours before', () => {
+  context('with an app started 2 hours ago', () => {
 
     beforeEach(() => {
       appUsageEvents = generatePastAppUsage(2, 'hours');
@@ -393,7 +355,8 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
     it('submits usage and gets expected report back', function(done) {
       this.timeout(totalTimeout + 2000);
 
-      waitForStartAndPoll('bridge', 9500, done);
+      client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+        checkReport, pollOptions('bridge', 9500), done);
     });
 
   });
