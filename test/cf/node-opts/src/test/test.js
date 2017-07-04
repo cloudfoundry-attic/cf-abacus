@@ -35,25 +35,20 @@ describe('webapp', function() {
     npm = require('abacus-npm');
 
     beforeEach((done) => {
-      // Start all Abacus services
-      const services = () => {
-        npm.startModules([
-          npm.modules.eurekaPlugin,
-          npm.modules.provisioningPlugin,
-          npm.modules.accountPlugin,
-          npm.modules.collector
-        ], done);
-      };
+      const modules = [
+        npm.modules.eurekaPlugin,
+        npm.modules.provisioningPlugin,
+        npm.modules.accountPlugin,
+        npm.modules.collector
+      ];
 
-      // Start local database server
       if (!process.env.DB) {
-        npm.startModules([npm.modules.pouchserver]);
-        services();
+        modules.push(npm.modules.pouchserver);
+        npm.startModules(modules, done);
       }
       else
-      // Delete test dbs on the configured db server
         dbclient.drop(process.env.DB, /^abacus-/, () => {
-          services();
+          npm.startModules(modules, done);
         });
     });
 

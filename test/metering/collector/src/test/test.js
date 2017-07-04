@@ -58,23 +58,19 @@ const totalTimeout = commander.totalTimeout || 60000;
 
 describe('abacus-usage-collector-itest', () => {
   before((done) => {
-    const services = () => {
-      npm.startModules([
-        npm.modules.provisioningPlugin,
-        npm.modules.accountPlugin,
-        npm.modules.collector
-      ], done);
-    };
+    const modules = [
+      npm.modules.provisioningPlugin,
+      npm.modules.accountPlugin,
+      npm.modules.collector
+    ];
 
-    // Start local database server
     if (!process.env.DB) {
-      npm.startModules([npm.modules.pouchserver]);
-      services();
+      modules.push(npm.modules.pouchserver);
+      npm.startModules(modules, done);
     }
     else
-      // Delete test dbs on the configured db server
-      dbclient.drop(process.env.DB, /^abacus-collector-/, () => {
-        services();
+      dbclient.drop(process.env.DB, /^abacus-/, () => {
+        npm.startModules(modules, done);
       });
   });
 

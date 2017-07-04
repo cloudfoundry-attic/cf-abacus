@@ -205,30 +205,25 @@ describe('abacus-cf multiple-apps-test with oAuth', () => {
 
     noUsageExpected = false;
 
-    // Start all Abacus services
-    const startServices = () => {
-      npm.startModules([
-        npm.modules.eurekaPlugin,
-        npm.modules.provisioningPlugin,
-        npm.modules.accountPlugin,
-        npm.modules.collector,
-        npm.modules.meter,
-        npm.modules.accumulator,
-        npm.modules.aggregator,
-        npm.modules.reporting,
-        npm.modules.bridge
-      ], done);
-    };
+    const modules = [
+      npm.modules.eurekaPlugin,
+      npm.modules.provisioningPlugin,
+      npm.modules.accountPlugin,
+      npm.modules.collector,
+      npm.modules.meter,
+      npm.modules.accumulator,
+      npm.modules.aggregator,
+      npm.modules.reporting,
+      npm.modules.bridge
+    ];
 
-    // Start local database server
     if (!process.env.DB) {
-      npm.startModules(['abacus-pouchserver']);
-      startServices();
+      modules.push(npm.modules.pouchserver);
+      npm.startModules(modules, done);
     }
     else
-    // Delete test dbs on the configured db server
       dbclient.drop(process.env.DB, /^abacus-/, () => {
-        startServices();
+        npm.startModules(modules, done);
       });
   });
 

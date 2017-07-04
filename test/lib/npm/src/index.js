@@ -59,10 +59,10 @@ const startModules = (streams, modules, afterAllStartedCb = () => {}) => {
     return;
   }
 
-  const oldStartedModulesCount = startedModules.size;
+  let started = 0;
   map(modules, (module) => start(streams, module, () => {
     startedModules.add(module);
-    if (startedModules.size === oldStartedModulesCount + modules.length)
+    if (++started === modules.length)
       afterAllStartedCb();
   }));
 };

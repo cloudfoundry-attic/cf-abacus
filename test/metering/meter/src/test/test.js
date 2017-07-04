@@ -63,7 +63,7 @@ describe('abacus-usage-meter-itest', () => {
     // Start local database server
     if (!process.env.DB) 
       npm.startModules([
-        npm.modules.poucherver,
+        npm.modules.pouchserver,
         npm.modules.meter
       ], done);
     else

@@ -252,24 +252,19 @@ const buildAggregatedQuantity = (p, u, ri, tri, count, end, f) => {
 
 describe('abacus-usage-reporting-itest', () => {
   before((done) => {
-    const services = () => {
-      npm.startModules([
-        npm.modules.accountPlugin,
-        npm.modules.reporting
-      ], done);
-    };
+    const modules = [
+      npm.modules.accountPlugin,
+      npm.modules.reporting
+    ];
 
-    // Start local database server
     if (!process.env.DB) {
-      npm.startModules([npm.modules.pouchserver]);
-      services();
+      modules.push(npm.modules.pouchserver);
+      npm.startModules(modules, done);
     }
     else
-      // Delete test dbs on the configured db server
-      dbclient.drop(process.env.DB,
-        /^abacus-aggregator-|^abacus-accumulator-/, () => {
-          services();
-        });
+      dbclient.drop(process.env.DB, /^abacus-/, () => {
+        npm.startModules(modules, done);
+      });
   });
 
   after((done) => {
