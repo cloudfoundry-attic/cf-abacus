@@ -20,14 +20,14 @@ if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
   insecure='--insecure'
 fi
 
-cf api https://api.$CF_SYS_DOMAIN $skip
-cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+cf api https://api.${CF_SYS_DOMAIN} $skip
+cf login -u ${CF_USER} -p ${CF_PASSWORD} -o ${CF_ORG} -s ${CF_SPACE}
 
 # Find params to speed-up bridge processing
-export ORG_GUID=$(cf org $CF_ORG --guid)
+export ORG_GUID=$(cf org ${CF_ORG} --guid)
 echo "Org GUID: $ORG_GUID"
 
-TOKEN=$(curl $insecure --user $CC_CLIENT_ID:$CC_CLIENT_SECRET -s "https://uaa.$CF_SYS_DOMAIN/oauth/token?grant_type=client_credentials" | jq -r .access_token)
+TOKEN=$(curl $insecure --user ${BRIDGE_CLIENT_ID}:${BRIDGE_CLIENT_SECRET} -s "https://uaa.$CF_SYS_DOMAIN/oauth/token?grant_type=client_credentials" | jq -r .access_token)
 if [ "$TOKEN" == "null" -o -z "$TOKEN" ]; then
   echo "Cannot obtain token for access to CF API !"
   exit 1
@@ -38,8 +38,8 @@ export LAST_RECORDED_GUID=$(curl -s $insecure -H "Authorization: bearer $TOKEN" 
 echo "Last recorded GUID: $LAST_RECORDED_GUID"
 
 echo "Replacing ORG_GUID and LAST_RECORDED_GUID in bridge manifest ..."
-abacus_config_dir=$ABACUS_CONFIG_DIR
-abacus_dir=$ABACUS_PROJECT_DIR
+abacus_config_dir=${ABACUS_CONFIG_DIR}
+abacus_dir=${ABACUS_PROJECT_DIR}
 $abacus_dir/etc/concourse/scripts/configure $abacus_config_dir
 cp -R $abacus_config_dir/* $abacus_dir
 
@@ -63,10 +63,10 @@ pushd $abacus_dir
   restartAppsWithRetry
 
   echo "Starting Acceptance test ..."
-  npm run acceptance -- --reporting-app=$REPORTING_APP \
-  --cf-domain=$CF_DOMAIN \
+  npm run acceptance -- --reporting-app=${REPORTING_APP} \
+  --cf-domain=${CF_DOMAIN} \
   --organization-guid=$ORG_GUID \
-  --total-timeout=$CI_PIPELINE_TIMEOUT \
-  --start-timeout=$CI_START_TIMEOUT
+  --total-timeout=${CI_PIPELINE_TIMEOUT} \
+  --start-timeout=${CI_START_TIMEOUT}
 
 popd
