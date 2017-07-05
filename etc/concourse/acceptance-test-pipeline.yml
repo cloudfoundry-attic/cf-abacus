@@ -68,9 +68,8 @@ jobs:
             - name: landscape
           params:
             BUILDPACK: {{nodejs-buildpack}}
-            # Save file handlers and offload CF stagers
-            JOBS: 2
-            # Cloud Foundry infrastructure
+            # Uncomment to save file handlers and offload CF stagers
+            # JOBS: 2
             CF_SYS_DOMAIN: {{cf-sys-domain}}
             CF_USER: {{cf-user}}
             CF_PASSWORD: {{cf-password}}
