@@ -45,6 +45,7 @@
     "abacus-account-plugin": "file:../../../lib/plugins/account",
     "abacus-yieldable": "file:../../../lib/utils/yieldable",
     "abacus-moment": "file:../../../lib/utils/moment",
+    "abacus-npm": "file:../../lib/npm",
     "bignumber.js": "^2.1.0",
     "commander": "2.8.1",
     "underscore": "^1.8.3"

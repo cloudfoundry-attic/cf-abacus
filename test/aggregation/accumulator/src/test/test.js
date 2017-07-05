@@ -1,6 +1,5 @@
 'use strict';
 
-const cp = require('child_process');
 const _ = require('underscore');
 
 const commander = require('commander');
@@ -24,6 +23,8 @@ const map = _.map;
 const range = _.range;
 const omit = _.omit;
 const extend = _.extend;
+
+const npm = require('abacus-npm');
 
 // Batch the requests
 const brequest = batch(request);
@@ -69,12 +70,6 @@ const startTimeout = commander.startTimeout || 30000;
 // This test timeout
 const totalTimeout = commander.totalTimeout || 60000;
 
-// Module directory
-const moduleDir = (module) => {
-  const path = require.resolve(module);
-  return path.substr(0, path.indexOf(module + '/') + module.length);
-};
-
 const pruneWindows = (v, k) => {
   if(k === 'windows')
     return [v[4][0]];
@@ -112,71 +107,23 @@ const buildQuantityWindows = (e, u, m, f, price) => {
 
 describe('abacus-usage-accumulator-itest', () => {
   before((done) => {
-    const start = (module) => {
-      const c = cp.spawn('npm', ['run', 'start'],
-        { cwd: moduleDir(module), env: clone(process.env) });
+    const modules = [
+      npm.modules.accountPlugin,
+      npm.modules.accumulator
+    ];
 
-      // Add listeners to stdout, stderr and exit messsage and forward the
-      // messages to debug logs
-      c.stdout.on('data', (d) => process.stdout.write(d));
-      c.stderr.on('data', (d) => process.stderr.write(d));
-      c.on('exit', (c) => debug('Application exited with code %d', c));
-    };
-
-    const services = () => {
-      // Start account plugin
-      start('abacus-account-plugin');
-
-      // Start usage accumulator
-      start('abacus-usage-accumulator');
-
-      done();
-    };
-
-    // Start local database server
     if (!process.env.DB) {
-      start('abacus-pouchserver');
-      services();
+      modules.push(npm.modules.pouchserver);
+      npm.startModules(modules, done);
     }
     else
-      // Delete test dbs on the configured db server
-      dbclient.drop(process.env.DB, /^abacus-accumulator-/, () => {
-        services();
+      dbclient.drop(process.env.DB, /^abacus-/, () => {
+        npm.startModules(modules, done);
       });
   });
 
   after((done) => {
-    let counter = 3;
-    const finishCb = (module, code) => {
-      counter--;
-      debug('Module %s exited with code %d. Left %d modules',
-        module, code, counter);
-      if (counter === 0) {
-        debug('All modules stopped. Exiting test');
-        done();
-      }
-    };
-
-    const stop = (module, cb) => {
-      debug('Stopping %s in directory %s', module, moduleDir(module));
-      const c = cp.spawn('npm', ['run', 'stop'],
-        { cwd: moduleDir(module), env: clone(process.env) });
-
-      // Add listeners to stdout, stderr and exit message and forward the
-      // messages to debug logs
-      c.stdout.on('data', (data) => process.stdout.write(data));
-      c.stderr.on('data', (data) => process.stderr.write(data));
-      c.on('exit', (code) => cb(module, code));
-    };
-
-    // Stop usage accumulator
-    stop('abacus-usage-accumulator', finishCb);
-
-    // Stop account plugin
-    stop('abacus-account-plugin', finishCb);
-
-    // Stop local database server
-    stop('abacus-pouchserver', finishCb);
+    npm.stopAllStarted(done);
   });
 
   it('accumulate metered usage submissions', function(done) {
