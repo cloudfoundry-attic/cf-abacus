@@ -229,15 +229,16 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
       npm.modules.reporting
     ], () => {
       debug('Waiting for collector ...');
-      request.waitFor('http://localhost:9080/batch', {}, startTimeout, (err) => {
-        if (err)
-          done(err);
+      request.waitFor('http://localhost:9080/batch', {}, 
+        startTimeout, (err) => {
+          if (err)
+            done(err);
 
-        npm.startModules([
-          npm.modules.renewer,
-          npm.modules.bridge
-        ], done);
-      });
+          npm.startModules([
+            npm.modules.renewer,
+            npm.modules.bridge
+          ], done);
+        });
     });
   };
 
