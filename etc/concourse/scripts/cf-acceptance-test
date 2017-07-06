@@ -34,7 +34,7 @@ if [ "$TOKEN" == "null" -o -z "$TOKEN" ]; then
 fi
 EVENTS_URL="https://api.$CF_SYS_DOMAIN/v2/app_usage_events"
 NUM_EVENTS=$(curl -s $insecure -H "Authorization: bearer $TOKEN" -H "Content-Type: application/json" "$EVENTS_URL?results-per-page=1" | jq '.total_results')
-export LAST_RECORDED_GUID=$(curl -s $insecure -H "Authorization: bearer $TOKEN" -H "Content-Type: application/json" "$EVENTS_URL?results-per-page=1&page=$NUM_EVENTS" | jq '.resources[0].metadata.guid')
+export LAST_RECORDED_GUID=$(curl -s $insecure -H "Authorization: bearer $TOKEN" -H "Content-Type: application/json" "$EVENTS_URL?results-per-page=1&page=$NUM_EVENTS" | jq -r '.resources[0].metadata.guid')
 echo "Last recorded GUID: $LAST_RECORDED_GUID"
 
 echo "Replacing ORG_GUID and LAST_RECORDED_GUID in bridge manifest ..."
