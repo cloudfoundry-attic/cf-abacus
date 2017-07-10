@@ -3,13 +3,16 @@
 // Deploy an app to Cloud Foundry
 
 const _ = require('underscore');
+const extend = _.extend;
+const noop = _.noop;
+
 const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
-const commander = require('commander');
-const yaml = require('js-yaml');
 
-const noop = _.noop;
+const commander = require('commander');
+const tmp = require('tmp');
+const yaml = require('js-yaml');
 
 /* eslint no-process-exit: 1 */
 
@@ -64,8 +67,10 @@ const push = (name, start, cb) => {
   const command = 'cf push ' +
     (start ? '' : '--no-start ') +
     '-f .cfpush/' + [name, 'manifest.yml'].join('-');
+  const tmpDir = tmp.dirSync({ prefix: 'cfpush_' });
   const ex = cp.exec(command, {
-    cwd: process.cwd()
+    cwd: process.cwd(),
+    env: extend(process.env, { CF_HOME: tmpDir.name })
   });
   ex.stdout.on('data', (data) => {
     process.stdout.write(data);
@@ -74,6 +79,7 @@ const push = (name, start, cb) => {
     process.stderr.write(data);
   });
   ex.on('close', (code) => {
+    tmpDir.removeCallback();
     cb(code);
   });
 };
