@@ -36,7 +36,6 @@
     "abacus-usage-collector": "file:../../../lib/metering/collector",
     "abacus-debug": "file:../../../lib/utils/debug",
     "abacus-npm": "file:../../lib/npm",
-    "abacus-eureka": "file:../../../lib/plugins/eureka",
     "underscore": "^1.8.3",
     "commander": "2.8.1"
   },
