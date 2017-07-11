@@ -1,6 +1,5 @@
 'use strict';
 
-const cp = require('child_process');
 const commander = require('commander');
 const jwt = require('jsonwebtoken');
 const util = require('util');
@@ -8,12 +7,13 @@ const util = require('util');
 const _ = require('underscore');
 const clone = _.clone;
 
+const client = require('abacus-client');
 const dbclient = require('abacus-dbclient');
 const express = require('abacus-express');
 const request = require('abacus-request');
 const router = require('abacus-router');
 const moment = require('abacus-moment');
-
+const npm = require('abacus-npm');
 
 // Setup the debug log
 const debug =
@@ -24,12 +24,6 @@ const resultDebug =
   require('abacus-debug')('abacus-cf-renewer-itest-result');
 const oAuthDebug =
   require('abacus-debug')('abacus-cf-renewer-itest-oauth');
-
-// Module directory
-const moduleDir = (module) => {
-  const path = require.resolve(module);
-  return path.substr(0, path.indexOf(module + '/') + module.length);
-};
 
 const timeWindows = {
   'second' : 0,
@@ -137,20 +131,14 @@ const test = (secured) => {
   let expectedConsuming;
   let noReportExpected;
 
-  const start = (module) => {
-    debug('Starting %s in directory %s', module, moduleDir(module));
-    const c = cp.spawn('npm', ['run', 'start'], {
-      cwd: moduleDir(module),
-      env: clone(process.env)
-    });
-
-    // Add listeners to stdout, stderr and exit message and forward the
-    // messages to debug logs
-    c.stdout.on('data', (data) => process.stdout.write(data));
-    c.stderr.on('data', (data) => process.stderr.write(data));
-    c.on('exit', (code) =>
-      debug('Module %s started with code %d', module, code));
-  };
+  const pollOptions = (component, port, checkFn, timeout = totalTimeout) => ({
+    component: component,
+    p: port,
+    token: () => secured ? 'bearer ' + signedSystemToken : '',
+    checkFn: checkFn,
+    startTimeout: startTimeout,
+    totalTimeout: timeout
+  });
 
   beforeEach((done) => {
     const app = express();
@@ -226,82 +214,31 @@ const test = (secured) => {
 
     noReportExpected = false;
 
-    // Start all Abacus services
-    const startServices = () => {
-      start('abacus-eureka-plugin');
-      start('abacus-provisioning-plugin');
-      start('abacus-account-plugin');
-      start('abacus-usage-collector');
-      start('abacus-usage-meter');
-      start('abacus-usage-accumulator');
-      start('abacus-usage-aggregator');
-      start('abacus-usage-reporting');
-      start('abacus-cf-bridge');
+    const modules = [
+      npm.modules.eurekaPlugin,
+      npm.modules.provisioningPlugin,
+      npm.modules.accountPlugin,
+      npm.modules.collector,
+      npm.modules.meter,
+      npm.modules.accumulator,
+      npm.modules.aggregator,
+      npm.modules.reporting,
+      npm.modules.bridge
+    ];
 
-      done();
-    };
-
-    // Start local database server
     if (!process.env.DB) {
-      start('abacus-pouchserver');
-      startServices();
+      modules.push(npm.modules.pouchserver);
+      npm.startModules(modules, done);
     }
     else
-      // Delete test dbs on the configured db server
       dbclient.drop(process.env.DB, /^abacus-/, () => {
-        startServices();
+        npm.startModules(modules, done);
       });
   });
 
   afterEach((done) => {
-    let counter = 11;
-    const finishCb = (module, code) => {
-      counter--;
-      debug('Module %s exited with code %d. Left %d modules',
-        module, code, counter);
-      if (counter === 0) {
-        debug('All modules stopped. Exiting test');
-        done();
-      }
-    };
-
-    const stop = (module, cb) => {
-      debug('Stopping %s in directory %s', module, moduleDir(module));
-      const c = cp.spawn('npm', ['run', 'stop'],
-        { cwd: moduleDir(module), env: clone(process.env) });
-
-      // Add listeners to stdout, stderr and exit message and forward the
-      // messages to debug logs
-      c.stdout.on('data', (data) => process.stdout.write(data));
-      c.stderr.on('data', (data) => process.stderr.write(data));
-      c.on('exit', (code) => cb(module, code));
-    };
-
-    stop('abacus-cf-renewer', finishCb);
-    stop('abacus-cf-bridge', finishCb);
-    stop('abacus-usage-reporting', finishCb);
-    stop('abacus-usage-aggregator', finishCb);
-    stop('abacus-usage-accumulator', finishCb);
-    stop('abacus-usage-meter', finishCb);
-    stop('abacus-usage-collector', finishCb);
-    stop('abacus-account-plugin', finishCb);
-    stop('abacus-provisioning-plugin', finishCb);
-    stop('abacus-eureka-plugin', finishCb);
-    stop('abacus-pouchserver', finishCb);
-
     server.close();
-
-    delete process.env.SECURED;
-    delete process.env.API;
-    delete process.env.AUTH_SERVER;
-    delete process.env.CF_CLIENT_ID;
-    delete process.env.CF_CLIENT_SECRET;
-    delete process.env.CLIENT_ID;
-    delete process.env.CLIENT_SECRET;
-    delete process.env.JWTKEY;
-    delete process.env.JWTALGO;
-    delete process.env.SLACK;
-    delete process.env.RETRY_INTERVAL;
+    npm.stopAllStarted(done);
   });
 
   const checkCurrentMonthWindow = (windowName, usage, level) => {
@@ -328,7 +265,7 @@ const test = (secured) => {
     expect(currentMonth.charge).to.be.above(0);
   };
 
-  const checkReport = (cb, checkFn) => {
+  const checkReport = (checkFn, cb) => {
     request.get('http://localhost:9088/v1/metering/organizations' +
       '/:organization_id/aggregated/usage', {
         organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
@@ -376,58 +313,6 @@ const test = (secured) => {
       });
   };
 
-  const poll = (fn, checkFn, done, timeout = 1000, interval = 100) => {
-    const startTimestamp = moment.now();
-
-    const doneCallback = (err) => {
-      if (!err) {
-        debug('Expectation in %s met', fn.name);
-        setImmediate(() => done());
-        return;
-      }
-
-      if (moment.now() - startTimestamp > timeout) {
-        debug('Expectation not met for %d ms. Error: %o', timeout, err);
-        setImmediate(() => done(new Error(err)));
-      }
-      else
-        setTimeout(() => {
-          debug('Calling %s after >= %d ms...', fn.name, interval);
-          fn(doneCallback, checkFn);
-        }, interval);
-    };
-
-    debug('Calling %s for the first time...', fn.name);
-    fn(doneCallback, checkFn);
-  };
-
-  const waitForStartAndPoll = (component, port, checkFn, timeout, done) => {
-    let startWaitTime = moment.now();
-    request.waitFor('http://localhost::p/v1/cf/:component',
-      { component: component, p: port },
-      startTimeout, (err, uri, opts) => {
-        // Failed to ping component before timing out
-        if (err) throw err;
-
-        // Check report
-        request.get(uri, {
-          headers: {
-            authorization: secured ? 'bearer ' + signedSystemToken : ''
-          }
-        }, (err, response) => {
-          expect(err).to.equal(undefined);
-          expect(response.statusCode).to.equal(200);
-
-          const t = timeout - (moment.now() - startWaitTime);
-          debug('Time left for executing test: %d ms', t);
-          poll(checkReport, checkFn, (error) => {
-            done(error);
-          }, t, 1000);
-        });
-      }
-    );
-  };
-
   context('start app in current month', () => {
     beforeEach(() => {
       const today = moment.utc().valueOf();
@@ -471,17 +356,27 @@ const test = (secured) => {
       this.timeout(totalTimeout + 2000);
 
       const startTestTime = moment.now();
-      waitForStartAndPoll('bridge', 9500, checkCurrentMonthWindow, totalTimeout,
-        (error) => {
+      const bridgeOptions = pollOptions(
+        'bridge', 9500,
+        checkCurrentMonthWindow
+      );
+      client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+        checkReport, bridgeOptions, (error) => {
           if (error) {
             done(error);
             return;
           }
-          start('abacus-cf-renewer');
+          npm.startModules([npm.modules.renewer]);
           // Allow the renewer to kick-in
-          setTimeout(() => waitForStartAndPoll('renewer', 9501,
-            checkCurrentMonthWindow,
-            totalTimeout - (moment.now() - startTestTime), done), 2000);
+          setTimeout(() => {
+            const renewerOptions = pollOptions(
+              'renewer', 9501,
+              checkCurrentMonthWindow,
+              totalTimeout - (moment.now() - startTestTime));
+            client.waitForStartAndPoll(
+              'http://localhost::p/v1/cf/:component',
+              checkReport, renewerOptions, done);
+          }, 2000);
         }
       );
     });
@@ -530,15 +425,23 @@ const test = (secured) => {
       this.timeout(totalTimeout + 2000);
 
       const startTestTime = moment.now();
-      waitForStartAndPoll('bridge', 9500, () => {}, totalTimeout,
-        (error) => {
+      const bridgeOptions = pollOptions(
+        'bridge', 9500,
+        () => {}
+      );
+      client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+        checkReport, bridgeOptions, (error) => {
           if (error) {
             done(error);
             return;
           }
-          start('abacus-cf-renewer');
-          waitForStartAndPoll('renewer', 9501, () => {},
-            totalTimeout - (moment.now() - startTestTime), done);
+          npm.startModules([npm.modules.renewer]);
+          const renewerOptions = pollOptions(
+            'renewer', 9501,
+            () => {},
+            totalTimeout - (moment.now() - startTestTime));
+          client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+            checkReport, renewerOptions, done);
         }
       );
     });
