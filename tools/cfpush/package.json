@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "commander": "^2.8.1",
+    "fs-extra": "^3.0.1",
     "js-yaml": "^3.4.3",
     "tmp": "^0.0.31",
     "underscore": "^1.8.3"
