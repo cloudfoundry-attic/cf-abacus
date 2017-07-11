@@ -3,13 +3,17 @@
 // Deploy an app to Cloud Foundry
 
 const _ = require('underscore');
-const fs = require('fs');
+const extend = _.extend;
+const noop = _.noop;
+
 const path = require('path');
 const cp = require('child_process');
-const commander = require('commander');
-const yaml = require('js-yaml');
 
-const noop = _.noop;
+const commander = require('commander');
+const fs = require('fs-extra');
+const tmp = require('tmp');
+tmp.setGracefulCleanup();
+const yaml = require('js-yaml');
 
 /* eslint no-process-exit: 1 */
 
@@ -59,13 +63,32 @@ const remanifest = (root, name, instances, conf, buildpack, prefix, cb) => {
     });
 };
 
+const prepareTmpDir = () => {
+  const tmpDir = tmp.dirSync({
+    prefix: 'cfpush_',
+    discardDescriptor: true,
+    unsafeCleanup: true
+  });
+
+  const cfTmpDir = path.join(tmpDir.name, '.cf');
+  const cfSettings = path.join(
+    process.env.CF_HOME || process.env.HOME, '.cf'
+  );
+  if (fs.existsSync(cfSettings))
+    fs.copySync(cfSettings, cfTmpDir);
+
+  return tmpDir;
+};
+
 // Push an app
 const push = (name, start, cb) => {
   const command = 'cf push ' +
     (start ? '' : '--no-start ') +
     '-f .cfpush/' + [name, 'manifest.yml'].join('-');
+  const tmpDir = prepareTmpDir();
   const ex = cp.exec(command, {
-    cwd: process.cwd()
+    cwd: process.cwd(),
+    env: extend(process.env, { CF_HOME: tmpDir.name })
   });
   ex.stdout.on('data', (data) => {
     process.stdout.write(data);
@@ -74,6 +97,7 @@ const push = (name, start, cb) => {
     process.stderr.write(data);
   });
   ex.on('close', (code) => {
+    tmpDir.removeCallback();
     cb(code);
   });
 };
