@@ -446,6 +446,7 @@ const test = (secured) => {
       );
     });
   });
+
 };
 
 describe('abacus-cf-renewer irrelevant-usage-test with oAuth',
