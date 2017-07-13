@@ -1,21 +1,35 @@
 language: node_js
+node_js: "6.10.0"
 
 sudo: false
 
 env:
   global:
-    - CI_TEST="true" CF_TEST="false" START_TIMEOUT=20000 TOTAL_TIMEOUT=120000
+    - CF_TEST="false"
+    - START_TIMEOUT=20000
+    - TOTAL_TIMEOUT=120000
 
-matrix:
+jobs:
   include:
-    - node_js: "6.10.0"
-      env: DESCRIPTION="pouchdb"
-    - node_js: "6.10.0"
-      env: DESCRIPTION="couchdb" JOBS=1 DBCLIENT=abacus-couchclient DB=http://localhost:5984
+    - &unit-tests
+      stage: unit tests
+      script: npm run build && npm run coveralls
+      env:
+        - DESCRIPTION="pouchdb"
+    - <<: *unit-tests
+      env:
+        - DESCRIPTION="couchdb"
+        - JOBS=1
+        - DBCLIENT=abacus-couchclient
+        - DB=http://localhost:5984
       services:
         - couchdb
-    - node_js: "6.10.0"
-      env: DESCRIPTION="mongodb 2.6" JOBS=1 DBCLIENT=abacus-mongoclient DB=mongodb://localhost:27017
+    - <<: *unit-tests
+      env:
+        - DESCRIPTION="mongodb 2.6"
+        - JOBS=1
+        - DBCLIENT=abacus-mongoclient
+        - DB=mongodb://localhost:27017
       addons:
         apt:
           sources:
@@ -23,10 +37,14 @@ matrix:
           packages:
             - mongodb-org-server
             - mongodb-org-shell
-      before_script:
+      install:
         - sleep 15
-    - node_js: "6.10.0"
-      env: DESCRIPTION="mongodb 3.2" JOBS=1 DBCLIENT=abacus-mongoclient DB=mongodb://localhost:27017
+    - <<: *unit-tests
+      env:
+        - DESCRIPTION="mongodb 3.2"
+        - JOBS=1
+        - DBCLIENT=abacus-mongoclient
+        - DB=mongodb://localhost:27017
       addons:
         apt:
           sources:
@@ -35,15 +53,157 @@ matrix:
           packages:
             - mongodb-org-server
             - mongodb-org-shell
-      before_script:
+      install:
         - sleep 15
-
-install: echo "install"
-
-script: npm run build && travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT && travis_retry npm run cftest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
-
-after_script:
-  - travis_retry npm run coveralls
+    - &integration-tests
+      stage: integration tests
+      before_script: npm run provision
+      script: travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+      env:
+        - DESCRIPTION="pouchdb"
+        - CI_TEST=itest
+    - <<: *integration-tests
+      env:
+        - DESCRIPTION="couchdb"
+        - JOBS=1
+        - DBCLIENT=abacus-couchclient
+        - DB=http://localhost:5984
+        - CI_TEST=itest
+      services:
+        - couchdb
+    - <<: *integration-tests
+      env:
+        - DESCRIPTION="mongodb 2.6"
+        - JOBS=1
+        - DBCLIENT=abacus-mongoclient
+        - DB=mongodb://localhost:27017
+        - CI_TEST=itest
+      addons:
+        apt:
+          sources:
+            - mongodb-upstart
+          packages:
+            - mongodb-org-server
+            - mongodb-org-shell
+      install:
+        - sleep 15
+    - <<: *integration-tests
+      env:
+        - DESCRIPTION="mongodb 3.2"
+        - JOBS=1
+        - DBCLIENT=abacus-mongoclient
+        - DB=mongodb://localhost:27017
+        - CI_TEST=itest
+      addons:
+        apt:
+          sources:
+            - mongodb-upstart
+            - mongodb-3.2-precise
+          packages:
+            - mongodb-org-server
+            - mongodb-org-shell
+      install:
+        - sleep 15
+    - &extended-tests
+      stage: extended tests
+      before_script: npm run provision
+      script: travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+      env:
+        - DESCRIPTION="pouchdb"
+        - CI_TEST=extended
+    - <<: *extended-tests
+      env:
+        - DESCRIPTION="couchdb"
+        - JOBS=1
+        - DBCLIENT=abacus-couchclient
+        - DB=http://localhost:5984
+        - CI_TEST=extended
+      services:
+        - couchdb
+    - <<: *extended-tests
+      env:
+        - DESCRIPTION="mongodb 2.6"
+        - JOBS=1
+        - DBCLIENT=abacus-mongoclient
+        - DB=mongodb://localhost:27017
+        - CI_TEST=extended
+      addons:
+        apt:
+          sources:
+            - mongodb-upstart
+          packages:
+            - mongodb-org-server
+            - mongodb-org-shell
+      install:
+        - sleep 15
+    - <<: *extended-tests
+      env:
+        - DESCRIPTION="mongodb 3.2"
+        - JOBS=1
+        - DBCLIENT=abacus-mongoclient
+        - DB=mongodb://localhost:27017
+        - CI_TEST=extended
+      addons:
+        apt:
+          sources:
+            - mongodb-upstart
+            - mongodb-3.2-precise
+          packages:
+            - mongodb-org-server
+            - mongodb-org-shell
+      install:
+        - sleep 15
+    - &perf-tests
+      stage: performance tests
+      script: travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+      before_script: npm run provision
+      env:
+        - DESCRIPTION="pouchdb"
+        - CI_TEST=perf
+    - <<: *perf-tests
+      env:
+        - DESCRIPTION="couchdb"
+        - JOBS=1
+        - DBCLIENT=abacus-couchclient
+        - DB=http://localhost:5984
+        - CI_TEST=perf
+      services:
+        - couchdb
+    - <<: *perf-tests
+      env:
+        - DESCRIPTION="mongodb 2.6"
+        - JOBS=1
+        - DBCLIENT=abacus-mongoclient
+        - DB=mongodb://localhost:27017
+        - CI_TEST=perf
+      addons:
+        apt:
+          sources:
+            - mongodb-upstart
+          packages:
+            - mongodb-org-server
+            - mongodb-org-shell
+      install:
+        - sleep 15
+    - <<: *perf-tests
+      env:
+        - DESCRIPTION="mongodb 3.2"
+        - JOBS=1
+        - DBCLIENT=abacus-mongoclient
+        - DB=mongodb://localhost:27017
+        - CI_TEST=perf
+      addons:
+        apt:
+          sources:
+            - mongodb-upstart
+            - mongodb-3.2-precise
+          packages:
+            - mongodb-org-server
+            - mongodb-org-shell
+      install:
+        - sleep 15
+    - stage: deploy
+      script: travis_retry npm run cftest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
 
 notifications:
   irc:
