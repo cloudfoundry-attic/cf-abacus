@@ -60,7 +60,6 @@
     "abacus-perf": "file:../../../lib/utils/perf",
     "abacus-request": "file:../../../lib/utils/request",
     "abacus-retry": "file:../../../lib/utils/retry",
-    "abacus-renewer": "file:../../../lib/cf/renewer",
     "abacus-router": "file:../../../lib/utils/router",
     "abacus-schema": "file:../../../lib/utils/schema",
     "abacus-seqid": "file:../../../lib/utils/seqid",
