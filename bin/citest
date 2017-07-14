@@ -2,61 +2,68 @@
 
 set -e
 
-# Run integration, demo client and performance tests
+case "$CI_TEST" in
+  itest)
+    # Based on default limits in throttle and batch processing and
+    # integration test matrix, we would need 2197 (= 13 * 13 * 13)
+    # usage submissions to get above 90 percent regression coverage
 
-# Skip the following steps if CI_TEST is false
-if [ "$CI_TEST" != "false" ]; then
+    npm run itest -- -o 4 -i 4 -u 4 $@
+    ;;
 
-  # Based on default limits in throttle and batch processing and
-  # integration test matrix, we would need 2197 (= 13 * 13 * 13)
-  # usage submissions to get above 90 percent regression coverage
+  extended)
+    # Run dupe test without security
+    npm start
+    sleep 3s
+    npm run dupe -- --synthetic
+    npm stop
 
-  npm run itest -- -o 4 -i 4 -u 4 $@
+    # Run smoke test
+    npm start
+    sleep 3s
+    npm run smoke
+    npm stop
 
-  # Run dupe test without security
-  npm start
-  sleep 3s
-  npm run dupe -- --synthetic
-  npm stop
+    # Run demo and smoke tests without security
+    npm start
+    sleep 3s
+    npm run demo
+    npm run smoke
+    npm stop
 
-  # Run smoke test
-  npm start
-  sleep 3s
-  npm run smoke
-  npm stop
+    # Run demo test with the smalldb config
+    npm start smalldb
+    sleep 3s
+    npm run demo
+    npm stop
 
-  # Run demo and smoke tests without security
-  npm start
-  sleep 3s
-  npm run demo
-  npm run smoke
-  npm stop
+    ;;
 
-  # Run demo test with the smalldb config
-  npm start smalldb
-  sleep 3s
-  npm run demo
-  npm stop
+  perf)
+    # Run perf test without security
+    npm start
+    sleep 3s
+    npm run perf -- -o 4 -i 4 -u 4 $@
+    npm stop
 
-  # Run perf test without security
-  npm start
-  sleep 3s
-  npm run perf -- -o 4 -i 4 -u 4 $@
-  npm stop
+    # Run perf test with security
+    export SECURED=true
+    export JWTKEY=encode
+    export JWTALGO=HS256
+    npm start
+    sleep 3s
+    npm run perf -- -o 4 -i 4 -u 4 $@
+    npm stop
 
-  # Run perf test with security
-  export SECURED=true
-  export JWTKEY=encode
-  export JWTALGO=HS256
-  npm start
-  sleep 3s
-  npm run perf -- -o 4 -i 4 -u 4 $@
-  npm stop
+    # Test for concurrency
+    npm start small
+    sleep 6s
+    npm run perf -- -o 1 -i 8 -u 8 $@
+    npm stop
+    ;;
 
-  # Test for concurrency
-  npm start small
-  sleep 6s
-  npm run perf -- -o 1 -i 8 -u 8 $@
-  npm stop
+  *)
+    echo "Unknown test $CI_SUITE"
+    ;;
 
-fi
+esac
