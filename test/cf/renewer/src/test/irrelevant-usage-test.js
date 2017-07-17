@@ -25,6 +25,8 @@ const resultDebug =
 const oAuthDebug =
   require('abacus-debug')('abacus-cf-renewer-itest-oauth');
 
+const dummyOrgGuid = 'e8139b76-e829-4af3-b332-87316b1c0a6c';
+
 const timeWindows = {
   'second' : 0,
   'minute' : 1,
@@ -268,7 +270,7 @@ const test = (secured) => {
   const checkReport = (checkFn, cb) => {
     request.get('http://localhost:9088/v1/metering/organizations' +
       '/:organization_id/aggregated/usage', {
-        organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+        organization_id: dummyOrgGuid,
         headers: {
           authorization: 'bearer ' + signedSystemToken
         }
@@ -334,7 +336,7 @@ const test = (secured) => {
             app_name: 'app',
             space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
             space_name: 'abacus',
-            org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+            org_guid: dummyOrgGuid,
             buildpack_guid: null,
             buildpack_name: null,
             package_state: 'PENDING',
@@ -366,6 +368,7 @@ const test = (secured) => {
             done(error);
             return;
           }
+
           npm.startModules([npm.modules.renewer]);
           // Allow the renewer to kick-in
           setTimeout(() => {
@@ -373,6 +376,7 @@ const test = (secured) => {
               'renewer', 9501,
               checkCurrentMonthWindow,
               totalTimeout - (moment.now() - startTestTime));
+
             client.waitForStartAndPoll(
               'http://localhost::p/v1/cf/:component',
               checkReport, renewerOptions, done);
@@ -403,7 +407,7 @@ const test = (secured) => {
             app_name: 'app',
             space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
             space_name: 'abacus',
-            org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+            org_guid: dummyOrgGuid,
             buildpack_guid: null,
             buildpack_name: null,
             package_state: 'PENDING',
