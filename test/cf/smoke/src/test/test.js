@@ -115,7 +115,8 @@ const deltaCompare = (currentWindow, previousWindow, ch, s, q, c) => {
 };
 
 // Leave only the current month charge in "windows"
-const prune = (v, k) => k === 'windows' ? v[4][0] : v;
+const prune = (value, key) => key === 'windows' && value[4] ?
+  value[4][0] : value;
 
 const authHeader = (token) => token ? {
   headers: {
