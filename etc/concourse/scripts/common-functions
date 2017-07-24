@@ -101,6 +101,7 @@ function mapRoutes {
 
   local APP_NAME=$1
   local INSTANCES=$(expr $2 - 1)
+  local DOMAIN=$3
 
   set +e # Disable error checks
   cf app $APP_NAME
@@ -110,9 +111,9 @@ function mapRoutes {
   if [ $single_app = 0 ]; then
     echo "Found single $APP_NAME instance. Will not map route !!!"
   else
-    echo "Mapping $2 (0-$INSTANCES) instances of $APP_NAME in $CF_DOMAIN domain ..."
+    echo "Mapping $2 (0-$INSTANCES) instances of $APP_NAME in $DOMAIN domain ..."
     for i in `seq 0 $INSTANCES`; do
-      cf map-route "$APP_NAME-$i" $CF_DOMAIN --hostname "$APP_NAME"
+      cf map-route "$APP_NAME-$i" $DOMAIN --hostname "$APP_NAME"
     done
   fi
 }
