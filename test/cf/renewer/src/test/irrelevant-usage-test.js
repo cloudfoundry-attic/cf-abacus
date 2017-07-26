@@ -225,7 +225,7 @@ const test = (secured) => {
       npm.modules.accumulator,
       npm.modules.aggregator,
       npm.modules.reporting,
-      npm.modules.bridge
+      npm.modules.applications
     ];
 
     if (!process.env.DB) {
@@ -359,7 +359,7 @@ const test = (secured) => {
 
       const startTestTime = moment.now();
       const bridgeOptions = pollOptions(
-        'bridge', 9500,
+        'applications', 9500,
         checkCurrentMonthWindow
       );
       client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
@@ -430,7 +430,7 @@ const test = (secured) => {
 
       const startTestTime = moment.now();
       const bridgeOptions = pollOptions(
-        'bridge', 9500,
+        'applications', 9500,
         () => {}
       );
       client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',

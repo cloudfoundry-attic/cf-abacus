@@ -221,7 +221,7 @@ describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
       npm.modules.accumulator,
       npm.modules.aggregator,
       npm.modules.reporting,
-      npm.modules.bridge
+      npm.modules.applications
     ];
 
     if (!process.env.DB) {
@@ -527,7 +527,7 @@ describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
         this.timeout(totalTimeout);
 
         const startTestTime = moment.now();
-        const bridgeOptions = pollOptions('bridge', 9500, checkLastMonthWindow);
+        const bridgeOptions = pollOptions('applications', 9500, checkLastMonthWindow);
         client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
           checkReport, bridgeOptions, (error) => {
             if (error) {
@@ -680,7 +680,7 @@ describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
         this.timeout(totalTimeout);
 
         const startTestTime = moment.now();
-        const bridgeOptions = pollOptions('bridge', 9500, checkLastMonthWindow);
+        const bridgeOptions = pollOptions('applications', 9500, checkLastMonthWindow);
         client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
           checkReport, bridgeOptions, (error) => {
             if (error) {

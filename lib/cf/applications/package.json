@@ -1,10 +1,10 @@
 {
-  "name": "abacus-cf-bridge",
-  "description": "CF App Usage reporter",
+  "name": "abacus-cf-applications",
+  "description": "CF Applications Usage reporter",
   "license": "Apache-2.0",
   "version": "0.0.6-dev.9",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/cf/bridge",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/cf/applications",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -14,7 +14,8 @@
   },
   "keywords": [
     "cf",
-    "abacus"
+    "abacus",
+    "applications"
   ],
   "files": [
     ".apprc",

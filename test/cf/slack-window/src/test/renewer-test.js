@@ -221,7 +221,7 @@ const test = (secured) => {
       npm.modules.accumulator,
       npm.modules.aggregator,
       npm.modules.reporting,
-      npm.modules.bridge
+      npm.modules.applications
     ];
 
     if (!process.env.DB) {
@@ -372,7 +372,7 @@ const test = (secured) => {
 
       const startTestTime = moment.now();
       const bridgeOptions = pollOptions(
-        'bridge', 9500, checkTwoMonthsAgoWindow
+        'applications', 9500, checkTwoMonthsAgoWindow
       );
       client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
         checkReport, bridgeOptions, (error) => {

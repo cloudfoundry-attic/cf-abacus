@@ -214,7 +214,7 @@ describe('abacus-cf multiple-apps-test with oAuth', () => {
       npm.modules.accumulator,
       npm.modules.aggregator,
       npm.modules.reporting,
-      npm.modules.bridge
+      npm.modules.applications
     ];
 
     if (!process.env.DB) {
@@ -673,7 +673,7 @@ describe('abacus-cf multiple-apps-test with oAuth', () => {
 
         const startTestTime = moment.now();
         const bridgeOptions = pollOptions(
-          'bridge', 9500,
+          'applications', 9500,
           checkLastMonth
         );
         client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
@@ -926,7 +926,7 @@ describe('abacus-cf multiple-apps-test with oAuth', () => {
 
         const startTestTime = moment.now();
         const bridgeOptions = pollOptions(
-          'bridge', 9500,
+          'applications', 9500,
           () => {}
         );
         client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',

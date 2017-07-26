@@ -75,7 +75,7 @@ const resourceToken = {
   },
   payload: {
     jti: '254abca5-1c25-40c5-99d7-2cc641791517',
-    sub: 'abacus-cf-bridge',
+    sub: 'abacus-cf-applications',
     authorities: [
       'abacus.usage.linux-container.write',
       'abacus.usage.linux-container.read'
@@ -84,9 +84,9 @@ const resourceToken = {
       'abacus.usage.linux-container.read',
       'abacus.usage.linux-container.write'
     ],
-    client_id: 'abacus-cf-bridge',
-    cid: 'abacus-cf-bridge',
-    azp: 'abacus-cf-bridge',
+    client_id: 'abacus-cf-applications',
+    cid: 'abacus-cf-applications',
+    azp: 'abacus-cf-applications',
     grant_type: 'client_credentials',
     rev_sig: '2cf89595',
     iat: 1456147679,
@@ -94,7 +94,7 @@ const resourceToken = {
     iss: 'https://localhost:1234/oauth/token',
     zid: 'uaa',
     aud: [
-      'abacus-cf-bridge',
+      'abacus-cf-applications',
       'abacus.usage.linux-container'
     ]
   },
@@ -106,7 +106,7 @@ const systemToken = {
   },
   payload: {
     jti: '254abca5-1c25-40c5-99d7-2cc641791517',
-    sub: 'abacus-cf-bridge',
+    sub: 'abacus-cf-applications',
     authorities: [
       'abacus.usage.write',
       'abacus.usage.read'
@@ -115,9 +115,9 @@ const systemToken = {
       'abacus.usage.write',
       'abacus.usage.read'
     ],
-    client_id: 'abacus-cf-bridge',
-    cid: 'abacus-cf-bridge',
-    azp: 'abacus-cf-bridge',
+    client_id: 'abacus-cf-applications',
+    cid: 'abacus-cf-applications',
+    azp: 'abacus-cf-applications',
     grant_type: 'client_credentials',
     rev_sig: '2cf89595',
     iat: 1456147679,
@@ -125,7 +125,7 @@ const systemToken = {
     iss: 'https://localhost:1234/oauth/token',
     zid: 'uaa',
     aud: [
-      'abacus-cf-bridge',
+      'abacus-cf-applications',
       'abacus.usage'
     ]
   },
@@ -205,7 +205,7 @@ const test = (secured) => {
     // Security setup
     process.env.API = 'http://localhost:' + serverPort;
     process.env.AUTH_SERVER = 'http://localhost:' + serverPort;
-    process.env.CF_CLIENT_ID = 'abacus-cf-bridge';
+    process.env.CF_CLIENT_ID = 'abacus-cf-applications';
     process.env.CF_CLIENT_SECRET = 'secret';
     process.env.CLIENT_ID = 'abacus-linux-container';
     process.env.CLIENT_SECRET = 'secret';
@@ -227,7 +227,7 @@ const test = (secured) => {
       npm.modules.accumulator,
       npm.modules.aggregator,
       npm.modules.reporting,
-      npm.modules.bridge
+      npm.modules.applications
     ];
 
     if (!process.env.DB) {
@@ -351,13 +351,13 @@ const test = (secured) => {
     it('submits usage and gets expected report back', function(done) {
       this.timeout(totalTimeout + 2000);
 
-      const bridgeOptions = pollOptions('bridge', 9500);
+      const bridgeOptions = pollOptions('applications', 9500);
       client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
         checkReport, bridgeOptions, done);
     });
   });
 };
 
-describe('abacus-cf-bridge purge-test without oAuth', () => test(false));
+describe('abacus-cf-applications purge-test without oAuth', () => test(false));
 
-describe('abacus-cf-bridge purge-test with oAuth', () => test(true));
+describe('abacus-cf-applications purge-test with oAuth', () => test(true));

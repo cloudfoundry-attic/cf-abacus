@@ -89,7 +89,8 @@ const modules = {
   accumulator: 'abacus-usage-accumulator',
   aggregator: 'abacus-usage-aggregator',
   reporting: 'abacus-usage-reporting',
-  bridge: 'abacus-cf-bridge',
+  applications: 'abacus-cf-applications',
+  services: 'abacus-cf-services',
   renewer: 'abacus-cf-renewer',
   pouchserver: 'abacus-pouchserver'
 };

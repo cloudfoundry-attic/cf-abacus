@@ -65,7 +65,7 @@ const resourceToken = {
   },
   payload: {
     jti: '254abca5-1c25-40c5-99d7-2cc641791517',
-    sub: 'abacus-cf-bridge',
+    sub: 'abacus-cf-applications',
     authorities: [
       'abacus.usage.linux-container.write',
       'abacus.usage.linux-container.read'
@@ -74,9 +74,9 @@ const resourceToken = {
       'abacus.usage.linux-container.read',
       'abacus.usage.linux-container.write'
     ],
-    client_id: 'abacus-cf-bridge',
-    cid: 'abacus-cf-bridge',
-    azp: 'abacus-cf-bridge',
+    client_id: 'abacus-cf-applications',
+    cid: 'abacus-cf-applications',
+    azp: 'abacus-cf-applications',
     grant_type: 'client_credentials',
     rev_sig: '2cf89595',
     iat: 1456147679,
@@ -84,7 +84,7 @@ const resourceToken = {
     iss: 'https://localhost:1234/oauth/token',
     zid: 'uaa',
     aud: [
-      'abacus-cf-bridge',
+      'abacus-cf-applications',
       'abacus.usage.linux-container'
     ]
   },
@@ -96,7 +96,7 @@ const systemToken = {
   },
   payload: {
     jti: '254abca5-1c25-40c5-99d7-2cc641791517',
-    sub: 'abacus-cf-bridge',
+    sub: 'abacus-cf-applications',
     authorities: [
       'abacus.usage.write',
       'abacus.usage.read'
@@ -105,9 +105,9 @@ const systemToken = {
       'abacus.usage.write',
       'abacus.usage.read'
     ],
-    client_id: 'abacus-cf-bridge',
-    cid: 'abacus-cf-bridge',
-    azp: 'abacus-cf-bridge',
+    client_id: 'abacus-cf-applications',
+    cid: 'abacus-cf-applications',
+    azp: 'abacus-cf-applications',
     grant_type: 'client_credentials',
     rev_sig: '2cf89595',
     iat: 1456147679,
@@ -115,7 +115,7 @@ const systemToken = {
     iss: 'https://localhost:1234/oauth/token',
     zid: 'uaa',
     aud: [
-      'abacus-cf-bridge',
+      'abacus-cf-applications',
       'abacus.usage'
     ]
   },
@@ -188,7 +188,7 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
     // Set environment variables
     process.env.API = 'http://localhost:' + serverPort;
     process.env.AUTH_SERVER = 'http://localhost:' + serverPort;
-    process.env.CF_CLIENT_ID = 'abacus-cf-bridge';
+    process.env.CF_CLIENT_ID = 'abacus-cf-applications';
     process.env.CF_CLIENT_SECRET = 'secret';
     process.env.CLIENT_ID = 'abacus-linux-container';
     process.env.CLIENT_SECRET = 'secret';
@@ -213,7 +213,7 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
       npm.modules.accumulator,
       npm.modules.aggregator,
       npm.modules.reporting,
-      npm.modules.bridge
+      npm.modules.applications
     ];
 
     if (!process.env.DB) {
@@ -333,7 +333,7 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
       this.timeout(totalTimeout + 2000);
 
       client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
-        checkReport, pollOptions('bridge', 9500), done);
+        checkReport, pollOptions('applications', 9500), done);
     });
 
   });
@@ -351,7 +351,7 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
       this.timeout(totalTimeout + 2000);
 
       client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
-        checkReport, pollOptions('bridge', 9500), done);
+        checkReport, pollOptions('applications', 9500), done);
     });
 
   });

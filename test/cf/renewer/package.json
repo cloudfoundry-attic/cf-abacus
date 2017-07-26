@@ -41,7 +41,7 @@
     "abacus-account-plugin": "file:../../../lib/plugins/account",
     "abacus-eureka-plugin": "file:../../../lib/plugins/eureka",
     "abacus-provisioning-plugin": "file:../../../lib/plugins/provisioning",
-    "abacus-cf-bridge": "file:../../../lib/cf/bridge",
+    "abacus-cf-applications": "file:../../../lib/cf/applications",
     "abacus-cf-renewer": "file:../../../lib/cf/renewer",
     "abacus-batch": "file:../../../lib/utils/batch",
     "abacus-breaker": "file:../../../lib/utils/breaker",

@@ -17,7 +17,7 @@ medium:
 
 large:
 
-bridge:
+cf:
   apps:
     - lib/utils/pouchserver
     - lib/plugins/eureka
@@ -29,5 +29,6 @@ bridge:
     - lib/aggregation/accumulator
     - lib/aggregation/aggregator
     - lib/aggregation/reporting
-    - lib/cf/bridge
+    - lib/cf/applications
+    - lib/cf/services
     - lib/cf/renewer

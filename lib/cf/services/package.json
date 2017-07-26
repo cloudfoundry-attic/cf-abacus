@@ -1,0 +1,71 @@
+{
+  "name": "abacus-cf-services",
+  "description": "CF Services Usage reporter",
+  "license": "Apache-2.0",
+  "version": "0.0.6-dev.9",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/cf/services",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus",
+    "services"
+  ],
+  "files": [
+    ".apprc",
+    ".npmrc",
+    "manifest.yml",
+    "src/"
+  ],
+  "main": "src/index.js",
+  "scripts": {
+    "start": "launch webapp start",
+    "stop": "webapp stop",
+    "test": "eslint && mocha",
+    "lint": "eslint",
+    "pub": "publish",
+    "cfpack": "cfpack",
+    "cfpush": "cfpush"
+  },
+  "dependencies": {
+    "abacus-batch": "file:../../utils/batch",
+    "abacus-breaker": "file:../../utils/breaker",
+    "abacus-carryover": "file:../../utils/carryover",
+    "abacus-cluster": "file:../../utils/cluster",
+    "abacus-debug": "file:../../utils/debug",
+    "abacus-dbclient": "file:../../utils/dbclient",
+    "abacus-launcher": "file:../../utils/launcher",
+    "abacus-moment": "file:../../utils/moment",
+    "abacus-oauth": "file:../../utils/oauth",
+    "abacus-paging": "file:../../utils/paging",
+    "abacus-partition": "file:../../utils/partition",
+    "abacus-perf": "file:../../utils/perf",
+    "abacus-client": "file:../../utils/client",
+    "abacus-retry": "file:../../utils/retry",
+    "abacus-request": "file:../../utils/request",
+    "abacus-router": "file:../../utils/router",
+    "abacus-throttle": "file:../../utils/throttle",
+    "abacus-urienv": "file:../../utils/urienv",
+    "abacus-eureka": "file:../../../lib/utils/eureka",
+    "abacus-webapp": "file:../../utils/webapp",
+    "jsonwebtoken": "^5.0.5",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "abacus-cfpack": "file:../../../tools/cfpack",
+    "abacus-cfpush": "file:../../../tools/cfpush",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-publish": "file:../../../tools/publish"
+  },
+  "engines": {
+    "node": ">=6.10.0",
+    "npm": ">=3.10.10"
+  }
+}

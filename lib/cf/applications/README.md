@@ -1,4 +1,4 @@
-abacus-cf-bridge
+abacus-cf-applications
 ===
 
 CF app usage reporting bridge.
@@ -13,12 +13,12 @@ For every app usage event from CF the bridge POSTs time-based usage report as fo
 
 ## UAA Clients
 
-The bridge communicates with Cloud Controller. Register cf-bridge application as CF client with:
+The applications bridge communicates with Cloud Controller. Register cf-applications application as CF client with:
 ```bash
 gem install cf-uaac
 uaac target uaa.bosh-lite.com --skip-ssl-validation
 uaac token client get admin -s admin-secret
-uaac client add abacus-cf-bridge --name abacus-cf-bridge --authorized_grant_types client_credentials --authorities cloud_controller.admin --secret secret
+uaac client add abacus-cf-applications --name abacus-cf-applications --authorized_grant_types client_credentials --authorities cloud_controller.admin --secret secret
 ```
 
 If you use secured Abacus installation you will need an additional resource client:
@@ -28,20 +28,20 @@ uaac client add abacus-linux-container --name abacus-linux-container --authorize
 
 **Note:** Take care to set change the client ID and secret in the examples above.
 
-## Start the bridge
+## Start the applications bridge
 
 ### Locally
 
 The steps below use Abacus running locally. We also assume that the Abacus installation has the abacus-authentication-plugin as a token provider.
 
-To start the bridge locally against CF running on BOSH Lite set the API address:
+To start the applications bridge locally against CF running on BOSH Lite set the API address:
 ```bash
 export API=https://api.bosh-lite.com
 ```
 
 Set the used client ID and secret with:
 ```bash
-export CF_CLIENT_ID=abacus-cf-bridge
+export CF_CLIENT_ID=abacus-cf-applications
 export CF_CLIENT_SECRET=secret
 ```
 
@@ -58,35 +58,35 @@ You can optionally enable the debug output with:
 export DEBUG=abacus-cf-*
 ```
 
-Finally start the bridge with:
+Finally start the applications bridge with:
 ```bash
 cd ~/workspace/cf-abacus
-npm start bridge
+npm start -- cf
 ```
 
-To stop the bridge:
+To stop the applications bridge:
 ```bash
-npm stop bridge
+npm stop cf
 ```
 
 ### Cloud Foundry
 
-To start the bridge on CF running on BOSH Lite follow the steps below.
+To start the applications bridge on CF running on BOSH Lite follow the steps below.
 
 Setup CF:
 ```bash
 ./bin/cfsetup
 ```
-Go to bridge directory:
+Go to applications bridge directory:
 ```bash
-cd ~/workspace/cf-abacus/lib/cf/bridge
+cd ~/workspace/cf-abacus/lib/cf/applications
 ```
 
 Edit the `manifest.yml` to look like this:
 ```yml
 applications:
-- name: abacus-cf-bridge
-  host: abacus-cf-bridge
+- name: abacus-cf-applications
+  host: abacus-cf-applications
   path: .cfpack/app.zip
   instances: 1
   memory: 512M
@@ -100,7 +100,7 @@ applications:
     API: https://api.bosh-lite.com:443
     AUTH_SERVER: https://api.bosh-lite.com:443
     NODE_MODULES_CACHE: false
-    CF_CLIENT_ID: abacus-cf-bridge
+    CF_CLIENT_ID: abacus-cf-applications
     CF_CLIENT_SECRET: secret
 ```
 
@@ -121,21 +121,21 @@ To limit the number of events submitted to Abacus add:
     THROTTLE: 2
 ```
 
-Add the DB client implementation you would like to use with the bridge:
+Add the DB client implementation you would like to use with the applications bridge:
 ```yml
     DBCLIENT: abacus-couchclient
 ```
 
-Build, pack and push the bridge to Cloud Foundry:
+Build, pack and push the applications bridge to Cloud Foundry:
 ```bash
 npm install && npm run lint && npm test &&
 npm run cfpack && npm run cfpush
 ```
 
-Create a database service instance, called `db` and bind it to `abacus-cf-bridge`:
+Create a database service instance, called `db` and bind it to `abacus-cf-applications`:
 ```bash
 cf create-service mongodb-3.0.7-lite free db
-cf bind-service abacus-cf-bridge db
+cf bind-service abacus-cf-applications db
 ```
 
 In case you want to use external DB you can do this by adding `DB` to the deployment manifest:
@@ -144,21 +144,21 @@ In case you want to use external DB you can do this by adding `DB` to the deploy
     DBCLIENT: abacus-mongoclient
 ```
 
-Start the bridge:
+Start the applications bridge:
 ```bash
-cf start abacus-cf-bridge
+cf start abacus-cf-applications
 ```
 
 Tail the logs to check the progress:
 ```bash
-cf logs abacus-cf-bridge
+cf logs abacus-cf-applications
 ```
 
 You can change the client ID and secret used to communicate with CC like so:
 ```
-cf set-env abacus-cf-bridge CLIENT_ID <client_id>
-cf set-env abacus-cf-bridge CLIENT_SECRET <secret>
-cf restart abacus-cf-bridge
+cf set-env abacus-cf-applications CLIENT_ID <client_id>
+cf set-env abacus-cf-applications CLIENT_SECRET <secret>
+cf restart abacus-cf-applications
 ```
 
 To change the resource provider (abacus-linux-container) settings or the number of connections, set the respective environment variables using `cf set-env`.
@@ -179,7 +179,7 @@ Note: The timeout between CF API calls and Abacus usage retries is increased exp
 
 ## Statistics
 
-The bridge exposes the `/v1/cf/bridge/` endpoint that provides performance metrics and call statistics. A snippet of the values returned:
+The applications bridge exposes the `/v1/cf/applications/` endpoint that provides performance metrics and call statistics. A snippet of the values returned:
 ```json
     "cache": {
       "lastRecordedGUID": "35c4ff2fa",
