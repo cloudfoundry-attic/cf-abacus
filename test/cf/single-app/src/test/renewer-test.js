@@ -527,7 +527,9 @@ describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
         this.timeout(totalTimeout);
 
         const startTestTime = moment.now();
-        const bridgeOptions = pollOptions('applications', 9500, checkLastMonthWindow);
+        const bridgeOptions = pollOptions(
+          'applications', 9500, checkLastMonthWindow
+        );
         client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
           checkReport, bridgeOptions, (error) => {
             if (error) {
@@ -680,7 +682,9 @@ describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
         this.timeout(totalTimeout);
 
         const startTestTime = moment.now();
-        const bridgeOptions = pollOptions('applications', 9500, checkLastMonthWindow);
+        const bridgeOptions = pollOptions(
+          'applications', 9500, checkLastMonthWindow
+        );
         client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
           checkReport, bridgeOptions, (error) => {
             if (error) {

@@ -116,11 +116,6 @@ In case you are running a secured Abacus installation, add the following entries
     JWTALGO: RS256
 ```
 
-To limit the number of events submitted to Abacus add:
-```yml
-    THROTTLE: 2
-```
-
 Add the DB client implementation you would like to use with the applications bridge:
 ```yml
     DBCLIENT: abacus-couchclient
@@ -184,22 +179,11 @@ The applications bridge exposes the `/v1/cf/applications/` endpoint that provide
     "cache": {
       "lastRecordedGUID": "35c4ff2fa",
       "lastRecordedTimestamp": "2015-08-18T11:28:20Z",
-      "lastCompensatedGUID": "acc4152dab",
-      "lastCompensatedTimestamp": "2015-07-18T11:24:15Z"
     },
     "statistics": {
       "cache": {
         "read": 1,
         "write": 428
-      },
-      "compensation": {
-        "saveCalls": 999,
-        "started": 831,
-        "fetchSuccess": 1,
-        "fetchFailure": 1,
-        "usageSuccess": 22,
-        "usageFailure": 0,
-        "usageSkip": 36
       },
       "usage": {
         "missingToken": 0,
@@ -224,19 +208,9 @@ The following data is available:
 Cache content:
 * lastRecordedGUID: GUID of the last reported event
 * lastRecordedTimestamp: Timestamp of the last reported event. For example 2015-08-18T11:28:20Z
-* lastCompensatedGUID: GUID of the last compensated event
-* lastCompensatedTimestamp: Timestamp of the last compensated event. For example: 2015-07-18T11:24:15Z
 
 Operation statistics:
 * cache.read/write: Number of cache operations. The cache stores the last processed app usage event GUID.
-* compensation
-   * saveCalls: Number of applications stored in memory
-   * started: Number of processed started applications
-   * fetchSuccess: Successful /v2/apps list operations (usually 1)
-   * fetchFailure: Failed attempts to read /v2/apps
-   * usageSuccess: Successful compensation reports to Abacus
-   * usageFailure: Failed compensation usage reports to Abacus
-   * usageSkip: Skipped usage reports
 * usage
    * missingToken: Missing abacus resource token
    * reportFailures: Number of failed usage reports

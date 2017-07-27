@@ -43,6 +43,7 @@
     "abacus-provisioning-plugin": "file:../../../lib/plugins/provisioning",
     "abacus-cf-applications": "file:../../../lib/cf/applications",
     "abacus-cf-renewer": "file:../../../lib/cf/renewer",
+    "abacus-cf-services": "file:../../../lib/cf/services",
     "abacus-batch": "file:../../../lib/utils/batch",
     "abacus-breaker": "file:../../../lib/utils/breaker",
     "abacus-oauth": "file:../../../lib/utils/oauth",

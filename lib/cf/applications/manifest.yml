@@ -1,6 +1,6 @@
 applications:
-- name: abacus-cf-bridge
-  host: abacus-cf-bridge
+- name: abacus-cf-applications
+  host: abacus-cf-applications
   path: .cfpack/app.zip
   instances: 1
   memory: 512M
@@ -13,7 +13,7 @@ applications:
     API: api
     DB: abacus-pouchserver
     DBCLIENT: abacus-couchclient
-    CF_CLIENT_ID: abacus-cf-bridge
+    CF_CLIENT_ID: abacus-cf-applications
     CF_CLIENT_SECRET: secret
     NODE_MODULES_CACHE: false
     SECURED: false
@@ -25,4 +25,3 @@ applications:
       ... <UAA public key in PEM format> ...
       -----END PUBLIC KEY-----
     JWTALGO: RS256
-    THROTTLE: 2

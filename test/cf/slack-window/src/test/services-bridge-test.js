@@ -3,6 +3,7 @@
 const commander = require('commander');
 const jwt = require('jsonwebtoken');
 const util = require('util');
+const moment = require('abacus-moment');
 
 const _ = require('underscore');
 const clone = _.clone;
@@ -12,19 +13,17 @@ const dbclient = require('abacus-dbclient');
 const express = require('abacus-express');
 const request = require('abacus-request');
 const router = require('abacus-router');
-const moment = require('abacus-moment');
 const npm = require('abacus-npm');
-
 
 // Setup the debug log
 const debug =
-  require('abacus-debug')('abacus-cf-renewer-slack-window-itest');
+  require('abacus-debug')('abacus-cf-services-slack-itest');
 const responseDebug =
-  require('abacus-debug')('abacus-cf-renewer-slack-window-itest-response');
+  require('abacus-debug')('abacus-cf-services-slack-itest-response');
 const resultDebug =
-  require('abacus-debug')('abacus-cf-renewer-slack-window-itest-result');
+  require('abacus-debug')('abacus-cf-services-slack-itest-result');
 const oAuthDebug =
-  require('abacus-debug')('abacus-cf-renewer-slack-window-itest-oauth');
+  require('abacus-debug')('abacus-cf-services-slack-itest-oauth');
 
 const timeWindows = {
   'second' : 0,
@@ -32,6 +31,22 @@ const timeWindows = {
   'hour'   : 2,
   'day'    : 3,
   'month'  : 4
+};
+
+// Checks if the difference between start and end time fall within a window
+const isWithinWindow = (start, end, timeWindow) => {
+  // [Second, Minute, Hour, Day, Month, Year]
+  const timescale = [1, 100, 10000, 1000000, 100000000, 10000000000];
+  // Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
+  const dateUTCNumbify = (t) => {
+    const d = moment.utc(t).toDate();
+    return d.getUTCFullYear() * timescale[5] + d.getUTCMonth() * timescale[4]
+      + d.getUTCDate() * timescale[3] + d.getUTCHours() * timescale[2]
+      + d.getUTCMinutes() * timescale[1] + d.getUTCSeconds();
+  };
+
+  return Math.floor(dateUTCNumbify(end) / timescale[timeWindow]) -
+    Math.floor(dateUTCNumbify(start) / timescale[timeWindow]) === 0;
 };
 
 // Parse command line options
@@ -60,18 +75,18 @@ const resourceToken = {
   },
   payload: {
     jti: '254abca5-1c25-40c5-99d7-2cc641791517',
-    sub: 'abacus-cf-renewer',
+    sub: 'abacus-cf-bridge',
     authorities: [
-      'abacus.usage.linux-container.write',
-      'abacus.usage.linux-container.read'
+      'abacus.usage.services.write',
+      'abacus.usage.services.read'
     ],
     scope: [
-      'abacus.usage.linux-container.read',
-      'abacus.usage.linux-container.write'
+      'abacus.usage.services.read',
+      'abacus.usage.services.write'
     ],
-    client_id: 'abacus-cf-renewer',
-    cid: 'abacus-cf-renewer',
-    azp: 'abacus-cf-renewer',
+    client_id: 'abacus-cf-bridge',
+    cid: 'abacus-cf-bridge',
+    azp: 'abacus-cf-bridge',
     grant_type: 'client_credentials',
     rev_sig: '2cf89595',
     iat: 1456147679,
@@ -79,11 +94,11 @@ const resourceToken = {
     iss: 'https://localhost:1234/oauth/token',
     zid: 'uaa',
     aud: [
-      'abacus-cf-renewer',
-      'abacus.usage.linux-container'
+      'abacus-cf-bridge',
+      'abacus.usage.services'
     ]
   },
-  signature: '7BVRprw-yySpW7lSkM8KPZoUIw2w61bs87l0YXqUT8E'
+  signature: 'irxoV230hkDJenXoTSHQFfqzoUl353lS2URo1fJm21Y'
 };
 const systemToken = {
   header: {
@@ -91,7 +106,7 @@ const systemToken = {
   },
   payload: {
     jti: '254abca5-1c25-40c5-99d7-2cc641791517',
-    sub: 'abacus-cf-renewer',
+    sub: 'abacus-cf-bridge',
     authorities: [
       'abacus.usage.write',
       'abacus.usage.read'
@@ -100,9 +115,9 @@ const systemToken = {
       'abacus.usage.write',
       'abacus.usage.read'
     ],
-    client_id: 'abacus-cf-renewer',
-    cid: 'abacus-cf-renewer',
-    azp: 'abacus-cf-renewer',
+    client_id: 'abacus-cf-bridge',
+    cid: 'abacus-cf-bridge',
+    azp: 'abacus-cf-bridge',
     grant_type: 'client_credentials',
     rev_sig: '2cf89595',
     iat: 1456147679,
@@ -110,11 +125,11 @@ const systemToken = {
     iss: 'https://localhost:1234/oauth/token',
     zid: 'uaa',
     aud: [
-      'abacus-cf-renewer',
+      'abacus-cf-bridge',
       'abacus.usage'
     ]
   },
-  signature: '1J3_hBJBUgwRO9fzg25sdDYj6DqCVWCNB3veyIBsklM'
+  signature: 'OVNTKTvu-yHI6QXmYxtPeJZofNddX36Mx1q4PDWuYQE'
 };
 const signedResourceToken = jwt.sign(resourceToken.payload, tokenSecret, {
   expiresIn: 43200
@@ -123,18 +138,21 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
   expiresIn: 43200
 });
 
+const sixDaysInMilliseconds = 6 * 24 * 60 * 60 * 1000;
+const twentySecondsInMilliseconds = 20 * 1000;
+
 const test = (secured) => {
+  const submitTime = moment.now();
+
   let server;
   let serverPort;
-
-  let appUsageEvents;
-
+  let serviceUsageEvents;
   let expectedConsuming;
 
   const pollOptions = (component, port, checkFn, timeout = totalTimeout) => ({
     component: component,
     p: port,
-    token: () => secured ? 'bearer ' + signedSystemToken : '',
+    token: () => `bearer ${signedSystemToken}`,
     checkFn: checkFn,
     startTimeout: startTimeout,
     totalTimeout: timeout
@@ -143,7 +161,7 @@ const test = (secured) => {
   beforeEach((done) => {
     const app = express();
     const routes = router();
-    routes.get('/v2/app_usage_events', (request, response) => {
+    routes.get('/v2/service_usage_events', (request, response) => {
       if (request.url.indexOf('after_guid') !== -1) {
         debug('Returning empty list of usage events');
         response.status(200).send({
@@ -156,13 +174,12 @@ const test = (secured) => {
         return;
       }
 
-      responseDebug('Returning events %j', appUsageEvents);
       response.status(200).send({
-        total_results: appUsageEvents.length,
+        total_results: serviceUsageEvents.length,
         total_pages: 1,
         prev_url: null,
         next_url: null,
-        resources: appUsageEvents
+        resources: serviceUsageEvents
       });
     });
     routes.get('/v2/info', (request, response) => {
@@ -197,20 +214,21 @@ const test = (secured) => {
     // Set environment variables
     process.env.API = 'http://localhost:' + serverPort;
     process.env.AUTH_SERVER = 'http://localhost:' + serverPort;
-    process.env.CF_CLIENT_ID = 'abacus-cf-renewer';
+    process.env.CF_CLIENT_ID = 'abacus-cf-bridge';
     process.env.CF_CLIENT_SECRET = 'secret';
-    process.env.CLIENT_ID = 'abacus-linux-container';
+    process.env.CLIENT_ID = 'abacus-services';
     process.env.CLIENT_SECRET = 'secret';
-    process.env.ABACUS_CLIENT_ID = 'abacus-cf-renewer';
-    process.env.ABACUS_CLIENT_SECRET = 'secret';
     process.env.JWTKEY = tokenSecret;
     process.env.JWTALGO = tokenAlgorithm;
+    process.env.SERVICES = '[map[PLANS:map[4fd1a379-2738-408e-9020-';
+    process.env.SERVICES += 'c5238a47a004:medium] NAME:mongodb GUID:bc3690b2-';
+    process.env.SERVICES += 'cc50-4475-b2cf-44d68c51f9d3]]';
 
-    // Change slack window to be able to submit usage for last 2 months
-    process.env.SLACK = '63D';
+    // Set slack window to 5 days
+    process.env.SLACK = '5D';
 
-    // Trigger renewer every 2 seconds
-    process.env.RETRY_INTERVAL = 2000;
+    // Disable wait for correct service-event ordering
+    process.env.GUID_MIN_AGE = twentySecondsInMilliseconds;
 
     const modules = [
       npm.modules.eurekaPlugin,
@@ -221,7 +239,7 @@ const test = (secured) => {
       npm.modules.accumulator,
       npm.modules.aggregator,
       npm.modules.reporting,
-      npm.modules.applications
+      npm.modules.services
     ];
 
     if (!process.env.DB) {
@@ -239,55 +257,17 @@ const test = (secured) => {
     npm.stopAllStarted(done);
   });
 
-  const checkTwoMonthsAgoWindow = (windowName, usage, level) => {
-    const windowUsage = usage.windows[timeWindows.month];
-    const previousMonth = windowUsage[2];
-
-    expect(previousMonth).to.not.equal(undefined);
-
-    if (level !== 'resource') {
-      expect(previousMonth).to.contain.all.keys('quantity', 'charge');
-      debug('%s month window; Expected: consuming=%d, charge>0; ' +
-        'Actual: consuming=%d, charge=%d; Month window: %o', windowName,
-        expectedConsuming, previousMonth.quantity.consuming,
-        previousMonth.charge, previousMonth);
-      expect(previousMonth.quantity.consuming).to.equal(expectedConsuming);
-    }
-    else
-      debug('%s month window; Expected: charge>0; ' +
-        'Actual: charge=%o; Month window: %o',
-        windowName, previousMonth.charge, previousMonth);
-
-    expect(previousMonth).to.contain.all.keys('charge');
-    expect(previousMonth.charge).to.not.equal(undefined);
-    expect(previousMonth.charge).to.be.above(0);
+  const checkAllTimeWindows = (usage, reporttime, level) => {
+    for (const windowType in timeWindows)
+      if(isWithinWindow(submitTime, reporttime, timeWindows[windowType])) {
+        const windowUsage = usage.windows[timeWindows[windowType]];
+        if(level !== 'resource')
+          expect(windowUsage[0].quantity.consuming).to.equal(expectedConsuming);
+        expect(windowUsage[0].charge).to.be.above(0);
+      }
   };
 
-  const checkCurrentMonthWindow = (windowName, usage, level) => {
-    const windowUsage = usage.windows[timeWindows.month];
-    const currentMonth = windowUsage[0];
-
-    expect(currentMonth).to.not.equal(undefined);
-
-    if (level !== 'resource') {
-      expect(currentMonth).to.contain.all.keys('quantity', 'charge');
-      debug('%s window; Expected: consuming=%d, charge>0; ' +
-        'Actual: consuming=%d, charge=%d; Month window: %o',
-        windowName, expectedConsuming, currentMonth.quantity.consuming,
-        currentMonth.charge, currentMonth);
-      expect(currentMonth.quantity.consuming).to.equal(expectedConsuming);
-    }
-    else
-      debug('%s window; Expected:  charge>0; ' +
-        'Actual: charge=%o; Month window: %o',
-        windowName, currentMonth.charge, currentMonth);
-
-    expect(currentMonth).to.contain.all.keys('charge');
-    expect(currentMonth.charge).not.to.equal(undefined);
-    expect(currentMonth.charge).to.be.above(0);
-  };
-
-  const checkReport = (checkFn, cb) => {
+  const checkReport = (cb) => {
     request.get('http://localhost:9088/v1/metering/organizations' +
       '/:organization_id/aggregated/usage', {
         organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
@@ -303,15 +283,16 @@ const test = (secured) => {
           const resources = response.body.resources;
           expect(resources.length).to.equal(1);
           expect(response.body.spaces.length).to.equal(1);
+          const reporttime = moment.now();
 
           expect(resources[0]).to.contain.all.keys(
             'plans', 'aggregated_usage');
 
           const planUsage = resources[0].plans[0].aggregated_usage[0];
-          checkFn('Plans aggregated usage', planUsage);
+          checkAllTimeWindows(planUsage, reporttime);
 
           const aggregatedUsage = resources[0].aggregated_usage[0];
-          checkFn('Aggregated usage', aggregatedUsage, 'resource');
+          checkAllTimeWindows(aggregatedUsage, reporttime, 'resource');
 
           resultDebug('All usage report checks are successful for: %s',
             JSON.stringify(response.body, null, 2));
@@ -328,71 +309,70 @@ const test = (secured) => {
       });
   };
 
-  context('start app 2 months ago', () => {
+  context('when submitting out of slack usage', () => {
     beforeEach(() => {
-      const twoMonthsAgo = moment.utc().subtract(2, 'months').valueOf();
-      appUsageEvents = [
+      serviceUsageEvents = [
+        // Usage that will be rejected because of the slack window
         {
           metadata: {
-            guid: 'b457f9e6-19f6-4263-9ffe-be39feccd576',
-            url: '/v2/app_usage_events/b457f9e6-19f6-4263-9ffe-be39feccd576',
-            created_at: moment.utc(twoMonthsAgo).toISOString()
+            guid: '904419c3',
+            url: '/v2/service_usage_events/904419c3',
+            created_at:
+              moment.utc(submitTime - sixDaysInMilliseconds).toISOString()
           },
           entity: {
-            state: 'STARTED',
-            previous_state: 'STOPPED',
-            memory_in_mb_per_instance: 512,
-            previous_memory_in_mb_per_instance: 512,
-            instance_count: 1,
-            previous_instance_count: 1,
-            app_guid: '35c4ff2f',
-            app_name: 'app',
+            state: 'CREATED',
             space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
             space_name: 'abacus',
             org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
-            buildpack_guid: null,
-            buildpack_name: null,
-            package_state: 'PENDING',
-            previous_package_state: 'PENDING',
-            parent_app_guid: null,
-            parent_app_name: null,
-            process_type: 'web',
-            task_name: null,
-            task_guid: null
+            service_instance_guid: '35c4ff2f',
+            service_instance_name: 'MongoDB',
+            service_instance_type: 'managed_service_instance',
+            service_plan_guid: '4fd1a379-2738-408e-9020-c5238a47a004',
+            service_plan_name: 'v3.0-dedicated-medium',
+            service_guid: 'bc3690b2-cc50-4475-b2cf-44d68c51f9d3',
+            service_label: 'mongodb'
+          }
+        },
+        // Usage that has to be processed by the pipeline
+        {
+          metadata: {
+            guid: '904419c4',
+            url: '/v2/service_usage_events/904419c4',
+            created_at:
+              moment.utc(submitTime - twentySecondsInMilliseconds).toISOString()
+          },
+          entity: {
+            state: 'CREATED',
+            space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
+            space_name: 'abacus',
+            org_guid: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+            service_instance_guid: '35c4ff2f',
+            service_instance_name: 'MongoDB',
+            service_instance_type: 'managed_service_instance',
+            service_plan_guid: '4fd1a379-2738-408e-9020-c5238a47a004',
+            service_plan_name: 'v3.0-dedicated-medium',
+            service_guid: 'bc3690b2-cc50-4475-b2cf-44d68c51f9d3',
+            service_label: 'mongodb'
           }
         }
       ];
 
-      // start: 0.5 GB
-      expectedConsuming = 0.5;
+      // first start is ignored - out of slack window
+      // second start: 1 Service Hour
+      expectedConsuming = 1;
     });
 
-    it('renews the old usage and submits it to collector', function(done) {
+    it('usage is rejected', function(done) {
       this.timeout(totalTimeout + 2000);
 
-      const startTestTime = moment.now();
-      const bridgeOptions = pollOptions(
-        'applications', 9500, checkTwoMonthsAgoWindow
-      );
       client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
-        checkReport, bridgeOptions, (error) => {
-          if (error) {
-            done(error);
-            return;
-          }
-          npm.startModules([npm.modules.renewer]);
-          const renewerOptions = pollOptions(
-            'renewer', 9501,
-            checkCurrentMonthWindow,
-            totalTimeout - (moment.now() - startTestTime)
-          );
-          client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
-            checkReport, renewerOptions, done);
-        }
-      );
+        checkReport, pollOptions('services', 9502), done);
     });
   });
+
 };
 
-describe('abacus-cf-renewer slack-window-test with oAuth',
-  () => test(true));
+describe('abacus-cf-services slack-test without oAuth', () => test(false));
+
+describe('abacus-cf-services slack-test with oAuth', () => test(true));

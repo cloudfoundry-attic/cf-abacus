@@ -1,10 +1,10 @@
 {
-  "name": "abacus-cf-slack-window-itest",
-  "description": "CF Bridge & Renewer slack window tests",
+  "name": "abacus-cf-single-service-itest",
+  "description": "CF Services Bridge & Renewer single service tests",
   "license": "Apache-2.0",
   "version": "0.0.6-dev.9",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/cf/slack-window",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/cf/single-service",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -28,7 +28,6 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-cf-renewer": "file:../../../lib/cf/renewer",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-metering-config": "file:../../../lib/config/metering",
     "abacus-pricing-config": "file:../../../lib/config/pricing",
@@ -41,12 +40,10 @@
     "abacus-account-plugin": "file:../../../lib/plugins/account",
     "abacus-provisioning-plugin": "file:../../../lib/plugins/provisioning",
     "abacus-eureka-plugin": "file:../../../lib/plugins/eureka",
-    "abacus-cf-applications": "file:../../../lib/cf/applications",
     "abacus-cf-services": "file:../../../lib/cf/services",
     "abacus-batch": "file:../../../lib/utils/batch",
     "abacus-breaker": "file:../../../lib/utils/breaker",
     "abacus-oauth": "file:../../../lib/utils/oauth",
-    "abacus-client": "file:../../../lib/utils/client",
     "abacus-cluster": "file:../../../lib/utils/cluster",
     "abacus-dbclient": "file:../../../lib/utils/dbclient",
     "abacus-pouchserver": "file:../../../lib/utils/pouchserver",
@@ -57,7 +54,6 @@
     "abacus-hystrix": "file:../../../lib/utils/hystrix",
     "abacus-launcher": "file:../../../lib/utils/launcher",
     "abacus-lock": "file:../../../lib/utils/lock",
-    "abacus-npm": "file:../../lib/npm",
     "abacus-partition": "file:../../../lib/utils/partition",
     "abacus-perf": "file:../../../lib/utils/perf",
     "abacus-request": "file:../../../lib/utils/request",
@@ -83,6 +79,6 @@
   },
   "engines": {
     "node": ">=6.10.0",
-    "npm": "<5.0.0"
+    "npm": ">=3.10.10"
   }
 }

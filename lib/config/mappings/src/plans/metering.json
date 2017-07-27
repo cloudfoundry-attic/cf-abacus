@@ -7,6 +7,54 @@
     "basic": "basic-linux-container",
     "standard": "standard-linux-container"
   },
+  "hana": {
+    "hdi-shared": "standard-service",
+    "schema": "standard-service"
+  },
+  "mongodb": {
+    "container": "standard-service",
+    "container-large": "standard-service",
+    "dev": "standard-service",
+    "dev-large": "standard-service",
+    "large": "standard-service",
+    "medium": "standard-service",
+    "small": "standard-service",
+    "xsmall": "standard-service"
+  },
+  "postgresql": {
+    "container": "standard-service",
+    "container-large": "standard-service",
+    "dev": "standard-service",
+    "dev-large": "standard-service",
+    "large": "standard-service",
+    "medium": "standard-service",
+    "small": "standard-service",
+    "xsmall": "standard-service"
+  },
+  "rabbitmq": {
+    "container": "standard-service",
+    "container-large": "standard-service",
+    "dev": "standard-service",
+    "large": "standard-service",
+    "medium": "standard-service",
+    "small": "standard-service",
+    "xsmall": "standard-service"
+  },
+  "redis": {
+    "container": "standard-service",
+    "container-large": "standard-service",
+    "dev": "standard-service",
+    "dev-large": "standard-service",
+    "large": "standard-service",
+    "large-single": "standard-service",
+    "medium": "standard-service",
+    "medium-single": "standard-service",
+    "small": "standard-service",
+    "small-single": "standard-service",
+    "xsmall": "standard-service",
+    "xsmall-single": "standard-service",
+    "xxlarge-single": "standard-service"
+  },
   "object-storage": {
     "basic": "basic-object-storage",
     "standard": "standard-object-storage"
@@ -16,4 +64,3 @@
     "standard": "test-metering-plan"
   }
 }
-

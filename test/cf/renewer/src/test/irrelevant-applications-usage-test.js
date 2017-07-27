@@ -17,15 +17,15 @@ const npm = require('abacus-npm');
 
 // Setup the debug log
 const debug =
-  require('abacus-debug')('abacus-cf-renewer-itest');
+  require('abacus-debug')('abacus-cf-renewer-applications-itest');
 const responseDebug =
-  require('abacus-debug')('abacus-cf-renewer-itest-response');
+  require('abacus-debug')('abacus-cf-renewer-applications-itest-response');
 const resultDebug =
-  require('abacus-debug')('abacus-cf-renewer-itest-result');
+  require('abacus-debug')('abacus-cf-renewer-applications-itest-result');
 const oAuthDebug =
-  require('abacus-debug')('abacus-cf-renewer-itest-oauth');
+  require('abacus-debug')('abacus-cf-renewer-applications-itest-oauth');
 
-const dummyOrgGuid = 'e8139b76-e829-4af3-b332-87316b1c0a6c';
+const orgGuid = 'e8139b76-e829-4af3-b332-87316b1c0a6c';
 
 const timeWindows = {
   'second' : 0,
@@ -270,12 +270,11 @@ const test = (secured) => {
   const checkReport = (checkFn, cb) => {
     request.get('http://localhost:9088/v1/metering/organizations' +
       '/:organization_id/aggregated/usage', {
-        organization_id: dummyOrgGuid,
+        organization_id: orgGuid,
         headers: {
           authorization: 'bearer ' + signedSystemToken
         }
-      },
-      (error, response) => {
+      }, (error, response) => {
         try {
           expect(error).to.equal(undefined);
 
@@ -336,7 +335,7 @@ const test = (secured) => {
             app_name: 'app',
             space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
             space_name: 'abacus',
-            org_guid: dummyOrgGuid,
+            org_guid: orgGuid,
             buildpack_guid: null,
             buildpack_name: null,
             package_state: 'PENDING',
@@ -375,7 +374,8 @@ const test = (secured) => {
             const renewerOptions = pollOptions(
               'renewer', 9501,
               checkCurrentMonthWindow,
-              totalTimeout - (moment.now() - startTestTime));
+              totalTimeout - (moment.now() - startTestTime)
+            );
 
             client.waitForStartAndPoll(
               'http://localhost::p/v1/cf/:component',
@@ -407,7 +407,7 @@ const test = (secured) => {
             app_name: 'app',
             space_guid: 'a7e44fcd-25bf-4023-8a87-03fba4882995',
             space_name: 'abacus',
-            org_guid: dummyOrgGuid,
+            org_guid: orgGuid,
             buildpack_guid: null,
             buildpack_name: null,
             package_state: 'PENDING',
@@ -443,7 +443,8 @@ const test = (secured) => {
           const renewerOptions = pollOptions(
             'renewer', 9501,
             () => {},
-            totalTimeout - (moment.now() - startTestTime));
+            totalTimeout - (moment.now() - startTestTime)
+          );
           client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
             checkReport, renewerOptions, done);
         }
@@ -453,5 +454,5 @@ const test = (secured) => {
 
 };
 
-describe('abacus-cf-renewer irrelevant-usage-test with oAuth',
+describe('abacus-cf-renewer irrelevant-apps-usage-test with oAuth',
   () => test(true));

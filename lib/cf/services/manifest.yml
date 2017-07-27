@@ -1,6 +1,6 @@
 applications:
-- name: abacus-cf-service
-  host: abacus-cf-service
+- name: abacus-cf-services
+  host: abacus-cf-services
   path: .cfpack/app.zip
   instances: 1
   memory: 512M
@@ -13,7 +13,7 @@ applications:
     API: api
     DB: abacus-pouchserver
     DBCLIENT: abacus-couchclient
-    CF_CLIENT_ID: abacus-cf-service
+    CF_CLIENT_ID: abacus-cf-services
     CF_CLIENT_SECRET: secret
     NODE_MODULES_CACHE: false
     SECURED: false
@@ -25,56 +25,14 @@ applications:
       ... <UAA public key in PEM format> ...
       -----END PUBLIC KEY-----
     JWTALGO: RS256
-    THROTTLE: 2
     SERVICES:
-      - NAME: hana
-        GUID: ad14ecbe-ed72-4e1a-a25e-5c49c79b9d05
+      - NAME: service1
+        GUID: 1
         PLANS:
-          fd5ec767-713c-48ca-927e-b34669dc2920: hdi-shared
-          7ba7ce7c-55fe-4d57-8117-b242a90af17d: schema
-      - NAME: mongodb
-        GUID: bc3690b2-cc50-4475-b2cf-44d68c51f9d3
+          1-2-3: plan1
+          3-4-5: plan2
+      - NAME: service2
+        GUID: 2
         PLANS:
-          52c10314-d9d0-487c-a149-1fd43f3d5ac5: container
-          50023f56-639a-4caf-a9c8-7a6655cfa6fb: container-large
-          08ce856c-8235-428e-8a7d-65506796aa53: dev
-          e0f56cb8-0d90-4fa9-b713-6e72b0afab85: dev-large
-          654dcfee-b245-46f4-a1bc-f4c3be5a7bb3: large
-          96f27600-0620-4216-a8f5-9f2a68a6194d: small
-          4fd1a379-2738-408e-9020-c5238a47a004: medium
-          0f9e1ecb-4ad8-4210-a886-fcb8707cc7da: xsmall
-      - NAME: postgresql
-        GUID: c4ec80ae-5949-4a79-99ef-e42a894d73d3
-        PLANS:
-          376996e3-5f48-4778-9ad7-3f45606e5b4b: container
-          41a24864-9dcb-4104-bb89-f90a66e4b589: dev
-          f7ebd961-1f78-41aa-9451-b7eb2ab07c9c: dev-large
-          a90b13ef-42c9-41f6-9cd8-a934777118a6: large
-          66fdf95f-e9b5-4650-9476-fc5bccdb1921: medium
-          210394d2-d6bc-4b6f-97e9-0da3f11bfea8: small
-          6b5c6db8-0b2f-40cd-8538-7769e95692c1: xsmall
-      - NAME: rabbitmq
-        GUID: 3939eedf-1a36-497c-a92d-1aceef65c6df
-        PLANS:
-          cda31f56-2b18-4d5c-96a1-e0a70aaa8388: container
-          8f950b85-38bf-45f9-ac2b-b87349601cf5: dev
-          27c7f763-97c3-42c6-a884-9be319ca0fb6: large
-          3f89717b-36d6-4d51-8f35-09e5cb28543d: medium
-          25aba225-6b35-49d3-9c13-e513d131a2fc: small
-          75fd6780-5fc6-4fec-954f-45da5cb6db30: xsmall
-      - NAME: redis
-        GUID: 74a211b8-11dc-4e3c-9526-953e31fe0109
-        PLANS:
-          5bcc65d4-3221-4687-a1d5-18094a53f5ff: container
-          4ff7d293-4e83-41df-8db4-5393e724560b: container-large
-          f2407199-f46f-4f8b-b913-7fc693983de9: dev
-          40bf5ba3-1c32-4b99-8d79-9fd5214173cf: dev-large
-          f47ce390-ef9a-4621-b814-993801419247: large
-          088fd85e-688d-4c58-a806-1586d8ddd88b: large-single
-          d3c62917-a890-448c-a818-2707a306ee4c: medium
-          e8796597-2b15-466c-a307-1fbdbd41b6f2: medium-single
-          1dcb1b3d-ac73-4c39-b41c-d812e7c1f02b: small
-          f0ecbcac-8807-43c7-94ef-f21dc2994d66: small-single
-          2520b164-d258-4cf0-9991-66e62faf208e: xsmall
-          915e9d5c-f75d-4972-95a9-911f26d48c9a: xsmall-single
-          a3ea028d-e8ef-4f2b-bc48-058887ec8966: xxlarge-single
+          1-2-3: plan1
+          3-4-5: plan2
