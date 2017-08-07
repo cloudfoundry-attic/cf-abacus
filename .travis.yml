@@ -35,8 +35,8 @@ jobs:
           sources:
             - mongodb-upstart
           packages:
-            - mongodb-org-server
-            - mongodb-org-shell
+            - mongodb-org-server=2.6.9
+            - mongodb-org-shell=2.6.9
       install:
         - sleep 15
     - <<: *unit-tests
@@ -82,8 +82,8 @@ jobs:
           sources:
             - mongodb-upstart
           packages:
-            - mongodb-org-server
-            - mongodb-org-shell
+            - mongodb-org-server=2.6.9
+            - mongodb-org-shell=2.6.9
       install:
         - sleep 15
     - <<: *integration-tests
@@ -130,8 +130,8 @@ jobs:
           sources:
             - mongodb-upstart
           packages:
-            - mongodb-org-server
-            - mongodb-org-shell
+            - mongodb-org-server=2.6.9
+            - mongodb-org-shell=2.6.9
       install:
         - sleep 15
     - <<: *extended-tests
@@ -178,8 +178,8 @@ jobs:
           sources:
             - mongodb-upstart
           packages:
-            - mongodb-org-server
-            - mongodb-org-shell
+            - mongodb-org-server=2.6.9
+            - mongodb-org-shell=2.6.9
       install:
         - sleep 15
     - <<: *perf-tests
