@@ -1,6 +1,6 @@
 language: node_js
 node_js: "6.10.0"
-
+dist: trusty
 sudo: false
 
 env:
@@ -49,7 +49,6 @@ jobs:
         apt:
           sources:
             - mongodb-upstart
-            - mongodb-3.2-precise
           packages:
             - mongodb-org-server
             - mongodb-org-shell
@@ -98,7 +97,6 @@ jobs:
         apt:
           sources:
             - mongodb-upstart
-            - mongodb-3.2-precise
           packages:
             - mongodb-org-server
             - mongodb-org-shell
@@ -147,7 +145,6 @@ jobs:
         apt:
           sources:
             - mongodb-upstart
-            - mongodb-3.2-precise
           packages:
             - mongodb-org-server
             - mongodb-org-shell
@@ -196,7 +193,6 @@ jobs:
         apt:
           sources:
             - mongodb-upstart
-            - mongodb-3.2-precise
           packages:
             - mongodb-org-server
             - mongodb-org-shell
