@@ -1,11 +1,7 @@
 {
-  "name": "cf-abacus",
-  "git_url": "https://github.com/cloudfoundry-incubator/cf-abacus",
   "tracker_url": "https://www.pivotaltracker.com/n/projects/1385414",
   "description": "Metering engine for CloudFoundry",
   "owner_company": "IBM",
   "contact_email": "Michael Maximilien <maxim@us.ibm.com>",
-  "status": "Incubating",
   "proposed_date": "2015-14-07T12:00:00Z07:00",
-  "status_changed_date": "2017-03-02T12:00:00Z07:00"
 }
