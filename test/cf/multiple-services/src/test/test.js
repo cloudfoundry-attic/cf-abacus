@@ -62,12 +62,12 @@ const resourceToken = {
     jti: '254abca5-1c25-40c5-99d7-2cc641791517',
     sub: 'abacus-cf-renewer',
     authorities: [
-      'abacus.usage.services.write',
-      'abacus.usage.services.read'
+      'abacus.usage.mongodb.write',
+      'abacus.usage.mongodb.read'
     ],
     scope: [
-      'abacus.usage.services.read',
-      'abacus.usage.services.write'
+      'abacus.usage.mongodb.read',
+      'abacus.usage.mongodb.write'
     ],
     client_id: 'abacus-cf-renewer',
     cid: 'abacus-cf-renewer',
@@ -168,10 +168,12 @@ describe('abacus-cf multiple-services-test with oAuth', () => {
     routes.post('/oauth/token', (request, response) => {
       oAuthDebug('Requested oAuth token with %j', request.query);
       const scope = request.query.scope;
-      const containerToken = scope && scope.indexOf('container') > 0;
+      const systemToken = scope && 
+        scope.indexOf('abacus.usage.write abacus.usage.read') >= 0;
       response.status(200).send({
         token_type: 'bearer',
-        access_token: containerToken ? signedResourceToken : signedSystemToken,
+        access_token: systemToken ? 
+          signedSystemToken : signedResourceToken,
         expires_in: 100000,
         scope: scope ? scope.split(' ') : '',
         authorities: scope ? scope.split(' ') : '',
@@ -198,9 +200,12 @@ describe('abacus-cf multiple-services-test with oAuth', () => {
     process.env.ABACUS_CLIENT_SECRET = 'secret';
     process.env.JWTKEY = tokenSecret;
     process.env.JWTALGO = tokenAlgorithm;
-    process.env.SERVICES = '[map[PLANS:map[4fd1a379-2738-408e-9020-' +
-      'c5238a47a004:medium] NAME:mongodb GUID:bc3690b2-' +
-      'cc50-4475-b2cf-44d68c51f9d3]]';
+    process.env.SERVICES = `{
+      "mongodb": {
+        "guid": "bc3690b2-cc50-4475-b2cf-44d68c51f9d3",
+        "plans": ["medium"]
+      }
+    }`;
 
     // Change slack window to be able to submit usage for last month
     process.env.SLACK = '32D';
@@ -347,7 +352,7 @@ describe('abacus-cf multiple-services-test with oAuth', () => {
               service_instance_name: 'MongoDB',
               service_instance_type: 'managed_service_instance',
               service_plan_guid: '4fd1a379-2738-408e-9020-c5238a47a004',
-              service_plan_name: 'v3.0-dedicated-medium',
+              service_plan_name: 'medium',
               service_guid: 'bc3690b2-cc50-4475-b2cf-44d68c51f9d3',
               service_label: 'mongodb'
             }
@@ -363,7 +368,7 @@ describe('abacus-cf multiple-services-test with oAuth', () => {
               service_instance_name: 'MongoDB',
               service_instance_type: 'managed_service_instance',
               service_plan_guid: '4fd1a379-2738-408e-9020-c5238a47a004',
-              service_plan_name: 'v3.0-dedicated-medium',
+              service_plan_name: 'medium',
               service_guid: 'bc3690b2-cc50-4475-b2cf-44d68c51f9d3',
               service_label: 'mongodb'
             }
@@ -379,7 +384,7 @@ describe('abacus-cf multiple-services-test with oAuth', () => {
               service_instance_name: 'MongoDB',
               service_instance_type: 'managed_service_instance',
               service_plan_guid: '4fd1a379-2738-408e-9020-c5238a47a004',
-              service_plan_name: 'v3.0-dedicated-medium',
+              service_plan_name: 'medium',
               service_guid: 'bc3690b2-cc50-4475-b2cf-44d68c51f9d3',
               service_label: 'mongodb'
             }
@@ -395,7 +400,7 @@ describe('abacus-cf multiple-services-test with oAuth', () => {
               service_instance_name: 'MongoDB',
               service_instance_type: 'managed_service_instance',
               service_plan_guid: '4fd1a379-2738-408e-9020-c5238a47a004',
-              service_plan_name: 'v3.0-dedicated-medium',
+              service_plan_name: 'medium',
               service_guid: 'bc3690b2-cc50-4475-b2cf-44d68c51f9d3',
               service_label: 'mongodb'
             }
@@ -411,7 +416,7 @@ describe('abacus-cf multiple-services-test with oAuth', () => {
               service_instance_name: 'MongoDB',
               service_instance_type: 'managed_service_instance',
               service_plan_guid: '4fd1a379-2738-408e-9020-c5238a47a004',
-              service_plan_name: 'v3.0-dedicated-medium',
+              service_plan_name: 'medium',
               service_guid: 'bc3690b2-cc50-4475-b2cf-44d68c51f9d3',
               service_label: 'mongodb'
             }
@@ -427,7 +432,7 @@ describe('abacus-cf multiple-services-test with oAuth', () => {
               service_instance_name: 'MongoDB',
               service_instance_type: 'managed_service_instance',
               service_plan_guid: '4fd1a379-2738-408e-9020-c5238a47a004',
-              service_plan_name: 'v3.0-dedicated-medium',
+              service_plan_name: 'medium',
               service_guid: 'bc3690b2-cc50-4475-b2cf-44d68c51f9d3',
               service_label: 'mongodb'
             }

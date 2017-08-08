@@ -25,14 +25,13 @@ applications:
       ... <UAA public key in PEM format> ...
       -----END PUBLIC KEY-----
     JWTALGO: RS256
-    SERVICES:
-      - NAME: service1
-        GUID: 1
-        PLANS:
-          1-2-3: plan1
-          3-4-5: plan2
-      - NAME: service2
-        GUID: 2
-        PLANS:
-          1-2-3: plan1
-          3-4-5: plan2
+    SERVICES: '{
+      "service1": {
+        "guid": "1",
+        "plans": ["plan1", "plan2"]
+      },
+      "service2": {
+        "guid": "2",
+        "plans": ["plan1", "plan2"]
+      }
+    }'

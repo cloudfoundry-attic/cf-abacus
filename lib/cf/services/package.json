@@ -62,7 +62,9 @@
     "abacus-cfpush": "file:../../../tools/cfpush",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-publish": "file:../../../tools/publish"
+    "abacus-publish": "file:../../../tools/publish",
+    "eslint-plugin-mocha": "^4.8.0",
+    "eslint-plugin-nodate": "file:../../../tools/eslint-plugin-nodate"
   },
   "engines": {
     "node": ">=6.10.0",
