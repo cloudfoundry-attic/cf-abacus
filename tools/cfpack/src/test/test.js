@@ -16,7 +16,7 @@ describe('CF Pack', () => {
       done();
   });
 
-  context('when executing CF pack command', () => {
+  context('When executing CF pack command', () => {
     it('should repackage modules correctly', (done) => {
       cfpack.run(path.resolve('../../../../'), undefined, (err) => {
         expect(err).to.equal(undefined);
