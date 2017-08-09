@@ -7,53 +7,8 @@
     "basic": "linux-rating-plan",
     "standard": "linux-rating-plan"
   },
-  "hana": {
-    "hdi-shared": "service-rating-standard",
-    "schema": "service-rating-standard"
-  },
-  "mongodb": {
-    "container": "service-rating-standard",
-    "container-large": "service-rating-standard",
-    "dev": "service-rating-standard",
-    "dev-large": "service-rating-standard",
-    "large": "service-rating-standard",
-    "medium": "service-rating-standard",
-    "small": "service-rating-standard",
-    "xsmall": "service-rating-standard"
-  },
-  "postgresql": {
-    "container": "service-rating-standard",
-    "container-large": "service-rating-standard",
-    "dev": "service-rating-standard",
-    "dev-large": "service-rating-standard",
-    "large": "service-rating-standard",
-    "medium": "service-rating-standard",
-    "small": "service-rating-standard",
-    "xsmall": "service-rating-standard"
-  },
-  "rabbitmq": {
-    "container": "service-rating-standard",
-    "container-large": "service-rating-standard",
-    "dev": "service-rating-standard",
-    "large": "service-rating-standard",
-    "medium": "service-rating-standard",
-    "small": "service-rating-standard",
-    "xsmall": "service-rating-standard"
-  },
-  "redis": {
-    "container": "service-rating-standard",
-    "container-large": "service-rating-standard",
-    "dev": "service-rating-standard",
-    "dev-large": "service-rating-standard",
-    "large": "service-rating-standard",
-    "large-single": "service-rating-standard",
-    "medium": "service-rating-standard",
-    "medium-single": "service-rating-standard",
-    "small": "service-rating-standard",
-    "small-single": "service-rating-standard",
-    "xsmall": "service-rating-standard",
-    "xsmall-single": "service-rating-standard",
-    "xxlarge-single": "service-rating-standard"
+  "service": {
+    "standard": "service-rating-standard"
   },
   "object-storage": {
     "basic": "object-rating-plan",

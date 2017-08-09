@@ -7,53 +7,8 @@
     "basic": "linux-pricing-basic",
     "standard": "linux-pricing-standard"
   },
-  "hana": {
-    "hdi-shared": "service-pricing-standard",
-    "schema": "service-pricing-standard"
-  },
-  "mongodb": {
-    "container": "service-pricing-standard",
-    "container-large": "service-pricing-standard",
-    "dev": "service-pricing-standard",
-    "dev-large": "service-pricing-standard",
-    "large": "service-pricing-standard",
-    "medium": "service-pricing-standard",
-    "small": "service-pricing-standard",
-    "xsmall": "service-pricing-standard"
-  },
-  "postgresql": {
-    "container": "service-pricing-standard",
-    "container-large": "service-pricing-standard",
-    "dev": "service-pricing-standard",
-    "dev-large": "service-pricing-standard",
-    "large": "service-pricing-standard",
-    "medium": "service-pricing-standard",
-    "small": "service-pricing-standard",
-    "xsmall": "service-pricing-standard"
-  },
-  "rabbitmq": {
-    "container": "service-pricing-standard",
-    "container-large": "service-pricing-standard",
-    "dev": "service-pricing-standard",
-    "large": "service-pricing-standard",
-    "medium": "service-pricing-standard",
-    "small": "service-pricing-standard",
-    "xsmall": "service-pricing-standard"
-  },
-  "redis": {
-    "container": "service-pricing-standard",
-    "container-large": "service-pricing-standard",
-    "dev": "service-pricing-standard",
-    "dev-large": "service-pricing-standard",
-    "large": "service-pricing-standard",
-    "large-single": "service-pricing-standard",
-    "medium": "service-pricing-standard",
-    "medium-single": "service-pricing-standard",
-    "small": "service-pricing-standard",
-    "small-single": "service-pricing-standard",
-    "xsmall": "service-pricing-standard",
-    "xsmall-single": "service-pricing-standard",
-    "xxlarge-single": "service-pricing-standard"
+  "service": {
+    "standard": "service-pricing-standard"
   },
   "object-storage": {
     "basic": "object-pricing-basic",

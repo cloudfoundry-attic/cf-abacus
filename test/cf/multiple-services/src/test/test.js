@@ -62,12 +62,12 @@ const resourceToken = {
     jti: '254abca5-1c25-40c5-99d7-2cc641791517',
     sub: 'abacus-cf-renewer',
     authorities: [
-      'abacus.usage.mongodb.write',
-      'abacus.usage.mongodb.read'
+      'abacus.usage.service.write',
+      'abacus.usage.service.read'
     ],
     scope: [
-      'abacus.usage.mongodb.read',
-      'abacus.usage.mongodb.write'
+      'abacus.usage.service.read',
+      'abacus.usage.service.write'
     ],
     client_id: 'abacus-cf-renewer',
     cid: 'abacus-cf-renewer',
@@ -80,7 +80,7 @@ const resourceToken = {
     zid: 'uaa',
     aud: [
       'abacus-cf-renewer',
-      'abacus.usage.services'
+      'abacus-cf-services'
     ]
   },
   signature: '7BVRprw-yySpW7lSkM8KPZoUIw2w61bs87l0YXqUT8E'

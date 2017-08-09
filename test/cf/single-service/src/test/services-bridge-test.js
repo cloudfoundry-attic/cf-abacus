@@ -77,12 +77,12 @@ const resourceToken = {
     jti: '254abca5-1c25-40c5-99d7-2cc641791517',
     sub: 'abacus-cf-bridge',
     authorities: [
-      'abacus.usage.mongodb.write',
-      'abacus.usage.mongodb.read'
+      'abacus.usage.service.write',
+      'abacus.usage.service.read'
     ],
     scope: [
-      'abacus.usage.mongodb.read',
-      'abacus.usage.mongodb.write'
+      'abacus.usage.service.read',
+      'abacus.usage.service.write'
     ],
     client_id: 'abacus-cf-bridge',
     cid: 'abacus-cf-bridge',
@@ -95,7 +95,7 @@ const resourceToken = {
     zid: 'uaa',
     aud: [
       'abacus-cf-bridge',
-      'abacus.usage.services'
+      'abacus-cf-services'
     ]
   },
   signature: 'irxoV230hkDJenXoTSHQFfqzoUl353lS2URo1fJm21Y'
@@ -126,7 +126,7 @@ const systemToken = {
     zid: 'uaa',
     aud: [
       'abacus-cf-bridge',
-      'abacus.usage.services'
+      'abacus-cf-services'
     ]
   },
   signature: 'OVNTKTvu-yHI6QXmYxtPeJZofNddX36Mx1q4PDWuYQE'
