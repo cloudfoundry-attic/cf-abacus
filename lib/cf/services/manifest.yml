@@ -18,7 +18,7 @@ applications:
     NODE_MODULES_CACHE: false
     SECURED: false
     AUTH_SERVER: api
-    CLIENT_ID: abacus-linux-container
+    CLIENT_ID: abacus-services-bridge
     CLIENT_SECRET: secret
     JWTKEY: |+
       -----BEGIN PUBLIC KEY-----
@@ -27,11 +27,9 @@ applications:
     JWTALGO: RS256
     SERVICES: '{
       "service1": {
-        "guid": "1",
         "plans": ["plan1", "plan2"]
       },
       "service2": {
-        "guid": "2",
         "plans": ["plan1", "plan2"]
       }
     }'
