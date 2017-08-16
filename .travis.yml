@@ -1,5 +1,5 @@
 language: node_js
-node_js: "6.10.0"
+node_js: "6.11.2"
 dist: trusty
 sudo: false
 
@@ -7,7 +7,7 @@ env:
   global:
     - CF_TEST="false"
     - START_TIMEOUT=20000
-    - TOTAL_TIMEOUT=120000
+    - TOTAL_TIMEOUT=200000
 
 jobs:
   include:
@@ -35,7 +35,7 @@ jobs:
     - &integration-tests
       stage: integration tests
       before_script: npm run provision
-      script: travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+      script: travis_retry travis_wait 30 npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
       env:
         - DESCRIPTION="pouchdb"
         - CI_TEST=itest
