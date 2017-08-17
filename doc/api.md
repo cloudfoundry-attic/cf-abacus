@@ -154,7 +154,7 @@ The _metering plan id_ API is used by abacus to retrieve _metering plan id_ for 
 
 Given the organization id, resource type, plan id, and time returns the metering plan id.
 
-This API gives more flexibility to Cloud platform integrating Abacus. Cloud platform integrating Abacus would be able give different way of metering depending on the given organization id, resource type, plan id, and time. 
+This API gives more flexibility to Cloud platform integrating Abacus. Cloud platform integrating Abacus would be able give different way of metering depending on the given organization id, resource type, plan id, and time.
 
 ### Method: get
 _HTTP request_:
@@ -171,7 +171,7 @@ The _rating plan id_ API is used by abacus to retrieve _rating plan id_ for Clou
 
 Given the organization id, resource type, plan id, and time returns the rating plan id.
 
-This API gives more flexibility to Cloud platform integrating Abacus. Cloud platform integrating Abacus would be able give different way of rating depending on the given organization id, resource type, plan id, and time. 
+This API gives more flexibility to Cloud platform integrating Abacus. Cloud platform integrating Abacus would be able give different way of rating depending on the given organization id, resource type, plan id, and time.
 
 ### Method: get
 _HTTP request_:
@@ -188,7 +188,7 @@ The _pricing plan id_ API is used by abacus to retrieve _pricing plan id_ for Cl
 
 Given the organization id, resource type, plan id, and time returns the pricing plan id.
 
-This API gives more flexibility to Cloud platform integrating Abacus. Cloud platform integrating Abacus would be able give different pricing depending on the given organization id, resource type, plan id, and time. 
+This API gives more flexibility to Cloud platform integrating Abacus. Cloud platform integrating Abacus would be able give different pricing depending on the given organization id, resource type, plan id, and time.
 
 ### Method: get
 _HTTP request_:
@@ -829,7 +829,9 @@ GET /v1/metering/organizations/:organization_id/aggregated/usage/:time
 
 _Description_: Retrieves a usage report document containing a summary of the aggregated Cloud resource usage incurred by the specified organization at the specified time.
 
-_HTTP response_: 200 to indicate success with a _usage summary report_ JSON document, 404 if the usage is not found, 500 to report a server error.
+If Abacus is [secured](https://github.com/cloudfoundry-incubator/cf-abacus/wiki/Security) the response depends on the scopes of the oAuth token used to call the API. When system token is used the complete report with aggregated usage for the requested organization will be returned. When resource token is used than the report will contain only the resources specified by the resource token scopes.
+
+_HTTP response_: 200 to indicate success with a _usage summary report_ JSON document, 403 when the resource_id value is invalid, 404 if the usage is not found, 500 to report a server error.
 
 ### JSON representation:
 ```json
@@ -2588,7 +2590,7 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
 {
   organizations(
     organization_ids: [
-      "us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",                                      
+      "us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
       "us-south:b3d7fe4d-3cb1-4cc3-a831-ffe98e20cf28"],
     time: 1435622400000) {
       organization_id,
