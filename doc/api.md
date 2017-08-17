@@ -29,6 +29,10 @@ A _resource usage document_ contains usage measurements for a Cloud resource.
 
 Once a _resource usage_ document has been submitted to Abacus it can be retrieved using GET.
 
+Collector API
+---
+## https://abacus-usage-collector.&lt;domain>
+
 ### Method: insert
 _HTTP request_:
 ```
@@ -139,6 +143,10 @@ The _resource type_ API is used by abacus to retrieve _resource type_ for Cloud 
 
 This API enable Cloud platform integrating Abacus to generalizes onboarded resource_ids to a single resource type.
 
+Provisioning plugin API
+---
+## https://abacus-provisioning-plugin.&lt;domain>
+
 ### Method: get
 _HTTP request_:
 ```
@@ -155,58 +163,6 @@ The _metering plan id_ API is used by abacus to retrieve _metering plan id_ for 
 Given the organization id, resource type, plan id, and time returns the metering plan id.
 
 This API gives more flexibility to Cloud platform integrating Abacus. Cloud platform integrating Abacus would be able give different way of metering depending on the given organization id, resource type, plan id, and time.
-
-### Method: get
-_HTTP request_:
-```
-GET /v1/metering/organizations/:organization_id/resource_types/:resource_type/plans/:plan_id/time/:time/metering_plan/id
-```
-_Description_: Retrieves the metering plan of the specified organization id, resource type, plan id at the specified time.
-
-_HTTP response_: 200 to indicate success with the requested _metering plan id_, 404 if the metering plan id is not found, 500 to report a server error.
-
-Rating plan id
----
-The _rating plan id_ API is used by abacus to retrieve _rating plan id_ for Cloud resources.
-
-Given the organization id, resource type, plan id, and time returns the rating plan id.
-
-This API gives more flexibility to Cloud platform integrating Abacus. Cloud platform integrating Abacus would be able give different way of rating depending on the given organization id, resource type, plan id, and time.
-
-### Method: get
-_HTTP request_:
-```
-GET /v1/rating/organizations/:organization_id/resource_types/:resource_type/plans/:plan_id/time/:time/rating_plan/id
-```
-_Description_: Retrieves the rating plan of the specified organization id, resource type, plan id at the specified time.
-
-_HTTP response_: 200 to indicate success with the requested _rating plan id_, 404 if the rating plan id is not found, 500 to report a server error.
-
-Pricing plan id
----
-The _pricing plan id_ API is used by abacus to retrieve _pricing plan id_ for Cloud resources.
-
-Given the organization id, resource type, plan id, and time returns the pricing plan id.
-
-This API gives more flexibility to Cloud platform integrating Abacus. Cloud platform integrating Abacus would be able give different pricing depending on the given organization id, resource type, plan id, and time.
-
-### Method: get
-_HTTP request_:
-```
-GET /v1/pricing/organizations/:organization_id/resource_types/:resource_type/plans/:plan_id/time/:time/pricing_plan/id
-```
-_Description_: Retrieves the pricing plan of the specified organization id, resource type, plan id at the specified time.
-
-_HTTP response_: 200 to indicate success with the requested _pricing plan id_, 404 if the pricing plan id is not found, 500 to report a server error.
-
-Metering plans
----
-
-The _metering plans_ API is used by Abacus to retrieve _metering plan_ documents for Cloud resources.
-
-_Metering plan_ documents describe the types of measurements, metrics, units, and metering, accumulation, aggregation, and reporting formulas that must be used by Abacus to meter, and report usage for each type of Cloud resource.
-
-This API defines the contract between Abacus and the Cloud platform integrating it. The Cloud platform can manage and store _metering plan_ documents describing its Cloud resources in a platform specific way outside of Abacus, and is simply expected to make these documents available to Abacus at an API endpoint supporting a GET method.
 
 ### Method: get
 _HTTP request_:
@@ -816,10 +772,70 @@ _HTTP response_: 201 to indicate success with the creation of the plan,409 to in
 }
 ```
 
+Account plugin API
+---
+## https://abacus-account-plugin.&lt;domain>
+
+### Method: get
+_HTTP request_:
+```
+GET /v1/metering/organizations/:organization_id/resource_types/:resource_type/plans/:plan_id/time/:time/metering_plan/id
+```
+_Description_: Retrieves the metering plan of the specified organization id, resource type, plan id at the specified time.
+
+_HTTP response_: 200 to indicate success with the requested _metering plan id_, 404 if the metering plan id is not found, 500 to report a server error.
+
+Rating plan id
+---
+The _rating plan id_ API is used by abacus to retrieve _rating plan id_ for Cloud resources.
+
+Given the organization id, resource type, plan id, and time returns the rating plan id.
+
+This API gives more flexibility to Cloud platform integrating Abacus. Cloud platform integrating Abacus would be able give different way of rating depending on the given organization id, resource type, plan id, and time.
+
+### Method: get
+_HTTP request_:
+```
+GET /v1/rating/organizations/:organization_id/resource_types/:resource_type/plans/:plan_id/time/:time/rating_plan/id
+```
+_Description_: Retrieves the rating plan of the specified organization id, resource type, plan id at the specified time.
+
+_HTTP response_: 200 to indicate success with the requested _rating plan id_, 404 if the rating plan id is not found, 500 to report a server error.
+
+Pricing plan id
+---
+The _pricing plan id_ API is used by abacus to retrieve _pricing plan id_ for Cloud resources.
+
+Given the organization id, resource type, plan id, and time returns the pricing plan id.
+
+This API gives more flexibility to Cloud platform integrating Abacus. Cloud platform integrating Abacus would be able give different pricing depending on the given organization id, resource type, plan id, and time.
+
+### Method: get
+_HTTP request_:
+```
+GET /v1/pricing/organizations/:organization_id/resource_types/:resource_type/plans/:plan_id/time/:time/pricing_plan/id
+```
+_Description_: Retrieves the pricing plan of the specified organization id, resource type, plan id at the specified time.
+
+_HTTP response_: 200 to indicate success with the requested _pricing plan id_, 404 if the pricing plan id is not found, 500 to report a server error.
+
+Metering plans
+---
+
+The _metering plans_ API is used by Abacus to retrieve _metering plan_ documents for Cloud resources.
+
+_Metering plan_ documents describe the types of measurements, metrics, units, and metering, accumulation, aggregation, and reporting formulas that must be used by Abacus to meter, and report usage for each type of Cloud resource.
+
+This API defines the contract between Abacus and the Cloud platform integrating it. The Cloud platform can manage and store _metering plan_ documents describing its Cloud resources in a platform specific way outside of Abacus, and is simply expected to make these documents available to Abacus at an API endpoint supporting a GET method.
+
 Usage summary report
 ---
 
 The _usage summary report_ API can be used to retrieve aggregated usage summary report documents from Abacus.
+
+Reporting API
+---
+## https://aabacus-usage-reporting.&lt;domain>
 
 ### Method: get
 _HTTP request_:
@@ -2739,4 +2755,3 @@ type Query {
     time: Int) : [OrganizationReport]
 }
 ```
-
