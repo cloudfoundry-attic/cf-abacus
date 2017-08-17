@@ -31,7 +31,7 @@ Once a _resource usage_ document has been submitted to Abacus it can be retrieve
 
 Collector API
 ---
-## https://abacus-usage-collector.&lt;domain>
+## https://abacus-usage-collector.{domain}
 
 ### Method: insert
 _HTTP request_:
@@ -145,7 +145,7 @@ This API enable Cloud platform integrating Abacus to generalizes onboarded resou
 
 Provisioning plugin API
 ---
-## https://abacus-provisioning-plugin.&lt;domain>
+## https://abacus-provisioning-plugin.{domain}
 
 ### Method: get
 _HTTP request_:
@@ -774,7 +774,7 @@ _HTTP response_: 201 to indicate success with the creation of the plan,409 to in
 
 Account plugin API
 ---
-## https://abacus-account-plugin.&lt;domain>
+## https://abacus-account-plugin.{domain}
 
 ### Method: get
 _HTTP request_:
@@ -835,7 +835,7 @@ The _usage summary report_ API can be used to retrieve aggregated usage summary 
 
 Reporting API
 ---
-## https://aabacus-usage-reporting.&lt;domain>
+## https://aabacus-usage-reporting.{domain}
 
 ### Method: get
 _HTTP request_:
