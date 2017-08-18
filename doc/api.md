@@ -835,7 +835,7 @@ The _usage summary report_ API can be used to retrieve aggregated usage summary 
 
 Reporting API
 ---
-## https://aabacus-usage-reporting.{domain}
+## https://abacus-usage-reporting.{domain}
 
 ### Method: get
 _HTTP request_:
