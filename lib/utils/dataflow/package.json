@@ -28,6 +28,7 @@
     "pub": "publish"
   },
   "dependencies": {
+    "abacus-audit": "file:../audit",
     "abacus-batch": "file:../batch",
     "abacus-breaker": "file:../breaker",
     "abacus-oauth": "file:../oauth",
@@ -38,24 +39,24 @@
     "abacus-eureka": "file:../eureka",
     "abacus-lock": "file:../lock",
     "abacus-lrucache": "file:../lrucache",
-    "abacus-moment": "file:../../utils/moment",
+    "abacus-moment": "file:../moment",
     "abacus-partition": "file:../partition",
     "abacus-request": "file:../request",
     "abacus-retry": "file:../retry",
-    "abacus-router": "file:../../utils/router",
-    "abacus-seqid": "file:../../utils/seqid",
-    "abacus-throttle": "file:../../utils/throttle",
-    "abacus-transform": "file:../../utils/transform",
-    "abacus-urienv": "file:../../utils/urienv",
-    "abacus-vcapenv": "file:../../utils/vcapenv",
-    "abacus-yieldable": "file:../../utils/yieldable",
+    "abacus-router": "file:../router",
+    "abacus-seqid": "file:../seqid",
+    "abacus-throttle": "file:../throttle",
+    "abacus-transform": "file:../transform",
+    "abacus-urienv": "file:../urienv",
+    "abacus-vcapenv": "file:../vcapenv",
+    "abacus-yieldable": "file:../yieldable",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish",
-    "abacus-webapp": "file:../../utils/webapp"
+    "abacus-webapp": "file:../webapp"
   },
   "engines": {
     "node": ">=6.10.0",
