@@ -90,6 +90,7 @@
     "abacus-client": "file:lib/utils/client",
     "abacus-cluster": "file:lib/utils/cluster",
     "abacus-couchclient": "file:lib/utils/couchclient",
+    "abacus-couchstore": "file:lib/utils/couchstore",
     "abacus-dataflow": "file:lib/utils/dataflow",
     "abacus-dbclient": "file:lib/utils/dbclient",
     "abacus-dbcommons": "file:lib/utils/dbcommons",
