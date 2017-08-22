@@ -71,6 +71,7 @@
     "async": "^2.3.0",
     "underscore": "^1.8.3",
     "abacus-account-plugin": "file:lib/plugins/account",
+    "abacus-audit": "file:lib/utils/audit",
     "abacus-authserver-plugin": "file:lib/plugins/authserver",
     "abacus-batch": "file:lib/utils/batch",
     "abacus-breaker": "file:lib/utils/breaker",
