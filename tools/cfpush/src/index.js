@@ -1,65 +1,43 @@
 'use strict';
 
-// Deploy an app to Cloud Foundry
-
 const _ = require('underscore');
 const extend = _.extend;
 const noop = _.noop;
 
 const path = require('path');
 const cp = require('child_process');
+const async = require('async');
 
 const commander = require('commander');
 const fs = require('fs-extra');
 const tmp = require('tmp');
+const remanifester = require('./lib/remanifester.js');
+
 tmp.setGracefulCleanup();
-const yaml = require('js-yaml');
 
-/* eslint no-process-exit: 1 */
+const originalManifestFilename = 'manifest.yml';
 
-// Create the directories we need
-const mkdirs = (cb) => {
-  // Create .cfpush directory
+const createCfPushDir = (cb) => {
   fs.mkdir('.cfpush', (err) => {
     if (err) noop();
     cb();
   });
 };
 
-// Adjust manifest.yml env variables
-const adjustManifest = (app, name, instances, conf, buildpack) => {
-  if (app) {
-    app.name = name;
-    app.host = name;
-    if (instances)
-      app.instances = parseInt(instances);
-    app.path = '../' + app.path;
-    if (conf) {
-      if (!app.env) app.env = {};
-      app.env.CONF = conf;
-    }
-    if (buildpack)
-      app.buildpack = buildpack;
-  }
-};
-
-// Write new manifest.yml
-const remanifest = (root, name, instances, conf, buildpack, prefix, cb) => {
-  fs.readFile(
-    path.join(process.cwd(), 'manifest.yml'), (err, content) => {
+const remanifest = (props, cb) => {
+  fs.readFile(path.join(process.cwd(), originalManifestFilename),
+    (err, originalManifestContent) => {
       if (err) {
         cb(err);
         return;
       }
-      const yml = yaml.load(content);
-      const app = yml.applications[0];
-      const appName = prefix ? [prefix, name].join('') : name;
 
-      adjustManifest(app, appName, instances, conf, buildpack);
+      const adjustedManifest = remanifester
+        .adjustManifest(originalManifestContent, props);
 
-      fs.writeFile(
-        path.join('.cfpush', [name, 'manifest.yml'].join('-')),
-        yaml.dump(yml), cb);
+      const adjustedManifestPath = path.join('.cfpush',
+        [props.name, originalManifestFilename].join('-'));
+      fs.writeFile(adjustedManifestPath, adjustedManifest, cb);
     });
 };
 
@@ -71,24 +49,25 @@ const prepareTmpDir = () => {
   });
 
   const cfTmpDir = path.join(tmpDir.name, '.cf');
-  const cfSettings = path.join(
+  const cfHomeDir = path.join(
     process.env.CF_HOME || process.env.HOME, '.cf'
   );
-  if (fs.existsSync(cfSettings))
-    fs.copySync(cfSettings, cfTmpDir);
+
+  if (fs.existsSync(cfHomeDir))
+    fs.copySync(cfHomeDir, cfTmpDir);
 
   return tmpDir;
 };
 
-// Push an app
-const push = (name, start, cb) => {
-  const command = 'cf push ' +
-    (start ? '' : '--no-start ') +
-    '-f .cfpush/' + [name, 'manifest.yml'].join('-');
+const push = (props, cb) => {
+  const startParam = props.start ? '' : '--no-start';
+  const command =
+  `cf push ${startParam} -f .cfpush/${props.name}-${originalManifestFilename}`;
+
   const tmpDir = prepareTmpDir();
   const ex = cp.exec(command, {
     cwd: process.cwd(),
-    env: extend(process.env, { CF_HOME: tmpDir.name })
+    env: extend({}, process.env, { CF_HOME: tmpDir.name })
   });
   ex.stdout.on('data', (data) => {
     process.stdout.write(data);
@@ -102,50 +81,56 @@ const push = (name, start, cb) => {
   });
 };
 
-// Package an app for deployment to Cloud Foundry
-const runCLI = () => {
-  // Parse command line options
-  commander
-  // Accept root directory of local dependencies as a parameter, default
-  // to the Abacus root directory
-    .option('-n, --name <name>', 'app name',
-      require(path.join(process.cwd(), 'package.json')).name)
-    .option('-i, --instances <nb>', 'nb of instances')
-    .option('-c, --conf <value>',
-      'configuration name', process.env.CONF)
-    .option('-b, --buildpack <value>',
-      'buildpack name or location', process.env.BUILDPACK)
-    .option('-x, --prefix <value>',
-      'host prefix (like \"dev\", \"prod\")', process.env.ABACUS_PREFIX)
-    .option('-s, --start',
-      'start an app after pushing')
-    .parse(process.argv);
+const retryPush = (properties, cb) => {
+  let retryAttempts = 0;
 
-  // Create the directories we need
-  mkdirs((err) => {
-    if (err) {
-      console.log('Couldn\'t setup cfpack layout -', err);
-      process.exit(1);
+  const retryCb = (error) => {
+    retryAttempts++;
+    if (error && retryAttempts < properties.retries) {
+      push(properties, retryCb);
+      return;
     }
 
-    // Generate the updated manifest.yml
-    remanifest(commander.root, commander.name, commander.instances,
-      commander.conf, commander.buildpack, commander.prefix, (err) => {
-        if (err) {
-          console.log('Couldn\'t write manifest.yml -', err);
-          process.exit(1);
-        }
+    cb(error);
+  };
 
-        // Produce the packaged app zip
-        push(commander.name, commander.start, (err) => {
-          if (err) {
-            console.log('Couldn\'t push app %s -', commander.name, err);
-            process.exit(1);
-          }
-        });
-      });
-  });
+  push(properties, retryCb);
 };
 
-// Export our CLI
+const runCLI = () => {
+  commander
+    .option('-n, --name <name>', 'app name',
+      require(path.join(process.cwd(), 'package.json')).name)
+    .option('-i, --instances <nb>', 'number of instances')
+    .option('-c, --conf <value>', 'configuration name', process.env.CONF)
+    .option('-b, --buildpack <value>', 'buildpack name or location',
+      process.env.BUILDPACK)
+    .option('-x, --prefix <value>', 'host prefix', process.env.ABACUS_PREFIX)
+    .option('-s, --start', 'starts an app after pushing')
+    .option('-r, --retries <value>', 'number of retries if app push fails',
+      process.env.PUSH_RETRIES)
+    .parse(process.argv);
+
+  const commanderProps = {
+    name: commander.name,
+    instances: commander.instances,
+    conf: commander.conf,
+    buildpack: commander.buildpack,
+    prefix: commander.prefix,
+    retries: commander.retries
+  };
+
+  async.series([
+    (callback) => createCfPushDir(callback),
+    (callback) => remanifest(commanderProps, callback),
+    (callback) => retryPush(commanderProps, callback)
+  ], (error, results) => {
+    if (error) {
+      console.log('Couldn\'t push app %s -', commander.name, error);
+      throw error;
+    }
+  });
+
+};
+
 module.exports.runCLI = runCLI;
