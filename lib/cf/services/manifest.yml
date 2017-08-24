@@ -26,10 +26,7 @@ applications:
       -----END PUBLIC KEY-----
     JWTALGO: RS256
     SERVICES: '{
-      "service1": {
-        "plans": ["plan1", "plan2"]
-      },
-      "service2": {
-        "plans": ["plan1", "plan2"]
+      "service": {
+        "plans": ["standard"]
       }
     }'
