@@ -1,7 +1,5 @@
 'use strict';
 
-// Deploy an app to Cloud Foundry
-
 const _ = require('underscore');
 const extend = _.extend;
 const noop = _.noop;
@@ -59,9 +57,9 @@ const prepareTmpDir = () => {
 };
 
 const push = (name, start, cb) => {
-  const command = 'cf push ' +
-    (start ? '' : '--no-start ') +
-    '-f .cfpush/' + [name, 'manifest.yml'].join('-');
+  const startParam = start ? '' : '--no-start';
+  const command = `cf push ${startParam} -f .cfpush/${name}-manifest.yml`;
+
   const tmpDir = prepareTmpDir();
   const ex = cp.exec(command, {
     cwd: process.cwd(),
