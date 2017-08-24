@@ -1,5 +1,8 @@
 'use strict';
 
+const _ = require('underscore');
+const noop = _.noop;
+
 const cfpush = require('..');
 const cp = require('child_process');
 const fs = require('fs-extra');
@@ -15,6 +18,7 @@ const adjustedName = 'adjusted-name';
 const adjustedInstances = 3;
 const adjustedConf = 'adjusted-conf';
 const adjustedBuildpack = 'adjusted-buildpack';
+const retryAttepmts = 3;
 
 const stubFileSystem = () => {
   stub(fs, 'mkdir').callsFake((dirName, cb) => {
@@ -29,7 +33,8 @@ const stubFileSystem = () => {
     cb();
   });
 
-  stub(fs, 'existsSync').returns(false);
+  stub(fs, 'copySync');
+  stub(fs, 'existsSync').returns(true);
 };
 
 const stubTmp = (tmpDir) => {
@@ -37,7 +42,23 @@ const stubTmp = (tmpDir) => {
   stub(tmp, 'dirSync').returns(tmpDir);
 };
 
-const stubChildProcess = (error) => {
+const onCloseHandlers = {
+  alwaysSuccessfulPush: (eventId, cb) => cb(),
+  alwaysFailingPush: (eventId, cb) => cb(new Error()),
+  successfullPushOn: (successfulAttempt) => {
+    let currentAttempt = 0;
+
+    return (eventId, cb) => {
+      currentAttempt++;
+      if (currentAttempt == successfulAttempt)
+        cb();
+      else
+        cb(new Error());
+    };
+  }
+};
+
+const stubChildProcessWith = (onCloseFn) => {
   const stdEvent = {
     on: (undefined, cb) => {}
   };
@@ -46,22 +67,21 @@ const stubChildProcess = (error) => {
     stdout: stdEvent,
     stderr: stdEvent,
     on: stub().withArgs('close', sinon.match.any)
-      .callsFake((eventId, cb) => {
-        cb(error);
-      })
+      .callsFake(onCloseFn)
   };
 
   stub(cp, 'exec').returns(executable);
 };
 
 const stubCommander = () => {
-  stub(commander, 'option').returns(commander);
+  stub(commander, 'option').returnsThis();
   stub(commander, 'parse');
   commander.name = adjustedName;
   commander.instances = adjustedInstances;
   commander.buildpack = adjustedBuildpack;
   commander.conf = adjustedConf;
   commander.prefix = prefix;
+  commander.retries = retryAttepmts;
 };
 
 const stubRemanifester = () => {
@@ -75,6 +95,13 @@ const tmpDir = {
   removeCallback: stub()
 };
 
+const clearStubs = () => {
+  fs.writeFile.resetHistory();
+  fs.copySync.resetHistory();
+  tmpDir.removeCallback.resetHistory();
+  cp.exec.restore();
+};
+
 stubFileSystem();
 stubTmp(tmpDir);
 stubCommander();
@@ -82,26 +109,34 @@ stubRemanifester();
 
 describe('Test abacus cfpush', () => {
   const manifestPath = `.cfpush/${adjustedName}-manifest.yml`;
+  const cfHomeDirectory = 'path';
 
-  context('when application is pushed', () => {
+  before(() => {
+    process.env = {
+      CF_HOME: cfHomeDirectory
+    };
+  });
 
+  context('when application is successfully pushed', () => {
 
     before(() => {
-      stubChildProcess();
-
-      process.env = {
-        CF_HOME: 'path'
-      };
+      stubChildProcessWith(onCloseHandlers.alwaysSuccessfulPush);
 
       cfpush.runCLI();
     });
 
     after(() => {
-      fs.writeFile.reset();
-      cp.exec.restore();
+      clearStubs();
+    });
+
+    it('verify CF_HOME content is copied to tmp dir', () => {
+      assert.calledOnce(fs.copySync);
+      assert.calledWithExactly(fs.copySync, `${cfHomeDirectory}/.cf`,
+        `${tmpDir.name}/.cf`);
     });
 
     it('verify manifest is adjusted', () => {
+      assert.calledOnce(fs.writeFile);
       assert.calledWithExactly(fs.writeFile,
         manifestPath,
         adjustedManifest,
@@ -116,41 +151,48 @@ describe('Test abacus cfpush', () => {
     });
   });
 
-  context.skip('when application push fails', () => {
+  context('when application push fails', () => {
 
-    before(() => {
-      stubChildProcess(new Error());
+    const verifyPushRetryAttempts = (expectedAttempts) => {
+      assert.callCount(cp.exec, expectedAttempts);
+      assert.alwaysCalledWithExactly(cp.exec,
+      `cf push --no-start -f ${manifestPath}`,
+      sinon.match.has('env', { CF_HOME: tmpDir.name }));
+      assert.callCount(tmpDir.removeCallback, expectedAttempts);
 
-      process.env.PUSH_RETRY = 2;
+      assert.callCount(fs.copySync, expectedAttempts);
+      assert.alwaysCalledWithExactly(fs.copySync, `${cfHomeDirectory}/.cf`,
+        `${tmpDir.name}/.cf`);
+    };
+
+    afterEach(() => {
+      clearStubs();
+    });
+
+    it('verify cf push was retried until retry attempts is reached',
+    () => {
+      stubChildProcessWith(onCloseHandlers.alwaysFailingPush);
 
       try {
         cfpush.runCLI();
+        assert.fail('Expected error to be thrown.');
       }
       catch (e) {
-        console.log('Failed to push app due to:', e);
+        // This is expected behavior
+        noop();
       }
 
+      verifyPushRetryAttempts(retryAttepmts);
     });
 
-    after(() => {
-      fs.writeFile.reset();
-      cp.exec.restore();
-    });
+    it('verify cf push was retried until successful push', () => {
+      const successfulAttempt = 2;
+      stubChildProcessWith(
+        onCloseHandlers.successfullPushOn(successfulAttempt));
 
-    it('verify manifest is adjusted once', () => {
-      assert.calledOnce(fs.writeFile);
-      assert.calledWithExactly(fs.writeFile,
-        manifestPath,
-        adjustedManifest,
-        sinon.match.any);
-    });
+      cfpush.runCLI();
 
-    it('verify cf push was retried', () => {
-      assert.calledTwice(cp.exec);
-      assert.calledWithExactly(cp.exec,
-      `cf push --no-start -f ${manifestPath}`,
-      sinon.match.has('env', { CF_HOME: tmpDir.name }));
-      assert.calledOnce(tmpDir.removeCallback);
+      verifyPushRetryAttempts(successfulAttempt);
     });
 
   });

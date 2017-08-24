@@ -15,27 +15,29 @@ const remanifester = require('./lib/remanifester.js');
 
 tmp.setGracefulCleanup();
 
-const mkdirs = (cb) => {
+const originalManifestFilename = 'manifest.yml';
+
+const createCfPushDir = (cb) => {
   fs.mkdir('.cfpush', (err) => {
     if (err) noop();
     cb();
   });
 };
 
-const remanifest = (name, instances, conf, buildpack, prefix, cb) => {
-  fs.readFile(
-    path.join(process.cwd(), 'manifest.yml'), (err, content) => {
+const remanifest = (props, cb) => {
+  fs.readFile(path.join(process.cwd(), originalManifestFilename),
+    (err, originalManifestContent) => {
       if (err) {
         cb(err);
         return;
       }
 
-      const props = { prefix, name, instances, buildpack, conf };
-      const adjustedManifest = remanifester.adjustManifest(content, props);
+      const adjustedManifest = remanifester
+        .adjustManifest(originalManifestContent, props);
 
-      fs.writeFile(
-        path.join('.cfpush', [name, 'manifest.yml'].join('-')),
-        adjustedManifest, cb);
+      const adjustedManifestPath = path.join('.cfpush',
+        [props.name, originalManifestFilename].join('-'));
+      fs.writeFile(adjustedManifestPath, adjustedManifest, cb);
     });
 };
 
@@ -47,23 +49,25 @@ const prepareTmpDir = () => {
   });
 
   const cfTmpDir = path.join(tmpDir.name, '.cf');
-  const cfSettings = path.join(
+  const cfHomeDir = path.join(
     process.env.CF_HOME || process.env.HOME, '.cf'
   );
-  if (fs.existsSync(cfSettings))
-    fs.copySync(cfSettings, cfTmpDir);
+
+  if (fs.existsSync(cfHomeDir))
+    fs.copySync(cfHomeDir, cfTmpDir);
 
   return tmpDir;
 };
 
-const push = (name, start, cb) => {
-  const startParam = start ? '' : '--no-start';
-  const command = `cf push ${startParam} -f .cfpush/${name}-manifest.yml`;
+const push = (props, cb) => {
+  const startParam = props.start ? '' : '--no-start';
+  const command =
+  `cf push ${startParam} -f .cfpush/${props.name}-${originalManifestFilename}`;
 
   const tmpDir = prepareTmpDir();
   const ex = cp.exec(command, {
     cwd: process.cwd(),
-    env: extend(process.env, { CF_HOME: tmpDir.name })
+    env: extend({}, process.env, { CF_HOME: tmpDir.name })
   });
   ex.stdout.on('data', (data) => {
     process.stdout.write(data);
@@ -77,30 +81,49 @@ const push = (name, start, cb) => {
   });
 };
 
-// Package an app for deployment to Cloud Foundry
+const retryPush = (properties, cb) => {
+  let retryAttempts = 0;
+
+  const retryCb = (error) => {
+    retryAttempts++;
+    if (error && retryAttempts < properties.retries) {
+      push(properties, retryCb);
+      return;
+    }
+
+    cb(error);
+  };
+
+  push(properties, retryCb);
+};
+
 const runCLI = () => {
   commander
-  // Accept root directory of local dependencies as a parameter, default
-  // to the Abacus root directory
     .option('-n, --name <name>', 'app name',
       require(path.join(process.cwd(), 'package.json')).name)
-    .option('-i, --instances <nb>', 'nb of instances')
-    .option('-c, --conf <value>',
-      'configuration name', process.env.CONF)
-    .option('-b, --buildpack <value>',
-      'buildpack name or location', process.env.BUILDPACK)
-    .option('-x, --prefix <value>',
-      'host prefix (like \"dev\", \"prod\")', process.env.ABACUS_PREFIX)
-    .option('-s, --start',
-      'start an app after pushing')
+    .option('-i, --instances <nb>', 'number of instances')
+    .option('-c, --conf <value>', 'configuration name', process.env.CONF)
+    .option('-b, --buildpack <value>', 'buildpack name or location',
+      process.env.BUILDPACK)
+    .option('-x, --prefix <value>', 'host prefix', process.env.ABACUS_PREFIX)
+    .option('-s, --start', 'starts an app after pushing')
+    .option('-r, --retries <value>', 'number of retries if app push fails',
+      process.env.PUSH_RETRIES)
     .parse(process.argv);
 
+  const commanderProps = {
+    name: commander.name,
+    instances: commander.instances,
+    conf: commander.conf,
+    buildpack: commander.buildpack,
+    prefix: commander.prefix,
+    retries: commander.retries
+  };
 
   async.series([
-    (callback) => mkdirs(callback),
-    (callback) => remanifest(commander.name, commander.instances,
-      commander.conf, commander.buildpack, commander.prefix, callback),
-    (callback) => push(commander.name, commander.start, callback)
+    (callback) => createCfPushDir(callback),
+    (callback) => remanifest(commanderProps, callback),
+    (callback) => retryPush(commanderProps, callback)
   ], (error, results) => {
     if (error) {
       console.log('Couldn\'t push app %s -', commander.name, error);
