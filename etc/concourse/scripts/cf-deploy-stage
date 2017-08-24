@@ -24,6 +24,7 @@ pushd built-project
   accumulatorApps=$(node_modules/abacus-etc/apprc lib/aggregation/accumulator/.apprc $ABACUS_PROFILE APPS)
   aggregatorApps=$(node_modules/abacus-etc/apprc lib/aggregation/aggregator/.apprc $ABACUS_PROFILE APPS)
   reportingApps=$(node_modules/abacus-etc/apprc lib/aggregation/reporting/.apprc $ABACUS_PROFILE APPS)
+  appBridgeApps=$(node_modules/abacus-etc/apprc lib/cf/applications/.apprc $ABACUS_PROFILE APPS)
 
   echo "Mapping routes ..."
   mapRoutes ${ABACUS_PREFIX}abacus-usage-collector $collectorApps $CF_DOMAIN
@@ -35,6 +36,7 @@ pushd built-project
   deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-accumulator $accumulatorApps
   deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-aggregator $aggregatorApps
   deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-reporting $reportingApps
+  deleteObsoleteApps ${ABACUS_PREFIX}abacus-cf-bridge $appBridgeApps
 popd
 
 if [ "$BIND_DB_SERVICE" == "true" ]; then
