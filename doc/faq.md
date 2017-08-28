@@ -23,17 +23,19 @@ On a final note, usage measures and metrics can be expressed as simple numbers (
   
 ### How to get Usage Data from CF?
 
-We are currently building a prototype for reporting Cloud Foundry app runtime usage data to Abacus. You can have a look at the CF bridge [source](../lib/cf/bridge).
+We have a prototype for reporting Cloud Foundry app and service runtime usage data to Abacus. You can have a look at the CF application bridge [source](../lib/cf/applications) and CF services bridge [source](../lib/cf/services).
 
-What we currently do is to:
+What we currently do for applications is to:
 - obtain an oauth token from CF
 - list app usage events
 - report linux-container metrics   
 
-For now we basically report the memory used.
+For services we do:
+- obtain an oauth token from CF
+- list service usage events
+- report linux-container metrics   
 
-The same approach can be applied to service usage events. However we're not aware of any useful metrics (besides the number of instances) present in the service usage events. This is due to the fact that CF does not know what the service actually does.  Instead the service providers can report the metrics they want to charge for to Abacus. This can happen in the service broker itself or in dedicated bridge that fetches the metrics from the broker and reports the usage to Abacus.
-
+For now we basically report the memory used and the number of service instances.
 
 ### Is there an API to cancel or correct entries?
 

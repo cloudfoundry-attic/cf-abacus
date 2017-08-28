@@ -1,4 +1,4 @@
 abacus-cf-purge-itest
 ===
 
-`cf-bridge` purge integration tests.
+`cf-applications` and `cf-services` purge integration tests.

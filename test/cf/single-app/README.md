@@ -1,4 +1,4 @@
 abacus-cf-single-app-itest
 ===
 
-`cf-bridge` and `cf-renewer` single application integration tests.
+`cf-applications` and `cf-renewer` single application integration tests.

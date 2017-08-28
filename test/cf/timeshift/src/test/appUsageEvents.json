@@ -3614,7 +3614,7 @@
         "instance_count": 1,
         "previous_instance_count": 1,
         "app_guid": "e6b62b8c-bd67-4af7-9c4b-a5e54bf314ab",
-        "app_name": "abacus-cf-bridge",
+        "app_name": "abacus-cf-applications",
         "space_guid": "f057fe03-0713-4896-94c7-24b71c6882c2",
         "space_name": "abacus",
         "org_guid": "640257fa-d7aa-4aa4-9a77-08ec60aae4f5",
@@ -3623,7 +3623,7 @@
         "package_state": "PENDING",
         "previous_package_state": "UNKNOWN",
         "parent_app_guid": "e6b62b8c-bd67-4af7-9c4b-a5e54bf314ab",
-        "parent_app_name": "abacus-cf-bridge",
+        "parent_app_name": "abacus-cf-applications",
         "process_type": "web",
         "task_name": null,
         "task_guid": null
@@ -3652,7 +3652,7 @@
         "package_state": "READY",
         "previous_package_state": "READY",
         "parent_app_guid": "e6b62b8c-bd67-4af7-9c4b-a5e54bf314ab",
-        "parent_app_name": "abacus-cf-bridge",
+        "parent_app_name": "abacus-cf-applications",
         "process_type": null,
         "task_name": null,
         "task_guid": null
@@ -3971,7 +3971,7 @@
         "package_state": "READY",
         "previous_package_state": "READY",
         "parent_app_guid": "e6b62b8c-bd67-4af7-9c4b-a5e54bf314ab",
-        "parent_app_name": "abacus-cf-bridge",
+        "parent_app_name": "abacus-cf-applications",
         "process_type": null,
         "task_name": null,
         "task_guid": null
@@ -3991,7 +3991,7 @@
         "instance_count": 1,
         "previous_instance_count": 1,
         "app_guid": "e6b62b8c-bd67-4af7-9c4b-a5e54bf314ab",
-        "app_name": "abacus-cf-bridge",
+        "app_name": "abacus-cf-applications",
         "space_guid": "f057fe03-0713-4896-94c7-24b71c6882c2",
         "space_name": "abacus",
         "org_guid": "640257fa-d7aa-4aa4-9a77-08ec60aae4f5",
@@ -4000,7 +4000,7 @@
         "package_state": "STAGED",
         "previous_package_state": "UNKNOWN",
         "parent_app_guid": "e6b62b8c-bd67-4af7-9c4b-a5e54bf314ab",
-        "parent_app_name": "abacus-cf-bridge",
+        "parent_app_name": "abacus-cf-applications",
         "process_type": "web",
         "task_name": null,
         "task_guid": null

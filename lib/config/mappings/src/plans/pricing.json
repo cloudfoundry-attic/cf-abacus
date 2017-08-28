@@ -7,6 +7,9 @@
     "basic": "linux-pricing-basic",
     "standard": "linux-pricing-standard"
   },
+  "service": {
+    "standard": "service-pricing-standard"
+  },
   "object-storage": {
     "basic": "object-pricing-basic",
     "standard": "object-pricing-standard"

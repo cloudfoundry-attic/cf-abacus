@@ -1,3 +1,4 @@
+
 {
   "analytics": {
     "basic": "basic-analytics",
@@ -14,6 +15,8 @@
   "test-resource": {
     "basic": "test-metering-plan",
     "standard": "test-metering-plan"
+  },
+  "service": {
+    "standard": "standard-service"
   }
 }
-

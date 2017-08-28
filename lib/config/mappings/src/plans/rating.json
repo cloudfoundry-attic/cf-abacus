@@ -7,6 +7,9 @@
     "basic": "linux-rating-plan",
     "standard": "linux-rating-plan"
   },
+  "service": {
+    "standard": "service-rating-standard"
+  },
   "object-storage": {
     "basic": "object-rating-plan",
     "standard": "object-rating-plan"

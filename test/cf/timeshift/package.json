@@ -31,7 +31,7 @@
     "abacus-account-plugin": "file:../../../lib/plugins/account",
     "abacus-batch": "file:../../../lib/utils/batch",
     "abacus-breaker": "file:../../../lib/utils/breaker",
-    "abacus-cf-bridge": "file:../../../lib/cf/bridge",
+    "abacus-cf-applications": "file:../../../lib/cf/applications",
     "abacus-cf-renewer": "file:../../../lib/cf/renewer",
     "abacus-client": "file:../../../lib/utils/client",
     "abacus-cluster": "file:../../../lib/utils/cluster",

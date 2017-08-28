@@ -75,8 +75,8 @@
     },
     "abacus-cf-bridge": {
       "version": "0.0.6-dev.9",
-      "from": "lib/cf/bridge",
-      "resolved": "file:lib/cf/bridge"
+      "from": "lib/cf/applications",
+      "resolved": "file:lib/cf/applications"
     },
     "abacus-cf-multiple-apps-itest": {
       "version": "0.0.6-dev.9",

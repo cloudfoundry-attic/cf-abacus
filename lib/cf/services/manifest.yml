@@ -1,0 +1,32 @@
+applications:
+- name: abacus-cf-services
+  host: abacus-cf-services
+  path: .cfpack/app.zip
+  instances: 1
+  memory: 512M
+  disk_quota: 512M
+  env:
+    CONF: default
+    DEBUG: e-abacus-*
+    COLLECTOR: abacus-usage-collector
+    EUREKA: abacus-eureka-plugin
+    API: api
+    DB: abacus-pouchserver
+    DBCLIENT: abacus-couchclient
+    CF_CLIENT_ID: abacus-cf-services
+    CF_CLIENT_SECRET: secret
+    NODE_MODULES_CACHE: false
+    SECURED: false
+    AUTH_SERVER: api
+    CLIENT_ID: abacus-services-bridge
+    CLIENT_SECRET: secret
+    JWTKEY: |+
+      -----BEGIN PUBLIC KEY-----
+      ... <UAA public key in PEM format> ...
+      -----END PUBLIC KEY-----
+    JWTALGO: RS256
+    SERVICES: '{
+      "service": {
+        "plans": ["standard"]
+      }
+    }'

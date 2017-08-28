@@ -16,8 +16,9 @@ These port numbers are used when running Abacus in a local dev environment.
 | 9200 | abacus-usage-accumulator   |
 | 9300 | abacus-usage-aggregator    |
 |      |                            |
-| 9500 | abacus-cf-bridge           |
+| 9500 | abacus-cf-applications     |
 | 9501 | abacus-cf-renewer          |
+| 9502 | abacus-cf-services         |
 |      |                            |
 | 9880 | abacus-provisioning-plugin |
 | 9881 | abacus-account-plugin      |
