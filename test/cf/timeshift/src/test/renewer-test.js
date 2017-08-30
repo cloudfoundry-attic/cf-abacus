@@ -186,9 +186,9 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
   };
 
   const buildAppUsageEvents = () => {
+    debug('Building app usage events');
     deleteAllAbacusModules();
 
-    // Load moment with offset
     moment = require('abacus-moment');
     debug('Time now is %s', moment.utc().format());
 
@@ -229,7 +229,7 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
       npm.modules.reporting
     ], () => {
       debug('Waiting for collector ...');
-      request.waitFor('http://localhost:9080/batch', {}, 
+      request.waitFor('http://localhost:9080/batch', {},
         startTimeout, (err) => {
           if (err)
             done(err);
@@ -274,6 +274,8 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
   };
 
   const checkReport = (checkFn, cb) => {
+    debug('Requesting org usage for org_guid, %s', testDataOrgGuid);
+
     request.get('http://localhost:9088/v1/metering/organizations' +
       '/:organization_id/aggregated/usage', {
         organization_id: testDataOrgGuid,
@@ -440,10 +442,11 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
         this.timeout(totalTimeout + 2000);
 
         let startWaitTime = moment.now();
-        const renewerOptions = pollOptions(
-          'renewer', 9501,
-          checkThisMonth,
+        const renewerOptions = pollOptions('renewer', 9501, checkThisMonth,
           totalTimeout - (moment.now() - startWaitTime));
+
+        debug('Renewer options %j', renewerOptions);
+
         client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
           checkReport, renewerOptions, done);
       });

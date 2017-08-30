@@ -7,7 +7,7 @@ env:
   global:
     - CF_TEST="false"
     - START_TIMEOUT=20000
-    - TOTAL_TIMEOUT=120000
+    - TOTAL_TIMEOUT=240000
 
 jobs:
   include:
@@ -35,7 +35,7 @@ jobs:
     - &integration-tests
       stage: integration tests
       before_script: npm run provision
-      script: travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+      script: travis_retry travis_wait 15 npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
       env:
         - DESCRIPTION="pouchdb"
         - CI_TEST=itest
