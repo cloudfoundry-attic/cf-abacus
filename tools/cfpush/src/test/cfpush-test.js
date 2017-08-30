@@ -8,6 +8,7 @@ const cp = require('child_process');
 const fs = require('fs-extra');
 const tmp = require('tmp');
 const commander = require('commander');
+const async = require('async');
 const remanifester = require('../lib/remanifester.js');
 
 const preparedManifest = 'manifest';
@@ -106,6 +107,45 @@ stubFileSystem();
 stubTmp(tmpDir);
 stubCommander();
 stubRemanifester();
+
+describe('Test command line args', () => {
+  const defaultRetriesAttempts = 1;
+
+  before(() => {
+    stub(async, 'series');
+    process.env.CONF = 'conf';
+    process.env.BUILDPACK = 'buildpack';
+    process.env.ABACUS_PREFIX = 'prefix';
+    cfpush.runCLI();
+  });
+
+  it('verify all arguments parsed', () => {
+    const commandLineArgsCount = 7;
+    assert.callCount(commander.option, commandLineArgsCount);
+    assert.calledOnce(commander.parse);
+  });
+
+  it('verify optional arguments', () => {
+    assert.calledWith(commander.option, '-c, --conf [value]',
+      sinon.match.any, process.env.CONF);
+    assert.calledWith(commander.option, '-b, --buildpack [value]',
+      sinon.match.any, process.env.BUILDPACK);
+    assert.calledWith(commander.option, '-x, --prefix [value]',
+      sinon.match.any, process.env.ABACUS_PREFIX);
+    assert.calledWith(commander.option, '-s, --start');
+    assert.calledWith(commander.option, '-r, --retries [value]',
+      sinon.match.any, defaultRetriesAttempts);
+  });
+
+  it('verify mandatory arguments', () => {
+    assert.calledWith(commander.option, '-n, --name <name>');
+    assert.calledWith(commander.option, '-i, --instances <nb>');
+  });
+
+  after(()=>{
+    async.series.restore();
+  });
+});
 
 describe('Test abacus cfpush', () => {
   const manifestPath = `.cfpush/${adjustedName}-manifest.yml`;
