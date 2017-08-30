@@ -49,7 +49,7 @@ commander
 const startTimeout = commander.startTimeout || 100000;
 
 // This test timeout
-const totalTimeout = commander.totalTimeout || 200000;
+const totalTimeout = commander.totalTimeout || 300000;
 
 // Token setup
 const tokenSecret = 'secret';
@@ -936,7 +936,7 @@ describe('abacus-cf multiple-apps-test with oAuth', () => {
               return;
             }
             npm.startModules([npm.modules.renewer]);
-       
+
             const renewerOptions = pollOptions(
               'renewer', 9501,
               checkThisMonth,
