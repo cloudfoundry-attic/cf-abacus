@@ -450,6 +450,7 @@ describe('abacus-cf multiple-services-test with oAuth', () => {
           'services', 9502,
           checkLastMonth
         );
+
         client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
           checkReport, bridgeOptions, (error) => {
             if (error) {
