@@ -167,6 +167,16 @@ const test = (secured) => {
         resources: serviceUsageEvents
       });
     });
+    routes.get('/v2/services', (request, response) => {
+      response.status(200).send({
+        entity: {
+          label: 'service'
+        },
+        metadata: {
+          guid: 'bc3690b2-cc50-4475-b2cf-44d68c51f9d3'
+        }
+      });
+    });
     routes.get('/v2/info', (request, response) => {
       oAuthDebug('Requested API info');
       response.status(200).send({
@@ -211,7 +221,6 @@ const test = (secured) => {
     process.env.JWTALGO = tokenAlgorithm;
     process.env.SERVICES = `{
       "service": {
-        "guid": "bc3690b2-cc50-4475-b2cf-44d68c51f9d3",
         "plans": ["standard"]
       }
     }`;
@@ -279,8 +288,8 @@ const test = (secured) => {
 
   const checkReport = (checkFn, cb) => {
     request.get('http://localhost:9088/v1/metering/organizations' +
-      '/:organization_id/aggregated/usage', {
-      organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+    '/:organization_id/aggregated/usage', {
+      organization_id: orgGuid,
       headers: {
         authorization: 'bearer ' + signedSystemToken
       }
@@ -362,10 +371,10 @@ const test = (secured) => {
 
       const startTestTime = moment.now();
       const bridgeOptions = pollOptions(
-        'services', 9502,
+        'stats', 9502,
         checkCurrentMonthWindow
       );
-      client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+      client.waitForStartAndPoll('http://localhost::p/v1/:component',
         checkReport, bridgeOptions, (error) => {
           if (error) {
             done(error);
@@ -427,10 +436,10 @@ const test = (secured) => {
 
       const startTestTime = moment.now();
       const bridgeOptions = pollOptions(
-        'services', 9502,
+        'stats', 9502,
         () => {}
       );
-      client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+      client.waitForStartAndPoll('http://localhost::p/v1/:component',
         checkReport, bridgeOptions, (error) => {
           if (error) {
             done(error);

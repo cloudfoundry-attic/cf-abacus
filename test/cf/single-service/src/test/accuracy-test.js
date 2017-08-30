@@ -167,6 +167,16 @@ describe('abacus-cf-single-service-accuracy-itest', () => {
         resources: serviceUsageEvents
       });
     });
+    routes.get('/v2/services', (request, response) => {
+      response.status(200).send({
+        entity: {
+          label: 'service'
+        },
+        metadata: {
+          guid: 'bc3690b2-cc50-4475-b2cf-44d68c51f9d3'
+        }
+      });
+    });
     routes.get('/v2/info', (request, response) => {
       oAuthDebug('Requested API info');
       response.status(200).send({
@@ -206,7 +216,6 @@ describe('abacus-cf-single-service-accuracy-itest', () => {
     process.env.JWTALGO = tokenAlgorithm;
     process.env.SERVICES = `{
       "service": {
-        "guid": "bc3690b2-cc50-4475-b2cf-44d68c51f9d3",
         "plans": ["standard"]
       }
     }`;
@@ -320,7 +329,7 @@ describe('abacus-cf-single-service-accuracy-itest', () => {
     }
   ];
 
-  context('with an service started 1 hour before', () => {
+  context('with a service started 1 hour before', () => {
 
     beforeEach(() => {
       serviceUsageEvents = generatePastAppUsage(1, 'hour');
@@ -329,14 +338,14 @@ describe('abacus-cf-single-service-accuracy-itest', () => {
     });
 
     it('submits usage and gets expected report back', (done) => {
-      const bridgeOptions = pollOptions('services', 9502);
-      client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+      const bridgeOptions = pollOptions('stats', 9502);
+      client.waitForStartAndPoll('http://localhost::p/v1/:component',
         checkReport, bridgeOptions, done);
     }).timeout(totalTimeout);;
 
   });
 
-  context('with an service started 2 hours before', () => {
+  context('with a service started 2 hours before', () => {
 
     beforeEach(() => {
       serviceUsageEvents = generatePastAppUsage(2, 'hours');
@@ -345,8 +354,8 @@ describe('abacus-cf-single-service-accuracy-itest', () => {
     });
 
     it('submits usage and gets expected report back', (done) => {
-      const bridgeOptions = pollOptions('services', 9502);
-      client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+      const bridgeOptions = pollOptions('stats', 9502);
+      client.waitForStartAndPoll('http://localhost::p/v1/:component',
         checkReport, bridgeOptions, done);
     }).timeout(totalTimeout);
   });

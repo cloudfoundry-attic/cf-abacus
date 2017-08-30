@@ -360,10 +360,10 @@ const test = (secured) => {
 
       const startTestTime = moment.now();
       const bridgeOptions = pollOptions(
-        'applications', 9500,
+        'stats', 9500,
         checkCurrentMonthWindow
       );
-      client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+      client.waitForStartAndPoll('http://localhost::p/v1/:component',
         checkReport, bridgeOptions, (error) => {
           if (error) {
             done(error);
@@ -432,10 +432,10 @@ const test = (secured) => {
 
       const startTestTime = moment.now();
       const bridgeOptions = pollOptions(
-        'applications', 9500,
+        'stats', 9500,
         () => {}
       );
-      client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+      client.waitForStartAndPoll('http://localhost::p/v1/:component',
         checkReport, bridgeOptions, (error) => {
           if (error) {
             done(error);
