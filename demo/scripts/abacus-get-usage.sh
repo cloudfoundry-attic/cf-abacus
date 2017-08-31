@@ -14,6 +14,11 @@ if [ -z "$CLIENT_ID" ] || [ -z "$CLIENT_SECRET" ]; then
   exit 1
 fi
 
+if [ -z "$DOMAIN" ]; then
+  echo "Missing DOMAIN !"
+  exit 1
+fi
+
 if [ -z "$1" ]; then
   echo "No organization id specified !"
   show_help
@@ -22,25 +27,21 @@ fi
 ORG_GUID=$1
 
 AUTH_SERVER="https://uaa.cf.$DOMAIN"
-SCOPE="abacus.usage.read"
 
-if [ "$CLIENT_ID" != "abacus" ] && [ -n "$RESOURCE_ID" ]; then
+if [ "$CLIENT_ID" == "abacus" ]; then
+  SCOPE="abacus.usage.read"
+  echo "Using Abacus system client to get complete org report"
+else
+  if [ -z "$RESOURCE_ID" ]; then
+    echo "Missing RESOURCE_ID !"
+    exit 1
+  fi
   SCOPE="abacus.usage.$RESOURCE_ID.read"
-else 
-  echo "Missing RESOURCE_ID !"
-  exit 1
 fi
 
 echo "Getting token for $CLIENT_ID from $AUTH_SERVER ..."
 AUTH_RESPONSE=$(curl -k --user "$CLIENT_ID":"$CLIENT_SECRET" -s "$AUTH_SERVER/oauth/token?grant_type=client_credentials&scope=$SCOPE") 
 TOKEN=$(echo "$AUTH_RESPONSE" | jq -r .access_token)
-if [ "$TOKEN" == "null" ] || [ -z "$TOKEN" ]; then
-  echo ""
-  echo "No token found ! Output: $AUTH_RESPONSE" 
-  echo "Are your credentials correct (CLIENT_ID, CLIENT_SECRET and RESOURCE_ID)?"
-  exit 1
-fi
-echo "Obtained token $TOKEN"
 echo ""
 
 URL="https://abacus-usage-reporting.cf.$DOMAIN/v1/metering/organizations/${ORG_GUID}/aggregated/usage"
