@@ -20,10 +20,10 @@ for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $C
   APPS=$(( $(node_modules/abacus-etc/apprc $MODULE/.apprc $CONF APPS) - 1 ))
   (cd $MODULE && npm run cfpack)
   if [ "$APPS" == "0" ]; then
-    COMMANDS+=("(cd $MODULE && npm run cfpush -- -n $APPNAME -i $INSTANCES -c $CONF -s)")
+    COMMANDS+=("(cd $MODULE && npm run cfpush -- -n $APPNAME -i $INSTANCES -c $CONF -s -r $PUSH_RETRIES)")
   else
     for I in $(seq 0 $APPS); do
-      COMMANDS+=("(cd $MODULE && npm run cfpush -- -n $APPNAME-$I -i $INSTANCES -c $CONF -s)")
+      COMMANDS+=("(cd $MODULE && npm run cfpush -- -n $APPNAME-$I -i $INSTANCES -c $CONF -s -r $PUSH_RETRIES)")
     done
   fi
 done

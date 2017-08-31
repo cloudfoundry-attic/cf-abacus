@@ -16,6 +16,7 @@ const remanifester = require('./lib/remanifester.js');
 tmp.setGracefulCleanup();
 
 const originalManifestFilename = 'manifest.yml';
+const defaultPushRetries = 1;
 
 const createCfPushDir = (cb) => {
   fs.mkdir('.cfpush', (err) => {
@@ -102,13 +103,13 @@ const runCLI = () => {
     .option('-n, --name <name>', 'app name',
       require(path.join(process.cwd(), 'package.json')).name)
     .option('-i, --instances <nb>', 'number of instances')
-    .option('-c, --conf <value>', 'configuration name', process.env.CONF)
-    .option('-b, --buildpack <value>', 'buildpack name or location',
+    .option('-c, --conf [value]', 'configuration name', process.env.CONF)
+    .option('-b, --buildpack [value]', 'buildpack name or location',
       process.env.BUILDPACK)
-    .option('-x, --prefix <value>', 'host prefix', process.env.ABACUS_PREFIX)
+    .option('-x, --prefix [value]', 'host prefix', process.env.ABACUS_PREFIX)
     .option('-s, --start', 'starts an app after pushing')
-    .option('-r, --retries <value>', 'number of retries if app push fails',
-      process.env.PUSH_RETRIES)
+    .option('-r, --retries [value]', 'number of retries if app push fails',
+      defaultPushRetries)
     .parse(process.argv);
 
   const commanderProps = {
