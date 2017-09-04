@@ -190,7 +190,6 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
 
   const buildAppUsageEvents = () => {
     debug('Building app usage events');
-    // deleteAllAbacusModules();
 
     moment = require('abacus-moment');
     debug('Time now is %s', moment.utc().format());
@@ -473,7 +472,7 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
 
   });
 
-  context('abaout two months', () => {
+  context.skip('abaout two months', () => {
 
     after(function(done) {
       cleanup(done);
@@ -523,7 +522,7 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
 
   });
 
-  context('after 3 months', function() {
+  context.skip('after 3 months', function() {
 
     beforeEach(function(done) {
       setupAbacus();
