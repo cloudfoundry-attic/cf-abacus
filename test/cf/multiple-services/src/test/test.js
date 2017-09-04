@@ -127,7 +127,7 @@ const lastMonthInMilliseconds = moment.utc().subtract(1, 'months').valueOf();
 
 const organizationId = 'e8139b76-e829-4af3-b332-87316b1c0a6c';
 
-describe('abacus-cf multiple-services-test with oAuth', () => {
+describe.skip('abacus-cf multiple-services-test with oAuth', () => {
   let server;
   let serverPort;
   let serviceUsageEvents;

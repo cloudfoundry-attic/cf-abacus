@@ -358,6 +358,6 @@ const test = (secured) => {
   });
 };
 
-describe('abacus-cf-services purge-test without oAuth', () => test(false));
+describe.skip('abacus-cf-services purge-test without oAuth', () => test(false));
 
-describe('abacus-cf-services purge-test with oAuth', () => test(true));
+describe.skip('abacus-cf-services purge-test with oAuth', () => test(true));

@@ -133,7 +133,7 @@ const pollOptions = (component, port, checkFn, timeout = totalTimeout) => ({
   totalTimeout: timeout
 });
 
-describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
+describe.skip('abacus-cf-single-app-renewer-itest without oAuth', () => {
   let server;
   let serverPort;
 
