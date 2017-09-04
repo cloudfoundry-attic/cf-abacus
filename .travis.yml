@@ -35,7 +35,7 @@ jobs:
     - &integration-tests
       stage: integration tests
       before_script: npm run provision
-      script: travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+      script: travis_wait travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
       env:
         - DESCRIPTION="pouchdb"
         - CI_TEST=itest
