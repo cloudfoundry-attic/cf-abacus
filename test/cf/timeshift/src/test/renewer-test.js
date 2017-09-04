@@ -472,7 +472,7 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
 
   });
 
-  context.skip('abaout two months', () => {
+  context('abaout two months', () => {
 
     after(function(done) {
       cleanup(done);
@@ -522,7 +522,7 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
 
   });
 
-  context.skip('after 3 months', function() {
+  context('after 3 months', function() {
 
     beforeEach(function(done) {
       setupAbacus();
