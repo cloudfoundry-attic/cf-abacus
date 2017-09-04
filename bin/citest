@@ -8,7 +8,7 @@ case "$CI_TEST" in
     # integration test matrix, we would need 2197 (= 13 * 13 * 13)
     # usage submissions to get above 90 percent regression coverage
 
-    ps aux && df -h && npm run itest -- -o 4 -i 4 -u 4 $@
+    npm run itest -- -o 4 -i 4 -u 4 $@
     ;;
 
   extended)
