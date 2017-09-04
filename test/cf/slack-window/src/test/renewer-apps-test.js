@@ -394,4 +394,4 @@ const test = (secured) => {
   });
 };
 
-describe('abacus-cf-renewer apps-slack-test with oAuth',() => test(true));
+describe.skip('abacus-cf-renewer apps-slack-test with oAuth',() => test(true));

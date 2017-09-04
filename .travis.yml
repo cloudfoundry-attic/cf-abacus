@@ -34,8 +34,8 @@ jobs:
         - mongodb
     - &integration-tests
       stage: integration tests
-      before_script: npm run provision
-      script: ps aux && travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+      before_script: npm run provision && ps aux && df -h
+      script: travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
       after_script: ps aux
       env:
         - DESCRIPTION="pouchdb"

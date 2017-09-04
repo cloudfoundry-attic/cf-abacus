@@ -22,7 +22,7 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "itest": "ps aux && df -h && mocha --command && ps aux && df -h",
+    "itest": "ps aux && df -h && mocha --command",
     "test": "eslint",
     "lint": "eslint",
     "pub": "publish"
