@@ -7,7 +7,7 @@ env:
   global:
     - CF_TEST="false"
     - START_TIMEOUT=20000
-    - TOTAL_TIMEOUT=240000
+    - TOTAL_TIMEOUT=300000
 
 jobs:
   include:
