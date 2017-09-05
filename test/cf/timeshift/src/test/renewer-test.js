@@ -149,8 +149,7 @@ const timeWindows = {
   'month'  : 4
 };
 
-// const runWithPersistentDB = process.env.DB ? describe : describe.skip;
-const runWithPersistentDB = describe.skip;
+const runWithPersistentDB = process.env.DB ? describe : describe.skip;
 
 runWithPersistentDB('abacus-cf-renewer time shift', () => {
   // mocked responses
