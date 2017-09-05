@@ -80,7 +80,6 @@ const resourceToken = {
   },
   signature: 'irxoV230hkDJenXoTSHQFfqzoUl353lS2URo1fJm21Y'
 };
-
 const systemToken = {
   header: {
     alg: tokenAlgorithm
@@ -112,11 +111,9 @@ const systemToken = {
   },
   signature: 'OVNTKTvu-yHI6QXmYxtPeJZofNddX36Mx1q4PDWuYQE'
 };
-
 const signedResourceToken = jwt.sign(resourceToken.payload, tokenSecret, {
   expiresIn: 43200
 });
-
 const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
   expiresIn: 43200
 });
@@ -189,8 +186,9 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
   };
 
   const buildAppUsageEvents = () => {
-    debug('Building app usage events');
+    deleteAllAbacusModules();
 
+    // Load moment with offset
     moment = require('abacus-moment');
     debug('Time now is %s', moment.utc().format());
 
@@ -220,7 +218,6 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
   };
 
   const startAbacus = (done) => {
-    debug('Starting abacus modules...');
     npm.startModules([
       npm.modules.eurekaPlugin,
       npm.modules.provisioningPlugin,
@@ -232,8 +229,8 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
       npm.modules.reporting
     ], () => {
       debug('Waiting for collector ...');
-      request.waitFor('http://localhost:9080/batch', {}, startTimeout,
-        (err) => {
+      request.waitFor('http://localhost:9080/batch', {},
+        startTimeout, (err) => {
           if (err)
             done(err);
 
@@ -277,8 +274,6 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
   };
 
   const checkReport = (checkFn, cb) => {
-    debug('Requesting org usage for org_guid, %s', testDataOrgGuid);
-
     request.get('http://localhost:9088/v1/metering/organizations' +
       '/:organization_id/aggregated/usage', {
         organization_id: testDataOrgGuid,
@@ -327,12 +322,12 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
     totalTimeout: timeout
   });
 
-  before(function(done) {
+  before((done) => {
     const dbclient = require('abacus-dbclient');
     dbclient.drop(process.env.DB, /^abacus-/, done);
   });
 
-  const setupAbacus = () => {
+  beforeEach(() => {
     deleteAllAbacusModules();
 
     express = require('abacus-express');
@@ -341,7 +336,6 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
 
     const app = express();
     const routes = router();
-
     routes.get('/v2/app_usage_events', (request, response) => {
       if (noUsage || request.query.after_guid === lastEventGuid) {
         debug('Returning empty list of usage events');
@@ -357,14 +351,12 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
 
       response.status(200).send(appUsageEvents);
     });
-
     routes.get('/v2/info', (request, response) => {
       oAuthDebug('Requested API info');
       response.status(200).send({
         token_endpoint: 'http://localhost:' + serverPort
       });
     });
-
     routes.post('/oauth/token', (request, response) => {
       oAuthDebug('Requested oAuth token with %j', request.query);
       const scope = request.query.scope;
@@ -378,7 +370,6 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
         jti: '254abca5-1c25-40c5-99d7-2cc641791517'
       });
     });
-
     app.use(routes);
     app.use(router.batch(routes));
     server = app.listen(0);
@@ -403,9 +394,9 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
 
     // Disable wait for correct app-event ordering
     process.env.GUID_MIN_AGE = twentySecondsInMilliseconds;
-  };
+  });
 
-  const cleanup = (done) => {
+  afterEach((done) => {
     delete process.env.ABACUS_TIME_OFFSET;
     delete process.env.API;
     delete process.env.AUTH_SERVER;
@@ -421,137 +412,147 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
 
     if (server)
       server.close();
-
     npm.stopAllStarted(done);
-  };
-
-  const setTimeOffset = (startTime) => {
-    const offset = moment.utc(startTime).
-    add(2, 'days').add(3, 'hours').diff(moment.now());
-    process.env.ABACUS_TIME_OFFSET = offset;
-
-    debug('Time offset set to %d (%s)',
-      offset, moment.duration(offset).humanize());
-  };
-
-  const runIt = (chechFn, done) => {
-    const startWaitTime = moment.now();
-
-    const renewerOptions = pollOptions('renewer', 9501, chechFn,
-      totalTimeout - (moment.now() - startWaitTime));
-
-    client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
-      checkReport, renewerOptions, done);
-  };
-
-  context.skip('next month at the start', () => {
-
-    beforeEach(function(done) {
-      setupAbacus();
-        // 1 space with:
-        // 37 apps consuming 512 MB
-        // 1 app using 4 GB
-        // total: 22.5 GB
-      numberOfSpaces = 1;
-      expectedConsuming = 22.5;
-      setTimeOffset(startOfNextMonth);
-
-      deleteAllAbacusModules();
-      buildAppUsageEvents();
-      startAbacus(done);
-    });
-
-    it('submits usage and gets expected report back', function(done) {
-      this.timeout(totalTimeout + 2000);
-      runIt(checkThisMonth, done);
-    });
-
-    afterEach(function(done) {
-      cleanup(done);
-    });
-
   });
 
-  context.skip('abaout two months', () => {
+  context('next month', () => {
 
-    after(function(done) {
-      cleanup(done);
-    });
+    context('at the start', () => {
+      beforeEach((done) => {
+        // 1 space with:
+        //   37 apps consuming 512 MB
+        //   1 app using 4 GB
+        // total: 22.5 GB
+        numberOfSpaces = 1;
+        expectedConsuming = 22.5;
 
-    before(function(done) {
-      setupAbacus();
-      // 2 spaces with:
-      // 37 apps consuming 512 MB
-      // 1 app using 4 GB
-      // total: 2 x 22.5 = 45 GB
-      numberOfSpaces = 2;
-      expectedConsuming = 45;
-      // Shift time 2 months, 2 days and 3 hours
-      setTimeOffset(afterTwoMonths);
+        const offset = moment.utc(startOfNextMonth).
+          add(2, 'days').add(3, 'hours').diff(moment.now());
+        process.env.ABACUS_TIME_OFFSET = offset;
+        debug('Time offset set to %d (%s)',
+          offset, moment.duration(offset).humanize());
 
-      deleteAllAbacusModules();
-      startAbacus(done);
-    });
-
-    context('next month inside slack window', () => {
-
-      beforeEach(function() {
         buildAppUsageEvents();
+        startAbacus(done);
       });
 
       it('submits usage and gets expected report back', function(done) {
         this.timeout(totalTimeout + 2000);
-        runIt(checkThisMonth, done);
-      });
 
+        let startWaitTime = moment.now();
+        const renewerOptions = pollOptions(
+          'renewer', 9501,
+          checkThisMonth,
+          totalTimeout - (moment.now() - startWaitTime));
+        client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+          checkReport, renewerOptions, done);
+      });
     });
 
-    context('after 2 months', () => {
+    context('inside slack window', () => {
+      beforeEach((done) => {
+        // 2 spaces with:
+        //   37 apps consuming 512 MB
+        //   1 app using 4 GB
+        // total: 2 x 22.5 = 45 GB
+        numberOfSpaces = 2;
+        expectedConsuming = 45;
 
-      beforeEach(function() {
-        // no new usage this month
-        noUsage = true;
+        const offset = moment.utc(afterTwoMonths).
+          add(2, 'days').add(3, 'hours').diff(moment.now());
+        process.env.ABACUS_TIME_OFFSET = offset;
+        debug('Time offset set to %d (%s)',
+          offset, moment.duration(offset).humanize());
+
         buildAppUsageEvents();
+        startAbacus(done);
       });
 
-      it('transfers the usage and gets expected report back', function(done) {
+      it('submits usage and gets expected report back', function(done) {
         this.timeout(totalTimeout + 2000);
-        runIt(checkThisAndPreviousMonths, done);
+
+        let startWaitTime = moment.now();
+        const renewerOptions = pollOptions(
+          'renewer', 9501,
+          checkThisMonth,
+          totalTimeout - (moment.now() - startWaitTime));
+        client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+          checkReport, renewerOptions, done);
       });
     });
 
   });
 
-  context('after 3 months', function() {
+  context('after 2 months', () => {
 
-    beforeEach(function(done) {
-      setupAbacus();
+    beforeEach((done) => {
       // no new usage this month
-      // from previous months we have 2 spaces with:
-      // 37 apps consuming 512 MB
-      // 1 app using 4 GB
+      // from previous month we have 2 spaces with:
+      //   37 apps consuming 512 MB
+      //   1 app using 4 GB
       // total: 2 x 22.5 = 45 GB
       noUsage = true;
       numberOfSpaces = 2;
       expectedConsuming = 45;
 
-      // Shift time 3 months, 2 days and 3 hours
-      setTimeOffset(afterThreeMonths);
+      // Shift time 2 months, 2 days and 3 hours
+      const offset = moment.utc(afterTwoMonths).add(2, 'days').add(3, 'hours').
+        diff(moment.now());
+      process.env.ABACUS_TIME_OFFSET = offset;
+      debug('Time offset set to %d (%s)',
+        offset, moment.duration(offset).humanize());
 
-      deleteAllAbacusModules();
       buildAppUsageEvents();
       startAbacus(done);
     });
 
     it('transfers the usage and gets expected report back', function(done) {
       this.timeout(totalTimeout + 2000);
-      runIt(checkThisAndPreviousMonths, done);
+
+      let startWaitTime = moment.now();
+      const renewerOptions = pollOptions(
+        'renewer', 9501,
+        checkThisAndPreviousMonths,
+        totalTimeout - (moment.now() - startWaitTime));
+      client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+        checkReport, renewerOptions, done);
+    });
+  });
+
+  context('after 3 months', () => {
+
+    beforeEach((done) => {
+      // no new usage this month
+      // from previous months we have 2 spaces with:
+      //   37 apps consuming 512 MB
+      //   1 app using 4 GB
+      // total: 2 x 22.5 = 45 GB
+      noUsage = true;
+      numberOfSpaces = 2;
+      expectedConsuming = 45;
+
+      // Shift time 3 months, 2 days and 3 hours
+      const offset = moment.utc(afterThreeMonths)
+        .add(2, 'days').add(3, 'hours').diff(moment.now());
+      process.env.ABACUS_TIME_OFFSET = offset;
+      debug('Time offset set to %d (%s)',
+        offset, moment.duration(offset).humanize());
+
+      buildAppUsageEvents();
+      startAbacus(done);
     });
 
-    afterEach(function(done) {
-      cleanup(done);
-    });
+    it('transfers the usage and gets expected report back', function(done) {
+      this.timeout(totalTimeout + 2000);
 
+      let startWaitTime = moment.now();
+      const renewerOptions = pollOptions(
+        'renewer', 9501,
+        checkThisAndPreviousMonths,
+        totalTimeout - (moment.now() - startWaitTime));
+      client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
+        checkReport, renewerOptions, done);
+    });
   });
 
 });
