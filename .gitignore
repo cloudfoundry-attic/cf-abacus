@@ -1,4 +1,5 @@
 .DS_Store
+.cf
 README.html
 CHANGES.html
 node_modules/**
