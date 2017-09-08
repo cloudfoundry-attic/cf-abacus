@@ -79,7 +79,7 @@
     "abacus-publish": "file:../../../tools/publish"
   },
   "engines": {
-    "node": ">=6.10.0",
+    "node": ">=8.0.0",
     "npm": ">=3.10.10"
   }
 }

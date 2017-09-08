@@ -33,7 +33,7 @@ The Abacus FAQ can be found in [doc/faq.md](doc/faq.md).
 Building
 ---
 
-Abacus requires Node.js >= 6.10.0 and Npm >= 3.10.10.
+Abacus requires Node.js >= 8.0.0 and Npm < 5.0.0.
 
 ```sh
 cd cf-abacus
@@ -48,10 +48,10 @@ Dependency management
 
 Abacus uses `npm shrinkwrap` to fix the versions of a package's dependencies. Fixed dependecies are
 persisted in `npm-shrinkwrap.json` file which is located at the same directory where `package.json` file
-exsists. 
+exsists.
 
 Updating dependencies
-* Automaticaly  
+* Automaticaly
 Dependencies could be updated automatically for the whole repository by executing the steps bellow. As a result
 this script will regenerate all shrinkwrap files.
 
@@ -62,7 +62,7 @@ cd cf-abacus
 bin/module-update
 ```
 
-* Manually  
+* Manually
 If you prefer  to update dependencies of particular module, it is possble to do it manually with the following steps.
 
 ```sh
@@ -76,7 +76,7 @@ rm npm-shrinkwrap.json
 
 # Install/Update dependency/cies in package.json file either manually or via npm
 npm install <dependency> --save
-or  
+or
 npm update <dependency> --save
 
 # Install dependencies
@@ -84,7 +84,7 @@ npm install
 
 # Generate shrinkwrap files
 npm shrinkwrap
-``` 
+```
 
 Testing
 ---
@@ -125,15 +125,15 @@ cf apps
 Getting apps in org <your organization> / space <your space>...
 OK
 
-name                       requested state   instances   memory   disk   urls   
-abacus-usage-collector     started           1/1         512M     512M   abacus-usage-collector.both-lite.com   
+name                       requested state   instances   memory   disk   urls
+abacus-usage-collector     started           1/1         512M     512M   abacus-usage-collector.both-lite.com
 abacus-usage-meter         started           1/1         512M     512M   abacus-usage-meter.both-lite.com
-abacus-usage-accumulator   started           1/1         512M     512M   abacus-usage-accumulator.both-lite.com   
-abacus-usage-aggregator    started           1/1         512M     512M   abacus-usage-aggregator.both-lite.com   
-abacus-usage-reporting     started           1/1         512M     512M   abacus-usage-reporting.both-lite.com   
-abacus-provisioning-plugin started           1/1         512M     512M   abacus-provisioning-plugin.both-lite.com   
-abacus-account-plugin      started           1/1         512M     512M   abacus-account-plugin.both-lite.com   
-abacus-pouchserver         started           1/1         1G       512M   abacus-pouchserver.both-lite.com   
+abacus-usage-accumulator   started           1/1         512M     512M   abacus-usage-accumulator.both-lite.com
+abacus-usage-aggregator    started           1/1         512M     512M   abacus-usage-aggregator.both-lite.com
+abacus-usage-reporting     started           1/1         512M     512M   abacus-usage-reporting.both-lite.com
+abacus-provisioning-plugin started           1/1         512M     512M   abacus-provisioning-plugin.both-lite.com
+abacus-account-plugin      started           1/1         512M     512M   abacus-account-plugin.both-lite.com
+abacus-pouchserver         started           1/1         1G       512M   abacus-pouchserver.both-lite.com
 ```
 
 Running the demo on Cloud Foundry
