@@ -40,7 +40,7 @@ else
 fi
 
 echo "Getting token for $CLIENT_ID from $AUTH_SERVER ..."
-AUTH_RESPONSE=$(curl -k --user "$CLIENT_ID":"$CLIENT_SECRET" -s "$AUTH_SERVER/oauth/token?grant_type=client_credentials&scope=$SCOPE") 
+AUTH_RESPONSE=$(curl -k --user "$CLIENT_ID":"$CLIENT_SECRET" -X POST -s "$AUTH_SERVER/oauth/token?grant_type=client_credentials&scope=$SCOPE") 
 TOKEN=$(echo "$AUTH_RESPONSE" | jq -r .access_token)
 echo ""
 
