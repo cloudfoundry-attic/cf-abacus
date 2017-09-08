@@ -3,6 +3,9 @@ node_js: "8.0.0"
 dist: trusty
 sudo: false
 
+before_install:
+  - npm i -g npm@latest-4
+
 env:
   global:
     - CF_TEST="false"
