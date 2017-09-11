@@ -2,7 +2,7 @@
   "name": "abacus-cf-renewer",
   "description": "CF App Usage renewer",
   "license": "Apache-2.0",
-  "version": "0.0.6-dev.9",
+  "version": "1.0.0",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/cf/renewer",
   "bugs": {
