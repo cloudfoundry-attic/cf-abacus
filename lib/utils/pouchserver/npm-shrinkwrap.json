@@ -1021,9 +1021,9 @@
       "resolved": "https://registry.npmjs.org/jkroso-type/-/jkroso-type-1.1.1.tgz"
     },
     "js-yaml": {
-      "version": "3.9.1",
+      "version": "3.10.0",
       "from": "js-yaml@>=3.4.3 <4.0.0",
-      "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.9.1.tgz"
+      "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.10.0.tgz"
     },
     "json-schema": {
       "version": "0.2.3",
