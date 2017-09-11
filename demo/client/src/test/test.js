@@ -58,18 +58,21 @@ const totalTimeout = commander.totalTimeout || 60000;
 const now = moment.utc().toDate();
 
 // Use secure routes or not
-const secured = () => process.env.SECURED === 'true' ? true : false;
+const secured = () => process.env.SECURED === 'true';
 
 // Token fetchers
-const objectStorageToken = secured() ? oauth.cache(authServer,
+const objectStorageWriteToken = secured() ? oauth.cache(
+    authServer,
     process.env.OBJECT_STORAGE_CLIENT_ID,
     process.env.OBJECT_STORAGE_CLIENT_SECRET,
-    'abacus.usage.object-storage.write') :
-  undefined;
-const systemToken = secured() ? oauth.cache(authServer,
-    process.env.SYSTEM_CLIENT_ID, process.env.SYSTEM_CLIENT_SECRET,
-    'abacus.usage.read') :
-  undefined;
+    'abacus.usage.object-storage.write'
+  ) : undefined;
+const objectStorageReadToken = secured() ? oauth.cache(
+    authServer,
+    process.env.SYSTEM_CLIENT_ID,
+    process.env.SYSTEM_CLIENT_SECRET,
+    'abacus.usage.object-storage.read'
+  ) : undefined;
 
 // Builds the expected window value based upon the
 // charge summary, quantity, cost, and window
@@ -111,10 +114,10 @@ const authHeader = (token) => token ? {
 
 describe('abacus-demo-client', function() {
   before((done) => {
-    if (objectStorageToken)
-      objectStorageToken.start();
-    if (systemToken)
-      systemToken.start();
+    if (objectStorageWriteToken)
+      objectStorageWriteToken.start();
+    if (objectStorageReadToken)
+      objectStorageReadToken.start();
 
     // Delete test dbs on the configured db server
     dbclient.drop(process.env.DB, /^abacus-/, done);
@@ -330,7 +333,7 @@ describe('abacus-demo-client', function() {
       };
 
       request.post(collector + '/v1/metering/collected/usage',
-        extend({ body: u.usage }, authHeader(objectStorageToken)),
+        extend({ body: u.usage }, authHeader(objectStorageWriteToken)),
           (err, val) => {
             expect(err).to.equal(undefined);
 
@@ -362,38 +365,40 @@ describe('abacus-demo-client', function() {
         'v1/metering/organizations',
         'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
         'aggregated/usage'
-      ].join('/'), extend({}, authHeader(systemToken)), (err, val) => {
-        expect(err).to.equal(undefined);
-        expect(val.statusCode).to.equal(200);
+      ].join('/'), extend({}, authHeader(objectStorageReadToken)),
+        (err, val) => {
+          expect(err).to.equal(undefined);
+          expect(val.statusCode).to.equal(200);
 
-        // Compare the usage report we got with the expected report
-        console.log('Processed %d usage docs', processed(val));
-        const actual = clone(omit(val.body,
-          'id', 'processed', 'processed_id', 'start', 'end'), prune);
+          // Compare the usage report we got with the expected report
+          console.log('Processed %d usage docs', processed(val));
+          const actual = clone(omit(val.body,
+            'id', 'processed', 'processed_id', 'start', 'end'), prune);
 
-        try {
-          actual.spaces[0].consumers[0].resources[0].plans[0]
-            .resource_instances[0] = omit(actual.spaces[0].consumers[0]
-            .resources[0].plans[0].resource_instances[0], 't', 'p');
-          expect(actual).to.deep.equal(report);
-          console.log('\n', util.inspect(val.body, {
-            depth: 20
-          }), '\n');
-          done();
-        }
-        catch (e) {
-          // If the comparison fails we'll be called again to retry
-          // after 250 msec, give up after the configured timeout as
-          // if we're still not getting the expected report then
-          // the processing of the submitted usage must have failed
-          if(moment.now() >= processingDeadline) {
-            console.log('All submitted usage still not processed\n');
+          try {
+            actual.spaces[0].consumers[0].resources[0].plans[0]
+              .resource_instances[0] = omit(actual.spaces[0].consumers[0]
+              .resources[0].plans[0].resource_instances[0], 't', 'p');
             expect(actual).to.deep.equal(report);
+            console.log('\n', util.inspect(val.body, {
+              depth: 20
+            }), '\n');
+            done();
           }
-          else
-            setTimeout(() => get(done), 250);
+          catch (e) {
+            // If the comparison fails we'll be called again to retry
+            // after 250 msec, give up after the configured timeout as
+            // if we're still not getting the expected report then
+            // the processing of the submitted usage must have failed
+            if(moment.now() >= processingDeadline) {
+              console.log('All submitted usage still not processed\n');
+              expect(actual).to.deep.equal(report);
+            }
+            else
+              setTimeout(() => get(done), 250);
+          }
         }
-      });
+      );
     };
 
     // Wait for the expected usage report, get a report every 250 msec until
