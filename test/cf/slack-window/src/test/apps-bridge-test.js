@@ -383,6 +383,7 @@ const test = (secured) => {
 
 };
 
-describe('abacus-cf-applications slack-test without oAuth', () => test(false));
+describe.skip('abacus-cf-applications slack-test without oAuth',
+  () => test(false));
 
-describe('abacus-cf-applications slack-test with oAuth', () => test(true));
+describe.skip('abacus-cf-applications slack-test with oAuth', () => test(true));

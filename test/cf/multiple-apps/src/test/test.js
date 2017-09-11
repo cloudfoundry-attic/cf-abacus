@@ -125,7 +125,7 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
 
 const lastMonthInMilliseconds = moment.utc().subtract(1, 'months').valueOf();
 
-describe('abacus-cf multiple-apps-test with oAuth', () => {
+describe.skip('abacus-cf multiple-apps-test with oAuth', () => {
   let server;
   let serverPort;
   let appUsageEvents;
@@ -936,7 +936,7 @@ describe('abacus-cf multiple-apps-test with oAuth', () => {
               return;
             }
             npm.startModules([npm.modules.renewer]);
-       
+
             const renewerOptions = pollOptions(
               'renewer', 9501,
               checkThisMonth,

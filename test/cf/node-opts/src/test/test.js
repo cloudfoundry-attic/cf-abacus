@@ -19,7 +19,7 @@ commander
 // External Abacus processes start timeout
 const startTimeout = commander.startTimeout || 30000;
 
-describe('webapp', function() {
+describe.skip('webapp', function() {
   let npm;
   this.timeout(startTimeout);
 

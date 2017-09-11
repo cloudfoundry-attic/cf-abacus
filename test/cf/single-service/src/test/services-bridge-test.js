@@ -140,7 +140,7 @@ const signedSystemToken = jwt.sign(systemToken.payload, tokenSecret, {
 
 const twentySecondsInMilliseconds = 20 * 1000;
 
-describe('abacus-cf-single-service-service-itest without oAuth', () => {
+describe.skip('abacus-cf-single-service-service-itest without oAuth', () => {
   const submittime = moment.now();
 
   let server;

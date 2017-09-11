@@ -83,7 +83,7 @@ jobs:
             CF_TEST: true
             # Uncomment to save file handlers and offload CF stagers
             # JOBS: 2
-            # Use latest node.js buildpack to enable 6.10.0
+            # Use latest node.js buildpack to enable 6.11.2
             BUILDPACK: https://github.com/cloudfoundry/nodejs-buildpack.git
             # Cloud Foundry infrastructure
             CF_SYS_DOMAIN: {{cf-sys-domain}}

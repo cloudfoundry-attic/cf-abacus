@@ -454,5 +454,5 @@ const test = (secured) => {
 
 };
 
-describe('abacus-cf-renewer irrelevant-apps-usage-test with oAuth',
+describe.skip('abacus-cf-renewer irrelevant-apps-usage-test with oAuth',
   () => test(true));
