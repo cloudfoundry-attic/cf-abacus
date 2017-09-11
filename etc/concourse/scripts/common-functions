@@ -103,12 +103,7 @@ function mapRoutes {
   local INSTANCES=$(expr $2 - 1)
   local DOMAIN=$3
 
-  set +e # Disable error checks
-  cf app $APP_NAME
-  single_app=$?
-  set -e # Enable error checks
-
-  if [ $single_app = 0 ]; then
+  if [ "$INSTANCES" -le 1 ]; then
     echo "Found single $APP_NAME instance. Will not map route !!!"
   else
     echo "Mapping $2 (0-$INSTANCES) instances of $APP_NAME in $DOMAIN domain ..."
