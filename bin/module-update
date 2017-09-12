@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export CONF=${1:-default}
+export CONF=${1:-cf}
 
 # fix the new dependencies on root level
 rm -rf node_modules
