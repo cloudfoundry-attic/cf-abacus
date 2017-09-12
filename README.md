@@ -33,7 +33,7 @@ The Abacus FAQ can be found in [doc/faq.md](doc/faq.md).
 Building
 ---
 
-Abacus requires Node.js >= 8.0.0 and Npm < 5.0.0.
+Abacus requires Node.js >= 8.1.3 and Npm < 5.0.0.
 
 ```sh
 cd cf-abacus
