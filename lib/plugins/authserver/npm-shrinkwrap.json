@@ -348,9 +348,16 @@
       "resolved": "https://registry.npmjs.org/basic-auth/-/basic-auth-1.1.0.tgz"
     },
     "body-parser": {
-      "version": "1.18.0",
+      "version": "1.18.1",
       "from": "body-parser@>=1.4.3 <2.0.0",
-      "resolved": "https://registry.npmjs.org/body-parser/-/body-parser-1.18.0.tgz"
+      "resolved": "https://registry.npmjs.org/body-parser/-/body-parser-1.18.1.tgz",
+      "dependencies": {
+        "qs": {
+          "version": "6.5.1",
+          "from": "qs@6.5.1",
+          "resolved": "https://registry.npmjs.org/qs/-/qs-6.5.1.tgz"
+        }
+      }
     },
     "boom": {
       "version": "2.10.1",
@@ -728,9 +735,9 @@
       "dev": true
     },
     "etag": {
-      "version": "1.8.0",
+      "version": "1.8.1",
       "from": "etag@>=1.8.0 <1.9.0",
-      "resolved": "https://registry.npmjs.org/etag/-/etag-1.8.0.tgz"
+      "resolved": "https://registry.npmjs.org/etag/-/etag-1.8.1.tgz"
     },
     "event-emitter": {
       "version": "0.3.5",
@@ -955,9 +962,9 @@
       "resolved": "https://registry.npmjs.org/http-signature/-/http-signature-1.1.1.tgz"
     },
     "iconv-lite": {
-      "version": "0.4.18",
-      "from": "iconv-lite@0.4.18",
-      "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.18.tgz"
+      "version": "0.4.19",
+      "from": "iconv-lite@0.4.19",
+      "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.19.tgz"
     },
     "ignore": {
       "version": "3.3.5",
@@ -994,9 +1001,9 @@
       "dev": true
     },
     "interpret": {
-      "version": "1.0.3",
+      "version": "1.0.4",
       "from": "interpret@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/interpret/-/interpret-1.0.3.tgz",
+      "resolved": "https://registry.npmjs.org/interpret/-/interpret-1.0.4.tgz",
       "dev": true
     },
     "ipaddr.js": {
@@ -1574,9 +1581,9 @@
       "resolved": "https://registry.npmjs.org/range-parser/-/range-parser-1.2.0.tgz"
     },
     "raw-body": {
-      "version": "2.3.1",
-      "from": "raw-body@2.3.1",
-      "resolved": "https://registry.npmjs.org/raw-body/-/raw-body-2.3.1.tgz"
+      "version": "2.3.2",
+      "from": "raw-body@2.3.2",
+      "resolved": "https://registry.npmjs.org/raw-body/-/raw-body-2.3.2.tgz"
     },
     "rc": {
       "version": "1.2.1",
