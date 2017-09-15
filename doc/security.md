@@ -66,6 +66,12 @@ This system token is used to protect the pipeline from unauthorized (erroneous o
 In order to read Abacus's health and hystrix stream, basic authentication is required. Abacus will use the provided basic authentication to obtain a bearer token and validates if the user has the `abacus.system.read` permission. 
 
 
+#### Other tokens
+
+There are two other kinds of tokens with scopes:
+ * `abacus.system.read` which is used by the hystrix client to gather information about the system
+ * `abacus.debug.write` which can be used by an operator to set/change/un-set the debug logging levels
+
 #### Token issuer
 
 Abacus can work with Cloud Foundry's UAA or other token issuers, complying with JWT (https://tools.ietf.org/html/rfc7519) and JWS (https://tools.ietf.org/html/rfc7515) specifications.
