@@ -1,7 +1,10 @@
 language: node_js
-node_js: "6.10.0"
+node_js: "8.1.3"
 dist: trusty
 sudo: false
+
+before_install:
+  - npm i -g npm@latest-4
 
 env:
   global:

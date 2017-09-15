@@ -40,6 +40,6 @@
     "abacus-publish": "file:../publish"
   },
   "engines": {
-    "node": ">=6.10.0"
+    "node": "<=8.1.3"
   }
 }
