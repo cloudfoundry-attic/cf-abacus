@@ -202,7 +202,6 @@ const test = (secured) => {
     process.env.SECURED = secured ? 'true' : 'false';
     debug('Set SECURED = %s', process.env.SECURED);
 
-    // Security setup
     process.env.API = 'http://localhost:' + serverPort;
     process.env.AUTH_SERVER = 'http://localhost:' + serverPort;
     process.env.CF_CLIENT_ID = 'abacus-cf-applications';
@@ -211,6 +210,7 @@ const test = (secured) => {
     process.env.CLIENT_SECRET = 'secret';
     process.env.JWTKEY = tokenSecret;
     process.env.JWTALGO = tokenAlgorithm;
+    process.env.MIN_INTERVAL_TIME = 5000;
 
     process.env.SLACK = '5D';
 
