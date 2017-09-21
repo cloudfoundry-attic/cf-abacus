@@ -2,9 +2,6 @@
 
 set -e -x
 
-echo "Environment:"
-env | sort
-
 pushd built-project
   echo "Running integration tests ..."
   # Based on default limits in throttle and batch processing and

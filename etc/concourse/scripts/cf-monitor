@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e -x
 
-echo "Environment:"
-env | sort
-
 echo "Logging to $CF_SYS_DOMAIN ..."
 if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
   skip='--skip-ssl-validation'

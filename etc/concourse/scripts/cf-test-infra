@@ -4,9 +4,6 @@ set -e -x
 
 SCRIPT_DIR="${BASH_SOURCE%/*}"
 
-echo "Environment:"
-env | sort
-
 echo "Logging to $CF_SYS_DOMAIN ..."
 if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
   skip='--skip-ssl-validation'
