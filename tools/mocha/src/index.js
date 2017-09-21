@@ -53,6 +53,8 @@ const runCLI = () => {
   }
   else {
     commander
+      .option('-f, --file <suffix>', 'test file should end with the suffix' +
+        ' provided [test.js]', 'test.js')
       .option('--no-istanbul', 'do not instrument with Istanbul')
       .option('-i, --istanbul-includes <regex>',
         'instrument matching modules with Istanbul [abacus]', 'abacus')
@@ -69,7 +71,7 @@ const runCLI = () => {
   // Collect all test files
   const testDir = path.join(target(), 'test');
   const files = fs.readdirSync(testDir).filter(
-    (file) => file.substr(-7) === 'test.js');
+    (file) => file.endsWith(commander.file));
 
   // Execute all test files in child processes sequentially
   const collector = new istanbul.Collector();
