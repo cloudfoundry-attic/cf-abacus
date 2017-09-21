@@ -1,51 +1,51 @@
 {
   "name": "cf-abacus",
-  "version": "0.0.6-dev.9",
+  "version": "1.0.0",
   "dependencies": {
     "abacus-account-plugin": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/plugins/account",
       "resolved": "file:lib/plugins/account"
     },
     "abacus-audit": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/audit",
       "resolved": "file:lib/utils/audit"
     },
     "abacus-authserver-plugin": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/plugins/authserver",
       "resolved": "file:lib/plugins/authserver"
     },
     "abacus-batch": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/batch",
       "resolved": "file:lib/utils/batch"
     },
     "abacus-breaker": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/breaker",
       "resolved": "file:lib/utils/breaker"
     },
     "abacus-carryover": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/carryover",
       "resolved": "file:lib/utils/carryover"
     },
     "abacus-cf-acceptance-test": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "test/cf/acceptance",
       "resolved": "file:test/cf/acceptance",
       "dependencies": {
         "abacus-mocha": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mocha",
           "resolved": "file:tools/mocha",
           "dependencies": {
             "mocha": {
-              "version": "3.5.0",
+              "version": "3.5.3",
               "from": "mocha@>=3.2.0 <4.0.0",
-              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
               "dependencies": {
                 "commander": {
                   "version": "2.9.0",
@@ -74,24 +74,24 @@
       }
     },
     "abacus-cf-applications": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/cf/applications",
       "resolved": "file:lib/cf/applications"
     },
     "abacus-cf-multiple-apps-itest": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "test/cf/multiple-apps",
       "resolved": "file:test/cf/multiple-apps",
       "dependencies": {
         "abacus-mocha": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mocha",
           "resolved": "file:tools/mocha",
           "dependencies": {
             "mocha": {
-              "version": "3.5.0",
+              "version": "3.5.3",
               "from": "mocha@^3.2.0",
-              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
               "dependencies": {
                 "commander": {
                   "version": "2.9.0",
@@ -120,31 +120,60 @@
       }
     },
     "abacus-cf-multiple-services-itest": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "test/cf/multiple-services",
       "resolved": "file:test/cf/multiple-services",
       "dependencies": {
-        "commander": {
-          "version": "2.8.1",
-          "from": "commander@2.8.1",
-          "resolved": "https://registry.npmjs.org/commander/-/commander-2.8.1.tgz"
-        }
-      }
-    },
-    "abacus-cf-node-opts-itest": {
-      "version": "0.0.6-dev.9",
-      "from": "test/cf/node-opts",
-      "resolved": "file:test/cf/node-opts",
-      "dependencies": {
         "abacus-mocha": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mocha",
           "resolved": "file:tools/mocha",
           "dependencies": {
             "mocha": {
-              "version": "3.5.0",
+              "version": "3.5.3",
               "from": "mocha@^3.2.0",
-              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
+              "dependencies": {
+                "commander": {
+                  "version": "2.9.0",
+                  "from": "commander@2.9.0",
+                  "resolved": "https://registry.npmjs.org/commander/-/commander-2.9.0.tgz"
+                }
+              }
+            }
+          }
+        },
+        "commander": {
+          "version": "2.8.1",
+          "from": "commander@2.8.1",
+          "resolved": "https://registry.npmjs.org/commander/-/commander-2.8.1.tgz"
+        },
+        "glob": {
+          "version": "7.1.1",
+          "from": "glob@7.1.1",
+          "resolved": "https://registry.npmjs.org/glob/-/glob-7.1.1.tgz"
+        },
+        "supports-color": {
+          "version": "3.1.2",
+          "from": "supports-color@3.1.2",
+          "resolved": "https://registry.npmjs.org/supports-color/-/supports-color-3.1.2.tgz"
+        }
+      }
+    },
+    "abacus-cf-node-opts-itest": {
+      "version": "1.0.0",
+      "from": "test/cf/node-opts",
+      "resolved": "file:test/cf/node-opts",
+      "dependencies": {
+        "abacus-mocha": {
+          "version": "1.0.0",
+          "from": "tools/mocha",
+          "resolved": "file:tools/mocha",
+          "dependencies": {
+            "mocha": {
+              "version": "3.5.3",
+              "from": "mocha@^3.2.0",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
               "dependencies": {
                 "commander": {
                   "version": "2.9.0",
@@ -173,19 +202,19 @@
       }
     },
     "abacus-cf-purge-itest": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "test/cf/purge",
       "resolved": "file:test/cf/purge",
       "dependencies": {
         "abacus-mocha": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mocha",
           "resolved": "file:tools/mocha",
           "dependencies": {
             "mocha": {
-              "version": "3.5.0",
+              "version": "3.5.3",
               "from": "mocha@^3.2.0",
-              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
               "dependencies": {
                 "commander": {
                   "version": "2.9.0",
@@ -214,24 +243,24 @@
       }
     },
     "abacus-cf-renewer": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/cf/renewer",
       "resolved": "file:lib/cf/renewer"
     },
     "abacus-cf-renewer-itest": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "test/cf/renewer",
       "resolved": "file:test/cf/renewer",
       "dependencies": {
         "abacus-mocha": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mocha",
           "resolved": "file:tools/mocha",
           "dependencies": {
             "mocha": {
-              "version": "3.5.0",
+              "version": "3.5.3",
               "from": "mocha@^3.2.0",
-              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
               "dependencies": {
                 "commander": {
                   "version": "2.9.0",
@@ -260,24 +289,24 @@
       }
     },
     "abacus-cf-services": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/cf/services",
       "resolved": "file:lib/cf/services"
     },
     "abacus-cf-single-app-itest": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "test/cf/single-app",
       "resolved": "file:test/cf/single-app",
       "dependencies": {
         "abacus-mocha": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mocha",
           "resolved": "file:tools/mocha",
           "dependencies": {
             "mocha": {
-              "version": "3.5.0",
+              "version": "3.5.3",
               "from": "mocha@^3.2.0",
-              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
               "dependencies": {
                 "commander": {
                   "version": "2.9.0",
@@ -306,31 +335,60 @@
       }
     },
     "abacus-cf-single-service-itest": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "test/cf/single-service",
       "resolved": "file:test/cf/single-service",
       "dependencies": {
-        "commander": {
-          "version": "2.8.1",
-          "from": "commander@2.8.1",
-          "resolved": "https://registry.npmjs.org/commander/-/commander-2.8.1.tgz"
-        }
-      }
-    },
-    "abacus-cf-slack-window-itest": {
-      "version": "0.0.6-dev.9",
-      "from": "test/cf/slack-window",
-      "resolved": "file:test/cf/slack-window",
-      "dependencies": {
         "abacus-mocha": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mocha",
           "resolved": "file:tools/mocha",
           "dependencies": {
             "mocha": {
-              "version": "3.5.0",
+              "version": "3.5.3",
               "from": "mocha@^3.2.0",
-              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
+              "dependencies": {
+                "commander": {
+                  "version": "2.9.0",
+                  "from": "commander@2.9.0",
+                  "resolved": "https://registry.npmjs.org/commander/-/commander-2.9.0.tgz"
+                }
+              }
+            }
+          }
+        },
+        "commander": {
+          "version": "2.8.1",
+          "from": "commander@2.8.1",
+          "resolved": "https://registry.npmjs.org/commander/-/commander-2.8.1.tgz"
+        },
+        "glob": {
+          "version": "7.1.1",
+          "from": "glob@7.1.1",
+          "resolved": "https://registry.npmjs.org/glob/-/glob-7.1.1.tgz"
+        },
+        "supports-color": {
+          "version": "3.1.2",
+          "from": "supports-color@3.1.2",
+          "resolved": "https://registry.npmjs.org/supports-color/-/supports-color-3.1.2.tgz"
+        }
+      }
+    },
+    "abacus-cf-slack-window-itest": {
+      "version": "1.0.0",
+      "from": "test/cf/slack-window",
+      "resolved": "file:test/cf/slack-window",
+      "dependencies": {
+        "abacus-mocha": {
+          "version": "1.0.0",
+          "from": "tools/mocha",
+          "resolved": "file:tools/mocha",
+          "dependencies": {
+            "mocha": {
+              "version": "3.5.3",
+              "from": "mocha@^3.2.0",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
               "dependencies": {
                 "commander": {
                   "version": "2.9.0",
@@ -359,19 +417,19 @@
       }
     },
     "abacus-cf-smoke": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "test/cf/smoke",
       "resolved": "file:test/cf/smoke",
       "dependencies": {
         "abacus-mocha": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mocha",
           "resolved": "file:tools/mocha",
           "dependencies": {
             "mocha": {
-              "version": "3.5.0",
+              "version": "3.5.3",
               "from": "mocha@^3.2.0",
-              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
               "dependencies": {
                 "commander": {
                   "version": "2.9.0",
@@ -395,19 +453,19 @@
       }
     },
     "abacus-cf-timeshift-itest": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "test/cf/timeshift",
       "resolved": "file:test/cf/timeshift",
       "dependencies": {
         "abacus-mocha": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mocha",
           "resolved": "file:tools/mocha",
           "dependencies": {
             "mocha": {
-              "version": "3.5.0",
+              "version": "3.5.3",
               "from": "mocha@^3.2.0",
-              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
               "dependencies": {
                 "commander": {
                   "version": "2.9.0",
@@ -436,87 +494,87 @@
       }
     },
     "abacus-cfpack": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "tools/cfpack",
       "resolved": "file:tools/cfpack",
       "dev": true
     },
     "abacus-cfpush": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "tools/cfpush",
       "resolved": "file:tools/cfpush",
       "dev": true
     },
     "abacus-client": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/client",
       "resolved": "file:lib/utils/client"
     },
     "abacus-clone": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/clone",
       "resolved": "file:lib/utils/clone"
     },
     "abacus-cluster": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/cluster",
       "resolved": "file:lib/utils/cluster"
     },
     "abacus-couchclient": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/couchclient",
       "resolved": "file:lib/utils/couchclient"
     },
     "abacus-couchstore": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/couchstore",
       "resolved": "file:lib/utils/couchstore"
     },
     "abacus-coverage": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "tools/coverage",
       "resolved": "file:tools/coverage",
       "dev": true
     },
     "abacus-dataflow": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/dataflow",
       "resolved": "file:lib/utils/dataflow"
     },
     "abacus-dbclient": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/dbclient",
       "resolved": "file:lib/utils/dbclient"
     },
     "abacus-dbcommons": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/dbcommons",
       "resolved": "file:lib/utils/dbcommons"
     },
     "abacus-debug": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/debug",
       "resolved": "file:lib/utils/debug"
     },
     "abacus-dedupe": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/dedupe",
       "resolved": "file:lib/utils/dedupe"
     },
     "abacus-demo-client": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "demo/client",
       "resolved": "file:demo/client",
       "dependencies": {
         "abacus-mocha": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mocha",
           "resolved": "file:tools/mocha",
           "dependencies": {
             "mocha": {
-              "version": "3.5.0",
+              "version": "3.5.3",
               "from": "mocha@^3.2.0",
-              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
               "dependencies": {
                 "commander": {
                   "version": "2.9.0",
@@ -540,36 +598,36 @@
       }
     },
     "abacus-doc": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "doc",
       "resolved": "file:doc",
       "dependencies": {
         "abacus-mddoc": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mddoc",
           "resolved": "file:tools/mddoc"
         },
         "abacus-publish": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/publish",
           "resolved": "file:tools/publish"
         }
       }
     },
     "abacus-dupe-test": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "test/dupe",
       "resolved": "file:test/dupe",
       "dependencies": {
         "abacus-mocha": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mocha",
           "resolved": "file:tools/mocha",
           "dependencies": {
             "mocha": {
-              "version": "3.5.0",
+              "version": "3.5.3",
               "from": "mocha@^3.2.0",
-              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
               "dependencies": {
                 "commander": {
                   "version": "2.9.0",
@@ -598,7 +656,7 @@
       }
     },
     "abacus-eslint": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "tools/eslint",
       "resolved": "file:tools/eslint",
       "dev": true,
@@ -630,7 +688,7 @@
       }
     },
     "abacus-etc": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "etc",
       "resolved": "file:etc",
       "dependencies": {
@@ -642,27 +700,27 @@
       }
     },
     "abacus-eureka": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/eureka",
       "resolved": "file:lib/utils/eureka"
     },
     "abacus-eureka-plugin": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/plugins/eureka",
       "resolved": "file:lib/plugins/eureka"
     },
     "abacus-eval": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/eval",
       "resolved": "file:lib/utils/eval"
     },
     "abacus-events": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/events",
       "resolved": "file:lib/utils/events"
     },
     "abacus-express": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/express",
       "resolved": "file:lib/utils/express"
     },
@@ -674,137 +732,299 @@
     "abacus-ext-provisioning-plugin": {
       "version": "0.0.6-dev.9",
       "from": "abacus-ext-provisioning-plugin@0.0.6-dev.9",
-      "resolved": "https://registry.npmjs.org/abacus-ext-provisioning-plugin/-/abacus-ext-provisioning-plugin-0.0.6-dev.9.tgz"
+      "resolved": "https://registry.npmjs.org/abacus-ext-provisioning-plugin/-/abacus-ext-provisioning-plugin-0.0.6-dev.9.tgz",
+      "dependencies": {
+        "abacus-batch": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-batch@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-batch/-/abacus-batch-0.0.6-dev.9.tgz"
+        },
+        "abacus-breaker": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-breaker@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-breaker/-/abacus-breaker-0.0.6-dev.9.tgz"
+        },
+        "abacus-cluster": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-cluster@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-cluster/-/abacus-cluster-0.0.6-dev.9.tgz"
+        },
+        "abacus-couchclient": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-couchclient@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-couchclient/-/abacus-couchclient-0.0.6-dev.9.tgz"
+        },
+        "abacus-dbclient": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-dbclient@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-dbclient/-/abacus-dbclient-0.0.6-dev.9.tgz"
+        },
+        "abacus-dbcommons": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-dbcommons@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-dbcommons/-/abacus-dbcommons-0.0.6-dev.9.tgz"
+        },
+        "abacus-debug": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-debug@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-debug/-/abacus-debug-0.0.6-dev.9.tgz"
+        },
+        "abacus-eureka": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-eureka@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-eureka/-/abacus-eureka-0.0.6-dev.9.tgz"
+        },
+        "abacus-events": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-events@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-events/-/abacus-events-0.0.6-dev.9.tgz"
+        },
+        "abacus-express": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-express@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-express/-/abacus-express-0.0.6-dev.9.tgz"
+        },
+        "abacus-hystrix": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-hystrix@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-hystrix/-/abacus-hystrix-0.0.6-dev.9.tgz"
+        },
+        "abacus-launcher": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-launcher@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-launcher/-/abacus-launcher-0.0.6-dev.9.tgz"
+        },
+        "abacus-lock": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-lock@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-lock/-/abacus-lock-0.0.6-dev.9.tgz"
+        },
+        "abacus-lrucache": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-lrucache@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-lrucache/-/abacus-lrucache-0.0.6-dev.9.tgz"
+        },
+        "abacus-moment": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-moment@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-moment/-/abacus-moment-0.0.6-dev.9.tgz"
+        },
+        "abacus-mongoclient": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-mongoclient@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-mongoclient/-/abacus-mongoclient-0.0.6-dev.9.tgz"
+        },
+        "abacus-oauth": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-oauth@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-oauth/-/abacus-oauth-0.0.6-dev.9.tgz"
+        },
+        "abacus-partition": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-partition@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-partition/-/abacus-partition-0.0.6-dev.9.tgz"
+        },
+        "abacus-perf": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-perf@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-perf/-/abacus-perf-0.0.6-dev.9.tgz"
+        },
+        "abacus-rc": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-rc@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-rc/-/abacus-rc-0.0.6-dev.9.tgz"
+        },
+        "abacus-request": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-request@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-request/-/abacus-request-0.0.6-dev.9.tgz"
+        },
+        "abacus-retry": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-retry@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-retry/-/abacus-retry-0.0.6-dev.9.tgz"
+        },
+        "abacus-router": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-router@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-router/-/abacus-router-0.0.6-dev.9.tgz"
+        },
+        "abacus-schema": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-schema@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-schema/-/abacus-schema-0.0.6-dev.9.tgz"
+        },
+        "abacus-transform": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-transform@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-transform/-/abacus-transform-0.0.6-dev.9.tgz"
+        },
+        "abacus-urienv": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-urienv@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-urienv/-/abacus-urienv-0.0.6-dev.9.tgz"
+        },
+        "abacus-usage-schemas": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-usage-schemas@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-usage-schemas/-/abacus-usage-schemas-0.0.6-dev.9.tgz"
+        },
+        "abacus-vcapenv": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-vcapenv@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-vcapenv/-/abacus-vcapenv-0.0.6-dev.9.tgz"
+        },
+        "abacus-webapp": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-webapp@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-webapp/-/abacus-webapp-0.0.6-dev.9.tgz"
+        },
+        "abacus-yieldable": {
+          "version": "0.0.6-dev.9",
+          "from": "abacus-yieldable@>=0.0.6-dev.9 <0.0.7",
+          "resolved": "https://registry.npmjs.org/abacus-yieldable/-/abacus-yieldable-0.0.6-dev.9.tgz"
+        },
+        "strip-json-comments": {
+          "version": "0.1.3",
+          "from": "strip-json-comments@>=0.1.0 <0.2.0",
+          "resolved": "https://registry.npmjs.org/strip-json-comments/-/strip-json-comments-0.1.3.tgz"
+        }
+      }
     },
     "abacus-hystrix": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/hystrix",
       "resolved": "file:lib/utils/hystrix"
     },
     "abacus-iterable": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/iterable",
       "resolved": "file:lib/utils/iterable"
     },
     "abacus-launcher": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/launcher",
       "resolved": "file:lib/utils/launcher"
     },
     "abacus-learning": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/learning",
       "resolved": "file:lib/utils/learning"
     },
     "abacus-lock": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/lock",
       "resolved": "file:lib/utils/lock"
     },
     "abacus-lrucache": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/lrucache",
       "resolved": "file:lib/utils/lrucache"
     },
     "abacus-lrudown": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/lrudown",
       "resolved": "file:lib/utils/lrudown"
     },
     "abacus-matrix": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/matrix",
       "resolved": "file:lib/utils/matrix"
     },
     "abacus-mddoc": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "tools/mddoc",
       "resolved": "file:tools/mddoc",
       "dev": true
     },
     "abacus-metering-config": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/config/metering",
       "resolved": "file:lib/config/metering"
     },
     "abacus-mocha": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "tools/mocha",
       "resolved": "file:tools/mocha",
+      "dev": true,
       "dependencies": {
         "glob": {
           "version": "7.1.1",
           "from": "glob@7.1.1",
-          "resolved": "https://registry.npmjs.org/glob/-/glob-7.1.1.tgz"
+          "resolved": "https://registry.npmjs.org/glob/-/glob-7.1.1.tgz",
+          "dev": true
         },
         "mocha": {
-          "version": "3.5.0",
+          "version": "3.5.3",
           "from": "mocha@^3.2.0",
-          "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+          "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
+          "dev": true,
           "dependencies": {
             "commander": {
               "version": "2.9.0",
               "from": "commander@2.9.0",
-              "resolved": "https://registry.npmjs.org/commander/-/commander-2.9.0.tgz"
+              "resolved": "https://registry.npmjs.org/commander/-/commander-2.9.0.tgz",
+              "dev": true
             }
           }
         },
         "supports-color": {
           "version": "3.1.2",
           "from": "supports-color@3.1.2",
-          "resolved": "https://registry.npmjs.org/supports-color/-/supports-color-3.1.2.tgz"
+          "resolved": "https://registry.npmjs.org/supports-color/-/supports-color-3.1.2.tgz",
+          "dev": true
         }
       }
     },
     "abacus-moment": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/moment",
       "resolved": "file:lib/utils/moment"
     },
     "abacus-mongoclient": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/mongoclient",
       "resolved": "file:lib/utils/mongoclient"
     },
     "abacus-npm": {
-      "version": "0.0.6-dev.8",
+      "version": "1.0.0",
       "from": "test/lib/npm",
       "resolved": "file:test/lib/npm"
     },
     "abacus-oauth": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/oauth",
       "resolved": "file:lib/utils/oauth"
     },
     "abacus-paging": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/paging",
       "resolved": "file:lib/utils/paging"
     },
     "abacus-partition": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/partition",
       "resolved": "file:lib/utils/partition"
     },
     "abacus-perf": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/perf",
       "resolved": "file:lib/utils/perf"
     },
     "abacus-perf-test": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "test/perf",
       "resolved": "file:test/perf",
       "dependencies": {
         "abacus-mocha": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mocha",
           "resolved": "file:tools/mocha",
           "dependencies": {
             "mocha": {
-              "version": "3.5.0",
+              "version": "3.5.3",
               "from": "mocha@^3.2.0",
-              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
               "dependencies": {
                 "commander": {
                   "version": "2.9.0",
@@ -833,38 +1053,38 @@
       }
     },
     "abacus-plan-mappings": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/config/mappings",
       "resolved": "file:lib/config/mappings"
     },
     "abacus-pouchserver": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/pouchserver",
       "resolved": "file:lib/utils/pouchserver"
     },
     "abacus-pricing-config": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/config/pricing",
       "resolved": "file:lib/config/pricing"
     },
     "abacus-provisioning-plugin": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/plugins/provisioning",
       "resolved": "file:lib/plugins/provisioning"
     },
     "abacus-publish": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "tools/publish",
       "resolved": "file:tools/publish",
       "dev": true
     },
     "abacus-rating-config": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/config/rating",
       "resolved": "file:lib/config/rating"
     },
     "abacus-rc": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/rc",
       "resolved": "file:lib/utils/rc",
       "dependencies": {
@@ -876,80 +1096,80 @@
       }
     },
     "abacus-replace-template": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "tools/replace-template",
       "resolved": "file:tools/replace-template",
       "dev": true
     },
     "abacus-request": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/request",
       "resolved": "file:lib/utils/request"
     },
     "abacus-retry": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/retry",
       "resolved": "file:lib/utils/retry"
     },
     "abacus-rewire": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/rewire",
       "resolved": "file:lib/utils/rewire"
     },
     "abacus-router": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/router",
       "resolved": "file:lib/utils/router"
     },
     "abacus-schema": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/schema",
       "resolved": "file:lib/utils/schema"
     },
     "abacus-seqid": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/seqid",
       "resolved": "file:lib/utils/seqid"
     },
     "abacus-throttle": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/throttle",
       "resolved": "file:lib/utils/throttle"
     },
     "abacus-timewindow": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/timewindow",
       "resolved": "file:lib/utils/timewindow"
     },
     "abacus-transform": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/transform",
       "resolved": "file:lib/utils/transform"
     },
     "abacus-urienv": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/urienv",
       "resolved": "file:lib/utils/urienv"
     },
     "abacus-usage-accumulator": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/aggregation/accumulator",
       "resolved": "file:lib/aggregation/accumulator"
     },
     "abacus-usage-accumulator-itest": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "test/aggregation/accumulator",
       "resolved": "file:test/aggregation/accumulator",
       "dependencies": {
         "abacus-mocha": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mocha",
           "resolved": "file:tools/mocha",
           "dependencies": {
             "mocha": {
-              "version": "3.5.0",
+              "version": "3.5.3",
               "from": "mocha@^3.2.0",
-              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
               "dependencies": {
                 "commander": {
                   "version": "2.9.0",
@@ -978,24 +1198,24 @@
       }
     },
     "abacus-usage-aggregator": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/aggregation/aggregator",
       "resolved": "file:lib/aggregation/aggregator"
     },
     "abacus-usage-aggregator-itest": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "test/aggregation/aggregator",
       "resolved": "file:test/aggregation/aggregator",
       "dependencies": {
         "abacus-mocha": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mocha",
           "resolved": "file:tools/mocha",
           "dependencies": {
             "mocha": {
-              "version": "3.5.0",
+              "version": "3.5.3",
               "from": "mocha@^3.2.0",
-              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
               "dependencies": {
                 "commander": {
                   "version": "2.9.0",
@@ -1024,29 +1244,29 @@
       }
     },
     "abacus-usage-analyzer": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/metering/analyzer",
       "resolved": "file:lib/metering/analyzer"
     },
     "abacus-usage-collector": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/metering/collector",
       "resolved": "file:lib/metering/collector"
     },
     "abacus-usage-collector-itest": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "test/metering/collector",
       "resolved": "file:test/metering/collector",
       "dependencies": {
         "abacus-mocha": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mocha",
           "resolved": "file:tools/mocha",
           "dependencies": {
             "mocha": {
-              "version": "3.5.0",
+              "version": "3.5.3",
               "from": "mocha@^3.2.0",
-              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
               "dependencies": {
                 "commander": {
                   "version": "2.9.0",
@@ -1075,24 +1295,24 @@
       }
     },
     "abacus-usage-meter": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/metering/meter",
       "resolved": "file:lib/metering/meter"
     },
     "abacus-usage-meter-itest": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "test/metering/meter",
       "resolved": "file:test/metering/meter",
       "dependencies": {
         "abacus-mocha": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mocha",
           "resolved": "file:tools/mocha",
           "dependencies": {
             "mocha": {
-              "version": "3.5.0",
+              "version": "3.5.3",
               "from": "mocha@^3.2.0",
-              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
               "dependencies": {
                 "commander": {
                   "version": "2.9.0",
@@ -1121,24 +1341,24 @@
       }
     },
     "abacus-usage-reporting": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/aggregation/reporting",
       "resolved": "file:lib/aggregation/reporting"
     },
     "abacus-usage-reporting-itest": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "test/aggregation/reporting",
       "resolved": "file:test/aggregation/reporting",
       "dependencies": {
         "abacus-mocha": {
-          "version": "0.0.6-dev.9",
+          "version": "1.0.0",
           "from": "tools/mocha",
           "resolved": "file:tools/mocha",
           "dependencies": {
             "mocha": {
-              "version": "3.5.0",
+              "version": "3.5.3",
               "from": "mocha@^3.2.0",
-              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.0.tgz",
+              "resolved": "https://registry.npmjs.org/mocha/-/mocha-3.5.3.tgz",
               "dependencies": {
                 "commander": {
                   "version": "2.9.0",
@@ -1167,32 +1387,32 @@
       }
     },
     "abacus-usage-schemas": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/config/schemas",
       "resolved": "file:lib/config/schemas"
     },
     "abacus-vcapenv": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/vcapenv",
       "resolved": "file:lib/utils/vcapenv"
     },
     "abacus-webapp": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/webapp",
       "resolved": "file:lib/utils/webapp"
     },
     "abacus-webhook": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/webhook",
       "resolved": "file:lib/utils/webhook"
     },
     "abacus-webproxy": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/webproxy",
       "resolved": "file:lib/utils/webproxy"
     },
     "abacus-yieldable": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "lib/utils/yieldable",
       "resolved": "file:lib/utils/yieldable"
     },
@@ -1212,9 +1432,9 @@
       "resolved": "https://registry.npmjs.org/accepts/-/accepts-1.3.4.tgz"
     },
     "acorn": {
-      "version": "5.1.1",
+      "version": "5.1.2",
       "from": "acorn@>=5.1.1 <6.0.0",
-      "resolved": "https://registry.npmjs.org/acorn/-/acorn-5.1.1.tgz"
+      "resolved": "https://registry.npmjs.org/acorn/-/acorn-5.1.2.tgz"
     },
     "acorn-bfs": {
       "version": "0.0.1",
@@ -1323,6 +1543,11 @@
       "from": "array-index@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/array-index/-/array-index-1.0.0.tgz"
     },
+    "array-like-slice-x": {
+      "version": "1.1.0",
+      "from": "array-like-slice-x@>=1.1.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/array-like-slice-x/-/array-like-slice-x-1.1.0.tgz"
+    },
     "array-union": {
       "version": "1.0.2",
       "from": "array-union@>=1.0.1 <2.0.0",
@@ -1367,6 +1592,11 @@
       "version": "0.4.0",
       "from": "asynckit@>=0.4.0 <0.5.0",
       "resolved": "https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz"
+    },
+    "attempt-x": {
+      "version": "1.1.0",
+      "from": "attempt-x@>=1.1.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/attempt-x/-/attempt-x-1.1.0.tgz"
     },
     "aws-sign2": {
       "version": "0.6.0",
@@ -1451,14 +1681,14 @@
       "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-1.2.4.tgz"
     },
     "body-parser": {
-      "version": "1.17.2",
+      "version": "1.18.1",
       "from": "body-parser@>=1.4.3 <2.0.0",
-      "resolved": "https://registry.npmjs.org/body-parser/-/body-parser-1.17.2.tgz",
+      "resolved": "https://registry.npmjs.org/body-parser/-/body-parser-1.18.1.tgz",
       "dependencies": {
-        "debug": {
-          "version": "2.6.7",
-          "from": "debug@2.6.7",
-          "resolved": "https://registry.npmjs.org/debug/-/debug-2.6.7.tgz"
+        "qs": {
+          "version": "6.5.1",
+          "from": "qs@6.5.1",
+          "resolved": "https://registry.npmjs.org/qs/-/qs-6.5.1.tgz"
         }
       }
     },
@@ -1503,9 +1733,9 @@
       "resolved": "https://registry.npmjs.org/buffer-shims/-/buffer-shims-1.0.0.tgz"
     },
     "bytes": {
-      "version": "2.4.0",
-      "from": "bytes@2.4.0",
-      "resolved": "https://registry.npmjs.org/bytes/-/bytes-2.4.0.tgz"
+      "version": "3.0.0",
+      "from": "bytes@3.0.0",
+      "resolved": "https://registry.npmjs.org/bytes/-/bytes-3.0.0.tgz"
     },
     "caller-path": {
       "version": "0.1.0",
@@ -1544,7 +1774,7 @@
     },
     "check-node-version": {
       "version": "2.1.0",
-      "from": "https://registry.npmjs.org/check-node-version/-/check-node-version-2.1.0.tgz",
+      "from": "check-node-version@>=2.1.0 <3.0.0",
       "resolved": "https://registry.npmjs.org/check-node-version/-/check-node-version-2.1.0.tgz",
       "dev": true
     },
@@ -1662,9 +1892,9 @@
       "resolved": "https://registry.npmjs.org/content-disposition/-/content-disposition-0.5.2.tgz"
     },
     "content-type": {
-      "version": "1.0.2",
+      "version": "1.0.4",
       "from": "content-type@>=1.0.2 <1.1.0",
-      "resolved": "https://registry.npmjs.org/content-type/-/content-type-1.0.2.tgz"
+      "resolved": "https://registry.npmjs.org/content-type/-/content-type-1.0.4.tgz"
     },
     "convert-source-map": {
       "version": "1.5.0",
@@ -1892,9 +2122,9 @@
       "resolved": "https://registry.npmjs.org/deferred-leveldown/-/deferred-leveldown-1.2.2.tgz",
       "dependencies": {
         "abstract-leveldown": {
-          "version": "2.6.2",
+          "version": "2.6.3",
           "from": "abstract-leveldown@>=2.6.0 <2.7.0",
-          "resolved": "https://registry.npmjs.org/abstract-leveldown/-/abstract-leveldown-2.6.2.tgz"
+          "resolved": "https://registry.npmjs.org/abstract-leveldown/-/abstract-leveldown-2.6.3.tgz"
         }
       }
     },
@@ -2085,9 +2315,9 @@
       }
     },
     "es5-ext": {
-      "version": "0.10.29",
+      "version": "0.10.30",
       "from": "es5-ext@>=0.10.14 <0.11.0",
-      "resolved": "https://registry.npmjs.org/es5-ext/-/es5-ext-0.10.29.tgz"
+      "resolved": "https://registry.npmjs.org/es5-ext/-/es5-ext-0.10.30.tgz"
     },
     "es6-iterator": {
       "version": "2.0.1",
@@ -2163,7 +2393,7 @@
       "dev": true
     },
     "eslint-plugin-nodate": {
-      "version": "0.0.6-dev.9",
+      "version": "1.0.0",
       "from": "tools/eslint-plugin-nodate",
       "resolved": "file:tools/eslint-plugin-nodate",
       "dev": true
@@ -2204,9 +2434,9 @@
       "resolved": "https://registry.npmjs.org/esutils/-/esutils-2.0.2.tgz"
     },
     "etag": {
-      "version": "1.8.0",
+      "version": "1.8.1",
       "from": "etag@>=1.8.0 <1.9.0",
-      "resolved": "https://registry.npmjs.org/etag/-/etag-1.8.0.tgz"
+      "resolved": "https://registry.npmjs.org/etag/-/etag-1.8.1.tgz"
     },
     "event-emitter": {
       "version": "0.3.5",
@@ -2372,9 +2602,9 @@
       "resolved": "https://registry.npmjs.org/formatio/-/formatio-1.2.0.tgz"
     },
     "forwarded": {
-      "version": "0.1.0",
+      "version": "0.1.1",
       "from": "forwarded@>=0.1.0 <0.2.0",
-      "resolved": "https://registry.npmjs.org/forwarded/-/forwarded-0.1.0.tgz"
+      "resolved": "https://registry.npmjs.org/forwarded/-/forwarded-0.1.1.tgz"
     },
     "fresh": {
       "version": "0.5.0",
@@ -2403,9 +2633,9 @@
       "resolved": "https://registry.npmjs.org/fstream/-/fstream-1.0.11.tgz"
     },
     "function-bind": {
-      "version": "1.1.0",
+      "version": "1.1.1",
       "from": "function-bind@>=1.1.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/function-bind/-/function-bind-1.1.0.tgz",
+      "resolved": "https://registry.npmjs.org/function-bind/-/function-bind-1.1.1.tgz",
       "dev": true
     },
     "functional-red-black-tree": {
@@ -2549,20 +2779,30 @@
       "from": "has-ansi@>=2.0.0 <3.0.0",
       "resolved": "https://registry.npmjs.org/has-ansi/-/has-ansi-2.0.0.tgz"
     },
+    "has-boxed-string-x": {
+      "version": "1.0.1",
+      "from": "has-boxed-string-x@>=1.0.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/has-boxed-string-x/-/has-boxed-string-x-1.0.1.tgz"
+    },
     "has-flag": {
       "version": "1.0.0",
       "from": "has-flag@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/has-flag/-/has-flag-1.0.0.tgz"
     },
+    "has-own-property-x": {
+      "version": "3.1.1",
+      "from": "has-own-property-x@>=3.1.1 <4.0.0",
+      "resolved": "https://registry.npmjs.org/has-own-property-x/-/has-own-property-x-3.1.1.tgz"
+    },
     "has-symbol-support-x": {
-      "version": "1.4.0",
-      "from": "has-symbol-support-x@>=1.4.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/has-symbol-support-x/-/has-symbol-support-x-1.4.0.tgz"
+      "version": "1.4.1",
+      "from": "has-symbol-support-x@>=1.4.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/has-symbol-support-x/-/has-symbol-support-x-1.4.1.tgz"
     },
     "has-to-string-tag-x": {
-      "version": "1.4.0",
-      "from": "has-to-string-tag-x@>=1.4.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/has-to-string-tag-x/-/has-to-string-tag-x-1.4.0.tgz"
+      "version": "1.4.1",
+      "from": "has-to-string-tag-x@>=1.4.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/has-to-string-tag-x/-/has-to-string-tag-x-1.4.1.tgz"
     },
     "has-unicode": {
       "version": "2.0.1",
@@ -2573,6 +2813,11 @@
       "version": "3.1.3",
       "from": "hawk@>=3.1.3 <3.2.0",
       "resolved": "https://registry.npmjs.org/hawk/-/hawk-3.1.3.tgz"
+    },
+    "he": {
+      "version": "1.1.1",
+      "from": "he@1.1.1",
+      "resolved": "https://registry.npmjs.org/he/-/he-1.1.1.tgz"
     },
     "header-case-normalizer": {
       "version": "1.0.3",
@@ -2733,14 +2978,14 @@
       }
     },
     "iconv-lite": {
-      "version": "0.4.15",
-      "from": "iconv-lite@0.4.15",
-      "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.15.tgz"
+      "version": "0.4.19",
+      "from": "iconv-lite@0.4.19",
+      "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.19.tgz"
     },
     "ignore": {
-      "version": "3.3.3",
+      "version": "3.3.5",
       "from": "ignore@>=3.2.0 <4.0.0",
-      "resolved": "https://registry.npmjs.org/ignore/-/ignore-3.3.3.tgz"
+      "resolved": "https://registry.npmjs.org/ignore/-/ignore-3.3.5.tgz"
     },
     "immediate": {
       "version": "3.2.3",
@@ -2795,9 +3040,9 @@
       "resolved": "https://registry.npmjs.org/inquirer/-/inquirer-0.12.0.tgz"
     },
     "interpret": {
-      "version": "1.0.3",
+      "version": "1.0.4",
       "from": "interpret@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/interpret/-/interpret-1.0.3.tgz"
+      "resolved": "https://registry.npmjs.org/interpret/-/interpret-1.0.4.tgz"
     },
     "ipaddr.js": {
       "version": "1.4.0",
@@ -2810,19 +3055,34 @@
       "resolved": "https://registry.npmjs.org/is-array/-/is-array-1.0.1.tgz"
     },
     "is-array-buffer-x": {
-      "version": "1.4.0",
+      "version": "1.7.0",
       "from": "is-array-buffer-x@>=1.0.13 <2.0.0",
-      "resolved": "https://registry.npmjs.org/is-array-buffer-x/-/is-array-buffer-x-1.4.0.tgz"
+      "resolved": "https://registry.npmjs.org/is-array-buffer-x/-/is-array-buffer-x-1.7.0.tgz"
+    },
+    "is-date-object": {
+      "version": "1.0.1",
+      "from": "is-date-object@>=1.0.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/is-date-object/-/is-date-object-1.0.1.tgz"
     },
     "is-empty": {
       "version": "0.0.1",
       "from": "is-empty@>=0.0.1 <0.0.2",
       "resolved": "https://registry.npmjs.org/is-empty/-/is-empty-0.0.1.tgz"
     },
+    "is-falsey-x": {
+      "version": "1.0.0",
+      "from": "is-falsey-x@>=1.0.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/is-falsey-x/-/is-falsey-x-1.0.0.tgz"
+    },
     "is-finite": {
       "version": "1.0.2",
       "from": "is-finite@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/is-finite/-/is-finite-1.0.2.tgz"
+    },
+    "is-finite-x": {
+      "version": "3.0.1",
+      "from": "is-finite-x@>=3.0.1 <4.0.0",
+      "resolved": "https://registry.npmjs.org/is-finite-x/-/is-finite-x-3.0.1.tgz"
     },
     "is-fullwidth-code-point": {
       "version": "1.0.0",
@@ -2830,19 +3090,34 @@
       "resolved": "https://registry.npmjs.org/is-fullwidth-code-point/-/is-fullwidth-code-point-1.0.0.tgz"
     },
     "is-function-x": {
-      "version": "3.1.0",
-      "from": "is-function-x@>=3.1.0 <4.0.0",
-      "resolved": "https://registry.npmjs.org/is-function-x/-/is-function-x-3.1.0.tgz"
+      "version": "3.1.1",
+      "from": "is-function-x@>=3.1.1 <4.0.0",
+      "resolved": "https://registry.npmjs.org/is-function-x/-/is-function-x-3.1.1.tgz"
+    },
+    "is-index-x": {
+      "version": "1.0.0",
+      "from": "is-index-x@>=1.0.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/is-index-x/-/is-index-x-1.0.0.tgz"
     },
     "is-my-json-valid": {
       "version": "2.16.1",
       "from": "is-my-json-valid@>=2.12.0 <3.0.0",
       "resolved": "https://registry.npmjs.org/is-my-json-valid/-/is-my-json-valid-2.16.1.tgz"
     },
+    "is-nan-x": {
+      "version": "1.0.1",
+      "from": "is-nan-x@>=1.0.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/is-nan-x/-/is-nan-x-1.0.1.tgz"
+    },
+    "is-nil-x": {
+      "version": "1.4.1",
+      "from": "is-nil-x@>=1.4.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/is-nil-x/-/is-nil-x-1.4.1.tgz"
+    },
     "is-object-like-x": {
-      "version": "1.5.0",
-      "from": "is-object-like-x@>=1.5.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/is-object-like-x/-/is-object-like-x-1.5.0.tgz"
+      "version": "1.5.1",
+      "from": "is-object-like-x@>=1.5.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/is-object-like-x/-/is-object-like-x-1.5.1.tgz"
     },
     "is-path-cwd": {
       "version": "1.0.0",
@@ -2952,9 +3227,9 @@
       "resolved": "https://registry.npmjs.org/js-tokens/-/js-tokens-3.0.2.tgz"
     },
     "js-yaml": {
-      "version": "3.9.1",
+      "version": "3.10.0",
       "from": "js-yaml@>=3.4.3 <4.0.0",
-      "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.9.1.tgz"
+      "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.10.0.tgz"
     },
     "jshint": {
       "version": "2.9.5",
@@ -3132,9 +3407,9 @@
       "resolved": "https://registry.npmjs.org/leveldown/-/leveldown-1.5.0.tgz",
       "dependencies": {
         "abstract-leveldown": {
-          "version": "2.6.2",
+          "version": "2.6.3",
           "from": "abstract-leveldown@>=2.6.1 <2.7.0",
-          "resolved": "https://registry.npmjs.org/abstract-leveldown/-/abstract-leveldown-2.6.2.tgz"
+          "resolved": "https://registry.npmjs.org/abstract-leveldown/-/abstract-leveldown-2.6.3.tgz"
         }
       }
     },
@@ -3299,6 +3574,21 @@
       "from": "markdown-it@>=4.2.2 <5.0.0",
       "resolved": "https://registry.npmjs.org/markdown-it/-/markdown-it-4.4.0.tgz"
     },
+    "math-clamp-x": {
+      "version": "1.1.0",
+      "from": "math-clamp-x@>=1.0.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/math-clamp-x/-/math-clamp-x-1.1.0.tgz"
+    },
+    "math-sign-x": {
+      "version": "2.1.0",
+      "from": "math-sign-x@>=2.1.0 <3.0.0",
+      "resolved": "https://registry.npmjs.org/math-sign-x/-/math-sign-x-2.1.0.tgz"
+    },
+    "max-safe-integer": {
+      "version": "1.0.1",
+      "from": "max-safe-integer@>=1.0.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/max-safe-integer/-/max-safe-integer-1.0.1.tgz"
+    },
     "mdurl": {
       "version": "1.0.1",
       "from": "mdurl@>=1.0.0 <1.1.0",
@@ -3311,7 +3601,7 @@
     },
     "memdown": {
       "version": "1.2.4",
-      "from": "memdown@>=1.2.4 <2.0.0",
+      "from": "memdown@1.2.4",
       "resolved": "https://registry.npmjs.org/memdown/-/memdown-1.2.4.tgz"
     },
     "meow": {
@@ -3347,14 +3637,14 @@
       "resolved": "https://registry.npmjs.org/mime/-/mime-1.3.4.tgz"
     },
     "mime-db": {
-      "version": "1.29.0",
-      "from": "mime-db@>=1.29.0 <1.30.0",
-      "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.29.0.tgz"
+      "version": "1.30.0",
+      "from": "mime-db@>=1.30.0 <1.31.0",
+      "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.30.0.tgz"
     },
     "mime-types": {
-      "version": "2.1.16",
+      "version": "2.1.17",
       "from": "mime-types@>=2.1.7 <2.2.0",
-      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.16.tgz"
+      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.17.tgz"
     },
     "minimatch": {
       "version": "3.0.4",
@@ -3484,9 +3774,9 @@
       "resolved": "https://registry.npmjs.org/nopt/-/nopt-3.0.6.tgz"
     },
     "normalize-space-x": {
-      "version": "1.3.2",
-      "from": "normalize-space-x@>=1.3.2 <2.0.0",
-      "resolved": "https://registry.npmjs.org/normalize-space-x/-/normalize-space-x-1.3.2.tgz"
+      "version": "1.3.3",
+      "from": "normalize-space-x@>=1.3.3 <2.0.0",
+      "resolved": "https://registry.npmjs.org/normalize-space-x/-/normalize-space-x-1.3.3.tgz"
     },
     "npmlog": {
       "version": "2.0.4",
@@ -3513,6 +3803,11 @@
       "from": "object-filter@>=1.0.2 <2.0.0",
       "resolved": "https://registry.npmjs.org/object-filter/-/object-filter-1.0.2.tgz",
       "dev": true
+    },
+    "object-get-own-property-descriptor-x": {
+      "version": "3.2.0",
+      "from": "object-get-own-property-descriptor-x@>=3.2.0 <4.0.0",
+      "resolved": "https://registry.npmjs.org/object-get-own-property-descriptor-x/-/object-get-own-property-descriptor-x-3.2.0.tgz"
     },
     "object-keys": {
       "version": "1.0.11",
@@ -3583,9 +3878,9 @@
       "resolved": "https://registry.npmjs.org/osenv/-/osenv-0.1.4.tgz"
     },
     "parseurl": {
-      "version": "1.3.1",
+      "version": "1.3.2",
       "from": "parseurl@>=1.3.1 <1.4.0",
-      "resolved": "https://registry.npmjs.org/parseurl/-/parseurl-1.3.1.tgz"
+      "resolved": "https://registry.npmjs.org/parseurl/-/parseurl-1.3.2.tgz"
     },
     "path-array": {
       "version": "1.0.1",
@@ -4285,6 +4580,11 @@
       "from": "promise-nodify@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/promise-nodify/-/promise-nodify-1.0.2.tgz"
     },
+    "property-is-enumerable-x": {
+      "version": "1.1.0",
+      "from": "property-is-enumerable-x@>=1.1.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/property-is-enumerable-x/-/property-is-enumerable-x-1.1.0.tgz"
+    },
     "proxy-addr": {
       "version": "1.1.5",
       "from": "proxy-addr@>=1.1.5 <1.2.0",
@@ -4337,9 +4637,9 @@
       "resolved": "https://registry.npmjs.org/range-parser/-/range-parser-1.2.0.tgz"
     },
     "raw-body": {
-      "version": "2.2.0",
-      "from": "raw-body@>=2.2.0 <2.3.0",
-      "resolved": "https://registry.npmjs.org/raw-body/-/raw-body-2.2.0.tgz"
+      "version": "2.3.2",
+      "from": "raw-body@2.3.2",
+      "resolved": "https://registry.npmjs.org/raw-body/-/raw-body-2.3.2.tgz"
     },
     "rc": {
       "version": "1.2.1",
@@ -4403,9 +4703,9 @@
       "resolved": "https://registry.npmjs.org/repeating/-/repeating-1.1.3.tgz"
     },
     "replace-comments-x": {
-      "version": "1.0.1",
-      "from": "replace-comments-x@>=1.0.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/replace-comments-x/-/replace-comments-x-1.0.1.tgz"
+      "version": "1.0.3",
+      "from": "replace-comments-x@>=1.0.3 <2.0.0",
+      "resolved": "https://registry.npmjs.org/replace-comments-x/-/replace-comments-x-1.0.3.tgz"
     },
     "request": {
       "version": "2.81.0",
@@ -4416,6 +4716,11 @@
       "version": "1.0.1",
       "from": "require_optional@>=1.0.0 <1.1.0",
       "resolved": "https://registry.npmjs.org/require_optional/-/require_optional-1.0.1.tgz"
+    },
+    "require-object-coercible-x": {
+      "version": "1.4.1",
+      "from": "require-object-coercible-x@>=1.4.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/require-object-coercible-x/-/require-object-coercible-x-1.4.1.tgz"
     },
     "require-uncached": {
       "version": "1.0.3",
@@ -4466,9 +4771,9 @@
       "resolved": "https://registry.npmjs.org/retry/-/retry-0.6.1.tgz"
     },
     "rimraf": {
-      "version": "2.6.1",
+      "version": "2.6.2",
       "from": "rimraf@>=2.0.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/rimraf/-/rimraf-2.6.1.tgz"
+      "resolved": "https://registry.npmjs.org/rimraf/-/rimraf-2.6.2.tgz"
     },
     "run-async": {
       "version": "0.1.0",
@@ -4490,6 +4795,11 @@
       "version": "5.1.1",
       "from": "safe-buffer@>=5.0.1 <6.0.0",
       "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.1.tgz"
+    },
+    "safe-to-string-x": {
+      "version": "2.0.1",
+      "from": "safe-to-string-x@>=2.0.1 <3.0.0",
+      "resolved": "https://registry.npmjs.org/safe-to-string-x/-/safe-to-string-x-2.0.1.tgz"
     },
     "samsam": {
       "version": "1.2.1",
@@ -4543,7 +4853,7 @@
     },
     "sinon": {
       "version": "2.4.1",
-      "from": "sinon@2.4.1",
+      "from": "sinon@>=2.4.1 <3.0.0",
       "resolved": "https://registry.npmjs.org/sinon/-/sinon-2.4.1.tgz",
       "dependencies": {
         "isarray": {
@@ -4579,9 +4889,9 @@
       "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.5.7.tgz"
     },
     "source-map-support": {
-      "version": "0.4.16",
+      "version": "0.4.18",
       "from": "source-map-support@>=0.3.2 <=1.0.0",
-      "resolved": "https://registry.npmjs.org/source-map-support/-/source-map-support-0.4.16.tgz"
+      "resolved": "https://registry.npmjs.org/source-map-support/-/source-map-support-0.4.18.tgz"
     },
     "spark-md5": {
       "version": "3.0.0",
@@ -4592,6 +4902,11 @@
       "version": "0.3.3",
       "from": "split@>=0.3.0 <0.4.0",
       "resolved": "https://registry.npmjs.org/split/-/split-0.3.3.tgz"
+    },
+    "split-if-boxed-bug-x": {
+      "version": "1.0.0",
+      "from": "split-if-boxed-bug-x@>=1.0.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/split-if-boxed-bug-x/-/split-if-boxed-bug-x-1.0.0.tgz"
     },
     "sprintf-js": {
       "version": "1.0.3",
@@ -4797,15 +5112,45 @@
       "resolved": "https://registry.npmjs.org/tmp/-/tmp-0.0.31.tgz",
       "dev": true
     },
+    "to-integer-x": {
+      "version": "2.1.0",
+      "from": "to-integer-x@>=2.1.0 <3.0.0",
+      "resolved": "https://registry.npmjs.org/to-integer-x/-/to-integer-x-2.1.0.tgz"
+    },
+    "to-length-x": {
+      "version": "2.1.0",
+      "from": "to-length-x@>=2.1.0 <3.0.0",
+      "resolved": "https://registry.npmjs.org/to-length-x/-/to-length-x-2.1.0.tgz"
+    },
+    "to-number-x": {
+      "version": "1.1.0",
+      "from": "to-number-x@>=1.1.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/to-number-x/-/to-number-x-1.1.0.tgz"
+    },
+    "to-object-x": {
+      "version": "1.4.1",
+      "from": "to-object-x@>=1.4.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/to-object-x/-/to-object-x-1.4.1.tgz"
+    },
+    "to-primitive-x": {
+      "version": "1.0.1",
+      "from": "to-primitive-x@>=1.0.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/to-primitive-x/-/to-primitive-x-1.0.1.tgz"
+    },
+    "to-property-key-x": {
+      "version": "2.0.1",
+      "from": "to-property-key-x@>=2.0.1 <3.0.0",
+      "resolved": "https://registry.npmjs.org/to-property-key-x/-/to-property-key-x-2.0.1.tgz"
+    },
     "to-string-tag-x": {
-      "version": "1.4.0",
-      "from": "to-string-tag-x@>=1.4.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/to-string-tag-x/-/to-string-tag-x-1.4.0.tgz"
+      "version": "1.4.1",
+      "from": "to-string-tag-x@>=1.4.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/to-string-tag-x/-/to-string-tag-x-1.4.1.tgz"
     },
     "to-string-x": {
-      "version": "1.4.0",
-      "from": "to-string-x@>=1.4.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/to-string-x/-/to-string-x-1.4.0.tgz"
+      "version": "1.4.1",
+      "from": "to-string-x@>=1.4.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/to-string-x/-/to-string-x-1.4.1.tgz"
     },
     "tough-cookie": {
       "version": "2.3.2",
@@ -4813,19 +5158,19 @@
       "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.3.2.tgz"
     },
     "trim-left-x": {
-      "version": "1.3.3",
-      "from": "trim-left-x@>=1.3.3 <2.0.0",
-      "resolved": "https://registry.npmjs.org/trim-left-x/-/trim-left-x-1.3.3.tgz"
+      "version": "1.3.5",
+      "from": "trim-left-x@>=1.3.5 <2.0.0",
+      "resolved": "https://registry.npmjs.org/trim-left-x/-/trim-left-x-1.3.5.tgz"
     },
     "trim-right-x": {
-      "version": "1.3.2",
-      "from": "trim-right-x@>=1.3.2 <2.0.0",
-      "resolved": "https://registry.npmjs.org/trim-right-x/-/trim-right-x-1.3.2.tgz"
+      "version": "1.3.3",
+      "from": "trim-right-x@>=1.3.3 <2.0.0",
+      "resolved": "https://registry.npmjs.org/trim-right-x/-/trim-right-x-1.3.3.tgz"
     },
     "trim-x": {
-      "version": "1.0.2",
-      "from": "trim-x@>=1.0.2 <2.0.0",
-      "resolved": "https://registry.npmjs.org/trim-x/-/trim-x-1.0.2.tgz"
+      "version": "1.0.3",
+      "from": "trim-x@>=1.0.3 <2.0.0",
+      "resolved": "https://registry.npmjs.org/trim-x/-/trim-x-1.0.3.tgz"
     },
     "trumpet": {
       "version": "1.7.2",
@@ -5002,9 +5347,9 @@
       }
     },
     "vm2": {
-      "version": "3.4.6",
+      "version": "3.5.0",
       "from": "vm2@>=3.4.6 <4.0.0",
-      "resolved": "https://registry.npmjs.org/vm2/-/vm2-3.4.6.tgz"
+      "resolved": "https://registry.npmjs.org/vm2/-/vm2-3.5.0.tgz"
     },
     "vuvuzela": {
       "version": "1.0.3",
@@ -5017,9 +5362,9 @@
       "resolved": "https://registry.npmjs.org/which/-/which-1.3.0.tgz"
     },
     "white-space-x": {
-      "version": "2.0.2",
-      "from": "white-space-x@>=2.0.2 <3.0.0",
-      "resolved": "https://registry.npmjs.org/white-space-x/-/white-space-x-2.0.2.tgz"
+      "version": "2.0.3",
+      "from": "white-space-x@>=2.0.3 <3.0.0",
+      "resolved": "https://registry.npmjs.org/white-space-x/-/white-space-x-2.0.3.tgz"
     },
     "wordwrap": {
       "version": "1.0.0",

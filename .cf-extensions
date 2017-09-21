@@ -1,7 +1,8 @@
 {
   "tracker_url": "https://www.pivotaltracker.com/n/projects/1385414",
   "description": "Metering engine for CloudFoundry",
-  "lead_company": "IBM",
+  "slack_channel": "#cf-abacus",
+  "lead_company": "IBM and SAP",
   "contact_email": "Michael Maximilien <maxim@us.ibm.com>",
   "proposed_date": "2015-07-14T12:00:00Z"
 }

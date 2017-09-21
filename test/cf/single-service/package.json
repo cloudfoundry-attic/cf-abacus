@@ -2,7 +2,7 @@
   "name": "abacus-cf-single-service-itest",
   "description": "CF Services Bridge & Renewer single service tests",
   "license": "Apache-2.0",
-  "version": "0.0.6-dev.9",
+  "version": "1.0.0",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/cf/single-service",
   "bugs": {
@@ -79,7 +79,7 @@
     "abacus-publish": "file:../../../tools/publish"
   },
   "engines": {
-    "node": ">=6.10.0",
+    "node": "<=8.1.3",
     "npm": ">=3.10.10"
   }
 }

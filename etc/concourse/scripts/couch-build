@@ -2,9 +2,6 @@
 
 set -e -x
 
-echo "Environment:"
-env | sort
-
 echo "Starting CouchDB ..."
 /usr/local/bin/couchdb -b
 
