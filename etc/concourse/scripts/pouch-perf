@@ -2,9 +2,6 @@
 
 set -e -x
 
-echo "Environment:"
-env | sort
-
 pushd built-project
   TIMEOUT=$(expr ${CI_START_TIMEOUT:-10000} / 1000)
   echo "Using start timeout of $TIMEOUT seconds"

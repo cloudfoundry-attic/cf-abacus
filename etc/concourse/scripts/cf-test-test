@@ -5,9 +5,6 @@ set -e -x
 SCRIPT_DIR="${BASH_SOURCE%/*}"
 source $SCRIPT_DIR/common-functions
 
-echo "Environment:"
-env | sort
-
 # Download CF CLI
 mkdir -p bin/.cf
 (cd bin/.cf && curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx)
