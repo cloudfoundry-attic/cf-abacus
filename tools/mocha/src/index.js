@@ -50,6 +50,7 @@ const runCLI = () => {
   if (contains(process.argv, '--command')) {
     commander.istanbul = false;
     commander.color = true;
+    commander.file = 'test.js';
   }
   else {
     commander
