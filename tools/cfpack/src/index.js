@@ -51,11 +51,13 @@ const mkdirs = (root, additional, cb) => {
 // Adjust a file: dependency to our packed app structure, by converting
 // relative path from the module to a relative path to our package root
 const local = (root, additional, d) => {
+  if (!/file:/.test(d[1]))
+    return d;
   const vendoredPath = path.resolve(d[1].substr(5)).
     replace(additional, additionalDir);
   const dependencyPath = path.join('file:.cfpack',
     path.relative(root, vendoredPath));
-  return !/file:/.test(d[1]) ? d : [d[0], dependencyPath];
+  return [d[0], dependencyPath];
 };
 
 // Fixes dependencies locations for npm-shrinkwrap.json
