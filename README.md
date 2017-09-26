@@ -43,6 +43,26 @@ cd cf-abacus
 npm run build
 ```
 
+Running Abacus on localhost
+---
+
+The Abacus apps can also run on your local host in a shell environment outside of Cloud Foundry, like this:
+
+```sh
+cd cf-abacus
+
+# Start the Abacus apps
+npm start
+
+# Wait a bit until all the apps have started
+
+# Run the demo script
+npm run demo
+
+# Stop everything
+npm stop
+```
+
 Dependency management
 ---
 
@@ -104,85 +124,7 @@ For a list of all available tests check [doc/tests.md](doc/tests.md).
 Deploying to Cloud Foundry
 ---
 
-Abacus runs as a set of applications deployed to Cloud Foundry. Each application is configured to run in multiple instances for availability and performance. Service usage data is stored in CouchDB databases.
-
-The following steps assume a local Cloud Foundry deployment created using [Bosh-lite](https://github.com/cloudfoundry/bosh-lite), running on the default local IP assigned by the Bosh-lite CF installation script, and have been tested on CF v226.4. Please adjust to your particular Cloud Foundry deployment environment.
-
-```sh
-cd cf-abacus
-
-# Point CF CLI to your local Cloud Foundry deployment and
-# create a CF security group for the Abacus apps
-bin/cfsetup
-
-# Run cf push on the Abacus apps to deploy them to Cloud Foundry
-npm run cfpush
-
-# Check the state of the Abacus apps
-cf apps
-
-# You should see something like this
-Getting apps in org <your organization> / space <your space>...
-OK
-
-name                       requested state   instances   memory   disk   urls
-abacus-usage-collector     started           1/1         512M     512M   abacus-usage-collector.both-lite.com
-abacus-usage-meter         started           1/1         512M     512M   abacus-usage-meter.both-lite.com
-abacus-usage-accumulator   started           1/1         512M     512M   abacus-usage-accumulator.both-lite.com
-abacus-usage-aggregator    started           1/1         512M     512M   abacus-usage-aggregator.both-lite.com
-abacus-usage-reporting     started           1/1         512M     512M   abacus-usage-reporting.both-lite.com
-abacus-provisioning-plugin started           1/1         512M     512M   abacus-provisioning-plugin.both-lite.com
-abacus-account-plugin      started           1/1         512M     512M   abacus-account-plugin.both-lite.com
-abacus-pouchserver         started           1/1         1G       512M   abacus-pouchserver.both-lite.com
-```
-
-Running the demo on Cloud Foundry
----
-
-The Abacus demo runs a simple test program that simulates the submission of usage by a Cloud service provider, then gets a daily report for the usage aggregated within a Cloud Foundry organization.
-
-The demo data is stored in a small in-memory [PouchDB](http://pouchdb.com) test database so the demo is self-contained and you don't need to set up a real CouchDB database just to run it.
-
-Once the Abacus apps are running on your Cloud Foundry deployment, do this:
-
-```sh
-cd cf-abacus
-
-# Run the demo script
-npm run demo -- \
-  --collector https://abacus-usage-collector.both-lite.com \
-  --reporting https://abacus-usage-reporting.both-lite.com
-
-# You should see usage being submitted and a usage report for the demo organization
-
-```
-
-Running Abacus on localhost
----
-
-The Abacus apps can also run on your local host in a shell environment outside of Cloud Foundry, like this:
-
-```sh
-cd cf-abacus
-
-# Start the Abacus apps
-npm start
-
-# Wait a bit until all the apps have started
-
-# Run the demo script
-npm run demo
-
-# Stop everything
-npm stop
-```
-
-Metering Cloud Foundry app usage
----
-
-Abacus comes with a CF [app bridge](lib/cf/applications) and [services bridge](lib/cf/services) that act as resource providers for Cloud Foundry app and service runtime usage. They read Cloud Foundry [usage events](https://docs.cloudfoundry.org/running/managing-cf/usage-events.html) using Cloud Controller [API](http://apidocs.cloudfoundry.org/) and reports usage to the Abacus usage [collector](lib/metering/collector).
-
-The Abacus CF bridges enables you to see runtime usage reports for the apps running on your Cloud Foundry instance. In order to start the bridge follow their README [here](lib/cf/applications/README.md) and [here](lib/cf/services/README.md).
+Check our [wiki](https://github.com/cloudfoundry-incubator/cf-abacus/wiki/Installation) on how to deploy Abacus to Cloud Foundry.
 
 Concourse pipelines
 ---
