@@ -1,0 +1,27 @@
+{
+  "name": "abacus-cfpack-test",
+  "version": "1.0.0",
+  "dependencies": {
+    "abacus-batch": {
+      "version": "1.0.0",
+      "from": "../../../../lib/utils/batch",
+      "resolved": "file:../../../../lib/utils/batch"
+    },
+    "jsonwebtoken": {
+      "version": "5.7.0",
+      "from": "jsonwebtoken@>=5.0.5 <6.0.0",
+      "resolved": "https://registry.npmjs.org/jsonwebtoken/-/jsonwebtoken-5.7.0.tgz",
+      "dependencies": {
+        "ms": {
+          "version": "0.7.3",
+          "from": "ms@>=0.7.1 <0.8.0"
+        }
+      }
+    },
+    "underscore": {
+      "version": "1.8.3",
+      "from": "underscore@>=1.8.3 <2.0.0",
+      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.8.3.tgz"
+    }
+  }
+}
