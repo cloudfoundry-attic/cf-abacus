@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -e -x
+
+SCRIPT_DIR="${BASH_SOURCE%/*}"
+
+if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
+  insecure='--insecure'
+fi
+
+function purge {
+  echo "Purging usage events ..."
+  
+  url_path=$1
+  response_code=$(curl $insecure -s -o /dev/null -w "%{http_code}" -X POST -H "Authorization: bearer $token" -i "https://api.$CF_SYS_DOMAIN/$url_path")
+  if [ "$response_code" == "204" ]; then
+    echo "$2 events purged successfully"
+  else
+    echo "$2 events purging failed with reposnse code: $response_code"
+    exit 1
+  fi
+}
+
+$SCRIPT_DIR/create-uaa-clients
+
+token=$(curl $insecure --user $CC_CLIENT_ID:$CC_CLIENT_SECRET -s "https://uaa.$CF_SYS_DOMAIN/oauth/token?grant_type=client_credentials" | jq -r .access_token)
+if [ "$token" == "null" ] || [ -z "$token" ]; then
+  echo "Cannot obtain token for access to CF API !"
+  exit 1
+fi
+
+app_purge_url_path="v2/app_usage_events/destructively_purge_all_and_reseed_started_apps"
+service_purge_url_path="v2/service_usage_events/destructively_purge_all_and_reseed_existing_instances"
+
+purge "$app_purge_url_path" "App"
+purge  "$service_purge_url_path" "Service"
