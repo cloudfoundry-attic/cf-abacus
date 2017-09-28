@@ -129,3 +129,20 @@ function deleteObsoleteApps {
     cf delete $APP_NAME -f
   fi
 }
+
+function purge {
+  echo "Purging usage events ..."
+  
+  if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
+    insecure='--insecure'
+  fi
+  
+  url_path=$1
+  response_code=$(curl $insecure -s -o /dev/null -w "%{http_code}" -X POST -H "Authorization: bearer $token" -i "https://api.$CF_SYS_DOMAIN/$url_path")
+  if [ "$response_code" == "204" ]; then
+    echo "$2 events purged successfully"
+  else
+    echo "$2 events purging failed with reposnse code: $response_code"
+    exit 1
+  fi
+}
