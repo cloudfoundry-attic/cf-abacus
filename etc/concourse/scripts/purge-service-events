@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+
+SCRIPT_DIR="${BASH_SOURCE%/*}"
+source $SCRIPT_DIR/common-functions
+
+if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
+  insecure='--insecure'
+fi
+
+token=$(curl $insecure --user $CC_CLIENT_ID:$CC_CLIENT_SECRET -s "https://uaa.$CF_SYS_DOMAIN/oauth/token?grant_type=client_credentials" | jq -r .access_token)
+if [ "$token" == "null" ] || [ -z "$token" ]; then
+  echo "Cannot obtain token for access to CF API !"
+  exit 1
+fi
+
+service_purge_url_path="v2/service_usage_events/destructively_purge_all_and_reseed_existing_instances"
+
+purge  "$service_purge_url_path" "Service"
