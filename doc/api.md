@@ -858,19 +858,19 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
   "organization_id": "us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
   "windows": [
     [{
-      "charge": 46.09,
+      "charge": 46.09
     }],
     [{
-      "charge": 46.09,
+      "charge": 46.09
     }],
     [{
-      "charge": 46.09,
+      "charge": 46.09
     }],
     [{
-      "charge": 46.09,
+      "charge": 46.09
     }],
     [{
-      "charge": 46.09,
+      "charge": 46.09
     }]
   ],
   "id": "k-a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27-t-0001435622400000",
@@ -879,19 +879,19 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
       "space_id": "aaeae239-f3f8-483c-9dd0-de5d41c38b6a",
       "windows": [
         [{
-          "charge": 46.09,
+          "charge": 46.09
         }],
         [{
-          "charge": 46.09,
+          "charge": 46.09
         }],
         [{
-          "charge": 46.09,
+          "charge": 46.09
         }],
         [{
-          "charge": 46.09,
+          "charge": 46.09
         }],
         [{
-          "charge": 46.09,
+          "charge": 46.09
         }]
       ],
       "consumers": [
@@ -899,19 +899,19 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
           "consumer_id": "app:d98b5916-3c77-44b9-ac12-045678edabae",
           "windows": [
             [{
-              "charge": 46.09,
+              "charge": 46.09
             }],
             [{
-              "charge": 46.09,
+              "charge": 46.09
             }],
             [{
-              "charge": 46.09,
+              "charge": 46.09
             }],
             [{
-              "charge": 46.09,
+              "charge": 46.09
             }],
             [{
-              "charge": 46.09,
+              "charge": 46.09
             }]
           ],
           "resources": [
@@ -1015,19 +1015,19 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
                   "plan_id": "basic",
                   "windows": [
                     [{
-                      "charge": 46.09,
+                      "charge": 46.09
                     }],
                     [{
-                      "charge": 46.09,
+                      "charge": 46.09
                     }],
                     [{
-                      "charge": 46.09,
+                      "charge": 46.09
                     }],
                     [{
-                      "charge": 46.09,
+                      "charge": 46.09
                     }],
                     [{
-                      "charge": 46.09,
+                      "charge": 46.09
                     }]
                   ],
                   "aggregated_usage": [
@@ -1148,19 +1148,19 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
           "resource_id": "object-storage",
           "windows": [
             [{
-              "charge": 46.09,
+              "charge": 46.09
             }],
             [{
-              "charge": 46.09,
+              "charge": 46.09
             }],
             [{
-              "charge": 46.09,
+              "charge": 46.09
             }],
             [{
-              "charge": 46.09,
+              "charge": 46.09
             }],
             [{
-              "charge": 46.09,
+              "charge": 46.09
             }]
           ],
           "aggregated_usage": [
@@ -1260,19 +1260,19 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
               "plan_id": "basic",
               "windows": [
                 [{
-                  "charge": 46.09,
+                  "charge": 46.09
                 }],
                 [{
-                  "charge": 46.09,
+                  "charge": 46.09
                 }],
                 [{
-                  "charge": 46.09,
+                  "charge": 46.09
                 }],
                 [{
-                  "charge": 46.09,
+                  "charge": 46.09
                 }],
                 [{
-                  "charge": 46.09,
+                  "charge": 46.09
                 }]
               ],
               "aggregated_usage": [
@@ -1378,19 +1378,19 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
       "resource_id": "object-storage",
       "windows": [
         [{
-          "charge": 46.09,
+          "charge": 46.09
         }],
         [{
-          "charge": 46.09,
+          "charge": 46.09
         }],
         [{
-          "charge": 46.09,
+          "charge": 46.09
         }],
         [{
-          "charge": 46.09,
+          "charge": 46.09
         }],
         [{
-          "charge": 46.09,
+          "charge": 46.09
         }]
       ],
       "aggregated_usage": [
@@ -1490,19 +1490,19 @@ _HTTP response_: 200 to indicate success with a _usage summary report_ JSON docu
           "plan_id": "basic",
           "windows": [
             [{
-              "charge": 46.09,
+              "charge": 46.09
             }],
             [{
-              "charge": 46.09,
+              "charge": 46.09
             }],
             [{
-              "charge": 46.09,
+              "charge": 46.09
             }],
             [{
-              "charge": 46.09,
+              "charge": 46.09
             }],
             [{
-              "charge": 46.09,
+              "charge": 46.09
             }]
           ],
           "aggregated_usage": [
