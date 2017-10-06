@@ -24,7 +24,7 @@ if [ "$ENABLE_SERVICE_ACCESS" == "true" ]; then
 fi
 
 if [ "$SKIP_CREATE_USER" == "true" ]; then
-  echo "Assigining user as OrgManager..."
+  echo "Using existing user $CF_USER ..."
 else
   echo "Recreating user ..."
   cf delete-user -f "$CF_USER"
