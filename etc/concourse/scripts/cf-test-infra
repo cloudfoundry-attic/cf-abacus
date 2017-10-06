@@ -19,7 +19,7 @@ cf create-org $CF_ORG -q $CF_ORG
 cf create-space $CF_SPACE -o $CF_ORG
 
 if [ "$SKIP_CREATE_USER" == "true" ]; then
-  echo "Assigining user as OrgManager..."
+  echo "Using existing user $CF_USER ..."
 else
   echo "Recreating user ..."
   cf delete-user -f "$CF_USER"
