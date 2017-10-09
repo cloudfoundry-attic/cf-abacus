@@ -1,7 +1,8 @@
 language: node_js
-node_js: "8.1.3"
 dist: trusty
 sudo: false
+git:
+  depth: 3
 
 before_install:
   - npm i -g npm@latest-4
@@ -12,106 +13,255 @@ env:
     - START_TIMEOUT=20000
     - TOTAL_TIMEOUT=120000
 
-jobs:
+matrix:
+  fast_finish: true
+
   include:
-    - &unit-tests
-      stage: unit tests
-      script: npm run build && npm run coveralls
-      env:
-        - DESCRIPTION="pouchdb"
-    - <<: *unit-tests
-      env:
-        - DESCRIPTION="couchdb"
-        - JOBS=1
-        - DBCLIENT=abacus-couchclient
-        - DB=http://localhost:5984
+    - env:
+      - DESCRIPTION=unit-tests-pouchdb
+      node_js: "8.1.3"
+      script:
+        - npm run build && npm run coveralls
+    - env:
+      - DESCRIPTION=unit-tests-couchdb
+      - DBCLIENT=abacus-couchclient
+      - DB=http://localhost:5984
+      node_js: "8.1.3"
       services:
         - couchdb
-    - <<: *unit-tests
-      env:
-        - DESCRIPTION="mongodb"
-        - JOBS=1
-        - DBCLIENT=abacus-mongoclient
-        - DB=mongodb://localhost:27017
+      script:
+        - npm run build && npm run coveralls
+    - env:
+      - DESCRIPTION=unit-tests-mongodb
+      - DBCLIENT=abacus-mongoclient
+      - DB=mongodb://localhost:27017
+      node_js: "8.1.3"
       services:
         - mongodb
-    - &integration-tests
-      stage: integration tests
-      before_script: npm run provision
-      script: travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
-      env:
-        - DESCRIPTION="pouchdb"
-        - CI_TEST=itest
-    - <<: *integration-tests
-      env:
-        - DESCRIPTION="couchdb"
-        - JOBS=1
-        - DBCLIENT=abacus-couchclient
-        - DB=http://localhost:5984
-        - CI_TEST=itest
+      script:
+        - npm run build && npm run coveralls
+
+    - env:
+      - DESCRIPTION=itests-pouchdb
+      - CI_TEST=itest
+      - JOBS=1
+      node_js: "8.1.3"
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+    - env:
+      - DESCRIPTION=itests-couchdb
+      - DBCLIENT=abacus-couchclient
+      - DB=http://localhost:5984
+      - JOBS=1
+      - CI_TEST=itest
+      node_js: "8.1.3"
       services:
         - couchdb
-    - <<: *integration-tests
-      env:
-        - DESCRIPTION="mongodb"
-        - JOBS=1
-        - DBCLIENT=abacus-mongoclient
-        - DB=mongodb://localhost:27017
-        - CI_TEST=itest
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+    - env:
+      - DESCRIPTION=itests-mongodb
+      - DBCLIENT=abacus-mongoclient
+      - DB=mongodb://localhost:27017
+      - JOBS=1
+      - CI_TEST=itest
+      node_js: "8.1.3"
       services:
         - mongodb
-    - &extended-tests
-      stage: extended tests
-      before_script: npm run provision
-      script: travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
-      env:
-        - DESCRIPTION="pouchdb"
-        - CI_TEST=extended
-    - <<: *extended-tests
-      env:
-        - DESCRIPTION="couchdb"
-        - JOBS=1
-        - DBCLIENT=abacus-couchclient
-        - DB=http://localhost:5984
-        - CI_TEST=extended
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+
+    - env:
+      - DESCRIPTION=extended-tests-pouchdb
+      - CI_TEST=extended
+      - JOBS=1
+      node_js: "8.1.3"
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+    - env:
+      - DESCRIPTION=extended-tests-couchdb
+      - DBCLIENT=abacus-couchclient
+      - DB=http://localhost:5984
+      - JOBS=1
+      - CI_TEST=extended
+      node_js: "8.1.3"
       services:
         - couchdb
-    - <<: *extended-tests
-      env:
-        - DESCRIPTION="mongodb"
-        - JOBS=1
-        - DBCLIENT=abacus-mongoclient
-        - DB=mongodb://localhost:27017
-        - CI_TEST=extended
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+    - env:
+      - DESCRIPTION=extended-tests-couchdb
+      - DBCLIENT=abacus-mongoclient
+      - DB=mongodb://localhost:27017
+      - JOBS=1
+      - CI_TEST=extended
+      node_js: "8.1.3"
       services:
         - mongodb
-    - &perf-tests
-      stage: performance tests
-      script: travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
-      before_script: npm run provision
-      env:
-        - DESCRIPTION="pouchdb"
-        - CI_TEST=perf
-    - <<: *perf-tests
-      env:
-        - DESCRIPTION="couchdb"
-        - JOBS=1
-        - DBCLIENT=abacus-couchclient
-        - DB=http://localhost:5984
-        - CI_TEST=perf
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+
+    - env:
+      - DESCRIPTION=perf-tests-pouchdb
+      - CI_TEST=perf
+      - JOBS=1
+      node_js: "8.1.3"
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+    - env:
+      - DESCRIPTION=perf-tests-couchdb
+      - DBCLIENT=abacus-couchclient
+      - DB=http://localhost:5984
+      - JOBS=1
+      - CI_TEST=perf
+      node_js: "8.1.3"
       services:
         - couchdb
-    - <<: *perf-tests
-      env:
-        - DESCRIPTION="mongodb 2.6"
-        - JOBS=1
-        - DBCLIENT=abacus-mongoclient
-        - DB=mongodb://localhost:27017
-        - CI_TEST=perf
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+    - env:
+      - DESCRIPTION=perf-tests-couchdb
+      - DBCLIENT=abacus-mongoclient
+      - DB=mongodb://localhost:27017
+      - JOBS=1
+      - CI_TEST=perf
+      node_js: "8.1.3"
       services:
         - mongodb
-    - stage: deploy
-      script: travis_retry npm run cftest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+
+    - env:
+      - DESCRIPTION=unit-tests-pouchdb
+      node_js: "node"
+      script:
+        - npm run build && npm run coveralls
+    - env:
+      - DESCRIPTION=unit-tests-couchdb
+      - DBCLIENT=abacus-couchclient
+      - DB=http://localhost:5984
+      node_js: "node"
+      services:
+        - couchdb
+      script:
+        - npm run build && npm run coveralls
+    - env:
+      - DESCRIPTION=unit-tests-mongodb
+      - DBCLIENT=abacus-mongoclient
+      - DB=mongodb://localhost:27017
+      node_js: "node"
+      services:
+        - mongodb
+      script:
+        - npm run build && npm run coveralls
+
+    - env:
+      - DESCRIPTION=itests-pouchdb
+      - CI_TEST=itest
+      - JOBS=1
+      node_js: "node"
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+    - env:
+      - DESCRIPTION=itests-couchdb
+      - DBCLIENT=abacus-couchclient
+      - DB=http://localhost:5984
+      - JOBS=1
+      - CI_TEST=itest
+      node_js: "node"
+      services:
+        - couchdb
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+    - env:
+      - DESCRIPTION=itests-mongodb
+      - DBCLIENT=abacus-mongoclient
+      - DB=mongodb://localhost:27017
+      - JOBS=1
+      - CI_TEST=itest
+      node_js: "node"
+      services:
+        - mongodb
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+
+    - env:
+      - DESCRIPTION=extended-tests-pouchdb
+      - CI_TEST=extended
+      - JOBS=1
+      node_js: "node"
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+    - env:
+      - DESCRIPTION=extended-tests-couchdb
+      - DBCLIENT=abacus-couchclient
+      - DB=http://localhost:5984
+      - JOBS=1
+      - CI_TEST=extended
+      node_js: "node"
+      services:
+        - couchdb
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+    - env:
+      - DESCRIPTION=extended-tests-couchdb
+      - DBCLIENT=abacus-mongoclient
+      - DB=mongodb://localhost:27017
+      - JOBS=1
+      - CI_TEST=extended
+      node_js: "node"
+      services:
+        - mongodb
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+
+    - env:
+      - DESCRIPTION=perf-tests-pouchdb
+      - CI_TEST=perf
+      - JOBS=1
+      node_js: "node"
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+    - env:
+      - DESCRIPTION=perf-tests-couchdb
+      - DBCLIENT=abacus-couchclient
+      - DB=http://localhost:5984
+      - JOBS=1
+      - CI_TEST=perf
+      node_js: "node"
+      services:
+        - couchdb
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+    - env:
+      - DESCRIPTION=perf-tests-couchdb
+      - DBCLIENT=abacus-mongoclient
+      - DB=mongodb://localhost:27017
+      - JOBS=1
+      - CI_TEST=perf
+      node_js: "node"
+      services:
+        - mongodb
+      script:
+        - npm run provision
+        - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
 
 notifications:
   irc:
