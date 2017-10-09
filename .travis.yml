@@ -1,7 +1,4 @@
 language: node_js
-node_js:
- - "8.1.3"
- - "node"
 dist: trusty
 sudo: false
 
@@ -21,6 +18,9 @@ jobs:
       script: npm run build && npm run coveralls
       env:
         - DESCRIPTION="pouchdb"
+        node_js:
+         - "8.1.3"
+         - "node"
     - <<: *unit-tests
       env:
         - DESCRIPTION="couchdb"
