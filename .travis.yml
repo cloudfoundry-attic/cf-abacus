@@ -53,8 +53,8 @@ matrix:
       - DESCRIPTION=itests-couchdb
       - DBCLIENT=abacus-couchclient
       - DB=http://localhost:5984
-      - CI_TEST=itest
       - JOBS=1
+      - CI_TEST=itest
       node_js: "8.1.3"
       services:
         - couchdb
@@ -65,8 +65,8 @@ matrix:
       - DESCRIPTION=itests-mongodb
       - DBCLIENT=abacus-mongoclient
       - DB=mongodb://localhost:27017
-      - CI_TEST=itest
       - JOBS=1
+      - CI_TEST=itest
       node_js: "8.1.3"
       services:
         - mongodb
@@ -86,8 +86,8 @@ matrix:
       - DESCRIPTION=extended-tests-couchdb
       - DBCLIENT=abacus-couchclient
       - DB=http://localhost:5984
-      - CI_TEST=extended
       - JOBS=1
+      - CI_TEST=extended
       node_js: "8.1.3"
       services:
         - couchdb
@@ -98,8 +98,8 @@ matrix:
       - DESCRIPTION=extended-tests-couchdb
       - DBCLIENT=abacus-mongoclient
       - DB=mongodb://localhost:27017
-      - CI_TEST=extended
       - JOBS=1
+      - CI_TEST=extended
       node_js: "8.1.3"
       services:
         - mongodb
@@ -119,8 +119,8 @@ matrix:
       - DESCRIPTION=perf-tests-couchdb
       - DBCLIENT=abacus-couchclient
       - DB=http://localhost:5984
-      - CI_TEST=perf
       - JOBS=1
+      - CI_TEST=perf
       node_js: "8.1.3"
       services:
         - couchdb
@@ -131,8 +131,8 @@ matrix:
       - DESCRIPTION=perf-tests-couchdb
       - DBCLIENT=abacus-mongoclient
       - DB=mongodb://localhost:27017
-      - CI_TEST=perf
       - JOBS=1
+      - CI_TEST=perf
       node_js: "8.1.3"
       services:
         - mongodb
@@ -140,7 +140,6 @@ matrix:
         - npm run provision
         - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
 
-  allow_failures:
     - env:
       - DESCRIPTION=unit-tests-pouchdb
       node_js: "node"
@@ -177,8 +176,8 @@ matrix:
       - DESCRIPTION=itests-couchdb
       - DBCLIENT=abacus-couchclient
       - DB=http://localhost:5984
-      - CI_TEST=itest
       - JOBS=1
+      - CI_TEST=itest
       node_js: "node"
       services:
         - couchdb
@@ -189,8 +188,8 @@ matrix:
       - DESCRIPTION=itests-mongodb
       - DBCLIENT=abacus-mongoclient
       - DB=mongodb://localhost:27017
-      - CI_TEST=itest
       - JOBS=1
+      - CI_TEST=itest
       node_js: "node"
       services:
         - mongodb
@@ -210,8 +209,8 @@ matrix:
       - DESCRIPTION=extended-tests-couchdb
       - DBCLIENT=abacus-couchclient
       - DB=http://localhost:5984
-      - CI_TEST=extended
       - JOBS=1
+      - CI_TEST=extended
       node_js: "node"
       services:
         - couchdb
@@ -222,8 +221,8 @@ matrix:
       - DESCRIPTION=extended-tests-couchdb
       - DBCLIENT=abacus-mongoclient
       - DB=mongodb://localhost:27017
-      - CI_TEST=extended
       - JOBS=1
+      - CI_TEST=extended
       node_js: "node"
       services:
         - mongodb
@@ -243,8 +242,8 @@ matrix:
       - DESCRIPTION=perf-tests-couchdb
       - DBCLIENT=abacus-couchclient
       - DB=http://localhost:5984
-      - CI_TEST=perf
       - JOBS=1
+      - CI_TEST=perf
       node_js: "node"
       services:
         - couchdb
@@ -255,8 +254,8 @@ matrix:
       - DESCRIPTION=perf-tests-couchdb
       - DBCLIENT=abacus-mongoclient
       - DB=mongodb://localhost:27017
-      - CI_TEST=perf
       - JOBS=1
+      - CI_TEST=perf
       node_js: "node"
       services:
         - mongodb
