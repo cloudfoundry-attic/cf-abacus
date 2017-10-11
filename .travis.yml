@@ -19,6 +19,7 @@ matrix:
   include:
     - env:
       - DESCRIPTION=unit-tests-pouchdb
+      - JOBS=1
       node_js: 8.1.3
       script:
         - npm run build && npm run coveralls
@@ -26,6 +27,7 @@ matrix:
       - DESCRIPTION=unit-tests-couchdb
       - DBCLIENT=abacus-couchclient
       - DB=http://localhost:5984
+      - JOBS=1
       node_js: 8.1.3
       services:
         - couchdb
@@ -35,6 +37,7 @@ matrix:
       - DESCRIPTION=unit-tests-mongodb
       - DBCLIENT=abacus-mongoclient
       - DB=mongodb://localhost:27017
+      - JOBS=1
       node_js: 8.1.3
       services:
         - mongodb
