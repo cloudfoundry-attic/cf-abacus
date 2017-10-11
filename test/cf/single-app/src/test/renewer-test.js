@@ -249,14 +249,14 @@ describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
       expect(previousMonth).to.contain.all.keys('quantity', 'charge');
       debug('%s month window; Expected: consuming=%d, charge>0; ' +
         'Actual: consuming=%d, charge=%d; Month window: %o', windowName,
-        expectedConsuming, previousMonth.quantity.consuming,
-        previousMonth.charge, previousMonth);
+      expectedConsuming, previousMonth.quantity.consuming,
+      previousMonth.charge, previousMonth);
       expect(previousMonth.quantity.consuming).to.equal(expectedConsuming);
     }
     else
       debug('%s month window; Expected: charge>0; ' +
         'Actual: charge=%o; Month window: %o',
-        windowName, previousMonth.charge, previousMonth);
+      windowName, previousMonth.charge, previousMonth);
 
     expect(previousMonth).to.contain.all.keys('charge');
     expect(previousMonth.charge).to.not.equal(undefined);
@@ -280,14 +280,14 @@ describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
       expect(currentMonth).to.contain.all.keys('quantity', 'charge');
       debug('%s window; Expected: consuming=%d, charge>0; ' +
         'Actual: consuming=%d, charge=%d; Month window: %o',
-        windowName, expectedConsuming, currentMonth.quantity.consuming,
-        currentMonth.charge, currentMonth);
+      windowName, expectedConsuming, currentMonth.quantity.consuming,
+      currentMonth.charge, currentMonth);
       expect(currentMonth.quantity.consuming).to.equal(expectedConsuming);
     }
     else
       debug('%s window; Expected:  charge>0; ' +
         'Actual: charge=%o; Month window: %o',
-        windowName, currentMonth.charge, currentMonth);
+      windowName, currentMonth.charge, currentMonth);
 
     expect(currentMonth.charge).not.to.equal(undefined);
     expect(currentMonth).to.contain.all.keys('charge');
@@ -297,42 +297,42 @@ describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
   const checkReport = (checkFn, cb) => {
     request.get('http://localhost:9088/v1/metering/organizations' +
       '/:organization_id/aggregated/usage', {
-        organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
-        headers: {
-          authorization: 'bearer ' + signedSystemToken
-        }
-      },
-      (error, response) => {
-        try {
-          expect(error).to.equal(undefined);
+      organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+      headers: {
+        authorization: 'bearer ' + signedSystemToken
+      }
+    },
+    (error, response) => {
+      try {
+        expect(error).to.equal(undefined);
 
-          expect(response.body).to.contain.all.keys('resources', 'spaces');
-          const resources = response.body.resources;
-          expect(resources.length).to.equal(1);
-          expect(response.body.spaces.length).to.equal(1);
+        expect(response.body).to.contain.all.keys('resources', 'spaces');
+        const resources = response.body.resources;
+        expect(resources.length).to.equal(1);
+        expect(response.body.spaces.length).to.equal(1);
 
-          expect(resources[0]).to.contain.all.keys(
-            'plans', 'aggregated_usage');
+        expect(resources[0]).to.contain.all.keys(
+          'plans', 'aggregated_usage');
 
-          const planUsage = resources[0].plans[0].aggregated_usage[0];
-          checkFn('Plans aggregated usage', planUsage);
+        const planUsage = resources[0].plans[0].aggregated_usage[0];
+        checkFn('Plans aggregated usage', planUsage);
 
-          const aggregatedUsage = resources[0].aggregated_usage[0];
-          checkFn('Aggregated usage', aggregatedUsage, 'resource');
+        const aggregatedUsage = resources[0].aggregated_usage[0];
+        checkFn('Aggregated usage', aggregatedUsage, 'resource');
 
-          resultDebug('All usage report checks are successful for: %s',
-            JSON.stringify(response.body, null, 2));
+        resultDebug('All usage report checks are successful for: %s',
+          JSON.stringify(response.body, null, 2));
 
-          cb();
-        }
-        catch (e) {
-          const message = util.format('Check failed with %s.\n' +
+        cb();
+      }
+      catch (e) {
+        const message = util.format('Check failed with %s.\n' +
             'Usage report:\n', e.stack,
-            response ? JSON.stringify(response.body, null, 2) : undefined);
-          responseDebug(message);
-          cb(new Error(message), e);
-        }
-      });
+        response ? JSON.stringify(response.body, null, 2) : undefined);
+        responseDebug(message);
+        cb(new Error(message), e);
+      }
+    });
   };
 
   context('with a single app', () => {

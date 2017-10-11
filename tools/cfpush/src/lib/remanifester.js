@@ -9,7 +9,7 @@ const buildAppName = (prefix, name) => {
 const verifyManifest = (manifest) => {
   if (!manifest.applications)
     throw new Error('Invalid application manifest yaml. No applications.',
-    manifest);
+      manifest);
 
   if (!manifest.applications[0].path)
     throw new Error('Invalid application manifest yaml. No path.', manifest);

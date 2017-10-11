@@ -85,8 +85,8 @@ const annotatedSource = (source, coveredSpans, uncoveredSpans, opt) => {
     // Determine if we are inside a covered code, uncovered code or text
     // section, and the corresponding mark
     const mark = c === '\n' ? marks.none : inside(accum.pos, uncoveredSpans) ?
-        marks.uncovered : inside(accum.pos, coveredSpans) ? marks.covered :
-          marks.text;
+      marks.uncovered : inside(accum.pos, coveredSpans) ? marks.covered :
+        marks.text;
 
     return {
       source: accum.source.concat(

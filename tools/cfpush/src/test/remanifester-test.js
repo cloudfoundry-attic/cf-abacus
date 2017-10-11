@@ -50,7 +50,7 @@ describe('Test adjusting manifest', () => {
     const test = (prefix, expectedAppName) => {
       const adjustedManifest = remanifester
         .adjustManifest(preparedManifest,
-        { name: testAppName, prefix: prefix });
+          { name: testAppName, prefix: prefix });
 
       const manifest = yaml.load(adjustedManifest);
       expect(manifest.applications.length).to.equal(1);
@@ -104,7 +104,7 @@ describe('Test adjusting manifest', () => {
 
     it('should adjust manifest buildpack', () => {
       veryfyOptionalProperty(properties('buildpack', 'test-buildpack'),
-       'buildpack', 'test-buildpack');
+        'buildpack', 'test-buildpack');
     });
 
     it('should adjust manifest configuration', () => {

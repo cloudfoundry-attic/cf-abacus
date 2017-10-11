@@ -20,7 +20,7 @@ const runCLI = () => {
 
   // Load the app's manifest and print its name
   const manifestPath = path.join(path.resolve(process.cwd(), commander.dir),
-      'manifest.yml');
+    'manifest.yml');
   const content = fs.readFileSync(manifestPath);
   const manifest = yaml.load(content);
   process.stdout.write(util.format('%s\n', manifest.applications[0].name));

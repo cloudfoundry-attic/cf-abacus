@@ -125,9 +125,9 @@ describe('abacus-usage-collector-itest', () => {
       resource_instance_id: riid(o, ri),
       consumer_id: cid(o, ri),
       measured_usage: [
-          { measure: 'storage', quantity: 1073741824 },
-          { measure: 'light_api_calls', quantity: 1000 },
-          { measure: 'heavy_api_calls', quantity: 100 }
+        { measure: 'storage', quantity: 1073741824 },
+        { measure: 'light_api_calls', quantity: 1000 },
+        { measure: 'heavy_api_calls', quantity: 100 }
       ]
     });
 

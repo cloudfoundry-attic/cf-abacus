@@ -250,14 +250,14 @@ describe('abacus-cf multiple-services-test with oAuth', () => {
       expect(monthWindow).to.contain.all.keys('quantity', 'charge');
       debug('%s window; Expected: consuming=%d, charge>0; ' +
         'Actual: consuming=%d, charge=%d; Month window: %o',
-        windowName, expectedConsuming, monthWindow.quantity.consuming,
-        monthWindow.charge, monthWindow);
+      windowName, expectedConsuming, monthWindow.quantity.consuming,
+      monthWindow.charge, monthWindow);
       expect(monthWindow.quantity.consuming).to.equal(expectedConsuming);
     }
     else
       debug('%s window; Expected:  charge>0; ' +
         'Actual: charge=%o; Month window: %o',
-        windowName, monthWindow.charge, monthWindow);
+      windowName, monthWindow.charge, monthWindow);
 
     expect(monthWindow).to.contain.all.keys('charge');
     expect(monthWindow.charge).not.to.equal(undefined);
@@ -283,42 +283,42 @@ describe('abacus-cf multiple-services-test with oAuth', () => {
   const checkReport = (checkFn, cb) => {
     request.get('http://localhost:9088/v1/metering/organizations' +
       '/:organization_id/aggregated/usage', {
-        organization_id: organizationId,
-        headers: {
-          authorization: 'bearer ' + signedSystemToken
-        }
-      },
-      (error, response) => {
-        try {
-          expect(error).to.equal(undefined);
+      organization_id: organizationId,
+      headers: {
+        authorization: 'bearer ' + signedSystemToken
+      }
+    },
+    (error, response) => {
+      try {
+        expect(error).to.equal(undefined);
 
-          expect(response.body).to.contain.all.keys('resources', 'spaces');
-          const resources = response.body.resources;
-          expect(resources.length).to.equal(1);
-          expect(response.body.spaces.length).to.equal(1);
+        expect(response.body).to.contain.all.keys('resources', 'spaces');
+        const resources = response.body.resources;
+        expect(resources.length).to.equal(1);
+        expect(response.body.spaces.length).to.equal(1);
 
-          expect(resources[0]).to.contain.all.keys(
-            'plans', 'aggregated_usage');
+        expect(resources[0]).to.contain.all.keys(
+          'plans', 'aggregated_usage');
 
-          const planUsage = resources[0].plans[0].aggregated_usage[0];
-          checkFn('Plans aggregated usage', planUsage);
+        const planUsage = resources[0].plans[0].aggregated_usage[0];
+        checkFn('Plans aggregated usage', planUsage);
 
-          const aggregatedUsage = resources[0].aggregated_usage[0];
-          checkFn('Aggregated usage', aggregatedUsage, 'resource');
+        const aggregatedUsage = resources[0].aggregated_usage[0];
+        checkFn('Aggregated usage', aggregatedUsage, 'resource');
 
-          resultDebug('All usage report checks are successful for: %s',
-            JSON.stringify(response.body, null, 2));
+        resultDebug('All usage report checks are successful for: %s',
+          JSON.stringify(response.body, null, 2));
 
-          cb();
-        }
-        catch (e) {
-          const message = util.format('Check failed with %s.\n' +
+        cb();
+      }
+      catch (e) {
+        const message = util.format('Check failed with %s.\n' +
             'Usage report:\n', e.stack,
-            response ? JSON.stringify(response.body, null, 2) : undefined);
-          responseDebug(message);
-          cb(new Error(message), e);
-        }
-      });
+        response ? JSON.stringify(response.body, null, 2) : undefined);
+        responseDebug(message);
+        cb(new Error(message), e);
+      }
+    });
   };
 
   const pollOptions = (component, port, checkFn, timeout = totalTimeout) => ({

@@ -173,11 +173,11 @@ const addCharge = (k, v) => {
       p.windows = map(zip.apply(_, map(p.aggregated_usage, (u) => {
         return u.windows;
       })),
-        (zu) => {
-          return map(unzip(zu), (uu) => {
-            return reduce(uu, sumCharges, { charge: 0 });
-          });
+      (zu) => {
+        return map(unzip(zu), (uu) => {
+          return reduce(uu, sumCharges, { charge: 0 });
         });
+      });
       return p;
     });
 
@@ -201,11 +201,11 @@ const addCharge = (k, v) => {
     r.windows = map(zip.apply(_, map(r.plans, (p) => {
       return p.windows;
     })),
-      (zu) => {
-        return map(unzip(zu), (uu) => {
-          return reduce(uu, sumCharges, { charge: 0 });
-        });
+    (zu) => {
+      return map(unzip(zu), (uu) => {
+        return reduce(uu, sumCharges, { charge: 0 });
       });
+    });
     return r;
   });
 };

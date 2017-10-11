@@ -244,40 +244,40 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
   const checkReport = (cb) => {
     request.get('http://localhost:9088/v1/metering/organizations' +
       '/:organization_id/aggregated/usage', {
-        organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
-        headers: {
-          authorization: 'bearer ' + signedSystemToken
-        }
-      },
-      (error, response) => {
-        try {
-          expect(error).to.equal(undefined);
+      organization_id: 'e8139b76-e829-4af3-b332-87316b1c0a6c',
+      headers: {
+        authorization: 'bearer ' + signedSystemToken
+      }
+    },
+    (error, response) => {
+      try {
+        expect(error).to.equal(undefined);
 
-          expect(response.body).to.contain.all.keys('resources', 'spaces');
-          const resources = response.body.resources;
-          expect(resources.length).to.equal(1);
-          expect(response.body.spaces.length).to.equal(1);
+        expect(response.body).to.contain.all.keys('resources', 'spaces');
+        const resources = response.body.resources;
+        expect(resources.length).to.equal(1);
+        expect(response.body.spaces.length).to.equal(1);
 
-          expect(resources[0]).to.contain.all.keys(
-            'plans', 'aggregated_usage');
+        expect(resources[0]).to.contain.all.keys(
+          'plans', 'aggregated_usage');
 
-          const planUsage = resources[0].plans[0].aggregated_usage[0];
-          checkTimeWindows(planUsage, timeWindows.day);
-          checkTimeWindows(planUsage, timeWindows.month);
+        const planUsage = resources[0].plans[0].aggregated_usage[0];
+        checkTimeWindows(planUsage, timeWindows.day);
+        checkTimeWindows(planUsage, timeWindows.month);
 
-          resultDebug('All usage report checks are successful for: %s',
-            JSON.stringify(response.body, null, 2));
+        resultDebug('All usage report checks are successful for: %s',
+          JSON.stringify(response.body, null, 2));
 
-          cb();
-        }
-        catch (e) {
-          const message = util.format('Check failed with %s.\n' +
+        cb();
+      }
+      catch (e) {
+        const message = util.format('Check failed with %s.\n' +
             'Usage report:\n', e.stack,
-            response ? JSON.stringify(response.body, null, 2) : undefined);
-          responseDebug(message);
-          cb(new Error(message), e);
-        }
-      });
+        response ? JSON.stringify(response.body, null, 2) : undefined);
+        responseDebug(message);
+        cb(new Error(message), e);
+      }
+    });
   };
 
   const pollOptions = (component, port) => ({

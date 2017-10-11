@@ -253,14 +253,14 @@ const test = (secured) => {
       expect(currentMonth).to.contain.all.keys('quantity', 'charge');
       debug('%s window; Expected: consuming=%d, charge>0; ' +
         'Actual: consuming=%d, charge=%d; Month window: %o',
-        windowName, expectedConsuming, currentMonth.quantity.consuming,
-        currentMonth.charge, currentMonth);
+      windowName, expectedConsuming, currentMonth.quantity.consuming,
+      currentMonth.charge, currentMonth);
       expect(currentMonth.quantity.consuming).to.equal(expectedConsuming);
     }
     else
       debug('%s window; Expected:  charge>0; ' +
         'Actual: charge=%o; Month window: %o',
-        windowName, currentMonth.charge, currentMonth);
+      windowName, currentMonth.charge, currentMonth);
 
     expect(currentMonth).to.contain.all.keys('charge');
     expect(currentMonth.charge).not.to.equal(undefined);
@@ -270,48 +270,48 @@ const test = (secured) => {
   const checkReport = (checkFn, cb) => {
     request.get('http://localhost:9088/v1/metering/organizations' +
       '/:organization_id/aggregated/usage', {
-        organization_id: orgGuid,
-        headers: {
-          authorization: 'bearer ' + signedSystemToken
-        }
-      }, (error, response) => {
-        try {
-          expect(error).to.equal(undefined);
+      organization_id: orgGuid,
+      headers: {
+        authorization: 'bearer ' + signedSystemToken
+      }
+    }, (error, response) => {
+      try {
+        expect(error).to.equal(undefined);
 
-          expect(response.body).to.contain.all.keys('resources', 'spaces');
-          const resources = response.body.resources;
+        expect(response.body).to.contain.all.keys('resources', 'spaces');
+        const resources = response.body.resources;
 
-          if (noReportExpected) {
-            expect(resources.length).to.equal(0);
-            cb();
-            return;
-          }
-
-          expect(resources.length).to.equal(1);
-          expect(response.body.spaces.length).to.equal(1);
-
-          expect(resources[0]).to.contain.all.keys(
-            'plans', 'aggregated_usage');
-
-          const planUsage = resources[0].plans[0].aggregated_usage[0];
-          checkFn('Plans aggregated usage', planUsage);
-
-          const aggregatedUsage = resources[0].aggregated_usage[0];
-          checkFn('Aggregated usage', aggregatedUsage, 'resource');
-
-          resultDebug('All usage report checks are successful for: %s',
-            JSON.stringify(response.body, null, 2));
-
+        if (noReportExpected) {
+          expect(resources.length).to.equal(0);
           cb();
+          return;
         }
-        catch (e) {
-          const message = util.format('Check failed with %s.\n' +
+
+        expect(resources.length).to.equal(1);
+        expect(response.body.spaces.length).to.equal(1);
+
+        expect(resources[0]).to.contain.all.keys(
+          'plans', 'aggregated_usage');
+
+        const planUsage = resources[0].plans[0].aggregated_usage[0];
+        checkFn('Plans aggregated usage', planUsage);
+
+        const aggregatedUsage = resources[0].aggregated_usage[0];
+        checkFn('Aggregated usage', aggregatedUsage, 'resource');
+
+        resultDebug('All usage report checks are successful for: %s',
+          JSON.stringify(response.body, null, 2));
+
+        cb();
+      }
+      catch (e) {
+        const message = util.format('Check failed with %s.\n' +
             'Usage report:\n', e.stack,
-            response ? JSON.stringify(response.body, null, 2) : undefined);
-          responseDebug(message);
-          cb(new Error(message), e);
-        }
-      });
+        response ? JSON.stringify(response.body, null, 2) : undefined);
+        responseDebug(message);
+        cb(new Error(message), e);
+      }
+    });
   };
 
   context('start app in current month', () => {

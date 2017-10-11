@@ -26,14 +26,14 @@ const reporting = /:/.test(commander.reporting) ? commander.reporting :
 // Get a usage report
 request.get(reporting +
   '/v1/metering/organizations/:organization_id/aggregated/usage/:time', {
-    organization_id: commander.org,
-    time: commander.time
-  }, (err, val) => {
-    if(err)
-      console.log('Response', err);
-    else
-      console.log('Response',
-        val.statusCode, require('util').inspect(val.body, {
-          depth: 10
-        }));
-  });
+  organization_id: commander.org,
+  time: commander.time
+}, (err, val) => {
+  if(err)
+    console.log('Response', err);
+  else
+    console.log('Response',
+      val.statusCode, require('util').inspect(val.body, {
+        depth: 10
+      }));
+});
