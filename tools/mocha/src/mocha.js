@@ -116,13 +116,15 @@ const runCLI = () => {
       'instrument matching modules with Istanbul [abacus]', 'abacus')
     .option('--no-color', 'do not colorify output')
     .option('-t, --timeout <number>', 'timeout [60000]', 60000)
+    .option('-b, --bail', 'bail after first test failure', false)
     .allowUnknownOption(true)
     .parse(process.argv);
 
   // Configure Mocha
   const mocha = new Mocha({
     timeout: commander.timeout,
-    useColors: commander.color
+    useColors: commander.color,
+    bail: commander.bail
   });
 
   // Install Chai expect and Sinon spy and stub as globals
