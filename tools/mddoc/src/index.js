@@ -84,12 +84,12 @@ const runCLI = (stdin, stdout) => {
           basedir: process.cwd()
         })).
         // Fix the svg content types
-        pipe(es.replace(/"data:image\/svg.*;base64,/,
-          '"data:image/svg+xml;base64,')).
+          pipe(es.replace(/"data:image\/svg.*;base64,/,
+            '"data:image/svg+xml;base64,')).
         // Adjust the links to other markdown files
-        pipe(es.replace(/\.md"/, '.html"')).
+          pipe(es.replace(/\.md"/, '.html"')).
         // Write the final doc out
-        pipe(sout);
+          pipe(sout);
       });
     });
 };

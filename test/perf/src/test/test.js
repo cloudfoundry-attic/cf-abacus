@@ -100,14 +100,14 @@ const authServer = commander.authServer;
 const secured = () => process.env.SECURED === 'true' ? true : false;
 
 const objectStorageToken = secured() ? oauth.cache(authServer,
-    process.env.OBJECT_STORAGE_CLIENT_ID,
-    process.env.OBJECT_STORAGE_CLIENT_SECRET,
-    'abacus.usage.object-storage.write') :
+  process.env.OBJECT_STORAGE_CLIENT_ID,
+  process.env.OBJECT_STORAGE_CLIENT_SECRET,
+  'abacus.usage.object-storage.write') :
   undefined;
 
 const systemToken = secured() ? oauth.cache(authServer,
-    process.env.SYSTEM_CLIENT_ID, process.env.SYSTEM_CLIENT_SECRET,
-    'abacus.usage.read') :
+  process.env.SYSTEM_CLIENT_ID, process.env.SYSTEM_CLIENT_SECRET,
+  'abacus.usage.read') :
   undefined;
 
 describe('abacus-perf-test', () => {
@@ -334,12 +334,12 @@ describe('abacus-perf-test', () => {
       brequest.post(collector + '/v1/metering/collected/usage',
         extend({}, authHeader(objectStorageToken),
           { body: usageTemplate(o, ri, i) }), (err, val) => {
-            expect(err).to.equal(undefined);
-            expect(val.statusCode).to.equal(201);
-            debug('Completed submission org%d instance%d usage%d',
-              o + 1, ri + 1, i + 1);
-            cb(err, val);
-          });
+          expect(err).to.equal(undefined);
+          expect(val.statusCode).to.equal(201);
+          debug('Completed submission org%d instance%d usage%d',
+            o + 1, ri + 1, i + 1);
+          cb(err, val);
+        });
     });
 
     // Post the requested number of usage docs
@@ -388,42 +388,42 @@ describe('abacus-perf-test', () => {
     const get = throttle((o, done) => {
       brequest.get(reporting + '/v1/metering/organizations' +
         '/:organization_id/aggregated/usage',
-        extend({}, authHeader(systemToken), {
-          organization_id: orgid(o)
-        }), (err, val) => {
-          expect(err).to.equal(undefined);
-          expect(val.statusCode).to.equal(200);
+      extend({}, authHeader(systemToken), {
+        organization_id: orgid(o)
+      }), (err, val) => {
+        expect(err).to.equal(undefined);
+        expect(val.statusCode).to.equal(200);
 
-          // Compare the usage report we got with the expected report
-          debug('Processed %d usage docs for org%d',
-            processed(val), o + 1);
-          try {
-            // Can't check the dynamic time in resource_instances
-            val.body.spaces[0].consumers[0].resources[0].plans[0] =
+        // Compare the usage report we got with the expected report
+        debug('Processed %d usage docs for org%d',
+          processed(val), o + 1);
+        try {
+          // Can't check the dynamic time in resource_instances
+          val.body.spaces[0].consumers[0].resources[0].plans[0] =
               omit(val.body.spaces[0].consumers[0]
-              .resources[0].plans[0], 'resource_instances');
-            const x = fixup(omit(val.body, 'id', 'processed', 'processed_id',
-              'start', 'end'));
-            const expected = fixup(report(o, resourceInstances, usage));
-            expect(x).to.deep.equal(expected);
+                .resources[0].plans[0], 'resource_instances');
+          const x = fixup(omit(val.body, 'id', 'processed', 'processed_id',
+            'start', 'end'));
+          const expected = fixup(report(o, resourceInstances, usage));
+          expect(x).to.deep.equal(expected);
 
+          console.log('\n', util.inspect(val.body, {
+            depth: 20
+          }), '\n');
+
+          done();
+        }
+        catch (e) {
+          // If the comparison fails we'll be called again to retry
+          // after 250 msec, but give up after the computed timeout
+          if(moment.now() >= processingDeadline) {
             console.log('\n', util.inspect(val.body, {
               depth: 20
             }), '\n');
-
-            done();
+            throw e;
           }
-          catch (e) {
-            // If the comparison fails we'll be called again to retry
-            // after 250 msec, but give up after the computed timeout
-            if(moment.now() >= processingDeadline) {
-              console.log('\n', util.inspect(val.body, {
-                depth: 20
-              }), '\n');
-              throw e;
-            }
-          }
-        });
+        }
+      });
     });
 
     // Wait for the expected usage report for all organizations, get an

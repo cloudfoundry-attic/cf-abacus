@@ -185,8 +185,8 @@ describe('Test abacus cfpush', () => {
 
     it('verify cf push executed', () => {
       assert.calledWithExactly(cp.exec,
-      `cf push --no-start -f ${manifestPath}`,
-      sinon.match.has('env', { CF_HOME: tmpDir.name }));
+        `cf push --no-start -f ${manifestPath}`,
+        sinon.match.has('env', { CF_HOME: tmpDir.name }));
       assert.calledOnce(tmpDir.removeCallback);
     });
   });
@@ -196,8 +196,8 @@ describe('Test abacus cfpush', () => {
     const verifyPushRetryAttempts = (expectedAttempts) => {
       assert.callCount(cp.exec, expectedAttempts);
       assert.alwaysCalledWithExactly(cp.exec,
-      `cf push --no-start -f ${manifestPath}`,
-      sinon.match.has('env', { CF_HOME: tmpDir.name }));
+        `cf push --no-start -f ${manifestPath}`,
+        sinon.match.has('env', { CF_HOME: tmpDir.name }));
       assert.callCount(tmpDir.removeCallback, expectedAttempts);
 
       assert.callCount(fs.copySync, expectedAttempts);
@@ -210,20 +210,20 @@ describe('Test abacus cfpush', () => {
     });
 
     it('verify cf push was retried until retry attempts is reached',
-    () => {
-      stubChildProcessWith(onCloseHandlers.alwaysFailingPush);
+      () => {
+        stubChildProcessWith(onCloseHandlers.alwaysFailingPush);
 
-      try {
-        cfpush.runCLI();
-        assert.fail('Expected error to be thrown.');
-      }
-      catch (e) {
+        try {
+          cfpush.runCLI();
+          assert.fail('Expected error to be thrown.');
+        }
+        catch (e) {
         // This is expected behavior
-        noop();
-      }
+          noop();
+        }
 
-      verifyPushRetryAttempts(retryAttepmts);
-    });
+        verifyPushRetryAttempts(retryAttepmts);
+      });
 
     it('verify cf push was retried until successful push', () => {
       const successfulAttempt = 2;

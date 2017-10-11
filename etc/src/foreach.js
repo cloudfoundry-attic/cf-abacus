@@ -118,7 +118,7 @@ const runCLI = () => {
   map(filter(pairs(mod.dependencies).concat(pairs(mod.devDependencies)),
     (dep) => rx.test(dep[0]) && /^file:/.test(dep[1])), (dependency) => {
     const resolve = (s) => s.replace(/\:name/, dependency[0])
-        .replace(/:path/, dependency[1].split(':')[1]);
+      .replace(/:path/, dependency[1].split(':')[1]);
 
     // Run the given command on each module
     exec(resolve([commander.cmd].concat(commander.args).join(' ')),

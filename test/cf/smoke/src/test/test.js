@@ -45,7 +45,7 @@ const reporting = /:/.test(commander.reporting) ? commander.reporting :
 
 // Auth server URL
 const authServer = /:/.test(commander.authServer) ? commander.authServer :
-'https://abacus-authserver-plugin.' + commander.authServer;
+  'https://abacus-authserver-plugin.' + commander.authServer;
 
 // External Abacus processes start timeout
 const startTimeout = commander.startTimeout || 10000;
@@ -61,13 +61,13 @@ const secured = () => process.env.SECURED === 'true' ? true : false;
 
 // Token fetchers
 const objectStorageToken = secured() ? oauth.cache(authServer,
-    process.env.OBJECT_STORAGE_CLIENT_ID,
-    process.env.OBJECT_STORAGE_CLIENT_SECRET,
-    'abacus.usage.object-storage.write') :
+  process.env.OBJECT_STORAGE_CLIENT_ID,
+  process.env.OBJECT_STORAGE_CLIENT_SECRET,
+  'abacus.usage.object-storage.write') :
   undefined;
 const systemToken = secured() ? oauth.cache(authServer,
-    process.env.SYSTEM_CLIENT_ID, process.env.SYSTEM_CLIENT_SECRET,
-    'abacus.usage.read') :
+  process.env.SYSTEM_CLIENT_ID, process.env.SYSTEM_CLIENT_SECRET,
+  'abacus.usage.read') :
   undefined;
 
 // Builds the expected window value based upon the
@@ -299,16 +299,16 @@ describe('abacus-smoke-test', function() {
 
       request.post(collector + '/v1/metering/collected/usage',
         extend({ body: u.usage }, authHeader(objectStorageToken)),
-          (err, val) => {
-            expect(err).to.equal(undefined, util.format('Error: %o', err));
+        (err, val) => {
+          expect(err).to.equal(undefined, util.format('Error: %o', err));
 
-            // Expect a 201 with the location of the accumulated usage
-            expect(val.statusCode).to.equal(201,
-              util.format('Response code: %d; headers: %j; body: %j',
-                val.statusCode, val.headers, val.body));
-            expect(val.headers.location).to.not.equal(undefined);
-            cb();
-          });
+          // Expect a 201 with the location of the accumulated usage
+          expect(val.statusCode).to.equal(201,
+            util.format('Response code: %d; headers: %j; body: %j',
+              val.statusCode, val.headers, val.body));
+          expect(val.headers.location).to.not.equal(undefined);
+          cb();
+        });
     };
 
     // Print the number of usage docs already processed given a get report
@@ -340,11 +340,11 @@ describe('abacus-smoke-test', function() {
         previousReport.resources[0].plans[0].windows, 45.09);
       deltaCompare(updatedReport.resources[0].plans[0]
         .aggregated_usage[1].windows,
-        previousReport.resources[0].plans[0]
+      previousReport.resources[0].plans[0]
         .aggregated_usage[1].windows, 0.09, 3, 3, 0.09);
       deltaCompare(updatedReport.resources[0].plans[0]
         .aggregated_usage[2].windows,
-        previousReport.resources[0].plans[0]
+      previousReport.resources[0].plans[0]
         .aggregated_usage[2].windows, 45, 300, 300, 45);
 
       deltaCompare(updatedReport.spaces[0].windows,
@@ -354,22 +354,22 @@ describe('abacus-smoke-test', function() {
         previousReport.spaces[0].resources[0].windows, 45.09);
       deltaCompare(updatedReport.spaces[0].resources[0]
         .aggregated_usage[1].windows,
-        previousReport.spaces[0].resources[0]
+      previousReport.spaces[0].resources[0]
         .aggregated_usage[1].windows, 0.09);
       deltaCompare(updatedReport.spaces[0].resources[0]
         .aggregated_usage[2].windows,
-        previousReport.spaces[0].resources[0]
+      previousReport.spaces[0].resources[0]
         .aggregated_usage[2].windows, 45);
 
       deltaCompare(updatedReport.spaces[0].resources[0].plans[0].windows,
         previousReport.spaces[0].resources[0].plans[0].windows, 45.09);
       deltaCompare(updatedReport.spaces[0].resources[0].plans[0]
         .aggregated_usage[1].windows,
-        previousReport.spaces[0].resources[0].plans[0]
+      previousReport.spaces[0].resources[0].plans[0]
         .aggregated_usage[1].windows, 0.09, 3, 3, 0.09);
       deltaCompare(updatedReport.spaces[0].resources[0].plans[0]
         .aggregated_usage[2].windows,
-        previousReport.spaces[0].resources[0].plans[0]
+      previousReport.spaces[0].resources[0].plans[0]
         .aggregated_usage[2].windows, 45, 300, 300, 45);
 
       deltaCompare(updatedReport.spaces[0].consumers[0].windows,
@@ -379,24 +379,24 @@ describe('abacus-smoke-test', function() {
         previousReport.spaces[0].consumers[0].resources[0].windows, 45.09);
       deltaCompare(updatedReport.spaces[0].consumers[0].resources[0]
         .aggregated_usage[1].windows,
-        previousReport.spaces[0].consumers[0].resources[0]
+      previousReport.spaces[0].consumers[0].resources[0]
         .aggregated_usage[1].windows, 0.09);
       deltaCompare(updatedReport.spaces[0].consumers[0].resources[0]
         .aggregated_usage[2].windows,
-        previousReport.spaces[0].consumers[0].resources[0]
+      previousReport.spaces[0].consumers[0].resources[0]
         .aggregated_usage[2].windows, 45);
 
       deltaCompare(updatedReport.spaces[0].consumers[0].resources[0].plans[0]
         .windows,
-        previousReport.spaces[0].consumers[0].resources[0].plans[0]
+      previousReport.spaces[0].consumers[0].resources[0].plans[0]
         .windows, 45.09);
       deltaCompare(updatedReport.spaces[0].consumers[0].resources[0].plans[0]
         .aggregated_usage[1].windows,
-        previousReport.spaces[0].consumers[0].resources[0].plans[0]
+      previousReport.spaces[0].consumers[0].resources[0].plans[0]
         .aggregated_usage[1].windows, 0.09, 3, 3, 0.09);
       deltaCompare(updatedReport.spaces[0].consumers[0].resources[0].plans[0]
         .aggregated_usage[2].windows,
-        previousReport.spaces[0].consumers[0].resources[0].plans[0]
+      previousReport.spaces[0].consumers[0].resources[0].plans[0]
         .aggregated_usage[2].windows, 45, 300, 300, 45);
     };
 
@@ -426,7 +426,7 @@ describe('abacus-smoke-test', function() {
         try {
           updatedReport.spaces[0].consumers[0].resources[0].plans[0]
             .resource_instances[0] = omit(updatedReport.spaces[0].consumers[0]
-            .resources[0].plans[0].resource_instances[0], 't', 'p');
+              .resources[0].plans[0].resource_instances[0], 't', 'p');
 
           if (processedDocs !== 0)
             deltaCompareReports(updatedReport, previousReport);

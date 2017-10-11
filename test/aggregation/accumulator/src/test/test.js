@@ -210,24 +210,24 @@ describe('abacus-usage-accumulator-itest', () => {
     const accumulatedTemplate = (o, ri, u) => extend(
       omit(meteredTemplate(o, ri, u), ['id', 'metered_usage',
         'measured_usage']), {
-          accumulated_usage: [
-            {
-              metric: 'storage',
-              windows: buildQuantityWindows(end, u, 1, (m, u) => m,
-                pid() === 'basic' ? 1 : 0.5)
-            },
-            {
-              metric: 'thousand_light_api_calls',
-              windows: buildQuantityWindows(end, u, 1, (m, u) => m * u,
-                pid() === 'basic' ? 0.03 : 0.04)
-            },
-            {
-              metric: 'heavy_api_calls',
-              windows: buildQuantityWindows(end, u, 100, (m, u) => m * u,
-                pid() === 'basic' ? 0.15 : 0.18)
-            }
-          ]
-        }
+        accumulated_usage: [
+          {
+            metric: 'storage',
+            windows: buildQuantityWindows(end, u, 1, (m, u) => m,
+              pid() === 'basic' ? 1 : 0.5)
+          },
+          {
+            metric: 'thousand_light_api_calls',
+            windows: buildQuantityWindows(end, u, 1, (m, u) => m * u,
+              pid() === 'basic' ? 0.03 : 0.04)
+          },
+          {
+            metric: 'heavy_api_calls',
+            windows: buildQuantityWindows(end, u, 100, (m, u) => m * u,
+              pid() === 'basic' ? 0.15 : 0.18)
+          }
+        ]
+      }
     );
 
     const expected = clone(accumulatedTemplate(
@@ -294,26 +294,26 @@ describe('abacus-usage-accumulator-itest', () => {
       debug('comparing latest record within %s and %s', sid, eid);
       db.allDocs({ limit: 1, startkey: sid, endkey: eid, descending: true,
         include_docs: true },
-        (err, val) => {
-          try {
+      (err, val) => {
+        try {
+          expect(clone(omit(val.rows[0].doc,
+            ['processed', 'processed_id',
+              '_rev', '_id', 'id', 'metered_usage_id']),
+          pruneWindows)).to.deep.equal(expected);
+          done();
+        }
+        catch (e) {
+          if(moment.now() >= processingDeadline)
             expect(clone(omit(val.rows[0].doc,
               ['processed', 'processed_id',
                 '_rev', '_id', 'id', 'metered_usage_id']),
-                pruneWindows)).to.deep.equal(expected);
-            done();
-          }
-          catch (e) {
-            if(moment.now() >= processingDeadline)
-              expect(clone(omit(val.rows[0].doc,
-                ['processed', 'processed_id',
-                  '_rev', '_id', 'id', 'metered_usage_id']),
-                  pruneWindows)).to.deep.equal(expected);
-            else
-              setTimeout(function() {
-                verifyAggregator(done);
-              }, 250);
-          }
-        });
+            pruneWindows)).to.deep.equal(expected);
+          else
+            setTimeout(function() {
+              verifyAggregator(done);
+            }, 250);
+        }
+      });
     };
 
     // Wait for usage accumulator to start

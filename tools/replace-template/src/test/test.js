@@ -63,7 +63,7 @@ const credentialsContent = '---\n' +
 const replaceTemplateRoot = __dirname + '/../..';
 
 const createTemporaryFiles = (tempDir, tempTemplateFile,
-                              tempCredentailsFile, done) => {
+  tempCredentailsFile, done) => {
   mkdirp(tempDir, (err) => {
     expect(err).to.equal(null);
     fs.writeFile(tempTemplateFile, templateContent, (err) => {

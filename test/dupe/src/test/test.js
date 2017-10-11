@@ -53,7 +53,7 @@ const reporting = /:/.test(commander.reporting) ? commander.reporting :
 
 // Auth server URL
 const authServer = /:/.test(commander.authServer) ? commander.authServer :
-'https://abacus-authserver-plugin.' + commander.authServer;
+  'https://abacus-authserver-plugin.' + commander.authServer;
 
 // External Abacus processes start timeout
 const startTimeout = commander.startTimeout || 30000;

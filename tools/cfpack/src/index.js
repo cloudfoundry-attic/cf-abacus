@@ -93,7 +93,7 @@ const repackage = (root, additional, cb) => {
         const shrinkwrap = require(shWrpPath);
         fixShwinkwrapDeps(shrinkwrap.dependencies, loc);
         fs.writeFile(path.join('.cfpack', 'npm-shrinkwrap.json'),
-        JSON.stringify(shrinkwrap, undefined, 2), cb);
+          JSON.stringify(shrinkwrap, undefined, 2), cb);
       }
     });
 };
@@ -108,8 +108,8 @@ const executeZip = (directories, ignore, cb) => {
     ' | zip -q -x@' + ignore + ' -@ .cfpack/app.zip) && ' +
     '(zip -q -j .cfpack/app.zip .cfpack/package.json ' +
     '.cfpack/npm-shrinkwrap.json)', {
-      cwd: process.cwd()
-    });
+    cwd: process.cwd()
+  });
   ex.stdout.on('data', (data) => {
     process.stdout.write(data);
   });
@@ -185,11 +185,11 @@ const runCLI = () => {
     // Accept root directory of local dependencies as a parameter, default
     // to the Abacus root directory
     .option(
-    '-r, --root <dir>', 'root local dependencies directory',
-    process.env.ABACUS_ROOT || rootDir(process.cwd()))
+      '-r, --root <dir>', 'root local dependencies directory',
+      process.env.ABACUS_ROOT || rootDir(process.cwd()))
     .option(
-    '-a, --additional <dir>', 'additional directory that will be packed',
-    process.env.ADDITIONAL_PACK_DIR)
+      '-a, --additional <dir>', 'additional directory that will be packed',
+      process.env.ADDITIONAL_PACK_DIR)
     .parse(process.argv);
 
   run(commander.root, commander.additional, (err) => {

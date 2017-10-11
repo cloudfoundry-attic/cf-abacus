@@ -30,7 +30,7 @@ const version = (file) => JSON.parse(fs.readFileSync(path.resolve(
 
 // Convert local dependencies to public versioned dependencies
 const publicize = (deps) => object(map(pairs(deps),
-    (dep) => /^file:/.test(dep[1]) ? [dep[0], '^' + version(dep[1])] : dep));
+  (dep) => /^file:/.test(dep[1]) ? [dep[0], '^' + version(dep[1])] : dep));
 
 // Pack a module
 const pack = (name, version, pubdir, cb) => {

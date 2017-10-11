@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "commander": "^2.8.1",
-    "eslint": "^3.13.1",
+    "eslint": "^4.1.7",
     "optionator": "^0.6.0"
   },
   "devDependencies": {

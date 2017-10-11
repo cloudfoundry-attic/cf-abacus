@@ -62,41 +62,41 @@ describe('abacus-acceptance test', () => {
   const checkReport = (cb) => {
     request.get('https://:reportingApp.:cfDomain/v1/metering/organizations' +
       '/:organization_id/aggregated/usage', {
-        organization_id: commander.organizationGuid,
-        reportingApp: commander.reportingApp,
-        cfDomain: commander.cfDomain
-      },
-      (error, response) => {
-        try {
-          expect(error).to.equal(undefined);
+      organization_id: commander.organizationGuid,
+      reportingApp: commander.reportingApp,
+      cfDomain: commander.cfDomain
+    },
+    (error, response) => {
+      try {
+        expect(error).to.equal(undefined);
 
-          expect(response.body).to.contain.all.keys('resources', 'spaces');
-          const resources = response.body.resources;
-          expect(resources.length).to.equal(1);
-          expect(response.body.spaces.length).to.equal(1);
+        expect(response.body).to.contain.all.keys('resources', 'spaces');
+        const resources = response.body.resources;
+        expect(resources.length).to.equal(1);
+        expect(response.body.spaces.length).to.equal(1);
 
-          expect(resources[0]).to.contain.all.keys(
-            'plans', 'aggregated_usage');
+        expect(resources[0]).to.contain.all.keys(
+          'plans', 'aggregated_usage');
 
-          const planUsage = resources[0].plans[0].aggregated_usage[0];
-          checkAllTimeWindows(planUsage);
+        const planUsage = resources[0].plans[0].aggregated_usage[0];
+        checkAllTimeWindows(planUsage);
 
-          const aggregatedUsage = resources[0].aggregated_usage[0];
-          checkAllTimeWindows(aggregatedUsage, 'resource');
+        const aggregatedUsage = resources[0].aggregated_usage[0];
+        checkAllTimeWindows(aggregatedUsage, 'resource');
 
-          resultDebug('All usage report checks are successful for: %s',
-            JSON.stringify(response.body, null, 2));
+        resultDebug('All usage report checks are successful for: %s',
+          JSON.stringify(response.body, null, 2));
 
-          cb();
-        }
-        catch (e) {
-          const message = util.format('Check failed with %s.\n' +
+        cb();
+      }
+      catch (e) {
+        const message = util.format('Check failed with %s.\n' +
             'Usage report:\n', e.stack,
-            response ? JSON.stringify(response.body, null, 2) : undefined);
-          responseDebug(message);
-          cb(new Error(message), e);
-        }
-      });
+        response ? JSON.stringify(response.body, null, 2) : undefined);
+        responseDebug(message);
+        cb(new Error(message), e);
+      }
+    });
   };
 
   const waitForStartAndPoll = (done) => {

@@ -561,31 +561,31 @@ describe('abacus-usage-aggregator-itest', () => {
       debug('comparing latest record within %s and %s', sid, eid);
       db.allDocs({ limit: 1, startkey: sid, endkey: eid, descending: true,
         include_docs: true },
-        (err, val) => {
-          try {
+      (err, val) => {
+        try {
+          expect(clone(omit(val.rows[0].doc, ['id', 'processed',
+            'processed_id', 'consumer_id', 'resource_instance_id',
+            '_id', '_rev', 'accumulated_usage_id', 'start']),
+          pruneWindows)).to.deep.equal(omit(expected, ['start']));
+          done();
+        }
+        catch (e) {
+          // If the test cannot verify the actual data with the expected
+          // data within the giveup time, forward the exception
+          if(moment.now() >= processingDeadline) {
+            debug('Unable to properly verify the last record');
             expect(clone(omit(val.rows[0].doc, ['id', 'processed',
               'processed_id', 'consumer_id', 'resource_instance_id',
               '_id', '_rev', 'accumulated_usage_id', 'start']),
-              pruneWindows)).to.deep.equal(omit(expected, ['start']));
-            done();
+            pruneWindows)).to.deep.equal(omit(expected, ['start']));
           }
-          catch (e) {
-            // If the test cannot verify the actual data with the expected
-            // data within the giveup time, forward the exception
-            if(moment.now() >= processingDeadline) {
-              debug('Unable to properly verify the last record');
-              expect(clone(omit(val.rows[0].doc, ['id', 'processed',
-                'processed_id', 'consumer_id', 'resource_instance_id',
-                '_id', '_rev', 'accumulated_usage_id', 'start']),
-                pruneWindows)).to.deep.equal(omit(expected, ['start']));
-            }
-            else
-              // Try the expected test again
-              setTimeout(function() {
-                verifyRating(done);
-              }, 250);
-          }
-        });
+          else
+          // Try the expected test again
+            setTimeout(function() {
+              verifyRating(done);
+            }, 250);
+        }
+      });
     };
 
     const verifyConsumerRating = (done) => {
@@ -594,48 +594,48 @@ describe('abacus-usage-aggregator-itest', () => {
 
       const sid = dbclient.kturi([expectedConsumer.organization_id,
         expectedConsumer.space_id, expectedConsumer.consumer_id].join('/'),
-        seqid.pad16(startDate));
+      seqid.pad16(startDate));
       const eid = dbclient.kturi([expectedConsumer.organization_id,
         expectedConsumer.space_id, expectedConsumer.consumer_id].join('/'),
-        seqid.pad16(endDate));
+      seqid.pad16(endDate));
       debug('%o', expectedConsumer);
       debug('comparing latest consumer record within %s and %s', sid, eid);
       db.allDocs({ limit: 1, startkey: sid, endkey: eid, descending: true,
         include_docs: true },
-        (err, val) => {
-          try {
-            map(val.rows[0].doc.resources, (r) => {
-              map(r.plans, (p) => {
-                p.resource_instances = map(p.resource_instances, (ri) => {
-                  return omit(ri, 'p');
-                });
+      (err, val) => {
+        try {
+          map(val.rows[0].doc.resources, (r) => {
+            map(r.plans, (p) => {
+              p.resource_instances = map(p.resource_instances, (ri) => {
+                return omit(ri, 'p');
               });
             });
+          });
+          expect(clone(omit(val.rows[0].doc, ['id', 'processed', '_id',
+            '_rev', 'processed_id', 'resource_instance_id', 'organization_id',
+            'accumulated_usage_id', 'start', 'end']),
+          pruneWindows)).to.deep.equal(omit(expectedConsumer, ['start',
+            'end', 'organization_id', 'space_id' ]));
+          done();
+        }
+        catch (e) {
+          // If the test cannot verify the actual data with the expected
+          // data within the giveup time, forward the exception
+          if(moment.now() >= processingDeadline) {
+            debug('Unable to properly verify the last record');
             expect(clone(omit(val.rows[0].doc, ['id', 'processed', '_id',
-              '_rev', 'processed_id', 'resource_instance_id', 'organization_id',
-              'accumulated_usage_id', 'start', 'end']),
-                pruneWindows)).to.deep.equal(omit(expectedConsumer, ['start',
-                  'end', 'organization_id', 'space_id' ]));
-            done();
+              '_rev', 'processed_id', 'resource_instance_id',
+              'organization_id', 'accumulated_usage_id', 'start', 'end']),
+            pruneWindows)).to.deep.equal(omit(expectedConsumer, ['start',
+              'end', 'organization_id', 'space_id']));
           }
-          catch (e) {
-            // If the test cannot verify the actual data with the expected
-            // data within the giveup time, forward the exception
-            if(moment.now() >= processingDeadline) {
-              debug('Unable to properly verify the last record');
-              expect(clone(omit(val.rows[0].doc, ['id', 'processed', '_id',
-                '_rev', 'processed_id', 'resource_instance_id',
-                'organization_id', 'accumulated_usage_id', 'start', 'end']),
-                  pruneWindows)).to.deep.equal(omit(expectedConsumer, ['start',
-                    'end', 'organization_id', 'space_id']));
-            }
-            else
-              // Try the expected test again
-              setTimeout(function() {
-                verifyConsumerRating(done);
-              }, 250);
-          }
-        });
+          else
+          // Try the expected test again
+            setTimeout(function() {
+              verifyConsumerRating(done);
+            }, 250);
+        }
+      });
     };
 
     // Wait for usage aggregator to start
