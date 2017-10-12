@@ -86,8 +86,7 @@ const exec = throttle((cmd, cwd, cb) => {
     // Call back when done
     cb(code !== 0 ? code : undefined, true);
   });
-}, process.env.JOBS ?
-  parseInt(process.env.JOBS) : Math.min(os.cpus().length, 8));
+}, process.env.JOBS ? parseInt(process.env.JOBS) : os.cpus().length * 2);
 
 // Execute a build command for each Abacus module
 const runCLI = () => {
