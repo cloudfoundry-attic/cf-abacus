@@ -18,10 +18,10 @@ for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $C
   APPNAME=$(node_modules/abacus-etc/appname $MODULE)
   APPS=$(( $(node_modules/abacus-etc/apprc $MODULE/.apprc $CONF APPS) - 1 ))
   if [ "$APPS" == "0" ]; then
-    APP_NAMES+=("$APPNAME")
+    APP_NAMES+=("$ABACUS_PREFIX$APPNAME")
   else
     for I in $(seq 0 $APPS); do
-      APP_NAMES+=("$APPNAME-$I")
+      APP_NAMES+=("$ABACUS_PREFIX$APPNAME-$I")
     done
   fi
 done
