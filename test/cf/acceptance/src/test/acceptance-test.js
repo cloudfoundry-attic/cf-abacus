@@ -19,7 +19,6 @@ const resultDebug =
   require('abacus-debug')('abacus-cf-acceptance-test-result');
 
 const timeWindows = {
-  'hour'   : 2,
   'day'    : 3,
   'month'  : 4
 };
