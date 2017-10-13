@@ -56,7 +56,7 @@ pushd $abacus_dir
 
   set +e
   echo "Start all apps ..."
-  (JOBS=1 npm run cfstart -- default)
+  (JOBS=6 npm run cfstart -- default)
 
   echo "Restarting failed apps ..."
   restartAppsWithRetry
