@@ -29,7 +29,7 @@
   "dependencies": {
     "abacus-debug": "file:../debug",
     "abacus-yieldable": "file:../yieldable",
-    "retry": "^0.6.1",
+    "retry": "^0.10.1",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
