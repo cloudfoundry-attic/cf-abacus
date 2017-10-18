@@ -208,6 +208,7 @@ describe('abacus-cf-single-app-bridge-itest without oAuth', () => {
     process.env.CLIENT_SECRET = 'secret';
     process.env.JWTKEY = tokenSecret;
     process.env.JWTALGO = tokenAlgorithm;
+    process.env.MIN_INTERVAL_TIME = 250;
 
     // Set slack window to 5 days
     process.env.SLACK = '5D';

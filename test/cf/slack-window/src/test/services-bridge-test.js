@@ -228,6 +228,7 @@ const test = (secured) => {
           "plans": ["standard"]
         }
       }`;
+    process.env.MIN_INTERVAL_TIME = 250;
 
     // Set slack window to 5 days
     process.env.SLACK = '5D';

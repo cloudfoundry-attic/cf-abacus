@@ -203,6 +203,8 @@ describe('abacus-cf-single-app-renewer-itest without oAuth', () => {
     process.env.ABACUS_CLIENT_SECRET = 'secret';
     process.env.JWTKEY = tokenSecret;
     process.env.JWTALGO = tokenAlgorithm;
+    process.env.MIN_INTERVAL_TIME = 250;
+    process.env.GUID_MIN_AGE = 1000;
 
     // Change slack window to be able to submit usage for last month
     process.env.SLACK = '32D';
