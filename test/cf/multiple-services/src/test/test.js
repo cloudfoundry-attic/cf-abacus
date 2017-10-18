@@ -206,6 +206,8 @@ describe('abacus-cf multiple-services-test with oAuth', () => {
         "plans": ["standard"]
       }
     }`;
+    process.env.MIN_INTERVAL_TIME = 250;
+    process.env.GUID_MIN_AGE = 1000;
 
     // Change slack window to be able to submit usage for last month
     process.env.SLACK = '32D';

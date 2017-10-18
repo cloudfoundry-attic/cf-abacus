@@ -210,7 +210,7 @@ const test = (secured) => {
     process.env.CLIENT_SECRET = 'secret';
     process.env.JWTKEY = tokenSecret;
     process.env.JWTALGO = tokenAlgorithm;
-    process.env.MIN_INTERVAL_TIME = 5000;
+    process.env.MIN_INTERVAL_TIME = 250;
 
     process.env.SLACK = '5D';
 

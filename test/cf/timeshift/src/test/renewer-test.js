@@ -15,7 +15,6 @@ const npm = require('abacus-npm');
 
 const _ = require('underscore');
 const clone = _.clone;
-// const npm = require('abacus-npm');
 
 const client = require('abacus-client');
 
@@ -394,6 +393,7 @@ runWithPersistentDB('abacus-cf-renewer time shift', () => {
     process.env.CLIENT_SECRET = 'secret';
     process.env.JWTKEY = tokenSecret;
     process.env.JWTALGO = tokenAlgorithm;
+    process.env.MIN_INTERVAL_TIME = 250;
 
     // Set slack window to 5 days
     process.env.SLACK = '5D';
