@@ -182,6 +182,16 @@ const test = (secured) => {
         resources: serviceUsageEvents
       });
     });
+    routes.get('/v2/services', (request, response) => {
+      response.status(200).send({
+        entity: {
+          label: 'service'
+        },
+        metadata: {
+          guid: 'bc3690b2-cc50-4475-b2cf-44d68c51f9d3'
+        }
+      });
+    });
     routes.get('/v2/info', (request, response) => {
       oAuthDebug('Requested API info');
       response.status(200).send({
@@ -224,7 +234,6 @@ const test = (secured) => {
     process.env.JWTALGO = tokenAlgorithm;
     process.env.SERVICES = `{
         "service": {
-          "guid": "bc3690b2-cc50-4475-b2cf-44d68c51f9d3",
           "plans": ["standard"]
         }
       }`;
@@ -372,8 +381,8 @@ const test = (secured) => {
     it('usage is rejected', function(done) {
       this.timeout(totalTimeout + 2000);
 
-      client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
-        checkReport, pollOptions('services', 9502), done);
+      client.waitForStartAndPoll('http://localhost::p/v1/:component',
+        checkReport, pollOptions('stats', 9502), done);
     });
   });
 

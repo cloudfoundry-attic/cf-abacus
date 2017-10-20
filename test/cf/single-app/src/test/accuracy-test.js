@@ -333,8 +333,8 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
     it('submits usage and gets expected report back', function(done) {
       this.timeout(totalTimeout + 2000);
 
-      client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
-        checkReport, pollOptions('applications', 9500), done);
+      client.waitForStartAndPoll('http://localhost::p/v1/:component',
+        checkReport, pollOptions('stats', 9500), done);
     });
 
   });
@@ -351,8 +351,8 @@ describe('abacus-cf-single-app-accuracy-itest', () => {
     it('submits usage and gets expected report back', function(done) {
       this.timeout(totalTimeout + 2000);
 
-      client.waitForStartAndPoll('http://localhost::p/v1/cf/:component',
-        checkReport, pollOptions('applications', 9500), done);
+      client.waitForStartAndPoll('http://localhost::p/v1/:component',
+        checkReport, pollOptions('stats', 9500), done);
     });
 
   });

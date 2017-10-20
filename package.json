@@ -75,6 +75,7 @@
     "abacus-authserver-plugin": "file:lib/plugins/authserver",
     "abacus-batch": "file:lib/utils/batch",
     "abacus-breaker": "file:lib/utils/breaker",
+    "abacus-bridge": "file:lib/utils/bridge",
     "abacus-carryover": "file:lib/utils/carryover",
     "abacus-cf-acceptance-test": "file:test/cf/acceptance",
     "abacus-cf-applications": "file:lib/cf/applications",
