@@ -29,8 +29,7 @@
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-publish": "file:../../../tools/publish",
-    "async": "^2.3.0"
+    "abacus-publish": "file:../../../tools/publish"
   },
   "engines": {
     "node": "<=8.1.3",

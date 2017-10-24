@@ -313,9 +313,9 @@
       "resolved": "https://registry.npmjs.org/after/-/after-0.8.2.tgz"
     },
     "ajv": {
-      "version": "5.2.4",
+      "version": "5.2.5",
       "from": "ajv@>=5.1.0 <6.0.0",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-5.2.4.tgz",
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-5.2.5.tgz",
       "dependencies": {
         "co": {
           "version": "4.6.0",
@@ -587,9 +587,9 @@
       "dev": true
     },
     "chalk": {
-      "version": "2.2.0",
+      "version": "2.3.0",
       "from": "chalk@>=2.1.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/chalk/-/chalk-2.2.0.tgz",
+      "resolved": "https://registry.npmjs.org/chalk/-/chalk-2.3.0.tgz",
       "dev": true,
       "dependencies": {
         "ansi-styles": {
