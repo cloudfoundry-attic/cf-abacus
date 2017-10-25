@@ -52,7 +52,7 @@ perf.healthy(51);                 // True
 ```
 
 Note that the function healthy will calculate the % faliure 
-based on the metrics recieved in the last 10 seconds from the last recieved metric.
+based on the metrics recieved in the last 10 seconds (by default) from the last recieved metric.
 
 It will reroll everytime you sent new metric.
 
@@ -65,7 +65,7 @@ perf.healthy();                   // True
 Now we are healthy because in the last 10 seconds we have only one report - successfull => 0% faliure.
 
 ### perf.rollCounts(...)
-This is the function that rerolls all the buckets on call of `perf.report(...)` and descides which make it to the current time window and which are out of date (droped). Currently we keep only for the last 10 seconds. The goal is to make this configurable.
+This is the function that rerolls all the buckets on call of `perf.report(...)` and descides which make it to the current time window and which are out of date (droped). 
 
 Relies on `perf.roll(...)` which implements the rolling time window algorithm.
 
@@ -73,3 +73,18 @@ Relies on `perf.roll(...)` which implements the rolling time window algorithm.
 Convert a list of buckets to a list of buckets in a rolling time window.
 Filter out the buckets that are out of the time window, and create a new
 bucket if necessary for the given time.
+
+## Configuration of tracked time window
+By default `perf` module keeps track on reported metrics within the last 10 seconds. This befaviour could be changed by providing additional configuration using PERF_COUNT_WINDOW_SAMPLE enviornment variable.
+The enviornment variable has the following format
+```
+PERF_COUNT_WINDOW_SAMPLE = '{ "granularity": "seconds", "size": 10 }'
+```
+
+The attributes have to following semantics
+ - `granularity` - specifies the time dimension that is used to define the time window size. Accepted values are `seconds`, `minutes` and `hours`.
+ - `size` - specifies the size of the time window. Accepted values are valid integers
+
+ <aside class="notice">
+  Please note that specifying certain granularity will reduce the `perf` resultion to this dimension. For instance specifying `hours` will result in metrics' timestamp to be rounded to an hour level. Having this in mind, window sample of `1 hour` and `60 minutes` is not quite the same. 
+</aside>
