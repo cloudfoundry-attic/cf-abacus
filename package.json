@@ -77,6 +77,7 @@
     "abacus-breaker": "file:lib/utils/breaker",
     "abacus-bridge": "file:lib/utils/bridge",
     "abacus-carryover": "file:lib/utils/carryover",
+    "abacus-counter": "file:lib/utils/counter",
     "abacus-cf-acceptance-test": "file:test/cf/acceptance",
     "abacus-cf-applications": "file:lib/cf/applications",
     "abacus-cf-renewer": "file:lib/cf/renewer",

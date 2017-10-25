@@ -23,13 +23,9 @@ if [ "$ENABLE_SERVICE_ACCESS" == "true" ]; then
   cf enable-service-access "$DB_SERVICE_NAME" -p "$DB_PLAN_NAME" -o "$CF_ORG"
 fi
 
-if [ "$SKIP_CREATE_USER" == "true" ]; then
-  echo "Using existing user $CF_USER ..."
-else
-  echo "Recreating user ..."
-  cf delete-user -f "$CF_USER"
-  cf create-user "$CF_USER" "$CF_PASSWORD"
-fi
+echo "Recreating user ..."
+cf delete-user -f "$CF_USER"
+cf create-user "$CF_USER" "$CF_PASSWORD"
 cf set-org-role "$CF_USER" "$CF_ORG" OrgManager
 cf set-space-role "$CF_USER" "$CF_ORG" "$CF_SPACE" SpaceManager
 cf set-space-role "$CF_USER" "$CF_ORG" "$CF_SPACE" SpaceDeveloper
