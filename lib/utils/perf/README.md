@@ -17,13 +17,13 @@ The stats are computed using rolling windows of call successes, failures, timeou
 
 The api this library provites is the following:
  - `perf.report(name, time, latency, err, timeout, reject, circuit)`
-   - `name` is the name of the metric for which you want to report status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  _required_
-   - `time` is the time of the occurance   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  _not mandatory_
-   - `latency`   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_not mandatory_
+   - `name` is the name of the metric for which you want to report status (_required_)
+   - `time` is the time of the occurance (_not mandatory_)
+   - `latency` (_not mandatory_)
    - `err`  Object of type error. _If provided, perf will treat this report as failing_
    - `timeout` _If provided, perf will treat this report as failing_
    - `reject`  _If provided, perf will treat this report as failing_
-   - `circuit`   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  _not mandatory_
+   - `circuit` (_not mandatory_)
 
 
 A little demo of how can you report custom metrics:
