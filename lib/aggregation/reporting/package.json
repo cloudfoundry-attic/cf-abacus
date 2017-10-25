@@ -35,7 +35,7 @@
   "dependencies": {
     "abacus-batch": "file:../../utils/batch",
     "abacus-breaker": "file:../../utils/breaker",
-    "abacus-oauth": "file:../../utils/oauth",
+    "abacus-counter": "file:../../utils/counter",
     "abacus-cluster": "file:../../utils/cluster",
     "abacus-dataflow": "file:../../utils/dataflow",
     "abacus-dbclient": "file:../../utils/dbclient",
@@ -45,6 +45,7 @@
     "abacus-request": "file:../../utils/request",
     "abacus-metering-config": "file:../../config/metering",
     "abacus-moment": "file:../../utils/moment",
+    "abacus-oauth": "file:../../utils/oauth",
     "abacus-rating-config": "file:../../config/rating",
     "abacus-retry": "file:../../utils/retry",
     "abacus-router": "file:../../utils/router",
