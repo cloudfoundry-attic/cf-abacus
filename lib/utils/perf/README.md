@@ -75,13 +75,13 @@ Filter out the buckets that are out of the time window, and create a new
 bucket if necessary for the given time.
 
 ## Configuration of tracked time window
-By default `perf` module keeps track on reported metrics within the last 10 seconds. This befaviour could be changed by providing additional configuration using `PERF_COUNT_WINDOW_SAMPLE` enviornment variable.
+By default `perf` module keeps track on reported metrics within the last 10 seconds. This befaviour could be changed by providing additional configuration using `PERF_COUNT_SAMPLE` enviornment variable.
 The enviornment variable has the following format
 ```
-PERF_COUNT_WINDOW_SAMPLE = '{ "granularity": "seconds", "size": 10 }'
+PERF_COUNT_SAMPLE = '{ "granularity": "seconds", "size": 10 }'
 ```
 
-The attributes have to following semantics
+The attributes have the following semantics
  - `granularity` - specifies the time dimension that is used to define the time window size. Accepted values are `seconds`, `minutes` and `hours`.
  - `size` - specifies the size of the time window. Accepted values are valid integers
 
