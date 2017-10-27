@@ -2,6 +2,11 @@
   "name": "abacus-authserver-plugin",
   "version": "1.0.0",
   "dependencies": {
+    "abacus-basic": {
+      "version": "1.0.0",
+      "from": "../../utils/basic",
+      "resolved": "file:../../utils/basic"
+    },
     "abacus-cfpack": {
       "version": "1.0.0",
       "from": "../../../tools/cfpack",
@@ -237,9 +242,9 @@
       }
     },
     "ajv": {
-      "version": "5.2.5",
+      "version": "5.3.0",
       "from": "ajv@>=5.1.0 <6.0.0",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-5.2.5.tgz",
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-5.3.0.tgz",
       "dependencies": {
         "co": {
           "version": "4.6.0",
@@ -783,6 +788,11 @@
       "from": "fast-deep-equal@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-1.0.0.tgz"
     },
+    "fast-json-stable-stringify": {
+      "version": "2.0.0",
+      "from": "fast-json-stable-stringify@>=2.0.0 <3.0.0",
+      "resolved": "https://registry.npmjs.org/fast-json-stable-stringify/-/fast-json-stable-stringify-2.0.0.tgz"
+    },
     "fast-levenshtein": {
       "version": "2.0.6",
       "from": "fast-levenshtein@>=2.0.4 <2.1.0",
@@ -978,9 +988,9 @@
       "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.19.tgz"
     },
     "ignore": {
-      "version": "3.3.6",
+      "version": "3.3.7",
       "from": "ignore@>=3.3.3 <4.0.0",
-      "resolved": "https://registry.npmjs.org/ignore/-/ignore-3.3.6.tgz",
+      "resolved": "https://registry.npmjs.org/ignore/-/ignore-3.3.7.tgz",
       "dev": true
     },
     "imurmurhash": {
@@ -1124,9 +1134,9 @@
       "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.10.0.tgz"
     },
     "jschardet": {
-      "version": "1.5.1",
+      "version": "1.6.0",
       "from": "jschardet@>=1.4.2 <2.0.0",
-      "resolved": "https://registry.npmjs.org/jschardet/-/jschardet-1.5.1.tgz",
+      "resolved": "https://registry.npmjs.org/jschardet/-/jschardet-1.6.0.tgz",
       "dev": true
     },
     "json-schema": {
@@ -1142,7 +1152,8 @@
     "json-stable-stringify": {
       "version": "1.0.1",
       "from": "json-stable-stringify@>=1.0.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/json-stable-stringify/-/json-stable-stringify-1.0.1.tgz"
+      "resolved": "https://registry.npmjs.org/json-stable-stringify/-/json-stable-stringify-1.0.1.tgz",
+      "dev": true
     },
     "json-stringify-safe": {
       "version": "5.0.1",
@@ -1164,7 +1175,8 @@
     "jsonify": {
       "version": "0.0.0",
       "from": "jsonify@>=0.0.0 <0.1.0",
-      "resolved": "https://registry.npmjs.org/jsonify/-/jsonify-0.0.0.tgz"
+      "resolved": "https://registry.npmjs.org/jsonify/-/jsonify-0.0.0.tgz",
+      "dev": true
     },
     "jsonwebtoken": {
       "version": "5.7.0",
@@ -1740,9 +1752,9 @@
       "dev": true
     },
     "sntp": {
-      "version": "2.0.2",
+      "version": "2.1.0",
       "from": "sntp@>=2.0.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/sntp/-/sntp-2.0.2.tgz"
+      "resolved": "https://registry.npmjs.org/sntp/-/sntp-2.1.0.tgz"
     },
     "source-map": {
       "version": "0.5.7",
