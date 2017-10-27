@@ -73,6 +73,7 @@
     "abacus-account-plugin": "file:lib/plugins/account",
     "abacus-audit": "file:lib/utils/audit",
     "abacus-authserver-plugin": "file:lib/plugins/authserver",
+    "abacus-basic": "file:lib/utils/basic",
     "abacus-batch": "file:lib/utils/batch",
     "abacus-breaker": "file:lib/utils/breaker",
     "abacus-bridge": "file:lib/utils/bridge",

@@ -31,6 +31,7 @@
     "pub": "publish"
   },
   "dependencies": {
+    "abacus-basic": "file:../basic",
     "abacus-cluster": "file:../cluster",
     "abacus-debug": "file:../debug",
     "abacus-eureka": "file:../eureka",

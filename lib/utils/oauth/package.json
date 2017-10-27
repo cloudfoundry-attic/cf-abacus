@@ -28,6 +28,7 @@
     "pub": "publish"
   },
   "dependencies": {
+    "abacus-basic": "file:../basic",
     "abacus-debug": "file:../debug",
     "abacus-moment": "file:../moment",
     "abacus-request": "file:../request",
