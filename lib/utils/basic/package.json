@@ -1,10 +1,10 @@
 {
-  "name": "abacus-hystrix",
-  "description": "Express middleware that serves Hystrix perf stats",
+  "name": "abacus-basic",
+  "description": "Basic authentication helpers",
   "license": "Apache-2.0",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/hystrix",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/basic",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -13,8 +13,9 @@
     "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
   },
   "keywords": [
-    "cf",
-    "abacus"
+    "abacus",
+    "basic",
+    "cf"
   ],
   "files": [
     ".npmrc",
@@ -26,17 +27,9 @@
     "lint": "eslint",
     "pub": "publish"
   },
-  "dependencies": {
-    "abacus-basic": "file:../basic",
-    "abacus-debug": "file:../debug",
-    "abacus-moment": "file:../moment",
-    "abacus-oauth": "file:../oauth",
-    "abacus-perf": "file:../perf",
-    "abacus-urienv": "file:../urienv",
-    "underscore": "^1.8.3"
-  },
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-express": "file:../express",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish"
   },
