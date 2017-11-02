@@ -29,10 +29,12 @@
   },
 
   "devDependencies": {
+    "async": "^2.3.0",
     "request": "^2.79.0",
     "underscore": "^1.8.3",
     "abacus-cf-services": "file:../../../lib/cf/services",
     "abacus-dbclient": "file:../../../lib/utils/dbclient",
+    "abacus-debug": "file:../../../lib/utils/debug",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-express": "file:../../../lib/utils/express",
     "abacus-mocha": "file:../../../tools/mocha",

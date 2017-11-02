@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('abacus-express');
+const debug = require('abacus-debug')('cloud-controller-mock');
 const randomPort = 0;
 
 const convert = (serviceGuids) => {
@@ -28,33 +29,65 @@ const extractOAuthToken = (authHeader) => {
   return undefined;
 };
 
+// Filter format is "label IN <label1,label2>"
+const extractServiceLabels = (filter) => {
+  return filter.substring('label IN '.length).split(',');
+};
+
+// Filter format is array of
+// [ 'service_instance_type:managed_service_instance',
+// 'service_guid IN test-service-guid,test-service-guid2' ]
+const extractServiceGuids = (filter) => {
+  return filter[1].substring('service_guid IN '.length).split(',');
+};
+
 module.exports = () => {
   let app;
   let server;
 
-  let events;
-  let guids;
-  let receivedRequestCount = 0;
-  let receivedServiceUsageEventsOAuthToken;
-  let receivedServicesOAuthToken;
+  const serviceUsageEvents = {
+    return: undefined,
+    requests:[],
+    receivedToken: undefined,
+    receivedServiceGuids: undefined,
+    receivedAfterGuid: [],
+    requestsCount: 0
+  };
+
+  const serviceGuidsData = {
+    return: undefined,
+    receivedToken: undefined,
+    recievedServiceLabels: undefined,
+    requestsCount: 0
+  };
 
   const start = () => {
     app = express();
 
     app.get('/v2/service_usage_events', (req, res) => {
-      console.log('Retrieved service usage events. Returning: %j', events);
-      receivedRequestCount++;
-      receivedServiceUsageEventsOAuthToken = extractOAuthToken(req.header('Authorization'));
+      debug('Retrieved service usage events. Request query: %j', req.query);
+      serviceUsageEvents.requests.push({
+        token: extractOAuthToken(req.header('Authorization')),
+        serviceGuids: extractServiceGuids(req.query.q),
+        afterGuid: req.query.after_guid
+      });
+
+      serviceUsageEvents.receivedToken = extractOAuthToken(req.header('Authorization'));
+      serviceUsageEvents.receivedServiceGuids = extractServiceGuids(req.query.q);
+      serviceUsageEvents.receivedAfterGuid.push(req.query.after_guid);
       res.send({
-        resources: events
+        resources: serviceUsageEvents.return
       });
     });
 
     app.get('/v2/services', (req, res) => {
-      // save request's query params and validate them
-      const services = convert(guids);
-      receivedServicesOAuthToken = extractOAuthToken(req.header('Authorization'));
-      console.log('Retrieved request for services. Returning: %j', services);
+      debug('Retrieved request for services. Headers: %j, Query params: %j', req.headers, req.query);
+
+      serviceGuidsData.requestsCount++;
+      serviceGuidsData.receivedToken = extractOAuthToken(req.header('Authorization'));
+      serviceGuidsData.recievedServiceLabels = extractServiceLabels(req.query.q);
+
+      const services = convert(serviceGuidsData.return);
       res.send(services);
     });
 
@@ -67,35 +100,33 @@ module.exports = () => {
     server.close(cb);
   };
 
-  // TODO: review
-  // in order to work this must be called after "start"
-  const returnEvents = (sendEvents) => {
-    events = sendEvents;
+  const returnEvents = (events) => {
+    serviceUsageEvents.return = events;
   };
 
-  const returnServiceGuids = (serviceGuids) => {
-    guids = serviceGuids;
+  const returnServiceGuids = (guids) => {
+    serviceGuidsData.return = guids;
   };
 
-  const getReceivedServiceUsageEventsOAuthToken = () => {
-    return receivedServiceUsageEventsOAuthToken;
-  };
-
-  const getReceivedServicesOAuthToken = () => {
-    return receivedServicesOAuthToken;
-  };
-
-  const getReceivedRequetsCount = () => {
-    return receivedRequestCount;
+  const getServiceGuidsRequestsCount = () => {
+    return serviceGuidsData.requestsCount;
   };
 
   return {
     start,
-    returnEvents,
-    returnServiceGuids,
-    getReceivedRequetsCount,
-    getReceivedServiceUsageEventsOAuthToken,
-    getReceivedServicesOAuthToken,
+    serviceGuids: {
+      return: returnServiceGuids,
+      requestsCount: getServiceGuidsRequestsCount,
+      received: {
+        token: () => serviceGuidsData.receivedToken,
+        serviceLabels: () => serviceGuidsData.recievedServiceLabels
+      }
+    },
+    serviceUsageEvents: {
+      return: returnEvents,
+      requestsCount: () => serviceUsageEvents.requests.length,
+      requests: (index) => serviceUsageEvents.requests[index]
+    },
     stop
   };
 };

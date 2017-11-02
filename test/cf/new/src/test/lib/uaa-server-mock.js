@@ -1,5 +1,6 @@
 'use strict';
 
+const debug = require('abacus-debug')('uaa-server-mock');
 const express = require('abacus-express');
 const randomPort = 0;
 
@@ -29,20 +30,23 @@ module.exports = () => {
   let receivedCfAdminCredentials;
   let receivedAbacusCollectorCredentials;
 
+  let requestsCount = 0;
+
   const start = () => {
     app = express();
 
     let address;
     app.get('/v2/info', (req, res) => {
-      console.log('Retrieving cf info...');
+      debug('Retrieving cf info...');
       res.send({
         token_endpoint: `http://localhost:${address.port}`
       });
     });
 
     app.post('/oauth/token', (request, response) => {
-      console.log('Called /oauth/token endpoint with %j', request.headers);
+      debug('Called /oauth/token endpoint with headers: %j', request.headers);
 
+      requestsCount++;
       let responseToken;
       if (isAbacusCollectorTokenRequested(request)) {
         responseToken = abacusCollectorToken;
@@ -52,7 +56,6 @@ module.exports = () => {
         responseToken = cfAdminToken;
         receivedCfAdminCredentials = extractCredentials(request.header('Authorization'));
       }
-
 
       response.status(200).send({
         access_token: responseToken,
@@ -65,14 +68,6 @@ module.exports = () => {
     address = server.address();
 
     return address;
-  };
-
-  const getReceivedCfAdminCredentials = () => {
-    return receivedCfAdminCredentials;
-  };
-
-  const getReceivedAbacusCollectorCredentials = () => {
-    return receivedAbacusCollectorCredentials;
   };
 
   // TODO: review
@@ -91,10 +86,17 @@ module.exports = () => {
 
   return {
     start,
-    returnAbacusCollectorToken,
-    returnCfAdminAccessToken,
-    getReceivedCfAdminCredentials,
-    getReceivedAbacusCollectorCredentials,
+    tokenService: {
+      return: {
+        abacusCollector: returnAbacusCollectorToken,
+        cfAdmin: returnCfAdminAccessToken
+      },
+      receivedCredentials: {
+        abacusCollector: () => receivedAbacusCollectorCredentials,
+        cfAdmin: () => receivedCfAdminCredentials
+      },
+      requestsCount: () => requestsCount
+    },
     stop
   };
 };

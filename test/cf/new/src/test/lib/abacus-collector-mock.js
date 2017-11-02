@@ -1,6 +1,7 @@
 
 'use strict';
 
+const debug = require('abacus-debug')('abacus-collector-mock');
 const express = require('abacus-express');
 const router = require('abacus-router');
 
@@ -18,8 +19,9 @@ module.exports = () => {
   let app;
   let server;
 
-  let receivedRequestCount = 0;
-  let receivedOAuthToken;
+  const received = {
+    requests: []
+  };
 
   const start = () => {
     app = express();
@@ -27,10 +29,13 @@ module.exports = () => {
     const routes = router();
 
     routes.post('/v1/metering/collected/usage', (req, res) => {
-      console.log('Abacus collector was called. Body: %j', req.body);
-      receivedRequestCount++;
-      receivedOAuthToken = extractOAuthToken(req.header('Authorization'));
-      res.header({ location: 'something' })
+      debug('Abacus collector was called. Usage: %j', req.body);
+
+      received.requests.push({
+        token: extractOAuthToken(req.header('Authorization')),
+        usage: req.body
+      });
+      res.header('Location', 'something')
         .status(201).send();
     });
 
@@ -44,19 +49,12 @@ module.exports = () => {
     server.close(cb);
   };
 
-
-  const getReceivedOAuthToken = () => {
-    return receivedOAuthToken;
-  };
-
-  const getReceivedRequetsCount = () => {
-    return receivedRequestCount;
-  };
-
   return {
     start,
-    getReceivedOAuthToken,
-    getReceivedRequetsCount,
+    collectUsageService: {
+      requests: (n) => received.requests[n],
+      requestsCount: () => received.requests.length
+    },
     stop
   };
 };
