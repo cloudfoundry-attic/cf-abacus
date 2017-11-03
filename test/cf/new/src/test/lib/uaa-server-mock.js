@@ -2,6 +2,8 @@
 
 const debug = require('abacus-debug')('uaa-server-mock');
 const express = require('abacus-express');
+const httpStatus = require('http-status-codes');
+
 const randomPort = 0;
 
 const isAbacusCollectorTokenRequested = (request) => {
@@ -57,7 +59,7 @@ module.exports = () => {
         receivedCfAdminCredentials = extractCredentials(request.header('Authorization'));
       }
 
-      response.status(200).send({
+      response.status(httpStatus.OK).send({
         access_token: responseToken,
         expires_in: 5 * 60
       });

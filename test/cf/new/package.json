@@ -30,6 +30,8 @@
 
   "devDependencies": {
     "async": "^2.3.0",
+    "http-status-codes": "^1.3.0",
+    "jsonwebtoken": "^5.0.5",
     "request": "^2.79.0",
     "underscore": "^1.8.3",
     "abacus-cf-services": "file:../../../lib/cf/services",
@@ -40,6 +42,7 @@
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-moment": "file:../../../lib/utils/moment",
     "abacus-npm": "file:../../lib/npm",
+    "abacus-request": "file:../../../lib/utils/request",
     "abacus-router": "file:../../../lib/utils/router"
   },
   "engines": {

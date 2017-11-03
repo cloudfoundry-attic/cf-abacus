@@ -3,6 +3,7 @@
 
 const debug = require('abacus-debug')('abacus-collector-mock');
 const express = require('abacus-express');
+const httpStatus = require('http-status-codes');
 const router = require('abacus-router');
 
 const randomPort = 0;
@@ -36,7 +37,7 @@ module.exports = () => {
         usage: req.body
       });
       res.header('Location', 'something')
-        .status(201).send();
+        .status(httpStatus.CREATED).send();
     });
 
     app.use(router.batch(routes));

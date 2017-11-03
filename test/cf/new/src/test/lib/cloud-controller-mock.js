@@ -64,8 +64,10 @@ module.exports = () => {
   const start = () => {
     app = express();
 
+    let eventsReturned = false;
     app.get('/v2/service_usage_events', (req, res) => {
       debug('Retrieved service usage events. Request query: %j', req.query);
+
       serviceUsageEvents.requests.push({
         token: extractOAuthToken(req.header('Authorization')),
         serviceGuids: extractServiceGuids(req.query.q),
@@ -76,8 +78,9 @@ module.exports = () => {
       serviceUsageEvents.receivedServiceGuids = extractServiceGuids(req.query.q);
       serviceUsageEvents.receivedAfterGuid.push(req.query.after_guid);
       res.send({
-        resources: serviceUsageEvents.return
+        resources: !eventsReturned ? serviceUsageEvents.return : []
       });
+      eventsReturned = true;
     });
 
     app.get('/v2/services', (req, res) => {

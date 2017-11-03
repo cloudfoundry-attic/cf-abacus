@@ -4,20 +4,20 @@ const async = require('async');
 const dbclient = require('abacus-dbclient');
 const abacusCollectorMock = require('./lib/abacus-collector-mock')();
 const cloudControllerMock = require('./lib/cloud-controller-mock')();
+const httpStatus = require('http-status-codes');
+const request = require('abacus-request');
 const uaaServerMock = require('./lib/uaa-server-mock')();
+const wait = require('./lib/wait');
 
-// const request = require('request');
 const npm = require('abacus-npm');
 const moment = require('abacus-moment');
 
-describe('test', () => {
+const tokenSecret = 'secret';
+const tokenAlgorithm = 'HS256';
+const token = require('./lib/token')(tokenSecret);
 
-  const waitUntil = (check, cb) => {
-    if (!check())
-      setTimeout(() => waitUntil(check, cb), 1500);
-    else
-      cb();
-  };
+
+describe('test', () => {
 
   const now = moment.now();
   const eventTimestamp = moment.utc(now).subtract(3, 'minutes').valueOf();
@@ -84,9 +84,11 @@ describe('test', () => {
       process.env.API = `http://localhost:${cloudControllerAddress.port}`;
       process.env.COLLECTOR = `http://localhost:${abacusCollectorAddress.port}`;
       process.env.SERVICES = `{
-      "test-service":{"plans":["test-plan"]}
-    }`;
+        "test-service":{"plans":["test-plan"]}
+      }`;
       process.env.MIN_INTERVAL_TIME = 10;
+      process.env.JWTKEY = tokenSecret;
+      process.env.JWTALGO = tokenAlgorithm;
 
       if (!process.env.DB)
         npm.startModules([npm.modules.pouchserver, npm.modules.services]);
@@ -95,8 +97,8 @@ describe('test', () => {
           npm.startModules(npm.modules.services);
         });
 
-      waitUntil(() => {
-        return abacusCollectorMock.collectUsageService.requestsCount() >= 2;
+      wait.until(() => {
+        return cloudControllerMock.serviceUsageEvents.requestsCount() >= 2;
       }, done);
     });
 
@@ -124,6 +126,7 @@ describe('test', () => {
     });
 
     it('verify abacus collector calls', () => {
+      expect(abacusCollectorMock.collectUsageService.requestsCount()).to.equal(1);
       expect(abacusCollectorMock.collectUsageService.requests(0).token).to.equal('abacus-collector-token');
       expect(abacusCollectorMock.collectUsageService.requests(0).usage).to.deep.equal(expectedUsage);
     });
@@ -141,6 +144,56 @@ describe('test', () => {
         secret: process.env.CF_CLIENT_SECRET
       });
     });
+
+    context('when requesting statictics with NO token', () => {
+      it('UNAUTHORIZED is returned', (done) => {
+        request.get('http://localhost:9502/v1/stats', {
+          port: 9502
+        }, (error, response) => {
+          expect(response.statusCode).to.equal(httpStatus.UNAUTHORIZED);
+          done();
+        });
+      });
+    });
+
+    context('when requesting statictics with token with required scopes', () => {
+      it('statistics are returned', (done) => {
+        const signedToken = token.create(['abacus.usage.read']);
+        request.get('http://localhost:9502/v1/stats', {
+          port: 9502,
+          headers: {
+            authorization: `Bearer ${signedToken}`
+          }
+        }, (error, response) => {
+          expect(response.statusCode).to.equal(httpStatus.OK);
+          console.log('%j', response.body);
+          done();
+        });
+      });
+    });
+
+    context('when requesting statictics with token with NO required scopes', () => {
+      it('FORBIDDEN is returned', (done) => {
+        const signedToken = token.create(['abacus.usage.invalid']);
+        request.get('http://localhost:9502/v1/stats', {
+          port: 9502,
+          headers: {
+            authorization: `Bearer ${signedToken}`
+          }
+        }, (error, response) => {
+          expect(response.statusCode).to.equal(httpStatus.FORBIDDEN);
+          done();
+        });
+      });
+    });
+
   });
+
+  // statistics (auth!!)
+  // filtering
+  // skipped unconverted events
+  // timestamp adjusting
+  // retry(s)
+  // behavior when some external system is not available
 
 });
