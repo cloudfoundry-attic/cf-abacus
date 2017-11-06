@@ -74,9 +74,6 @@ module.exports = () => {
         afterGuid: req.query.after_guid
       });
 
-      serviceUsageEvents.receivedToken = extractOAuthToken(req.header('Authorization'));
-      serviceUsageEvents.receivedServiceGuids = extractServiceGuids(req.query.q);
-      serviceUsageEvents.receivedAfterGuid.push(req.query.after_guid);
       res.send({
         resources: !eventsReturned ? serviceUsageEvents.return : []
       });

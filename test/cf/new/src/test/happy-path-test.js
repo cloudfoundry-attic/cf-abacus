@@ -166,7 +166,12 @@ describe('test', () => {
           }
         }, (error, response) => {
           expect(response.statusCode).to.equal(httpStatus.OK);
-          console.log('%j', response.body);
+          expect(response.body.statistics.usage).to.deep.equal({
+            success : 1,
+            conflicts : 0,
+            skips : 0,
+            failures : 0
+          });
           done();
         });
       });
