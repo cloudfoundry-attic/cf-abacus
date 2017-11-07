@@ -47,18 +47,12 @@ module.exports = () => {
 
   const serviceUsageEvents = {
     return: undefined,
-    requests:[],
-    receivedToken: undefined,
-    receivedServiceGuids: undefined,
-    receivedAfterGuid: [],
-    requestsCount: 0
+    requests:[]
   };
 
   const serviceGuidsData = {
     return: undefined,
-    receivedToken: undefined,
-    recievedServiceLabels: undefined,
-    requestsCount: 0
+    requests: []
   };
 
   const start = () => {
@@ -83,9 +77,10 @@ module.exports = () => {
     app.get('/v2/services', (req, res) => {
       debug('Retrieved request for services. Headers: %j, Query params: %j', req.headers, req.query);
 
-      serviceGuidsData.requestsCount++;
-      serviceGuidsData.receivedToken = extractOAuthToken(req.header('Authorization'));
-      serviceGuidsData.recievedServiceLabels = extractServiceLabels(req.query.q);
+      serviceGuidsData.requests.push({
+        token: extractOAuthToken(req.header('Authorization')),
+        serviceLabels: extractServiceLabels(req.query.q)
+      });
 
       const services = convert(serviceGuidsData.return);
       res.send(services);
@@ -108,22 +103,20 @@ module.exports = () => {
     serviceGuidsData.return = guids;
   };
 
-  const getServiceGuidsRequestsCount = () => {
-    return serviceGuidsData.requestsCount;
-  };
-
   return {
     start,
+    address: () => server.address(),
     serviceGuids: {
-      return: returnServiceGuids,
-      requestsCount: getServiceGuidsRequestsCount,
-      received: {
-        token: () => serviceGuidsData.receivedToken,
-        serviceLabels: () => serviceGuidsData.recievedServiceLabels
-      }
+      return: {
+        always: returnServiceGuids
+      },
+      requestsCount: () => serviceGuidsData.requests.length,
+      requests: (index) => serviceGuidsData.requests[index]
     },
     serviceUsageEvents: {
-      return: returnEvents,
+      return: {
+        firstTime: returnEvents
+      },
       requestsCount: () => serviceUsageEvents.requests.length,
       requests: (index) => serviceUsageEvents.requests[index]
     },

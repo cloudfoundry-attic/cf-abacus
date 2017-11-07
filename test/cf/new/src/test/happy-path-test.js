@@ -1,203 +1,202 @@
 'use strict';
 
 const async = require('async');
-const dbclient = require('abacus-dbclient');
-const abacusCollectorMock = require('./lib/abacus-collector-mock')();
-const cloudControllerMock = require('./lib/cloud-controller-mock')();
 const httpStatus = require('http-status-codes');
+const extend = require('underscore').extend;
+
 const request = require('abacus-request');
-const uaaServerMock = require('./lib/uaa-server-mock')();
+
 const wait = require('./lib/wait');
+const createFixture = require('./lib/service-bridge-fixture');
+const createTokenFactory = require('./lib/token-factory');
 
-const npm = require('abacus-npm');
-const moment = require('abacus-moment');
+const abacusCollectorToken = 'abacus-collector-token';
+const cfAdminToken = 'cfadmin-token';
 
-const tokenSecret = 'secret';
-const tokenAlgorithm = 'HS256';
-const token = require('./lib/token')(tokenSecret);
-
-
-describe('test', () => {
-
-  const now = moment.now();
-  const eventTimestamp = moment.utc(now).subtract(3, 'minutes').valueOf();
-
-  const serviceEventUsage = {
-    metadata: {
-      created_at: eventTimestamp,
-      guid: 'event-guid'
-    },
-    entity: {
-      state: 'CREATED',
-      org_guid: 'test-org',
-      space_guid: 'space-guid',
-      service_label: 'test-service',
-      service_plan_name: 'test-plan',
-      service_instance_guid: 'service-instance-guid'
-    }
-  };
-
-  const expectedUsage = {
-    start: eventTimestamp,
-    end: eventTimestamp,
-    organization_id: 'test-org',
-    space_id: 'space-guid',
-    consumer_id: 'service:service-instance-guid',
-    resource_id: 'test-service',
-    plan_id: 'test-plan',
-    resource_instance_id: 'service:service-instance-guid:test-plan:test-service',
-    measured_usage: [
-      {
-        measure: 'current_instances',
-        quantity : 1
-      },
-      {
-        measure: 'previous_instances',
-        quantity : 0
-      }
-    ]
-  };
+describe('service-bridge-test', () => {
 
   context('when all external systems are working', () => {
+    let fixture;
+    let externalSystemsMocks;
+    let usageEventTimestamp;
 
     before((done) => {
-      const abacusCollectorAddress = abacusCollectorMock.start();
-      const cloudControllerAddress = cloudControllerMock.start();
-      const uaaServerAddress = uaaServerMock.start();
+      fixture = createFixture();
+      const serviceUsageEvent = fixture
+        .usageEvent()
+        .get();
 
-      uaaServerMock.tokenService.return.abacusCollector('abacus-collector-token');
-      uaaServerMock.tokenService.return.cfAdmin('cfadmin-token');
+      usageEventTimestamp = serviceUsageEvent.metadata.created_at;
 
-      cloudControllerMock.serviceUsageEvents.return([serviceEventUsage]);
+      externalSystemsMocks = fixture.createExternalSystemsMocks();
+      externalSystemsMocks.startAll();
 
-      cloudControllerMock.serviceGuids.return({
-        'test-service': 'test-service-guid'
+      externalSystemsMocks.uaaServer.tokenService.forAbacusCollectorToken.return.always(abacusCollectorToken);
+      externalSystemsMocks.uaaServer.tokenService.forCfAdminToken.return.always(cfAdminToken);
+
+      externalSystemsMocks.cloudController.serviceUsageEvents.return.firstTime([serviceUsageEvent]);
+      externalSystemsMocks.cloudController.serviceGuids.return.always({
+        [fixture.defaults.usageEvent.serviceLabel]: fixture.defaults.usageEvent.serviceGuid
       });
 
-      process.env.CLIENT_ID = 'abacus-collector-client-id';
-      process.env.CLIENT_SECRET = 'abacus-collector-client-secret';
-      process.env.CF_CLIENT_ID = 'cf-client-id';
-      process.env.CF_CLIENT_SECRET = 'cf-client-secret';
-      process.env.SECURED = 'true';
-      process.env.ORGS_TO_REPORT = '["test-org"]';
-      process.env.AUTH_SERVER = `http://localhost:${uaaServerAddress.port}`;
-      process.env.API = `http://localhost:${cloudControllerAddress.port}`;
-      process.env.COLLECTOR = `http://localhost:${abacusCollectorAddress.port}`;
-      process.env.SERVICES = `{
-        "test-service":{"plans":["test-plan"]}
-      }`;
-      process.env.MIN_INTERVAL_TIME = 10;
-      process.env.JWTKEY = tokenSecret;
-      process.env.JWTALGO = tokenAlgorithm;
+      extend(process.env, fixture.customEnviornmentVars());
 
-      if (!process.env.DB)
-        npm.startModules([npm.modules.pouchserver, npm.modules.services]);
-      else
-        dbclient.drop(process.env.DB, /^abacus-/, () => {
-          npm.startModules(npm.modules.services);
-        });
+      fixture.bridge.start({ db: process.env.DB });
 
       wait.until(() => {
-        return cloudControllerMock.serviceUsageEvents.requestsCount() >= 2;
+        return externalSystemsMocks.cloudController.serviceUsageEvents.requestsCount() >= 2;
       }, done);
     });
 
     after((done) => {
       async.parallel([
-        npm.stopAllStarted,
-        abacusCollectorMock.stop,
-        cloudControllerMock.stop,
-        uaaServerMock.stop
+        fixture.bridge.stop,
+        externalSystemsMocks.stopAll
       ], done);
     });
 
     it('verify cloud controller calls', () => {
+      const cloudControllerMock = externalSystemsMocks.cloudController;
+
       // Expect 2 calls as configuration is load by both Master and Worker process
       expect(cloudControllerMock.serviceGuids.requestsCount()).to.equal(2);
-      expect(cloudControllerMock.serviceGuids.received.token()).to.equal('cfadmin-token');
-      expect(cloudControllerMock.serviceGuids.received.serviceLabels()).to.deep.equal(['test-service']);
+      expect(cloudControllerMock.serviceGuids.requests(0)).to.deep.equal({
+        token: cfAdminToken,
+        serviceLabels: [fixture.defaults.usageEvent.serviceLabel]
+      });
+      expect(cloudControllerMock.serviceGuids.requests(1)).to.deep.equal({
+        token: cfAdminToken,
+        serviceLabels: [fixture.defaults.usageEvent.serviceLabel]
+      });
 
-      expect(cloudControllerMock.serviceUsageEvents.requests(0).token).to.equal('cfadmin-token');
-      expect(cloudControllerMock.serviceUsageEvents.requests(1).token).to.equal('cfadmin-token');
-      expect(cloudControllerMock.serviceUsageEvents.requests(0).serviceGuids).to.deep.equal(['test-service-guid']);
-      expect(cloudControllerMock.serviceUsageEvents.requests(1).serviceGuids).to.deep.equal(['test-service-guid']);
-      expect(cloudControllerMock.serviceUsageEvents.requests(0).afterGuid).to.equal(undefined);
-      expect(cloudControllerMock.serviceUsageEvents.requests(1).afterGuid).to.equal('event-guid');
+      expect(cloudControllerMock.serviceUsageEvents.requests(0)).to.deep.equal({
+        token: cfAdminToken,
+        serviceGuids: [fixture.defaults.usageEvent.serviceGuid],
+        afterGuid: undefined
+      });
+      expect(cloudControllerMock.serviceUsageEvents.requests(1)).to.deep.equal({
+        token: cfAdminToken,
+        serviceGuids: [fixture.defaults.usageEvent.serviceGuid],
+        afterGuid: fixture.defaults.usageEvent.eventGuid
+      });
     });
 
     it('verify abacus collector calls', () => {
+      const abacusCollectorMock = externalSystemsMocks.abacusCollector;
+      const expectedUsage = {
+        start: usageEventTimestamp,
+        end: usageEventTimestamp,
+        organization_id: fixture.defaults.usageEvent.orgGuid,
+        space_id: fixture.defaults.usageEvent.spaceGuid,
+        consumer_id: `service:${fixture.defaults.usageEvent.serviceInstanceGuid}`,
+        resource_id: fixture.defaults.usageEvent.serviceLabel,
+        plan_id: fixture.defaults.usageEvent.servicePlanName,
+        resource_instance_id: `service:${fixture.defaults.usageEvent.serviceInstanceGuid}:${fixture.defaults.usageEvent.servicePlanName}:${fixture.defaults.usageEvent.serviceLabel}`,
+        measured_usage: [
+          {
+            measure: 'current_instances',
+            quantity : 1
+          },
+          {
+            measure: 'previous_instances',
+            quantity : 0
+          }
+        ]
+      };
+
       expect(abacusCollectorMock.collectUsageService.requestsCount()).to.equal(1);
-      expect(abacusCollectorMock.collectUsageService.requests(0).token).to.equal('abacus-collector-token');
-      expect(abacusCollectorMock.collectUsageService.requests(0).usage).to.deep.equal(expectedUsage);
+      expect(abacusCollectorMock.collectUsageService.requests(0)).to.deep.equal({
+        token: abacusCollectorToken,
+        usage: expectedUsage
+      });
     });
 
     it('verify UAA calls', () => {
-      // Expect 4 calls, 2 done by Worker, and 2 by Master process
+      const uaaServerMock = externalSystemsMocks.uaaServer;
+      // Expect 2 calls for every token (abacus and cfadmin) per Worker and Master processes
       // TODO: check this!!!
-      expect(uaaServerMock.tokenService.requestsCount()).to.equal(4);
-      expect(uaaServerMock.tokenService.receivedCredentials.abacusCollector()).to.deep.equal({
-        id: process.env.CLIENT_ID,
-        secret: process.env.CLIENT_SECRET
+      expect(uaaServerMock.tokenService.forAbacusCollectorToken.requestsCount()).to.equal(2);
+      expect(uaaServerMock.tokenService.forCfAdminToken.requestsCount()).to.equal(2);
+
+      expect(uaaServerMock.tokenService.forAbacusCollectorToken.requests(0)).to.deep.equal({
+        clientId: fixture.defaults.oauth.abacusClientId,
+        secret: fixture.defaults.oauth.abacusClientSecret
       });
-      expect(uaaServerMock.tokenService.receivedCredentials.cfAdmin()).to.deep.equal({
-        id: process.env.CF_CLIENT_ID,
-        secret: process.env.CF_CLIENT_SECRET
+      expect(uaaServerMock.tokenService.forCfAdminToken.requests(0)).to.deep.equal({
+        clientId: fixture.defaults.oauth.cfClientId,
+        secret: fixture.defaults.oauth.cfClientSecret
       });
     });
 
-    context('when requesting statictics with NO token', () => {
-      it('UNAUTHORIZED is returned', (done) => {
-        request.get('http://localhost:9502/v1/stats', {
-          port: 9502
-        }, (error, response) => {
-          expect(response.statusCode).to.equal(httpStatus.UNAUTHORIZED);
-          done();
-        });
-      });
-    });
+    context('when requesting statistics', () => {
+      let tokenFactory;
 
-    context('when requesting statictics with token with required scopes', () => {
-      it('statistics are returned', (done) => {
-        const signedToken = token.create(['abacus.usage.read']);
-        request.get('http://localhost:9502/v1/stats', {
-          port: 9502,
-          headers: {
-            authorization: `Bearer ${signedToken}`
-          }
-        }, (error, response) => {
-          expect(response.statusCode).to.equal(httpStatus.OK);
-          expect(response.body.statistics.usage).to.deep.equal({
-            success : 1,
-            conflicts : 0,
-            skips : 0,
-            failures : 0
+      before(() => {
+        tokenFactory = createTokenFactory(fixture.defaults.oauth.tokenSecret);
+      });
+
+      context('with NO token', () => {
+        it('UNAUTHORIZED is returned', (done) => {
+          request.get('http://localhost:9502/v1/stats', {
+            port: 9502
+          }, (error, response) => {
+            expect(response.statusCode).to.equal(httpStatus.UNAUTHORIZED);
+            done();
           });
-          done();
         });
       });
-    });
 
-    context('when requesting statictics with token with NO required scopes', () => {
-      it('FORBIDDEN is returned', (done) => {
-        const signedToken = token.create(['abacus.usage.invalid']);
-        request.get('http://localhost:9502/v1/stats', {
-          port: 9502,
-          headers: {
-            authorization: `Bearer ${signedToken}`
-          }
-        }, (error, response) => {
-          expect(response.statusCode).to.equal(httpStatus.FORBIDDEN);
-          done();
+      context('with token with NO required scopes', () => {
+        it('FORBIDDEN is returned', (done) => {
+          const signedToken = tokenFactory.create(['abacus.usage.invalid']);
+          request.get('http://localhost:9502/v1/stats', {
+            port: 9502,
+            headers: {
+              authorization: `Bearer ${signedToken}`
+            }
+          }, (error, response) => {
+            expect(response.statusCode).to.equal(httpStatus.FORBIDDEN);
+            done();
+          });
         });
       });
+
+      context('with token with required scopes', () => {
+        it('correct statistics are returned', (done) => {
+          const signedToken = tokenFactory.create(['abacus.usage.read']);
+          request.get('http://localhost:9502/v1/stats', {
+            port: 9502,
+            headers: {
+              authorization: `Bearer ${signedToken}`
+            }
+          }, (error, response) => {
+            expect(response.statusCode).to.equal(httpStatus.OK);
+            expect(response.body.statistics.usage).to.deep.equal({
+              success : {
+                all: 1,
+                conflicts : 0,
+                skips : 0
+              },
+              failures : 0
+            });
+            done();
+          });
+        });
+      });
+
+
     });
 
   });
 
-  // statistics (auth!!)
+
+  // TODO: fix cloudControllerMock.return - returns only on first call
+  // npm.startModules - send child process env vars, fixture could send them to npm.
   // filtering
   // skipped unconverted events
+  // conflict
   // timestamp adjusting
+  // write to carryOver
   // retry(s)
   // behavior when some external system is not available
 

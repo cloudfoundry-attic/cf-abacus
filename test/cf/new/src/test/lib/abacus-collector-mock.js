@@ -52,6 +52,7 @@ module.exports = () => {
 
   return {
     start,
+    address: () => server.address(),
     collectUsageService: {
       requests: (n) => received.requests[n],
       requestsCount: () => received.requests.length

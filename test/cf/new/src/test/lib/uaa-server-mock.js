@@ -17,7 +17,7 @@ const extractCredentials = (authHeader) => {
   const credentialsArray = decodedCredentials.split(':');
 
   return {
-    id: credentialsArray[0],
+    clientId: credentialsArray[0],
     secret: credentialsArray[1]
   };
 };
@@ -29,10 +29,8 @@ module.exports = () => {
   let abacusCollectorToken;
   let cfAdminToken;
 
-  let receivedCfAdminCredentials;
-  let receivedAbacusCollectorCredentials;
-
-  let requestsCount = 0;
+  const abacusTokenRequests = [];
+  const cfAdminTokenRequests = [];
 
   const start = () => {
     app = express();
@@ -48,15 +46,14 @@ module.exports = () => {
     app.post('/oauth/token', (request, response) => {
       debug('Called /oauth/token endpoint with headers: %j', request.headers);
 
-      requestsCount++;
       let responseToken;
       if (isAbacusCollectorTokenRequested(request)) {
+        abacusTokenRequests.push(extractCredentials(request.header('Authorization')));
         responseToken = abacusCollectorToken;
-        receivedAbacusCollectorCredentials = extractCredentials(request.header('Authorization'));
       }
       else {
+        cfAdminTokenRequests.push(extractCredentials(request.header('Authorization')));
         responseToken = cfAdminToken;
-        receivedCfAdminCredentials = extractCredentials(request.header('Authorization'));
       }
 
       response.status(httpStatus.OK).send({
@@ -65,15 +62,12 @@ module.exports = () => {
       });
     });
 
-
     server = app.listen(randomPort);
     address = server.address();
 
     return address;
   };
 
-  // TODO: review
-  // in order to work this must be called after "start"
   const returnAbacusCollectorToken = (token) => {
     abacusCollectorToken = token;
   };
@@ -88,16 +82,22 @@ module.exports = () => {
 
   return {
     start,
+    address: () => server.address(),
     tokenService: {
-      return: {
-        abacusCollector: returnAbacusCollectorToken,
-        cfAdmin: returnCfAdminAccessToken
+      forAbacusCollectorToken: {
+        return: {
+          always: returnAbacusCollectorToken
+        },
+        requests: (index) => abacusTokenRequests[index],
+        requestsCount: () => abacusTokenRequests.length
       },
-      receivedCredentials: {
-        abacusCollector: () => receivedAbacusCollectorCredentials,
-        cfAdmin: () => receivedCfAdminCredentials
-      },
-      requestsCount: () => requestsCount
+      forCfAdminToken: {
+        return: {
+          always: returnCfAdminAccessToken
+        },
+        requests: (index) => cfAdminTokenRequests[index],
+        requestsCount: () => cfAdminTokenRequests.length
+      }
     },
     stop
   };
