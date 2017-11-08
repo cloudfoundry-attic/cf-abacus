@@ -34,6 +34,7 @@
     "abacus-oauth": "file:../oauth",
     "abacus-cluster": "file:../cluster",
     "abacus-dbclient": "file:../dbclient",
+    "abacus-dbcommons": "file:../dbcommons",
     "abacus-debug": "file:../debug",
     "abacus-dedupe": "file:../dedupe",
     "abacus-eureka": "file:../eureka",
