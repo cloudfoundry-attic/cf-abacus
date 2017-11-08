@@ -26,6 +26,7 @@ const map = _.map;
 const debug = require('abacus-debug')('abacus-npm');
 
 const startedModules = new Set();
+let customEnv;
 
 const getModuleDir = (module) => {
   const path = require.resolve(module);
@@ -35,11 +36,11 @@ const getModuleDir = (module) => {
 const defineNpmOperation = (operation) => (streams, module, onExitCb) => {
   const moduleDir = getModuleDir(module);
   debug('Executing "%s" operation on module "%s" in directory %s',
-   operation, module, moduleDir);
+    operation, module, moduleDir);
 
   const c = cp.spawn('npm', ['run', operation], {
     cwd: moduleDir,
-    env: clone(process.env)
+    env: customEnv ? customEnv : clone(process.env)
   });
 
   c.stdout.on('data', (data) => streams.out.write(data));
@@ -71,7 +72,7 @@ const stopAllStarted = (streams, afterAllStoppedCb = () => {}) => {
     afterAllStoppedCb();
     return;
   }
-  
+
   startedModules.forEach((module) => stop(streams, module, () => {
     startedModules.delete(module);
     if (!startedModules.size)
@@ -108,14 +109,15 @@ module.exports = {
   stopAllStarted: (afterAllStoppedCb) =>
     stopAllStarted(defaultStreams, afterAllStoppedCb),
 
-  use: (streams) => {
+  useEnv: (env) => {
+    customEnv = env;
     return {
       modules,
 
       startModules: (modules, afterAllStartedCb) =>
-        startModules(streams, modules, afterAllStartedCb),
+        startModules(defaultStreams, modules, afterAllStartedCb),
       stopAllStarted: (afterAllStoppedCb) =>
-        stopAllStarted(streams, afterAllStoppedCb)
+        stopAllStarted(defaultStreams, afterAllStoppedCb)
     };
   }
 };

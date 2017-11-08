@@ -14,47 +14,30 @@ const cfAdminToken = 'cfadmin-token';
 
 describe('service-bridge-test', () => {
 
-  context('when reading unsupported events from cloud controller', () => {
+  context('when send usage conflicts', () => {
     let fixture;
     let externalSystemsMocks;
 
     before((done) => {
       fixture = createFixture();
+
       externalSystemsMocks = fixture.createExternalSystemsMocks();
       externalSystemsMocks.startAll();
 
       externalSystemsMocks.uaaServer.tokenService.forAbacusCollectorToken.return.always(abacusCollectorToken);
       externalSystemsMocks.uaaServer.tokenService.forCfAdminToken.return.always(cfAdminToken);
 
-      const unsupportedOrganzationUsageEvent = fixture
+      const serviceUsageEvent = fixture
         .usageEvent()
-        .overwriteOrgGuid('unsupported')
         .get();
-      const unsupportedStateUsageEvent = fixture
-        .usageEvent()
-        .overwriteState('UNSUPPORTED')
-        .get();
-      const unsupportedServiceUsageEvent = fixture
-        .usageEvent()
-        .overwriteServiceLabel('unsupported-service')
-        .get();
-      const unsupportedServicePlanUsageEvent = fixture
-        .usageEvent()
-        .overwriteServicePlanName('unsupported-service-plan')
-        .get();
-
       externalSystemsMocks.cloudController.serviceUsageEvents.return.firstTime([
-        unsupportedOrganzationUsageEvent,
-        unsupportedServicePlanUsageEvent,
-        unsupportedServiceUsageEvent,
-        unsupportedStateUsageEvent
+        serviceUsageEvent
       ]);
       externalSystemsMocks.cloudController.serviceGuids.return.always({
         [fixture.defaults.usageEvent.serviceLabel]: fixture.defaults.usageEvent.serviceGuid
       });
 
-      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
-
+      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CONFLICT);
       fixture.bridge.start({ db: process.env.DB });
 
       wait.until(() => {
@@ -71,8 +54,8 @@ describe('service-bridge-test', () => {
     });
 
 
-    it('expect abacus collector receive NO usage', () => {
-      expect(externalSystemsMocks.abacusCollector.collectUsageService.requestsCount()).to.equal(0);
+    it('expect abacus collector received usage', () => {
+      expect(externalSystemsMocks.abacusCollector.collectUsageService.requestsCount()).to.equal(1);
     });
 
     it('expect correct statistics are returned', (done) => {
@@ -87,9 +70,9 @@ describe('service-bridge-test', () => {
         expect(response.statusCode).to.equal(httpStatus.OK);
         expect(response.body.statistics.usage).to.deep.equal({
           success : {
-            all: 4,
-            conflicts: 0,
-            skips: 4
+            all: 1,
+            conflicts: 1,
+            skips: 0
           },
           failures : 0
         });

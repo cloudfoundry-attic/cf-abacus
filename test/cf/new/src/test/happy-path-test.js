@@ -2,7 +2,6 @@
 
 const async = require('async');
 const httpStatus = require('http-status-codes');
-const extend = require('underscore').extend;
 
 const request = require('abacus-request');
 
@@ -39,7 +38,7 @@ describe('service-bridge-test', () => {
         [fixture.defaults.usageEvent.serviceLabel]: fixture.defaults.usageEvent.serviceGuid
       });
 
-      extend(process.env, fixture.customEnviornmentVars());
+      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
 
       fixture.bridge.start({ db: process.env.DB });
 
@@ -190,11 +189,8 @@ describe('service-bridge-test', () => {
   });
 
 
-  // TODO: fix cloudControllerMock.return - returns only on first call
-  // npm.startModules - send child process env vars, fixture could send them to npm.
-  // filtering
-  // skipped unconverted events
   // conflict
+  // test with and without cluster
   // timestamp adjusting
   // write to carryOver
   // retry(s)

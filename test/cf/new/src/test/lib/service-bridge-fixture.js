@@ -1,6 +1,7 @@
 'use sterict';
 
 const async = require('async');
+const extend = require('underscore').extend;
 
 const dbclient = require('abacus-dbclient');
 const npm = require('abacus-npm');
@@ -104,31 +105,35 @@ module.exports = () => {
     };
   };
 
-  const customEnviornmentVars = () => {
-    process.env.CLIENT_ID = defaults.oauth.abacusClientId;
-    process.env.CLIENT_SECRET = defaults.oauth.abacusClientSecret;
-    process.env.CF_CLIENT_ID = defaults.oauth.cfClientId;
-    process.env.CF_CLIENT_SECRET = defaults.oauth.cfClientSecret;
-    process.env.SECURED = 'true';
-    process.env.ORGS_TO_REPORT = `["${defaults.usageEvent.orgGuid}"]`;
-    process.env.AUTH_SERVER = `http://localhost:${uaaServerMock.address().port}`;
-    process.env.API = `http://localhost:${cloudControllerMock.address().port}`;
-    process.env.COLLECTOR = `http://localhost:${abacusCollectorMock.address().port}`;
-    process.env.SERVICES = `{
+  const getEnviornmentVars = () => ({
+    CLIENT_ID: defaults.oauth.abacusClientId,
+    CLIENT_SECRET: defaults.oauth.abacusClientSecret,
+    CF_CLIENT_ID : defaults.oauth.cfClientId,
+    CF_CLIENT_SECRET : defaults.oauth.cfClientSecret,
+    SECURED : 'true',
+    ORGS_TO_REPORT : `["${defaults.usageEvent.orgGuid}"]`,
+    AUTH_SERVER : `http://localhost:${uaaServerMock.address().port}`,
+    API : `http://localhost:${cloudControllerMock.address().port}`,
+    COLLECTOR : `http://localhost:${abacusCollectorMock.address().port}`,
+    SERVICES : `{
       "${defaults.usageEvent.serviceLabel}":{"plans":["${defaults.usageEvent.servicePlanName}"]}
-    }`;
-    process.env.MIN_INTERVAL_TIME = 10;
-    process.env.JWTKEY = defaults.oauth.tokenSecret;
-    process.env.JWTALGO = defaults.oauth.tokenAlgorithm;
-  };
+    }`,
+    MIN_INTERVAL_TIME : 10,
+    JWTKEY : defaults.oauth.tokenSecret,
+    JWTALGO : defaults.oauth.tokenAlgorithm
+  });
 
   const bridge = {
     start: (config) => {
       if (!config.db)
-        npm.startModules([npm.modules.pouchserver, npm.modules.services]);
+        npm
+          .useEnv(extend({}, process.env, getEnviornmentVars()))
+          .startModules([npm.modules.pouchserver, npm.modules.services]);
       else
         dbclient.drop(config.db, /^abacus-/, () => {
-          npm.startModules(npm.modules.services);
+          npm
+            .useEnv(extend({}, process.env, getEnviornmentVars()))
+            .startModules(npm.modules.services);
         });
     },
     stop: (done) => npm.stopAllStarted(done)
@@ -137,7 +142,6 @@ module.exports = () => {
   return {
     defaults,
     usageEvent,
-    customEnviornmentVars,
     createExternalSystemsMocks,
     bridge: bridge
   };

@@ -1,9 +1,10 @@
 
 'use strict';
 
+const httpStatus = require('http-status-codes');
+
 const debug = require('abacus-debug')('abacus-collector-mock');
 const express = require('abacus-express');
-const httpStatus = require('http-status-codes');
 const router = require('abacus-router');
 
 const randomPort = 0;
@@ -19,6 +20,8 @@ const extractOAuthToken = (authHeader) => {
 module.exports = () => {
   let app;
   let server;
+
+  let returnStatusCode;
 
   const received = {
     requests: []
@@ -36,8 +39,15 @@ module.exports = () => {
         token: extractOAuthToken(req.header('Authorization')),
         usage: req.body
       });
-      res.header('Location', 'something')
-        .status(httpStatus.CREATED).send();
+
+      let responseBody;
+      if (returnStatusCode === httpStatus.CREATED)
+        res.header('Location', 'something');
+
+      if (returnStatusCode === httpStatus.CONFLICT)
+        responseBody = { error: 'something' };
+
+      res.status(returnStatusCode).send(responseBody);
     });
 
     app.use(router.batch(routes));
@@ -55,7 +65,10 @@ module.exports = () => {
     address: () => server.address(),
     collectUsageService: {
       requests: (n) => received.requests[n],
-      requestsCount: () => received.requests.length
+      requestsCount: () => received.requests.length,
+      return: {
+        always: (value) => returnStatusCode = value
+      }
     },
     stop
   };
