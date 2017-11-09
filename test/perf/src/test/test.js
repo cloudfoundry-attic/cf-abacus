@@ -110,6 +110,8 @@ const systemToken = secured() ? oauth.cache(authServer,
   'abacus.usage.read') :
   undefined;
 
+const timestamp = moment.now();
+
 describe('abacus-perf-test', () => {
   before((done) => {
     if (objectStorageToken)
@@ -148,8 +150,7 @@ describe('abacus-perf-test', () => {
     const end = moment.now() + delta;
     const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87',
       o + 1, ri + 1].join('-');
-    const orgid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-      o + 1].join('-');
+    const orgid = (o) => ['org', timestamp, o + 1].join('-');
 
     const usageTemplate = (o, ri, i) => ({
       start: start + i,
