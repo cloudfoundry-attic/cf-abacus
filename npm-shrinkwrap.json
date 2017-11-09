@@ -1668,7 +1668,7 @@
     },
     "async": {
       "version": "2.6.0",
-      "from": "async@>=2.3.0 <3.0.0",
+      "from": "async@>=2.6.0 <3.0.0",
       "resolved": "https://registry.npmjs.org/async/-/async-2.6.0.tgz"
     },
     "asynckit": {
@@ -1901,9 +1901,9 @@
       "resolved": "https://registry.npmjs.org/code-point-at/-/code-point-at-1.1.0.tgz"
     },
     "color-convert": {
-      "version": "1.9.0",
+      "version": "1.9.1",
       "from": "color-convert@>=1.9.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/color-convert/-/color-convert-1.9.0.tgz",
+      "resolved": "https://registry.npmjs.org/color-convert/-/color-convert-1.9.1.tgz",
       "dev": true
     },
     "color-name": {
@@ -2286,7 +2286,15 @@
       "version": "1.1.2",
       "from": "define-properties@>=1.1.2 <2.0.0",
       "resolved": "https://registry.npmjs.org/define-properties/-/define-properties-1.1.2.tgz",
-      "dev": true
+      "dev": true,
+      "dependencies": {
+        "object-keys": {
+          "version": "1.0.11",
+          "from": "object-keys@>=1.0.8 <2.0.0",
+          "resolved": "https://registry.npmjs.org/object-keys/-/object-keys-1.0.11.tgz",
+          "dev": true
+        }
+      }
     },
     "defined": {
       "version": "1.0.0",
@@ -2711,6 +2719,11 @@
           "version": "0.0.1",
           "from": "isarray@0.0.1",
           "resolved": "https://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz"
+        },
+        "object-keys": {
+          "version": "1.0.11",
+          "from": "object-keys@>=1.0.6 <2.0.0",
+          "resolved": "https://registry.npmjs.org/object-keys/-/object-keys-1.0.11.tgz"
         }
       }
     },
@@ -3083,11 +3096,6 @@
           "version": "0.0.10",
           "from": "minimist@>=0.0.8 <0.1.0",
           "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.10.tgz"
-        },
-        "object-keys": {
-          "version": "0.4.0",
-          "from": "object-keys@>=0.4.0 <0.5.0",
-          "resolved": "https://registry.npmjs.org/object-keys/-/object-keys-0.4.0.tgz"
         },
         "through2": {
           "version": "0.4.2",
@@ -3858,7 +3866,7 @@
     },
     "minimist": {
       "version": "1.2.0",
-      "from": "minimist@>=1.2.0 <2.0.0",
+      "from": "minimist@>=1.1.2 <2.0.0",
       "resolved": "https://registry.npmjs.org/minimist/-/minimist-1.2.0.tgz"
     },
     "mkdirp": {
@@ -3959,14 +3967,7 @@
     "node-gyp": {
       "version": "3.6.2",
       "from": "node-gyp@>=3.0.3 <4.0.0",
-      "resolved": "https://registry.npmjs.org/node-gyp/-/node-gyp-3.6.2.tgz",
-      "dependencies": {
-        "semver": {
-          "version": "5.3.0",
-          "from": "semver@>=5.3.0 <5.4.0",
-          "resolved": "https://registry.npmjs.org/semver/-/semver-5.3.0.tgz"
-        }
-      }
+      "resolved": "https://registry.npmjs.org/node-gyp/-/node-gyp-3.6.2.tgz"
     },
     "node-ninja": {
       "version": "1.0.2",
@@ -4020,15 +4021,23 @@
       "resolved": "https://registry.npmjs.org/object-get-own-property-descriptor-x/-/object-get-own-property-descriptor-x-3.2.0.tgz"
     },
     "object-keys": {
-      "version": "1.0.11",
-      "from": "object-keys@>=1.0.10 <2.0.0",
-      "resolved": "https://registry.npmjs.org/object-keys/-/object-keys-1.0.11.tgz"
+      "version": "0.4.0",
+      "from": "object-keys@>=0.4.0 <0.5.0",
+      "resolved": "https://registry.npmjs.org/object-keys/-/object-keys-0.4.0.tgz"
     },
     "object.assign": {
       "version": "4.0.4",
       "from": "object.assign@>=4.0.4 <5.0.0",
       "resolved": "https://registry.npmjs.org/object.assign/-/object.assign-4.0.4.tgz",
-      "dev": true
+      "dev": true,
+      "dependencies": {
+        "object-keys": {
+          "version": "1.0.11",
+          "from": "object-keys@>=1.0.10 <2.0.0",
+          "resolved": "https://registry.npmjs.org/object-keys/-/object-keys-1.0.11.tgz",
+          "dev": true
+        }
+      }
     },
     "on-finished": {
       "version": "2.3.0",
@@ -5114,9 +5123,9 @@
       "resolved": "https://registry.npmjs.org/secure-random/-/secure-random-1.1.1.tgz"
     },
     "semver": {
-      "version": "5.4.1",
-      "from": "semver@>=5.0.3 <6.0.0",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-5.4.1.tgz"
+      "version": "5.3.0",
+      "from": "semver@>=5.3.0 <5.4.0",
+      "resolved": "https://registry.npmjs.org/semver/-/semver-5.3.0.tgz"
     },
     "send": {
       "version": "0.16.1",

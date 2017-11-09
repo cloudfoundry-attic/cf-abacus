@@ -20,7 +20,7 @@ matrix:
     - env:
       - DESCRIPTION=unit-tests-pouchdb
       - JOBS=1
-      node_js: 8.1.3
+      node_js: 8.9.0
       script:
         - npm run build && npm run coveralls
     - env:
@@ -28,7 +28,7 @@ matrix:
       - DBCLIENT=abacus-couchclient
       - DB=http://localhost:5984
       - JOBS=1
-      node_js: 8.1.3
+      node_js: 8.9.0
       services:
         - couchdb
       script:
@@ -38,7 +38,7 @@ matrix:
       - DBCLIENT=abacus-mongoclient
       - DB=mongodb://localhost:27017
       - JOBS=1
-      node_js: 8.1.3
+      node_js: 8.9.0
       services:
         - mongodb
       script:
@@ -48,7 +48,7 @@ matrix:
       - DESCRIPTION=itests-pouchdb
       - CI_TEST=itest
       - JOBS=1
-      node_js: 8.1.3
+      node_js: 8.9.0
       script:
         - npm run provision
         - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
@@ -58,7 +58,7 @@ matrix:
       - DB=http://localhost:5984
       - JOBS=1
       - CI_TEST=itest
-      node_js: 8.1.3
+      node_js: 8.9.0
       services:
         - couchdb
       script:
@@ -70,7 +70,7 @@ matrix:
       - DB=mongodb://localhost:27017
       - JOBS=1
       - CI_TEST=itest
-      node_js: 8.1.3
+      node_js: 8.9.0
       services:
         - mongodb
       script:
@@ -81,7 +81,7 @@ matrix:
       - DESCRIPTION=extended-tests-pouchdb
       - CI_TEST=extended
       - JOBS=1
-      node_js: 8.1.3
+      node_js: 8.9.0
       script:
         - npm run provision
         - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
@@ -91,7 +91,7 @@ matrix:
       - DB=http://localhost:5984
       - JOBS=1
       - CI_TEST=extended
-      node_js: 8.1.3
+      node_js: 8.9.0
       services:
         - couchdb
       script:
@@ -103,7 +103,7 @@ matrix:
       - DB=mongodb://localhost:27017
       - JOBS=1
       - CI_TEST=extended
-      node_js: 8.1.3
+      node_js: 8.9.0
       services:
         - mongodb
       script:
@@ -114,7 +114,7 @@ matrix:
       - DESCRIPTION=perf-tests-pouchdb
       - CI_TEST=perf
       - JOBS=1
-      node_js: 8.1.3
+      node_js: 8.9.0
       script:
         - npm run provision
         - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
@@ -124,7 +124,7 @@ matrix:
       - DB=http://localhost:5984
       - JOBS=1
       - CI_TEST=perf
-      node_js: 8.1.3
+      node_js: 8.9.0
       services:
         - couchdb
       script:
@@ -136,7 +136,7 @@ matrix:
       - DB=mongodb://localhost:27017
       - JOBS=1
       - CI_TEST=perf
-      node_js: 8.1.3
+      node_js: 8.9.0
       services:
         - mongodb
       script:

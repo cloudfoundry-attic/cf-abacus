@@ -1,10 +1,10 @@
 {
-  "name": "abacus-lrudown",
-  "description": "LevelDown adapter for the lru-cache module",
+  "name": "abacus-learning",
+  "description": "Minimal machine learning test utilities",
   "license": "Apache-2.0",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/lrudown",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/learning",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -27,18 +27,15 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abstract-leveldown": "^2.4.1",
     "abacus-debug": "file:../debug",
-    "abacus-lrucache": "file:../lrucache",
-    "abacus-moment": "file:../moment",
-    "underscore": "^1.8.3"
+    "abacus-iterable": "file:../iterable",
+    "abacus-matrix": "file:../matrix",
+    "murmurhash": "0.0.2"
   },
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-publish": "file:../../../tools/publish",
-    "levelup": "^1.2.1",
-    "pouchdb": "^6.1.2"
+    "abacus-publish": "file:../../../tools/publish"
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",
