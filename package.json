@@ -143,7 +143,6 @@
     "abacus-usage-accumulator-itest": "file:test/aggregation/accumulator",
     "abacus-usage-aggregator": "file:lib/aggregation/aggregator",
     "abacus-usage-aggregator-itest": "file:test/aggregation/aggregator",
-    "abacus-usage-analyzer": "file:lib/metering/analyzer",
     "abacus-usage-collector": "file:lib/metering/collector",
     "abacus-usage-collector-itest": "file:test/metering/collector",
     "abacus-usage-meter": "file:lib/metering/meter",
