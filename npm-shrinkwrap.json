@@ -968,20 +968,10 @@
       "from": "lib/utils/hystrix",
       "resolved": "file:lib/utils/hystrix"
     },
-    "abacus-iterable": {
-      "version": "1.0.0",
-      "from": "lib/utils/iterable",
-      "resolved": "file:lib/utils/iterable"
-    },
     "abacus-launcher": {
       "version": "1.0.0",
       "from": "lib/utils/launcher",
       "resolved": "file:lib/utils/launcher"
-    },
-    "abacus-learning": {
-      "version": "1.0.0",
-      "from": "lib/utils/learning",
-      "resolved": "file:lib/utils/learning"
     },
     "abacus-lock": {
       "version": "1.0.0",
@@ -997,11 +987,6 @@
       "version": "1.0.0",
       "from": "lib/utils/lrudown",
       "resolved": "file:lib/utils/lrudown"
-    },
-    "abacus-matrix": {
-      "version": "1.0.0",
-      "from": "lib/utils/matrix",
-      "resolved": "file:lib/utils/matrix"
     },
     "abacus-mddoc": {
       "version": "1.0.0",
@@ -1335,11 +1320,6 @@
           "resolved": "https://registry.npmjs.org/supports-color/-/supports-color-3.1.2.tgz"
         }
       }
-    },
-    "abacus-usage-analyzer": {
-      "version": "1.0.0",
-      "from": "lib/metering/analyzer",
-      "resolved": "file:lib/metering/analyzer"
     },
     "abacus-usage-collector": {
       "version": "1.0.0",
@@ -1688,7 +1668,11 @@
     },
     "async": {
       "version": "2.6.0",
+<<<<<<< HEAD
       "from": "async@>=2.6.0 <3.0.0",
+=======
+      "from": "async@>=2.3.0 <3.0.0",
+>>>>>>> master
       "resolved": "https://registry.npmjs.org/async/-/async-2.6.0.tgz"
     },
     "asynckit": {
