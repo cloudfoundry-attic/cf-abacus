@@ -22,14 +22,14 @@ do
     dir=${dir%*/}
     image="$REPO/${dir##*/}"
 
-    # Replace '#' with ':', to allow git-clone on Windows
-    tag=${image/\#/:}
+    version=$(head -1 $dir/Dockerfile | cut -d ':' -f 2)
+    tag="$image:$version"
 
-    echo ""
     echo "Entering $dir"
     pushd $dir
       echo "Using tag $tag"
-      docker build -t "$tag" .
+      docker build -t "$tag" -t "$image:latest" .
       docker push "$tag"
+      docker push "$image:latest"
     popd
 done
