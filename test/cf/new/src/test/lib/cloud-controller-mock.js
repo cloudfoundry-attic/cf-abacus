@@ -45,7 +45,7 @@ module.exports = () => {
   let app;
   let server;
 
-  const serviceUsageEvents = {
+  const serviceUsageEventsData = {
     return: undefined,
     requests:[]
   };
@@ -62,14 +62,14 @@ module.exports = () => {
     app.get('/v2/service_usage_events', (req, res) => {
       debug('Retrieved service usage events. Request query: %j', req.query);
 
-      serviceUsageEvents.requests.push({
+      serviceUsageEventsData.requests.push({
         token: extractOAuthToken(req.header('Authorization')),
         serviceGuids: extractServiceGuids(req.query.q),
         afterGuid: req.query.after_guid
       });
 
       res.send({
-        resources: !eventsReturned ? serviceUsageEvents.return : []
+        resources: !eventsReturned ? serviceUsageEventsData.return : []
       });
       eventsReturned = true;
     });
@@ -95,30 +95,22 @@ module.exports = () => {
     server.close(cb);
   };
 
-  const returnEvents = (events) => {
-    serviceUsageEvents.return = events;
-  };
-
-  const returnServiceGuids = (guids) => {
-    serviceGuidsData.return = guids;
-  };
-
   return {
     start,
     address: () => server.address(),
     serviceGuids: {
       return: {
-        always: returnServiceGuids
+        always: (guids) => serviceGuidsData.return = guids
       },
       requestsCount: () => serviceGuidsData.requests.length,
       requests: (index) => serviceGuidsData.requests[index]
     },
     serviceUsageEvents: {
       return: {
-        firstTime: returnEvents
+        firstTime: (events) => serviceUsageEventsData.return = events
       },
-      requestsCount: () => serviceUsageEvents.requests.length,
-      requests: (index) => serviceUsageEvents.requests[index]
+      requestsCount: () => serviceUsageEventsData.requests.length,
+      requests: (index) => serviceUsageEventsData.requests[index]
     },
     stop
   };

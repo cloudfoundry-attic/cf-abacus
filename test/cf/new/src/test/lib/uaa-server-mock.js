@@ -68,14 +68,6 @@ module.exports = () => {
     return address;
   };
 
-  const returnAbacusCollectorToken = (token) => {
-    abacusCollectorToken = token;
-  };
-
-  const returnCfAdminAccessToken = (token) => {
-    cfAdminToken = token;
-  };
-
   const stop = (cb) => {
     server.close(cb);
   };
@@ -86,14 +78,14 @@ module.exports = () => {
     tokenService: {
       forAbacusCollectorToken: {
         return: {
-          always: returnAbacusCollectorToken
+          always: (token) => abacusCollectorToken = token
         },
         requests: (index) => abacusTokenRequests[index],
         requestsCount: () => abacusTokenRequests.length
       },
       forCfAdminToken: {
         return: {
-          always: returnCfAdminAccessToken
+          always: (token) => cfAdminToken = token
         },
         requests: (index) => cfAdminTokenRequests[index],
         requestsCount: () => cfAdminTokenRequests.length

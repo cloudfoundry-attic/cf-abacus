@@ -42,10 +42,10 @@ module.exports = () => {
 
       let responseBody;
       if (returnStatusCode === httpStatus.CREATED)
-        res.header('Location', 'something');
+        res.header('Location', 'http://location.com');
 
       if (returnStatusCode === httpStatus.CONFLICT)
-        responseBody = { error: 'something' };
+        responseBody = { error: 'Conflict' };
 
       res.status(returnStatusCode).send(responseBody);
     });

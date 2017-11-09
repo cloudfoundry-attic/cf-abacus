@@ -4,7 +4,9 @@ const async = require('async');
 const httpStatus = require('http-status-codes');
 
 const request = require('abacus-request');
+const yieldable = require('abacus-yieldable');
 
+const carryOverDb = require('./lib/carry-over-db');
 const wait = require('./lib/wait');
 const createFixture = require('./lib/service-bridge-fixture');
 const createTokenFactory = require('./lib/token-factory');
@@ -21,11 +23,6 @@ describe('service-bridge-test', () => {
 
     before((done) => {
       fixture = createFixture();
-      const serviceUsageEvent = fixture
-        .usageEvent()
-        .get();
-
-      usageEventTimestamp = serviceUsageEvent.metadata.created_at;
 
       externalSystemsMocks = fixture.createExternalSystemsMocks();
       externalSystemsMocks.startAll();
@@ -33,6 +30,10 @@ describe('service-bridge-test', () => {
       externalSystemsMocks.uaaServer.tokenService.forAbacusCollectorToken.return.always(abacusCollectorToken);
       externalSystemsMocks.uaaServer.tokenService.forCfAdminToken.return.always(cfAdminToken);
 
+      const serviceUsageEvent = fixture
+        .usageEvent()
+        .get();
+      usageEventTimestamp = serviceUsageEvent.metadata.created_at;
       externalSystemsMocks.cloudController.serviceUsageEvents.return.firstTime([serviceUsageEvent]);
       externalSystemsMocks.cloudController.serviceGuids.return.always({
         [fixture.defaults.usageEvent.serviceLabel]: fixture.defaults.usageEvent.serviceGuid
@@ -127,6 +128,17 @@ describe('service-bridge-test', () => {
       });
     });
 
+    it('verify carry-over content', (done) => yieldable.functioncb(function *() {
+      const docs = yield carryOverDb.readCurrentMonthDocs();
+      expect(docs).to.deep.equal([{
+        collector_id: 'http://location.com',
+        event_guid: fixture.defaults.usageEvent.eventGuid,
+        state: fixture.defaults.usageEvent.state,
+        timestamp: usageEventTimestamp }]);
+    })((err) => {
+      done(err);
+    }));
+
     context('when requesting statistics', () => {
       let tokenFactory;
 
@@ -136,8 +148,8 @@ describe('service-bridge-test', () => {
 
       context('with NO token', () => {
         it('UNAUTHORIZED is returned', (done) => {
-          request.get('http://localhost:9502/v1/stats', {
-            port: 9502
+          request.get('http://localhost::port/v1/stats', {
+            port: fixture.bridge.port
           }, (error, response) => {
             expect(response.statusCode).to.equal(httpStatus.UNAUTHORIZED);
             done();
@@ -148,8 +160,8 @@ describe('service-bridge-test', () => {
       context('with token with NO required scopes', () => {
         it('FORBIDDEN is returned', (done) => {
           const signedToken = tokenFactory.create(['abacus.usage.invalid']);
-          request.get('http://localhost:9502/v1/stats', {
-            port: 9502,
+          request.get('http://localhost::port/v1/stats', {
+            port: fixture.bridge.port,
             headers: {
               authorization: `Bearer ${signedToken}`
             }
@@ -163,8 +175,8 @@ describe('service-bridge-test', () => {
       context('with token with required scopes', () => {
         it('correct statistics are returned', (done) => {
           const signedToken = tokenFactory.create(['abacus.usage.read']);
-          request.get('http://localhost:9502/v1/stats', {
-            port: 9502,
+          request.get('http://localhost::port/v1/stats', {
+            port: fixture.bridge.port,
             headers: {
               authorization: `Bearer ${signedToken}`
             }
@@ -188,12 +200,12 @@ describe('service-bridge-test', () => {
 
   });
 
-
-  // conflict
+  // write to carryOver
   // test with and without cluster
   // timestamp adjusting
-  // write to carryOver
   // retry(s)
   // behavior when some external system is not available
+
+  // think of a way to start and stop bridge only once.
 
 });

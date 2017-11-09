@@ -4,7 +4,9 @@ const async = require('async');
 const httpStatus = require('http-status-codes');
 
 const request = require('abacus-request');
+const yieldable = require('abacus-yieldable');
 
+const carryOverDb = require('./lib/carry-over-db');
 const createFixture = require('./lib/service-bridge-fixture');
 const createTokenFactory = require('./lib/token-factory');
 const wait = require('./lib/wait');
@@ -54,15 +56,22 @@ describe('service-bridge-test', () => {
     });
 
 
-    it('expect abacus collector received usage', () => {
+    it('expect abacus collector received the conflicting usage', () => {
       expect(externalSystemsMocks.abacusCollector.collectUsageService.requestsCount()).to.equal(1);
     });
 
-    it('expect correct statistics are returned', (done) => {
+    it('expect carry-over is empty', (done) => yieldable.functioncb(function *() {
+      const docs = yield carryOverDb.readCurrentMonthDocs();
+      expect(docs).to.deep.equal([]);
+    })((err) => {
+      done(err);
+    }));
+
+    it('expect conflict statistics are returned', (done) => {
       const tokenFactory = createTokenFactory(fixture.defaults.oauth.tokenSecret);
       const signedToken = tokenFactory.create(['abacus.usage.read']);
-      request.get('http://localhost:9502/v1/stats', {
-        port: 9502,
+      request.get('http://localhost::port/v1/stats', {
+        port: fixture.bridge.port,
         headers: {
           authorization: `Bearer ${signedToken}`
         }

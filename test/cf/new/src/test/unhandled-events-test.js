@@ -2,9 +2,12 @@
 
 const async = require('async');
 const httpStatus = require('http-status-codes');
+const yieldable = require('abacus-yieldable');
 
+const moment = require('abacus-moment');
 const request = require('abacus-request');
 
+const carryOverDb = require('./lib/carry-over-db');
 const createFixture = require('./lib/service-bridge-fixture');
 const createTokenFactory = require('./lib/token-factory');
 const wait = require('./lib/wait');
@@ -14,7 +17,7 @@ const cfAdminToken = 'cfadmin-token';
 
 describe('service-bridge-test', () => {
 
-  context('when reading unsupported events from cloud controller', () => {
+  context('when reading unhandled events from cloud controller', () => {
     let fixture;
     let externalSystemsMocks;
 
@@ -32,7 +35,7 @@ describe('service-bridge-test', () => {
         .get();
       const unsupportedStateUsageEvent = fixture
         .usageEvent()
-        .overwriteState('UNSUPPORTED')
+        .overwriteState('UPDATE')
         .get();
       const unsupportedServiceUsageEvent = fixture
         .usageEvent()
@@ -43,11 +46,20 @@ describe('service-bridge-test', () => {
         .overwriteServicePlanName('unsupported-service-plan')
         .get();
 
+      const now = moment.now();
+      const tooYoungUsageEvent = fixture
+        .usageEvent()
+        .overwriteCreatedAt(moment
+          .utc(now)
+          .subtract(fixture.defaults.minimalAgeInMinutes / 2, 'minutes'))
+        .get();
+
       externalSystemsMocks.cloudController.serviceUsageEvents.return.firstTime([
         unsupportedOrganzationUsageEvent,
         unsupportedServicePlanUsageEvent,
         unsupportedServiceUsageEvent,
-        unsupportedStateUsageEvent
+        unsupportedStateUsageEvent,
+        tooYoungUsageEvent
       ]);
       externalSystemsMocks.cloudController.serviceGuids.return.always({
         [fixture.defaults.usageEvent.serviceLabel]: fixture.defaults.usageEvent.serviceGuid
@@ -70,16 +82,22 @@ describe('service-bridge-test', () => {
       ], done);
     });
 
-
     it('expect abacus collector receive NO usage', () => {
       expect(externalSystemsMocks.abacusCollector.collectUsageService.requestsCount()).to.equal(0);
     });
 
-    it('expect correct statistics are returned', (done) => {
+    it('expect carry-over is empty', (done) => yieldable.functioncb(function *() {
+      const docs = yield carryOverDb.readCurrentMonthDocs();
+      expect(docs).to.deep.equal([]);
+    })((err) => {
+      done(err);
+    }));
+
+    it('expect skipped statistics are returned', (done) => {
       const tokenFactory = createTokenFactory(fixture.defaults.oauth.tokenSecret);
       const signedToken = tokenFactory.create(['abacus.usage.read']);
-      request.get('http://localhost:9502/v1/stats', {
-        port: 9502,
+      request.get('http://localhost::port/v1/stats', {
+        port: fixture.bridge.port,
         headers: {
           authorization: `Bearer ${signedToken}`
         }

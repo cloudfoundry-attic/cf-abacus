@@ -11,6 +11,9 @@ const createAbacusCollectorMock = require('./abacus-collector-mock');
 const createCloudControllerMock = require('./cloud-controller-mock');
 const createUAAServerMock = require('./uaa-server-mock');
 
+const minimalAgeInMinutes = 3;
+const minimalAgeInMinutesInMillis = minimalAgeInMinutes * 60 * 1000;
+
 const defaults = {
   oauth: {
     tokenSecret: 'secret',
@@ -21,6 +24,7 @@ const defaults = {
     abacusClientSecret: 'abacus-collector-client-secret'
   },
   usageEvent: {
+    state: 'CREATED',
     serviceGuid: 'test-service-guid',
     serviceLabel: 'test-service',
     eventGuid: 'event-guid',
@@ -28,7 +32,8 @@ const defaults = {
     spaceGuid:'space-guid',
     servicePlanName:'test-plan',
     serviceInstanceGuid: 'service-instance-guid'
-  }
+  },
+  minimalAgeInMinutes
 };
 
 const validUsageEvent = (eventTimestamp) => ({
@@ -37,7 +42,7 @@ const validUsageEvent = (eventTimestamp) => ({
     guid: defaults.usageEvent.eventGuid
   },
   entity: {
-    state: 'CREATED',
+    state: defaults.usageEvent.state,
     org_guid: defaults.usageEvent.orgGuid,
     space_guid: defaults.usageEvent.spaceGuid,
     service_label: defaults.usageEvent.serviceLabel,
@@ -48,11 +53,18 @@ const validUsageEvent = (eventTimestamp) => ({
 
 const usageEvent = () => {
   const now = moment.now();
-  const eventTimestamp = moment.utc(now).subtract(3, 'minutes').valueOf();
+  const eventTimestamp = moment
+    .utc(now)
+    .subtract(minimalAgeInMinutes + 1, 'minutes')
+    .valueOf();
 
   const resultUsageEvent = validUsageEvent(eventTimestamp);
 
   const overwritable = {
+    overwriteCreatedAt: (value) => {
+      resultUsageEvent.metadata.created_at = value;
+      return overwritable;
+    },
     overwriteState: (value) => {
       resultUsageEvent.entity.state = value;
       return overwritable;
@@ -119,11 +131,13 @@ module.exports = () => {
       "${defaults.usageEvent.serviceLabel}":{"plans":["${defaults.usageEvent.servicePlanName}"]}
     }`,
     MIN_INTERVAL_TIME : 10,
+    GUID_MIN_AGE: minimalAgeInMinutesInMillis,
     JWTKEY : defaults.oauth.tokenSecret,
     JWTALGO : defaults.oauth.tokenAlgorithm
   });
 
   const bridge = {
+    port: 9502,
     start: (config) => {
       if (!config.db)
         npm
