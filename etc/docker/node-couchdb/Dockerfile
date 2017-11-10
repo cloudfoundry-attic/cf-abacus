@@ -1,7 +1,5 @@
 FROM node:8.9.0
 
-RUN npm install -g npm@4
-
 RUN echo "deb http://packages.erlang-solutions.com/debian jessie contrib" > /etc/apt/sources.list.d/erlang-solutions.list
 RUN wget -qO - http://packages.erlang-solutions.com/debian/erlang_solutions.asc | apt-key add -
 RUN apt-get update -y
@@ -38,3 +36,4 @@ WORKDIR /usr/bin
 RUN curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx
 
 ENV NPM_CONFIG_LOGLEVEL=warn
+RUN npm install -g npm@4
