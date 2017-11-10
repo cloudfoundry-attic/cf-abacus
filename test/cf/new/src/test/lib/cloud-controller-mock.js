@@ -46,7 +46,7 @@ module.exports = () => {
   let server;
 
   const serviceUsageEventsData = {
-    return: undefined,
+    return: [],
     requests:[]
   };
 
@@ -58,7 +58,7 @@ module.exports = () => {
   const start = () => {
     app = express();
 
-    let eventsReturned = false;
+    
     app.get('/v2/service_usage_events', (req, res) => {
       debug('Retrieved service usage events. Request query: %j', req.query);
 
@@ -68,7 +68,8 @@ module.exports = () => {
         afterGuid: req.query.after_guid
       });
 
-      const result = !eventsReturned ? serviceUsageEventsData.return : [];
+      const currentRequestReturn = serviceUsageEventsData.return[serviceUsageEventsData.requests.length - 1];
+      const result = currentRequestReturn || []; 
       debug('Returing service usage events: %j', result);
       res.send({
         resources: result
@@ -109,7 +110,8 @@ module.exports = () => {
     },
     serviceUsageEvents: {
       return: {
-        firstTime: (events) => serviceUsageEventsData.return = events
+        firstTime: (events) => serviceUsageEventsData.return[0] = events,
+        secondTime: (events) => serviceUsageEventsData.return[1] = events
       },
       requestsCount: () => serviceUsageEventsData.requests.length,
       requests: (index) => serviceUsageEventsData.requests[index]

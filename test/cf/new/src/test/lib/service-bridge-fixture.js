@@ -36,29 +36,38 @@ const defaults = {
   minimalAgeInMinutes
 };
 
-const validUsageEvent = (eventTimestamp) => ({
-  metadata: {
-    created_at: eventTimestamp,
-    guid: defaults.usageEvent.eventGuid
-  },
-  entity: {
-    state: defaults.usageEvent.state,
-    org_guid: defaults.usageEvent.orgGuid,
-    space_guid: defaults.usageEvent.spaceGuid,
-    service_label: defaults.usageEvent.serviceLabel,
-    service_plan_name: defaults.usageEvent.servicePlanName,
-    service_instance_guid: defaults.usageEvent.serviceInstanceGuid
-  }
-});
-
-const usageEvent = () => {
+const eventTimestampGenerator = function *() {
   const now = moment.now();
-  const eventTimestamp = moment
+  let currentEventTimestamp = moment
     .utc(now)
     .subtract(minimalAgeInMinutes + 1, 'minutes')
     .valueOf();
+  
+  while (true)
+    yield currentEventTimestamp--;
+};
 
-  const resultUsageEvent = validUsageEvent(eventTimestamp);
+const validUsageEvent = () => {
+  const createdAt = eventTimestampGenerator().next().value;
+  
+  return { 
+    metadata: {
+      created_at: createdAt,
+      guid: defaults.usageEvent.eventGuid + createdAt
+    },
+    entity: {
+      state: defaults.usageEvent.state,
+      org_guid: defaults.usageEvent.orgGuid,
+      space_guid: defaults.usageEvent.spaceGuid,
+      service_label: defaults.usageEvent.serviceLabel,
+      service_plan_name: defaults.usageEvent.servicePlanName,
+      service_instance_guid: defaults.usageEvent.serviceInstanceGuid
+    }
+  };
+};
+
+const usageEvent = () => {
+  const resultUsageEvent = validUsageEvent();
 
   const overwritable = {
     overwriteEventGuid: (value) => {

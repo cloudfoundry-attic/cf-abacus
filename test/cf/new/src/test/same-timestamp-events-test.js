@@ -36,12 +36,10 @@ describe('service-bridge-test', () => {
         .valueOf();
       const firstUsageEvent = fixture
         .usageEvent()
-        .overwriteEventGuid('event-guid-1')
         .overwriteCreatedAt(usageEventsTimestamp)
         .get();
       const secondUsageEvent = fixture
         .usageEvent()
-        .overwriteEventGuid('event-guid-2')
         .overwriteCreatedAt(usageEventsTimestamp)
         .get();
 

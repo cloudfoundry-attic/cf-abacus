@@ -17,9 +17,12 @@ const cfAdminToken = 'cfadmin-token';
 describe('service-bridge-test', () => {
 
   context('when all external systems are working', () => {
+    const firstEventGuid = 'event-guid-1';
+    const secondEventGuid = 'event-guid-2';
     let fixture;
     let externalSystemsMocks;
-    let usageEventTimestamp;
+    let firstUsageEventTimestamp;
+    let secondUsageEventTimestamp;
 
     before((done) => {
       fixture = createFixture();
@@ -30,11 +33,19 @@ describe('service-bridge-test', () => {
       externalSystemsMocks.uaaServer.tokenService.forAbacusCollectorToken.return.always(abacusCollectorToken);
       externalSystemsMocks.uaaServer.tokenService.forCfAdminToken.return.always(cfAdminToken);
 
-      const serviceUsageEvent = fixture
+      const firstServiceUsageEvent = fixture
         .usageEvent()
+        .overwriteEventGuid(firstEventGuid)
         .get();
-      usageEventTimestamp = serviceUsageEvent.metadata.created_at;
-      externalSystemsMocks.cloudController.serviceUsageEvents.return.firstTime([serviceUsageEvent]);
+      firstUsageEventTimestamp = firstServiceUsageEvent.metadata.created_at;
+      const secondServiceUsageEvent = fixture
+        .usageEvent()
+        .overwriteEventGuid(secondEventGuid)
+        .get();
+      secondUsageEventTimestamp = secondServiceUsageEvent.metadata.created_at;
+      externalSystemsMocks.cloudController.serviceUsageEvents.return.firstTime([firstServiceUsageEvent]);
+      externalSystemsMocks.cloudController.serviceUsageEvents.return.secondTime([secondServiceUsageEvent]);
+
       externalSystemsMocks.cloudController.serviceGuids.return.always({
         [fixture.defaults.usageEvent.serviceLabel]: fixture.defaults.usageEvent.serviceGuid
       });
@@ -44,7 +55,7 @@ describe('service-bridge-test', () => {
       fixture.bridge.start({ db: process.env.DB });
 
       wait.until(() => {
-        return externalSystemsMocks.cloudController.serviceUsageEvents.requestsCount() >= 2;
+        return externalSystemsMocks.cloudController.serviceUsageEvents.requestsCount() >= 3;
       }, done);
     });
 
@@ -55,37 +66,47 @@ describe('service-bridge-test', () => {
       ], done);
     });
 
-    it('verify cloud controller calls', () => {
-      const cloudControllerMock = externalSystemsMocks.cloudController;
+    context('verify cloud controller', () => {
+      it('verify Services service calls', () => {
+        const cloudControllerMock = externalSystemsMocks.cloudController;
+  
+        // Expect 2 calls as configuration is load by both Master and Worker process
+        expect(cloudControllerMock.serviceGuids.requestsCount()).to.equal(2);
+        expect(cloudControllerMock.serviceGuids.requests(0)).to.deep.equal({
+          token: cfAdminToken,
+          serviceLabels: [fixture.defaults.usageEvent.serviceLabel]
+        });
+        expect(cloudControllerMock.serviceGuids.requests(1)).to.deep.equal({
+          token: cfAdminToken,
+          serviceLabels: [fixture.defaults.usageEvent.serviceLabel]
+        });
+      });
 
-      // Expect 2 calls as configuration is load by both Master and Worker process
-      expect(cloudControllerMock.serviceGuids.requestsCount()).to.equal(2);
-      expect(cloudControllerMock.serviceGuids.requests(0)).to.deep.equal({
-        token: cfAdminToken,
-        serviceLabels: [fixture.defaults.usageEvent.serviceLabel]
-      });
-      expect(cloudControllerMock.serviceGuids.requests(1)).to.deep.equal({
-        token: cfAdminToken,
-        serviceLabels: [fixture.defaults.usageEvent.serviceLabel]
-      });
-
-      expect(cloudControllerMock.serviceUsageEvents.requests(0)).to.deep.equal({
-        token: cfAdminToken,
-        serviceGuids: [fixture.defaults.usageEvent.serviceGuid],
-        afterGuid: undefined
-      });
-      expect(cloudControllerMock.serviceUsageEvents.requests(1)).to.deep.equal({
-        token: cfAdminToken,
-        serviceGuids: [fixture.defaults.usageEvent.serviceGuid],
-        afterGuid: fixture.defaults.usageEvent.eventGuid
+      it('verify Service Usage Events service calls ', () => {
+        const cloudControllerMock = externalSystemsMocks.cloudController;
+  
+        expect(cloudControllerMock.serviceUsageEvents.requests(0)).to.deep.equal({
+          token: cfAdminToken,
+          serviceGuids: [fixture.defaults.usageEvent.serviceGuid],
+          afterGuid: undefined
+        });
+        expect(cloudControllerMock.serviceUsageEvents.requests(1)).to.deep.equal({
+          token: cfAdminToken,
+          serviceGuids: [fixture.defaults.usageEvent.serviceGuid],
+          afterGuid: firstEventGuid
+        });
+        expect(cloudControllerMock.serviceUsageEvents.requests(2)).to.deep.equal({
+          token: cfAdminToken,
+          serviceGuids: [fixture.defaults.usageEvent.serviceGuid],
+          afterGuid: secondEventGuid
+        });
       });
     });
 
-    it('verify abacus collector calls', () => {
-      const abacusCollectorMock = externalSystemsMocks.abacusCollector;
-      const expectedUsage = {
-        start: usageEventTimestamp,
-        end: usageEventTimestamp,
+    context('when verifing abacus collector', () => {
+      const expectedUsage = (timestamp) => ({
+        start: timestamp,
+        end: timestamp,
         organization_id: fixture.defaults.usageEvent.orgGuid,
         space_id: fixture.defaults.usageEvent.spaceGuid,
         consumer_id: `service:${fixture.defaults.usageEvent.serviceInstanceGuid}`,
@@ -102,13 +123,22 @@ describe('service-bridge-test', () => {
             quantity : 0
           }
         ]
-      };
-
-      expect(abacusCollectorMock.collectUsageService.requestsCount()).to.equal(1);
-      expect(abacusCollectorMock.collectUsageService.requests(0)).to.deep.equal({
-        token: abacusCollectorToken,
-        usage: expectedUsage
       });
+
+      it('expect two usages to be send to abacus collector', () => {
+        expect(externalSystemsMocks.abacusCollector.collectUsageService.requestsCount()).to.equal(2);
+      });
+  
+      it('expect first recieved usage to be as it is', () => {
+        expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(0).usage)
+          .to.deep.equal(expectedUsage(firstUsageEventTimestamp));
+      });
+  
+      it('expect second recieved usage timestamp to be adjusted', () => {
+        expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(1).usage)
+          .to.deep.equal(expectedUsage(secondUsageEventTimestamp));
+      });
+  
     });
 
     it('verify UAA calls', () => {
@@ -131,10 +161,10 @@ describe('service-bridge-test', () => {
     it('verify carry-over content', (done) => yieldable.functioncb(function *() {
       const docs = yield carryOverDb.readCurrentMonthDocs();
       expect(docs).to.deep.equal([{
-        collector_id: 'http://location.com',
-        event_guid: fixture.defaults.usageEvent.eventGuid,
+        collector_id: externalSystemsMocks.abacusCollector.collectUsageService.resourceLocation,
+        event_guid: secondEventGuid,
         state: fixture.defaults.usageEvent.state,
-        timestamp: usageEventTimestamp }]);
+        timestamp: secondUsageEventTimestamp }]);
     })((err) => {
       done(err);
     }));
@@ -184,7 +214,7 @@ describe('service-bridge-test', () => {
             expect(response.statusCode).to.equal(httpStatus.OK);
             expect(response.body.statistics.usage).to.deep.equal({
               success : {
-                all: 1,
+                all: 2,
                 conflicts : 0,
                 skips : 0
               },
@@ -200,7 +230,6 @@ describe('service-bridge-test', () => {
 
   });
 
-  // test with and without cluster
   // retry(s)
   // behavior when some external system is not available
   // Cloud Controller cannot find GUID "%s". Restarting reporting, starting from epoch.

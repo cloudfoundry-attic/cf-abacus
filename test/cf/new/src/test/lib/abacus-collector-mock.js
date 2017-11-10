@@ -8,6 +8,7 @@ const express = require('abacus-express');
 const router = require('abacus-router');
 
 const randomPort = 0;
+const resourceLocation = 'http://location.com';
 
 // OAuth Authorization header format: "Bearer <token-value>"
 const extractOAuthToken = (authHeader) => {
@@ -42,7 +43,7 @@ module.exports = () => {
 
       let responseBody;
       if (returnStatusCode === httpStatus.CREATED)
-        res.header('Location', 'http://location.com');
+        res.header('Location', resourceLocation);
 
       if (returnStatusCode === httpStatus.CONFLICT)
         responseBody = { error: 'Conflict' };
@@ -64,6 +65,7 @@ module.exports = () => {
     start,
     address: () => server.address(),
     collectUsageService: {
+      resourceLocation,
       requests: (n) => received.requests[n],
       requestsCount: () => received.requests.length,
       return: {
