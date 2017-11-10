@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e -x
+set -e
 
 pushd built-project
   TIMEOUT=$(expr ${CI_START_TIMEOUT:-10000} / 1000)

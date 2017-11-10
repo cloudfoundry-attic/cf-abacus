@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e -x
+set -e
 
 function create_or_update_client() {
    client_id="$1"

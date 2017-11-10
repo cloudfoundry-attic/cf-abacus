@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e -x
+set -e
 
 echo "Creating security group for CF API access ..."
 group="["

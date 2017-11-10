@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e -x
+set -e
 
 SCRIPT_DIR="${BASH_SOURCE%/*}"
 source $SCRIPT_DIR/common-functions

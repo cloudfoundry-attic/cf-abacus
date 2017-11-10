@@ -2,9 +2,6 @@
 
 set -e
 
-echo "Environment:"
-env | sort
-
 echo "Copying Abacus ..."
 cp -r landscape/cf-abacus/. built-project
 
