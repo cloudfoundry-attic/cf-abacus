@@ -169,65 +169,6 @@ describe('service-bridge-test', () => {
       done(err);
     }));
 
-    context('when requesting statistics', () => {
-      let tokenFactory;
-
-      before(() => {
-        tokenFactory = createTokenFactory(fixture.defaults.oauth.tokenSecret);
-      });
-
-      context('with NO token', () => {
-        it('UNAUTHORIZED is returned', (done) => {
-          request.get('http://localhost::port/v1/stats', {
-            port: fixture.bridge.port
-          }, (error, response) => {
-            expect(response.statusCode).to.equal(httpStatus.UNAUTHORIZED);
-            done();
-          });
-        });
-      });
-
-      context('with token with NO required scopes', () => {
-        it('FORBIDDEN is returned', (done) => {
-          const signedToken = tokenFactory.create(['abacus.usage.invalid']);
-          request.get('http://localhost::port/v1/stats', {
-            port: fixture.bridge.port,
-            headers: {
-              authorization: `Bearer ${signedToken}`
-            }
-          }, (error, response) => {
-            expect(response.statusCode).to.equal(httpStatus.FORBIDDEN);
-            done();
-          });
-        });
-      });
-
-      context('with token with required scopes', () => {
-        it('correct statistics are returned', (done) => {
-          const signedToken = tokenFactory.create(['abacus.usage.read']);
-          request.get('http://localhost::port/v1/stats', {
-            port: fixture.bridge.port,
-            headers: {
-              authorization: `Bearer ${signedToken}`
-            }
-          }, (error, response) => {
-            expect(response.statusCode).to.equal(httpStatus.OK);
-            expect(response.body.statistics.usage).to.deep.equal({
-              success : {
-                all: 2,
-                conflicts : 0,
-                skips : 0
-              },
-              failures : 0
-            });
-            done();
-          });
-        });
-      });
-
-
-    });
-
   });
 
   // retry(s)

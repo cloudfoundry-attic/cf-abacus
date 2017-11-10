@@ -76,6 +76,7 @@ module.exports = () => {
     start,
     address: () => server.address(),
     tokenService: {
+      requestsCount: () => abacusTokenRequests.length + cfAdminTokenRequests.length,
       forAbacusCollectorToken: {
         return: {
           always: (token) => abacusCollectorToken = token

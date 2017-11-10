@@ -22,7 +22,7 @@ module.exports = () => {
   let app;
   let server;
 
-  let returnStatusCode;
+  let returnStatusCode = httpStatus.INTERNAL_SERVER_ERROR;
 
   const received = {
     requests: []
