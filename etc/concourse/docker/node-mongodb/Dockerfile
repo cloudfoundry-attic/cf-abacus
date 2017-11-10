@@ -1,4 +1,7 @@
-FROM node:6.10.2
+FROM node:8.9.0
+
+RUN npm install -g npm@4
+
 RUN apt-get update -y
 RUN apt-get install -y mongodb zip
 RUN apt-get clean

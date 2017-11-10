@@ -30,7 +30,7 @@ jobs:
             type: docker-image
             source:
               repository: godofcontainers/ubuntu-14.04-cf
-              tag: 'latest'
+              tag: 14.04
           inputs:
             - name: landscape
           params:
@@ -60,7 +60,7 @@ jobs:
             type: docker-image
             source:
               repository: godofcontainers/ubuntu-14.04-cf
-              tag: 'latest'
+              tag: 14.04
           inputs:
             - name: landscape
           params:
@@ -83,7 +83,7 @@ jobs:
               type: docker-image
               source:
                 repository: godofcontainers/ubuntu-14.04-cf
-                tag: 'latest'
+                tag: 14.04
             inputs:
               - name: landscape
             run:
@@ -102,7 +102,7 @@ jobs:
               type: docker-image
               source:
                 repository: godofcontainers/ubuntu-14.04-cf
-                tag: 'latest'
+                tag: 14.04
             inputs:
               - name: landscape
             run:

@@ -25,7 +25,7 @@ jobs:
             type: docker-image
             source:
               repository: godofcontainers/ubuntu-14.04-cf
-              tag: 'latest'
+              tag: 14.04
           inputs:
             - name: landscape
           params:
@@ -84,7 +84,7 @@ jobs:
               type: docker-image
               source:
                 repository: godofcontainers/node-mongodb
-                tag: '6.10.2'
+                tag: 8.9.0
             inputs:
               - name: landscape
             outputs:
@@ -112,7 +112,7 @@ jobs:
               type: docker-image
               source:
                 repository: godofcontainers/ubuntu-14.04-cf
-                tag: 'latest'
+                tag: 14.04
             inputs:
               - name: landscape
             run:
@@ -147,7 +147,7 @@ jobs:
             type: docker-image
             source:
               repository: godofcontainers/node-mongodb
-              tag: '6.10.2'
+              tag: 8.9.0
           inputs:
             - name: built-project
           params:
@@ -179,7 +179,7 @@ jobs:
             type: docker-image
             source:
               repository: godofcontainers/node-mongodb
-              tag: '6.10.2'
+              tag: 8.9.0
           inputs:
             - name: built-project
           params:
@@ -207,7 +207,7 @@ jobs:
             type: docker-image
             source:
               repository: godofcontainers/node-mongodb
-              tag: '6.10.2'
+              tag: 8.9.0
           inputs:
             - name: built-project
           params:

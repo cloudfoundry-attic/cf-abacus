@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Deleting all containers ..."
-docker rm $(docker ps -a -q)
+docker rm -f $(docker ps -a -q)
 
 echo "Deleting all images ..."
-docker rmi $(docker images -q)
+docker rmi -f $(docker images -q)
