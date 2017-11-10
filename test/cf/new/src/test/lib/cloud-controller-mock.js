@@ -68,8 +68,10 @@ module.exports = () => {
         afterGuid: req.query.after_guid
       });
 
+      const result = !eventsReturned ? serviceUsageEventsData.return : [];
+      debug('Returing service usage events: %j', result);
       res.send({
-        resources: !eventsReturned ? serviceUsageEventsData.return : []
+        resources: result
       });
       eventsReturned = true;
     });

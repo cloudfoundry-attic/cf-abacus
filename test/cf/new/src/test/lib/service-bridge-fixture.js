@@ -61,6 +61,10 @@ const usageEvent = () => {
   const resultUsageEvent = validUsageEvent(eventTimestamp);
 
   const overwritable = {
+    overwriteEventGuid: (value) => {
+      resultUsageEvent.metadata.guid = value;
+      return overwritable;
+    },
     overwriteCreatedAt: (value) => {
       resultUsageEvent.metadata.created_at = value;
       return overwritable;

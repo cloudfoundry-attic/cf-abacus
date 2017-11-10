@@ -9,7 +9,6 @@ const seqid = require('abacus-seqid');
 const urienv = require('abacus-urienv');
 const yieldable = require('abacus-yieldable');
 
-
 const checkKeyPart = partition.partitioner(partition.bucket,
   partition.period, partition.forward, partition.balance, true);
 
@@ -23,17 +22,6 @@ const getAllDocs = yieldable(db.allDocs);
 
 const readCurrentMonthDocs = function *(cb) {
 
-  // const monthStart = seqid.pad16(moment.utc(usageEventData.createdAt).startOf('month').valueOf());
-  // const docKey = [
-  //   't', monthStart,
-  //   'k', usageEventData.orgGuid, usageEventData.spaceGuid,
-  //   'service:' + usageEventData.serviceInstanceGuid, usageEventData.serviceLabel, usageEventData.servicePlanName,
-  //   'service:'].join('/') + [
-  //     usageEventData.serviceInstanceGuid,
-  //     usageEventData.servicePlanName,
-  //     usageEventData.serviceLabel].join(':');
-
-
   const monthStart = moment.utc(moment.now()).startOf('month').valueOf();
   const result = yield getAllDocs({
     startkey: 't/' + seqid.pad16(moment.utc(monthStart).subtract(1, 'days').valueOf()),
@@ -42,21 +30,8 @@ const readCurrentMonthDocs = function *(cb) {
     include_docs: true
   });
 
-
-
   const docs = result.rows.map((row) => omit(row.doc, '_rev', '_id'));
   return docs;
-  // db.allDocs({
-  //   keys: [docKey],
-  //   descending: false,
-  //   include_docs: true
-  // }, (err, result) => {
-  //   if (err)
-  //     cb(err);
-
-  //   const docs = result.rows.map((row) => omit(row.doc, '_rev', '_id'));
-
-  //   cb(undefined, docs);
 };
 
 

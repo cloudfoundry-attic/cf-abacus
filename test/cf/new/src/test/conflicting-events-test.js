@@ -43,7 +43,6 @@ describe('service-bridge-test', () => {
       fixture.bridge.start({ db: process.env.DB });
 
       wait.until(() => {
-        // TODO: check if we could wait abacus to recieve a single usage
         return externalSystemsMocks.cloudController.serviceUsageEvents.requestsCount() >= 2;
       }, done);
     });

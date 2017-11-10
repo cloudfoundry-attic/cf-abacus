@@ -200,11 +200,10 @@ describe('service-bridge-test', () => {
 
   });
 
-  // write to carryOver
   // test with and without cluster
-  // timestamp adjusting
   // retry(s)
   // behavior when some external system is not available
+  // Cloud Controller cannot find GUID "%s". Restarting reporting, starting from epoch.
 
   // think of a way to start and stop bridge only once.
 
