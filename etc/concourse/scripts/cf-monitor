@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e -x
+set -e
 
 echo "Logging to $CF_SYS_DOMAIN ..."
 if [ "$SKIP_SSL_VALIDATION" == "true" ]; then

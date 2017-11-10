@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e -x
+set -e
 
 pushd built-project
   echo "Running integration tests ..."
