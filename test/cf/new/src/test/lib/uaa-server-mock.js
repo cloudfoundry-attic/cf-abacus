@@ -1,15 +1,12 @@
 'use strict';
 
+const httpStatus = require('http-status-codes');
+const isEqual = require('underscore').isEqual;
+
 const debug = require('abacus-debug')('uaa-server-mock');
 const express = require('abacus-express');
-const httpStatus = require('http-status-codes');
 
 const randomPort = 0;
-
-const isAbacusCollectorTokenRequested = (request) => {
-  return request.query.scope
-    && request.query.scope === 'abacus.usage.write abacus.usage.read';
-};
 
 const extractCredentials = (authHeader) => {
   const encodedCredentials = authHeader.split(' ')[1];
@@ -26,11 +23,8 @@ module.exports = () => {
   let app;
   let server;
 
-  let abacusCollectorToken;
-  let cfAdminToken;
-
-  const abacusTokenRequests = [];
-  const cfAdminTokenRequests = [];
+  const returns = [];
+  const requests = [];
 
   const start = () => {
     app = express();
@@ -44,18 +38,15 @@ module.exports = () => {
     });
 
     app.post('/oauth/token', (request, response) => {
-      debug('Called /oauth/token endpoint with headers: %j', request.headers);
+      debug('Called /oauth/token endpoint with query %j and headers: %j', request.query, request.headers);
+      const queryScopes = request.query.scope || '';
+      requests.push({
+        credentials: extractCredentials(request.header('Authorization')),
+        scopes: queryScopes ? queryScopes.split(' ') : []
+      });
 
-      let responseToken;
-      if (isAbacusCollectorTokenRequested(request)) {
-        abacusTokenRequests.push(extractCredentials(request.header('Authorization')));
-        responseToken = abacusCollectorToken;
-      }
-      else {
-        cfAdminTokenRequests.push(extractCredentials(request.header('Authorization')));
-        responseToken = cfAdminToken;
-      }
-
+      const responseToken = returns[queryScopes];
+      debug('Returning Oauth Token: %s', responseToken);
       response.status(httpStatus.OK).send({
         access_token: responseToken,
         expires_in: 5 * 60
@@ -76,20 +67,19 @@ module.exports = () => {
     start,
     address: () => server.address(),
     tokenService: {
-      requestsCount: () => abacusTokenRequests.length + cfAdminTokenRequests.length,
-      forAbacusCollectorToken: {
-        return: {
-          always: (token) => abacusCollectorToken = token
-        },
-        requests: (index) => abacusTokenRequests[index],
-        requestsCount: () => abacusTokenRequests.length
+      requestsCount: () => requests.length,
+      requests: {
+        withScopes: (scopes) => {
+          return requests.filter((request) => isEqual(request.scopes, scopes));
+        }
       },
-      forCfAdminToken: {
-        return: {
-          always: (token) => cfAdminToken = token
-        },
-        requests: (index) => cfAdminTokenRequests[index],
-        requestsCount: () => cfAdminTokenRequests.length
+      whenScopes: (scopes) => {
+        const serializedScopes = scopes.join(' ');
+        return {
+          return: (returnValue) => {
+            returns[serializedScopes] = returnValue;
+          }
+        };
       }
     },
     stop

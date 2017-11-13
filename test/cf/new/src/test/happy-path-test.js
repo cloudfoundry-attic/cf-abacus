@@ -11,7 +11,9 @@ const wait = require('./lib/wait');
 const createFixture = require('./lib/service-bridge-fixture');
 const createTokenFactory = require('./lib/token-factory');
 
+const abacusCollectorScopes = ['abacus.usage.write', 'abacus.usage.read'];
 const abacusCollectorToken = 'abacus-collector-token';
+const cfAdminScopes = [];
 const cfAdminToken = 'cfadmin-token';
 
 describe('service-bridge-test', () => {
@@ -30,8 +32,8 @@ describe('service-bridge-test', () => {
       externalSystemsMocks = fixture.createExternalSystemsMocks();
       externalSystemsMocks.startAll();
 
-      externalSystemsMocks.uaaServer.tokenService.forAbacusCollectorToken.return.always(abacusCollectorToken);
-      externalSystemsMocks.uaaServer.tokenService.forCfAdminToken.return.always(cfAdminToken);
+      externalSystemsMocks.uaaServer.tokenService.whenScopes(abacusCollectorScopes).return(abacusCollectorToken);
+      externalSystemsMocks.uaaServer.tokenService.whenScopes(cfAdminScopes).return(cfAdminToken);
 
       const firstServiceUsageEvent = fixture
         .usageEvent()
@@ -133,17 +135,36 @@ describe('service-bridge-test', () => {
       const uaaServerMock = externalSystemsMocks.uaaServer;
       // Expect 2 calls for every token (abacus and cfadmin) per Worker and Master processes
       // TODO: check this!!!
-      expect(uaaServerMock.tokenService.forAbacusCollectorToken.requestsCount()).to.equal(2);
-      expect(uaaServerMock.tokenService.forCfAdminToken.requestsCount()).to.equal(2);
+      expect(uaaServerMock.tokenService.requestsCount()).to.equal(4);
 
-      expect(uaaServerMock.tokenService.forAbacusCollectorToken.requests(0)).to.deep.equal({
-        clientId: fixture.defaults.oauth.abacusClientId,
-        secret: fixture.defaults.oauth.abacusClientSecret
-      });
-      expect(uaaServerMock.tokenService.forCfAdminToken.requests(0)).to.deep.equal({
-        clientId: fixture.defaults.oauth.cfClientId,
-        secret: fixture.defaults.oauth.cfClientSecret
-      });
+      expect(uaaServerMock.tokenService.requests.withScopes(abacusCollectorScopes)).to.deep.equal([{
+        credentials: {
+          clientId: fixture.defaults.oauth.abacusClientId,
+          secret: fixture.defaults.oauth.abacusClientSecret
+        },
+        scopes: abacusCollectorScopes
+      },{
+        credentials: {
+          clientId: fixture.defaults.oauth.abacusClientId,
+          secret: fixture.defaults.oauth.abacusClientSecret
+        },
+        scopes: abacusCollectorScopes
+      }]);
+
+      expect(uaaServerMock.tokenService.requests.withScopes(cfAdminScopes)).to.deep.equal([{
+        credentials: {
+          clientId: fixture.defaults.oauth.cfClientId,
+          secret: fixture.defaults.oauth.cfClientSecret
+        },
+        scopes: cfAdminScopes
+      },{
+        credentials: {
+          clientId: fixture.defaults.oauth.cfClientId,
+          secret: fixture.defaults.oauth.cfClientSecret
+        },
+        scopes: cfAdminScopes
+      }]);
+
     });
 
     it('verify carry-over content', (done) => yieldable.functioncb(function *() {
@@ -181,8 +202,8 @@ describe('service-bridge-test', () => {
 
   });
 
-  // Cloud Controller cannot find GUID "%s". Restarting reporting, starting from epoch.
+// Why services bridge posts to 'batch' endpoint, but application not ?????
+// return.always -> always.return
 
-  // think of a way to start and stop bridge only once.
 
 });

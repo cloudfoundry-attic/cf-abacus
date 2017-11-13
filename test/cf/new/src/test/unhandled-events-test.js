@@ -12,7 +12,9 @@ const createFixture = require('./lib/service-bridge-fixture');
 const createTokenFactory = require('./lib/token-factory');
 const wait = require('./lib/wait');
 
+const abacusCollectorScopes = ['abacus.usage.write', 'abacus.usage.read'];
 const abacusCollectorToken = 'abacus-collector-token';
+const cfAdminScopes = [];
 const cfAdminToken = 'cfadmin-token';
 
 describe('service-bridge-test', () => {
@@ -26,8 +28,8 @@ describe('service-bridge-test', () => {
       externalSystemsMocks = fixture.createExternalSystemsMocks();
       externalSystemsMocks.startAll();
 
-      externalSystemsMocks.uaaServer.tokenService.forAbacusCollectorToken.return.always(abacusCollectorToken);
-      externalSystemsMocks.uaaServer.tokenService.forCfAdminToken.return.always(cfAdminToken);
+      externalSystemsMocks.uaaServer.tokenService.whenScopes(abacusCollectorScopes).return(abacusCollectorToken);
+      externalSystemsMocks.uaaServer.tokenService.whenScopes(cfAdminScopes).return(cfAdminToken);
 
       const unsupportedOrganzationUsageEvent = fixture
         .usageEvent()
@@ -54,7 +56,7 @@ describe('service-bridge-test', () => {
           .subtract(fixture.defaults.minimalAgeInMinutes / 2, 'minutes')
           .valueOf())
         .get();
-      
+
       externalSystemsMocks.cloudController.serviceUsageEvents.return.firstTime([
         unsupportedOrganzationUsageEvent,
         unsupportedServicePlanUsageEvent,
