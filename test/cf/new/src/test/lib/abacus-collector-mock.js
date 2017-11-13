@@ -56,6 +56,7 @@ module.exports = () => {
     });
 
     app.use(router.batch(routes));
+    app.use(routes);
     server = app.listen(randomPort);
 
     return server.address();

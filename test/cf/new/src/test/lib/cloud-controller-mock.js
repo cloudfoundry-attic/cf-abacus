@@ -50,6 +50,11 @@ module.exports = () => {
     requests:[]
   };
 
+  const applicationUsageEventsData = {
+    return: [],
+    requests:[]
+  };
+
   const serviceGuidsData = {
     return: undefined,
     requests: []
@@ -58,9 +63,9 @@ module.exports = () => {
   const start = () => {
     app = express();
 
-    
+
     app.get('/v2/service_usage_events', (req, res) => {
-      debug('Retrieved service usage events. Request query: %j', req.query);
+      debug('Retrieved service usage events request. Query: %j', req.query);
 
       serviceUsageEventsData.requests.push({
         token: extractOAuthToken(req.header('Authorization')),
@@ -69,12 +74,25 @@ module.exports = () => {
       });
 
       const currentRequestReturn = serviceUsageEventsData.return[serviceUsageEventsData.requests.length - 1];
-      const result = currentRequestReturn || []; 
+      const result = currentRequestReturn || [];
       debug('Returing service usage events: %j', result);
       res.send({
         resources: result
       });
-      eventsReturned = true;
+    });
+
+    app.get('/v2/app_usage_events', (req, res) => {
+      debug('Retrieved app usage events request. Query: %j', req.query);
+      applicationUsageEventsData.requests.push({
+        token: extractOAuthToken(req.header('Authorization')),
+        afterGuid: req.query.after_guid
+      });
+      const currentRequestReturn = applicationUsageEventsData.return[applicationUsageEventsData.requests.length - 1];
+      const result = currentRequestReturn || [];
+      debug('Returning app usage events: %j', result);
+      res.send({
+        resources: result
+      });
     });
 
     app.get('/v2/services', (req, res) => {
@@ -115,6 +133,14 @@ module.exports = () => {
       },
       requestsCount: () => serviceUsageEventsData.requests.length,
       requests: (index) => serviceUsageEventsData.requests[index]
+    },
+    applicationUsageEvents: {
+      return: {
+        firstTime: (events) => applicationUsageEventsData.return[0] = events,
+        secondTime: (events) => applicationUsageEventsData.return[1] = events
+      },
+      requestsCount: () => applicationUsageEventsData.requests.length,
+      requests: (index) => applicationUsageEventsData.requests[index]
     },
     stop
   };

@@ -15,7 +15,6 @@ const retryCount = 3;
 const minimalAgeInMinutes = 3;
 const minimalAgeInMinutesInMillis = minimalAgeInMinutes * 60 * 1000;
 
-
 const defaults = {
   oauth: {
     tokenSecret: 'secret',
@@ -26,14 +25,17 @@ const defaults = {
     abacusClientSecret: 'abacus-collector-client-secret'
   },
   usageEvent: {
-    state: 'CREATED',
-    serviceGuid: 'test-service-guid',
+    state: 'STARTED',
+    previousState: 'STOPPED',
+    appGuid: 'test-app-guid',
     serviceLabel: 'test-service',
     eventGuid: 'event-guid',
     orgGuid: 'test-org',
     spaceGuid:'space-guid',
-    servicePlanName:'test-plan',
-    serviceInstanceGuid: 'service-instance-guid'
+    instanceCount: 5,
+    previousInstanceCount: 3,
+    memoryPerInstance: 2,
+    previousMemoryPerInstance: 6
   },
   env: {
     minimalAgeInMinutes,
@@ -61,11 +63,14 @@ const validUsageEvent = () => {
     },
     entity: {
       state: defaults.usageEvent.state,
+      previous_state: defaults.usageEvent.previousState,
       org_guid: defaults.usageEvent.orgGuid,
       space_guid: defaults.usageEvent.spaceGuid,
-      service_label: defaults.usageEvent.serviceLabel,
-      service_plan_name: defaults.usageEvent.servicePlanName,
-      service_instance_guid: defaults.usageEvent.serviceInstanceGuid
+      app_guid: defaults.usageEvent.appGuid,
+      instance_count: defaults.usageEvent.instanceCount,
+      previous_instance_count: defaults.usageEvent.previousInstanceCount,
+      memory_in_mb_per_instance: defaults.usageEvent.memoryPerInstance,
+      previous_memory_in_mb_per_instance: defaults.usageEvent.previousMemoryPerInstance
     }
   };
 };
@@ -109,17 +114,25 @@ collectorUsage = (eventTimestamp) => ({
   end: eventTimestamp,
   organization_id: defaults.usageEvent.orgGuid,
   space_id: defaults.usageEvent.spaceGuid,
-  consumer_id: `service:${defaults.usageEvent.serviceInstanceGuid}`,
-  resource_id: defaults.usageEvent.serviceLabel,
-  plan_id: defaults.usageEvent.servicePlanName,
-  resource_instance_id: `service:${defaults.usageEvent.serviceInstanceGuid}:${defaults.usageEvent.servicePlanName}:${defaults.usageEvent.serviceLabel}`,
+  consumer_id: `app:${defaults.usageEvent.appGuid}`,
+  resource_id: 'linux-container',
+  plan_id: 'standard',
+  resource_instance_id: `memory:${defaults.usageEvent.appGuid}`,
   measured_usage: [
     {
-      measure: 'current_instances',
-      quantity : 1
+      measure: 'current_instance_memory',
+      quantity : 2097152
     },
     {
-      measure: 'previous_instances',
+      measure: 'current_running_instances',
+      quantity: 5
+    },
+    {
+      measure: 'previous_instance_memory',
+      quantity : 0
+    },
+    {
+      measure: 'previous_running_instances',
       quantity : 0
     }
   ]
@@ -176,12 +189,12 @@ module.exports = () => {
   });
 
   const bridge = {
-    port: 9502,
+    port: 9500,
     start: (config) => {
       if (!config.db)
         npm
           .useEnv(extend({}, process.env, getEnviornmentVars()))
-          .startModules([npm.modules.pouchserver, npm.modules.services]);
+          .startModules([npm.modules.pouchserver, npm.modules.applications]);
       else
         dbclient.drop(config.db, /^abacus-/, () => {
           npm

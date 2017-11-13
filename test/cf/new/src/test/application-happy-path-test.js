@@ -8,10 +8,10 @@ const yieldable = require('abacus-yieldable');
 
 const carryOverDb = require('./lib/carry-over-db');
 const wait = require('./lib/wait');
-const createFixture = require('./lib/service-bridge-fixture');
+const createFixture = require('./lib/application-bridge-fixture');
 const createTokenFactory = require('./lib/token-factory');
 
-const abacusCollectorScopes = ['abacus.usage.write', 'abacus.usage.read'];
+const abacusCollectorScopes = ['abacus.usage.linux-container.write', 'abacus.usage.linux-container.read'];
 const abacusCollectorToken = 'abacus-collector-token';
 const cfAdminScopes = [];
 const cfAdminToken = 'cfadmin-token';
@@ -45,19 +45,16 @@ describe('service-bridge-test', () => {
         .overwriteEventGuid(secondEventGuid)
         .get();
       secondUsageEventTimestamp = secondServiceUsageEvent.metadata.created_at;
-      externalSystemsMocks.cloudController.serviceUsageEvents.return.firstTime([firstServiceUsageEvent]);
-      externalSystemsMocks.cloudController.serviceUsageEvents.return.secondTime([secondServiceUsageEvent]);
+      externalSystemsMocks.cloudController.applicationUsageEvents.return.firstTime([firstServiceUsageEvent]);
+      externalSystemsMocks.cloudController.applicationUsageEvents.return.secondTime([secondServiceUsageEvent]);
 
-      externalSystemsMocks.cloudController.serviceGuids.return.always({
-        [fixture.defaults.usageEvent.serviceLabel]: fixture.defaults.usageEvent.serviceGuid
-      });
 
       externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
 
       fixture.bridge.start({ db: process.env.DB });
 
       wait.until(() => {
-        return externalSystemsMocks.cloudController.serviceUsageEvents.requestsCount() >= 4;
+        return externalSystemsMocks.cloudController.applicationUsageEvents.requestsCount() >= 4;
       }, done);
     });
 
@@ -69,42 +66,24 @@ describe('service-bridge-test', () => {
     });
 
     context('verify cloud controller', () => {
-      it('verify Services service calls', () => {
-        const cloudControllerMock = externalSystemsMocks.cloudController;
-
-        // Expect 2 calls as configuration is load by both Master and Worker process
-        expect(cloudControllerMock.serviceGuids.requestsCount()).to.equal(2);
-        expect(cloudControllerMock.serviceGuids.requests(0)).to.deep.equal({
-          token: cfAdminToken,
-          serviceLabels: [fixture.defaults.usageEvent.serviceLabel]
-        });
-        expect(cloudControllerMock.serviceGuids.requests(1)).to.deep.equal({
-          token: cfAdminToken,
-          serviceLabels: [fixture.defaults.usageEvent.serviceLabel]
-        });
-      });
 
       it('verify Service Usage Events service calls ', () => {
         const cloudControllerMock = externalSystemsMocks.cloudController;
 
-        expect(cloudControllerMock.serviceUsageEvents.requests(0)).to.deep.equal({
+        expect(cloudControllerMock.applicationUsageEvents.requests(0)).to.deep.equal({
           token: cfAdminToken,
-          serviceGuids: [fixture.defaults.usageEvent.serviceGuid],
           afterGuid: undefined
         });
-        expect(cloudControllerMock.serviceUsageEvents.requests(1)).to.deep.equal({
+        expect(cloudControllerMock.applicationUsageEvents.requests(1)).to.deep.equal({
           token: cfAdminToken,
-          serviceGuids: [fixture.defaults.usageEvent.serviceGuid],
           afterGuid: firstEventGuid
         });
-        expect(cloudControllerMock.serviceUsageEvents.requests(2)).to.deep.equal({
+        expect(cloudControllerMock.applicationUsageEvents.requests(2)).to.deep.equal({
           token: cfAdminToken,
-          serviceGuids: [fixture.defaults.usageEvent.serviceGuid],
           afterGuid: secondEventGuid
         });
-        expect(cloudControllerMock.serviceUsageEvents.requests(3)).to.deep.equal({
+        expect(cloudControllerMock.applicationUsageEvents.requests(3)).to.deep.equal({
           token: cfAdminToken,
-          serviceGuids: [fixture.defaults.usageEvent.serviceGuid],
           afterGuid: secondEventGuid
         });
       });
@@ -164,7 +143,6 @@ describe('service-bridge-test', () => {
         },
         scopes: cfAdminScopes
       }]);
-
     });
 
     it('verify carry-over content', (done) => yieldable.functioncb(function *() {
@@ -201,11 +179,5 @@ describe('service-bridge-test', () => {
     });
 
   });
-
-// Why services bridge posts to 'batch' endpoint, but application not ?????
-// return.always -> always.return
-// refactor UAA tests to use mathcers?
-// revire package.json
-
 
 });
