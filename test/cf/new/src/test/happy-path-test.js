@@ -69,7 +69,7 @@ describe('service-bridge-test', () => {
     context('verify cloud controller', () => {
       it('verify Services service calls', () => {
         const cloudControllerMock = externalSystemsMocks.cloudController;
-  
+
         // Expect 2 calls as configuration is load by both Master and Worker process
         expect(cloudControllerMock.serviceGuids.requestsCount()).to.equal(2);
         expect(cloudControllerMock.serviceGuids.requests(0)).to.deep.equal({
@@ -84,7 +84,7 @@ describe('service-bridge-test', () => {
 
       it('verify Service Usage Events service calls ', () => {
         const cloudControllerMock = externalSystemsMocks.cloudController;
-  
+
         expect(cloudControllerMock.serviceUsageEvents.requests(0)).to.deep.equal({
           token: cfAdminToken,
           serviceGuids: [fixture.defaults.usageEvent.serviceGuid],
@@ -109,45 +109,24 @@ describe('service-bridge-test', () => {
     });
 
     context('verify abacus collector', () => {
-      const expectedUsage = (timestamp) => ({
-        start: timestamp,
-        end: timestamp,
-        organization_id: fixture.defaults.usageEvent.orgGuid,
-        space_id: fixture.defaults.usageEvent.spaceGuid,
-        consumer_id: `service:${fixture.defaults.usageEvent.serviceInstanceGuid}`,
-        resource_id: fixture.defaults.usageEvent.serviceLabel,
-        plan_id: fixture.defaults.usageEvent.servicePlanName,
-        resource_instance_id: `service:${fixture.defaults.usageEvent.serviceInstanceGuid}:${fixture.defaults.usageEvent.servicePlanName}:${fixture.defaults.usageEvent.serviceLabel}`,
-        measured_usage: [
-          {
-            measure: 'current_instances',
-            quantity : 1
-          },
-          {
-            measure: 'previous_instances',
-            quantity : 0
-          }
-        ]
-      });
-
       it('expect two requests to be made to abacus collector', () => {
         expect(externalSystemsMocks.abacusCollector.collectUsageService.requestsCount()).to.equal(2);
       });
-  
+
       it('verify first request', () => {
         expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(0)).to.deep.equal({
           token: abacusCollectorToken,
-          usage: expectedUsage(firstUsageEventTimestamp)
+          usage: fixture.collectorUsage(firstUsageEventTimestamp)
         });
       });
-  
+
       it('verify second request', () => {
         expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(1)).to.deep.equal({
           token: abacusCollectorToken,
-          usage: expectedUsage(secondUsageEventTimestamp)
+          usage: fixture.collectorUsage(secondUsageEventTimestamp)
         });
       });
-  
+
     });
 
     it('verify UAA calls', () => {
@@ -202,8 +181,6 @@ describe('service-bridge-test', () => {
 
   });
 
-  // retry(s)
-  // behavior when some external system is not available
   // Cloud Controller cannot find GUID "%s". Restarting reporting, starting from epoch.
 
   // think of a way to start and stop bridge only once.

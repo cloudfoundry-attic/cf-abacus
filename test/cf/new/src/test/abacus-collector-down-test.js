@@ -5,9 +5,7 @@ const httpStatus = require('http-status-codes');
 const _ = require('underscore');
 
 const request = require('abacus-request');
-const yieldable = require('abacus-yieldable');
 
-const carryOverDb = require('./lib/carry-over-db');
 const wait = require('./lib/wait');
 const createFixture = require('./lib/service-bridge-fixture');
 const createTokenFactory = require('./lib/token-factory');
@@ -45,7 +43,7 @@ describe('service-bridge-test', () => {
 
       // Event reporter (abacus-client) will retry 'fixture.defaults.env.retryCount' times to report usage to abacus.
       // After that the whole process is retried (i.e. start reading again the events)
-      // Stub Abacus Collector so that it will force the bridge to retry the whole proces. 
+      // Stub Abacus Collector so that it will force the bridge to retry the whole proces.
       const responses = _(fixture.defaults.env.retryCount + 1).times(() => httpStatus.BAD_GATEWAY);
       responses.push(httpStatus.CREATED);
       externalSystemsMocks.abacusCollector.collectUsageService.return.series(responses);
@@ -72,10 +70,10 @@ describe('service-bridge-test', () => {
             .serviceUsageEvents
             .requests(requestNumber)
             .afterGuid).to.equal(
-              afterGuid
+            afterGuid
           );
         };
-  
+
         verifyServiceUsageEventsAfterGuid(0, undefined);
         verifyServiceUsageEventsAfterGuid(1, undefined);
         verifyServiceUsageEventsAfterGuid(2, usageEventMetadata.guid);
@@ -83,41 +81,20 @@ describe('service-bridge-test', () => {
     });
 
     context('verify abacus collector', () => {
-      const expectedUsage = (timestamp) => ({
-        start: timestamp,
-        end: timestamp,
-        organization_id: fixture.defaults.usageEvent.orgGuid,
-        space_id: fixture.defaults.usageEvent.spaceGuid,
-        consumer_id: `service:${fixture.defaults.usageEvent.serviceInstanceGuid}`,
-        resource_id: fixture.defaults.usageEvent.serviceLabel,
-        plan_id: fixture.defaults.usageEvent.servicePlanName,
-        resource_instance_id: `service:${fixture.defaults.usageEvent.serviceInstanceGuid}:${fixture.defaults.usageEvent.servicePlanName}:${fixture.defaults.usageEvent.serviceLabel}`,
-        measured_usage: [
-          {
-            measure: 'current_instances',
-            quantity : 1
-          },
-          {
-            measure: 'previous_instances',
-            quantity : 0
-          }
-        ]
-      });
-      
       it('expect all requests are the same', () => {
         const verifyRequest = (requestNumber) => {
           expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(requestNumber)).to.deep.equal({
             token: abacusCollectorToken,
-            usage: expectedUsage(usageEventMetadata.created_at)
+            usage: fixture.collectorUsage(usageEventMetadata.created_at)
           });
         };
-        
-         // retryCount+1 failing requests, and one successful.
+
+        // retryCount+1 failing requests, and one successful.
         const expecedRequestsCount = fixture.defaults.env.retryCount + 2;
         expect(externalSystemsMocks.abacusCollector.collectUsageService.requestsCount()).to.equal(expecedRequestsCount);
         _(expecedRequestsCount).forEach((n) => verifyRequest(n));
       });
-  
+
     });
 
     it('verify correct statistics are returned', (done) => {

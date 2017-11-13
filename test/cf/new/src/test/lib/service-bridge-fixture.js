@@ -46,14 +46,14 @@ const eventTimestampGenerator = (function *() {
     .utc(now)
     .subtract(minimalAgeInMinutes + 1, 'minutes')
     .valueOf();
-  
+
   while (true)
     yield currentEventTimestamp++;
 })();
 
 const validUsageEvent = () => {
   const createdAt = eventTimestampGenerator.next().value;
-  return { 
+  return {
     metadata: {
       created_at: createdAt,
       guid: defaults.usageEvent.eventGuid + '-' + createdAt
@@ -102,6 +102,27 @@ const usageEvent = () => {
 
   return overwritable;
 };
+
+collectorUsage = (eventTimestamp) => ({
+  start: eventTimestamp,
+  end: eventTimestamp,
+  organization_id: defaults.usageEvent.orgGuid,
+  space_id: defaults.usageEvent.spaceGuid,
+  consumer_id: `service:${defaults.usageEvent.serviceInstanceGuid}`,
+  resource_id: defaults.usageEvent.serviceLabel,
+  plan_id: defaults.usageEvent.servicePlanName,
+  resource_instance_id: `service:${defaults.usageEvent.serviceInstanceGuid}:${defaults.usageEvent.servicePlanName}:${defaults.usageEvent.serviceLabel}`,
+  measured_usage: [
+    {
+      measure: 'current_instances',
+      quantity : 1
+    },
+    {
+      measure: 'previous_instances',
+      quantity : 0
+    }
+  ]
+});
 
 
 module.exports = () => {
@@ -173,7 +194,8 @@ module.exports = () => {
   return {
     defaults,
     usageEvent,
+    collectorUsage,
     createExternalSystemsMocks,
-    bridge: bridge
+    bridge
   };
 };

@@ -68,43 +68,21 @@ describe('service-bridge-test', () => {
     });
 
     context('when verifing abacus collector', () => {
-      const expectedUsage = (timestamp) => ({
-        start: timestamp,
-        end: timestamp,
-        organization_id: fixture.defaults.usageEvent.orgGuid,
-        space_id: fixture.defaults.usageEvent.spaceGuid,
-        consumer_id: `service:${fixture.defaults.usageEvent.serviceInstanceGuid}`,
-        resource_id: fixture.defaults.usageEvent.serviceLabel,
-        plan_id: fixture.defaults.usageEvent.servicePlanName,
-        resource_instance_id: `service:${fixture.defaults.usageEvent.serviceInstanceGuid}:${fixture.defaults.usageEvent.servicePlanName}:${fixture.defaults.usageEvent.serviceLabel}`,
-        measured_usage: [
-          {
-            measure: 'current_instances',
-            quantity : 1
-          },
-          {
-            measure: 'previous_instances',
-            quantity : 0
-          }
-        ]
-      });
-
       it('expect two usages to be send to abacus collector', () => {
         expect(externalSystemsMocks.abacusCollector.collectUsageService.requestsCount()).to.equal(2);
       });
-  
+
       it('expect first recieved usage to be as it is', () => {
         expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(0).usage)
-          .to.deep.equal(expectedUsage(usageEventsTimestamp));
+          .to.deep.equal(fixture.collectorUsage(usageEventsTimestamp));
       });
-  
+
       it('expect second recieved usage timestamp to be adjusted', () => {
         expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(1).usage)
-          .to.deep.equal(expectedUsage(usageEventsTimestamp + 1));
+          .to.deep.equal(fixture.collectorUsage(usageEventsTimestamp + 1));
       });
-  
     });
-    
+
     it('expect statistics with all events successfully processed', (done) => {
       const tokenFactory = createTokenFactory(fixture.defaults.oauth.tokenSecret);
       const signedToken = tokenFactory.create(['abacus.usage.read']);
