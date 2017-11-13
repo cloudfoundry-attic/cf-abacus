@@ -17,7 +17,7 @@ const cfAdminToken = 'cfadmin-token';
 
 describe('service-bridge-test', () => {
 
-  context('when reading unhandled events from cloud controller', () => {
+  context('when reading unhandleable events from Cloud Controller', () => {
     let fixture;
     let externalSystemsMocks;
 

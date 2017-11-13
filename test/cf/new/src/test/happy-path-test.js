@@ -55,7 +55,7 @@ describe('service-bridge-test', () => {
       fixture.bridge.start({ db: process.env.DB });
 
       wait.until(() => {
-        return externalSystemsMocks.cloudController.serviceUsageEvents.requestsCount() >= 3;
+        return externalSystemsMocks.cloudController.serviceUsageEvents.requestsCount() >= 4;
       }, done);
     });
 
@@ -100,10 +100,15 @@ describe('service-bridge-test', () => {
           serviceGuids: [fixture.defaults.usageEvent.serviceGuid],
           afterGuid: secondEventGuid
         });
+        expect(cloudControllerMock.serviceUsageEvents.requests(3)).to.deep.equal({
+          token: cfAdminToken,
+          serviceGuids: [fixture.defaults.usageEvent.serviceGuid],
+          afterGuid: secondEventGuid
+        });
       });
     });
 
-    context('when verifing abacus collector', () => {
+    context('verify abacus collector', () => {
       const expectedUsage = (timestamp) => ({
         start: timestamp,
         end: timestamp,
@@ -125,18 +130,22 @@ describe('service-bridge-test', () => {
         ]
       });
 
-      it('expect two usages to be send to abacus collector', () => {
+      it('expect two requests to be made to abacus collector', () => {
         expect(externalSystemsMocks.abacusCollector.collectUsageService.requestsCount()).to.equal(2);
       });
   
-      it('expect first recieved usage to be as it is', () => {
-        expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(0).usage)
-          .to.deep.equal(expectedUsage(firstUsageEventTimestamp));
+      it('verify first request', () => {
+        expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(0)).to.deep.equal({
+          token: abacusCollectorToken,
+          usage: expectedUsage(firstUsageEventTimestamp)
+        });
       });
   
-      it('expect second recieved usage timestamp to be adjusted', () => {
-        expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(1).usage)
-          .to.deep.equal(expectedUsage(secondUsageEventTimestamp));
+      it('verify second request', () => {
+        expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(1)).to.deep.equal({
+          token: abacusCollectorToken,
+          usage: expectedUsage(secondUsageEventTimestamp)
+        });
       });
   
     });
@@ -168,6 +177,28 @@ describe('service-bridge-test', () => {
     })((err) => {
       done(err);
     }));
+
+    it('verify correct statistics are returned', (done) => {
+      const tokenFactory = createTokenFactory(fixture.defaults.oauth.tokenSecret);
+      const signedToken = tokenFactory.create(['abacus.usage.read']);
+      request.get('http://localhost::port/v1/stats', {
+        port: fixture.bridge.port,
+        headers: {
+          authorization: `Bearer ${signedToken}`
+        }
+      }, (error, response) => {
+        expect(response.statusCode).to.equal(httpStatus.OK);
+        expect(response.body.statistics.usage).to.deep.equal({
+          success : {
+            all: 2,
+            conflicts : 0,
+            skips : 0
+          },
+          failures : 0
+        });
+        done();
+      });
+    });
 
   });
 

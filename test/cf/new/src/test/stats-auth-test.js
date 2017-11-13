@@ -14,7 +14,7 @@ const cfAdminToken = 'cfadmin-token';
 
 describe('service-bridge-test/stats endpoint', () => {
 
-  context('when all external systems are working', () => {
+  context('when requesting statistics', () => {
     let fixture;
     let externalSystemsMocks;
 
@@ -37,7 +37,6 @@ describe('service-bridge-test/stats endpoint', () => {
         return externalSystemsMocks.cloudController.serviceUsageEvents.requestsCount() >= 1;
       }, done);
     });
-
    
     after((done) => {
       async.parallel([
@@ -46,33 +45,30 @@ describe('service-bridge-test/stats endpoint', () => {
       ], done);
     });
 
-
-    context('when requesting statistics', () => {
-      context('with NO token', () => {
-        it('UNAUTHORIZED is returned', (done) => {
-          request.get('http://localhost::port/v1/stats', {
-            port: fixture.bridge.port
-          }, (error, response) => {
-            console.log(error);
-            expect(response.statusCode).to.equal(httpStatus.UNAUTHORIZED);
-            done();
-          });
+    context('with NO token', () => {
+      it('UNAUTHORIZED is returned', (done) => {
+        request.get('http://localhost::port/v1/stats', {
+          port: fixture.bridge.port
+        }, (error, response) => {
+          console.log(error);
+          expect(response.statusCode).to.equal(httpStatus.UNAUTHORIZED);
+          done();
         });
       });
+    });
 
-      context('with token with NO required scopes', () => {
-        it('FORBIDDEN is returned', (done) => {
-          const tokenFactory = createTokenFactory(fixture.defaults.oauth.tokenSecret);
-          const signedToken = tokenFactory.create(['abacus.usage.invalid']);
-          request.get('http://localhost::port/v1/stats', {
-            port: fixture.bridge.port,
-            headers: {
-              authorization: `Bearer ${signedToken}`
-            }
-          }, (error, response) => {
-            expect(response.statusCode).to.equal(httpStatus.FORBIDDEN);
-            done();
-          });
+    context('with token with NO required scopes', () => {
+      it('FORBIDDEN is returned', (done) => {
+        const tokenFactory = createTokenFactory(fixture.defaults.oauth.tokenSecret);
+        const signedToken = tokenFactory.create(['abacus.usage.invalid']);
+        request.get('http://localhost::port/v1/stats', {
+          port: fixture.bridge.port,
+          headers: {
+            authorization: `Bearer ${signedToken}`
+          }
+        }, (error, response) => {
+          expect(response.statusCode).to.equal(httpStatus.FORBIDDEN);
+          done();
         });
       });
     });

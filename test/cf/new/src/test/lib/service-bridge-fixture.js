@@ -11,6 +11,7 @@ const createAbacusCollectorMock = require('./abacus-collector-mock');
 const createCloudControllerMock = require('./cloud-controller-mock');
 const createUAAServerMock = require('./uaa-server-mock');
 
+const retryCount = 3;
 const minimalAgeInMinutes = 3;
 const minimalAgeInMinutesInMillis = minimalAgeInMinutes * 60 * 1000;
 
@@ -33,10 +34,13 @@ const defaults = {
     servicePlanName:'test-plan',
     serviceInstanceGuid: 'service-instance-guid'
   },
-  minimalAgeInMinutes
+  env: {
+    minimalAgeInMinutes,
+    retryCount
+  }
 };
 
-const eventTimestampGenerator = function *() {
+const eventTimestampGenerator = (function *() {
   const now = moment.now();
   let currentEventTimestamp = moment
     .utc(now)
@@ -44,16 +48,15 @@ const eventTimestampGenerator = function *() {
     .valueOf();
   
   while (true)
-    yield currentEventTimestamp--;
-};
+    yield currentEventTimestamp++;
+})();
 
 const validUsageEvent = () => {
-  const createdAt = eventTimestampGenerator().next().value;
-  
+  const createdAt = eventTimestampGenerator.next().value;
   return { 
     metadata: {
       created_at: createdAt,
-      guid: defaults.usageEvent.eventGuid + createdAt
+      guid: defaults.usageEvent.eventGuid + '-' + createdAt
     },
     entity: {
       state: defaults.usageEvent.state,
@@ -144,6 +147,7 @@ module.exports = () => {
       "${defaults.usageEvent.serviceLabel}":{"plans":["${defaults.usageEvent.servicePlanName}"]}
     }`,
     MIN_INTERVAL_TIME : 10,
+    RETRIES: retryCount,
     GUID_MIN_AGE: minimalAgeInMinutesInMillis,
     JWTKEY : defaults.oauth.tokenSecret,
     JWTALGO : defaults.oauth.tokenAlgorithm

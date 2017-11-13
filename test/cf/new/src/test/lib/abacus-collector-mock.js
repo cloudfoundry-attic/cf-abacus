@@ -1,4 +1,3 @@
-
 'use strict';
 
 const httpStatus = require('http-status-codes');
@@ -22,7 +21,10 @@ module.exports = () => {
   let app;
   let server;
 
-  let returnStatusCode = httpStatus.INTERNAL_SERVER_ERROR;
+  const returnStatusCode = {
+    always: undefined,
+    perRequest: []
+  };
 
   const received = {
     requests: []
@@ -41,14 +43,16 @@ module.exports = () => {
         usage: req.body
       });
 
+      const responseCode = returnStatusCode.always || returnStatusCode.perRequest[received.requests.length - 1];
       let responseBody;
-      if (returnStatusCode === httpStatus.CREATED)
+      if (responseCode === httpStatus.CREATED)
         res.header('Location', resourceLocation);
 
-      if (returnStatusCode === httpStatus.CONFLICT)
+      if (responseCode === httpStatus.CONFLICT)
         responseBody = { error: 'Conflict' };
 
-      res.status(returnStatusCode).send(responseBody);
+      debug('Abacus collector response with: %d', responseCode);
+      res.status(responseCode).send(responseBody);
     });
 
     app.use(router.batch(routes));
@@ -69,7 +73,10 @@ module.exports = () => {
       requests: (n) => received.requests[n],
       requestsCount: () => received.requests.length,
       return: {
-        always: (value) => returnStatusCode = value
+        always: (value) => returnStatusCode.always = value,
+        firstTime: (value) => returnStatusCode.perRequest[0] = value,
+        secondTime: (value) => returnStatusCode.perRequest[1] = value,
+        series: (values) => returnStatusCode.perRequest = values
       }
     },
     stop

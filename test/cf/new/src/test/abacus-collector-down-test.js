@@ -2,61 +2,58 @@
 
 const async = require('async');
 const httpStatus = require('http-status-codes');
+const _ = require('underscore');
 
-const moment = require('abacus-moment');
 const request = require('abacus-request');
+const yieldable = require('abacus-yieldable');
 
+const carryOverDb = require('./lib/carry-over-db');
+const wait = require('./lib/wait');
 const createFixture = require('./lib/service-bridge-fixture');
 const createTokenFactory = require('./lib/token-factory');
-const wait = require('./lib/wait');
 
 const abacusCollectorToken = 'abacus-collector-token';
 const cfAdminToken = 'cfadmin-token';
 
 describe('service-bridge-test', () => {
 
-  context('when reading multiple events with same timestamp from Cloud Controller', () => {
+  context('when abacus collector is down', () => {
     let fixture;
     let externalSystemsMocks;
-
-    let usageEventsTimestamp;
+    let usageEventMetadata;
 
     before((done) => {
       fixture = createFixture();
+
       externalSystemsMocks = fixture.createExternalSystemsMocks();
       externalSystemsMocks.startAll();
 
       externalSystemsMocks.uaaServer.tokenService.forAbacusCollectorToken.return.always(abacusCollectorToken);
       externalSystemsMocks.uaaServer.tokenService.forCfAdminToken.return.always(cfAdminToken);
 
-      const now = moment.now();
-      usageEventsTimestamp = moment
-        .utc(now)
-        .subtract(fixture.defaults.env.minimalAgeInMinutes + 1, 'minutes')
-        .valueOf();
-      const firstUsageEvent = fixture
+      const serviceUsageEvent = fixture
         .usageEvent()
-        .overwriteCreatedAt(usageEventsTimestamp)
         .get();
-      const secondUsageEvent = fixture
-        .usageEvent()
-        .overwriteCreatedAt(usageEventsTimestamp)
-        .get();
+      usageEventMetadata = serviceUsageEvent.metadata;
 
-      externalSystemsMocks.cloudController.serviceUsageEvents.return.firstTime([
-        firstUsageEvent,
-        secondUsageEvent
-      ]);
+      externalSystemsMocks.cloudController.serviceUsageEvents.return.firstTime([serviceUsageEvent]);
+      externalSystemsMocks.cloudController.serviceUsageEvents.return.secondTime([serviceUsageEvent]);
+
       externalSystemsMocks.cloudController.serviceGuids.return.always({
         [fixture.defaults.usageEvent.serviceLabel]: fixture.defaults.usageEvent.serviceGuid
       });
 
-      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
+      // Event reporter (abacus-client) will retry 'fixture.defaults.env.retryCount' times to report usage to abacus.
+      // After that the whole process is retried (i.e. start reading again the events)
+      // Stub Abacus Collector so that it will force the bridge to retry the whole proces. 
+      const responses = _(fixture.defaults.env.retryCount + 1).times(() => httpStatus.BAD_GATEWAY);
+      responses.push(httpStatus.CREATED);
+      externalSystemsMocks.abacusCollector.collectUsageService.return.series(responses);
 
       fixture.bridge.start({ db: process.env.DB });
 
       wait.until(() => {
-        return externalSystemsMocks.cloudController.serviceUsageEvents.requestsCount() >= 2;
+        return externalSystemsMocks.cloudController.serviceUsageEvents.requestsCount() >= 3;
       }, done);
     });
 
@@ -67,7 +64,25 @@ describe('service-bridge-test', () => {
       ], done);
     });
 
-    context('when verifing abacus collector', () => {
+    context('verify cloud controller', () => {
+
+      it('verify Service Usage Events service calls ', () => {
+        const verifyServiceUsageEventsAfterGuid = (requestNumber, afterGuid) => {
+          expect(externalSystemsMocks.cloudController
+            .serviceUsageEvents
+            .requests(requestNumber)
+            .afterGuid).to.equal(
+              afterGuid
+          );
+        };
+  
+        verifyServiceUsageEventsAfterGuid(0, undefined);
+        verifyServiceUsageEventsAfterGuid(1, undefined);
+        verifyServiceUsageEventsAfterGuid(2, usageEventMetadata.guid);
+      });
+    });
+
+    context('verify abacus collector', () => {
       const expectedUsage = (timestamp) => ({
         start: timestamp,
         end: timestamp,
@@ -88,24 +103,24 @@ describe('service-bridge-test', () => {
           }
         ]
       });
-
-      it('expect two usages to be send to abacus collector', () => {
-        expect(externalSystemsMocks.abacusCollector.collectUsageService.requestsCount()).to.equal(2);
-      });
-  
-      it('expect first recieved usage to be as it is', () => {
-        expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(0).usage)
-          .to.deep.equal(expectedUsage(usageEventsTimestamp));
-      });
-  
-      it('expect second recieved usage timestamp to be adjusted', () => {
-        expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(1).usage)
-          .to.deep.equal(expectedUsage(usageEventsTimestamp + 1));
+      
+      it('expect all requests are the same', () => {
+        const verifyRequest = (requestNumber) => {
+          expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(requestNumber)).to.deep.equal({
+            token: abacusCollectorToken,
+            usage: expectedUsage(usageEventMetadata.created_at)
+          });
+        };
+        
+         // retryCount+1 failing requests, and one successful.
+        const expecedRequestsCount = fixture.defaults.env.retryCount + 2;
+        expect(externalSystemsMocks.abacusCollector.collectUsageService.requestsCount()).to.equal(expecedRequestsCount);
+        _(expecedRequestsCount).forEach((n) => verifyRequest(n));
       });
   
     });
-    
-    it('expect statistics with all events successfully processed', (done) => {
+
+    it('verify correct statistics are returned', (done) => {
       const tokenFactory = createTokenFactory(fixture.defaults.oauth.tokenSecret);
       const signedToken = tokenFactory.create(['abacus.usage.read']);
       request.get('http://localhost::port/v1/stats', {
@@ -117,12 +132,13 @@ describe('service-bridge-test', () => {
         expect(response.statusCode).to.equal(httpStatus.OK);
         expect(response.body.statistics.usage).to.deep.equal({
           success : {
-            all: 2,
-            conflicts: 0,
-            skips: 0
+            all: 1,
+            conflicts : 0,
+            skips : 0
           },
-          failures : 0
+          failures : 1
         });
+
         done();
       });
     });
