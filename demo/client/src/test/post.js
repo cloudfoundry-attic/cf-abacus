@@ -45,7 +45,7 @@ const usage = {
 };
 
 request.post(collector + '/v1/metering/collected/usage', {
-  rejectUnauthorized: !process.env.SELF_SIGNED_CERT,
+  rejectUnauthorized: !process.env.SKIP_SSL_VALIDATION,
   body: usage
 }, (err, val) => {
   if(err)
