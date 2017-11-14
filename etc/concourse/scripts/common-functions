@@ -16,9 +16,9 @@ function getApps {
 
 function restartApps {
   getApps '?'
-  echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+  echo ${APPS[@]} | xargs -n1 -r cf restart
   getApps '0/'
-  echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+  echo ${APPS[@]} | xargs -n1 -r cf restart
 }
 
 function restartAppsWithRetry {

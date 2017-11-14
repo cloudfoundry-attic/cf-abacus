@@ -46,7 +46,7 @@ pushd $abacus_dir
 
   echo "Deleting all apps in $CF_ORG/$CF_SPACE ..."
   getApps
-  echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf delete -f -r {}
+  echo ${APPS[@]} | xargs -n1 | xargs -i cf delete -f -r {}
 
   echo "Deploying Abacus ..."
   npm run cfstage -- default

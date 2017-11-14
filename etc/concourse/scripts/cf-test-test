@@ -33,7 +33,7 @@ pushd $project_dir
 
   echo "Deleting all apps in $CF_ORG/$CF_SPACE ..."
   getApps
-  echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf delete -f -r {}
+  echo ${APPS[@]} | xargs -n1 | xargs -i cf delete -f -r {}
 
   echo "Deploying Abacus ..."
   npm run cfstage medium
@@ -41,7 +41,7 @@ pushd $project_dir
   set +e
   echo "Start all apps in $CF_ORG/$CF_SPACE ..."
   getApps
-  echo ${APPS[@]} | xargs -n1 | xargs -P 5 -i cf start {}
+  echo ${APPS[@]} | xargs -n1 | xargs -i cf start {}
 
   echo "Restarting failed apps ..."
   restartAppsWithRetry

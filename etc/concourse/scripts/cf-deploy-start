@@ -20,7 +20,7 @@ getApps
 
 set +e
 echo "Starting applications ..."
-echo ${APPS[@]} | xargs -n1 -P 5 cf start
+echo ${APPS[@]} | xargs -n1 cf start
 
 echo "Applications:"
 cf apps
