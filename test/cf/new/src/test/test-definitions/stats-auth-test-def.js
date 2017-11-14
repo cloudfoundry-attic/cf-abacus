@@ -5,38 +5,39 @@ const httpStatus = require('http-status-codes');
 
 const request = require('abacus-request');
 
-const wait = require('./lib/wait');
-const createFixture = require('./lib/service-bridge-fixture');
-const createTokenFactory = require('./lib/token-factory');
+const wait = require('./../lib/wait');
+const createTokenFactory = require('./../lib/token-factory');
 
-const abacusCollectorScopes = ['abacus.usage.write', 'abacus.usage.read'];
-const abacusCollectorToken = 'abacus-collector-token';
-const cfAdminScopes = [];
-const cfAdminToken = 'cfadmin-token';
+let fixture;
+let customBefore = () => {};
 
-describe('service-bridge-test/stats endpoint', () => {
+const build = () => {
 
   context('when requesting statistics', () => {
-    let fixture;
     let externalSystemsMocks;
 
     before((done) => {
-      fixture = createFixture();
-
-      externalSystemsMocks = fixture.createExternalSystemsMocks();
+      externalSystemsMocks = fixture.getExternalSystemsMocks();
       externalSystemsMocks.startAll();
 
-      externalSystemsMocks.uaaServer.tokenService.whenScopes(abacusCollectorScopes).return(abacusCollectorToken);
-      externalSystemsMocks.uaaServer.tokenService.whenScopes(cfAdminScopes).return(cfAdminToken);
+      customBefore(fixture);
 
-      externalSystemsMocks.cloudController.serviceGuids.return.always({
-        [fixture.defaults.usageEvent.serviceLabel]: fixture.defaults.usageEvent.serviceGuid
-      });
+      externalSystemsMocks
+        .uaaServer
+        .tokenService
+        .whenScopes(fixture.defaults.oauth.abacusCollectorScopes)
+        .return(fixture.defaults.oauth.abacusCollectorToken);
+
+      externalSystemsMocks
+        .uaaServer
+        .tokenService
+        .whenScopes(fixture.defaults.oauth.cfAdminScopes)
+        .return(fixture.defaults.oauth.cfAdminToken);
 
       fixture.bridge.start({ db: process.env.DB });
 
       wait.until(() => {
-        return externalSystemsMocks.cloudController.serviceUsageEvents.requestsCount() >= 1;
+        return externalSystemsMocks.cloudController.usageEvents.requestsCount() >= 1;
       }, done);
     });
 
@@ -76,4 +77,19 @@ describe('service-bridge-test/stats endpoint', () => {
     });
 
   });
-});
+};
+
+const testDef = {
+  fixture: (value) => {
+    fixture = value;
+    return testDef;
+  },
+  before: (value) => {
+    customBefore = value;
+    return testDef;
+  },
+  build
+};
+
+module.exports = testDef;
+

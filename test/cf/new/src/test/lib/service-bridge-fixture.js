@@ -8,13 +8,12 @@ const npm = require('abacus-npm');
 const moment = require('abacus-moment');
 
 const createAbacusCollectorMock = require('./abacus-collector-mock');
-const createCloudControllerMock = require('./cloud-controller-mock');
+const createCloudControllerMock = require('./services-usage-events');
 const createUAAServerMock = require('./uaa-server-mock');
 
 const retryCount = 3;
 const minimalAgeInMinutes = 3;
 const minimalAgeInMinutesInMillis = minimalAgeInMinutes * 60 * 1000;
-
 
 const defaults = {
   oauth: {
@@ -23,7 +22,11 @@ const defaults = {
     cfClientId: 'cf-client-id',
     cfClientSecret: 'cf-client-secret',
     abacusClientId: 'abacus-collector-client-id',
-    abacusClientSecret: 'abacus-collector-client-secret'
+    abacusClientSecret: 'abacus-collector-client-secret',
+    abacusCollectorScopes: ['abacus.usage.write', 'abacus.usage.read'],
+    cfAdminScopes: [],
+    abacusCollectorToken: 'abacus-collector-token',
+    cfAdminToken: 'cfadmin-token'
   },
   usageEvent: {
     state: 'CREATED',
@@ -131,12 +134,18 @@ module.exports = () => {
   let cloudControllerMock;
   let uaaServerMock;
 
-  const createExternalSystemsMocks = () => {
+  let externalSystemsMocks;
+
+  const getExternalSystemsMocks = () => {
+    if (externalSystemsMocks)
+      return externalSystemsMocks;
+
+
     abacusCollectorMock = createAbacusCollectorMock();
     cloudControllerMock = createCloudControllerMock();
     uaaServerMock = createUAAServerMock();
 
-    return {
+    externalSystemsMocks = {
       abacusCollector: abacusCollectorMock,
       cloudController: cloudControllerMock,
       uaaServer: uaaServerMock,
@@ -153,6 +162,8 @@ module.exports = () => {
         ], done);
       }
     };
+
+    return externalSystemsMocks;
   };
 
   const getEnviornmentVars = () => ({
@@ -196,7 +207,7 @@ module.exports = () => {
     defaults,
     usageEvent,
     collectorUsage,
-    createExternalSystemsMocks,
+    getExternalSystemsMocks,
     bridge
   };
 };

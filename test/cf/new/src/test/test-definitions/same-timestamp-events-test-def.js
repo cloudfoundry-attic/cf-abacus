@@ -6,30 +6,35 @@ const httpStatus = require('http-status-codes');
 const moment = require('abacus-moment');
 const request = require('abacus-request');
 
-const createFixture = require('./lib/service-bridge-fixture');
-const createTokenFactory = require('./lib/token-factory');
-const wait = require('./lib/wait');
+const createTokenFactory = require('./../lib/token-factory');
+const wait = require('./../lib/wait');
 
-const abacusCollectorScopes = ['abacus.usage.write', 'abacus.usage.read'];
-const abacusCollectorToken = 'abacus-collector-token';
-const cfAdminScopes = [];
-const cfAdminToken = 'cfadmin-token';
+let fixture;
+let customBefore = () => {};
 
-describe('service-bridge-test', () => {
+const build = () => {
 
   context('when reading multiple events with same timestamp from Cloud Controller', () => {
-    let fixture;
     let externalSystemsMocks;
-
     let usageEventsTimestamp;
 
     before((done) => {
-      fixture = createFixture();
-      externalSystemsMocks = fixture.createExternalSystemsMocks();
+      externalSystemsMocks = fixture.getExternalSystemsMocks();
       externalSystemsMocks.startAll();
 
-      externalSystemsMocks.uaaServer.tokenService.whenScopes(abacusCollectorScopes).return(abacusCollectorToken);
-      externalSystemsMocks.uaaServer.tokenService.whenScopes(cfAdminScopes).return(cfAdminToken);
+      customBefore(fixture);
+
+      externalSystemsMocks
+        .uaaServer
+        .tokenService
+        .whenScopes(fixture.defaults.oauth.abacusCollectorScopes)
+        .return(fixture.defaults.oauth.abacusCollectorToken);
+
+      externalSystemsMocks
+        .uaaServer
+        .tokenService
+        .whenScopes(fixture.defaults.oauth.cfAdminScopes)
+        .return(fixture.defaults.oauth.cfAdminToken);
 
       const now = moment.now();
       usageEventsTimestamp = moment
@@ -45,20 +50,17 @@ describe('service-bridge-test', () => {
         .overwriteCreatedAt(usageEventsTimestamp)
         .get();
 
-      externalSystemsMocks.cloudController.serviceUsageEvents.return.firstTime([
+      externalSystemsMocks.cloudController.usageEvents.return.firstTime([
         firstUsageEvent,
         secondUsageEvent
       ]);
-      externalSystemsMocks.cloudController.serviceGuids.return.always({
-        [fixture.defaults.usageEvent.serviceLabel]: fixture.defaults.usageEvent.serviceGuid
-      });
 
       externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
 
       fixture.bridge.start({ db: process.env.DB });
 
       wait.until(() => {
-        return externalSystemsMocks.cloudController.serviceUsageEvents.requestsCount() >= 2;
+        return externalSystemsMocks.cloudController.usageEvents.requestsCount() >= 2;
       }, done);
     });
 
@@ -109,4 +111,19 @@ describe('service-bridge-test', () => {
 
   });
 
-});
+};
+
+
+const testDef = {
+  fixture: (value) => {
+    fixture = value;
+    return testDef;
+  },
+  before: (value) => {
+    customBefore = value;
+    return testDef;
+  },
+  build
+};
+
+module.exports = testDef;
