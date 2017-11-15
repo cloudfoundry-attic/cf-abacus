@@ -13,23 +13,22 @@ const getExternalSystemsMocks = require('./external-systems')(
 const createEventTimestampGenerator = require('./event-timestamp-generator');
 const createBridge = require('./bridge');
 
-const defaults = {
-  oauth: {
-    abacusCollectorScopes: ['abacus.usage.write', 'abacus.usage.read'],
-    cfAdminScopes: [],
-    abacusCollectorToken: 'abacus-collector-token',
-    cfAdminToken: 'cfadmin-token'
-  },
-  usageEvent: {
-    state: 'CREATED',
-    serviceGuid: 'test-service-guid',
-    serviceLabel: 'test-service',
-    eventGuid: 'event-guid',
-    orgGuid: 'test-org',
-    spaceGuid:'space-guid',
-    servicePlanName:'test-plan',
-    serviceInstanceGuid: 'service-instance-guid'
-  }
+const oauth = {
+  abacusCollectorScopes: ['abacus.usage.write', 'abacus.usage.read'],
+  cfAdminScopes: [],
+  abacusCollectorToken: 'abacus-collector-token',
+  cfAdminToken: 'cfadmin-token'
+};
+
+const defaultUsageEvent = {
+  state: 'CREATED',
+  serviceGuid: 'test-service-guid',
+  serviceLabel: 'test-service',
+  eventGuid: 'event-guid',
+  orgGuid: 'test-org',
+  spaceGuid:'space-guid',
+  servicePlanName:'test-plan',
+  serviceInstanceGuid: 'service-instance-guid'
 };
 
 const bridge = createBridge({
@@ -37,27 +36,27 @@ const bridge = createBridge({
   port: 9502,
   customEnv: {
     SERVICES: `{
-      "${defaults.usageEvent.serviceLabel}":{"plans":["${defaults.usageEvent.servicePlanName}"]}
+      "${defaultUsageEvent.serviceLabel}":{"plans":["${defaultUsageEvent.servicePlanName}"]}
     }`,
-    ORGS_TO_REPORT : `["${defaults.usageEvent.orgGuid}"]`
+    ORGS_TO_REPORT : `["${defaultUsageEvent.orgGuid}"]`
   }
 });
 
-const eventTimestampGenerator = createEventTimestampGenerator(bridge.defaultEnv.minimalAgeInMinutes + 1);
+const eventTimestampGenerator = createEventTimestampGenerator(bridge.env.minimalAgeInMinutes + 1);
 const validUsageEvent = () => {
   const createdAt = eventTimestampGenerator.next().value;
   return {
     metadata: {
       created_at: createdAt,
-      guid: defaults.usageEvent.eventGuid + '-' + createdAt
+      guid: defaultUsageEvent.eventGuid + '-' + createdAt
     },
     entity: {
-      state: defaults.usageEvent.state,
-      org_guid: defaults.usageEvent.orgGuid,
-      space_guid: defaults.usageEvent.spaceGuid,
-      service_label: defaults.usageEvent.serviceLabel,
-      service_plan_name: defaults.usageEvent.servicePlanName,
-      service_instance_guid: defaults.usageEvent.serviceInstanceGuid
+      state: defaultUsageEvent.state,
+      org_guid: defaultUsageEvent.orgGuid,
+      space_guid: defaultUsageEvent.spaceGuid,
+      service_label: defaultUsageEvent.serviceLabel,
+      service_plan_name: defaultUsageEvent.servicePlanName,
+      service_instance_guid: defaultUsageEvent.serviceInstanceGuid
     }
   };
 };
@@ -99,12 +98,12 @@ const usageEvent = () => {
 collectorUsage = (eventTimestamp) => ({
   start: eventTimestamp,
   end: eventTimestamp,
-  organization_id: defaults.usageEvent.orgGuid,
-  space_id: defaults.usageEvent.spaceGuid,
-  consumer_id: `service:${defaults.usageEvent.serviceInstanceGuid}`,
-  resource_id: defaults.usageEvent.serviceLabel,
-  plan_id: defaults.usageEvent.servicePlanName,
-  resource_instance_id: `service:${defaults.usageEvent.serviceInstanceGuid}:${defaults.usageEvent.servicePlanName}:${defaults.usageEvent.serviceLabel}`,
+  organization_id: defaultUsageEvent.orgGuid,
+  space_id: defaultUsageEvent.spaceGuid,
+  consumer_id: `service:${defaultUsageEvent.serviceInstanceGuid}`,
+  resource_id: defaultUsageEvent.serviceLabel,
+  plan_id: defaultUsageEvent.servicePlanName,
+  resource_instance_id: `service:${defaultUsageEvent.serviceInstanceGuid}:${defaultUsageEvent.servicePlanName}:${defaultUsageEvent.serviceLabel}`,
   measured_usage: [
     {
       measure: 'current_instances',
@@ -118,10 +117,11 @@ collectorUsage = (eventTimestamp) => ({
 });
 
 module.exports = {
-  defaults,
-  env: bridge.defaultEnv,
+  defaultUsageEvent,
   usageEvent,
   collectorUsage,
+  oauth,
+  env: bridge.env,
   getExternalSystemsMocks,
   bridge
 };

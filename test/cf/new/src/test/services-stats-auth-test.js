@@ -5,7 +5,7 @@ const servicesFixture = require('./lib/service-bridge-fixture');
 
 const stubCloudControllerServices = (fixture) => {
   fixture.getExternalSystemsMocks().cloudController.serviceGuids.return.always({
-    [fixture.defaults.usageEvent.serviceLabel]: fixture.defaults.usageEvent.serviceGuid
+    [fixture.defaultUsageEvent.serviceLabel]: fixture.defaultUsageEvent.serviceGuid
   });
 };
 

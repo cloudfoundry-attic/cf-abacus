@@ -32,14 +32,14 @@ const build = () => {
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.defaults.oauth.abacusCollectorScopes)
-        .return(fixture.defaults.oauth.abacusCollectorToken);
+        .whenScopes(fixture.oauth.abacusCollectorScopes)
+        .return(fixture.oauth.abacusCollectorToken);
 
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.defaults.oauth.cfAdminScopes)
-        .return(fixture.defaults.oauth.cfAdminToken);
+        .whenScopes(fixture.oauth.cfAdminScopes)
+        .return(fixture.oauth.cfAdminToken);
 
       const firstServiceUsageEvent = fixture
         .usageEvent()
@@ -80,19 +80,19 @@ const build = () => {
         const cloudControllerMock = externalSystemsMocks.cloudController;
 
         expect(cloudControllerMock.usageEvents.requests(0)).to.include({
-          token: fixture.defaults.oauth.cfAdminToken,
+          token: fixture.oauth.cfAdminToken,
           afterGuid: undefined
         });
         expect(cloudControllerMock.usageEvents.requests(1)).to.include({
-          token: fixture.defaults.oauth.cfAdminToken,
+          token: fixture.oauth.cfAdminToken,
           afterGuid: firstEventGuid
         });
         expect(cloudControllerMock.usageEvents.requests(2)).to.include({
-          token: fixture.defaults.oauth.cfAdminToken,
+          token: fixture.oauth.cfAdminToken,
           afterGuid: secondEventGuid
         });
         expect(cloudControllerMock.usageEvents.requests(3)).to.include({
-          token: fixture.defaults.oauth.cfAdminToken,
+          token: fixture.oauth.cfAdminToken,
           afterGuid: secondEventGuid
         });
       });
@@ -104,14 +104,14 @@ const build = () => {
 
         it('verify first request', () => {
           expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(0)).to.deep.equal({
-            token: fixture.defaults.oauth.abacusCollectorToken,
+            token: fixture.oauth.abacusCollectorToken,
             usage: fixture.collectorUsage(firstUsageEventTimestamp)
           });
         });
 
         it('verify second request', () => {
           expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(1)).to.deep.equal({
-            token: fixture.defaults.oauth.abacusCollectorToken,
+            token: fixture.oauth.abacusCollectorToken,
             usage: fixture.collectorUsage(secondUsageEventTimestamp)
           });
         });
@@ -124,32 +124,32 @@ const build = () => {
         // TODO: check this!!!
         expect(uaaServerMock.tokenService.requestsCount()).to.equal(4);
 
-        expect(uaaServerMock.tokenService.requests.withScopes(fixture.defaults.oauth.abacusCollectorScopes)).to.deep.equal([{
+        expect(uaaServerMock.tokenService.requests.withScopes(fixture.oauth.abacusCollectorScopes)).to.deep.equal([{
           credentials: {
             clientId: fixture.env.abacusClientId,
             secret: fixture.env.abacusClientSecret
           },
-          scopes: fixture.defaults.oauth.abacusCollectorScopes
+          scopes: fixture.oauth.abacusCollectorScopes
         },{
           credentials: {
             clientId: fixture.env.abacusClientId,
             secret: fixture.env.abacusClientSecret
           },
-          scopes: fixture.defaults.oauth.abacusCollectorScopes
+          scopes: fixture.oauth.abacusCollectorScopes
         }]);
 
-        expect(uaaServerMock.tokenService.requests.withScopes(fixture.defaults.oauth.cfAdminScopes)).to.deep.equal([{
+        expect(uaaServerMock.tokenService.requests.withScopes(fixture.oauth.cfAdminScopes)).to.deep.equal([{
           credentials: {
             clientId: fixture.env.cfClientId,
             secret: fixture.env.cfClientSecret
           },
-          scopes: fixture.defaults.oauth.cfAdminScopes
+          scopes: fixture.oauth.cfAdminScopes
         },{
           credentials: {
             clientId: fixture.env.cfClientId,
             secret: fixture.env.cfClientSecret
           },
-          scopes: fixture.defaults.oauth.cfAdminScopes
+          scopes: fixture.oauth.cfAdminScopes
         }]);
 
       });
@@ -159,7 +159,7 @@ const build = () => {
         expect(docs).to.deep.equal([{
           collector_id: externalSystemsMocks.abacusCollector.collectUsageService.resourceLocation,
           event_guid: secondEventGuid,
-          state: fixture.defaults.usageEvent.state,
+          state: fixture.defaultUsageEvent.state,
           timestamp: secondUsageEventTimestamp }]);
       })((err) => {
         done(err);

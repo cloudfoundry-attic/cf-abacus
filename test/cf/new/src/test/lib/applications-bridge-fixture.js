@@ -13,53 +13,52 @@ const getExternalSystemsMocks = require('./external-systems')(
 const createEventTimestampGenerator = require('./event-timestamp-generator');
 const createBridge = require('./bridge');
 
-const defaults = {
-  oauth: {
-    abacusCollectorScopes: ['abacus.usage.linux-container.write', 'abacus.usage.linux-container.read'],
-    cfAdminScopes: [],
-    abacusCollectorToken: 'abacus-collector-token',
-    cfAdminToken: 'cfadmin-token'
-  },
-  usageEvent: {
-    state: 'STARTED',
-    previousState: 'STOPPED',
-    appGuid: 'test-app-guid',
-    eventGuid: 'event-guid',
-    orgGuid: 'test-org',
-    spaceGuid:'space-guid',
-    instanceCount: 5,
-    previousInstanceCount: 3,
-    memoryPerInstance: 2,
-    previousMemoryPerInstance: 6
-  }
+const oauth = {
+  abacusCollectorScopes: ['abacus.usage.linux-container.write', 'abacus.usage.linux-container.read'],
+  cfAdminScopes: [],
+  abacusCollectorToken: 'abacus-collector-token',
+  cfAdminToken: 'cfadmin-token'
+};
+
+const defaultUsageEvent = {
+  state: 'STARTED',
+  previousState: 'STOPPED',
+  appGuid: 'test-app-guid',
+  eventGuid: 'event-guid',
+  orgGuid: 'test-org',
+  spaceGuid:'space-guid',
+  instanceCount: 5,
+  previousInstanceCount: 3,
+  memoryPerInstance: 2,
+  previousMemoryPerInstance: 6
 };
 
 const bridge = createBridge({
   bridge: npm.modules.applications,
   port: 9500,
   customEnv: {
-    ORGS_TO_REPORT : `["${defaults.usageEvent.orgGuid}"]`
+    ORGS_TO_REPORT : `["${defaultUsageEvent.orgGuid}"]`
   }
 });
 
-const eventTimestampGenerator = createEventTimestampGenerator(bridge.defaultEnv.minimalAgeInMinutes + 1);
+const eventTimestampGenerator = createEventTimestampGenerator(bridge.env.minimalAgeInMinutes + 1);
 const validUsageEvent = () => {
   const createdAt = eventTimestampGenerator.next().value;
   return {
     metadata: {
       created_at: createdAt,
-      guid: defaults.usageEvent.eventGuid + '-' + createdAt
+      guid: defaultUsageEvent.eventGuid + '-' + createdAt
     },
     entity: {
-      state: defaults.usageEvent.state,
-      previous_state: defaults.usageEvent.previousState,
-      org_guid: defaults.usageEvent.orgGuid,
-      space_guid: defaults.usageEvent.spaceGuid,
-      app_guid: defaults.usageEvent.appGuid,
-      instance_count: defaults.usageEvent.instanceCount,
-      previous_instance_count: defaults.usageEvent.previousInstanceCount,
-      memory_in_mb_per_instance: defaults.usageEvent.memoryPerInstance,
-      previous_memory_in_mb_per_instance: defaults.usageEvent.previousMemoryPerInstance
+      state: defaultUsageEvent.state,
+      previous_state: defaultUsageEvent.previousState,
+      org_guid: defaultUsageEvent.orgGuid,
+      space_guid: defaultUsageEvent.spaceGuid,
+      app_guid: defaultUsageEvent.appGuid,
+      instance_count: defaultUsageEvent.instanceCount,
+      previous_instance_count: defaultUsageEvent.previousInstanceCount,
+      memory_in_mb_per_instance: defaultUsageEvent.memoryPerInstance,
+      previous_memory_in_mb_per_instance: defaultUsageEvent.previousMemoryPerInstance
     }
   };
 };
@@ -93,12 +92,12 @@ const usageEvent = () => {
 collectorUsage = (eventTimestamp) => ({
   start: eventTimestamp,
   end: eventTimestamp,
-  organization_id: defaults.usageEvent.orgGuid,
-  space_id: defaults.usageEvent.spaceGuid,
-  consumer_id: `app:${defaults.usageEvent.appGuid}`,
+  organization_id: defaultUsageEvent.orgGuid,
+  space_id: defaultUsageEvent.spaceGuid,
+  consumer_id: `app:${defaultUsageEvent.appGuid}`,
   resource_id: 'linux-container',
   plan_id: 'standard',
-  resource_instance_id: `memory:${defaults.usageEvent.appGuid}`,
+  resource_instance_id: `memory:${defaultUsageEvent.appGuid}`,
   measured_usage: [
     {
       measure: 'current_instance_memory',
@@ -120,10 +119,11 @@ collectorUsage = (eventTimestamp) => ({
 });
 
 module.exports = {
-  defaults,
-  env: bridge.defaultEnv,
+  defaultUsageEvent,
   usageEvent,
   collectorUsage,
+  oauth,
+  env: bridge.env,
   getExternalSystemsMocks,
   bridge
 };

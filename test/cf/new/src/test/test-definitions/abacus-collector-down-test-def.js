@@ -27,14 +27,14 @@ const build = () => {
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.defaults.oauth.abacusCollectorScopes)
-        .return(fixture.defaults.oauth.abacusCollectorToken);
+        .whenScopes(fixture.oauth.abacusCollectorScopes)
+        .return(fixture.oauth.abacusCollectorToken);
 
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.defaults.oauth.cfAdminScopes)
-        .return(fixture.defaults.oauth.cfAdminToken);
+        .whenScopes(fixture.oauth.cfAdminScopes)
+        .return(fixture.oauth.cfAdminToken);
 
       const serviceUsageEvent = fixture
         .usageEvent()
@@ -87,7 +87,7 @@ const build = () => {
       it('expect all requests are the same', () => {
         const verifyRequest = (requestNumber) => {
           expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(requestNumber)).to.deep.equal({
-            token: fixture.defaults.oauth.abacusCollectorToken,
+            token: fixture.oauth.abacusCollectorToken,
             usage: fixture.collectorUsage(usageEventMetadata.created_at)
           });
         };

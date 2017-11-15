@@ -5,7 +5,7 @@ const servicesFixture = require('./lib/service-bridge-fixture');
 
 const stubCloudControllerServices = (fixture) => {
   fixture.getExternalSystemsMocks().cloudController.serviceGuids.return.always({
-    [fixture.defaults.usageEvent.serviceLabel]: fixture.defaults.usageEvent.serviceGuid
+    [fixture.defaultUsageEvent.serviceLabel]: fixture.defaultUsageEvent.serviceGuid
   });
 };
 
@@ -18,16 +18,16 @@ const tests = (fixture) => {
 
       // FIXME: refactor -> expect(requests()).to.hava.all(serviceGuids: [..])
       expect(cloudControllerMock.usageEvents.requests(0).serviceGuids).to.deep.equal(
-        [fixture.defaults.usageEvent.serviceGuid]
+        [fixture.defaultUsageEvent.serviceGuid]
       );
       expect(cloudControllerMock.usageEvents.requests(1).serviceGuids).to.deep.equal(
-        [fixture.defaults.usageEvent.serviceGuid]
+        [fixture.defaultUsageEvent.serviceGuid]
       );
       expect(cloudControllerMock.usageEvents.requests(2).serviceGuids).to.deep.equal(
-        [fixture.defaults.usageEvent.serviceGuid]
+        [fixture.defaultUsageEvent.serviceGuid]
       );
       expect(cloudControllerMock.usageEvents.requests(3).serviceGuids).to.deep.equal(
-        [fixture.defaults.usageEvent.serviceGuid]
+        [fixture.defaultUsageEvent.serviceGuid]
       );
     });
 
@@ -37,12 +37,12 @@ const tests = (fixture) => {
       // Expect 2 calls as configuration is load by both Master and Worker process
       expect(cloudControllerMock.serviceGuids.requestsCount()).to.equal(2);
       expect(cloudControllerMock.serviceGuids.requests(0)).to.deep.equal({
-        token: fixture.defaults.oauth.cfAdminToken,
-        serviceLabels: [fixture.defaults.usageEvent.serviceLabel]
+        token: fixture.oauth.cfAdminToken,
+        serviceLabels: [fixture.defaultUsageEvent.serviceLabel]
       });
       expect(cloudControllerMock.serviceGuids.requests(1)).to.deep.equal({
-        token: fixture.defaults.oauth.cfAdminToken,
-        serviceLabels: [fixture.defaults.usageEvent.serviceLabel]
+        token: fixture.oauth.cfAdminToken,
+        serviceLabels: [fixture.defaultUsageEvent.serviceLabel]
       });
     });
 

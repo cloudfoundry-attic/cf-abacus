@@ -34,7 +34,7 @@ const getEnviornmentVars = (externalSystems) => ({
 
 module.exports = (config) => ({
   port: config.port,
-  defaultEnv: env,
+  env,
   start: (externalSystemsMocks) => {
 
     const bridgeEnv = extend({},

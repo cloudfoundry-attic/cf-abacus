@@ -27,14 +27,14 @@ const build = () => {
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.defaults.oauth.abacusCollectorScopes)
-        .return(fixture.defaults.oauth.abacusCollectorToken);
+        .whenScopes(fixture.oauth.abacusCollectorScopes)
+        .return(fixture.oauth.abacusCollectorToken);
 
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.defaults.oauth.cfAdminScopes)
-        .return(fixture.defaults.oauth.cfAdminToken);
+        .whenScopes(fixture.oauth.cfAdminScopes)
+        .return(fixture.oauth.cfAdminToken);
 
       const now = moment.now();
       usageEventsTimestamp = moment
