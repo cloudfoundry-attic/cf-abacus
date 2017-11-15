@@ -1,7 +1,7 @@
 'use strict';
 
 const unhandleableEventsTestsDefinition = require('./test-definitions/unhandled-events-test-def');
-const createApplicationsFixture = require('./lib/applications-bridge-fixture');
+const applicationFixture = require('./lib/applications-bridge-fixture');
 
 const unhandleableEvents = (fixture) => {
   const unsupportedOrganzationUsageEvent = fixture
@@ -31,7 +31,7 @@ const unhandleableEvents = (fixture) => {
 describe('applications-bridge unhandleable events tests', () => {
 
   unhandleableEventsTestsDefinition
-    .fixture(createApplicationsFixture())
+    .fixture(applicationFixture)
     .unhandleableEvents(unhandleableEvents)
     .build();
 

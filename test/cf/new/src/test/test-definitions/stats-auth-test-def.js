@@ -34,7 +34,7 @@ const build = () => {
         .whenScopes(fixture.defaults.oauth.cfAdminScopes)
         .return(fixture.defaults.oauth.cfAdminToken);
 
-      fixture.bridge.start({ db: process.env.DB });
+      fixture.bridge.start(externalSystemsMocks);
 
       wait.until(() => {
         return externalSystemsMocks.cloudController.usageEvents.requestsCount() >= 1;
@@ -62,7 +62,8 @@ const build = () => {
 
     context('with token with NO required scopes', () => {
       it('FORBIDDEN is returned', (done) => {
-        const tokenFactory = createTokenFactory(fixture.defaults.oauth.tokenSecret);
+        console.log(fixture.env.tokenSecret);
+        const tokenFactory = createTokenFactory(fixture.env.tokenSecret);
         const signedToken = tokenFactory.create(['abacus.usage.invalid']);
         request.get('http://localhost::port/v1/stats', {
           port: fixture.bridge.port,

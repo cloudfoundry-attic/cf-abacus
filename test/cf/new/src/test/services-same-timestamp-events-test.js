@@ -1,7 +1,7 @@
 'use strict';
 
 const sameTimestampEventsTestsDefinition = require('./test-definitions/same-timestamp-events-test-def');
-const createServicesFixture = require('./lib/service-bridge-fixture');
+const servicesFixture = require('./lib/service-bridge-fixture');
 
 const stubCloudControllerServices = (fixture) => {
   fixture.getExternalSystemsMocks().cloudController.serviceGuids.return.always({
@@ -12,7 +12,7 @@ const stubCloudControllerServices = (fixture) => {
 describe('services-bridge unhandleable events tests', () => {
 
   sameTimestampEventsTestsDefinition
-    .fixture(createServicesFixture())
+    .fixture(servicesFixture)
     .before(stubCloudControllerServices)
     .build();
 });

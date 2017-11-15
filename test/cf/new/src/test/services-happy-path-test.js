@@ -1,7 +1,7 @@
 'use strict';
 
 const happyTestsDefinition = require('./test-definitions/happy-path-test-def');
-const createServicesFixture = require('./lib/service-bridge-fixture');
+const servicesFixture = require('./lib/service-bridge-fixture');
 
 const stubCloudControllerServices = (fixture) => {
   fixture.getExternalSystemsMocks().cloudController.serviceGuids.return.always({
@@ -52,7 +52,7 @@ const tests = (fixture) => {
 describe('services-bridge happy path tests', () => {
 
   happyTestsDefinition
-    .fixture(createServicesFixture())
+    .fixture(servicesFixture)
     .before(stubCloudControllerServices)
     .customTests(tests)
     .build();

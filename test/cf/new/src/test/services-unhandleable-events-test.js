@@ -1,9 +1,7 @@
 'use strict';
 
-const moment = require('abacus-moment');
-
 const unhandleableEventsTestsDefinition = require('./test-definitions/unhandled-events-test-def');
-const createServicesFixture = require('./lib/service-bridge-fixture');
+const servicesFixture = require('./lib/service-bridge-fixture');
 
 const stubCloudControllerServices = (fixture) => {
   fixture.getExternalSystemsMocks().cloudController.serviceGuids.return.always({
@@ -49,7 +47,7 @@ const unhandleableEvents = (fixture) => {
 describe('services-bridge unhandleable events tests', () => {
 
   unhandleableEventsTestsDefinition
-    .fixture(createServicesFixture())
+    .fixture(servicesFixture)
     .before(stubCloudControllerServices)
     .unhandleableEvents(unhandleableEvents)
     .build();

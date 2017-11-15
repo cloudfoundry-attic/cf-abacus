@@ -39,7 +39,7 @@ const build = () => {
       const now = moment.now();
       usageEventsTimestamp = moment
         .utc(now)
-        .subtract(fixture.defaults.env.minimalAgeInMinutes + 1, 'minutes')
+        .subtract(fixture.env.minimalAgeInMinutes + 1, 'minutes')
         .valueOf();
       const firstUsageEvent = fixture
         .usageEvent()
@@ -57,7 +57,7 @@ const build = () => {
 
       externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
 
-      fixture.bridge.start({ db: process.env.DB });
+      fixture.bridge.start(externalSystemsMocks);
 
       wait.until(() => {
         return externalSystemsMocks.cloudController.usageEvents.requestsCount() >= 2;
@@ -88,7 +88,7 @@ const build = () => {
     });
 
     it('expect statistics with all events successfully processed', (done) => {
-      const tokenFactory = createTokenFactory(fixture.defaults.oauth.tokenSecret);
+      const tokenFactory = createTokenFactory(fixture.env.tokenSecret);
       const signedToken = tokenFactory.create(['abacus.usage.read']);
       request.get('http://localhost::port/v1/stats', {
         port: fixture.bridge.port,

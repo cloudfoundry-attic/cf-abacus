@@ -44,14 +44,14 @@ const build = () => {
       externalSystemsMocks.cloudController.usageEvents.return.firstTime([serviceUsageEvent]);
       externalSystemsMocks.cloudController.usageEvents.return.secondTime([serviceUsageEvent]);
 
-      // Event reporter (abacus-client) will retry 'fixture.defaults.env.retryCount' times to report usage to abacus.
+      // Event reporter (abacus-client) will retry 'fixture.env.retryCount' times to report usage to abacus.
       // After that the whole process is retried (i.e. start reading again the events)
       // Stub Abacus Collector so that it will force the bridge to retry the whole proces.
-      const responses = _(fixture.defaults.env.retryCount + 1).times(() => httpStatus.BAD_GATEWAY);
+      const responses = _(fixture.env.retryCount + 1).times(() => httpStatus.BAD_GATEWAY);
       responses.push(httpStatus.CREATED);
       externalSystemsMocks.abacusCollector.collectUsageService.return.series(responses);
 
-      fixture.bridge.start({ db: process.env.DB });
+      fixture.bridge.start(externalSystemsMocks);
 
       wait.until(() => {
         return externalSystemsMocks.cloudController.usageEvents.requestsCount() >= 3;
@@ -93,7 +93,7 @@ const build = () => {
         };
 
         // retryCount+1 failing requests, and one successful.
-        const expecedRequestsCount = fixture.defaults.env.retryCount + 2;
+        const expecedRequestsCount = fixture.env.retryCount + 2;
         expect(externalSystemsMocks.abacusCollector.collectUsageService.requestsCount()).to.equal(expecedRequestsCount);
         _(expecedRequestsCount).forEach((n) => verifyRequest(n));
       });
@@ -101,7 +101,7 @@ const build = () => {
     });
 
     it('verify correct statistics are returned', (done) => {
-      const tokenFactory = createTokenFactory(fixture.defaults.oauth.tokenSecret);
+      const tokenFactory = createTokenFactory(fixture.env.tokenSecret);
       const signedToken = tokenFactory.create(['abacus.usage.read']);
       request.get('http://localhost::port/v1/stats', {
         port: fixture.bridge.port,

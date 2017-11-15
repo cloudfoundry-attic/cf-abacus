@@ -43,7 +43,8 @@ const build = () => {
       ]);
 
       externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CONFLICT);
-      fixture.bridge.start({ db: process.env.DB });
+
+      fixture.bridge.start(externalSystemsMocks);
 
       wait.until(() => {
         return externalSystemsMocks.cloudController.usageEvents.requestsCount() >= 2;
@@ -70,7 +71,7 @@ const build = () => {
     }));
 
     it('expect conflict statistics are returned', (done) => {
-      const tokenFactory = createTokenFactory(fixture.defaults.oauth.tokenSecret);
+      const tokenFactory = createTokenFactory(fixture.env.tokenSecret);
       const signedToken = tokenFactory.create(['abacus.usage.read']);
       request.get('http://localhost::port/v1/stats', {
         port: fixture.bridge.port,

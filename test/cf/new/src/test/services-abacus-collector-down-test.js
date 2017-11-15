@@ -1,7 +1,7 @@
 'use strict';
 
 const abacusCollectorDownTestsDefinition = require('./test-definitions/abacus-collector-down-test-def');
-const createServicesFixture = require('./lib/service-bridge-fixture');
+const servicesFixture = require('./lib/service-bridge-fixture');
 
 const stubCloudControllerServices = (fixture) => {
   fixture.getExternalSystemsMocks().cloudController.serviceGuids.return.always({
@@ -12,7 +12,7 @@ const stubCloudControllerServices = (fixture) => {
 describe('services-bridge abacus collector down tests', () => {
 
   abacusCollectorDownTestsDefinition
-    .fixture(createServicesFixture())
+    .fixture(servicesFixture)
     .before(stubCloudControllerServices)
     .build();
 });

@@ -1,28 +1,20 @@
 'use sterict';
 
-const async = require('async');
-const extend = require('underscore').extend;
-
-const dbclient = require('abacus-dbclient');
 const npm = require('abacus-npm');
-const moment = require('abacus-moment');
 
 const createAbacusCollectorMock = require('./abacus-collector-mock');
 const createCloudControllerMock = require('./application-usage-events');
 const createUAAServerMock = require('./uaa-server-mock');
-
-const retryCount = 3;
-const minimalAgeInMinutes = 3;
-const minimalAgeInMinutesInMillis = minimalAgeInMinutes * 60 * 1000;
+const getExternalSystemsMocks = require('./external-systems')(
+  createAbacusCollectorMock,
+  createCloudControllerMock,
+  createUAAServerMock
+);
+const createEventTimestampGenerator = require('./event-timestamp-generator');
+const createBridge = require('./bridge');
 
 const defaults = {
   oauth: {
-    tokenSecret: 'secret',
-    tokenAlgorithm: 'HS256',
-    cfClientId: 'cf-client-id',
-    cfClientSecret: 'cf-client-secret',
-    abacusClientId: 'abacus-collector-client-id',
-    abacusClientSecret: 'abacus-collector-client-secret',
     abacusCollectorScopes: ['abacus.usage.linux-container.write', 'abacus.usage.linux-container.read'],
     cfAdminScopes: [],
     abacusCollectorToken: 'abacus-collector-token',
@@ -32,7 +24,6 @@ const defaults = {
     state: 'STARTED',
     previousState: 'STOPPED',
     appGuid: 'test-app-guid',
-    serviceLabel: 'test-service',
     eventGuid: 'event-guid',
     orgGuid: 'test-org',
     spaceGuid:'space-guid',
@@ -40,24 +31,18 @@ const defaults = {
     previousInstanceCount: 3,
     memoryPerInstance: 2,
     previousMemoryPerInstance: 6
-  },
-  env: {
-    minimalAgeInMinutes,
-    retryCount
   }
 };
 
-const eventTimestampGenerator = (function *() {
-  const now = moment.now();
-  let currentEventTimestamp = moment
-    .utc(now)
-    .subtract(minimalAgeInMinutes + 1, 'minutes')
-    .valueOf();
+const bridge = createBridge({
+  bridge: npm.modules.applications,
+  port: 9500,
+  customEnv: {
+    ORGS_TO_REPORT : `["${defaults.usageEvent.orgGuid}"]`
+  }
+});
 
-  while (true)
-    yield currentEventTimestamp++;
-})();
-
+const eventTimestampGenerator = createEventTimestampGenerator(bridge.defaultEnv.minimalAgeInMinutes + 1);
 const validUsageEvent = () => {
   const createdAt = eventTimestampGenerator.next().value;
   return {
@@ -99,14 +84,6 @@ const usageEvent = () => {
       resultUsageEvent.entity.org_guid = value;
       return overwritable;
     },
-    overwriteServiceLabel: (value) => {
-      resultUsageEvent.entity.service_label = value;
-      return overwritable;
-    },
-    overwriteServicePlanName: (value) => {
-      resultUsageEvent.entity.service_plan_name = value;
-      return overwritable;
-    },
     get: () => resultUsageEvent
   };
 
@@ -142,86 +119,11 @@ collectorUsage = (eventTimestamp) => ({
   ]
 });
 
-
-module.exports = () => {
-  let abacusCollectorMock;
-  let cloudControllerMock;
-  let uaaServerMock;
-
-  let externalSystemsMocks;
-
-  const getExternalSystemsMocks = () => {
-    if (externalSystemsMocks)
-      return externalSystemsMocks;
-
-
-    abacusCollectorMock = createAbacusCollectorMock();
-    cloudControllerMock = createCloudControllerMock();
-    uaaServerMock = createUAAServerMock();
-
-    externalSystemsMocks = {
-      abacusCollector: abacusCollectorMock,
-      cloudController: cloudControllerMock,
-      uaaServer: uaaServerMock,
-      startAll: () => {
-        abacusCollectorMock.start();
-        cloudControllerMock.start();
-        uaaServerMock.start();
-      },
-      stopAll: (done) => {
-        async.parallel([
-          abacusCollectorMock.stop,
-          cloudControllerMock.stop,
-          uaaServerMock.stop
-        ], done);
-      }
-    };
-
-    return externalSystemsMocks;
-  };
-
-  const getEnviornmentVars = () => ({
-    CLIENT_ID: defaults.oauth.abacusClientId,
-    CLIENT_SECRET: defaults.oauth.abacusClientSecret,
-    CF_CLIENT_ID : defaults.oauth.cfClientId,
-    CF_CLIENT_SECRET : defaults.oauth.cfClientSecret,
-    SECURED : 'true',
-    ORGS_TO_REPORT : `["${defaults.usageEvent.orgGuid}"]`,
-    AUTH_SERVER : `http://localhost:${uaaServerMock.address().port}`,
-    API : `http://localhost:${cloudControllerMock.address().port}`,
-    COLLECTOR : `http://localhost:${abacusCollectorMock.address().port}`,
-    SERVICES : `{
-      "${defaults.usageEvent.serviceLabel}":{"plans":["${defaults.usageEvent.servicePlanName}"]}
-    }`,
-    MIN_INTERVAL_TIME : 10,
-    RETRIES: retryCount,
-    GUID_MIN_AGE: minimalAgeInMinutesInMillis,
-    JWTKEY : defaults.oauth.tokenSecret,
-    JWTALGO : defaults.oauth.tokenAlgorithm
-  });
-
-  const bridge = {
-    port: 9500,
-    start: (config) => {
-      if (!config.db)
-        npm
-          .useEnv(extend({}, process.env, getEnviornmentVars()))
-          .startModules([npm.modules.pouchserver, npm.modules.applications]);
-      else
-        dbclient.drop(config.db, /^abacus-/, () => {
-          npm
-            .useEnv(extend({}, process.env, getEnviornmentVars()))
-            .startModules(npm.modules.services);
-        });
-    },
-    stop: (done) => npm.stopAllStarted(done)
-  };
-
-  return {
-    defaults,
-    usageEvent,
-    collectorUsage,
-    getExternalSystemsMocks,
-    bridge
-  };
+module.exports = {
+  defaults,
+  env: bridge.defaultEnv,
+  usageEvent,
+  collectorUsage,
+  getExternalSystemsMocks,
+  bridge
 };
