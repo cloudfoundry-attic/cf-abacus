@@ -2,6 +2,7 @@
 
 const async = require('async');
 const httpStatus = require('http-status-codes');
+const _ = require('underscore');
 
 const request = require('abacus-request');
 const yieldable = require('abacus-yieldable');
@@ -76,7 +77,7 @@ const build = () => {
 
     context('Bridge generic tests', () => {
 
-      it('verify Service Usage Events service calls ', () => {
+      it('verify Usage Events service calls ', () => {
         const cloudControllerMock = externalSystemsMocks.cloudController;
 
         expect(cloudControllerMock.usageEvents.requests(0)).to.include({
@@ -124,34 +125,23 @@ const build = () => {
         // TODO: check this!!!
         expect(uaaServerMock.tokenService.requestsCount()).to.equal(4);
 
-        expect(uaaServerMock.tokenService.requests.withScopes(fixture.oauth.abacusCollectorScopes)).to.deep.equal([{
+        const abacusCollectorTokenRequests = uaaServerMock.tokenService.requests.withScopes(fixture.oauth.abacusCollectorScopes);
+        expect(abacusCollectorTokenRequests).to.deep.equal(_(2).times(()=>({
           credentials: {
             clientId: fixture.env.abacusClientId,
             secret: fixture.env.abacusClientSecret
           },
           scopes: fixture.oauth.abacusCollectorScopes
-        },{
-          credentials: {
-            clientId: fixture.env.abacusClientId,
-            secret: fixture.env.abacusClientSecret
-          },
-          scopes: fixture.oauth.abacusCollectorScopes
-        }]);
+        })));
 
-        expect(uaaServerMock.tokenService.requests.withScopes(fixture.oauth.cfAdminScopes)).to.deep.equal([{
+        const cfAdminTokenRequests = uaaServerMock.tokenService.requests.withScopes(fixture.oauth.cfAdminScopes);
+        expect(cfAdminTokenRequests).to.deep.equal(_(2).times(()=>({
           credentials: {
             clientId: fixture.env.cfClientId,
             secret: fixture.env.cfClientSecret
           },
           scopes: fixture.oauth.cfAdminScopes
-        },{
-          credentials: {
-            clientId: fixture.env.cfClientId,
-            secret: fixture.env.cfClientSecret
-          },
-          scopes: fixture.oauth.cfAdminScopes
-        }]);
-
+        })));
       });
 
       it('verify carry-over content', (done) => yieldable.functioncb(function *() {
@@ -211,8 +201,6 @@ const testDef = {
 
 module.exports = testDef;
 
-// cloud-controller mock(s) - rename/refactor
 // Why services bridge posts to 'batch' endpoint, but application not ?????
 // return.always -> always.return
-// refactor UAA tests to use mathcers?
 // review package.json
