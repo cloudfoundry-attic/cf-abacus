@@ -1,7 +1,7 @@
 'use strict';
 
-const unhandleableEventsTestsDefinition = require('./test-definitions/unhandled-events-test-def');
-const applicationFixture = require('./lib/applications-bridge-fixture');
+const unhandleableEventsTestsDefinition = require('./test-definitions/unhandleable-events-test-def');
+const applicationFixture = require('./fixtures/applications-bridge-fixture');
 
 const unhandleableEvents = (fixture) => {
   const unsupportedOrganzationUsageEvent = fixture
@@ -12,19 +12,10 @@ const unhandleableEvents = (fixture) => {
     .usageEvent()
     .overwriteState('UNSUPPORTED')
     .get();
-  // const now = moment.now();
-  // const tooYoungUsageEvent = fixture
-  //   .usageEvent()
-  //   .overwriteCreatedAt(moment
-  //     .utc(now)
-  //     .subtract(fixture.defaults.minimalAgeInMinutes / 2, 'minutes')
-  //     .valueOf())
-  //   .get();
 
   return [
     unsupportedOrganzationUsageEvent,
     unsupportedStateUsageEvent
-    // tooYoungUsageEvent
   ];
 };
 

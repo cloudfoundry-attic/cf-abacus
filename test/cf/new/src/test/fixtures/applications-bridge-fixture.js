@@ -2,42 +2,41 @@
 
 const npm = require('abacus-npm');
 
-const createAbacusCollectorMock = require('./abacus-collector-mock');
-const createCloudControllerMock = require('./services-usage-events');
-const createUAAServerMock = require('./uaa-server-mock');
-const getExternalSystemsMocks = require('./external-systems')(
+const createAbacusCollectorMock = require('../server-mocks/abacus-collector-mock');
+const createCloudControllerMock = require('../server-mocks/application-usage-events');
+const createUAAServerMock = require('../server-mocks/uaa-server-mock');
+const getExternalSystemsMocks = require('./utils/external-systems')(
   createAbacusCollectorMock,
   createCloudControllerMock,
   createUAAServerMock
 );
-const createEventTimestampGenerator = require('./event-timestamp-generator');
-const createBridge = require('./bridge');
+const createEventTimestampGenerator = require('./utils/event-timestamp-generator');
+const createBridge = require('./utils/bridge');
 
 const oauth = {
-  abacusCollectorScopes: ['abacus.usage.write', 'abacus.usage.read'],
+  abacusCollectorScopes: ['abacus.usage.linux-container.write', 'abacus.usage.linux-container.read'],
   cfAdminScopes: [],
   abacusCollectorToken: 'abacus-collector-token',
   cfAdminToken: 'cfadmin-token'
 };
 
 const defaultUsageEvent = {
-  state: 'CREATED',
-  serviceGuid: 'test-service-guid',
-  serviceLabel: 'test-service',
+  state: 'STARTED',
+  previousState: 'STOPPED',
+  appGuid: 'test-app-guid',
   eventGuid: 'event-guid',
   orgGuid: 'test-org',
   spaceGuid:'space-guid',
-  servicePlanName:'test-plan',
-  serviceInstanceGuid: 'service-instance-guid'
+  instanceCount: 5,
+  previousInstanceCount: 3,
+  memoryPerInstance: 2,
+  previousMemoryPerInstance: 6
 };
 
 const bridge = createBridge({
-  bridge: npm.modules.services,
-  port: 9502,
+  bridge: npm.modules.applications,
+  port: 9500,
   customEnv: {
-    SERVICES: `{
-      "${defaultUsageEvent.serviceLabel}":{"plans":["${defaultUsageEvent.servicePlanName}"]}
-    }`,
     ORGS_TO_REPORT : `["${defaultUsageEvent.orgGuid}"]`
   }
 });
@@ -52,11 +51,14 @@ const validUsageEvent = () => {
     },
     entity: {
       state: defaultUsageEvent.state,
+      previous_state: defaultUsageEvent.previousState,
       org_guid: defaultUsageEvent.orgGuid,
       space_guid: defaultUsageEvent.spaceGuid,
-      service_label: defaultUsageEvent.serviceLabel,
-      service_plan_name: defaultUsageEvent.servicePlanName,
-      service_instance_guid: defaultUsageEvent.serviceInstanceGuid
+      app_guid: defaultUsageEvent.appGuid,
+      instance_count: defaultUsageEvent.instanceCount,
+      previous_instance_count: defaultUsageEvent.previousInstanceCount,
+      memory_in_mb_per_instance: defaultUsageEvent.memoryPerInstance,
+      previous_memory_in_mb_per_instance: defaultUsageEvent.previousMemoryPerInstance
     }
   };
 };
@@ -81,14 +83,6 @@ const usageEvent = () => {
       resultUsageEvent.entity.org_guid = value;
       return overwritable;
     },
-    overwriteServiceLabel: (value) => {
-      resultUsageEvent.entity.service_label = value;
-      return overwritable;
-    },
-    overwriteServicePlanName: (value) => {
-      resultUsageEvent.entity.service_plan_name = value;
-      return overwritable;
-    },
     get: () => resultUsageEvent
   };
 
@@ -100,17 +94,25 @@ collectorUsage = (eventTimestamp) => ({
   end: eventTimestamp,
   organization_id: defaultUsageEvent.orgGuid,
   space_id: defaultUsageEvent.spaceGuid,
-  consumer_id: `service:${defaultUsageEvent.serviceInstanceGuid}`,
-  resource_id: defaultUsageEvent.serviceLabel,
-  plan_id: defaultUsageEvent.servicePlanName,
-  resource_instance_id: `service:${defaultUsageEvent.serviceInstanceGuid}:${defaultUsageEvent.servicePlanName}:${defaultUsageEvent.serviceLabel}`,
+  consumer_id: `app:${defaultUsageEvent.appGuid}`,
+  resource_id: 'linux-container',
+  plan_id: 'standard',
+  resource_instance_id: `memory:${defaultUsageEvent.appGuid}`,
   measured_usage: [
     {
-      measure: 'current_instances',
-      quantity : 1
+      measure: 'current_instance_memory',
+      quantity : 2097152
     },
     {
-      measure: 'previous_instances',
+      measure: 'current_running_instances',
+      quantity: 5
+    },
+    {
+      measure: 'previous_instance_memory',
+      quantity : 0
+    },
+    {
+      measure: 'previous_running_instances',
       quantity : 0
     }
   ]

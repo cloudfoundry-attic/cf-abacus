@@ -1,7 +1,7 @@
 'use strict';
 
 const sameTimestampEventsTestsDefinition = require('./test-definitions/same-timestamp-events-test-def');
-const servicesFixture = require('./lib/service-bridge-fixture');
+const servicesFixture = require('./fixtures/service-bridge-fixture');
 
 const stubCloudControllerServices = (fixture) => {
   fixture.getExternalSystemsMocks().cloudController.serviceGuids.return.always({

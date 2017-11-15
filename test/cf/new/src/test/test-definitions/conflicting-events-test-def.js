@@ -6,9 +6,9 @@ const httpStatus = require('http-status-codes');
 const request = require('abacus-request');
 const yieldable = require('abacus-yieldable');
 
-const carryOverDb = require('./../lib/carry-over-db');
-const createTokenFactory = require('./../lib/token-factory');
-const wait = require('./../lib/wait');
+const carryOverDb = require('./utils/carry-over-db');
+const createTokenFactory = require('./utils/token-factory');
+const wait = require('./utils/wait');
 
 let fixture;
 let customBefore = () => {};

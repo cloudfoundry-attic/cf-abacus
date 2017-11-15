@@ -6,8 +6,8 @@ const _ = require('underscore');
 
 const request = require('abacus-request');
 
-const wait = require('./../lib/wait');
-const createTokenFactory = require('./../lib/token-factory');
+const wait = require('./utils/wait');
+const createTokenFactory = require('./utils/token-factory');
 
 let fixture;
 let customBefore = () => {};

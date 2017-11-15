@@ -1,7 +1,7 @@
 'use strict';
 
 const statsAuthTestsDefinition = require('./test-definitions/stats-auth-test-def');
-const servicesFixture = require('./lib/service-bridge-fixture');
+const servicesFixture = require('./fixtures/service-bridge-fixture');
 
 const stubCloudControllerServices = (fixture) => {
   fixture.getExternalSystemsMocks().cloudController.serviceGuids.return.always({

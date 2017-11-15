@@ -1,7 +1,7 @@
 'use strict';
 
-const unhandleableEventsTestsDefinition = require('./test-definitions/unhandled-events-test-def');
-const servicesFixture = require('./lib/service-bridge-fixture');
+const unhandleableEventsTestsDefinition = require('./test-definitions/unhandleable-events-test-def');
+const servicesFixture = require('./fixtures/service-bridge-fixture');
 
 const stubCloudControllerServices = (fixture) => {
   fixture.getExternalSystemsMocks().cloudController.serviceGuids.return.always({
@@ -26,21 +26,12 @@ const unhandleableEvents = (fixture) => {
     .usageEvent()
     .overwriteServicePlanName('unsupported-service-plan')
     .get();
-  // const now = moment.now();
-  // const tooYoungUsageEvent = fixture
-  //   .usageEvent()
-  //   .overwriteCreatedAt(moment
-  //     .utc(now)
-  //     .subtract(fixture.defaults.minimalAgeInMinutes / 2, 'minutes')
-  //     .valueOf())
-  //   .get();
 
   return [
     unsupportedOrganzationUsageEvent,
     unsupportedStateUsageEvent,
     unsupportedServiceUsageEvent,
     unsupportedServicePlanUsageEvent
-    // tooYoungUsageEvent
   ];
 };
 

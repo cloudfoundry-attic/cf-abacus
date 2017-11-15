@@ -6,8 +6,8 @@ const httpStatus = require('http-status-codes');
 const moment = require('abacus-moment');
 const request = require('abacus-request');
 
-const createTokenFactory = require('./../lib/token-factory');
-const wait = require('./../lib/wait');
+const createTokenFactory = require('./utils/token-factory');
+const wait = require('./utils/wait');
 
 let fixture;
 let customBefore = () => {};

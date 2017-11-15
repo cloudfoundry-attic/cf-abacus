@@ -6,9 +6,9 @@ const httpStatus = require('http-status-codes');
 const request = require('abacus-request');
 const yieldable = require('abacus-yieldable');
 
-const carryOverDb = require('./../lib/carry-over-db');
-const wait = require('./../lib/wait');
-const createTokenFactory = require('./../lib/token-factory');
+const carryOverDb = require('./utils/carry-over-db');
+const createTokenFactory = require('./utils/token-factory');
+const wait = require('./utils/wait');
 
 let fixture;
 let customBefore = () => {};
@@ -193,7 +193,6 @@ const build = () => {
 
 };
 
-
 const testDef = {
   fixture: (value) => {
     fixture = value;
@@ -212,6 +211,7 @@ const testDef = {
 
 module.exports = testDef;
 
+// cloud-controller mock(s) - rename/refactor
 // Why services bridge posts to 'batch' endpoint, but application not ?????
 // return.always -> always.return
 // refactor UAA tests to use mathcers?
