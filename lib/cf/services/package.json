@@ -37,7 +37,6 @@
   "dependencies": {
     "abacus-bridge": "file:../../utils/bridge",
     "abacus-debug": "file:../../utils/debug",
-    "abacus-ext-plan-mappings": "0.0.6-dev.9",
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-moment": "file:../../utils/moment",
     "abacus-paging": "file:../../utils/paging",

@@ -82,9 +82,9 @@
           "dev": true
         },
         "eslint": {
-          "version": "4.10.0",
+          "version": "4.11.0",
           "from": "eslint@>=4.1.7 <5.0.0",
-          "resolved": "https://registry.npmjs.org/eslint/-/eslint-4.10.0.tgz",
+          "resolved": "https://registry.npmjs.org/eslint/-/eslint-4.11.0.tgz",
           "dev": true,
           "dependencies": {
             "optionator": {
@@ -111,11 +111,6 @@
       "version": "1.0.0",
       "from": "../../utils/express",
       "resolved": "file:../../utils/express"
-    },
-    "abacus-ext-plan-mappings": {
-      "version": "0.0.6-dev.9",
-      "from": "abacus-ext-plan-mappings@0.0.6-dev.9",
-      "resolved": "https://registry.npmjs.org/abacus-ext-plan-mappings/-/abacus-ext-plan-mappings-0.0.6-dev.9.tgz"
     },
     "abacus-hystrix": {
       "version": "1.0.0",
@@ -304,7 +299,7 @@
     },
     "acorn": {
       "version": "5.2.1",
-      "from": "acorn@>=5.1.1 <6.0.0",
+      "from": "acorn@>=5.2.1 <6.0.0",
       "resolved": "https://registry.npmjs.org/acorn/-/acorn-5.2.1.tgz",
       "dev": true
     },
@@ -655,9 +650,9 @@
       "resolved": "https://registry.npmjs.org/co/-/co-3.1.0.tgz"
     },
     "color-convert": {
-      "version": "1.9.0",
+      "version": "1.9.1",
       "from": "color-convert@>=1.9.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/color-convert/-/color-convert-1.9.0.tgz",
+      "resolved": "https://registry.npmjs.org/color-convert/-/color-convert-1.9.1.tgz",
       "dev": true
     },
     "color-name": {
@@ -986,9 +981,9 @@
       "dev": true
     },
     "espree": {
-      "version": "3.5.1",
-      "from": "espree@>=3.5.1 <4.0.0",
-      "resolved": "https://registry.npmjs.org/espree/-/espree-3.5.1.tgz",
+      "version": "3.5.2",
+      "from": "espree@>=3.5.2 <4.0.0",
+      "resolved": "https://registry.npmjs.org/espree/-/espree-3.5.2.tgz",
       "dev": true
     },
     "esprima": {
@@ -1559,6 +1554,12 @@
       "from": "json-stable-stringify@>=1.0.1 <2.0.0",
       "resolved": "https://registry.npmjs.org/json-stable-stringify/-/json-stable-stringify-1.0.1.tgz"
     },
+    "json-stable-stringify-without-jsonify": {
+      "version": "1.0.1",
+      "from": "json-stable-stringify-without-jsonify@>=1.0.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz",
+      "dev": true
+    },
     "json-stringify-safe": {
       "version": "5.0.1",
       "from": "json-stringify-safe@>=5.0.1 <5.1.0",
@@ -1871,9 +1872,9 @@
       }
     },
     "moment": {
-      "version": "2.19.1",
+      "version": "2.19.2",
       "from": "moment@>=2.17.1 <3.0.0",
-      "resolved": "https://registry.npmjs.org/moment/-/moment-2.19.1.tgz"
+      "resolved": "https://registry.npmjs.org/moment/-/moment-2.19.2.tgz"
     },
     "mongodb": {
       "version": "2.2.33",
@@ -2559,9 +2560,9 @@
           "dev": true
         },
         "type-detect": {
-          "version": "4.0.3",
+          "version": "4.0.5",
           "from": "type-detect@>=4.0.0 <5.0.0",
-          "resolved": "https://registry.npmjs.org/type-detect/-/type-detect-4.0.3.tgz",
+          "resolved": "https://registry.npmjs.org/type-detect/-/type-detect-4.0.5.tgz",
           "dev": true
         }
       }
@@ -2687,9 +2688,9 @@
       "resolved": "https://registry.npmjs.org/tar-fs/-/tar-fs-1.16.0.tgz"
     },
     "tar-stream": {
-      "version": "1.5.4",
+      "version": "1.5.5",
       "from": "tar-stream@>=1.2.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/tar-stream/-/tar-stream-1.5.4.tgz",
+      "resolved": "https://registry.npmjs.org/tar-stream/-/tar-stream-1.5.5.tgz",
       "dependencies": {
         "readable-stream": {
           "version": "2.3.3",
