@@ -10,7 +10,6 @@ const createTokenFactory = require('./utils/token-factory');
 const wait = require('./utils/wait');
 
 let fixture;
-let customBefore = () => {};
 
 const build = () => {
 
@@ -21,8 +20,6 @@ const build = () => {
     before((done) => {
       externalSystemsMocks = fixture.getExternalSystemsMocks();
       externalSystemsMocks.startAll();
-
-      customBefore(fixture);
 
       externalSystemsMocks
         .uaaServer
@@ -60,7 +57,7 @@ const build = () => {
       fixture.bridge.start(externalSystemsMocks);
 
       wait.until(() => {
-        return externalSystemsMocks.cloudController.usageEvents.requestsCount() >= 2;
+        return externalSystemsMocks.cloudController.usageEvents.requests().length >= 2;
       }, done);
     });
 
@@ -73,16 +70,16 @@ const build = () => {
 
     context('when verifing abacus collector', () => {
       it('expect two usages to be send to abacus collector', () => {
-        expect(externalSystemsMocks.abacusCollector.collectUsageService.requestsCount()).to.equal(2);
+        expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(2);
       });
 
       it('expect first recieved usage to be as it is', () => {
-        expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(0).usage)
+        expect(externalSystemsMocks.abacusCollector.collectUsageService.request(0).usage)
           .to.deep.equal(fixture.collectorUsage(usageEventsTimestamp));
       });
 
       it('expect second recieved usage timestamp to be adjusted', () => {
-        expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(1).usage)
+        expect(externalSystemsMocks.abacusCollector.collectUsageService.request(1).usage)
           .to.deep.equal(fixture.collectorUsage(usageEventsTimestamp + 1));
       });
     });
@@ -117,10 +114,6 @@ const build = () => {
 const testDef = {
   fixture: (value) => {
     fixture = value;
-    return testDef;
-  },
-  before: (value) => {
-    customBefore = value;
     return testDef;
   },
   build

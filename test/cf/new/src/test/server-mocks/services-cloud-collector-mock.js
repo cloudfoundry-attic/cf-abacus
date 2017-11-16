@@ -55,6 +55,12 @@ module.exports = () => {
     requests: []
   };
 
+  const stubCloudControllerServices = (fixture) => {
+    fixture.getExternalSystemsMocks().cloudController.serviceGuids.return.always({
+      [fixture.defaultUsageEvent.serviceLabel]: fixture.defaultUsageEvent.serviceGuid
+    });
+  };
+
   const start = () => {
     app = express();
 
@@ -103,16 +109,15 @@ module.exports = () => {
       return: {
         always: (guids) => serviceGuidsData.return = guids
       },
-      requestsCount: () => serviceGuidsData.requests.length,
-      requests: (index) => serviceGuidsData.requests[index]
+      requests: () => serviceGuidsData.requests
     },
     usageEvents: {
       return: {
         firstTime: (events) => serviceUsageEventsData.return[0] = events,
         secondTime: (events) => serviceUsageEventsData.return[1] = events
       },
-      requestsCount: () => serviceUsageEventsData.requests.length,
-      requests: (index) => serviceUsageEventsData.requests[index]
+      request: (index) => serviceUsageEventsData.requests[index],
+      requests: () => serviceUsageEventsData.requests
     },
     stop
   };

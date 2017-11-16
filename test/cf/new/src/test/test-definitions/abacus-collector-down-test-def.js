@@ -10,7 +10,6 @@ const wait = require('./utils/wait');
 const createTokenFactory = require('./utils/token-factory');
 
 let fixture;
-let customBefore = () => {};
 
 const build = () => {
 
@@ -21,8 +20,6 @@ const build = () => {
     before((done) => {
       externalSystemsMocks = fixture.getExternalSystemsMocks();
       externalSystemsMocks.startAll();
-
-      customBefore(fixture);
 
       externalSystemsMocks
         .uaaServer
@@ -54,7 +51,7 @@ const build = () => {
       fixture.bridge.start(externalSystemsMocks);
 
       wait.until(() => {
-        return externalSystemsMocks.cloudController.usageEvents.requestsCount() >= 3;
+        return externalSystemsMocks.cloudController.usageEvents.requests().length >= 3;
       }, done);
     });
 
@@ -71,7 +68,7 @@ const build = () => {
         const verifyServiceUsageEventsAfterGuid = (requestNumber, afterGuid) => {
           expect(externalSystemsMocks.cloudController
             .usageEvents
-            .requests(requestNumber)
+            .request(requestNumber)
             .afterGuid).to.equal(
             afterGuid
           );
@@ -85,17 +82,15 @@ const build = () => {
 
     context('verify abacus collector', () => {
       it('expect all requests are the same', () => {
-        const verifyRequest = (requestNumber) => {
-          expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(requestNumber)).to.deep.equal({
-            token: fixture.oauth.abacusCollectorToken,
-            usage: fixture.collectorUsage(usageEventMetadata.created_at)
-          });
-        };
-
         // retryCount+1 failing requests, and one successful.
         const expecedRequestsCount = fixture.env.retryCount + 2;
-        expect(externalSystemsMocks.abacusCollector.collectUsageService.requestsCount()).to.equal(expecedRequestsCount);
-        _(expecedRequestsCount).forEach((n) => verifyRequest(n));
+        const expectedRequests = _(expecedRequestsCount).times(() => ({
+          token: fixture.oauth.abacusCollectorToken,
+          usage: fixture.collectorUsage(usageEventMetadata.created_at)
+        }));
+
+        expect(externalSystemsMocks.abacusCollector.collectUsageService.requests())
+          .to.deep.equal(expectedRequests);
       });
 
     });
@@ -130,10 +125,6 @@ const build = () => {
 const testDef = {
   fixture: (value) => {
     fixture = value;
-    return testDef;
-  },
-  before: (value) => {
-    customBefore = value;
     return testDef;
   },
   build

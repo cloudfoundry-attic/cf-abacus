@@ -3,17 +3,16 @@
 const abacusCollectorDownTestsDefinition = require('./test-definitions/abacus-collector-down-test-def');
 const servicesFixture = require('./fixtures/service-bridge-fixture');
 
-const stubCloudControllerServices = (fixture) => {
-  fixture.getExternalSystemsMocks().cloudController.serviceGuids.return.always({
-    [fixture.defaultUsageEvent.serviceLabel]: fixture.defaultUsageEvent.serviceGuid
-  });
-};
-
 describe('services-bridge abacus collector down tests', () => {
+
+  before(() => {
+    servicesFixture.getExternalSystemsMocks().cloudController.serviceGuids.return.always({
+      [servicesFixture.defaultUsageEvent.serviceLabel]: servicesFixture.defaultUsageEvent.serviceGuid
+    });
+  });
 
   abacusCollectorDownTestsDefinition
     .fixture(servicesFixture)
-    .before(stubCloudControllerServices)
     .build();
 });
 

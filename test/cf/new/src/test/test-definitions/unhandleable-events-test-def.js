@@ -11,7 +11,6 @@ const createTokenFactory = require('./utils/token-factory');
 const wait = require('./utils/wait');
 
 let fixture;
-let customBefore = () => {};
 let createUnhandleableEvents;
 
 const build = () => {
@@ -23,8 +22,6 @@ const build = () => {
     before((done) => {
       externalSystemsMocks = fixture.getExternalSystemsMocks();
       externalSystemsMocks.startAll();
-
-      customBefore(fixture);
 
       externalSystemsMocks
         .uaaServer
@@ -50,7 +47,7 @@ const build = () => {
       fixture.bridge.start(externalSystemsMocks);
 
       wait.until(() => {
-        return externalSystemsMocks.cloudController.usageEvents.requestsCount() >= 2;
+        return externalSystemsMocks.cloudController.usageEvents.requests().length >= 2;
       }, done);
     });
 
@@ -62,7 +59,7 @@ const build = () => {
     });
 
     it('expect abacus collector receive NO usage', () => {
-      expect(externalSystemsMocks.abacusCollector.collectUsageService.requestsCount()).to.equal(0);
+      expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(0);
     });
 
     it('expect carry-over is empty', (done) => yieldable.functioncb(function *() {
@@ -101,10 +98,6 @@ const build = () => {
 const testDef = {
   fixture: (value) => {
     fixture = value;
-    return testDef;
-  },
-  before: (value) => {
-    customBefore = value;
     return testDef;
   },
   unhandleableEvents: (value) => {

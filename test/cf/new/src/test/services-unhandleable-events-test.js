@@ -3,12 +3,6 @@
 const unhandleableEventsTestsDefinition = require('./test-definitions/unhandleable-events-test-def');
 const servicesFixture = require('./fixtures/service-bridge-fixture');
 
-const stubCloudControllerServices = (fixture) => {
-  fixture.getExternalSystemsMocks().cloudController.serviceGuids.return.always({
-    [fixture.defaultUsageEvent.serviceLabel]: fixture.defaultUsageEvent.serviceGuid
-  });
-};
-
 const unhandleableEvents = (fixture) => {
   const unsupportedOrganzationUsageEvent = fixture
     .usageEvent()
@@ -37,9 +31,14 @@ const unhandleableEvents = (fixture) => {
 
 describe('services-bridge unhandleable events tests', () => {
 
+  before(() => {
+    servicesFixture.getExternalSystemsMocks().cloudController.serviceGuids.return.always({
+      [servicesFixture.defaultUsageEvent.serviceLabel]: servicesFixture.defaultUsageEvent.serviceGuid
+    });
+  });
+
   unhandleableEventsTestsDefinition
     .fixture(servicesFixture)
-    .before(stubCloudControllerServices)
     .unhandleableEvents(unhandleableEvents)
     .build();
 

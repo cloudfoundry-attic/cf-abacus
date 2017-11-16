@@ -9,7 +9,6 @@ const createTokenFactory = require('./utils/token-factory');
 const wait = require('./utils/wait');
 
 let fixture;
-let customBefore = () => {};
 
 const build = () => {
 
@@ -19,8 +18,6 @@ const build = () => {
     before((done) => {
       externalSystemsMocks = fixture.getExternalSystemsMocks();
       externalSystemsMocks.startAll();
-
-      customBefore(fixture);
 
       externalSystemsMocks
         .uaaServer
@@ -37,7 +34,7 @@ const build = () => {
       fixture.bridge.start(externalSystemsMocks);
 
       wait.until(() => {
-        return externalSystemsMocks.cloudController.usageEvents.requestsCount() >= 1;
+        return externalSystemsMocks.cloudController.usageEvents.requests().length >= 1;
       }, done);
     });
 
@@ -83,10 +80,6 @@ const build = () => {
 const testDef = {
   fixture: (value) => {
     fixture = value;
-    return testDef;
-  },
-  before: (value) => {
-    customBefore = value;
     return testDef;
   },
   build

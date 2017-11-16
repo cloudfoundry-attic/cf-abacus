@@ -54,8 +54,8 @@ module.exports = () => {
         firstTime: (events) => applicationUsageEventsData.return[0] = events,
         secondTime: (events) => applicationUsageEventsData.return[1] = events
       },
-      requestsCount: () => applicationUsageEventsData.requests.length,
-      requests: (index) => applicationUsageEventsData.requests[index]
+      request: (index) => applicationUsageEventsData.requests[index],
+      requests: () => applicationUsageEventsData.requests
     },
     stop
   };

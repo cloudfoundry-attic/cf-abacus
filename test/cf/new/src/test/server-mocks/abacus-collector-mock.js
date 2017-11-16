@@ -71,8 +71,8 @@ module.exports = () => {
     address: () => server.address(),
     collectUsageService: {
       resourceLocation,
-      requests: (n) => received.requests[n],
-      requestsCount: () => received.requests.length,
+      request: (n) => received.requests[n],
+      requests: (n) => received.requests,
       return: {
         always: (value) => returnStatusCode.always = value,
         firstTime: (value) => returnStatusCode.perRequest[0] = value,

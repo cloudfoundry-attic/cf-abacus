@@ -12,7 +12,6 @@ const createTokenFactory = require('./utils/token-factory');
 const wait = require('./utils/wait');
 
 let fixture;
-let customBefore = () => {};
 let customTests = () => {};
 
 const build = () => {
@@ -27,8 +26,6 @@ const build = () => {
     before((done) => {
       externalSystemsMocks = fixture.getExternalSystemsMocks();
       externalSystemsMocks.startAll();
-
-      customBefore(fixture);
 
       externalSystemsMocks
         .uaaServer
@@ -60,7 +57,7 @@ const build = () => {
       fixture.bridge.start(externalSystemsMocks);
 
       wait.until(() => {
-        return externalSystemsMocks.cloudController.usageEvents.requestsCount() >= 4;
+        return externalSystemsMocks.cloudController.usageEvents.requests().length >= 4;
       }, done);
     });
 
@@ -80,19 +77,19 @@ const build = () => {
       it('verify Usage Events service calls ', () => {
         const cloudControllerMock = externalSystemsMocks.cloudController;
 
-        expect(cloudControllerMock.usageEvents.requests(0)).to.include({
+        expect(cloudControllerMock.usageEvents.request(0)).to.include({
           token: fixture.oauth.cfAdminToken,
           afterGuid: undefined
         });
-        expect(cloudControllerMock.usageEvents.requests(1)).to.include({
+        expect(cloudControllerMock.usageEvents.request(1)).to.include({
           token: fixture.oauth.cfAdminToken,
           afterGuid: firstEventGuid
         });
-        expect(cloudControllerMock.usageEvents.requests(2)).to.include({
+        expect(cloudControllerMock.usageEvents.request(2)).to.include({
           token: fixture.oauth.cfAdminToken,
           afterGuid: secondEventGuid
         });
-        expect(cloudControllerMock.usageEvents.requests(3)).to.include({
+        expect(cloudControllerMock.usageEvents.request(3)).to.include({
           token: fixture.oauth.cfAdminToken,
           afterGuid: secondEventGuid
         });
@@ -100,18 +97,18 @@ const build = () => {
 
       context('verify abacus collector', () => {
         it('expect two requests to be made to abacus collector', () => {
-          expect(externalSystemsMocks.abacusCollector.collectUsageService.requestsCount()).to.equal(2);
+          expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(2);
         });
 
         it('verify first request', () => {
-          expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(0)).to.deep.equal({
+          expect(externalSystemsMocks.abacusCollector.collectUsageService.request(0)).to.deep.equal({
             token: fixture.oauth.abacusCollectorToken,
             usage: fixture.collectorUsage(firstUsageEventTimestamp)
           });
         });
 
         it('verify second request', () => {
-          expect(externalSystemsMocks.abacusCollector.collectUsageService.requests(1)).to.deep.equal({
+          expect(externalSystemsMocks.abacusCollector.collectUsageService.request(1)).to.deep.equal({
             token: fixture.oauth.abacusCollectorToken,
             usage: fixture.collectorUsage(secondUsageEventTimestamp)
           });
@@ -188,10 +185,6 @@ const testDef = {
     fixture = value;
     return testDef;
   },
-  before: (value) => {
-    customBefore = value;
-    return testDef;
-  },
   customTests:  (value) => {
     customTests = value;
     return testDef;
@@ -202,5 +195,4 @@ const testDef = {
 module.exports = testDef;
 
 // Why services bridge posts to 'batch' endpoint, but application not ?????
-// return.always -> always.return
 // review package.json
