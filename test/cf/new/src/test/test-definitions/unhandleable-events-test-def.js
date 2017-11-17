@@ -8,6 +8,7 @@ const request = require('abacus-request');
 
 const carryOverDb = require('./utils/carry-over-db');
 const createTokenFactory = require('./utils/token-factory');
+const serviceMock = require('./utils/service-mock-util');
 const wait = require('./utils/wait');
 
 let fixture;
@@ -46,9 +47,8 @@ const build = () => {
 
       fixture.bridge.start(externalSystemsMocks);
 
-      wait.until(() => {
-        return externalSystemsMocks.cloudController.usageEvents.requests().length >= 2;
-      }, done);
+      wait.until(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(2), done);
+
     });
 
     after((done) => {

@@ -3,7 +3,7 @@
 
 const moment = require('abacus-moment');
 
-module.exports = function *(startMinutesAgo) {
+module.exports = function *(startMinutesAgo = 0) {
   const now = moment.now();
   let currentEventTimestamp = moment
     .utc(now)

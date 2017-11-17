@@ -1,13 +1,18 @@
 'use strict';
 
 const omit = require('underscore').omit;
+const extend = require('underscore').extend;
 
 const dbClient = require('abacus-dbclient');
 const moment = require('abacus-moment');
+const npm = require('abacus-npm');
 const partition = require('abacus-partition');
 const seqid = require('abacus-seqid');
 const urienv = require('abacus-urienv');
 const yieldable = require('abacus-yieldable');
+
+const wait = require('./wait');
+
 
 const checkKeyPart = partition.partitioner(partition.bucket,
   partition.period, partition.forward, partition.balance, true);
@@ -19,6 +24,9 @@ const uris = urienv({
 
 const db = dbClient(checkKeyPart, dbClient.dburi(uris[dbalias], 'abacus-carry-over'));
 const getAllDocs = yieldable(db.allDocs);
+const putDoc = yieldable(db.put);
+const drop = yieldable(dbClient.drop);
+const waitUntil = yieldable(wait.until);
 
 const readCurrentMonthDocs = function *(cb) {
 
@@ -34,5 +42,33 @@ const readCurrentMonthDocs = function *(cb) {
   return docs;
 };
 
+const put = function *(doc) {
+  yield putDoc(extend({}, doc, {
+    _id: dbClient.tkuri('testKey', doc.timestamp)
+  }));
+};
+
+const isAvailable = function *() {
+  try {
+    yield readCurrentMonthDocs();
+    return true;
+  }
+  catch(error) {
+    return false;
+  }
+};
+
+const setup = function *() {
+  const startModules = yieldable(npm.startModules);
+
+  if (!process.env.DB)
+    yield startModules([npm.modules.pouchserver]);
+  else
+    yield drop(process.env.DB, /^abacus-/);
+
+  yield waitUntil(yieldable.functioncb(isAvailable));
+};
 
 module.exports.readCurrentMonthDocs = readCurrentMonthDocs;
+module.exports.put = put;
+module.exports.setup = setup;

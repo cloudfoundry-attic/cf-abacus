@@ -26,7 +26,7 @@ module.exports = () => {
   const returns = [];
   const requests = [];
 
-  const start = () => {
+  const start = (cb) => {
     app = express();
 
     let address;
@@ -55,8 +55,6 @@ module.exports = () => {
 
     server = app.listen(randomPort);
     address = server.address();
-
-    return address;
   };
 
   const stop = (cb) => {

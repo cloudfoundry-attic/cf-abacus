@@ -3,7 +3,7 @@
 const npm = require('abacus-npm');
 
 const createAbacusCollectorMock = require('../server-mocks/abacus-collector-mock');
-const createCloudControllerMock = require('../server-mocks/services-cloud-collector-mock');
+const createCloudControllerMock = require('../server-mocks/services-cloud-controller-mock');
 const createUAAServerMock = require('../server-mocks/uaa-server-mock');
 const getExternalSystemsMocks = require('./utils/external-systems')(
   createAbacusCollectorMock,

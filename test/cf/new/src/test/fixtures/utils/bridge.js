@@ -31,11 +31,10 @@ const getEnviornmentVars = (externalSystems) => ({
   GUID_MIN_AGE: env.minimalAgeInMinutes * 60 * 1000
 });
 
-
 module.exports = (config) => ({
   port: config.port,
   env,
-  start: (externalSystemsMocks) => {
+  start: (externalSystemsMocks, done) => {
 
     const bridgeEnv = extend({},
       process.env,

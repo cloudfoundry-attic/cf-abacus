@@ -6,6 +6,7 @@ const httpStatus = require('http-status-codes');
 const request = require('abacus-request');
 
 const createTokenFactory = require('./utils/token-factory');
+const serviceMock = require('./utils/service-mock-util');
 const wait = require('./utils/wait');
 
 let fixture;
@@ -33,9 +34,7 @@ const build = () => {
 
       fixture.bridge.start(externalSystemsMocks);
 
-      wait.until(() => {
-        return externalSystemsMocks.cloudController.usageEvents.requests().length >= 1;
-      }, done);
+      wait.until(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(1), done);
     });
 
     after((done) => {
