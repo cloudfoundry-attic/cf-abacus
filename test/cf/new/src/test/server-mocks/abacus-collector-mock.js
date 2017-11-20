@@ -76,7 +76,7 @@ module.exports = () => {
       const response = getUsageServiceData.return.always
         || getUsageServiceData.return.perRequest[getUsageServiceData.requests.length - 1];
       debug('[v1/metering/collected/usage/:usage_id] response: %j', response);
-      res.status(response.code).send(response.body);
+      res.status(response.statusCode).send(response.body);
     });
 
     app.use(router.batch(routes));
@@ -105,7 +105,6 @@ module.exports = () => {
       }
     },
     getUsageService: {
-      resourceLocation,
       request: (n) => getUsageServiceData.requests[n],
       requests: (n) => getUsageServiceData.requests,
       return: {

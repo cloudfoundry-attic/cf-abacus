@@ -8,7 +8,6 @@ const scheduleInterval = 1000;
 const until = (check, cb) => {
   const checkCallbackFn = yieldable.functioncb(check);
   checkCallbackFn((err, result) => {
-    console.log('>>', err, result);
     if (err || !result)
       setTimeout(() => until(check, cb), scheduleInterval);
     else

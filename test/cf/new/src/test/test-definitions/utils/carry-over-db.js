@@ -27,6 +27,7 @@ const getAllDocs = yieldable(db.allDocs);
 const putDoc = yieldable(db.put);
 const drop = yieldable(dbClient.drop);
 const waitUntil = yieldable(wait.until);
+const startModules = yieldable(npm.startModules);
 
 const readCurrentMonthDocs = function *(cb) {
 
@@ -48,7 +49,7 @@ const put = function *(doc) {
   }));
 };
 
-const isAvailable = function *() {
+const isDbAvailable = function *() {
   try {
     yield readCurrentMonthDocs();
     return true;
@@ -59,14 +60,12 @@ const isAvailable = function *() {
 };
 
 const setup = function *() {
-  const startModules = yieldable(npm.startModules);
-
   if (!process.env.DB)
     yield startModules([npm.modules.pouchserver]);
   else
     yield drop(process.env.DB, /^abacus-/);
 
-  yield waitUntil(yieldable.functioncb(isAvailable));
+  yield waitUntil(isDbAvailable);
 };
 
 module.exports.readCurrentMonthDocs = readCurrentMonthDocs;
