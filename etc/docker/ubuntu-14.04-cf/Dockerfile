@@ -13,4 +13,3 @@ RUN gem install cf-uaac --no-ri --no-rdoc
 
 WORKDIR /usr/bin
 RUN curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx
-
