@@ -3,9 +3,6 @@
 const async = require('async');
 const httpStatus = require('http-status-codes');
 
-const request = require('abacus-request');
-
-const createTokenFactory = require('./utils/token-factory');
 const serviceMock = require('./utils/service-mock-util');
 const wait = require('./utils/wait');
 
@@ -44,29 +41,18 @@ const build = () => {
       ], done);
     });
 
-    context('with NO token', () => {
+    context('With NO token', () => {
       it('UNAUTHORIZED is returned', (done) => {
-        request.get('http://localhost::port/v1/stats', {
-          port: fixture.bridge.port
-        }, (error, response) => {
-          console.log(error);
+        fixture.bridge.readStats.withoutToken((err, response) => {
           expect(response.statusCode).to.equal(httpStatus.UNAUTHORIZED);
           done();
         });
       });
     });
 
-    context('with token with NO required scopes', () => {
+    context('With token without required scopes', () => {
       it('FORBIDDEN is returned', (done) => {
-        console.log(fixture.env.tokenSecret);
-        const tokenFactory = createTokenFactory(fixture.env.tokenSecret);
-        const signedToken = tokenFactory.create(['abacus.usage.invalid']);
-        request.get('http://localhost::port/v1/stats', {
-          port: fixture.bridge.port,
-          headers: {
-            authorization: `Bearer ${signedToken}`
-          }
-        }, (error, response) => {
+        fixture.bridge.readStats.withMissingScope((err, response) => {
           expect(response.statusCode).to.equal(httpStatus.FORBIDDEN);
           done();
         });

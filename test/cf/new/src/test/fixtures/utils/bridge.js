@@ -2,7 +2,9 @@
 
 const extend = require('underscore').extend;
 
+const request = require('abacus-request');
 const npm = require('abacus-npm');
+const createTokenFactory = require('../../test-definitions/utils/token-factory');
 
 const env = {
   tokenSecret: 'secret',
@@ -31,9 +33,42 @@ const getEnviornmentVars = (externalSystems) => ({
   GUID_MIN_AGE: env.minimalAgeInMinutes * 60 * 1000
 });
 
+const readStats = (config, cb) => {
+  const headers = config.token ? {
+    authorization: `Bearer ${config.token}`
+  } : undefined;
+
+  request.get('http://localhost::port/v1/stats', {
+    port: config.port,
+    headers
+  }, cb);
+};
+
 module.exports = (config) => ({
-  port: config.port,
   env,
+  readStats: {
+    withValidToken: (cb) => {
+      const tokenFactory = createTokenFactory(env.tokenSecret);
+      const signedToken = tokenFactory.create(['abacus.usage.read']);
+      readStats({
+        port: config.port,
+        token: signedToken
+      }, cb);
+    },
+    withMissingScope: (cb) => {
+      const tokenFactory = createTokenFactory(env.tokenSecret);
+      const signedToken = tokenFactory.create([]);
+      readStats({
+        port: config.port,
+        token: signedToken
+      }, cb);
+    },
+    withoutToken: (cb) => {
+      readStats({
+        port: config.port
+      }, cb);
+    }
+  },
   start: (externalSystemsMocks, done) => {
 
     const bridgeEnv = extend({},

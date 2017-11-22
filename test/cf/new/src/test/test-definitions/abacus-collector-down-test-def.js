@@ -4,9 +4,6 @@ const async = require('async');
 const httpStatus = require('http-status-codes');
 const _ = require('underscore');
 
-const request = require('abacus-request');
-
-const createTokenFactory = require('./utils/token-factory');
 const serviceMock = require('./utils/service-mock-util');
 const wait = require('./utils/wait');
 
@@ -61,48 +58,36 @@ const build = () => {
       ], done);
     });
 
-    context('verify cloud controller', () => {
+    it('Service Usage Events receive correct requests ', () => {
+      const verifyServiceUsageEventsAfterGuid = (requestNumber, afterGuid) => {
+        expect(externalSystemsMocks.cloudController
+          .usageEvents
+          .request(requestNumber)
+          .afterGuid).to.equal(
+          afterGuid
+        );
+      };
 
-      it('verify Service Usage Events service calls ', () => {
-        const verifyServiceUsageEventsAfterGuid = (requestNumber, afterGuid) => {
-          expect(externalSystemsMocks.cloudController
-            .usageEvents
-            .request(requestNumber)
-            .afterGuid).to.equal(
-            afterGuid
-          );
-        };
-
-        verifyServiceUsageEventsAfterGuid(0, undefined);
-        verifyServiceUsageEventsAfterGuid(1, undefined);
-        verifyServiceUsageEventsAfterGuid(2, usageEventMetadata.guid);
-      });
+      verifyServiceUsageEventsAfterGuid(0, undefined);
+      verifyServiceUsageEventsAfterGuid(1, undefined);
+      verifyServiceUsageEventsAfterGuid(2, usageEventMetadata.guid);
     });
 
-    context('verify abacus collector', () => {
-      it('expect all requests are the same', () => {
-        // retryCount+1 failing requests, and one successful.
-        const expecedRequestsCount = fixture.env.retryCount + 2;
-        const expectedRequests = _(expecedRequestsCount).times(() => ({
-          token: fixture.oauth.abacusCollectorToken,
-          usage: fixture.collectorUsage(usageEventMetadata.created_at)
-        }));
+    it('Abacus Collector receives the same requests', () => {
+      // retryCount+1 failing requests, and one successful.
+      const expecedRequestsCount = fixture.env.retryCount + 2;
+      const expectedRequests = _(expecedRequestsCount).times(() => ({
+        token: fixture.oauth.abacusCollectorToken,
+        usage: fixture.collectorUsage(usageEventMetadata.created_at)
+      }));
 
-        expect(externalSystemsMocks.abacusCollector.collectUsageService.requests())
-          .to.deep.equal(expectedRequests);
-      });
-
+      expect(externalSystemsMocks.abacusCollector.collectUsageService.requests())
+        .to.deep.equal(expectedRequests);
     });
 
-    it('verify correct statistics are returned', (done) => {
-      const tokenFactory = createTokenFactory(fixture.env.tokenSecret);
-      const signedToken = tokenFactory.create(['abacus.usage.read']);
-      request.get('http://localhost::port/v1/stats', {
-        port: fixture.bridge.port,
-        headers: {
-          authorization: `Bearer ${signedToken}`
-        }
-      }, (error, response) => {
+
+    it('Exposes correct statistics', (done) => {
+      fixture.bridge.readStats.withValidToken((err, response) => {
         expect(response.statusCode).to.equal(httpStatus.OK);
         expect(response.body.statistics.usage).to.deep.equal({
           success : {
@@ -113,7 +98,7 @@ const build = () => {
           failures : 1
         });
 
-        done();
+        done(err);
       });
     });
 

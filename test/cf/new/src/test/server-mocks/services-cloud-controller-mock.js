@@ -55,12 +55,6 @@ module.exports = () => {
     requests: []
   };
 
-  const stubCloudControllerServices = (fixture) => {
-    fixture.getExternalSystemsMocks().cloudController.serviceGuids.return.always({
-      [fixture.defaultUsageEvent.serviceLabel]: fixture.defaultUsageEvent.serviceGuid
-    });
-  };
-
   const start = () => {
     app = express();
 

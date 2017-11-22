@@ -32,9 +32,10 @@ const startModules = yieldable(npm.startModules);
 const readCurrentMonthDocs = function *(cb) {
 
   const monthStart = moment.utc(moment.now()).startOf('month').valueOf();
+  const monthEnd = moment.utc(moment.now()).endOf('month').valueOf();
   const result = yield getAllDocs({
-    startkey: 't/' + seqid.pad16(moment.utc(monthStart).subtract(1, 'days').valueOf()),
-    endkey: 't/' + seqid.pad16(moment.utc(monthStart).add(1, 'days').valueOf()),
+    startkey: 't/' + seqid.pad16(monthStart),
+    endkey: 't/' + seqid.pad16(monthEnd),
     descending: false,
     include_docs: true
   });
@@ -45,7 +46,7 @@ const readCurrentMonthDocs = function *(cb) {
 
 const put = function *(doc) {
   yield putDoc(extend({}, doc, {
-    _id: dbClient.tkuri('testKey', doc.timestamp)
+    _id: dbClient.tkuri(doc.event_guid, doc.timestamp)
   }));
 };
 

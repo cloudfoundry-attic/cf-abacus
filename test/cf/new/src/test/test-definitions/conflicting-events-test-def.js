@@ -3,18 +3,16 @@
 const async = require('async');
 const httpStatus = require('http-status-codes');
 
-const request = require('abacus-request');
 const yieldable = require('abacus-yieldable');
 
 const carryOverDb = require('./utils/carry-over-db');
-const createTokenFactory = require('./utils/token-factory');
 const serviceMock = require('./utils/service-mock-util');
 const wait = require('./utils/wait');
 
 let fixture;
 
 const build = () => {
-  context('when send usage conflicts', () => {
+  context('when bridge sends conflicting usage documents', () => {
     let externalSystemsMocks;
 
     before((done) => {
@@ -55,26 +53,17 @@ const build = () => {
     });
 
 
-    it('expect abacus collector received the conflicting usage', () => {
+    it('Abacus collector received the conflicting usage', () => {
       expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(1);
     });
 
-    it('expect carry-over is empty', (done) => yieldable.functioncb(function *() {
+    it('Does not write entry in carry-over', yieldable.functioncb(function *() {
       const docs = yield carryOverDb.readCurrentMonthDocs();
       expect(docs).to.deep.equal([]);
-    })((err) => {
-      done(err);
     }));
 
-    it('expect conflict statistics are returned', (done) => {
-      const tokenFactory = createTokenFactory(fixture.env.tokenSecret);
-      const signedToken = tokenFactory.create(['abacus.usage.read']);
-      request.get('http://localhost::port/v1/stats', {
-        port: fixture.bridge.port,
-        headers: {
-          authorization: `Bearer ${signedToken}`
-        }
-      }, (error, response) => {
+    it('Exposes correct statistics', (done) => {
+      fixture.bridge.readStats.withValidToken((err, response) => {
         expect(response.statusCode).to.equal(httpStatus.OK);
         expect(response.body.statistics.usage).to.deep.equal({
           success : {
@@ -84,7 +73,7 @@ const build = () => {
           },
           failures : 0
         });
-        done();
+        done(err);
       });
     });
 

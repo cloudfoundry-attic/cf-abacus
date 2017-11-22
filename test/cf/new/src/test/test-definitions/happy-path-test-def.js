@@ -4,11 +4,9 @@ const async = require('async');
 const httpStatus = require('http-status-codes');
 const _ = require('underscore');
 
-const request = require('abacus-request');
 const yieldable = require('abacus-yieldable');
 
 const carryOverDb = require('./utils/carry-over-db');
-const createTokenFactory = require('./utils/token-factory');
 const serviceMock = require('./utils/service-mock-util');
 const wait = require('./utils/wait');
 
@@ -73,7 +71,7 @@ const build = () => {
 
     context('Bridge generic tests', () => {
 
-      it('verify Usage Events service calls ', () => {
+      it('Usage Events Service is called with correct arguments', () => {
         const cloudControllerMock = externalSystemsMocks.cloudController;
 
         expect(cloudControllerMock.usageEvents.request(0)).to.include({
@@ -94,31 +92,21 @@ const build = () => {
         });
       });
 
-      context('verify abacus collector', () => {
-        it('expect two requests to be made to abacus collector', () => {
-          expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(2);
+      it('Collect Usage Service is called with correct arguments', () => {
+        expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(2);
+        expect(externalSystemsMocks.abacusCollector.collectUsageService.request(0)).to.deep.equal({
+          token: fixture.oauth.abacusCollectorToken,
+          usage: fixture.collectorUsage(firstUsageEventTimestamp)
         });
-
-        it('verify first request', () => {
-          expect(externalSystemsMocks.abacusCollector.collectUsageService.request(0)).to.deep.equal({
-            token: fixture.oauth.abacusCollectorToken,
-            usage: fixture.collectorUsage(firstUsageEventTimestamp)
-          });
+        expect(externalSystemsMocks.abacusCollector.collectUsageService.request(1)).to.deep.equal({
+          token: fixture.oauth.abacusCollectorToken,
+          usage: fixture.collectorUsage(secondUsageEventTimestamp)
         });
-
-        it('verify second request', () => {
-          expect(externalSystemsMocks.abacusCollector.collectUsageService.request(1)).to.deep.equal({
-            token: fixture.oauth.abacusCollectorToken,
-            usage: fixture.collectorUsage(secondUsageEventTimestamp)
-          });
-        });
-
       });
 
-      it('verify UAA calls', () => {
+      it('Get OAuth Token Service is called with correct arguments', () => {
         const uaaServerMock = externalSystemsMocks.uaaServer;
         // Expect 2 calls for every token (abacus and cfadmin) per Worker and Master processes
-        // TODO: check this!!!
         expect(uaaServerMock.tokenService.requestsCount()).to.equal(4);
 
         const abacusCollectorTokenRequests = uaaServerMock.tokenService.requests.withScopes(fixture.oauth.abacusCollectorScopes);
@@ -140,26 +128,17 @@ const build = () => {
         })));
       });
 
-      it('verify carry-over content', (done) => yieldable.functioncb(function *() {
+      it('Writes an entry in carry-over', yieldable.functioncb(function *() {
         const docs = yield carryOverDb.readCurrentMonthDocs();
         expect(docs).to.deep.equal([{
           collector_id: externalSystemsMocks.abacusCollector.collectUsageService.resourceLocation,
           event_guid: secondEventGuid,
           state: fixture.defaultUsageEvent.state,
           timestamp: secondUsageEventTimestamp }]);
-      })((err) => {
-        done(err);
       }));
 
-      it('verify correct statistics are returned', (done) => {
-        const tokenFactory = createTokenFactory(fixture.env.tokenSecret);
-        const signedToken = tokenFactory.create(['abacus.usage.read']);
-        request.get('http://localhost::port/v1/stats', {
-          port: fixture.bridge.port,
-          headers: {
-            authorization: `Bearer ${signedToken}`
-          }
-        }, (error, response) => {
+      it('Exposes correct statistics', (done) => {
+        fixture.bridge.readStats.withValidToken((err, response) => {
           expect(response.statusCode).to.equal(httpStatus.OK);
           expect(response.body.statistics.usage).to.deep.equal({
             success : {
@@ -169,7 +148,7 @@ const build = () => {
             },
             failures : 0
           });
-          done();
+          done(err);
         });
       });
 

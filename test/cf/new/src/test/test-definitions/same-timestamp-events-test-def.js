@@ -4,9 +4,7 @@ const async = require('async');
 const httpStatus = require('http-status-codes');
 
 const moment = require('abacus-moment');
-const request = require('abacus-request');
 
-const createTokenFactory = require('./utils/token-factory');
 const serviceMock = require('./utils/service-mock-util');
 const wait = require('./utils/wait');
 
@@ -67,31 +65,24 @@ const build = () => {
       ], done);
     });
 
-    context('when verifing abacus collector', () => {
-      it('expect two usages to be send to abacus collector', () => {
+    context('When abacus collector is called', () => {
+      it('Two usages are sent', () => {
         expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(2);
       });
 
-      it('expect first recieved usage to be as it is', () => {
+      it('First recieved usage is as it was sent', () => {
         expect(externalSystemsMocks.abacusCollector.collectUsageService.request(0).usage)
           .to.deep.equal(fixture.collectorUsage(usageEventsTimestamp));
       });
 
-      it('expect second recieved usage timestamp to be adjusted', () => {
+      it('Second recieved usage timestamp is adjusted', () => {
         expect(externalSystemsMocks.abacusCollector.collectUsageService.request(1).usage)
           .to.deep.equal(fixture.collectorUsage(usageEventsTimestamp + 1));
       });
     });
 
-    it('expect statistics with all events successfully processed', (done) => {
-      const tokenFactory = createTokenFactory(fixture.env.tokenSecret);
-      const signedToken = tokenFactory.create(['abacus.usage.read']);
-      request.get('http://localhost::port/v1/stats', {
-        port: fixture.bridge.port,
-        headers: {
-          authorization: `Bearer ${signedToken}`
-        }
-      }, (error, response) => {
+    it('Exposes correct statistics', (done) => {
+      fixture.bridge.readStats.withValidToken((err, response) => {
         expect(response.statusCode).to.equal(httpStatus.OK);
         expect(response.body.statistics.usage).to.deep.equal({
           success : {
@@ -101,14 +92,12 @@ const build = () => {
           },
           failures : 0
         });
-        done();
+        done(err);
       });
     });
 
   });
-
 };
-
 
 const testDef = {
   fixture: (value) => {
