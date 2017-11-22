@@ -224,6 +224,4 @@ describe('renewer standard flow', () => {
     });
   });
 
-  // abacus collector down???
-
 });

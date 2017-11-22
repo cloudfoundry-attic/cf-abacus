@@ -66,7 +66,7 @@ module.exports = () => {
 
 
     routes.get('/v1/metering/collected/usage/:usage_id', (req, res) => {
-      debug('[v1/metering/collected/usage/:usage_id] called - usage_id: %s', req.params.usage_id);
+      debug('[v1/metering/collected/usage/%s] was called', req.params.usage_id);
 
       getUsageServiceData.requests.push({
         token: extractOAuthToken(req.header('Authorization')),
