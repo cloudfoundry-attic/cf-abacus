@@ -20,13 +20,10 @@ const wait = require('./test-definitions/utils/wait');
 const createAbacusCollectorMock = require('./server-mocks/abacus-collector-mock');
 const createUAAServerMock = require('./server-mocks/uaa-server-mock');
 
-const abacusCollectorScopes = ['abacus.usage.write', 'abacus.usage.read'];
-const abacusCollectorToken = 'abacus-collector-token';
-
 const waitUntil = yieldable(wait.until);
 
 const now = moment.now();
-const eventTimestamp = moment
+const endOfLastMonth = moment
   .utc(now)
   .subtract(1, 'month')
   .endOf('month')
@@ -36,7 +33,7 @@ const carryOverDoc = {
   collector_id: 1,
   event_guid: 'event-guid-1',
   state: 'STARTED',
-  timestamp: eventTimestamp
+  timestamp: endOfLastMonth
 };
 
 describe('when renewer sends conflicting documents', () => {
@@ -49,8 +46,8 @@ describe('when renewer sends conflicting documents', () => {
 
     uaaServerMock
       .tokenService
-      .whenScopes(abacusCollectorScopes)
-      .return(abacusCollectorToken);
+      .whenScopes(fixture.abacusCollectorScopes)
+      .return(fixture.abacusCollectorToken);
 
     abacusCollectorMock
       .getUsageService
@@ -58,7 +55,7 @@ describe('when renewer sends conflicting documents', () => {
       .always({
         statusCode: 200,
         body: fixture.usage.create()
-          .withTimestamp(eventTimestamp)
+          .withTimestamp(endOfLastMonth)
           .withCurrentInstances(2)
           .withPreviousInstances(1)
           .build()

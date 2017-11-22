@@ -1,5 +1,8 @@
 'use strict';
 
+const abacusCollectorScopes = ['abacus.usage.write', 'abacus.usage.read'];
+const abacusCollectorToken = 'abacus-collector-token';
+
 const createUsage = () => {
   let timestamp;
   let currentInstances;
@@ -80,6 +83,8 @@ const modifyUsage = (usage) => {
 };
 
 module.exports = {
+  abacusCollectorScopes,
+  abacusCollectorToken,
   usage: {
     create: createUsage,
     modify: modifyUsage

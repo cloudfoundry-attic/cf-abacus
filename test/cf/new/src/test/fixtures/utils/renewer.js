@@ -29,6 +29,11 @@ const isLastHourOfCurrentMonth = () =>
   now <= moment.utc(now).endOf('month').valueOf();
 
 
+// Use value larger the months' length in order to force renewer to start
+// independently of current date (renewer starts working only if current date
+// is before "start of month + slack")
+const slack = '32D';
+
 const getEnviornmentVars = (abacusCollector, uaaServer) => ({
   ABACUS_CLIENT_ID: env.abacusClientId,
   ABACUS_CLIENT_SECRET: env.abacusClientSecret,
@@ -38,7 +43,8 @@ const getEnviornmentVars = (abacusCollector, uaaServer) => ({
   JWTKEY : env.tokenSecret,
   JWTALGO : env.tokenAlgorithm,
   RETRIES: env.retryCount,
-  ABACUS_TIME_OFFSET: isLastHourOfCurrentMonth() ? -hourInMillis : 0
+  ABACUS_TIME_OFFSET: isLastHourOfCurrentMonth() ? -hourInMillis : 0,
+  SLACK: slack
 });
 
 const readStats = (cb) => {

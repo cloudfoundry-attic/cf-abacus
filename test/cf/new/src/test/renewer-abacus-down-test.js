@@ -21,13 +21,10 @@ const wait = require('./test-definitions/utils/wait');
 const createAbacusCollectorMock = require('./server-mocks/abacus-collector-mock');
 const createUAAServerMock = require('./server-mocks/uaa-server-mock');
 
-const abacusCollectorScopes = ['abacus.usage.write', 'abacus.usage.read'];
-const abacusCollectorToken = 'abacus-collector-token';
-
 const waitUntil = yieldable(wait.until);
 
 const now = moment.now();
-const eventTimestamp = moment
+const endOfLasMonth = moment
   .utc(now)
   .subtract(1, 'month')
   .endOf('month')
@@ -37,7 +34,7 @@ const carryOverDoc = {
   collector_id: 1,
   event_guid: 'event-guid-1',
   state: 'STARTED',
-  timestamp: eventTimestamp
+  timestamp: endOfLasMonth
 };
 
 describe('when renewer sends usage, but abacus is down', () => {
@@ -50,8 +47,8 @@ describe('when renewer sends usage, but abacus is down', () => {
 
     uaaServerMock
       .tokenService
-      .whenScopes(abacusCollectorScopes)
-      .return(abacusCollectorToken);
+      .whenScopes(fixture.abacusCollectorScopes)
+      .return(fixture.abacusCollectorToken);
 
     abacusCollectorMock
       .getUsageService
@@ -59,7 +56,7 @@ describe('when renewer sends usage, but abacus is down', () => {
       .always({
         statusCode: 200,
         body: fixture.usage.create()
-          .withTimestamp(eventTimestamp)
+          .withTimestamp(endOfLasMonth)
           .withCurrentInstances(2)
           .withPreviousInstances(1)
           .build()
@@ -74,8 +71,8 @@ describe('when renewer sends usage, but abacus is down', () => {
     yield carryOverDb.put(carryOverDoc);
     renewer.start(abacusCollectorMock, uaaServerMock);
 
-    // Event reporter (abacus-client) will retry 'fixture.env.retryCount'
-    // times to report usage to abacus.
+    // Event reporter (abacus-client) will retry 'fixture.env.retryCount' + 1
+    // times to report usage to abacus. After that it will give up.
     yield waitUntil(
       serviceMock(
         abacusCollectorMock.collectUsageService

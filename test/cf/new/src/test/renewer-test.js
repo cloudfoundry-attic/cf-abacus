@@ -21,27 +21,20 @@ const wait = require('./test-definitions/utils/wait');
 const createAbacusCollectorMock = require('./server-mocks/abacus-collector-mock');
 const createUAAServerMock = require('./server-mocks/uaa-server-mock');
 
-
-const abacusCollectorScopes = ['abacus.usage.write', 'abacus.usage.read'];
-const abacusCollectorToken = 'abacus-collector-token';
-
 const waitUntil = yieldable(wait.until);
 
 const now = moment.now();
 const startOfCurrentMonth = moment.utc(now).startOf('month').valueOf();
-
 const startOfLastMonth = moment
   .utc(now)
   .subtract(1, 'month')
   .startOf('month')
   .valueOf();
-
 const endOfLastMonth = moment
   .utc(now)
   .subtract(1, 'month')
   .endOf('month')
   .valueOf();
-
 const middleOfLastMonth = Math.floor((startOfLastMonth + endOfLastMonth) / 2);
 
 const outOfSlackCarryOverDoc = {
@@ -50,28 +43,24 @@ const outOfSlackCarryOverDoc = {
   state: 'STARTED',
   timestamp: moment.utc(startOfLastMonth).subtract(100, 'days').valueOf()
 };
-
 const unsupportedCarryOverDoc = {
   collector_id: 1,
   event_guid: 'event-guid-1',
-  state: 'UNSUPPORTED',
+  state: 'DELETED',
   timestamp: middleOfLastMonth
 };
-
 const startOfLastMonthCarryOverDoc = {
   collector_id: 3,
   event_guid: 'event-guid-3',
   state: 'STARTED',
   timestamp: startOfLastMonth
 };
-
 const middleOfLastMonthCarryOverDoc = {
   collector_id: 4,
   event_guid: 'event-guid-4',
   state: 'CREATED',
   timestamp: middleOfLastMonth
 };
-
 const endOfLastMonthCarryOverDoc = {
   collector_id: 5,
   event_guid: 'event-guid-5',
@@ -109,8 +98,8 @@ describe('renewer standard flow', () => {
 
     uaaServerMock
       .tokenService
-      .whenScopes(abacusCollectorScopes)
-      .return(abacusCollectorToken);
+      .whenScopes(fixture.abacusCollectorScopes)
+      .return(fixture.abacusCollectorToken);
 
     abacusCollectorMock
       .getUsageService
