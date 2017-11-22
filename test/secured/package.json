@@ -29,11 +29,11 @@
   },
   "devDependencies": {
     "abacus-debug": "file:../../lib/utils/debug",
+    "abacus-eureka": "file:../../lib/utils/eureka",
     "abacus-eslint": "file:../../tools/eslint",
-    "abacus-eureka": "file:../../utils/eureka",
-    "abacus-npm": "file:../../lib/npm",
-    "abacus-publish": "file:../../tools/publish",
     "abacus-mocha": "file:../../tools/mocha",
+    "abacus-npm": "file:../lib/npm",
+    "abacus-publish": "file:../../tools/publish",
     "underscore": "^1.8.3",
     "commander": "2.8.1"
   },

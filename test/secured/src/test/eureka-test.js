@@ -65,13 +65,18 @@ describe('eureka', function() {
     npm.stopAllStarted(done);
   });
 
+  const checkInstance = (app, uri, expectToBeFound, done) => {
+    eureka.instance(eureka.server(), app, uri, (err, instance) => {
+      if (expectToBeFound)
+        expect(instance.app).to.equal(app.toUpperCase());
+      else
+        expect(instance).to.equal(undefined);
+      done(err);
+    });
+  };
+
   it('has authserver registered', (done) => {
-    eureka.instance(eureka.server(), 'abacus-authserver-plugin', 'localhost',
-      (err, instance) => {
-        console.log('>>>', err, instance);
-        expect(instance.app).to.equal('ABACUS-AUTHSERVER-PLUGIN');
-        done(err);
-      });
+    checkInstance('abacus-authserver-plugin', 'localhost', true, done);
   });
 
   it('registers an apps', (done) => {
@@ -82,4 +87,14 @@ describe('eureka', function() {
         done();
       });
   });
+
+  it('deregisters an apps', (done) => {
+    eureka.deregister(eureka.server(), 'test', '127.0.0.1', (err, response) => {
+      expect(err).to.equal(undefined);
+      expect(response.statusCode).to.equal(200);
+
+      checkInstance('test', 'localhost', false, done);
+    });
+  });
+
 });
