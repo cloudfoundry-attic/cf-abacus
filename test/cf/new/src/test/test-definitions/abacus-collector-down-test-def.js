@@ -1,11 +1,15 @@
 'use strict';
 
-const async = require('async');
 const httpStatus = require('http-status-codes');
 const _ = require('underscore');
 
+const yieldable = require('abacus-yieldable');
+
+const carryOverDb = require('./utils/carry-over-db');
 const serviceMock = require('./utils/service-mock-util');
 const wait = require('./utils/wait');
+
+const waitUntil = yieldable(wait.until);
 
 let fixture;
 
@@ -15,7 +19,7 @@ const build = () => {
     let externalSystemsMocks;
     let usageEventMetadata;
 
-    before((done) => {
+    before(yieldable.functioncb(function *() {
       externalSystemsMocks = fixture.getExternalSystemsMocks();
       externalSystemsMocks.startAll();
 
@@ -46,16 +50,16 @@ const build = () => {
       responses.push(httpStatus.CREATED);
       externalSystemsMocks.abacusCollector.collectUsageService.return.series(responses);
 
+      yield carryOverDb.setup();
       fixture.bridge.start(externalSystemsMocks);
 
-      wait.until(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(3), done);
-    });
+      yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(3));
+    }));
 
     after((done) => {
-      async.parallel([
-        fixture.bridge.stop,
-        externalSystemsMocks.stopAll
-      ], done);
+      fixture.bridge.stop();
+      carryOverDb.teardown();
+      externalSystemsMocks.stopAll(done);
     });
 
     it('Service Usage Events receive correct requests ', () => {

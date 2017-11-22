@@ -23,7 +23,6 @@ const createUAAServerMock = require('./server-mocks/uaa-server-mock');
 const abacusCollectorScopes = ['abacus.usage.write', 'abacus.usage.read'];
 const abacusCollectorToken = 'abacus-collector-token';
 
-const startRenewer = yieldable(renewer.start);
 const waitUntil = yieldable(wait.until);
 
 const now = moment.now();
@@ -75,14 +74,15 @@ describe('when renewer sends conflicting documents', () => {
 
     yield carryOverDb.setup();
     yield carryOverDb.put(carryOverDoc);
-    yield startRenewer(abacusCollectorMock, uaaServerMock);
+    renewer.start(abacusCollectorMock, uaaServerMock);
 
     yield waitUntil(serviceMock(abacusCollectorMock.collectUsageService).received(1));
   }));
 
   after((done) => {
+    renewer.stop();
+    carryOverDb.teardown();
     async.parallel([
-      renewer.stop,
       uaaServerMock.stop,
       abacusCollectorMock.stop
     ], done);

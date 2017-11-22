@@ -24,7 +24,6 @@ const createUAAServerMock = require('./server-mocks/uaa-server-mock');
 const abacusCollectorScopes = ['abacus.usage.write', 'abacus.usage.read'];
 const abacusCollectorToken = 'abacus-collector-token';
 
-const startRenewer = yieldable(renewer.start);
 const waitUntil = yieldable(wait.until);
 
 const now = moment.now();
@@ -73,7 +72,7 @@ describe('when renewer sends usage, but abacus is down', () => {
 
     yield carryOverDb.setup();
     yield carryOverDb.put(carryOverDoc);
-    yield startRenewer(abacusCollectorMock, uaaServerMock);
+    renewer.start(abacusCollectorMock, uaaServerMock);
 
     // Event reporter (abacus-client) will retry 'fixture.env.retryCount'
     // times to report usage to abacus.
@@ -84,8 +83,9 @@ describe('when renewer sends usage, but abacus is down', () => {
   }));
 
   after((done) => {
+    renewer.stop();
+    carryOverDb.teardown();
     async.parallel([
-      renewer.stop,
       uaaServerMock.stop,
       abacusCollectorMock.stop
     ], done);

@@ -5,7 +5,7 @@ const extend = require('underscore').extend;
 
 const dbClient = require('abacus-dbclient');
 const moment = require('abacus-moment');
-const npm = require('abacus-npm');
+const npm = require('abacus-npm')();
 const partition = require('abacus-partition');
 const seqid = require('abacus-seqid');
 const urienv = require('abacus-urienv');
@@ -27,7 +27,6 @@ const getAllDocs = yieldable(db.allDocs);
 const putDoc = yieldable(db.put);
 const drop = yieldable(dbClient.drop);
 const waitUntil = yieldable(wait.until);
-const startModules = yieldable(npm.startModules);
 
 const readCurrentMonthDocs = function *(cb) {
 
@@ -62,13 +61,19 @@ const isDbAvailable = function *() {
 
 const setup = function *() {
   if (!process.env.DB)
-    yield startModules([npm.modules.pouchserver]);
+    npm.startModules([npm.modules.pouchserver]);
   else
     yield drop(process.env.DB, /^abacus-/);
 
   yield waitUntil(isDbAvailable);
 };
 
+const teardown = () => {
+  if (!process.env.DB)
+    npm.stopAllStarted();
+};
+
 module.exports.readCurrentMonthDocs = readCurrentMonthDocs;
 module.exports.put = put;
 module.exports.setup = setup;
+module.exports.teardown = teardown;

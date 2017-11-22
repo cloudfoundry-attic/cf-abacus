@@ -1,6 +1,6 @@
 'use sterict';
 
-const npm = require('abacus-npm');
+const npm = require('abacus-npm')();
 
 const createAbacusCollectorMock = require('../server-mocks/abacus-collector-mock');
 const createCloudControllerMock = require('../server-mocks/applications-cloud-controller-mock');

@@ -1,12 +1,15 @@
 'use strict';
 
-const async = require('async');
 const httpStatus = require('http-status-codes');
 
 const moment = require('abacus-moment');
+const yieldable = require('abacus-yieldable');
 
+const carryOverDb = require('./utils/carry-over-db');
 const serviceMock = require('./utils/service-mock-util');
 const wait = require('./utils/wait');
+
+const waitUntil = yieldable(wait.until);
 
 let fixture;
 
@@ -16,7 +19,7 @@ const build = () => {
     let externalSystemsMocks;
     let usageEventsTimestamp;
 
-    before((done) => {
+    before(yieldable.functioncb(function *() {
       externalSystemsMocks = fixture.getExternalSystemsMocks();
       externalSystemsMocks.startAll();
 
@@ -53,16 +56,16 @@ const build = () => {
 
       externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
 
+      yield carryOverDb.setup();
       fixture.bridge.start(externalSystemsMocks);
 
-      wait.until(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(2), done);
-    });
+      yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(2));
+    }));
 
     after((done) => {
-      async.parallel([
-        fixture.bridge.stop,
-        externalSystemsMocks.stopAll
-      ], done);
+      fixture.bridge.stop();
+      carryOverDb.teardown();
+      externalSystemsMocks.stopAll(done);
     });
 
     context('When abacus collector is called', () => {

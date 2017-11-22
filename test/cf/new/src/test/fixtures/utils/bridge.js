@@ -3,7 +3,7 @@
 const extend = require('underscore').extend;
 
 const request = require('abacus-request');
-const npm = require('abacus-npm');
+const npm = require('abacus-npm')();
 const createTokenFactory = require('../../test-definitions/utils/token-factory');
 
 const env = {
@@ -69,24 +69,16 @@ module.exports = (config) => ({
       }, cb);
     }
   },
-  start: (externalSystemsMocks, done) => {
-
+  start: (externalSystemsMocks) => {
     const bridgeEnv = extend({},
       process.env,
       getEnviornmentVars(externalSystemsMocks),
       config.customEnv
     );
 
-    if (!process.env.DB)
-      npm
-        .useEnv(bridgeEnv)
-        .startModules([npm.modules.pouchserver, config.bridge]);
-    else
-      dbclient.drop(process.env.DB, /^abacus-/, () => {
-        npm
-          .useEnv(bridgeEnv)
-          .startModules(config.bridge);
-      });
+    npm
+      .useEnv(bridgeEnv)
+      .startModules([config.bridge]);
   },
-  stop: (done) => npm.stopAllStarted(done)
+  stop: npm.stopAllStarted
 });

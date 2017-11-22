@@ -3,7 +3,7 @@
 const { extend } = require('underscore');
 const request = require('abacus-request');
 const moment = require('abacus-moment');
-const npm = require('abacus-npm');
+const npm = require('abacus-npm')();
 const createTokenFactory = require('../../test-definitions/utils/token-factory');
 
 const env = {
@@ -55,7 +55,7 @@ const readStats = (cb) => {
 module.exports = (customEnv) => ({
   env,
   readStats,
-  start: (abacusCollector, uaaServer, done) => {
+  start: (abacusCollector, uaaServer) => {
     const renewerEnv = extend({},
       process.env,
       getEnviornmentVars(abacusCollector, uaaServer),
@@ -63,7 +63,7 @@ module.exports = (customEnv) => ({
     );
     npm
       .useEnv(renewerEnv)
-      .startModules([npm.modules.renewer], done);
+      .startModules([npm.modules.renewer]);
   },
-  stop: (done) => npm.stopAllStarted(done)
+  stop: npm.stopAllStarted
 });

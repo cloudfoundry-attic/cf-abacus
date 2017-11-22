@@ -25,10 +25,7 @@ const createUAAServerMock = require('./server-mocks/uaa-server-mock');
 const abacusCollectorScopes = ['abacus.usage.write', 'abacus.usage.read'];
 const abacusCollectorToken = 'abacus-collector-token';
 
-const startRenewer = yieldable(renewer.start);
 const waitUntil = yieldable(wait.until);
-
-
 
 const now = moment.now();
 const startOfCurrentMonth = moment.utc(now).startOf('month').valueOf();
@@ -143,14 +140,15 @@ describe('renewer standard flow', () => {
     yield carryOverDb.put(startOfLastMonthCarryOverDoc);
     yield carryOverDb.put(middleOfLastMonthCarryOverDoc);
     yield carryOverDb.put(endOfLastMonthCarryOverDoc);
-    yield startRenewer(abacusCollectorMock, uaaServerMock);
+    renewer.start(abacusCollectorMock, uaaServerMock);
 
     yield waitUntil(serviceMock(abacusCollectorMock.collectUsageService).received(3));
   }));
 
   after((done) => {
+    renewer.stop();
+    carryOverDb.teardown();
     async.parallel([
-      renewer.stop,
       uaaServerMock.stop,
       abacusCollectorMock.stop
     ], done);

@@ -1,10 +1,14 @@
 'use strict';
 
-const async = require('async');
 const httpStatus = require('http-status-codes');
 
+const yieldable = require('abacus-yieldable');
+
+const carryOverDb = require('./utils/carry-over-db');
 const serviceMock = require('./utils/service-mock-util');
 const wait = require('./utils/wait');
+
+const waitUntil = yieldable(wait.until);
 
 let fixture;
 
@@ -13,7 +17,7 @@ const build = () => {
   context('when requesting statistics', () => {
     let externalSystemsMocks;
 
-    before((done) => {
+    before(yieldable.functioncb(function *() {
       externalSystemsMocks = fixture.getExternalSystemsMocks();
       externalSystemsMocks.startAll();
 
@@ -29,16 +33,16 @@ const build = () => {
         .whenScopes(fixture.oauth.cfAdminScopes)
         .return(fixture.oauth.cfAdminToken);
 
+      yield carryOverDb.setup();
       fixture.bridge.start(externalSystemsMocks);
 
-      wait.until(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(1), done);
-    });
+      yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(1));
+    }));
 
     after((done) => {
-      async.parallel([
-        fixture.bridge.stop,
-        externalSystemsMocks.stopAll
-      ], done);
+      fixture.bridge.stop();
+      carryOverDb.teardown();
+      externalSystemsMocks.stopAll(done);
     });
 
     context('With NO token', () => {
