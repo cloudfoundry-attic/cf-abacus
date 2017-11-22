@@ -18,13 +18,12 @@ npm.startModules([npm.modules.renewer], cb);
 
 */
 
+const cp = require('child_process');
 const _ = require('underscore');
 const clone = _.clone;
 const map = _.map;
 
 const debug = require('abacus-debug')('abacus-npm');
-const cp = require('child_process');
-
 
 const startedModules = new Set();
 
@@ -81,6 +80,7 @@ const stopAllStarted = (streams, afterAllStoppedCb = () => {}) => {
 };
 
 const modules = {
+  authServerPlugin: 'abacus-authserver-plugin',
   accountPlugin: 'abacus-account-plugin',
   eurekaPlugin: 'abacus-eureka-plugin',
   provisioningPlugin: 'abacus-provisioning-plugin',

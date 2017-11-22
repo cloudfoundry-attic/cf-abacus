@@ -1,0 +1,44 @@
+{
+  "name": "abacus-secured-itest",
+  "description": "Secured Abacus tests",
+  "license": "Apache-2.0",
+  "version": "1.0.0",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/secured",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "src/"
+  ],
+  "main": "src/index.js",
+  "scripts": {
+    "itest": "mocha --command",
+    "test": "eslint",
+    "lint": "eslint",
+    "pub": "publish"
+  },
+  "devDependencies": {
+    "abacus-debug": "file:../../lib/utils/debug",
+    "abacus-eslint": "file:../../tools/eslint",
+    "abacus-eureka": "file:../../utils/eureka",
+    "abacus-npm": "file:../../lib/npm",
+    "abacus-publish": "file:../../tools/publish",
+    "abacus-mocha": "file:../../tools/mocha",
+    "underscore": "^1.8.3",
+    "commander": "2.8.1"
+  },
+  "engines": {
+    "node": ">=6.11.4 <9.0.0",
+    "npm": "<5.0.0"
+  }
+}
