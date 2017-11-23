@@ -9,10 +9,6 @@ const yieldable = require('abacus-yieldable');
 
 const fixture = require('./fixtures/renewer-fixture');
 
-// FIXME: dynamically calculate this value???
-const renewer = require('./fixtures/utils/renewer')({
-  SLACK: '32D'
-});
 const carryOverDb = require('./test-definitions/utils/carry-over-db');
 const serviceMock = require('./test-definitions/utils/service-mock-util');
 const wait = require('./test-definitions/utils/wait');
@@ -71,13 +67,13 @@ describe('when renewer sends conflicting documents', () => {
 
     yield carryOverDb.setup();
     yield carryOverDb.put(carryOverDoc);
-    renewer.start(abacusCollectorMock, uaaServerMock);
+    fixture.renewer.start(abacusCollectorMock, uaaServerMock);
 
     yield waitUntil(serviceMock(abacusCollectorMock.collectUsageService).received(1));
   }));
 
   after((done) => {
-    renewer.stop();
+    fixture.renewer.stop();
     carryOverDb.teardown();
     async.parallel([
       uaaServerMock.stop,
@@ -91,7 +87,7 @@ describe('when renewer sends conflicting documents', () => {
   }));
 
   it('exposes correct statistics', (done) => {
-    renewer.readStats((err, response) => {
+    fixture.renewer.readStats((err, response) => {
       expect(response.statusCode).to.equal(httpStatus.OK);
       const usageStats = response.body.renewer.statistics.usage;
       expect(usageStats.report).to.deep.equal({

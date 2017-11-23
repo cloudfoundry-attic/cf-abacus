@@ -11,7 +11,7 @@ const tests = (fixture) => {
   return context('verify Cloud Controller', () => {
 
     it('verify Service Usage Events recieved correct service guids ', () => {
-      const cloudControllerMock = fixture.getExternalSystemsMocks().cloudController;
+      const cloudControllerMock = fixture.externalSystemsMocks().cloudController;
 
       const expectedGuids = [fixture.defaultUsageEvent.serviceGuid];
       const requests = cloudControllerMock.usageEvents.requests();
@@ -20,7 +20,7 @@ const tests = (fixture) => {
     });
 
     it('verify Services service calls', () => {
-      const cloudControllerMock = fixture.getExternalSystemsMocks().cloudController;
+      const cloudControllerMock = fixture.externalSystemsMocks().cloudController;
 
       // Expect 2 calls as configuration is load by both Master and Worker process
       const expectedRequests = _(2).times(() => ({
@@ -36,7 +36,7 @@ const tests = (fixture) => {
 describe('services-bridge happy path tests', () => {
 
   before(() => {
-    servicesFixture.getExternalSystemsMocks().cloudController.serviceGuids.return.always({
+    servicesFixture.externalSystemsMocks().cloudController.serviceGuids.return.always({
       [servicesFixture.defaultUsageEvent.serviceLabel]: servicesFixture.defaultUsageEvent.serviceGuid
     });
   });

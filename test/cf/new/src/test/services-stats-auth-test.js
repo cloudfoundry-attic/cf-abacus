@@ -6,7 +6,7 @@ const servicesFixture = require('./fixtures/service-bridge-fixture');
 describe('services-bridge stats auth tests', () => {
 
   before(() => {
-    servicesFixture.getExternalSystemsMocks().cloudController.serviceGuids.return.always({
+    servicesFixture.externalSystemsMocks().cloudController.serviceGuids.return.always({
       [servicesFixture.defaultUsageEvent.serviceLabel]: servicesFixture.defaultUsageEvent.serviceGuid
     });
   });

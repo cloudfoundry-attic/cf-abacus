@@ -1,5 +1,7 @@
 'use strict';
 
+const renewer = require('./utils/renewer')();
+
 const abacusCollectorScopes = ['abacus.usage.write', 'abacus.usage.read'];
 const abacusCollectorToken = 'abacus-collector-token';
 
@@ -85,6 +87,7 @@ const modifyUsage = (usage) => {
 module.exports = {
   abacusCollectorScopes,
   abacusCollectorToken,
+  renewer,
   usage: {
     create: createUsage,
     modify: modifyUsage

@@ -5,11 +5,12 @@ const npm = require('abacus-npm')();
 const createAbacusCollectorMock = require('../server-mocks/abacus-collector-mock');
 const createCloudControllerMock = require('../server-mocks/applications-cloud-controller-mock');
 const createUAAServerMock = require('../server-mocks/uaa-server-mock');
-const getExternalSystemsMocks = require('./utils/external-systems')(
-  createAbacusCollectorMock,
-  createCloudControllerMock,
-  createUAAServerMock
-);
+const externalSystemsMocks = require('./utils/external-systems')({
+  abacusCollector: createAbacusCollectorMock,
+  cloudController: createCloudControllerMock,
+  uaaServer: createUAAServerMock
+});
+
 const createEventTimestampGenerator = require('./utils/event-timestamp-generator');
 const createBridge = require('./utils/bridge');
 
@@ -124,6 +125,6 @@ module.exports = {
   collectorUsage,
   oauth,
   env: bridge.env,
-  getExternalSystemsMocks,
+  externalSystemsMocks,
   bridge
 };

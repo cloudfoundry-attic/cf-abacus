@@ -18,7 +18,7 @@ const build = () => {
     let externalSystemsMocks;
 
     before(yieldable.functioncb(function *() {
-      externalSystemsMocks = fixture.getExternalSystemsMocks();
+      externalSystemsMocks = fixture.externalSystemsMocks();
       externalSystemsMocks.startAll();
 
       externalSystemsMocks

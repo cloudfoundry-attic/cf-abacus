@@ -9,11 +9,6 @@ const yieldable = require('abacus-yieldable');
 
 const fixture = require('./fixtures/renewer-fixture');
 
-
-// FIXME: dynamically calculate this value???
-const renewer = require('./fixtures/utils/renewer')({
-  SLACK: '32D'
-});
 const carryOverDb = require('./test-definitions/utils/carry-over-db');
 const serviceMock = require('./test-definitions/utils/service-mock-util');
 const wait = require('./test-definitions/utils/wait');
@@ -129,13 +124,13 @@ describe('renewer standard flow', () => {
     yield carryOverDb.put(startOfLastMonthCarryOverDoc);
     yield carryOverDb.put(middleOfLastMonthCarryOverDoc);
     yield carryOverDb.put(endOfLastMonthCarryOverDoc);
-    renewer.start(abacusCollectorMock, uaaServerMock);
+    fixture.renewer.start(abacusCollectorMock, uaaServerMock);
 
     yield waitUntil(serviceMock(abacusCollectorMock.collectUsageService).received(3));
   }));
 
   after((done) => {
-    renewer.stop();
+    fixture.renewer.stop();
     carryOverDb.teardown();
     async.parallel([
       uaaServerMock.stop,
@@ -168,9 +163,10 @@ describe('renewer standard flow', () => {
   });
 
   it('sends correct oauth token to collector', () => {
-    expect(abacusCollectorMock.collectUsageService.request(0).token).to.equal(abacusCollectorToken);
-    expect(abacusCollectorMock.collectUsageService.request(1).token).to.equal(abacusCollectorToken);
-    expect(abacusCollectorMock.collectUsageService.request(2).token).to.equal(abacusCollectorToken);
+    const expectedToken = fixture.abacusCollectorToken;
+    expect(abacusCollectorMock.collectUsageService.request(0).token).to.equal(expectedToken);
+    expect(abacusCollectorMock.collectUsageService.request(1).token).to.equal(expectedToken);
+    expect(abacusCollectorMock.collectUsageService.request(2).token).to.equal(expectedToken);
   });
 
   it('records entries in carry-over', yieldable.functioncb(function *() {
@@ -195,7 +191,7 @@ describe('renewer standard flow', () => {
   }));
 
   it('exposes correct statistics', (done) => {
-    renewer.readStats((err, response) => {
+    fixture.renewer.readStats((err, response) => {
       expect(response.statusCode).to.equal(httpStatus.OK);
       const usageStats = response.body.renewer.statistics.usage;
       expect(usageStats.report).to.deep.equal({

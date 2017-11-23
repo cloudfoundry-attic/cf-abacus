@@ -24,7 +24,7 @@ const build = () => {
     let secondUsageEventTimestamp;
 
     before(yieldable.functioncb(function *() {
-      externalSystemsMocks = fixture.getExternalSystemsMocks();
+      externalSystemsMocks = fixture.externalSystemsMocks();
       externalSystemsMocks.startAll();
 
       externalSystemsMocks

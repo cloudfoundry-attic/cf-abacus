@@ -1,43 +1,34 @@
 'use strict';
 
 const async = require('async');
+const { extend } = require('underscore');
+module.exports = (creators) => {
+  let result;
 
-module.exports = (createAbacusCollectorMock, createCloudControllerMock, createUAAServerMock) => {
-  let abacusCollectorMock;
-  let cloudControllerMock;
-  let uaaServerMock;
+  const externalSystemsMocks = () => {
+    if (result)
+      return result;
 
-  let externalSystemsMocks;
+    const serverMocks = Object.keys(creators).reduce((accumulated, key) => {
+      accumulated[key] = creators[key]();
+      return accumulated;
+    }, {});
 
-  const getExternalSystemsMocks = () => {
-    if (externalSystemsMocks)
-      return externalSystemsMocks;
-
-
-    abacusCollectorMock = createAbacusCollectorMock();
-    cloudControllerMock = createCloudControllerMock();
-    uaaServerMock = createUAAServerMock();
-
-    externalSystemsMocks = {
-      abacusCollector: abacusCollectorMock,
-      cloudController: cloudControllerMock,
-      uaaServer: uaaServerMock,
+    result = {
       startAll: () => {
-        abacusCollectorMock.start();
-        cloudControllerMock.start();
-        uaaServerMock.start();
+        Object.keys(serverMocks).forEach((key) => serverMocks[key].start());
       },
       stopAll: (done) => {
-        async.parallel([
-          abacusCollectorMock.stop,
-          cloudControllerMock.stop,
-          uaaServerMock.stop
-        ], done);
+        async.forEach(
+          Object.keys(serverMocks),
+          (key, stopped) => serverMocks[key].stop(stopped),
+          done);
       }
     };
 
-    return externalSystemsMocks;
+    extend(result, serverMocks);
+    return result;
   };
 
-  return getExternalSystemsMocks;
+  return externalSystemsMocks;
 };

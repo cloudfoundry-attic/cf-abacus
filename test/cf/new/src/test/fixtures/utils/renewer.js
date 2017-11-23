@@ -29,7 +29,7 @@ const isLastHourOfCurrentMonth = () =>
   now <= moment.utc(now).endOf('month').valueOf();
 
 
-// Use value larger the months' length in order to force renewer to start
+// Use value larger then the months' length in order to force renewer to start
 // independently of current date (renewer starts working only if current date
 // is before "start of month + slack")
 const slack = '32D';

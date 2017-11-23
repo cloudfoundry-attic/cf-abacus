@@ -19,7 +19,7 @@ const build = () => {
     let unhandleableEvents;
 
     before(yieldable.functioncb(function *() {
-      externalSystemsMocks = fixture.getExternalSystemsMocks();
+      externalSystemsMocks = fixture.externalSystemsMocks();
       externalSystemsMocks.startAll();
 
       externalSystemsMocks
