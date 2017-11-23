@@ -31,7 +31,7 @@ describe('eureka', function() {
     process.env.JWTALGO = 'HS256';
     process.env.JWTKEY = 'encode';
 
-    process.env.CF_API = 'http://localhost:9882';
+    process.env.API = 'http://localhost:9882';
 
     process.env.EUREKA = 'http://localhost:9990';
     process.env.EUREKA_USER = 'user';
