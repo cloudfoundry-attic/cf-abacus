@@ -7,7 +7,7 @@ const omit = _.omit;
 const moment = require('abacus-moment');
 const yieldable = require('abacus-yieldable');
 
-const fixture = require('./utils/fixture');
+const fixture = require('./fixture');
 
 const carryOverDb = require('../utils/carry-over-db');
 const serviceMock = require('../utils/service-mock-util');
@@ -83,7 +83,7 @@ describe('renewer sends usage, but abacus is down', () => {
   }));
 
   it('exposes correct statistics', (done) => {
-    fixture.renewer.readStats((err, response) => {
+    fixture.renewer.readStats.withValidToken((err, response) => {
       expect(response.statusCode).to.equal(httpStatus.OK);
       const usageStats = response.body.renewer.statistics.usage;
       expect(usageStats.report).to.deep.equal({
