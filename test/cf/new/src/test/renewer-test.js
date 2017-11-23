@@ -1,6 +1,5 @@
 'use strict';
 
-const async = require('async');
 const httpStatus = require('http-status-codes');
 const { omit } = require('underscore');
 
@@ -12,9 +11,6 @@ const fixture = require('./fixtures/renewer-fixture');
 const carryOverDb = require('./test-definitions/utils/carry-over-db');
 const serviceMock = require('./test-definitions/utils/service-mock-util');
 const wait = require('./test-definitions/utils/wait');
-
-const createAbacusCollectorMock = require('./server-mocks/abacus-collector-mock');
-const createUAAServerMock = require('./server-mocks/uaa-server-mock');
 
 const waitUntil = yieldable(wait.until);
 
@@ -84,19 +80,19 @@ const endOfLastMonthAbacusUsage = fixture.usage.create()
 
 
 describe('renewer standard flow', () => {
-  let uaaServerMock;
-  let abacusCollectorMock;
+  let externalSystemsMocks;
 
   before(yieldable.functioncb(function *() {
-    uaaServerMock = createUAAServerMock();
-    abacusCollectorMock = createAbacusCollectorMock();
+    externalSystemsMocks = fixture.externalSystemsMocks();
 
-    uaaServerMock
+    externalSystemsMocks
+      .uaaServer
       .tokenService
       .whenScopes(fixture.abacusCollectorScopes)
       .return(fixture.abacusCollectorToken);
 
-    abacusCollectorMock
+    externalSystemsMocks
+      .abacusCollector
       .getUsageService
       .return
       .series([{
@@ -110,13 +106,13 @@ describe('renewer standard flow', () => {
         body: endOfLastMonthAbacusUsage
       }]);
 
-    abacusCollectorMock
+    externalSystemsMocks
+      .abacusCollector
       .collectUsageService
       .return
       .always(httpStatus.CREATED);
 
-    uaaServerMock.start();
-    abacusCollectorMock.start();
+    externalSystemsMocks.startAll();
 
     yield carryOverDb.setup();
     yield carryOverDb.put(outOfSlackCarryOverDoc);
@@ -124,21 +120,19 @@ describe('renewer standard flow', () => {
     yield carryOverDb.put(startOfLastMonthCarryOverDoc);
     yield carryOverDb.put(middleOfLastMonthCarryOverDoc);
     yield carryOverDb.put(endOfLastMonthCarryOverDoc);
-    fixture.renewer.start(abacusCollectorMock, uaaServerMock);
+    fixture.renewer.start(externalSystemsMocks);
 
-    yield waitUntil(serviceMock(abacusCollectorMock.collectUsageService).received(3));
+    yield waitUntil(serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(3));
   }));
 
   after((done) => {
     fixture.renewer.stop();
     carryOverDb.teardown();
-    async.parallel([
-      uaaServerMock.stop,
-      abacusCollectorMock.stop
-    ], done);
+    externalSystemsMocks.stopAll(done);
   });
 
   it('sends updated usage document to collector', () => {
+    const abacusCollectorMock = externalSystemsMocks.abacusCollector;
     expect(abacusCollectorMock.collectUsageService.request(0).usage).to.deep.equal(
       fixture.usage
         .modify(startOfLastMonthAbacusUsage)
@@ -163,6 +157,7 @@ describe('renewer standard flow', () => {
   });
 
   it('sends correct oauth token to collector', () => {
+    const abacusCollectorMock = externalSystemsMocks.abacusCollector;
     const expectedToken = fixture.abacusCollectorToken;
     expect(abacusCollectorMock.collectUsageService.request(0).token).to.equal(expectedToken);
     expect(abacusCollectorMock.collectUsageService.request(1).token).to.equal(expectedToken);
@@ -170,6 +165,7 @@ describe('renewer standard flow', () => {
   });
 
   it('records entries in carry-over', yieldable.functioncb(function *() {
+    const abacusCollectorMock = externalSystemsMocks.abacusCollector;
     const docs = yield carryOverDb.readCurrentMonthDocs();
     const expectedNewDocuments = [{
       collector_id: abacusCollectorMock.collectUsageService.resourceLocation,

@@ -34,12 +34,12 @@ const isLastHourOfCurrentMonth = () =>
 // is before "start of month + slack")
 const slack = '32D';
 
-const getEnviornmentVars = (abacusCollector, uaaServer) => ({
+const getEnviornmentVars = (externalSystemsMocks) => ({
   ABACUS_CLIENT_ID: env.abacusClientId,
   ABACUS_CLIENT_SECRET: env.abacusClientSecret,
   SECURED : 'true',
-  AUTH_SERVER : `http://localhost:${uaaServer.address().port}`,
-  COLLECTOR : `http://localhost:${abacusCollector.address().port}`,
+  AUTH_SERVER : `http://localhost:${externalSystemsMocks.uaaServer.address().port}`,
+  COLLECTOR : `http://localhost:${externalSystemsMocks.abacusCollector.address().port}`,
   JWTKEY : env.tokenSecret,
   JWTALGO : env.tokenAlgorithm,
   RETRIES: env.retryCount,
@@ -61,10 +61,10 @@ const readStats = (cb) => {
 module.exports = (customEnv) => ({
   env,
   readStats,
-  start: (abacusCollector, uaaServer) => {
+  start: (externalSystemsMocks) => {
     const renewerEnv = extend({},
       process.env,
-      getEnviornmentVars(abacusCollector, uaaServer),
+      getEnviornmentVars(externalSystemsMocks),
       customEnv
     );
     npm

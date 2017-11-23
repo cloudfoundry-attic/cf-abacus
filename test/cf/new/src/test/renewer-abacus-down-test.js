@@ -1,6 +1,5 @@
 'use strict';
 
-const async = require('async');
 const httpStatus = require('http-status-codes');
 const _ = require('underscore');
 const omit = _.omit;
@@ -13,9 +12,6 @@ const fixture = require('./fixtures/renewer-fixture');
 const carryOverDb = require('./test-definitions/utils/carry-over-db');
 const serviceMock = require('./test-definitions/utils/service-mock-util');
 const wait = require('./test-definitions/utils/wait');
-
-const createAbacusCollectorMock = require('./server-mocks/abacus-collector-mock');
-const createUAAServerMock = require('./server-mocks/uaa-server-mock');
 
 const waitUntil = yieldable(wait.until);
 
@@ -34,19 +30,19 @@ const carryOverDoc = {
 };
 
 describe('when renewer sends usage, but abacus is down', () => {
-  let uaaServerMock;
-  let abacusCollectorMock;
+  let externalSystemsMocks;
 
   before(yieldable.functioncb(function *() {
-    uaaServerMock = createUAAServerMock();
-    abacusCollectorMock = createAbacusCollectorMock();
+    externalSystemsMocks = fixture.externalSystemsMocks();
 
-    uaaServerMock
+    externalSystemsMocks
+      .uaaServer
       .tokenService
       .whenScopes(fixture.abacusCollectorScopes)
       .return(fixture.abacusCollectorToken);
 
-    abacusCollectorMock
+    externalSystemsMocks
+      .abacusCollector
       .getUsageService
       .return
       .always({
@@ -58,31 +54,28 @@ describe('when renewer sends usage, but abacus is down', () => {
           .build()
       });
 
-    abacusCollectorMock.collectUsageService.return.always(httpStatus.BAD_GATEWAY);
+    externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.BAD_GATEWAY);
 
-    uaaServerMock.start();
-    abacusCollectorMock.start();
+    externalSystemsMocks.startAll();
 
     yield carryOverDb.setup();
     yield carryOverDb.put(carryOverDoc);
-    fixture.renewer.start(abacusCollectorMock, uaaServerMock);
+    fixture.renewer.start(externalSystemsMocks);
 
     // Event reporter (abacus-client) will retry 'fixture.env.retryCount' + 1
     // times to report usage to abacus. After that it will give up.
     yield waitUntil(
       serviceMock(
-        abacusCollectorMock.collectUsageService
+        externalSystemsMocks.abacusCollector.collectUsageService
       ).received(fixture.renewer.env.retryCount + 1));
   }));
 
   after((done) => {
     fixture.renewer.stop();
     carryOverDb.teardown();
-    async.parallel([
-      uaaServerMock.stop,
-      abacusCollectorMock.stop
-    ], done);
+    externalSystemsMocks.stopAll(done);
   });
+
 
   it('does not record an entry in carry-over', yieldable.functioncb(function *() {
     const docs = yield carryOverDb.readCurrentMonthDocs();

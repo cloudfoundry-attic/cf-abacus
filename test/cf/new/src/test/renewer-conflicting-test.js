@@ -1,6 +1,5 @@
 'use strict';
 
-const async = require('async');
 const httpStatus = require('http-status-codes');
 const { omit } = require('underscore');
 
@@ -12,9 +11,6 @@ const fixture = require('./fixtures/renewer-fixture');
 const carryOverDb = require('./test-definitions/utils/carry-over-db');
 const serviceMock = require('./test-definitions/utils/service-mock-util');
 const wait = require('./test-definitions/utils/wait');
-
-const createAbacusCollectorMock = require('./server-mocks/abacus-collector-mock');
-const createUAAServerMock = require('./server-mocks/uaa-server-mock');
 
 const waitUntil = yieldable(wait.until);
 
@@ -33,19 +29,19 @@ const carryOverDoc = {
 };
 
 describe('when renewer sends conflicting documents', () => {
-  let uaaServerMock;
-  let abacusCollectorMock;
+  let externalSystemsMocks;
 
   before(yieldable.functioncb(function *() {
-    uaaServerMock = createUAAServerMock();
-    abacusCollectorMock = createAbacusCollectorMock();
+    externalSystemsMocks = fixture.externalSystemsMocks();
 
-    uaaServerMock
+    externalSystemsMocks
+      .uaaServer
       .tokenService
       .whenScopes(fixture.abacusCollectorScopes)
       .return(fixture.abacusCollectorToken);
 
-    abacusCollectorMock
+    externalSystemsMocks
+      .abacusCollector
       .getUsageService
       .return
       .always({
@@ -57,28 +53,25 @@ describe('when renewer sends conflicting documents', () => {
           .build()
       });
 
-    abacusCollectorMock
+    externalSystemsMocks
+      .abacusCollector
       .collectUsageService
       .return
       .always(httpStatus.CONFLICT);
 
-    uaaServerMock.start();
-    abacusCollectorMock.start();
+    externalSystemsMocks.startAll();
 
     yield carryOverDb.setup();
     yield carryOverDb.put(carryOverDoc);
-    fixture.renewer.start(abacusCollectorMock, uaaServerMock);
+    fixture.renewer.start(externalSystemsMocks);
 
-    yield waitUntil(serviceMock(abacusCollectorMock.collectUsageService).received(1));
+    yield waitUntil(serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(1));
   }));
 
   after((done) => {
     fixture.renewer.stop();
     carryOverDb.teardown();
-    async.parallel([
-      uaaServerMock.stop,
-      abacusCollectorMock.stop
-    ], done);
+    externalSystemsMocks.stopAll(done);
   });
 
   it('does not record an entry in carry-over', yieldable.functioncb(function *() {

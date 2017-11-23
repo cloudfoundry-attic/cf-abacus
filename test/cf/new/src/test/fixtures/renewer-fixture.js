@@ -2,6 +2,13 @@
 
 const renewer = require('./utils/renewer')();
 
+const createAbacusCollectorMock = require('../server-mocks/abacus-collector-mock');
+const createUAAServerMock = require('../server-mocks/uaa-server-mock');
+const externalSystemsMocks = require('./utils/external-systems')({
+  abacusCollector: createAbacusCollectorMock,
+  uaaServer: createUAAServerMock
+});
+
 const abacusCollectorScopes = ['abacus.usage.write', 'abacus.usage.read'];
 const abacusCollectorToken = 'abacus-collector-token';
 
@@ -88,6 +95,7 @@ module.exports = {
   abacusCollectorScopes,
   abacusCollectorToken,
   renewer,
+  externalSystemsMocks,
   usage: {
     create: createUsage,
     modify: modifyUsage
