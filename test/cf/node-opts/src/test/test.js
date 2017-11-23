@@ -9,7 +9,7 @@ const clone = _.clone;
 
 // Parse command line options
 const argv = clone(process.argv);
-argv.splice(1, 1, 'usage-collector-itest');
+argv.splice(1, 1, 'cf-node-opts-itest');
 commander
   .option('-t, --start-timeout <n>',
     'external processes start timeout in milliseconds', parseInt)
