@@ -21,6 +21,7 @@
     ".jshintrc",
     ".jsinspectrc",
     ".npmrc",
+    ".prettierrc",
     ".travis.yml",
     "LICENSE",
     "NOTICE",
@@ -172,8 +173,11 @@
     "coveralls": "^2.11.3",
     "eslint-plugin-mocha": "^4.8.0",
     "eslint-plugin-nodate": "file:tools/eslint-plugin-nodate",
+    "eslint-plugin-prettier": "2.3.1",
+    "eslint-config-prettier": "2.9.0",
     "jshint": "^2.8.0",
-    "jsinspect": "^0.6.1"
+    "jsinspect": "^0.6.1",
+    "prettier": "1.9.1"
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",
