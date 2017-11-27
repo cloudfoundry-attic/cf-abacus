@@ -64,21 +64,18 @@ const build = () => {
       expect(docs).to.deep.equal([]);
     }));
 
-    it('Exposes correct statistics', (done) => {
-      fixture.bridge.readStats.withValidToken((err, response) => {
-        expect(response.statusCode).to.equal(httpStatus.OK);
-        expect(response.body.statistics.usage).to.deep.equal({
-          success : {
-            all: unhandleableEvents.length,
-            conflicts: 0,
-            skips: unhandleableEvents.length
-          },
-          failures : 0
-        });
-        done(err);
+    it('Exposes correct statistics', yieldable.functioncb(function *() {
+      const response = yield fixture.bridge.readStats.withValidToken();
+      expect(response.statusCode).to.equal(httpStatus.OK);
+      expect(response.body.statistics.usage).to.deep.equal({
+        success : {
+          all: unhandleableEvents.length,
+          conflicts: 0,
+          skips: unhandleableEvents.length
+        },
+        failures : 0
       });
-    });
-
+    }));
   });
 
 };

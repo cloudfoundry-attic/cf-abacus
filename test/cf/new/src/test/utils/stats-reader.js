@@ -1,39 +1,60 @@
 'use strict';
 
+const httpStatus = require('http-status-codes');
+
 const request = require('abacus-request');
+const yieldable = require('abacus-yieldable');
+
 const createTokenFactory = require('../utils/token-factory');
 
-const readStats = (config, cb) => {
+const get = yieldable(request.get);
+
+const readStats = function *(config) {
   const headers = config.token ? {
     authorization: `Bearer ${config.token}`
   } : undefined;
 
-  request.get('http://localhost::port/v1/stats', {
+  return yield get('http://localhost::port/v1/stats', {
     port: config.port,
     headers
-  }, cb);
+  });
 };
 
-module.exports = (config) => ({
-  withValidToken: (cb) => {
+module.exports = (config) => {
+
+  const withValidToken = function *() {
     const tokenFactory = createTokenFactory(config.tokenSecret);
     const signedToken = tokenFactory.create(['abacus.usage.read']);
-    readStats({
+    return yield readStats({
       port: config.port,
       token: signedToken
-    }, cb);
-  },
-  withMissingScope: (cb) => {
+    });
+  };
+
+  const withMissingScope = function *() {
     const tokenFactory = createTokenFactory(config.tokenSecret);
     const signedToken = tokenFactory.create([]);
-    readStats({
+    return yield readStats({
       port: config.port,
       token: signedToken
-    }, cb);
-  },
-  withoutToken: (cb) => {
-    readStats({
+    });
+  };
+
+  const withoutToken = function *() {
+    return yield readStats({
       port: config.port
-    }, cb);
-  }
-});
+    });
+  };
+
+  const isEndpointAvailable = function *() {
+    const response = yield withValidToken(config);
+    return response.statusCode && response.statusCode !== httpStatus.NOT_FOUND;
+  };
+
+  return {
+    withValidToken,
+    withMissingScope,
+    withoutToken,
+    isEndpointAvailable
+  };
+};

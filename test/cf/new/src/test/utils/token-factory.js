@@ -1,6 +1,7 @@
 'use strict';
 
 const jwt = require('jsonwebtoken');
+const expiresIn = 43200;
 
 const token = (tokenSecret) => {
   const create = (scopes) => {
@@ -8,7 +9,7 @@ const token = (tokenSecret) => {
       scope: scopes
     };
     return jwt.sign(payload , tokenSecret, {
-      expiresIn: 43200
+      expiresIn
     });
   };
 

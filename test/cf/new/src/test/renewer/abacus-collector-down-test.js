@@ -82,20 +82,18 @@ describe('renewer sends usage, but abacus is down', () => {
     expect(docs).to.deep.equal([]);
   }));
 
-  it('exposes correct statistics', (done) => {
-    fixture.renewer.readStats.withValidToken((err, response) => {
-      expect(response.statusCode).to.equal(httpStatus.OK);
-      const usageStats = response.body.renewer.statistics.usage;
-      expect(usageStats.report).to.deep.equal({
-        success: 0,
-        conflicts : 0,
-        failures : 1
-      });
-      expect(omit(usageStats.get, 'missingToken')).to.deep.equal({
-        success: 1,
-        failures : 0
-      });
-      done(err);
+  it('exposes correct statistics', yieldable.functioncb(function *() {
+    const response = yield fixture.renewer.readStats.withValidToken();
+    expect(response.statusCode).to.equal(httpStatus.OK);
+    const usageStats = response.body.statistics.usage;
+    expect(usageStats.report).to.deep.equal({
+      success: 0,
+      conflicts : 0,
+      failures : 1
     });
-  });
+    expect(omit(usageStats.get, 'missingToken')).to.deep.equal({
+      success: 1,
+      failures : 0
+    });
+  }));
 });

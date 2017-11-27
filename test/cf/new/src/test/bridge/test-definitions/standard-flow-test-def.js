@@ -66,11 +66,11 @@ const build = () => {
       externalSystemsMocks.stopAll(done);
     });
 
-    context('Bridge specific tests', () => {
+    describe('Bridge specific tests', () => {
       customTests(fixture);
     });
 
-    context('Bridge generic tests', () => {
+    describe('Bridge generic tests', () => {
 
       it('Usage Events Service is called with correct arguments', () => {
         const cloudControllerMock = externalSystemsMocks.cloudController;
@@ -138,25 +138,28 @@ const build = () => {
           timestamp: secondUsageEventTimestamp }]);
       }));
 
-      it('Exposes correct statistics', (done) => {
-        fixture.bridge.readStats.withValidToken((err, response) => {
-          expect(response.statusCode).to.equal(httpStatus.OK);
-          expect(response.body.statistics.usage).to.deep.equal({
-            success : {
-              all: 2,
-              conflicts : 0,
-              skips : 0
-            },
-            failures : 0
-          });
-          done(err);
-        });
+      context('With token without required scopes', () => {
+        it('FORBIDDEN is returned', yieldable.functioncb(function *() {
+          const response = yield fixture.bridge.readStats.withMissingScope();
+          expect(response.statusCode).to.equal(httpStatus.FORBIDDEN);
+        }));
       });
 
+      it('Exposes correct statistics', yieldable.functioncb(function *() {
+        const response = yield fixture.bridge.readStats.withValidToken();
+        expect(response.statusCode).to.equal(httpStatus.OK);
+        expect(response.body.statistics.usage).to.deep.equal({
+          success : {
+            all: 2,
+            conflicts : 0,
+            skips : 0
+          },
+          failures : 0
+        });
+      }));
+
     });
-
   });
-
 };
 
 const testDef = {

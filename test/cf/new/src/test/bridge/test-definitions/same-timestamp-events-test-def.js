@@ -84,21 +84,18 @@ const build = () => {
       });
     });
 
-    it('Exposes correct statistics', (done) => {
-      fixture.bridge.readStats.withValidToken((err, response) => {
-        expect(response.statusCode).to.equal(httpStatus.OK);
-        expect(response.body.statistics.usage).to.deep.equal({
-          success : {
-            all: 2,
-            conflicts: 0,
-            skips: 0
-          },
-          failures : 0
-        });
-        done(err);
+    it('Exposes correct statistics', yieldable.functioncb(function *() {
+      const response = yield fixture.bridge.readStats.withValidToken();
+      expect(response.statusCode).to.equal(httpStatus.OK);
+      expect(response.body.statistics.usage).to.deep.equal({
+        success : {
+          all: 2,
+          conflicts : 0,
+          skips : 0
+        },
+        failures : 0
       });
-    });
-
+    }));
   });
 };
 

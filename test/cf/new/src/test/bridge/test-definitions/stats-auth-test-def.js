@@ -5,7 +5,6 @@ const httpStatus = require('http-status-codes');
 const yieldable = require('abacus-yieldable');
 
 const carryOverDb = require('../../utils/carry-over-db');
-const serviceMock = require('../..//utils/service-mock-util');
 const wait = require('../../utils/wait');
 
 const waitUntil = yieldable(wait.until);
@@ -36,7 +35,7 @@ const build = () => {
       yield carryOverDb.setup();
       fixture.bridge.start(externalSystemsMocks);
 
-      yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(1));
+      yield waitUntil(fixture.bridge.readStats.isEndpointAvailable);
     }));
 
     after((done) => {
@@ -46,21 +45,17 @@ const build = () => {
     });
 
     context('With NO token', () => {
-      it('UNAUTHORIZED is returned', (done) => {
-        fixture.bridge.readStats.withoutToken((err, response) => {
-          expect(response.statusCode).to.equal(httpStatus.UNAUTHORIZED);
-          done();
-        });
-      });
+      it('UNAUTHORIZED is returned', yieldable.functioncb(function *() {
+        const response = yield fixture.bridge.readStats.withoutToken();
+        expect(response.statusCode).to.equal(httpStatus.UNAUTHORIZED);
+      }));
     });
 
     context('With token without required scopes', () => {
-      it('FORBIDDEN is returned', (done) => {
-        fixture.bridge.readStats.withMissingScope((err, response) => {
-          expect(response.statusCode).to.equal(httpStatus.FORBIDDEN);
-          done();
-        });
-      });
+      it('FORBIDDEN is returned', yieldable.functioncb(function *() {
+        const response = yield fixture.bridge.readStats.withMissingScope();
+        expect(response.statusCode).to.equal(httpStatus.FORBIDDEN);
+      }));
     });
 
   });
