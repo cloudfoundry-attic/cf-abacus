@@ -20,6 +20,7 @@ const adjustedInstances = 3;
 const adjustedConf = 'adjusted-conf';
 const adjustedBuildpack = 'adjusted-buildpack';
 const retryAttepmts = 3;
+// const prepareZdm = true;
 
 const stubFileSystem = () => {
   stub(fs, 'mkdir').callsFake((dirName, cb) => {
@@ -83,6 +84,7 @@ const stubCommander = () => {
   commander.conf = adjustedConf;
   commander.prefix = prefix;
   commander.retries = retryAttepmts;
+  commander.prepareZdm = true;
 };
 
 const stubRemanifester = () => {
@@ -120,7 +122,7 @@ describe('Test command line args', () => {
   });
 
   it('verify all arguments parsed', () => {
-    const commandLineArgsCount = 7;
+    const commandLineArgsCount = 8;
     assert.callCount(commander.option, commandLineArgsCount);
     assert.calledOnce(commander.parse);
   });
@@ -161,7 +163,6 @@ describe('Test abacus cfpush', () => {
 
     before(() => {
       stubChildProcessWith(onCloseHandlers.alwaysSuccessfulPush);
-
       cfpush.runCLI();
     });
 
@@ -169,8 +170,14 @@ describe('Test abacus cfpush', () => {
       clearStubs();
     });
 
+    it('verify prepareZdm', () => {
+      assert.calledWithExactly(cp.exec,
+        `cf delete ${adjustedName}-old`,
+        sinon.match.has('env', { CF_HOME: tmpDir.name }));
+    });
+
     it('verify CF_HOME content is copied to tmp dir', () => {
-      assert.calledOnce(fs.copySync);
+      assert.calledThrice(fs.copySync);
       assert.calledWithExactly(fs.copySync, `${cfHomeDirectory}/.cf`,
         `${tmpDir.name}/.cf`);
     });
@@ -187,11 +194,15 @@ describe('Test abacus cfpush', () => {
       assert.calledWithExactly(cp.exec,
         `cf push --no-start -f ${manifestPath}`,
         sinon.match.has('env', { CF_HOME: tmpDir.name }));
-      assert.calledOnce(tmpDir.removeCallback);
+      assert.calledThrice(tmpDir.removeCallback);
     });
   });
 
   context('when application push fails', () => {
+
+    before(() => {
+      commander.prepareZdm = false;
+    });
 
     const verifyPushRetryAttempts = (expectedAttempts) => {
       assert.callCount(cp.exec, expectedAttempts);
