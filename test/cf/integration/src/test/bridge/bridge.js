@@ -3,7 +3,7 @@
 
 const extend = require('underscore').extend;
 
-const npm = require('abacus-npm')();
+const lifecycleManager = require('abacus-lifecycle-manager')();
 
 const createStatsReader = require('../utils/stats-reader');
 
@@ -47,9 +47,9 @@ module.exports = (config) => ({
       config.customEnv
     );
 
-    npm
+    lifecycleManager
       .useEnv(bridgeEnv)
       .startModules([config.bridge]);
   },
-  stop: npm.stopAllStarted
+  stop: lifecycleManager.stopAllStarted
 });

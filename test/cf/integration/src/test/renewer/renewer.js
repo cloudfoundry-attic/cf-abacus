@@ -4,7 +4,7 @@
 
 const { extend } = require('underscore');
 const moment = require('abacus-moment');
-const npm = require('abacus-npm')();
+const lifecycleManager = require('abacus-lifecycle-manager')();
 
 const createStatsReader = require('../utils/stats-reader');
 
@@ -61,9 +61,9 @@ module.exports = (customEnv) => ({
       getEnviornmentVars(externalSystemsMocks),
       customEnv
     );
-    npm
+    lifecycleManager
       .useEnv(renewerEnv)
-      .startModules([npm.modules.renewer]);
+      .startModules([lifecycleManager.modules.renewer]);
   },
-  stop: npm.stopAllStarted
+  stop: lifecycleManager.stopAllStarted
 });

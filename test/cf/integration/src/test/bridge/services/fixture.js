@@ -2,7 +2,7 @@
 
 /* eslint-disable max-len */
 
-const npm = require('abacus-npm')();
+const lifecycleManager = require('abacus-lifecycle-manager')();
 
 const createAbacusCollectorMock = require('../../utils/server-mocks/abacus-collector-mock');
 const createCloudControllerMock = require('../../utils/server-mocks/services-cloud-controller-mock');
@@ -34,7 +34,7 @@ const defaultUsageEvent = {
 };
 
 const bridge = createBridge({
-  bridge: npm.modules.services,
+  bridge: lifecycleManager.modules.services,
   port: 9502,
   customEnv: {
     SERVICES: `{

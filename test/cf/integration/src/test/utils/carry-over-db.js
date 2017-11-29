@@ -5,7 +5,7 @@ const extend = require('underscore').extend;
 
 const dbClient = require('abacus-dbclient');
 const moment = require('abacus-moment');
-const npm = require('abacus-npm')();
+const lifecycleManager = require('abacus-lifecycle-manager')();
 const partition = require('abacus-partition');
 const seqid = require('abacus-seqid');
 const urienv = require('abacus-urienv');
@@ -62,7 +62,7 @@ const isDbAvailable = function *() {
 
 const setup = function *() {
   if (!process.env.DB)
-    npm.startModules([npm.modules.pouchserver]);
+    lifecycleManager.startModules([lifecycleManager.modules.pouchserver]);
   else
     yield drop(process.env.DB, /^abacus-/);
 
@@ -71,7 +71,7 @@ const setup = function *() {
 
 const teardown = () => {
   if (!process.env.DB)
-    npm.stopAllStarted();
+    lifecycleManager.stopAllStarted();
 };
 
 module.exports.readCurrentMonthDocs = readCurrentMonthDocs;

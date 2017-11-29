@@ -11,7 +11,7 @@ const router = require('abacus-router');
 const express = require('abacus-express');
 const dbclient = require('abacus-dbclient');
 const moment = require('abacus-moment');
-const npm = require('abacus-npm')();
+const lifecycleManager = require('abacus-lifecycle-manager')();
 
 const map = _.map;
 const range = _.range;
@@ -62,21 +62,21 @@ describe('abacus-usage-meter-itest', () => {
   before(() => {
     // Start local database server
     if (!process.env.DB)
-      npm.startModules([
-        npm.modules.pouchserver,
-        npm.modules.meter
+      lifecycleManager.startModules([
+        lifecycleManager.modules.pouchserver,
+        lifecycleManager.modules.meter
       ]);
     else
       // Delete test dbs on the configured db server
       dbclient.drop(process.env.DB, /^abacus-meter-/, () => {
-        npm.startModules([
-          npm.modules.meter
+        lifecycleManager.startModules([
+          lifecycleManager.modules.meter
         ]);
       });
   });
 
   after(() => {
-    npm.stopAllStarted();
+    lifecycleManager.stopAllStarted();
   });
 
   it('meter normalized usage submissions', function(done) {

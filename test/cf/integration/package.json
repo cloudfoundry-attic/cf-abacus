@@ -43,7 +43,7 @@
     "abacus-express": "file:../../../lib/utils/express",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-moment": "file:../../../lib/utils/moment",
-    "abacus-npm": "file:../../lib/npm",
+    "abacus-lifecycle-manager": "file:../../lib/lifecycle-manager",
     "abacus-request": "file:../../../lib/utils/request",
     "abacus-router": "file:../../../lib/utils/router"
   },
