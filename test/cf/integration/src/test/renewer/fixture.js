@@ -2,7 +2,8 @@
 
 const renewer = require('./renewer')();
 
-const createAbacusCollectorMock = require('../utils/server-mocks/abacus-collector-mock');
+const createAbacusCollectorMock =
+  require('../utils/server-mocks/abacus-collector-mock');
 const createUAAServerMock = require('../utils/server-mocks/uaa-server-mock');
 const externalSystemsMocks = require('../utils/external-systems')({
   abacusCollector: createAbacusCollectorMock,

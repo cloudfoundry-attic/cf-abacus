@@ -25,13 +25,13 @@ const build = () => {
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.oauth.abacusCollectorScopes)
+        .whenScopesAre(fixture.oauth.abacusCollectorScopes)
         .return(fixture.oauth.abacusCollectorToken);
 
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.oauth.cfAdminScopes)
+        .whenScopesAre(fixture.oauth.cfAdminScopes)
         .return(fixture.oauth.cfAdminToken);
 
       unhandleableEvents = createUnhandleableEvents(fixture);
@@ -41,12 +41,19 @@ const build = () => {
         .return
         .firstTime(unhandleableEvents);
 
-      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
+      externalSystemsMocks
+        .abacusCollector
+        .collectUsageService
+        .return
+        .always(httpStatus.CREATED);
 
       yield carryOverDb.setup();
       fixture.bridge.start(externalSystemsMocks);
 
-      yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(2));
+      yield waitUntil(
+        serviceMock(
+          externalSystemsMocks.cloudController.usageEvents
+        ).received(2));
     }));
 
     after((done) => {
@@ -56,13 +63,20 @@ const build = () => {
     });
 
     it('Abacus collector does not receive any usage', () => {
-      expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(0);
+      expect(
+        externalSystemsMocks
+          .abacusCollector
+          .collectUsageService
+          .requests()
+          .length
+      ).to.equal(0);
     });
 
-    it('Does not write an entry in carry over', yieldable.functioncb(function *() {
-      const docs = yield carryOverDb.readCurrentMonthDocs();
-      expect(docs).to.deep.equal([]);
-    }));
+    it('Does not write an entry in carry over',
+      yieldable.functioncb(function *() {
+        const docs = yield carryOverDb.readCurrentMonthDocs();
+        expect(docs).to.deep.equal([]);
+      }));
 
     it('Exposes correct statistics', yieldable.functioncb(function *() {
       const response = yield fixture.bridge.readStats.withValidToken();

@@ -4,6 +4,8 @@ const express = require('abacus-express');
 const debug = require('abacus-debug')('cloud-controller-mock');
 const randomPort = 0;
 
+const createMockServiceData = require('./mock-service-data');
+
 const convert = (serviceGuids) => {
   const resources = [];
   Object.keys(serviceGuids).forEach((serviceLabel) => {
@@ -45,15 +47,8 @@ module.exports = () => {
   let app;
   let server;
 
-  const serviceUsageEventsData = {
-    return: [],
-    requests:[]
-  };
-
-  const serviceGuidsData = {
-    return: undefined,
-    requests: []
-  };
+  const serviceUsageEventsData = createMockServiceData();
+  const serviceGuidsData = createMockServiceData();
 
   const start = () => {
     app = express();
@@ -61,13 +56,13 @@ module.exports = () => {
     app.get('/v2/service_usage_events', (req, res) => {
       debug('Retrieved service usage events request. Query: %j', req.query);
 
-      serviceUsageEventsData.requests.push({
+      serviceUsageEventsData.requests().push({
         token: extractOAuthToken(req.header('Authorization')),
         serviceGuids: extractServiceGuids(req.query.q),
         afterGuid: req.query.after_guid
       });
 
-      const currentRequestReturn = serviceUsageEventsData.return[serviceUsageEventsData.requests.length - 1];
+      const currentRequestReturn = serviceUsageEventsData.nextResponse();
       const result = currentRequestReturn || [];
       debug('Returing service usage events: %j', result);
       res.send({
@@ -76,14 +71,15 @@ module.exports = () => {
     });
 
     app.get('/v2/services', (req, res) => {
-      debug('Retrieved request for services. Headers: %j, Query params: %j', req.headers, req.query);
+      debug('Retrieved request for services. Headers: %j, Query params: %j',
+        req.headers, req.query);
 
-      serviceGuidsData.requests.push({
+      serviceGuidsData.requests().push({
         token: extractOAuthToken(req.header('Authorization')),
         serviceLabels: extractServiceLabels(req.query.q)
       });
 
-      const services = convert(serviceGuidsData.return);
+      const services = convert(serviceGuidsData.nextResponse());
       res.send(services);
     });
 
@@ -99,20 +95,8 @@ module.exports = () => {
   return {
     start,
     address: () => server.address(),
-    serviceGuids: {
-      return: {
-        always: (guids) => serviceGuidsData.return = guids
-      },
-      requests: () => serviceGuidsData.requests
-    },
-    usageEvents: {
-      return: {
-        firstTime: (events) => serviceUsageEventsData.return[0] = events,
-        secondTime: (events) => serviceUsageEventsData.return[1] = events
-      },
-      request: (index) => serviceUsageEventsData.requests[index],
-      requests: () => serviceUsageEventsData.requests
-    },
+    serviceGuids: serviceGuidsData,
+    usageEvents: serviceUsageEventsData,
     stop
   };
 };

@@ -1,7 +1,8 @@
 'use strict';
 
+/* eslint-disable max-len */
+
 const { extend } = require('underscore');
-const request = require('abacus-request');
 const moment = require('abacus-moment');
 const npm = require('abacus-npm')();
 

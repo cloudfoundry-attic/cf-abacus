@@ -26,13 +26,13 @@ const build = () => {
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.oauth.abacusCollectorScopes)
+        .whenScopesAre(fixture.oauth.abacusCollectorScopes)
         .return(fixture.oauth.abacusCollectorToken);
 
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.oauth.cfAdminScopes)
+        .whenScopesAre(fixture.oauth.cfAdminScopes)
         .return(fixture.oauth.cfAdminToken);
 
       const serviceUsageEvent = fixture
@@ -40,20 +40,39 @@ const build = () => {
         .get();
       usageEventMetadata = serviceUsageEvent.metadata;
 
-      externalSystemsMocks.cloudController.usageEvents.return.firstTime([serviceUsageEvent]);
-      externalSystemsMocks.cloudController.usageEvents.return.secondTime([serviceUsageEvent]);
+      externalSystemsMocks
+        .cloudController
+        .usageEvents
+        .return
+        .firstTime([serviceUsageEvent]);
 
-      // Event reporter (abacus-client) will retry 'fixture.env.retryCount' times to report usage to abacus.
-      // After that the whole process is retried (i.e. start reading again the events)
-      // Stub Abacus Collector so that it will force the bridge to retry the whole proces.
-      const responses = _(fixture.env.retryCount + 1).times(() => httpStatus.BAD_GATEWAY);
+      externalSystemsMocks
+        .cloudController
+        .usageEvents
+        .return
+        .secondTime([serviceUsageEvent]);
+
+      // Event reporter (abacus-client) will retry 'fixture.env.retryCount'
+      // times to report usage to abacus. After that the whole process is
+      // retried (i.e. start reading again the events).  Stub Abacus Collector
+      // so that it will force the bridge to retry the whole proces.
+      const failRequetsCount = fixture.env.retryCount + 1;
+      const responses = _(failRequetsCount).times(() => httpStatus.BAD_GATEWAY);
       responses.push(httpStatus.CREATED);
-      externalSystemsMocks.abacusCollector.collectUsageService.return.series(responses);
+
+      externalSystemsMocks
+        .abacusCollector
+        .collectUsageService
+        .return
+        .series(responses);
 
       yield carryOverDb.setup();
       fixture.bridge.start(externalSystemsMocks);
 
-      yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(3));
+      yield waitUntil(
+        serviceMock(
+          externalSystemsMocks.cloudController.usageEvents
+        ).received(3));
     }));
 
     after((done) => {
@@ -85,8 +104,12 @@ const build = () => {
         usage: fixture.collectorUsage(usageEventMetadata.created_at)
       }));
 
-      expect(externalSystemsMocks.abacusCollector.collectUsageService.requests())
-        .to.deep.equal(expectedRequests);
+      expect(
+        externalSystemsMocks
+          .abacusCollector
+          .collectUsageService
+          .requests()
+      ).to.deep.equal(expectedRequests);
     });
 
     it('Exposes correct statistics', yieldable.functioncb(function *() {

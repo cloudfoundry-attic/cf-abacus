@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint-disable max-len */
+
 const httpStatus = require('http-status-codes');
 
 const moment = require('abacus-moment');
@@ -26,13 +28,13 @@ const build = () => {
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.oauth.abacusCollectorScopes)
+        .whenScopesAre(fixture.oauth.abacusCollectorScopes)
         .return(fixture.oauth.abacusCollectorToken);
 
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.oauth.cfAdminScopes)
+        .whenScopesAre(fixture.oauth.cfAdminScopes)
         .return(fixture.oauth.cfAdminToken);
 
       const now = moment.now();
@@ -54,12 +56,19 @@ const build = () => {
         secondUsageEvent
       ]);
 
-      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
+      externalSystemsMocks
+        .abacusCollector
+        .collectUsageService
+        .return
+        .always(httpStatus.CREATED);
 
       yield carryOverDb.setup();
       fixture.bridge.start(externalSystemsMocks);
 
-      yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(2));
+      yield waitUntil(
+        serviceMock(
+          externalSystemsMocks.cloudController.usageEvents
+        ).received(2));
     }));
 
     after((done) => {
@@ -70,17 +79,33 @@ const build = () => {
 
     context('When abacus collector is called', () => {
       it('Two usages are sent', () => {
-        expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(2);
+        expect(
+          externalSystemsMocks
+            .abacusCollector
+            .collectUsageService
+            .requests()
+            .length
+        ).to.equal(2);
       });
 
       it('First recieved usage is as it was sent', () => {
-        expect(externalSystemsMocks.abacusCollector.collectUsageService.request(0).usage)
-          .to.deep.equal(fixture.collectorUsage(usageEventsTimestamp));
+        expect(
+          externalSystemsMocks
+            .abacusCollector
+            .collectUsageService
+            .request(0)
+            .usage
+        ).to.deep.equal(fixture.collectorUsage(usageEventsTimestamp));
       });
 
       it('Second recieved usage timestamp is adjusted', () => {
-        expect(externalSystemsMocks.abacusCollector.collectUsageService.request(1).usage)
-          .to.deep.equal(fixture.collectorUsage(usageEventsTimestamp + 1));
+        expect(
+          externalSystemsMocks
+            .abacusCollector
+            .collectUsageService
+            .request(1)
+            .usage
+        ).to.deep.equal(fixture.collectorUsage(usageEventsTimestamp + 1));
       });
     });
 

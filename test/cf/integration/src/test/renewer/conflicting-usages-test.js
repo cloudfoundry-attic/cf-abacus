@@ -37,7 +37,7 @@ describe('renewer sends conflicting documents', () => {
     externalSystemsMocks
       .uaaServer
       .tokenService
-      .whenScopes(fixture.abacusCollectorScopes)
+      .whenScopesAre(fixture.abacusCollectorScopes)
       .return(fixture.abacusCollectorToken);
 
     externalSystemsMocks
@@ -65,7 +65,10 @@ describe('renewer sends conflicting documents', () => {
     yield carryOverDb.put(carryOverDoc);
     fixture.renewer.start(externalSystemsMocks);
 
-    yield waitUntil(serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(1));
+    yield waitUntil(
+      serviceMock(
+        externalSystemsMocks.abacusCollector.collectUsageService
+      ).received(1));
   }));
 
   after((done) => {
@@ -74,10 +77,11 @@ describe('renewer sends conflicting documents', () => {
     externalSystemsMocks.stopAll(done);
   });
 
-  it('does not record an entry in carry-over', yieldable.functioncb(function *() {
-    const docs = yield carryOverDb.readCurrentMonthDocs();
-    expect(docs).to.deep.equal([]);
-  }));
+  it('does not record an entry in carry-over',
+    yieldable.functioncb(function *() {
+      const docs = yield carryOverDb.readCurrentMonthDocs();
+      expect(docs).to.deep.equal([]);
+    }));
 
   it('exposes correct statistics', yieldable.functioncb(function *() {
     const response = yield fixture.renewer.readStats.withValidToken();

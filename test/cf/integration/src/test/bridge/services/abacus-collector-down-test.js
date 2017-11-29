@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint-disable max-len */
+
 const abacusCollectorDownTestsDefinition = require('../test-definitions/abacus-collector-down-test-def');
 const servicesFixture = require('./fixture');
 

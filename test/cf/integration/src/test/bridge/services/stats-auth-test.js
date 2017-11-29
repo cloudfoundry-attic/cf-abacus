@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint-disable max-len */
+
 const statsAuthTestsDefinition = require('../test-definitions/stats-auth-test-def');
 const servicesFixture = require('./fixture');
 

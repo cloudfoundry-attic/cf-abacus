@@ -1,10 +1,12 @@
 'use strict';
-
 const httpStatus = require('http-status-codes');
+const { extend } = require('underscore');
 
 const debug = require('abacus-debug')('abacus-collector-mock');
 const express = require('abacus-express');
 const router = require('abacus-router');
+
+const createMockServiceData = require('./mock-service-data');
 
 const randomPort = 0;
 const resourceLocation = 'http://location.com';
@@ -21,21 +23,8 @@ module.exports = () => {
   let app;
   let server;
 
-  const collectUsageServiceData = {
-    requests: [],
-    returnStatusCode: {
-      always: undefined,
-      perRequest: []
-    }
-  };
-
-  const getUsageServiceData = {
-    requests: [],
-    return: {
-      always: undefined,
-      perRequest: []
-    }
-  };
+  const collectUsageServiceData = createMockServiceData();
+  const getUsageServiceData = createMockServiceData();
 
   const start = () => {
     app = express();
@@ -45,18 +34,17 @@ module.exports = () => {
     routes.post('/v1/metering/collected/usage', (req, res) => {
       debug('[/v1/metering/collected/usage] called. Usage: %j', req.body);
 
-      collectUsageServiceData.requests.push({
+      collectUsageServiceData.requests().push({
         token: extractOAuthToken(req.header('Authorization')),
         usage: req.body
       });
 
-      const responseCode = collectUsageServiceData.returnStatusCode.always
-        || collectUsageServiceData.returnStatusCode.perRequest[collectUsageServiceData.requests.length - 1];
+      const responseCode = collectUsageServiceData.nextResponse();
 
-      let responseBody;
       if (responseCode === httpStatus.CREATED)
         res.header('Location', resourceLocation);
 
+      let responseBody;
       if (responseCode === httpStatus.CONFLICT)
         responseBody = { error: 'Conflict' };
 
@@ -68,19 +56,17 @@ module.exports = () => {
     routes.get('/v1/metering/collected/usage/:usage_id', (req, res) => {
       debug('[v1/metering/collected/usage/%s] was called', req.params.usage_id);
 
-      getUsageServiceData.requests.push({
+      getUsageServiceData.requests().push({
         token: extractOAuthToken(req.header('Authorization')),
         usageId: req.params.usage_id
       });
 
-      const response = getUsageServiceData.return.always
-        || getUsageServiceData.return.perRequest[getUsageServiceData.requests.length - 1];
+      const response = getUsageServiceData.nextResponse();
       debug('[v1/metering/collected/usage/:usage_id] response: %j', response);
       res.status(response.statusCode).send(response.body);
     });
 
     app.use(router.batch(routes));
-    app.use(routes);
     server = app.listen(randomPort);
 
     return server.address();
@@ -93,27 +79,9 @@ module.exports = () => {
   return {
     start,
     address: () => server.address(),
-    collectUsageService: {
-      resourceLocation,
-      request: (n) => collectUsageServiceData.requests[n],
-      requests: (n) => collectUsageServiceData.requests,
-      return: {
-        always: (value) => collectUsageServiceData.returnStatusCode.always = value,
-        firstTime: (value) => collectUsageServiceData.returnStatusCode.perRequest[0] = value,
-        secondTime: (value) => collectUsageServiceData.returnStatusCode.perRequest[1] = value,
-        series: (values) => collectUsageServiceData.returnStatusCode.perRequest = values
-      }
-    },
-    getUsageService: {
-      request: (n) => getUsageServiceData.requests[n],
-      requests: (n) => getUsageServiceData.requests,
-      return: {
-        always: (value) => getUsageServiceData.return.always = value,
-        firstTime: (value) => getUsageServiceData.return.perRequest[0] = value,
-        secondTime: (value) => getUsageServiceData.return.perRequest[1] = value,
-        series: (values) => getUsageServiceData.return.perRequest = values
-      }
-    },
+    collectUsageService:
+      extend({}, collectUsageServiceData, { resourceLocation }),
+    getUsageService: getUsageServiceData,
     stop
   };
 };

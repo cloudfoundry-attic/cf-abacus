@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint-disable max-len */
+
 const sameTimestampEventsTestsDefinition = require('../test-definitions/same-timestamp-events-test-def');
 const servicesFixture = require('./fixture');
 

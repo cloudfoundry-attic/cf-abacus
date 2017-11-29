@@ -38,7 +38,7 @@ describe('renewer sends usage, but abacus is down', () => {
     externalSystemsMocks
       .uaaServer
       .tokenService
-      .whenScopes(fixture.abacusCollectorScopes)
+      .whenScopesAre(fixture.abacusCollectorScopes)
       .return(fixture.abacusCollectorToken);
 
     externalSystemsMocks
@@ -54,7 +54,11 @@ describe('renewer sends usage, but abacus is down', () => {
           .build()
       });
 
-    externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.BAD_GATEWAY);
+    externalSystemsMocks
+      .abacusCollector
+      .collectUsageService
+      .return
+      .always(httpStatus.BAD_GATEWAY);
 
     externalSystemsMocks.startAll();
 
@@ -77,10 +81,11 @@ describe('renewer sends usage, but abacus is down', () => {
   });
 
 
-  it('does not record an entry in carry-over', yieldable.functioncb(function *() {
-    const docs = yield carryOverDb.readCurrentMonthDocs();
-    expect(docs).to.deep.equal([]);
-  }));
+  it('does not record an entry in carry-over',
+    yieldable.functioncb(function *() {
+      const docs = yield carryOverDb.readCurrentMonthDocs();
+      expect(docs).to.deep.equal([]);
+    }));
 
   it('exposes correct statistics', yieldable.functioncb(function *() {
     const response = yield fixture.renewer.readStats.withValidToken();

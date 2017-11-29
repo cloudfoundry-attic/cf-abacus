@@ -23,13 +23,13 @@ const build = () => {
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.oauth.abacusCollectorScopes)
+        .whenScopesAre(fixture.oauth.abacusCollectorScopes)
         .return(fixture.oauth.abacusCollectorToken);
 
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.oauth.cfAdminScopes)
+        .whenScopesAre(fixture.oauth.cfAdminScopes)
         .return(fixture.oauth.cfAdminToken);
 
       yield carryOverDb.setup();

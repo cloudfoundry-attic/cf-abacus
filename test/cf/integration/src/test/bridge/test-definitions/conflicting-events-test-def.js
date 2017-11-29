@@ -23,13 +23,13 @@ const build = () => {
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.oauth.abacusCollectorScopes)
+        .whenScopesAre(fixture.oauth.abacusCollectorScopes)
         .return(fixture.oauth.abacusCollectorToken);
 
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.oauth.cfAdminScopes)
+        .whenScopesAre(fixture.oauth.cfAdminScopes)
         .return(fixture.oauth.cfAdminToken);
 
       const serviceUsageEvent = fixture
@@ -39,12 +39,19 @@ const build = () => {
         serviceUsageEvent
       ]);
 
-      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CONFLICT);
+      externalSystemsMocks
+        .abacusCollector
+        .collectUsageService
+        .return
+        .always(httpStatus.CONFLICT);
 
       yield carryOverDb.setup();
       fixture.bridge.start(externalSystemsMocks);
 
-      yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(2));
+      yield waitUntil(
+        serviceMock(
+          externalSystemsMocks.cloudController.usageEvents
+        ).received(2));
     }));
 
     after((done) => {
@@ -55,7 +62,13 @@ const build = () => {
 
 
     it('Abacus collector received the conflicting usage', () => {
-      expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(1);
+      expect(
+        externalSystemsMocks
+          .abacusCollector
+          .collectUsageService
+          .requests()
+          .length
+      ).to.equal(1);
     });
 
     it('Does not write entry in carry-over', yieldable.functioncb(function *() {

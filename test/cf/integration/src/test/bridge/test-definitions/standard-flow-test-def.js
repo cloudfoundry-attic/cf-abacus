@@ -30,13 +30,13 @@ const build = () => {
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.oauth.abacusCollectorScopes)
+        .whenScopesAre(fixture.oauth.abacusCollectorScopes)
         .return(fixture.oauth.abacusCollectorToken);
 
       externalSystemsMocks
         .uaaServer
         .tokenService
-        .whenScopes(fixture.oauth.cfAdminScopes)
+        .whenScopesAre(fixture.oauth.cfAdminScopes)
         .return(fixture.oauth.cfAdminToken);
 
       const firstServiceUsageEvent = fixture
@@ -44,20 +44,36 @@ const build = () => {
         .overwriteEventGuid(firstEventGuid)
         .get();
       firstUsageEventTimestamp = firstServiceUsageEvent.metadata.created_at;
+      externalSystemsMocks
+        .cloudController
+        .usageEvents
+        .return
+        .firstTime([firstServiceUsageEvent]);
+
       const secondServiceUsageEvent = fixture
         .usageEvent()
         .overwriteEventGuid(secondEventGuid)
         .get();
       secondUsageEventTimestamp = secondServiceUsageEvent.metadata.created_at;
-      externalSystemsMocks.cloudController.usageEvents.return.firstTime([firstServiceUsageEvent]);
-      externalSystemsMocks.cloudController.usageEvents.return.secondTime([secondServiceUsageEvent]);
+      externalSystemsMocks
+        .cloudController
+        .usageEvents
+        .return
+        .secondTime([secondServiceUsageEvent]);
 
-      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
+      externalSystemsMocks
+        .abacusCollector
+        .collectUsageService
+        .return
+        .always(httpStatus.CREATED);
 
       yield carryOverDb.setup();
       fixture.bridge.start(externalSystemsMocks);
 
-      yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(4));
+      yield waitUntil(
+        serviceMock(
+          externalSystemsMocks.cloudController.usageEvents
+        ).received(4));
     }));
 
     after((done) => {
@@ -94,12 +110,30 @@ const build = () => {
       });
 
       it('Collect Usage Service is called with correct arguments', () => {
-        expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(2);
-        expect(externalSystemsMocks.abacusCollector.collectUsageService.request(0)).to.deep.equal({
+        expect(
+          externalSystemsMocks
+            .abacusCollector
+            .collectUsageService
+            .requests()
+            .length
+        ).to.equal(2);
+
+        expect(
+          externalSystemsMocks
+            .abacusCollector
+            .collectUsageService
+            .request(0)
+        ).to.deep.equal({
           token: fixture.oauth.abacusCollectorToken,
           usage: fixture.collectorUsage(firstUsageEventTimestamp)
         });
-        expect(externalSystemsMocks.abacusCollector.collectUsageService.request(1)).to.deep.equal({
+
+        expect(
+          externalSystemsMocks
+            .abacusCollector
+            .collectUsageService
+            .request(1)
+        ).to.deep.equal({
           token: fixture.oauth.abacusCollectorToken,
           usage: fixture.collectorUsage(secondUsageEventTimestamp)
         });
@@ -107,10 +141,15 @@ const build = () => {
 
       it('Get OAuth Token Service is called with correct arguments', () => {
         const uaaServerMock = externalSystemsMocks.uaaServer;
-        // Expect 2 calls for every token (abacus and cfadmin) per Worker and Master processes
+        // Expect 2 calls for every token (abacus and cfadmin)
+        // per Worker and Master processes
         expect(uaaServerMock.tokenService.requestsCount()).to.equal(4);
 
-        const abacusCollectorTokenRequests = uaaServerMock.tokenService.requests.withScopes(fixture.oauth.abacusCollectorScopes);
+        const abacusCollectorTokenRequests = uaaServerMock
+          .tokenService
+          .requests
+          .withScopes(fixture.oauth.abacusCollectorScopes);
+
         expect(abacusCollectorTokenRequests).to.deep.equal(_(2).times(()=>({
           credentials: {
             clientId: fixture.env.abacusClientId,
@@ -119,7 +158,11 @@ const build = () => {
           scopes: fixture.oauth.abacusCollectorScopes
         })));
 
-        const cfAdminTokenRequests = uaaServerMock.tokenService.requests.withScopes(fixture.oauth.cfAdminScopes);
+        const cfAdminTokenRequests = uaaServerMock
+          .tokenService
+          .requests
+          .withScopes(fixture.oauth.cfAdminScopes);
+
         expect(cfAdminTokenRequests).to.deep.equal(_(2).times(()=>({
           credentials: {
             clientId: fixture.env.cfClientId,
@@ -131,8 +174,11 @@ const build = () => {
 
       it('Writes an entry in carry-over', yieldable.functioncb(function *() {
         const docs = yield carryOverDb.readCurrentMonthDocs();
+        const expectedCollectorId = externalSystemsMocks
+          .abacusCollector
+          .resourceLocation;
         expect(docs).to.deep.equal([{
-          collector_id: externalSystemsMocks.abacusCollector.collectUsageService.resourceLocation,
+          collector_id: expectedCollectorId,
           event_guid: secondEventGuid,
           state: fixture.defaultUsageEvent.state,
           timestamp: secondUsageEventTimestamp }]);
@@ -175,6 +221,3 @@ const testDef = {
 };
 
 module.exports = testDef;
-
-// Why services bridge posts to 'batch' endpoint, but application not ?????
-// review package.json

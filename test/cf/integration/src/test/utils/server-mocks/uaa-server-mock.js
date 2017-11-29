@@ -6,11 +6,14 @@ const isEqual = require('underscore').isEqual;
 const debug = require('abacus-debug')('uaa-server-mock');
 const express = require('abacus-express');
 
+const createMockServiceData = require('./mock-service-data');
+
 const randomPort = 0;
 
 const extractCredentials = (authHeader) => {
   const encodedCredentials = authHeader.split(' ')[1];
-  const decodedCredentials = Buffer.from(encodedCredentials, 'base64').toString();
+  const decodedCredentials = Buffer.from(encodedCredentials, 'base64')
+    .toString();
   const credentialsArray = decodedCredentials.split(':');
 
   return {
@@ -23,8 +26,7 @@ module.exports = () => {
   let app;
   let server;
 
-  const returns = [];
-  const requests = [];
+  const serviceData = createMockServiceData();
 
   const start = (cb) => {
     app = express();
@@ -38,14 +40,16 @@ module.exports = () => {
     });
 
     app.post('/oauth/token', (request, response) => {
-      debug('Called /oauth/token endpoint with query %j and headers: %j', request.query, request.headers);
+      debug('Called /oauth/token endpoint with query %j and headers: %j',
+        request.query, request.headers);
       const queryScopes = request.query.scope || '';
-      requests.push({
+      serviceData.requests().push({
         credentials: extractCredentials(request.header('Authorization')),
         scopes: queryScopes ? queryScopes.split(' ') : []
       });
 
-      const responseToken = returns[queryScopes];
+      const responseToken = serviceData.responseFor(queryScopes);
+
       debug('Returning Oauth Token: %s', responseToken);
       response.status(httpStatus.OK).send({
         access_token: responseToken,
@@ -65,17 +69,19 @@ module.exports = () => {
     start,
     address: () => server.address(),
     tokenService: {
-      requestsCount: () => requests.length,
+      requestsCount: () => serviceData.requests().length,
       requests: {
         withScopes: (scopes) => {
-          return requests.filter((request) => isEqual(request.scopes, scopes));
+          return serviceData
+            .requests()
+            .filter((request) => isEqual(request.scopes, scopes));
         }
       },
-      whenScopes: (scopes) => {
+      whenScopesAre: (scopes) => {
         const serializedScopes = scopes.join(' ');
         return {
           return: (returnValue) => {
-            returns[serializedScopes] = returnValue;
+            serviceData.return.for(serializedScopes).value(returnValue);
           }
         };
       }

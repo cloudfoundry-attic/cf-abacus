@@ -1,4 +1,5 @@
 'use strict';
+/* eslint-disable max-len */
 
 const extend = require('underscore').extend;
 

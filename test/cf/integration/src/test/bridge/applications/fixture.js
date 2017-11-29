@@ -1,5 +1,7 @@
 'use sterict';
 
+/* eslint-disable max-len */
+
 const npm = require('abacus-npm')();
 
 const createAbacusCollectorMock = require('../../utils/server-mocks/abacus-collector-mock');

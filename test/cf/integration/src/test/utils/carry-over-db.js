@@ -22,7 +22,8 @@ const uris = urienv({
   [dbalias]  : 5984
 });
 
-const db = dbClient(checkKeyPart, dbClient.dburi(uris[dbalias], 'abacus-carry-over'));
+const db = dbClient(checkKeyPart, dbClient.dburi(uris[dbalias],
+  'abacus-carry-over'));
 const getAllDocs = yieldable(db.allDocs);
 const putDoc = yieldable(db.put);
 const drop = yieldable(dbClient.drop);

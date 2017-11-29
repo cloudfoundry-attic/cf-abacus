@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint-disable max-len */
+
 const httpStatus = require('http-status-codes');
 const { omit } = require('underscore');
 
@@ -88,7 +90,7 @@ describe('renewer standard flow', () => {
     externalSystemsMocks
       .uaaServer
       .tokenService
-      .whenScopes(fixture.abacusCollectorScopes)
+      .whenScopesAre(fixture.abacusCollectorScopes)
       .return(fixture.abacusCollectorToken);
 
     externalSystemsMocks
@@ -122,7 +124,10 @@ describe('renewer standard flow', () => {
     yield carryOverDb.put(endOfLastMonthCarryOverDoc);
     fixture.renewer.start(externalSystemsMocks);
 
-    yield waitUntil(serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(3));
+    yield waitUntil(
+      serviceMock(
+        externalSystemsMocks.abacusCollector.collectUsageService
+      ).received(3));
   }));
 
   after((done) => {
@@ -168,17 +173,17 @@ describe('renewer standard flow', () => {
     const abacusCollectorMock = externalSystemsMocks.abacusCollector;
     const docs = yield carryOverDb.readCurrentMonthDocs();
     const expectedNewDocuments = [{
-      collector_id: abacusCollectorMock.collectUsageService.resourceLocation,
+      collector_id: abacusCollectorMock.resourceLocation,
       event_guid: startOfLastMonthCarryOverDoc.event_guid,
       state: startOfLastMonthCarryOverDoc.state,
       timestamp: startOfCurrentMonth
     },{
-      collector_id: abacusCollectorMock.collectUsageService.resourceLocation,
+      collector_id: abacusCollectorMock.resourceLocation,
       event_guid: middleOfLastMonthCarryOverDoc.event_guid,
       state: middleOfLastMonthCarryOverDoc.state,
       timestamp: startOfCurrentMonth
     },{
-      collector_id: abacusCollectorMock.collectUsageService.resourceLocation,
+      collector_id: abacusCollectorMock.resourceLocation,
       event_guid: endOfLastMonthCarryOverDoc.event_guid,
       state: endOfLastMonthCarryOverDoc.state,
       timestamp: startOfCurrentMonth
