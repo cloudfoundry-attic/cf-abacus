@@ -14,8 +14,11 @@ module.exports = () => {
       return returnKeyValue[key];
     },
     nextResponse: (scopes) => {
+      if (returnAlways)
+        return returnAlways;
+
       const requestNumber = serviceRequests.length - 1;
-      return returnAlways || returnSeries[requestNumber];
+      return returnSeries[requestNumber];
     },
     return: {
       firstTime: (value) => returnSeries[0] = value,

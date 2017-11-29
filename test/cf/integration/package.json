@@ -1,5 +1,5 @@
 {
-  "name": "abacus-cf-tests",
+  "name": "abacus-cf-integration-itest",
   "description": "CF Bridges & Renewer tests",
   "license": "Apache-2.0",
   "version": "1.0.0",
@@ -36,6 +36,7 @@
     "underscore": "^1.8.3",
     "abacus-cf-applications": "file:../../../lib/cf/applications",
     "abacus-cf-services": "file:../../../lib/cf/services",
+    "abacus-cf-renewer": "file:../../../lib/cf/renewer",
     "abacus-dbclient": "file:../../../lib/utils/dbclient",
     "abacus-debug": "file:../../../lib/utils/debug",
     "abacus-eslint": "file:../../../tools/eslint",

@@ -11,7 +11,7 @@ const router = require('abacus-router');
 const express = require('abacus-express');
 const dbclient = require('abacus-dbclient');
 const moment = require('abacus-moment');
-const npm = require('abacus-npm');
+const npm = require('abacus-npm')();
 
 const map = _.map;
 const range = _.range;
@@ -59,24 +59,24 @@ const startTimeout = commander.startTimeout || 30000;
 const totalTimeout = commander.totalTimeout || 60000;
 
 describe('abacus-usage-meter-itest', () => {
-  before((done) => {
+  before(() => {
     // Start local database server
-    if (!process.env.DB) 
+    if (!process.env.DB)
       npm.startModules([
         npm.modules.pouchserver,
         npm.modules.meter
-      ], done);
+      ]);
     else
       // Delete test dbs on the configured db server
       dbclient.drop(process.env.DB, /^abacus-meter-/, () => {
         npm.startModules([
           npm.modules.meter
-        ], done);
+        ]);
       });
   });
 
-  after((done) => {
-    npm.stopAllStarted(done);
+  after(() => {
+    npm.stopAllStarted();
   });
 
   it('meter normalized usage submissions', function(done) {

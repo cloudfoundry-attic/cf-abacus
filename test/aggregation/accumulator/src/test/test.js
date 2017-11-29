@@ -24,7 +24,7 @@ const range = _.range;
 const omit = _.omit;
 const extend = _.extend;
 
-const npm = require('abacus-npm');
+const npm = require('abacus-npm')();
 
 // Batch the requests
 const brequest = batch(request);
@@ -106,7 +106,7 @@ const buildQuantityWindows = (e, u, m, f, price) => {
 };
 
 describe('abacus-usage-accumulator-itest', () => {
-  before((done) => {
+  before(() => {
     const modules = [
       npm.modules.accountPlugin,
       npm.modules.accumulator
@@ -114,16 +114,16 @@ describe('abacus-usage-accumulator-itest', () => {
 
     if (!process.env.DB) {
       modules.push(npm.modules.pouchserver);
-      npm.startModules(modules, done);
+      npm.startModules(modules);
     }
     else
       dbclient.drop(process.env.DB, /^abacus-/, () => {
-        npm.startModules(modules, done);
+        npm.startModules(modules);
       });
   });
 
-  after((done) => {
-    npm.stopAllStarted(done);
+  after(() => {
+    npm.stopAllStarted();
   });
 
   it('accumulate metered usage submissions', function(done) {

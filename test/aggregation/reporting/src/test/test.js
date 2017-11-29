@@ -11,7 +11,7 @@ const throttle = require('abacus-throttle');
 const request = require('abacus-request');
 const dbclient = require('abacus-dbclient');
 const dataflow = require('abacus-dataflow');
-const npm = require('abacus-npm');
+const npm = require('abacus-npm')();
 const yieldable = require('abacus-yieldable');
 
 // BigNumber
@@ -251,7 +251,7 @@ const buildAggregatedQuantity = (p, u, ri, tri, count, end, f) => {
 };
 
 describe('abacus-usage-reporting-itest', () => {
-  before((done) => {
+  before(() => {
     const modules = [
       npm.modules.accountPlugin,
       npm.modules.reporting
@@ -259,16 +259,16 @@ describe('abacus-usage-reporting-itest', () => {
 
     if (!process.env.DB) {
       modules.push(npm.modules.pouchserver);
-      npm.startModules(modules, done);
+      npm.startModules(modules);
     }
     else
       dbclient.drop(process.env.DB, /^abacus-/, () => {
-        npm.startModules(modules, done);
+        npm.startModules(modules);
       });
   });
 
-  after((done) => {
-    npm.stopAllStarted(done);
+  after(() => {
+    npm.stopAllStarted();
   });
 
   it('report rated usage submissions', function(done) {

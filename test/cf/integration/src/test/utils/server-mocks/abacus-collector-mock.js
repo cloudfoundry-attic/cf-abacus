@@ -79,8 +79,8 @@ module.exports = () => {
   return {
     start,
     address: () => server.address(),
-    collectUsageService:
-      extend({}, collectUsageServiceData, { resourceLocation }),
+    resourceLocation,
+    collectUsageService: collectUsageServiceData,
     getUsageService: getUsageServiceData,
     stop
   };
