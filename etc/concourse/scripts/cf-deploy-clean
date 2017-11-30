@@ -15,6 +15,7 @@ getApps \\-old
 
 set +e
 echo "Deleting old applications ..."
+echo "Apps: ${APPS[@]}"
 echo ${APPS[@]} | xargs -n1 -P 50 cf delete -f
 
 echo "Clean-up finished"
