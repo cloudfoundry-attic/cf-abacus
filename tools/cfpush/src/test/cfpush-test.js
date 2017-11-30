@@ -187,10 +187,12 @@ describe('Test abacus cfpush', () => {
     });
 
     it('verify prepareZdm', () => {
+      const appName = `${prefix}${adjustedName}`;
       const orderedCommands = {
-        cfApp : `cf app ${adjustedName}`,
-        cfDelete : `cf delete -f ${adjustedName}-old`,
-        cfRename : `cf rename ${adjustedName} ${adjustedName}-old`
+        cfApp : `cf app ${appName}`,
+        cfDelete : `cf delete -f ${appName}-old`,
+        cfRename :
+          `cf rename ${appName} ${appName}-old`
       };
       const envMock = sinon.match.has('env', { CF_HOME: tmpDir.name });
 
