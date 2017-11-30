@@ -1,6 +1,5 @@
 'use strict';
 const httpStatus = require('http-status-codes');
-const { extend } = require('underscore');
 
 const debug = require('abacus-debug')('abacus-collector-mock');
 const express = require('abacus-express');

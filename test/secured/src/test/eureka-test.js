@@ -6,10 +6,9 @@ const _ = require('underscore');
 const clone = _.clone;
 
 const dbclient = require('abacus-dbclient');
-const npm = require('abacus-npm');
+const createLifecycleManager = require('abacus-lifecycle-manager');
 const request = require('abacus-request');
 
-// Parse command line options
 const argv = clone(process.argv);
 argv.splice(1, 1, 'secured-itest');
 commander
@@ -22,6 +21,7 @@ commander
 const startTimeout = commander.startTimeout || 5000;
 
 describe('eureka', function() {
+  let lifecycleManager;
   this.timeout(startTimeout);
 
   let eureka;
@@ -40,29 +40,28 @@ describe('eureka', function() {
 
     eureka = require('abacus-eureka');
 
+    lifecycleManager = createLifecycleManager();
     const modules = [
-      npm.modules.authServerPlugin,
-      npm.modules.eurekaPlugin
+      lifecycleManager.modules.authServerPlugin,
+      lifecycleManager.modules.eurekaPlugin
     ];
 
     const startModules = () => {
-      npm.startModules(modules, () => {
-        // Wait for auth server to start
-        request.waitFor('http://localhost::p/v2/info', { p: 9882 },
-          startTimeout, (err, value) => done(err));
-      });
+      lifecycleManager.startModules(modules);
+      request.waitFor('http://localhost::p',
+        { p: 9990 }, startTimeout, done);
     };
 
     if (!process.env.DB) {
-      modules.push(npm.modules.pouchserver);
+      modules.push(lifecycleManager.modules.pouchserver);
       startModules();
     }
     else
       dbclient.drop(process.env.DB, /^abacus-/, startModules);
   });
 
-  after((done) => {
-    npm.stopAllStarted(done);
+  after(() => {
+    lifecycleManager.stopAllStarted();
   });
 
   const checkInstance = (app, uri, expectToBeFound, done) => {

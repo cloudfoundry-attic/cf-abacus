@@ -33,6 +33,7 @@ const edebug = require('abacus-debug')('e-abacus-lifecycle-manager');
 const cp = require('child_process');
 
 const modules = {
+  authServerPlugin: 'abacus-authserver-plugin',
   accountPlugin: 'abacus-account-plugin',
   eurekaPlugin: 'abacus-eureka-plugin',
   provisioningPlugin: 'abacus-provisioning-plugin',
@@ -54,17 +55,17 @@ const getModuleDir = (module) => {
 
 const start = (module, env) => {
   const moduleDir = getModuleDir(module);
-  debug('Executing "start" operation on module "%s" in directory %s',
-    module, moduleDir);
+  debug(`Executing "start" operation on module ${module} in ` +
+    `directory ${moduleDir} with environment %o`, env);
 
   const startOperation = 'npm run start';
-  return cp.exec(startOperation,{
+  return cp.exec(startOperation, {
     cwd: moduleDir,
     env
   }, (err, stdout, stderr) => {
-    debug(stdout.toString());
+    debug(`stdout > ${stdout}`);
     edebug(err);
-    edebug(stderr.toString());
+    edebug(`stderr > ${stderr}`);
   });
 
 };
