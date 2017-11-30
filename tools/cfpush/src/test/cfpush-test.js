@@ -137,6 +137,7 @@ describe('Test command line args', () => {
     assert.calledWith(commander.option, '-s, --start');
     assert.calledWith(commander.option, '-r, --retries [value]',
       sinon.match.any, defaultRetriesAttempts);
+    assert.calledWith(commander.option, '-z, --prepare-zdm [boolean]');
   });
 
   it('verify mandatory arguments', () => {
@@ -170,15 +171,10 @@ describe('Test abacus cfpush', () => {
       clearStubs();
     });
 
-    it('verify prepareZdm', () => {
-      assert.calledWithExactly(cp.exec,
-        `cf delete ${adjustedName}-old`,
-        sinon.match.has('env', { CF_HOME: tmpDir.name }));
-    });
-
     it('verify CF_HOME content is copied to tmp dir', () => {
-      assert.calledThrice(fs.copySync);
-      assert.calledWithExactly(fs.copySync, `${cfHomeDirectory}/.cf`,
+      assert.calledWithExactly(
+        fs.copySync,
+        `${cfHomeDirectory}/.cf`,
         `${tmpDir.name}/.cf`);
     });
 
@@ -190,11 +186,34 @@ describe('Test abacus cfpush', () => {
         sinon.match.any);
     });
 
+    it('verify prepareZdm', () => {
+      const orderedCommands = {
+        cfApp : `cf app ${adjustedName}`,
+        cfDelete : `cf delete -f ${adjustedName}-old`,
+        cfRename : `cf rename ${adjustedName} ${adjustedName}-old`
+      };
+      const envMock = sinon.match.has('env', { CF_HOME: tmpDir.name });
+
+      assert.calledWithExactly(cp.exec, orderedCommands.cfDelete, envMock);
+      assert.calledWithExactly(cp.exec, orderedCommands.cfApp, envMock);
+      assert.calledWithExactly(cp.exec, orderedCommands.cfRename, envMock);
+
+      // verify order of execution
+      const calls = cp.exec.getCalls();
+      for(let i = 0; i < Object.keys(orderedCommands).length; i++)
+        assert.match(calls[i].args[0],
+          orderedCommands[Object.keys(orderedCommands)[i]]);
+    });
+
     it('verify cf push executed', () => {
-      assert.calledWithExactly(cp.exec,
+      const executeCommandCalls = 4;
+
+      assert.callCount(tmpDir.removeCallback, executeCommandCalls);
+      assert.calledWithExactly(
+        cp.exec,
         `cf push --no-start -f ${manifestPath}`,
-        sinon.match.has('env', { CF_HOME: tmpDir.name }));
-      assert.calledThrice(tmpDir.removeCallback);
+        sinon.match.has('env',
+        { CF_HOME: tmpDir.name }));
     });
   });
 

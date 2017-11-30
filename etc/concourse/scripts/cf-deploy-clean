@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+
+SCRIPT_DIR="${BASH_SOURCE%/*}"
+source $SCRIPT_DIR/common-functions
+
+echo "Logging to $CF_SYS_DOMAIN ..."
+if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
+  skip='--skip-ssl-validation'
+fi
+
+cf login -a https://api.$CF_SYS_DOMAIN -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE $skip
+getApps \\-old
+
+set +e
+echo "Deleting old applications ..."
+echo ${APPS[@]} | xargs -n1 -P 50 cf delete -f
+
+echo "Clean-up finished"

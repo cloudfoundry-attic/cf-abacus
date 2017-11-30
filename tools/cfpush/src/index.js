@@ -88,7 +88,7 @@ const push = (props, cb) => {
 
 const rename = (props, cb) => {
   const command = `cf rename ${props.name} ${props.name}-old`;
-  executeCommand(command, cb);
+  return executeCommand(command, cb);
 };
 
 const deleteOld = (props, cb) => {
@@ -97,12 +97,18 @@ const deleteOld = (props, cb) => {
 };
 
 const prepareZdm = (props, cb) => {
-  if (props.prepareZdm)
-    deleteOld(props, (error) => {
-      if (error)
-        return cb(error);
-      return rename(props, cb);
+  if (props.prepareZdm) {
+    const command = `cf app ${props.name}`;
+    executeCommand(command, (code) => {
+      if (code === 1)
+        return cb();
+      return deleteOld(props, (error) => {
+        if (error)
+          return cb(error);
+        return rename(props, cb);
+      });
     });
+  }
   else
     cb();
 };
@@ -147,14 +153,12 @@ const runCLI = () => {
     .option('-s, --start', 'starts an app after pushing')
     .option('-r, --retries [value]', 'number of retries if app push fails',
       defaultPushRetries)
-    .option('-z, --prepare-zdm',
+    .option('-z, --prepare-zdm [boolean]',
       'perform zero downtime (blue-green) deployment')
     .parse(process.argv);
 
   const requestZdm = commander.prepareZdm ?
       commander.prepareZdm : getBlueGreenOptionFromManifest();
-
-  console.log('>>>>', requestZdm);
 
   const commanderProps = {
     name: commander.name,
@@ -162,11 +166,10 @@ const runCLI = () => {
     conf: commander.conf,
     buildpack: commander.buildpack,
     prefix: commander.prefix,
+    start: commander.start,
     retries: commander.retries,
     prepareZdm: requestZdm
   };
-
-  console.log('zdm', commanderProps.prepareZdm);
 
   async.series([
     (callback) => createCfPushDir(callback),
