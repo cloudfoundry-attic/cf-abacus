@@ -13,7 +13,7 @@ const request = require('abacus-request');
 const clone = require('abacus-clone');
 const moment = require('abacus-moment');
 const timewindow = require('abacus-timewindow');
-const npm = require('abacus-npm');
+const lifecycleManager = require('abacus-lifecycle-manager')();
 
 const BigNumber = require('bignumber.js');
 BigNumber.config({ ERRORS: false });
@@ -131,24 +131,24 @@ const buildAggregatedWindows = (p, u, ri, tri, count, end, f, price) => {
 };
 
 describe('abacus-usage-aggregator-itest', () => {
-  before((done) => {
+  before(() => {
     const modules = [
-      npm.modules.accountPlugin,
-      npm.modules.aggregator
+      lifecycleManager.modules.accountPlugin,
+      lifecycleManager.modules.aggregator
     ];
 
     if (!process.env.DB) {
-      modules.push(npm.modules.pouchserver);
-      npm.startModules(modules, done);
+      modules.push(lifecycleManager.modules.pouchserver);
+      lifecycleManager.startModules(modules);
     }
     else
       dbclient.drop(process.env.DB, /^abacus-/, () => {
-        npm.startModules(modules, done);
+        lifecycleManager.startModules(modules);
       });
   });
 
-  after((done) => {
-    npm.stopAllStarted(done);
+  after(() => {
+    lifecycleManager.stopAllStarted();
   });
 
   it('aggregator accumulated usage submissions', function(done) {

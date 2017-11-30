@@ -30,9 +30,11 @@
   "devDependencies": {
     "abacus-debug": "file:../../lib/utils/debug",
     "abacus-eureka": "file:../../lib/utils/eureka",
+    "abacus-eureka-plugin": "file:../../lib/plugins/eureka",
+    "abacus-authserver-plugin": "file:../../lib/plugins/authserver",
     "abacus-eslint": "file:../../tools/eslint",
     "abacus-mocha": "file:../../tools/mocha",
-    "abacus-npm": "file:../lib/npm",
+    "abacus-lifecycle-manager": "file:../lib/lifecycle-manager",
     "abacus-publish": "file:../../tools/publish",
     "underscore": "^1.8.3",
     "commander": "2.8.1"

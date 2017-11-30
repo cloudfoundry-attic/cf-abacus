@@ -7,6 +7,8 @@
 // Implemented in ES5 for now
 /* eslint no-var: 0 */
 
+const recursiveReadSync = require('recursive-readdir-sync');
+
 if(process.env.LONGJOHN)
   require('longjohn');
 const _ = require('underscore');
@@ -71,7 +73,7 @@ const runCLI = () => {
 
   // Collect all test files
   const testDir = path.join(target(), 'test');
-  const files = fs.readdirSync(testDir).filter(
+  const files = recursiveReadSync(testDir).filter(
     (file) => file.endsWith(commander.file));
 
   // Execute all test files in child processes sequentially
@@ -82,14 +84,14 @@ const runCLI = () => {
     let args;
     if (contains(process.argv, '--command')) {
       args = [
-        '--file', path.join(testDir, file)
+        '--file', path.join(file)
       ];
       const index = process.argv.indexOf('--command');
       args = args.concat(process.argv.slice(index + 1));
     }
     else
       args = [
-        '--file', path.join(testDir, file),
+        '--file', path.join(file),
         '--istanbul-includes', commander.istanbulIncludes,
         '--timeout', commander.timeout
       ];

@@ -2,11 +2,6 @@
   "name": "cf-abacus",
   "version": "1.0.0",
   "dependencies": {
-    "@types/node": {
-      "version": "7.0.48",
-      "from": "@types/node@>=7.0.48 <8.0.0",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-7.0.48.tgz"
-    },
     "abacus-account-plugin": {
       "version": "1.0.0",
       "from": "lib/plugins/account",
@@ -66,147 +61,27 @@
       "from": "lib/cf/applications",
       "resolved": "file:lib/cf/applications"
     },
-    "abacus-cf-multiple-apps-itest": {
+    "abacus-cf-integration-itest": {
       "version": "1.0.0",
-      "from": "test/cf/multiple-apps",
-      "resolved": "file:test/cf/multiple-apps",
-      "dev": true,
-      "dependencies": {
-        "commander": {
-          "version": "2.8.1",
-          "from": "commander@2.8.1",
-          "resolved": "https://registry.npmjs.org/commander/-/commander-2.8.1.tgz",
-          "dev": true
-        }
-      }
-    },
-    "abacus-cf-multiple-services-itest": {
-      "version": "1.0.0",
-      "from": "test/cf/multiple-services",
-      "resolved": "file:test/cf/multiple-services",
-      "dev": true,
-      "dependencies": {
-        "commander": {
-          "version": "2.8.1",
-          "from": "commander@2.8.1",
-          "resolved": "https://registry.npmjs.org/commander/-/commander-2.8.1.tgz",
-          "dev": true
-        }
-      }
-    },
-    "abacus-cf-node-opts-itest": {
-      "version": "1.0.0",
-      "from": "test/cf/node-opts",
-      "resolved": "file:test/cf/node-opts",
-      "dev": true,
-      "dependencies": {
-        "commander": {
-          "version": "2.8.1",
-          "from": "commander@2.8.1",
-          "resolved": "https://registry.npmjs.org/commander/-/commander-2.8.1.tgz",
-          "dev": true
-        }
-      }
-    },
-    "abacus-cf-purge-itest": {
-      "version": "1.0.0",
-      "from": "test/cf/purge",
-      "resolved": "file:test/cf/purge",
-      "dev": true,
-      "dependencies": {
-        "commander": {
-          "version": "2.8.1",
-          "from": "commander@2.8.1",
-          "resolved": "https://registry.npmjs.org/commander/-/commander-2.8.1.tgz",
-          "dev": true
-        }
-      }
+      "from": "test/cf/integration",
+      "resolved": "file:test/cf/integration",
+      "dev": true
     },
     "abacus-cf-renewer": {
       "version": "1.0.0",
       "from": "lib/cf/renewer",
       "resolved": "file:lib/cf/renewer"
     },
-    "abacus-cf-renewer-itest": {
-      "version": "1.0.0",
-      "from": "test/cf/renewer",
-      "resolved": "file:test/cf/renewer",
-      "dev": true,
-      "dependencies": {
-        "commander": {
-          "version": "2.8.1",
-          "from": "commander@2.8.1",
-          "resolved": "https://registry.npmjs.org/commander/-/commander-2.8.1.tgz",
-          "dev": true
-        }
-      }
-    },
     "abacus-cf-services": {
       "version": "1.0.0",
       "from": "lib/cf/services",
       "resolved": "file:lib/cf/services"
-    },
-    "abacus-cf-single-app-itest": {
-      "version": "1.0.0",
-      "from": "test/cf/single-app",
-      "resolved": "file:test/cf/single-app",
-      "dev": true,
-      "dependencies": {
-        "commander": {
-          "version": "2.8.1",
-          "from": "commander@2.8.1",
-          "resolved": "https://registry.npmjs.org/commander/-/commander-2.8.1.tgz",
-          "dev": true
-        }
-      }
-    },
-    "abacus-cf-single-service-itest": {
-      "version": "1.0.0",
-      "from": "test/cf/single-service",
-      "resolved": "file:test/cf/single-service",
-      "dev": true,
-      "dependencies": {
-        "commander": {
-          "version": "2.8.1",
-          "from": "commander@2.8.1",
-          "resolved": "https://registry.npmjs.org/commander/-/commander-2.8.1.tgz",
-          "dev": true
-        }
-      }
-    },
-    "abacus-cf-slack-window-itest": {
-      "version": "1.0.0",
-      "from": "test/cf/slack-window",
-      "resolved": "file:test/cf/slack-window",
-      "dev": true,
-      "dependencies": {
-        "commander": {
-          "version": "2.8.1",
-          "from": "commander@2.8.1",
-          "resolved": "https://registry.npmjs.org/commander/-/commander-2.8.1.tgz",
-          "dev": true
-        }
-      }
     },
     "abacus-cf-smoke": {
       "version": "1.0.0",
       "from": "test/cf/smoke",
       "resolved": "file:test/cf/smoke",
       "dev": true
-    },
-    "abacus-cf-timeshift-itest": {
-      "version": "1.0.0",
-      "from": "test/cf/timeshift",
-      "resolved": "file:test/cf/timeshift",
-      "dev": true,
-      "dependencies": {
-        "commander": {
-          "version": "2.8.1",
-          "from": "commander@2.8.1",
-          "resolved": "https://registry.npmjs.org/commander/-/commander-2.8.1.tgz",
-          "dev": true
-        }
-      }
     },
     "abacus-cfpack": {
       "version": "1.0.0",
@@ -218,7 +93,15 @@
       "version": "1.0.0",
       "from": "tools/cfpush",
       "resolved": "file:tools/cfpush",
-      "dev": true
+      "dev": true,
+      "dependencies": {
+        "tmp": {
+          "version": "0.0.31",
+          "from": "tmp@>=0.0.31 <0.0.32",
+          "resolved": "https://registry.npmjs.org/tmp/-/tmp-0.0.31.tgz",
+          "dev": true
+        }
+      }
     },
     "abacus-client": {
       "version": "1.0.0",
@@ -402,9 +285,9 @@
           "dev": true
         },
         "eslint": {
-          "version": "4.11.0",
+          "version": "4.12.1",
           "from": "eslint@>=4.1.7 <5.0.0",
-          "resolved": "https://registry.npmjs.org/eslint/-/eslint-4.11.0.tgz",
+          "resolved": "https://registry.npmjs.org/eslint/-/eslint-4.12.1.tgz",
           "dev": true,
           "dependencies": {
             "optionator": {
@@ -419,6 +302,12 @@
           "version": "2.0.0",
           "from": "figures@>=2.0.0 <3.0.0",
           "resolved": "https://registry.npmjs.org/figures/-/figures-2.0.0.tgz",
+          "dev": true
+        },
+        "globals": {
+          "version": "11.0.1",
+          "from": "globals@>=11.0.1 <12.0.0",
+          "resolved": "https://registry.npmjs.org/globals/-/globals-11.0.1.tgz",
           "dev": true
         },
         "has-flag": {
@@ -586,6 +475,12 @@
       "from": "lib/utils/launcher",
       "resolved": "file:lib/utils/launcher"
     },
+    "abacus-lifecycle-manager": {
+      "version": "1.0.0",
+      "from": "test/lib/lifecycle-manager",
+      "resolved": "file:test/lib/lifecycle-manager",
+      "dev": true
+    },
     "abacus-lock": {
       "version": "1.0.0",
       "from": "lib/utils/lock",
@@ -661,12 +556,6 @@
       "version": "1.0.0",
       "from": "lib/utils/mongoclient",
       "resolved": "file:lib/utils/mongoclient"
-    },
-    "abacus-npm": {
-      "version": "1.0.0",
-      "from": "test/lib/npm",
-      "resolved": "file:test/lib/npm",
-      "dev": true
     },
     "abacus-oauth": {
       "version": "1.0.0",
@@ -780,15 +669,7 @@
       "version": "1.0.0",
       "from": "test/secured",
       "resolved": "file:test/secured",
-      "dev": true,
-      "dependencies": {
-        "commander": {
-          "version": "2.8.1",
-          "from": "commander@2.8.1",
-          "resolved": "https://registry.npmjs.org/commander/-/commander-2.8.1.tgz",
-          "dev": true
-        }
-      }
+      "dev": true
     },
     "abacus-seqid": {
       "version": "1.0.0",
@@ -984,9 +865,9 @@
       "resolved": "https://registry.npmjs.org/after/-/after-0.8.2.tgz"
     },
     "ajv": {
-      "version": "5.4.0",
+      "version": "5.5.0",
       "from": "ajv@>=5.1.0 <6.0.0",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-5.4.0.tgz",
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-5.5.0.tgz",
       "dependencies": {
         "co": {
           "version": "4.6.0",
@@ -1290,9 +1171,9 @@
       "resolved": "https://registry.npmjs.org/chalk/-/chalk-1.1.3.tgz"
     },
     "chardet": {
-      "version": "0.4.0",
+      "version": "0.4.2",
       "from": "chardet@>=0.4.0 <0.5.0",
-      "resolved": "https://registry.npmjs.org/chardet/-/chardet-0.4.0.tgz",
+      "resolved": "https://registry.npmjs.org/chardet/-/chardet-0.4.2.tgz",
       "dev": true
     },
     "check-node-version": {
@@ -1360,9 +1241,9 @@
       "resolved": "https://registry.npmjs.org/combined-stream/-/combined-stream-1.0.5.tgz"
     },
     "commander": {
-      "version": "2.12.0",
+      "version": "2.12.2",
       "from": "commander@>=2.8.1 <3.0.0",
-      "resolved": "https://registry.npmjs.org/commander/-/commander-2.12.0.tgz"
+      "resolved": "https://registry.npmjs.org/commander/-/commander-2.12.2.tgz"
     },
     "commoner": {
       "version": "0.10.8",
@@ -1425,9 +1306,9 @@
       "resolved": "https://registry.npmjs.org/content-type/-/content-type-1.0.4.tgz"
     },
     "convert-source-map": {
-      "version": "1.5.0",
+      "version": "1.5.1",
       "from": "convert-source-map@>=1.1.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/convert-source-map/-/convert-source-map-1.5.0.tgz"
+      "resolved": "https://registry.npmjs.org/convert-source-map/-/convert-source-map-1.5.1.tgz"
     },
     "cookie": {
       "version": "0.3.1",
@@ -1766,16 +1647,9 @@
       "resolved": "https://registry.npmjs.org/destroy/-/destroy-1.0.4.tgz"
     },
     "detective": {
-      "version": "4.5.0",
+      "version": "4.6.0",
       "from": "detective@>=4.3.1 <5.0.0",
-      "resolved": "https://registry.npmjs.org/detective/-/detective-4.5.0.tgz",
-      "dependencies": {
-        "acorn": {
-          "version": "4.0.13",
-          "from": "acorn@>=4.0.3 <5.0.0",
-          "resolved": "https://registry.npmjs.org/acorn/-/acorn-4.0.13.tgz"
-        }
-      }
+      "resolved": "https://registry.npmjs.org/detective/-/detective-4.6.0.tgz"
     },
     "diff": {
       "version": "3.2.0",
@@ -1783,9 +1657,9 @@
       "resolved": "https://registry.npmjs.org/diff/-/diff-3.2.0.tgz"
     },
     "doctrine": {
-      "version": "2.0.0",
+      "version": "2.0.2",
       "from": "doctrine@>=2.0.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/doctrine/-/doctrine-2.0.0.tgz"
+      "resolved": "https://registry.npmjs.org/doctrine/-/doctrine-2.0.2.tgz"
     },
     "dom-serializer": {
       "version": "0.1.0",
@@ -1911,9 +1785,9 @@
       }
     },
     "es5-ext": {
-      "version": "0.10.35",
+      "version": "0.10.37",
       "from": "es5-ext@>=0.10.14 <0.11.0",
-      "resolved": "https://registry.npmjs.org/es5-ext/-/es5-ext-0.10.35.tgz"
+      "resolved": "https://registry.npmjs.org/es5-ext/-/es5-ext-0.10.37.tgz"
     },
     "es6-iterator": {
       "version": "2.0.3",
@@ -2124,15 +1998,7 @@
       "version": "2.1.0",
       "from": "external-editor@>=2.0.4 <3.0.0",
       "resolved": "https://registry.npmjs.org/external-editor/-/external-editor-2.1.0.tgz",
-      "dev": true,
-      "dependencies": {
-        "tmp": {
-          "version": "0.0.33",
-          "from": "tmp@>=0.0.33 <0.0.34",
-          "resolved": "https://registry.npmjs.org/tmp/-/tmp-0.0.33.tgz",
-          "dev": true
-        }
-      }
+      "dev": true
     },
     "extsprintf": {
       "version": "1.3.0",
@@ -2591,6 +2457,12 @@
       "from": "http-signature@>=1.2.0 <1.3.0",
       "resolved": "https://registry.npmjs.org/http-signature/-/http-signature-1.2.0.tgz"
     },
+    "http-status-codes": {
+      "version": "1.3.0",
+      "from": "http-status-codes@>=1.3.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/http-status-codes/-/http-status-codes-1.3.0.tgz",
+      "dev": true
+    },
     "hyperquest": {
       "version": "1.2.0",
       "from": "hyperquest@>=1.2.0 <1.3.0",
@@ -2671,9 +2543,9 @@
       "resolved": "https://registry.npmjs.org/inquirer/-/inquirer-0.12.0.tgz"
     },
     "interpret": {
-      "version": "1.0.4",
+      "version": "1.1.0",
       "from": "interpret@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/interpret/-/interpret-1.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/interpret/-/interpret-1.1.0.tgz"
     },
     "ipaddr.js": {
       "version": "1.5.2",
@@ -2761,9 +2633,9 @@
       "resolved": "https://registry.npmjs.org/is-path-in-cwd/-/is-path-in-cwd-1.0.0.tgz"
     },
     "is-path-inside": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "from": "is-path-inside@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/is-path-inside/-/is-path-inside-1.0.0.tgz"
+      "resolved": "https://registry.npmjs.org/is-path-inside/-/is-path-inside-1.0.1.tgz"
     },
     "is-primitive": {
       "version": "2.0.0",
@@ -3316,9 +3188,9 @@
       }
     },
     "moment": {
-      "version": "2.19.2",
+      "version": "2.19.3",
       "from": "moment@>=2.17.1 <3.0.0",
-      "resolved": "https://registry.npmjs.org/moment/-/moment-2.19.2.tgz"
+      "resolved": "https://registry.npmjs.org/moment/-/moment-2.19.3.tgz"
     },
     "mongodb": {
       "version": "2.2.33",
@@ -4430,6 +4302,11 @@
       "from": "rechoir@>=0.6.2 <0.7.0",
       "resolved": "https://registry.npmjs.org/rechoir/-/rechoir-0.6.2.tgz"
     },
+    "recursive-readdir-sync": {
+      "version": "1.0.6",
+      "from": "recursive-readdir-sync@1.0.6",
+      "resolved": "https://registry.npmjs.org/recursive-readdir-sync/-/recursive-readdir-sync-1.0.6.tgz"
+    },
     "repeating": {
       "version": "1.1.3",
       "from": "repeating@>=1.1.0 <2.0.0",
@@ -4869,9 +4746,9 @@
       "resolved": "https://registry.npmjs.org/tiny-queue/-/tiny-queue-0.2.1.tgz"
     },
     "tmp": {
-      "version": "0.0.31",
-      "from": "tmp@>=0.0.31 <0.0.32",
-      "resolved": "https://registry.npmjs.org/tmp/-/tmp-0.0.31.tgz",
+      "version": "0.0.33",
+      "from": "tmp@>=0.0.33 <0.0.34",
+      "resolved": "https://registry.npmjs.org/tmp/-/tmp-0.0.33.tgz",
       "dev": true
     },
     "to-boolean-x": {
