@@ -11,7 +11,7 @@ if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
 fi
 
 cf login -a https://api.$CF_SYS_DOMAIN -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE $skip
-getApps \\-old
+getApps '\-old '
 
 set +e
 echo "Deleting old applications ..."
