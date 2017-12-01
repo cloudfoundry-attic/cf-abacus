@@ -136,7 +136,6 @@ const getBlueGreenOptionFromManifest = () => {
   const manifestLoc = path.join(process.cwd(), originalManifestFilename);
   try {
     const manifest = yaml.load(fs.readFileSync(manifestLoc));
-    console.log('istrue', manifest.applications[0].blue_green_enabled === true);
     return manifest.applications[0].blue_green_enabled === true;
   }
   catch (err) {
