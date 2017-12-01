@@ -160,7 +160,7 @@ const runCLI = () => {
     .parse(process.argv);
 
   const requestZdm = commander.prepareZdm ?
-      commander.prepareZdm : getBlueGreenOptionFromManifest();
+    commander.prepareZdm : getBlueGreenOptionFromManifest();
 
   const commanderProps = {
     name: commander.name,

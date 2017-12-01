@@ -215,7 +215,7 @@ describe('Test abacus cfpush', () => {
         cp.exec,
         `cf push --no-start -f ${manifestPath}`,
         sinon.match.has('env',
-        { CF_HOME: tmpDir.name }));
+          { CF_HOME: tmpDir.name }));
     });
   });
 
