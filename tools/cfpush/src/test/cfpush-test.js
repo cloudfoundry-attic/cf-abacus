@@ -196,8 +196,8 @@ describe('Test abacus cfpush', () => {
       };
       const envMock = sinon.match.has('env', { CF_HOME: tmpDir.name });
 
-      assert.calledWithExactly(cp.exec, orderedCommands.cfDelete, envMock);
       assert.calledWithExactly(cp.exec, orderedCommands.cfApp, envMock);
+      assert.calledWithExactly(cp.exec, orderedCommands.cfDelete, envMock);
       assert.calledWithExactly(cp.exec, orderedCommands.cfRename, envMock);
 
       // verify order of execution

@@ -103,7 +103,7 @@ const prepareZdm = (props, cb) => {
     const appName = `${props.prefix}${props.name}`;
     const command = `cf app ${appName}`;
     executeCommand(command, (code) => {
-      if (code !== 0)
+      if (code > 0)
         return cb();
       return deleteOld(props, (error) => {
         if (error)
