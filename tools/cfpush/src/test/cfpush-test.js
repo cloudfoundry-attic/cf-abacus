@@ -20,6 +20,7 @@ const adjustedInstances = 3;
 const adjustedConf = 'adjusted-conf';
 const adjustedBuildpack = 'adjusted-buildpack';
 const retryAttepmts = 3;
+// const prepareZdm = true;
 
 const stubFileSystem = () => {
   stub(fs, 'mkdir').callsFake((dirName, cb) => {
@@ -83,6 +84,7 @@ const stubCommander = () => {
   commander.conf = adjustedConf;
   commander.prefix = prefix;
   commander.retries = retryAttepmts;
+  commander.prepareZdm = true;
 };
 
 const stubRemanifester = () => {
@@ -120,7 +122,7 @@ describe('Test command line args', () => {
   });
 
   it('verify all arguments parsed', () => {
-    const commandLineArgsCount = 7;
+    const commandLineArgsCount = 8;
     assert.callCount(commander.option, commandLineArgsCount);
     assert.calledOnce(commander.parse);
   });
@@ -135,6 +137,7 @@ describe('Test command line args', () => {
     assert.calledWith(commander.option, '-s, --start');
     assert.calledWith(commander.option, '-r, --retries [value]',
       sinon.match.any, defaultRetriesAttempts);
+    assert.calledWith(commander.option, '-z, --prepare-zdm [boolean]');
   });
 
   it('verify mandatory arguments', () => {
@@ -161,7 +164,6 @@ describe('Test abacus cfpush', () => {
 
     before(() => {
       stubChildProcessWith(onCloseHandlers.alwaysSuccessfulPush);
-
       cfpush.runCLI();
     });
 
@@ -170,8 +172,9 @@ describe('Test abacus cfpush', () => {
     });
 
     it('verify CF_HOME content is copied to tmp dir', () => {
-      assert.calledOnce(fs.copySync);
-      assert.calledWithExactly(fs.copySync, `${cfHomeDirectory}/.cf`,
+      assert.calledWithExactly(
+        fs.copySync,
+        `${cfHomeDirectory}/.cf`,
         `${tmpDir.name}/.cf`);
     });
 
@@ -183,15 +186,44 @@ describe('Test abacus cfpush', () => {
         sinon.match.any);
     });
 
+    it('verify prepareZdm', () => {
+      const appName = `${prefix}${adjustedName}`;
+      const orderedCommands = {
+        cfApp : `cf app ${appName}`,
+        cfDelete : `cf delete -f ${appName}-old`,
+        cfRename :
+          `cf rename ${appName} ${appName}-old`
+      };
+      const envMock = sinon.match.has('env', { CF_HOME: tmpDir.name });
+
+      assert.calledWithExactly(cp.exec, orderedCommands.cfApp, envMock);
+      assert.calledWithExactly(cp.exec, orderedCommands.cfDelete, envMock);
+      assert.calledWithExactly(cp.exec, orderedCommands.cfRename, envMock);
+
+      // verify order of execution
+      const calls = cp.exec.getCalls();
+      for(let i = 0; i < Object.keys(orderedCommands).length; i++)
+        assert.match(calls[i].args[0],
+          orderedCommands[Object.keys(orderedCommands)[i]]);
+    });
+
     it('verify cf push executed', () => {
-      assert.calledWithExactly(cp.exec,
+      const executeCommandCalls = 4;
+
+      assert.callCount(tmpDir.removeCallback, executeCommandCalls);
+      assert.calledWithExactly(
+        cp.exec,
         `cf push --no-start -f ${manifestPath}`,
-        sinon.match.has('env', { CF_HOME: tmpDir.name }));
-      assert.calledOnce(tmpDir.removeCallback);
+        sinon.match.has('env',
+          { CF_HOME: tmpDir.name }));
     });
   });
 
   context('when application push fails', () => {
+
+    before(() => {
+      commander.prepareZdm = false;
+    });
 
     const verifyPushRetryAttempts = (expectedAttempts) => {
       assert.callCount(cp.exec, expectedAttempts);

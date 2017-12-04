@@ -12,6 +12,7 @@ const commander = require('commander');
 const fs = require('fs-extra');
 const tmp = require('tmp');
 const remanifester = require('./lib/remanifester.js');
+const yaml = require('js-yaml');
 
 tmp.setGracefulCleanup();
 
@@ -60,11 +61,7 @@ const prepareTmpDir = () => {
   return tmpDir;
 };
 
-const push = (props, cb) => {
-  const startParam = props.start ? '' : '--no-start';
-  const command =
-  `cf push ${startParam} -f .cfpush/${props.name}-${originalManifestFilename}`;
-
+const executeCommand = (command, cb) => {
   const tmpDir = prepareTmpDir();
   const ex = cp.exec(command, {
     cwd: process.cwd(),
@@ -80,6 +77,43 @@ const push = (props, cb) => {
     tmpDir.removeCallback();
     cb(code);
   });
+};
+
+const push = (props, cb) => {
+  const startParam = props.start ? '' : '--no-start';
+  const command =
+  `cf push ${startParam} -f .cfpush/${props.name}-${originalManifestFilename}`;
+  executeCommand(command, cb);
+};
+
+const rename = (props, cb) => {
+  const appName = `${props.prefix}${props.name}`;
+  const command = `cf rename ${appName} ${appName}-old`;
+  return executeCommand(command, cb);
+};
+
+const deleteOld = (props, cb) => {
+  const appName = `${props.prefix}${props.name}`;
+  const command = `cf delete -f ${appName}-old`;
+  executeCommand(command, cb);
+};
+
+const prepareZdm = (props, cb) => {
+  if (props.prepareZdm) {
+    const appName = `${props.prefix}${props.name}`;
+    const command = `cf app ${appName}`;
+    executeCommand(command, (code) => {
+      if (code > 0)
+        return cb();
+      return deleteOld(props, (error) => {
+        if (error)
+          return cb(error);
+        return rename(props, cb);
+      });
+    });
+  }
+  else
+    cb();
 };
 
 const retryPush = (properties, cb) => {
@@ -98,6 +132,17 @@ const retryPush = (properties, cb) => {
   push(properties, retryCb);
 };
 
+const getBlueGreenOptionFromManifest = () => {
+  const manifestLoc = path.join(process.cwd(), originalManifestFilename);
+  try {
+    const manifest = yaml.load(fs.readFileSync(manifestLoc));
+    return manifest.applications[0].zdm === true;
+  }
+  catch (err) {
+    return false;
+  }
+};
+
 const runCLI = () => {
   commander
     .option('-n, --name <name>', 'app name',
@@ -110,7 +155,12 @@ const runCLI = () => {
     .option('-s, --start', 'starts an app after pushing')
     .option('-r, --retries [value]', 'number of retries if app push fails',
       defaultPushRetries)
+    .option('-z, --prepare-zdm [boolean]',
+      'perform zero downtime (blue-green) deployment')
     .parse(process.argv);
+
+  const requestZdm = commander.prepareZdm ?
+    commander.prepareZdm : getBlueGreenOptionFromManifest();
 
   const commanderProps = {
     name: commander.name,
@@ -118,12 +168,15 @@ const runCLI = () => {
     conf: commander.conf,
     buildpack: commander.buildpack,
     prefix: commander.prefix,
-    retries: commander.retries
+    start: commander.start,
+    retries: commander.retries,
+    prepareZdm: requestZdm
   };
 
   async.series([
     (callback) => createCfPushDir(callback),
     (callback) => remanifest(commanderProps, callback),
+    (callback) => prepareZdm(commanderProps, callback),
     (callback) => retryPush(commanderProps, callback)
   ], (error, results) => {
     if (error) {
