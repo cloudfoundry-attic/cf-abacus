@@ -103,7 +103,7 @@ const prepareZdm = (props, cb) => {
     const appName = `${props.prefix}${props.name}`;
     const command = `cf app ${appName}`;
     executeCommand(command, (code) => {
-      if (code === 1)
+      if (code !== 0)
         return cb();
       return deleteOld(props, (error) => {
         if (error)
@@ -136,7 +136,7 @@ const getBlueGreenOptionFromManifest = () => {
   const manifestLoc = path.join(process.cwd(), originalManifestFilename);
   try {
     const manifest = yaml.load(fs.readFileSync(manifestLoc));
-    return manifest.applications[0].blue_green_enabled === true;
+    return manifest.applications[0].zdm === true;
   }
   catch (err) {
     return false;
