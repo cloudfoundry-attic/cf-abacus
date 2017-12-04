@@ -1,5 +1,3 @@
-// GraphQL shorthand notation schema for usage reports
-
 type PlanMetric {
   metric: String
   quantity: Float
@@ -28,9 +26,12 @@ type Resource {
   plans: [Plan]
 }
 
-enum ConsumerType { 'CF_APP', 'EXTERNAL' }
+enum ConsumerType {
+  CF_APP,
+  EXTERNAL
+}
 
-type ConsumerID = {
+type ConsumerID {
   type: ConsumerType
   consumer_id: String
 }
