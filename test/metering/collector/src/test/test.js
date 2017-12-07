@@ -8,7 +8,7 @@ const router = require('abacus-router');
 const express = require('abacus-express');
 const dbclient = require('abacus-dbclient');
 const moment = require('abacus-moment');
-const npm = require('abacus-npm');
+const lifecycleManager = require('abacus-lifecycle-manager')();
 
 const _ = require('underscore');
 const map = _.map;
@@ -57,25 +57,25 @@ const startTimeout = commander.startTimeout || 30000;
 const totalTimeout = commander.totalTimeout || 60000;
 
 describe('abacus-usage-collector-itest', () => {
-  before((done) => {
+  before(() => {
     const modules = [
-      npm.modules.provisioningPlugin,
-      npm.modules.accountPlugin,
-      npm.modules.collector
+      lifecycleManager.modules.provisioningPlugin,
+      lifecycleManager.modules.accountPlugin,
+      lifecycleManager.modules.collector
     ];
 
     if (!process.env.DB) {
-      modules.push(npm.modules.pouchserver);
-      npm.startModules(modules, done);
+      modules.push(lifecycleManager.modules.pouchserver);
+      lifecycleManager.startModules(modules);
     }
     else
       dbclient.drop(process.env.DB, /^abacus-/, () => {
-        npm.startModules(modules, done);
+        lifecycleManager.startModules(modules);
       });
   });
 
-  after((done) => {
-    npm.stopAllStarted(done);
+  after(() => {
+    lifecycleManager.stopAllStarted();
   });
 
   it('collect measured usage submissions', function(done) {

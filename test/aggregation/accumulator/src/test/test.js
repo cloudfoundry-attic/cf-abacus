@@ -24,7 +24,7 @@ const range = _.range;
 const omit = _.omit;
 const extend = _.extend;
 
-const npm = require('abacus-npm');
+const lifecycleManager = require('abacus-lifecycle-manager')();
 
 // Batch the requests
 const brequest = batch(request);
@@ -106,24 +106,24 @@ const buildQuantityWindows = (e, u, m, f, price) => {
 };
 
 describe('abacus-usage-accumulator-itest', () => {
-  before((done) => {
+  before(() => {
     const modules = [
-      npm.modules.accountPlugin,
-      npm.modules.accumulator
+      lifecycleManager.modules.accountPlugin,
+      lifecycleManager.modules.accumulator
     ];
 
     if (!process.env.DB) {
-      modules.push(npm.modules.pouchserver);
-      npm.startModules(modules, done);
+      modules.push(lifecycleManager.modules.pouchserver);
+      lifecycleManager.startModules(modules);
     }
     else
       dbclient.drop(process.env.DB, /^abacus-/, () => {
-        npm.startModules(modules, done);
+        lifecycleManager.startModules(modules);
       });
   });
 
-  after((done) => {
-    npm.stopAllStarted(done);
+  after(() => {
+    lifecycleManager.stopAllStarted();
   });
 
   it('accumulate metered usage submissions', function(done) {

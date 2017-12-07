@@ -6,10 +6,9 @@ const _ = require('underscore');
 const clone = _.clone;
 
 const dbclient = require('abacus-dbclient');
-const npm = require('abacus-npm');
+const lifecycleManager = require('abacus-lifecycle-manager')();
 const request = require('abacus-request');
 
-// Parse command line options
 const argv = clone(process.argv);
 argv.splice(1, 1, 'secured-itest');
 commander
@@ -25,39 +24,27 @@ describe('healthcheck', function() {
   this.timeout(startTimeout);
 
   before((done) => {
-    process.env.SECURED = true;
-    process.env.JWTALGO = 'HS256';
-    process.env.JWTKEY = 'encode';
-
-    process.env.API = 'http://localhost:9882';
-
-    process.env.EUREKA = 'http://localhost:9990';
-    process.env.EUREKA_USER = 'user';
-    process.env.EUREKA_PASSWORD = 'password';
-    process.env.EUREKA_REGISTER_INTERVAL = 200;
-
     const modules = [
-      npm.modules.authServerPlugin,
-      npm.modules.eurekaPlugin
+      lifecycleManager.modules.authServerPlugin,
+      lifecycleManager.modules.eurekaPlugin
     ];
 
     const startModules = () => {
-      npm.startModules(modules, () => {
-        request.waitFor('http://localhost::p/eureka/v2', { p: 9882 },
-          startTimeout, (err, value) => done(err));
-      });
+      lifecycleManager.startModules(modules);
+      request.waitFor('http://localhost::p', { p: 9882 },
+        startTimeout, (err, value) => done(err));
     };
 
     if (!process.env.DB) {
-      modules.push(npm.modules.pouchserver);
+      modules.push(lifecycleManager.modules.pouchserver);
       startModules();
     }
     else
       dbclient.drop(process.env.DB, /^abacus-/, startModules);
   });
 
-  after((done) => {
-    npm.stopAllStarted(done);
+  after(() => {
+    lifecycleManager.stopAllStarted();
   });
 
   it('responds healthy', (done) => {
