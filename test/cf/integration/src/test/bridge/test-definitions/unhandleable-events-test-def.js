@@ -4,7 +4,7 @@ const httpStatus = require('http-status-codes');
 const yieldable = require('abacus-yieldable');
 
 const carryOverDb = require('../../utils/carry-over-db');
-const serviceMock = require('../..//utils/service-mock-util');
+const serviceMock = require('../../utils/service-mock-util');
 const wait = require('../../utils/wait');
 
 const waitUntil = yieldable(wait.until);
