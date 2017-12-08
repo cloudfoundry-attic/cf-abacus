@@ -25,12 +25,12 @@ const mkdirs = (pubdir, cb) => {
 };
 
 // Return the version of a local dependency
-const version = (file) => JSON.parse(fs.readFileSync(path.resolve(
-  process.cwd(), file.substr(5), 'package.json')).toString()).version;
+const version = (file) =>
+  JSON.parse(fs.readFileSync(path.resolve(process.cwd(), file.substr(5), 'package.json')).toString()).version;
 
 // Convert local dependencies to public versioned dependencies
-const publicize = (deps) => object(map(pairs(deps),
-  (dep) => /^file:/.test(dep[1]) ? [dep[0], '^' + version(dep[1])] : dep));
+const publicize = (deps) =>
+  object(map(pairs(deps), (dep) => (/^file:/.test(dep[1]) ? [dep[0], '^' + version(dep[1])] : dep)));
 
 // Pack a module
 const pack = (name, version, pubdir, cb) => {
@@ -67,9 +67,21 @@ const repackage = (mod, pubdir, cb) => {
 // Publish a module
 const publish = (tgz, pubdir, cb) => {
   const tar = tgz.replace(/\.tgz$/, '.tar');
-  const ex = cp.exec('gunzip ' + tgz + ' && tar -uf ' + tar +
-    ' package && gzip -c ' + tar + ' > ' + tgz + ' && rm ' + tar +
-    ' && npm publish ./' + tgz, { cwd: pubdir });
+  const ex = cp.exec(
+    'gunzip ' +
+      tgz +
+      ' && tar -uf ' +
+      tar +
+      ' package && gzip -c ' +
+      tar +
+      ' > ' +
+      tgz +
+      ' && rm ' +
+      tar +
+      ' && npm publish ./' +
+      tgz,
+    { cwd: pubdir }
+  );
   ex.stdout.on('data', (data) => {
     process.stdout.write(data);
   });
@@ -84,14 +96,13 @@ const publish = (tgz, pubdir, cb) => {
 // Publish a module to npm
 const runCLI = () => {
   // Parse command line options
-  commander
-    .parse(process.argv);
+  commander.parse(process.argv);
 
   // Create the directories we need
   const pubdir = path.resolve(process.cwd(), '.publish');
   mkdirs(pubdir, (err) => {
     if (err) {
-      console.log('Couldn\'t setup publish layout -', err);
+      console.log("Couldn't setup publish layout -", err);
       process.exit(1);
     }
 
@@ -99,21 +110,21 @@ const runCLI = () => {
     const mod = require(path.join(process.cwd(), 'package.json'));
     pack(mod.name, mod.version, pubdir, (code, tgz) => {
       if (code) {
-        console.log('Couldn\'t pack module -', code);
+        console.log("Couldn't pack module -", code);
         process.exit(code);
       }
 
       // Convert the module's package.json
       repackage(mod, pubdir, (err, pkg) => {
         if (err) {
-          console.log('Couldn\'t repackage package.json -', err);
+          console.log("Couldn't repackage package.json -", err);
           process.exit(1);
         }
 
         // Publish the module
         publish(tgz, pubdir, (err) => {
           if (err) {
-            console.log('Couldn\'t publish module -', err);
+            console.log("Couldn't publish module -", err);
             process.exit(1);
           }
         });
@@ -124,4 +135,3 @@ const runCLI = () => {
 
 // Export our CLI
 module.exports.runCLI = runCLI;
-

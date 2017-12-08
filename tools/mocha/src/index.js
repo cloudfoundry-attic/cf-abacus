@@ -9,8 +9,7 @@
 
 const recursiveReadSync = require('recursive-readdir-sync');
 
-if(process.env.LONGJOHN)
-  require('longjohn');
+if (process.env.LONGJOHN) require('longjohn');
 const _ = require('underscore');
 const path = require('path');
 const util = require('util');
@@ -35,8 +34,7 @@ const target = () => {
   try {
     fs.lstatSync('lib');
     return 'lib';
-  }
-  catch (e) {
+  } catch (e) {
     return 'src';
   }
 };
@@ -53,19 +51,15 @@ const runCLI = () => {
     commander.istanbul = false;
     commander.color = true;
     commander.file = 'test.js';
-  }
-  else {
+  } else {
     commander
-      .option('-f, --file <suffix>', 'test file should end with the suffix' +
-        ' provided [test.js]', 'test.js')
+      .option('-f, --file <suffix>', 'test file should end with the suffix' + ' provided [test.js]', 'test.js')
       .option('--no-istanbul', 'do not instrument with Istanbul')
-      .option('-i, --istanbul-includes <regex>',
-        'instrument matching modules with Istanbul [abacus]', 'abacus')
+      .option('-i, --istanbul-includes <regex>', 'instrument matching modules with Istanbul [abacus]', 'abacus')
       .option('--no-color', 'do not colorify output')
       .option('-t, --timeout <number>', 'timeout [60000]', 60000)
       .parse(process.argv);
-    if (process.env.NO_ISTANBUL)
-      commander.istanbul = false;
+    if (process.env.NO_ISTANBUL) commander.istanbul = false;
   }
 
   // Time the execution of the tests
@@ -73,89 +67,88 @@ const runCLI = () => {
 
   // Collect all test files
   const testDir = path.join(target(), 'test');
-  const files = recursiveReadSync(testDir).filter(
-    (file) => file.endsWith(commander.file));
+  const files = recursiveReadSync(testDir).filter((file) => file.endsWith(commander.file));
 
   // Execute all test files in child processes sequentially
   const collector = new istanbul.Collector();
   let sources = {};
-  async.forEachSeries(files, (file, callback) => {
-    // Collect child process arguments
-    let args;
-    if (contains(process.argv, '--command')) {
-      args = [
-        '--file', path.join(file)
-      ];
-      const index = process.argv.indexOf('--command');
-      args = args.concat(process.argv.slice(index + 1));
-    }
-    else
-      args = [
-        '--file', path.join(file),
-        '--istanbul-includes', commander.istanbulIncludes,
-        '--timeout', commander.timeout
-      ];
-    if (!commander.istanbul)
-      args.push('--no-istanbul');
-    if (!colorify(commander))
-      args.push('--no-color');
+  async.forEachSeries(
+    files,
+    (file, callback) => {
+      // Collect child process arguments
+      let args;
+      if (contains(process.argv, '--command')) {
+        args = ['--file', path.join(file)];
+        const index = process.argv.indexOf('--command');
+        args = args.concat(process.argv.slice(index + 1));
+      } else
+        args = [
+          '--file',
+          path.join(file),
+          '--istanbul-includes',
+          commander.istanbulIncludes,
+          '--timeout',
+          commander.timeout
+        ];
+      if (!commander.istanbul) args.push('--no-istanbul');
+      if (!colorify(commander)) args.push('--no-color');
 
-    // Spawn child process
-    const child = childProcess.fork(__dirname + '/mocha.js', args);
+      // Spawn child process
+      const child = childProcess.fork(__dirname + '/mocha.js', args);
 
-    // Listen for message events from the child process
-    child.on('message', (message) => {
-      collector.add(message.coverage);
-      sources = extend(sources, message.sources);
-    });
-
-    // Listen for exit events from the child process
-    child.on('exit', (code) => {
-      if (code != 0)
-        callback(new Error('Child process exited with code ' + code));
-      else
-        callback();
-    });
-
-    // Listen for error events from the child process
-    child.on('error', (err) => {
-      callback(err);
-    });
-  }, (err) => {
-    // Check for errors
-    if (err) {
-      process.stderr.write(err.message + '\n');
-      process.exit(1);
-    }
-
-    // Time the execution of the tests
-    const t1 = Date.now();
-
-    // Print the test execution time
-    const time = () =>{
-      process.stdout.write(util.format('\nRun time %dms\n', t1 - t0));
-    };
-
-    if (!commander.istanbul) {
-      time();
-      process.exit(0);
-    }
-
-    // Write the JSON and LCOV coverage reports
-    const coverage = collector.getFinalCoverage();
-    const reporter = new istanbul.Reporter(undefined, '.coverage');
-    reporter.addAll(['lcovonly']);
-    reporter.write(collector, false, () => {
-      fs.writeFileSync('.coverage/coverage.json', JSON.stringify(coverage));
-
-      // Print a detailed source coverage text report and the test
-      // execution time
-      textcov(coverage, sources, {
-        color: colorify(commander)
+      // Listen for message events from the child process
+      child.on('message', (message) => {
+        collector.add(message.coverage);
+        sources = extend(sources, message.sources);
       });
-      time();
-    });
-  });
+
+      // Listen for exit events from the child process
+      child.on('exit', (code) => {
+        if (code != 0) callback(new Error('Child process exited with code ' + code));
+        else callback();
+      });
+
+      // Listen for error events from the child process
+      child.on('error', (err) => {
+        callback(err);
+      });
+    },
+    (err) => {
+      // Check for errors
+      if (err) {
+        process.stderr.write(err.message + '\n');
+        process.exit(1);
+      }
+
+      // Time the execution of the tests
+      const t1 = Date.now();
+
+      // Print the test execution time
+      const time = () => {
+        process.stdout.write(util.format('\nRun time %dms\n', t1 - t0));
+      };
+
+      if (!commander.istanbul) {
+        time();
+        process.exit(0);
+      }
+
+      // Write the JSON and LCOV coverage reports
+      const coverage = collector.getFinalCoverage();
+      const reporter = new istanbul.Reporter(undefined, '.coverage');
+      reporter.addAll(['lcovonly']);
+      reporter.write(collector, false, () => {
+        fs.writeFileSync('.coverage/coverage.json', JSON.stringify(coverage));
+
+        // Print a detailed source coverage text report and the test
+        // execution time
+        textcov(coverage, sources, {
+          color: colorify(commander)
+        });
+        time();
+      });
+    }
+  );
 };
 
 // Export our public functions

@@ -9,9 +9,7 @@ const happyTestsDefinition = require('../test-definitions/standard-flow-test-def
 const servicesFixture = require('./fixture');
 
 const tests = (fixture) => {
-
   return context('verify Cloud Controller', () => {
-
     it('Service Usage Events recieved correct service guids ', () => {
       const cloudControllerMock = fixture.externalSystemsMocks().cloudController;
 
@@ -31,12 +29,10 @@ const tests = (fixture) => {
       }));
       expect(cloudControllerMock.serviceGuids.requests()).to.deep.equal(expectedRequests);
     });
-
   });
 };
 
 describe('services-bridge standard flow tests', () => {
-
   before(() => {
     servicesFixture.externalSystemsMocks().cloudController.serviceGuids.return.always({
       [servicesFixture.defaultUsageEvent.serviceLabel]: servicesFixture.defaultUsageEvent.serviceGuid
@@ -47,6 +43,4 @@ describe('services-bridge standard flow tests', () => {
     .fixture(servicesFixture)
     .customTests(tests)
     .build();
-
 });
-

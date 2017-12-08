@@ -27,20 +27,17 @@ const createCfPushDir = (cb) => {
 };
 
 const remanifest = (props, cb) => {
-  fs.readFile(path.join(process.cwd(), originalManifestFilename),
-    (err, originalManifestContent) => {
-      if (err) {
-        cb(err);
-        return;
-      }
+  fs.readFile(path.join(process.cwd(), originalManifestFilename), (err, originalManifestContent) => {
+    if (err) {
+      cb(err);
+      return;
+    }
 
-      const adjustedManifest = remanifester
-        .adjustManifest(originalManifestContent, props);
+    const adjustedManifest = remanifester.adjustManifest(originalManifestContent, props);
 
-      const adjustedManifestPath = path.join('.cfpush',
-        [props.name, originalManifestFilename].join('-'));
-      fs.writeFile(adjustedManifestPath, adjustedManifest, cb);
-    });
+    const adjustedManifestPath = path.join('.cfpush', [props.name, originalManifestFilename].join('-'));
+    fs.writeFile(adjustedManifestPath, adjustedManifest, cb);
+  });
 };
 
 const prepareTmpDir = () => {
@@ -51,12 +48,9 @@ const prepareTmpDir = () => {
   });
 
   const cfTmpDir = path.join(tmpDir.name, '.cf');
-  const cfHomeDir = path.join(
-    process.env.CF_HOME || process.env.HOME, '.cf'
-  );
+  const cfHomeDir = path.join(process.env.CF_HOME || process.env.HOME, '.cf');
 
-  if (fs.existsSync(cfHomeDir))
-    fs.copySync(cfHomeDir, cfTmpDir);
+  if (fs.existsSync(cfHomeDir)) fs.copySync(cfHomeDir, cfTmpDir);
 
   return tmpDir;
 };
@@ -81,8 +75,7 @@ const executeCommand = (command, cb) => {
 
 const push = (props, cb) => {
   const startParam = props.start ? '' : '--no-start';
-  const command =
-  `cf push ${startParam} -f .cfpush/${props.name}-${originalManifestFilename}`;
+  const command = `cf push ${startParam} -f .cfpush/${props.name}-${originalManifestFilename}`;
   executeCommand(command, cb);
 };
 
@@ -103,17 +96,13 @@ const prepareZdm = (props, cb) => {
     const appName = `${props.prefix}${props.name}`;
     const command = `cf app ${appName}`;
     executeCommand(command, (code) => {
-      if (code > 0)
-        return cb();
+      if (code > 0) return cb();
       return deleteOld(props, (error) => {
-        if (error)
-          return cb(error);
+        if (error) return cb(error);
         return rename(props, cb);
       });
     });
-  }
-  else
-    cb();
+  } else cb();
 };
 
 const retryPush = (properties, cb) => {
@@ -137,30 +126,24 @@ const getBlueGreenOptionFromManifest = () => {
   try {
     const manifest = yaml.load(fs.readFileSync(manifestLoc));
     return manifest.applications[0].zdm === true;
-  }
-  catch (err) {
+  } catch (err) {
     return false;
   }
 };
 
 const runCLI = () => {
   commander
-    .option('-n, --name <name>', 'app name',
-      require(path.join(process.cwd(), 'package.json')).name)
+    .option('-n, --name <name>', 'app name', require(path.join(process.cwd(), 'package.json')).name)
     .option('-i, --instances <nb>', 'number of instances')
     .option('-c, --conf [value]', 'configuration name', process.env.CONF)
-    .option('-b, --buildpack [value]', 'buildpack name or location',
-      process.env.BUILDPACK)
+    .option('-b, --buildpack [value]', 'buildpack name or location', process.env.BUILDPACK)
     .option('-x, --prefix [value]', 'host prefix', process.env.ABACUS_PREFIX)
     .option('-s, --start', 'starts an app after pushing')
-    .option('-r, --retries [value]', 'number of retries if app push fails',
-      defaultPushRetries)
-    .option('-z, --prepare-zdm [boolean]',
-      'perform zero downtime (blue-green) deployment')
+    .option('-r, --retries [value]', 'number of retries if app push fails', defaultPushRetries)
+    .option('-z, --prepare-zdm [boolean]', 'perform zero downtime (blue-green) deployment')
     .parse(process.argv);
 
-  const requestZdm = commander.prepareZdm ?
-    commander.prepareZdm : getBlueGreenOptionFromManifest();
+  const requestZdm = commander.prepareZdm ? commander.prepareZdm : getBlueGreenOptionFromManifest();
 
   const commanderProps = {
     name: commander.name,
@@ -173,18 +156,20 @@ const runCLI = () => {
     prepareZdm: requestZdm
   };
 
-  async.series([
-    (callback) => createCfPushDir(callback),
-    (callback) => remanifest(commanderProps, callback),
-    (callback) => prepareZdm(commanderProps, callback),
-    (callback) => retryPush(commanderProps, callback)
-  ], (error, results) => {
-    if (error) {
-      console.log('Couldn\'t push app %s -', commander.name, error);
-      throw error;
+  async.series(
+    [
+      (callback) => createCfPushDir(callback),
+      (callback) => remanifest(commanderProps, callback),
+      (callback) => prepareZdm(commanderProps, callback),
+      (callback) => retryPush(commanderProps, callback)
+    ],
+    (error, results) => {
+      if (error) {
+        console.log("Couldn't push app %s -", commander.name, error);
+        throw error;
+      }
     }
-  });
-
+  );
 };
 
 module.exports.runCLI = runCLI;

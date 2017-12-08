@@ -12,8 +12,7 @@ const request = require('abacus-request');
 const argv = clone(process.argv);
 argv.splice(1, 1, 'secured-itest');
 commander
-  .option('-t, --start-timeout <n>',
-    'external processes start timeout in milliseconds', parseInt)
+  .option('-t, --start-timeout <n>', 'external processes start timeout in milliseconds', parseInt)
   .allowUnknownOption(true)
   .parse(argv);
 
@@ -24,23 +23,17 @@ describe('healthcheck', function() {
   this.timeout(startTimeout);
 
   before((done) => {
-    const modules = [
-      lifecycleManager.modules.authServerPlugin,
-      lifecycleManager.modules.eurekaPlugin
-    ];
+    const modules = [lifecycleManager.modules.authServerPlugin, lifecycleManager.modules.eurekaPlugin];
 
     const startModules = () => {
       lifecycleManager.startModules(modules);
-      request.waitFor('http://localhost::p', { p: 9882 },
-        startTimeout, (err, value) => done(err));
+      request.waitFor('http://localhost::p', { p: 9882 }, startTimeout, (err, value) => done(err));
     };
 
     if (!process.env.DB) {
       modules.push(lifecycleManager.modules.pouchserver);
       startModules();
-    }
-    else
-      dbclient.drop(process.env.DB, /^abacus-/, startModules);
+    } else dbclient.drop(process.env.DB, /^abacus-/, startModules);
   });
 
   after(() => {
@@ -48,16 +41,19 @@ describe('healthcheck', function() {
   });
 
   it('responds healthy', (done) => {
-    request.get('http://localhost:9990/healthcheck', {
-      auth: {
-        user: 'testUser',
-        password: 'testPassword'
+    request.get(
+      'http://localhost:9990/healthcheck',
+      {
+        auth: {
+          user: 'testUser',
+          password: 'testPassword'
+        }
+      },
+      (err, response) => {
+        expect(response.statusCode).to.equal(200);
+        expect(response.body).to.deep.equal({ healthy: true });
+        done(err);
       }
-    }, (err, response) => {
-      expect(response.statusCode).to.equal(200);
-      expect(response.body).to.deep.equal({ healthy: true });
-      done(err);
-    });
+    );
   });
-
 });

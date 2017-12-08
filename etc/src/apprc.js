@@ -13,15 +13,13 @@ const util = require('util');
 
 // Parse JSON and Yaml
 const parse = (content) => {
-  if (/^\s*{/.test(content))
-    return JSON.parse(strip(content));
+  if (/^\s*{/.test(content)) return JSON.parse(strip(content));
   return yaml.load(content);
 };
 
 // Return the value of a variable under a given conf
 const env = (content, vars, name) => {
-  if (content[vars] && content[vars][name])
-    return content[vars][name];
+  if (content[vars] && content[vars][name]) return content[vars][name];
   return undefined;
 };
 
@@ -40,23 +38,18 @@ const runCLI = () => {
 
   // Read the specified .apprc file
   fs.readFile(commander.rcfile, 'utf8', (err, content) => {
-    if (err)
-      return;
+    if (err) return;
     // Parse the file
     const rc = parse(content);
-    if (!rc)
-      return;
+    if (!rc) return;
 
     // Write the specified variable
-    const val = env(rc, commander.conf, commander.name) ||
-      env(rc, 'default', commander.name);
-    map(typeof val === 'object' || typeof val === 'array' ? val : [val],
-      (v) => {
-        process.stdout.write(util.format('%s\n', v));
-      });
+    const val = env(rc, commander.conf, commander.name) || env(rc, 'default', commander.name);
+    map(typeof val === 'object' || typeof val === 'array' ? val : [val], (v) => {
+      process.stdout.write(util.format('%s\n', v));
+    });
   });
 };
 
 // Export our CLI
 module.exports.runCLI = runCLI;
-

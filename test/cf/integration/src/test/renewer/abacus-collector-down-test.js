@@ -32,47 +32,41 @@ const carryOverDoc = {
 describe('renewer sends usage, but abacus is down', () => {
   let externalSystemsMocks;
 
-  before(yieldable.functioncb(function *() {
-    externalSystemsMocks = fixture.externalSystemsMocks();
+  before(
+    yieldable.functioncb(function*() {
+      externalSystemsMocks = fixture.externalSystemsMocks();
 
-    externalSystemsMocks
-      .uaaServer
-      .tokenService
-      .whenScopesAre(fixture.abacusCollectorScopes)
-      .return(fixture.abacusCollectorToken);
+      externalSystemsMocks.uaaServer.tokenService
+        .whenScopesAre(fixture.abacusCollectorScopes)
+        .return(fixture.abacusCollectorToken);
 
-    externalSystemsMocks
-      .abacusCollector
-      .getUsageService
-      .return
-      .always({
+      externalSystemsMocks.abacusCollector.getUsageService.return.always({
         statusCode: 200,
-        body: fixture.usage.create()
+        body: fixture.usage
+          .create()
           .withTimestamp(endOfLasMonth)
           .withCurrentInstances(2)
           .withPreviousInstances(1)
           .build()
       });
 
-    externalSystemsMocks
-      .abacusCollector
-      .collectUsageService
-      .return
-      .always(httpStatus.BAD_GATEWAY);
+      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.BAD_GATEWAY);
 
-    externalSystemsMocks.startAll();
+      externalSystemsMocks.startAll();
 
-    yield carryOverDb.setup();
-    yield carryOverDb.put(carryOverDoc);
-    fixture.renewer.start(externalSystemsMocks);
+      yield carryOverDb.setup();
+      yield carryOverDb.put(carryOverDoc);
+      fixture.renewer.start(externalSystemsMocks);
 
-    // Event reporter (abacus-client) will retry 'fixture.env.retryCount' + 1
-    // times to report usage to abacus. After that it will give up.
-    yield waitUntil(
-      serviceMock(
-        externalSystemsMocks.abacusCollector.collectUsageService
-      ).received(fixture.renewer.env.retryCount + 1));
-  }));
+      // Event reporter (abacus-client) will retry 'fixture.env.retryCount' + 1
+      // times to report usage to abacus. After that it will give up.
+      yield waitUntil(
+        serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(
+          fixture.renewer.env.retryCount + 1
+        )
+      );
+    })
+  );
 
   after((done) => {
     fixture.renewer.stop();
@@ -80,25 +74,29 @@ describe('renewer sends usage, but abacus is down', () => {
     externalSystemsMocks.stopAll(done);
   });
 
-
-  it('does not record an entry in carry-over',
-    yieldable.functioncb(function *() {
+  it(
+    'does not record an entry in carry-over',
+    yieldable.functioncb(function*() {
       const docs = yield carryOverDb.readCurrentMonthDocs();
       expect(docs).to.deep.equal([]);
-    }));
+    })
+  );
 
-  it('exposes correct statistics', yieldable.functioncb(function *() {
-    const response = yield fixture.renewer.readStats.withValidToken();
-    expect(response.statusCode).to.equal(httpStatus.OK);
-    const usageStats = response.body.statistics.usage;
-    expect(usageStats.report).to.deep.equal({
-      success: 0,
-      conflicts : 0,
-      failures : 1
-    });
-    expect(omit(usageStats.get, 'missingToken')).to.deep.equal({
-      success: 1,
-      failures : 0
-    });
-  }));
+  it(
+    'exposes correct statistics',
+    yieldable.functioncb(function*() {
+      const response = yield fixture.renewer.readStats.withValidToken();
+      expect(response.statusCode).to.equal(httpStatus.OK);
+      const usageStats = response.body.statistics.usage;
+      expect(usageStats.report).to.deep.equal({
+        success: 0,
+        conflicts: 0,
+        failures: 1
+      });
+      expect(omit(usageStats.get, 'missingToken')).to.deep.equal({
+        success: 1,
+        failures: 0
+      });
+    })
+  );
 });

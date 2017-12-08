@@ -8,7 +8,7 @@ const token = (tokenSecret) => {
     const payload = {
       scope: scopes
     };
-    return jwt.sign(payload , tokenSecret, {
+    return jwt.sign(payload, tokenSecret, {
       expiresIn
     });
   };

@@ -9,10 +9,12 @@ const createTokenFactory = require('../utils/token-factory');
 
 const get = yieldable(request.get);
 
-const readStats = function *(config) {
-  const headers = config.token ? {
-    authorization: `Bearer ${config.token}`
-  } : undefined;
+const readStats = function*(config) {
+  const headers = config.token
+    ? {
+        authorization: `Bearer ${config.token}`
+      }
+    : undefined;
 
   return yield get('http://localhost::port/v1/stats', {
     port: config.port,
@@ -21,8 +23,7 @@ const readStats = function *(config) {
 };
 
 module.exports = (config) => {
-
-  const withValidToken = function *() {
+  const withValidToken = function*() {
     const tokenFactory = createTokenFactory(config.tokenSecret);
     const signedToken = tokenFactory.create(['abacus.usage.read']);
     return yield readStats({
@@ -31,7 +32,7 @@ module.exports = (config) => {
     });
   };
 
-  const withMissingScope = function *() {
+  const withMissingScope = function*() {
     const tokenFactory = createTokenFactory(config.tokenSecret);
     const signedToken = tokenFactory.create([]);
     return yield readStats({
@@ -40,13 +41,13 @@ module.exports = (config) => {
     });
   };
 
-  const withoutToken = function *() {
+  const withoutToken = function*() {
     return yield readStats({
       port: config.port
     });
   };
 
-  const isEndpointAvailable = function *() {
+  const isEndpointAvailable = function*() {
     const response = yield withValidToken(config);
     return response.statusCode && response.statusCode !== httpStatus.NOT_FOUND;
   };

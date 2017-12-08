@@ -41,12 +41,9 @@ commander
   .option('-o, --orgs <n>', 'number of thousands of organizations', parseInt)
   .option('-i, --instances <n>', 'number of resource instances', parseInt)
   .option('-u, --usagedocs <n>', 'number of usage docs', parseInt)
-  .option('-d, --day <d>',
-    'usage time shift using number of days', parseInt)
-  .option('-t, --start-timeout <n>',
-    'external processes start timeout in milliseconds', parseInt)
-  .option('-x, --total-timeout <n>',
-    'test timeout in milliseconds', parseInt)
+  .option('-d, --day <d>', 'usage time shift using number of days', parseInt)
+  .option('-t, --start-timeout <n>', 'external processes start timeout in milliseconds', parseInt)
+  .option('-x, --total-timeout <n>', 'test timeout in milliseconds', parseInt)
   .allowUnknownOption(true)
   .parse(argv);
 
@@ -73,7 +70,7 @@ const totalTimeout = commander.totalTimeout || 60000;
 const cextend = (o, interceptor) => {
   const deepcopy = (k, v) => {
     // if value is an object, then extend it using the interceptor
-    if(typeof v === 'object') return cextend(v, interceptor);
+    if (typeof v === 'object') return cextend(v, interceptor);
     return v;
   };
 
@@ -88,13 +85,13 @@ const cextend = (o, interceptor) => {
 const cost = {
   basic: {
     storage: 1,
-    'thousand_light_api_calls': 0.03,
-    'heavy_api_calls': 0.15
+    thousand_light_api_calls: 0.03,
+    heavy_api_calls: 0.15
   },
   standard: {
     storage: 0.5,
-    'thousand_light_api_calls': 0.04,
-    'heavy_api_calls': 0.18
+    thousand_light_api_calls: 0.04,
+    heavy_api_calls: 0.18
   }
 };
 
@@ -117,8 +114,7 @@ const addWindows = (u) => {
   map(u.spaces, (s) => {
     s.resources = map(s.resources, addResourceWindows);
     map(s.consumers, (c) => {
-      if(c.resources)
-        c.resources = map(c.resources, addResourceWindows);
+      if (c.resources) c.resources = map(c.resources, addResourceWindows);
     });
   });
   return u;
@@ -127,21 +123,21 @@ const addWindows = (u) => {
 // Add cost to aggregated usage at all plan levels
 const addCost = (k, v) => {
   // all plan level aggregations need cost as part of aggregated_usage
-  if (k === 'plans') map(v, (p) => {
-    // Warning: mutating aggregated_usage to include cost
-    p.aggregated_usage = map(p.aggregated_usage, (u) => ({
-      metric: u.metric,
-      windows: map(u.quantity, (w) => {
-        return map(w, (q) => ({
-          quantity: q,
-          cost: new BigNumber(q).mul(cost[p.plan_id.split('/')[0]]
-            [u.metric]).toNumber()
-        }));
-      })
-    }));
+  if (k === 'plans')
+    map(v, (p) => {
+      // Warning: mutating aggregated_usage to include cost
+      p.aggregated_usage = map(p.aggregated_usage, (u) => ({
+        metric: u.metric,
+        windows: map(u.quantity, (w) => {
+          return map(w, (q) => ({
+            quantity: q,
+            cost: new BigNumber(q).mul(cost[p.plan_id.split('/')[0]][u.metric]).toNumber()
+          }));
+        })
+      }));
 
-    return p;
-  });
+      return p;
+    });
 };
 
 // Reduce function that can be used to compute the sum of a list of charges
@@ -153,82 +149,109 @@ const sumCharges = (a, m) => {
 // Add charge, and summary to aggregated_usage at all resources and
 // all plan levels
 const addCharge = (k, v) => {
-  if (k === 'resources') map(v, (r) => {
-    let metrics = [];
-    // Calculate plan level charges
-    r.plans = map(r.plans, (p) => {
-      p.aggregated_usage = map(p.aggregated_usage, (u) => {
-        if(!contains(metrics, u.metric))
-          metrics.push(u.metric);
-        map(u.windows, (w) => {
-          map(w, (wi) => {
-            wi.charge = wi.cost;
-            wi.summary = wi.quantity;
+  if (k === 'resources')
+    map(v, (r) => {
+      let metrics = [];
+      // Calculate plan level charges
+      r.plans = map(r.plans, (p) => {
+        p.aggregated_usage = map(p.aggregated_usage, (u) => {
+          if (!contains(metrics, u.metric)) metrics.push(u.metric);
+          map(u.windows, (w) => {
+            map(w, (wi) => {
+              wi.charge = wi.cost;
+              wi.summary = wi.quantity;
+            });
           });
+          return u;
         });
-        return u;
+
+        // Total charge for a plan
+        p.windows = map(
+          zip.apply(
+            _,
+            map(p.aggregated_usage, (u) => {
+              return u.windows;
+            })
+          ),
+          (zu) => {
+            return map(unzip(zu), (uu) => {
+              return reduce(uu, sumCharges, { charge: 0 });
+            });
+          }
+        );
+        return p;
       });
 
-      // Total charge for a plan
-      p.windows = map(zip.apply(_, map(p.aggregated_usage, (u) => {
-        return u.windows;
-      })),
-      (zu) => {
-        return map(unzip(zu), (uu) => {
-          return reduce(uu, sumCharges, { charge: 0 });
-        });
+      r.aggregated_usage = map(metrics, (m) => {
+        return {
+          metric: m,
+          windows: map(r.plans[0].windows, (w, i) => {
+            return map(w, (wi, j) => {
+              return {
+                charge: reduce(
+                  r.plans,
+                  (a, p) =>
+                    new BigNumber(a)
+                      .add(
+                        reduce(
+                          p.aggregated_usage,
+                          (a1, u1) => new BigNumber(a1).add(u1.metric === m ? u1.windows[i][j].charge : 0).toNumber(),
+                          0
+                        )
+                      )
+                      .toNumber(),
+                  0
+                )
+              };
+            });
+          })
+        };
       });
-      return p;
-    });
 
-    r.aggregated_usage = map(metrics, (m) => {
-      return {
-        metric: m,
-        windows: map(r.plans[0].windows, (w, i) => {
-          return map(w, (wi, j) => {
-            return {
-              charge: reduce(r.plans, (a, p) =>
-                new BigNumber(a).add(reduce(p.aggregated_usage, (a1, u1) =>
-                  new BigNumber(a1).add(u1.metric === m ?
-                    u1.windows[i][j].charge : 0).toNumber(), 0)).toNumber(), 0)
-            };
+      // Total charges for a resource
+      r.windows = map(
+        zip.apply(
+          _,
+          map(r.plans, (p) => {
+            return p.windows;
+          })
+        ),
+        (zu) => {
+          return map(unzip(zu), (uu) => {
+            return reduce(uu, sumCharges, { charge: 0 });
           });
-        })
-      };
+        }
+      );
+      return r;
     });
-
-    // Total charges for a resource
-    r.windows = map(zip.apply(_, map(r.plans, (p) => {
-      return p.windows;
-    })),
-    (zu) => {
-      return map(unzip(zu), (uu) => {
-        return reduce(uu, sumCharges, { charge: 0 });
-      });
-    });
-    return r;
-  });
 };
 
 // Converts a millisecond number to a format a number that is YYYYMMDDHHmmSS
 const dateUTCNumbify = (t) => {
   const d = new Date(t);
-  return d.getUTCFullYear() * 10000000000 + d.getUTCMonth() * 100000000
-    + d.getUTCDate() * 1000000 + d.getUTCHours() * 10000 + d.getUTCMinutes()
-    * 100 + d.getUTCSeconds();
+  return (
+    d.getUTCFullYear() * 10000000000 +
+    d.getUTCMonth() * 100000000 +
+    d.getUTCDate() * 1000000 +
+    d.getUTCHours() * 10000 +
+    d.getUTCMinutes() * 100 +
+    d.getUTCSeconds()
+  );
 };
 
 // Converts a number output in dateUTCNumbify back to a Date object
 const revertUTCNumber = (n) => {
   const numstring = n.toString();
-  const d = new Date(Date.UTC(
-    numstring.substring(0, 4),
-    numstring.substring(4, 6),
-    numstring.substring(6, 8),
-    numstring.substring(8, 10),
-    numstring.substring(10, 12),
-    numstring.substring(12)
-  ));
+  const d = new Date(
+    Date.UTC(
+      numstring.substring(0, 4),
+      numstring.substring(4, 6),
+      numstring.substring(6, 8),
+      numstring.substring(8, 10),
+      numstring.substring(10, 12),
+      numstring.substring(12)
+    )
+  );
   return d;
 };
 
@@ -252,16 +275,12 @@ const buildAggregatedQuantity = (p, u, ri, tri, count, end, f) => {
 
 describe('abacus-usage-reporting-itest', () => {
   before(() => {
-    const modules = [
-      lifecycleManager.modules.accountPlugin,
-      lifecycleManager.modules.reporting
-    ];
+    const modules = [lifecycleManager.modules.accountPlugin, lifecycleManager.modules.reporting];
 
     if (!process.env.DB) {
       modules.push(lifecycleManager.modules.pouchserver);
       lifecycleManager.startModules(modules);
-    }
-    else
+    } else
       dbclient.drop(process.env.DB, /^abacus-/, () => {
         lifecycleManager.startModules(modules);
       });
@@ -274,8 +293,7 @@ describe('abacus-usage-reporting-itest', () => {
   it('report rated usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs, or
     // a predefined timeout
-    const timeout = Math.max(totalTimeout,
-      100 * (orgs / 1000) * resourceInstances * usage);
+    const timeout = Math.max(totalTimeout, 100 * (orgs / 1000) * resourceInstances * usage);
     this.timeout(timeout + 2000);
 
     // Initialize usage doc properties with unique values
@@ -302,31 +320,27 @@ describe('abacus-usage-reporting-itest', () => {
     //    1           1            1    0        1-0
 
     // Organization id based on org index
-    const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf28',
-      o + 1].join('-');
+    const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf28', o + 1].join('-');
 
     // One of the two spaces at a given org based on resource instance index
-    const sid = (o, ri) => ['aaeae239-f3f8-483c-9dd0-de5d41c38b6b',
-      o + 1, ri % 2 === 0 ? 1 : 2].join('-');
+    const sid = (o, ri) => ['aaeae239-f3f8-483c-9dd0-de5d41c38b6b', o + 1, ri % 2 === 0 ? 1 : 2].join('-');
 
     // One of the two consumers at a given org and derived space based on
     // resource instance index
-    const cid = (o, ri) => ['bbeae239-f3f8-483c-9dd0-de6781c38bac',
-      o + 1, ri % 2 === 0 ? 1 : 2, ri % 8 < 4 ? 1 : 2].join('-');
+    const cid = (o, ri) =>
+      ['bbeae239-f3f8-483c-9dd0-de6781c38bac', o + 1, ri % 2 === 0 ? 1 : 2, ri % 8 < 4 ? 1 : 2].join('-');
 
     // One of the two plans based on resource instance index
-    const pid = (ri) => ri % 4 < 2 ? 'basic' : 'standard';
+    const pid = (ri) => (ri % 4 < 2 ? 'basic' : 'standard');
 
     // The metering plan id
     const mpid = (ri) => 'test-metering-plan';
 
     // One of the two rating plans based on resource instance index
-    const ppid = (ri) => ri % 4 < 2 ? 'test-pricing-basic' :
-      'test-pricing-standard';
+    const ppid = (ri) => (ri % 4 < 2 ? 'test-pricing-basic' : 'test-pricing-standard');
 
     // One of the two pricing plans based on resource instance index
-    const rpid = (ri) => ri % 4 < 2 ? 'test-rating-plan' :
-      'test-rating-plan-standard';
+    const rpid = (ri) => (ri % 4 < 2 ? 'test-rating-plan' : 'test-rating-plan-standard');
 
     // Use number sequences to find expected aggregated value at any given
     // resource instance index and a given usage index based on the generated
@@ -336,8 +350,7 @@ describe('abacus-usage-reporting-itest', () => {
     const tri = resourceInstances - 1;
 
     // Create an array of objects based on a range and a creator function
-    const create = (number, creator) =>
-      map(range(number()), (i) => creator(i));
+    const create = (number, creator) => map(range(number()), (i) => creator(i));
 
     // Aggregate metrics based on ressource instance, usage and plan indices
     // For max, we use either the current count or the totat count based on
@@ -345,37 +358,59 @@ describe('abacus-usage-reporting-itest', () => {
     // For sum, we use current count + total count based on resource instance
     // and usage index
     const a = (ri, u, p, count) => [
-      { metric: 'storage',
-        quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
-          (p, u, ri, tri, count) =>
-            10 * (u === 0 ? count(ri, p) : count(tri, p))) },
-      { metric: 'thousand_light_api_calls',
-        quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
-          (p, u, ri, tri, count) =>
-            1000 * (count(ri, p) + u * count(tri, p))) },
-      { metric: 'heavy_api_calls',
-        quantity: buildAggregatedQuantity(p, u, ri, tri, count, end,
-          (p, u, ri, tri, count) =>
-            100 * (count(ri, p) + u * count(tri, p))) }
+      {
+        metric: 'storage',
+        quantity: buildAggregatedQuantity(
+          p,
+          u,
+          ri,
+          tri,
+          count,
+          end,
+          (p, u, ri, tri, count) => 10 * (u === 0 ? count(ri, p) : count(tri, p))
+        )
+      },
+      {
+        metric: 'thousand_light_api_calls',
+        quantity: buildAggregatedQuantity(
+          p,
+          u,
+          ri,
+          tri,
+          count,
+          end,
+          (p, u, ri, tri, count) => 1000 * (count(ri, p) + u * count(tri, p))
+        )
+      },
+      {
+        metric: 'heavy_api_calls',
+        quantity: buildAggregatedQuantity(
+          p,
+          u,
+          ri,
+          tri,
+          count,
+          end,
+          (p, u, ri, tri, count) => 100 * (count(ri, p) + u * count(tri, p))
+        )
+      }
     ];
 
     // Resouce plan level aggregations for a given consumer at given space
     const scpagg = (o, ri, u, s, c) => {
       // Resource instance index shift to locate a value at count number
       // sequence specified below
-      const shift = (p) =>
-        (s === 0 ? c === 0 ? 8 : 4 : c === 0 ? 7 : 3) - (p === 0 ? 0 : 2);
+      const shift = (p) => (s === 0 ? (c === 0 ? 8 : 4) : c === 0 ? 7 : 3) - (p === 0 ? 0 : 2);
 
       // Number sequence representing count for a given space, consumer and
       // plan based on specified spread using id generators
       // 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
       // 2, 2, 2, 2, 2, 2, 2, 2, 3, ......
-      const count = (n, p) => Math.round((n + shift(p)) / 8 - 0.50);
+      const count = (n, p) => Math.round((n + shift(p)) / 8 - 0.5);
 
       // Number of plans at a given space, consumer and
       // resource instance indices
-      const plans = () => u === 0 && ri <= (c === 0 ? 1 + s : 5 + s) ||
-        tri <= (c === 0 ? 1 + s : 5 + s) ? 1 : 2;
+      const plans = () => ((u === 0 && ri <= (c === 0 ? 1 + s : 5 + s)) || tri <= (c === 0 ? 1 + s : 5 + s) ? 1 : 2);
 
       // Create plan aggregations
       return create(plans, (i) => {
@@ -384,8 +419,7 @@ describe('abacus-usage-reporting-itest', () => {
         const ratingPlanId = rpid(i === 0 ? 0 : 2);
         const pricingPlanId = ppid(i === 0 ? 0 : 2);
         return {
-          plan_id: [planId, meteringPlanId, ratingPlanId,
-            pricingPlanId].join('/'),
+          plan_id: [planId, meteringPlanId, ratingPlanId, pricingPlanId].join('/'),
           metering_plan_id: meteringPlanId,
           rating_plan_id: ratingPlanId,
           pricing_plan_id: pricingPlanId,
@@ -397,7 +431,7 @@ describe('abacus-usage-reporting-itest', () => {
     // Consumer level resource aggregations for a given space
     const cagg = (o, ri, u, s, id) => {
       // Number of consumers at a given resource instance and space indices
-      const consumers = () => u === 0 && ri <= 3 + s || tri <= 3 + s ? 1 : 2;
+      const consumers = () => ((u === 0 && ri <= 3 + s) || tri <= 3 + s ? 1 : 2);
 
       // Create resource aggregations
       return create(consumers, (i) => {
@@ -411,25 +445,34 @@ describe('abacus-usage-reporting-itest', () => {
           pricing_country: 'USA',
           prices: {
             metrics: [
-              { name: 'storage',
-                price: 1 },
-              { name: 'thousand_light_api_calls',
-                price: 0.03 },
-              { name: 'heavy_api_calls',
-                price: 0.15 },
-              { name: 'memory',
-                price: 0.00014 }
+              {
+                name: 'storage',
+                price: 1
+              },
+              {
+                name: 'thousand_light_api_calls',
+                price: 0.03
+              },
+              {
+                name: 'heavy_api_calls',
+                price: 0.15
+              },
+              {
+                name: 'memory',
+                price: 0.00014
+              }
             ]
           },
           consumer_id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
-          resources: [{
-            resource_id: 'test-resource',
-            plans: scpagg(o, ri, u, s, i)
-          }]
+          resources: [
+            {
+              resource_id: 'test-resource',
+              plans: scpagg(o, ri, u, s, i)
+            }
+          ]
         };
-        if(id)
-          consumer.id = dbclient.kturi([oid(o), sid(o, s),
-            cid(o, i === 0 ? s : s === 0 ? 4 : 5)].join('/'), end + u);
+        if (id)
+          consumer.id = dbclient.kturi([oid(o), sid(o, s), cid(o, i === 0 ? s : s === 0 ? 4 : 5)].join('/'), end + u);
         return consumer;
       });
     };
@@ -437,11 +480,10 @@ describe('abacus-usage-reporting-itest', () => {
     // Consumer level resource aggregations for a given space
     const scagg = (o, ri, u, s, c) => {
       // Number of consumers at a given resource instance and space indices
-      const consumers = () => u === 0 && ri <= 3 + s || tri <= 3 + s ? 1 : 2;
+      const consumers = () => ((u === 0 && ri <= 3 + s) || tri <= 3 + s ? 1 : 2);
 
       // Create resource aggregations only if true, otherwise, return the id
-      if(c)
-        return cagg(o, ri, u, s);
+      if (c) return cagg(o, ri, u, s);
       return create(consumers, (i) => ({
         id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
         t: dbclient.pad16(end + u)
@@ -458,7 +500,7 @@ describe('abacus-usage-reporting-itest', () => {
       const count = (n, p) => Math.round((n + shift(p)) / 4 - 0.25);
 
       // Number of plans at a given resource instance and space indices
-      const plans = () => u === 0 && ri <= 1 + s || tri <= 1 + s ? 1 : 2;
+      const plans = () => ((u === 0 && ri <= 1 + s) || tri <= 1 + s ? 1 : 2);
 
       // Create plan level aggregations
       return create(plans, (i) => {
@@ -467,8 +509,7 @@ describe('abacus-usage-reporting-itest', () => {
         const ratingPlanId = rpid(i === 0 ? 0 : 2);
         const pricingPlanId = ppid(i === 0 ? 0 : 2);
         return {
-          plan_id: [planId, meteringPlanId, ratingPlanId,
-            pricingPlanId].join('/'),
+          plan_id: [planId, meteringPlanId, ratingPlanId, pricingPlanId].join('/'),
           metering_plan_id: meteringPlanId,
           rating_plan_id: ratingPlanId,
           pricing_plan_id: pricingPlanId,
@@ -480,15 +521,17 @@ describe('abacus-usage-reporting-itest', () => {
     // Space level resource aggregations for a given organization
     const osagg = (o, ri, u, c) => {
       // Number of spaces at a given resource index
-      const spaces = () => u === 0 && ri === 0 || tri === 0 ? 1 : 2;
+      const spaces = () => ((u === 0 && ri === 0) || tri === 0 ? 1 : 2);
 
       // Create resource instance aggregations
       return create(spaces, (i) => ({
         space_id: sid(o, i),
-        resources: [{
-          resource_id: 'test-resource',
-          plans: spagg(o, ri, u, i)
-        }],
+        resources: [
+          {
+            resource_id: 'test-resource',
+            plans: spagg(o, ri, u, i)
+          }
+        ],
         consumers: scagg(o, ri, u, i, c)
       }));
     };
@@ -496,19 +539,18 @@ describe('abacus-usage-reporting-itest', () => {
     // Resource plan level aggregations for a given organization
     const opagg = (o, ri, u) => {
       // Resource instance index shift
-      const shift = (p) => p === 0 ? 2 : 0;
+      const shift = (p) => (p === 0 ? 2 : 0);
 
       // Number sequence of count
       // 0, 0, 1, 2, 2, 2, 3, 4, 4, 4, 5, 6, 6, 6, 7, 8, 8, 8, ...........
       const count = (n, p) => {
         const nri = n + shift(p);
 
-        return Math.round(nri / 2 +
-          (nri % 2 === 0 ? 0 : 0.5) * ((nri / 2 - 0.5) % 2 === 0 ? -1 : 1));
+        return Math.round(nri / 2 + (nri % 2 === 0 ? 0 : 0.5) * ((nri / 2 - 0.5) % 2 === 0 ? -1 : 1));
       };
 
       // Number of plans at a given resource instance index
-      const plans = () => u === 0 && ri <= 1 || tri <= 1 ? 1 : 2;
+      const plans = () => ((u === 0 && ri <= 1) || tri <= 1 ? 1 : 2);
 
       // Create plan aggregations
       return create(plans, (i) => {
@@ -517,8 +559,7 @@ describe('abacus-usage-reporting-itest', () => {
         const ratingPlanId = rpid(i === 0 ? 0 : 2);
         const pricingPlanId = ppid(i === 0 ? 0 : 2);
         return {
-          plan_id: [planId, meteringPlanId, ratingPlanId,
-            pricingPlanId].join('/'),
+          plan_id: [planId, meteringPlanId, ratingPlanId, pricingPlanId].join('/'),
           metering_plan_id: meteringPlanId,
           rating_plan_id: ratingPlanId,
           pricing_plan_id: pricingPlanId,
@@ -540,37 +581,51 @@ describe('abacus-usage-reporting-itest', () => {
       pricing_country: 'USA',
       prices: {
         metrics: [
-          { name: 'storage',
-            price: 1 },
-          { name: 'thousand_light_api_calls',
-            price: 0.03 },
-          { name: 'heavy_api_calls',
-            price: 0.15 },
-          { name: 'memory',
-            price: 0.00014 }
+          {
+            name: 'storage',
+            price: 1
+          },
+          {
+            name: 'thousand_light_api_calls',
+            price: 0.03
+          },
+          {
+            name: 'heavy_api_calls',
+            price: 0.15
+          },
+          {
+            name: 'memory',
+            price: 0.00014
+          }
         ]
       },
       start: end + u,
       end: end + u,
       processed: end + u,
-      resources: cextend([{
-        resource_id: 'test-resource',
-        plans: opagg(o, ri, u)
-      }], addCost),
+      resources: cextend(
+        [
+          {
+            resource_id: 'test-resource',
+            plans: opagg(o, ri, u)
+          }
+        ],
+        addCost
+      ),
       spaces: cextend(osagg(o, ri, u, c), addCost)
     });
     // Rated usage for a given consumer
     const ratedConsumerTemplate = (o, ri, u) => {
       // Number of spaces at a given resource index
-      const spaces = () => u === 0 && ri === 0 || tri === 0 ? 1 : 2;
-      return flatten(map(create(spaces, (i) => cagg(o, ri, u, i, 1)), (s) => {
-        map(s, (c) => {
-          c.processed = end + u;
-          c.resources = cextend(
-            map(c.resources, addResourceWindows), addCost);
-        });
-        return s;
-      }));
+      const spaces = () => ((u === 0 && ri === 0) || tri === 0 ? 1 : 2);
+      return flatten(
+        map(create(spaces, (i) => cagg(o, ri, u, i, 1)), (s) => {
+          map(s, (c) => {
+            c.processed = end + u;
+            c.resources = cextend(map(c.resources, addResourceWindows), addCost);
+          });
+          return s;
+        })
+      );
     };
 
     // Usage report for a given org, resource instance, usage indices
@@ -579,38 +634,63 @@ describe('abacus-usage-reporting-itest', () => {
       const report = cextend(addWindows(ratedTemplate(o, ri, u, 1)), addCharge);
 
       // Add charge at organization, space and consumer levels
-      report.windows = map(zip.apply(_, map(report.resources, (r) => {
-        return r.windows;
-      })), (zr) => {
-        return map(unzip(zr), (uu) => {
-          return reduce(uu, sumCharges, { charge: 0 });
-        });
-      });
-      report.spaces = map(report.spaces, (s) => {
-        s.windows = map(zip.apply(_, map(s.resources, (r) => {
-          return r.windows;
-        })), (zr) => {
+      report.windows = map(
+        zip.apply(
+          _,
+          map(report.resources, (r) => {
+            return r.windows;
+          })
+        ),
+        (zr) => {
           return map(unzip(zr), (uu) => {
             return reduce(uu, sumCharges, { charge: 0 });
           });
-        });
-        s.consumers = map(s.consumers, (c) => {
-          c.windows = map(zip.apply(_, map(c.resources, (r) => {
-            return r.windows;
-          })), (zr) => {
+        }
+      );
+      report.spaces = map(report.spaces, (s) => {
+        s.windows = map(
+          zip.apply(
+            _,
+            map(s.resources, (r) => {
+              return r.windows;
+            })
+          ),
+          (zr) => {
             return map(unzip(zr), (uu) => {
               return reduce(uu, sumCharges, { charge: 0 });
             });
-          });
-          return omit(c, 'resource_instance_id', 'organization_id', 'start',
-            'end', 'resource_id', 'plan_id', 'prices', 'pricing_country');
+          }
+        );
+        s.consumers = map(s.consumers, (c) => {
+          c.windows = map(
+            zip.apply(
+              _,
+              map(c.resources, (r) => {
+                return r.windows;
+              })
+            ),
+            (zr) => {
+              return map(unzip(zr), (uu) => {
+                return reduce(uu, sumCharges, { charge: 0 });
+              });
+            }
+          );
+          return omit(
+            c,
+            'resource_instance_id',
+            'organization_id',
+            'start',
+            'end',
+            'resource_id',
+            'plan_id',
+            'prices',
+            'pricing_country'
+          );
         });
         return s;
       });
-      return omit(report, 'resource_instance_id', 'consumer_id',
-        'resource_id', 'plan_id', 'prices', 'pricing_country');
+      return omit(report, 'resource_instance_id', 'consumer_id', 'resource_id', 'plan_id', 'prices', 'pricing_country');
     };
-
 
     // Post rated usage doc, throttled to default concurrent requests
     const aggregatordb = dataflow.db('abacus-aggregator-aggregated-usage');
@@ -618,8 +698,7 @@ describe('abacus-usage-reporting-itest', () => {
     const dbbulk = yieldable.functioncb(aggregatordb.bulkDocs);
 
     const post = throttle((o, ri, u, cb) => {
-      debug('Submit rated usage for org%d instance%d usage%d',
-        o + 1, ri + 1, u + 1);
+      debug('Submit rated usage for org%d instance%d usage%d', o + 1, ri + 1, u + 1);
 
       dbput(addWindows(ratedTemplate(o, ri, u)), (err, val) => {
         debug('Verify rated usage for org%d', o + 1);
@@ -644,7 +723,7 @@ describe('abacus-usage-reporting-itest', () => {
     const submit = (done) => {
       let posts = 0;
       const cb = () => {
-        if(++posts === orgs) done();
+        if (++posts === orgs) done();
       };
 
       // Submit usage for all organizations
@@ -653,16 +732,16 @@ describe('abacus-usage-reporting-itest', () => {
 
     // Get usage report, throttled to default concurrent requests
     const get = throttle((o, ri, u, cb) => {
-      debug('Get rated usage for org%d instance%d usage%d',
-        o + 1, ri + 1, u + 1);
+      debug('Get rated usage for org%d instance%d usage%d', o + 1, ri + 1, u + 1);
 
       brequest.get(
-        'http://localhost::port/v1/metering/organizations' +
-        '/:organization_id/aggregated/usage/:time', {
+        'http://localhost::port/v1/metering/organizations' + '/:organization_id/aggregated/usage/:time',
+        {
           port: 9088,
           organization_id: oid(o),
           time: end + usage
-        }, (err, val) => {
+        },
+        (err, val) => {
           debug('Verify usage report for org%d', o + 1);
 
           expect(err).to.equal(undefined);
@@ -671,13 +750,14 @@ describe('abacus-usage-reporting-itest', () => {
           debug('Verified usage report for org%d', o + 1);
 
           cb();
-        });
+        }
+      );
     });
 
     const verifyReporting = (done) => {
       let gets = 0;
       const cb = () => {
-        if(++gets === orgs) done();
+        if (++gets === orgs) done();
       };
 
       // Get usage report for all organizations
@@ -685,13 +765,12 @@ describe('abacus-usage-reporting-itest', () => {
     };
 
     // Wait for usage reporting service to start
-    request.waitFor('http://localhost::p/batch',
-      { p: 9088 }, startTimeout, (err, value) => {
-        // Failed to ping usage reporting service before timing out
-        if (err) throw err;
+    request.waitFor('http://localhost::p/batch', { p: 9088 }, startTimeout, (err, value) => {
+      // Failed to ping usage reporting service before timing out
+      if (err) throw err;
 
-        // Submit organization usage  and verify
-        submit(() => verifyReporting(done));
-      });
+      // Submit organization usage  and verify
+      submit(() => verifyReporting(done));
+    });
   });
 });

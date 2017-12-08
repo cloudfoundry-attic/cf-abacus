@@ -29,7 +29,7 @@ const defaultUsageEvent = {
   appGuid: 'test-app-guid',
   eventGuid: 'event-guid',
   orgGuid: 'test-org',
-  spaceGuid:'space-guid',
+  spaceGuid: 'space-guid',
   instanceCount: 5,
   previousInstanceCount: 3,
   memoryPerInstance: 2,
@@ -40,7 +40,7 @@ const bridge = createBridge({
   bridge: lifecycleManager.modules.applications,
   port: 9500,
   customEnv: {
-    ORGS_TO_REPORT : `["${defaultUsageEvent.orgGuid}"]`
+    ORGS_TO_REPORT: `["${defaultUsageEvent.orgGuid}"]`
   }
 });
 
@@ -104,7 +104,7 @@ collectorUsage = (eventTimestamp) => ({
   measured_usage: [
     {
       measure: 'current_instance_memory',
-      quantity : 2097152
+      quantity: 2097152
     },
     {
       measure: 'current_running_instances',
@@ -112,11 +112,11 @@ collectorUsage = (eventTimestamp) => ({
     },
     {
       measure: 'previous_instance_memory',
-      quantity : 0
+      quantity: 0
     },
     {
       measure: 'previous_running_instances',
-      quantity : 0
+      quantity: 0
     }
   ]
 });

@@ -33,35 +33,48 @@ const moduleDir = (file) => {
 // Convert the covered file paths in the given coverage info to relative paths
 // to the original source files
 const sources = (root, cov) => {
-  return object(filter(map(pairs(cov), (file) => {
-    // Determine the build path and the name of the module containing each
-    // covered file
-    const mdir = moduleDir(file[0]);
-    const mod = path.basename(mdir);
+  return object(
+    filter(
+      map(pairs(cov), (file) => {
+        // Determine the build path and the name of the module containing each
+        // covered file
+        const mdir = moduleDir(file[0]);
+        const mod = path.basename(mdir);
 
-    // Determine the path to the module source directory
-    const sdir = root.dependencies[mod] || root.devDependencies[mod];
-    if (!sdir)
-      return [file[0], file[1]];
+        // Determine the path to the module source directory
+        const sdir = root.dependencies[mod] || root.devDependencies[mod];
+        if (!sdir) return [file[0], file[1]];
 
-    // Return a covered object with a relative path to the original source
-    // of the covered file
-    const src = path.join(sdir,
-      file[0].substr(mdir.length + 1)).split(':').reverse()[0];
-    return [src, extend({}, file[1], { path: src })];
-
-  }), (file) => {
-    return file[1];
-  }));
+        // Return a covered object with a relative path to the original source
+        // of the covered file
+        const src = path
+          .join(sdir, file[0].substr(mdir.length + 1))
+          .split(':')
+          .reverse()[0];
+        return [src, extend({}, file[1], { path: src })];
+      }),
+      (file) => {
+        return file[1];
+      }
+    )
+  );
 };
 
 // Return a list of all the individual json coverage files for our modules
 const covfiles = (cb) => {
   fs.readdir('node_modules', (err, files) => {
-    cb(undefined, filter([path.join('.coverage', 'coverage.json')].
-      concat(err ? [] : map(files, (file) => {
-        return path.join('node_modules', file, '.coverage', 'coverage.json');
-      })), fs.existsSync)
+    cb(
+      undefined,
+      filter(
+        [path.join('.coverage', 'coverage.json')].concat(
+          err
+            ? []
+            : map(files, (file) => {
+                return path.join('node_modules', file, '.coverage', 'coverage.json');
+              })
+        ),
+        fs.existsSync
+      )
     );
   });
 };
@@ -81,44 +94,47 @@ const collect = (root, cb) => {
 // Compute overall line and statement coverage percentages
 const percentages = (coverage) => {
   // Count overall covered and totals of lines, statements and branches
-  const t = reduce(values(coverage), (a, cov) => {
-    const l = values(cov.l);
-    const s = values(cov.s);
-    const b = flatten(values(cov.b));
-    return {
+  const t = reduce(
+    values(coverage),
+    (a, cov) => {
+      const l = values(cov.l);
+      const s = values(cov.s);
+      const b = flatten(values(cov.b));
+      return {
+        l: {
+          covered: a.l.covered + filter(l, identity).length,
+          total: a.l.total + l.length
+        },
+        s: {
+          covered: a.s.covered + filter(s, identity).length,
+          total: a.s.total + s.length
+        },
+        b: {
+          covered: a.b.covered + filter(b, identity).length,
+          total: a.b.total + b.length
+        }
+      };
+    },
+    {
       l: {
-        covered: a.l.covered + filter(l, identity).length,
-        total: a.l.total + l.length
+        covered: 0,
+        total: 0
       },
       s: {
-        covered: a.s.covered + filter(s, identity).length,
-        total: a.s.total + s.length
+        covered: 0,
+        total: 0
       },
       b: {
-        covered: a.b.covered + filter(b, identity).length,
-        total: a.b.total + b.length
+        covered: 0,
+        total: 0
       }
-    };
-  }, {
-    l: {
-      covered: 0,
-      total: 0
-    },
-    s: {
-      covered: 0,
-      total: 0
-    },
-    b: {
-      covered: 0,
-      total: 0
     }
-  });
+  );
 
   // Return the coverage percentages
   return {
     l: t.l.covered / (t.l.total || 1) * 100,
-    s: (t.s.covered + /* t.b.covered */ 0) /
-    (t.s.total + /* t.b.total */ 0 || 1) * 100
+    s: (t.s.covered + /* t.b.covered */ 0) / (t.s.total + /* t.b.total */ 0 || 1) * 100
   };
 };
 
@@ -136,10 +152,7 @@ const fail = (msg) => {
 // Report overall code coverage from Istanbul coverage files
 const runCLI = () => {
   // Parse command line options
-  commander
-    .option(
-      '--no-color', 'do not colorify output')
-    .parse(process.argv);
+  commander.option('--no-color', 'do not colorify output').parse(process.argv);
 
   const redColor = colorify(commander) ? '\u001b[31m' : '';
   const greenColor = colorify(commander) ? '\u001b[32m' : '';
@@ -150,14 +163,14 @@ const runCLI = () => {
 
   // Collect all the individual json coverage reports for our modules
   collect(root, (err, collector) => {
-    if (err) fail(util.format('Couldn\'t collect coverage files', err));
+    if (err) fail(util.format("Couldn't collect coverage files", err));
 
     // Combine all the individual reports and write overall coverage
     // reports in LCOV and JSON formats
     const reporter = new istanbul.Reporter(undefined, '.coverage');
     reporter.addAll(['lcovonly', 'json']);
     reporter.write(collector, false, (err) => {
-      if (err) fail(util.format('Couldn\'t write coverage reports', err, '\n'));
+      if (err) fail(util.format("Couldn't write coverage reports", err, '\n'));
 
       // Compute and report overall line and statement coverage
       const percent = percentages(collector.getFinalCoverage());
@@ -168,13 +181,19 @@ const runCLI = () => {
       const color = fullcov ? greenColor : redColor;
 
       if (process.env.NO_ISTANBUL)
-        process.stdout.write(util.format(
-          '\n%sCoverage is disabled via NO_ISTANBUL environment variable%s\n',
-          redColor, resetColor));
+        process.stdout.write(
+          util.format('\n%sCoverage is disabled via NO_ISTANBUL environment variable%s\n', redColor, resetColor)
+        );
       else
-        process.stdout.write(util.format(
-          '\n%sOverall coverage lines %d\% statements %d\% %s\n\n',
-          color, percent.l.toFixed(2), percent.s.toFixed(2), resetColor));
+        process.stdout.write(
+          util.format(
+            '\n%sOverall coverage lines %d% statements %d% %s\n\n',
+            color,
+            percent.l.toFixed(2),
+            percent.s.toFixed(2),
+            resetColor
+          )
+        );
 
       process.exit(0);
     });
@@ -183,4 +202,3 @@ const runCLI = () => {
 
 // Export our public functions
 module.exports.runCLI = runCLI;
-

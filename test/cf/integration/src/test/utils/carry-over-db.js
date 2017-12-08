@@ -13,26 +13,34 @@ const yieldable = require('abacus-yieldable');
 
 const wait = require('./wait');
 
-
-const checkKeyPart = partition.partitioner(partition.bucket,
-  partition.period, partition.forward, partition.balance, true);
+const checkKeyPart = partition.partitioner(
+  partition.bucket,
+  partition.period,
+  partition.forward,
+  partition.balance,
+  true
+);
 
 const dbalias = process.env.DBALIAS || 'db';
 const uris = urienv({
-  [dbalias]  : 5984
+  [dbalias]: 5984
 });
 
-const db = dbClient(checkKeyPart, dbClient.dburi(uris[dbalias],
-  'abacus-carry-over'));
+const db = dbClient(checkKeyPart, dbClient.dburi(uris[dbalias], 'abacus-carry-over'));
 const getAllDocs = yieldable(db.allDocs);
 const putDoc = yieldable(db.put);
 const drop = yieldable(dbClient.drop);
 const waitUntil = yieldable(wait.until);
 
-const readCurrentMonthDocs = function *(cb) {
-
-  const monthStart = moment.utc(moment.now()).startOf('month').valueOf();
-  const monthEnd = moment.utc(moment.now()).endOf('month').valueOf();
+const readCurrentMonthDocs = function*(cb) {
+  const monthStart = moment
+    .utc(moment.now())
+    .startOf('month')
+    .valueOf();
+  const monthEnd = moment
+    .utc(moment.now())
+    .endOf('month')
+    .valueOf();
   const result = yield getAllDocs({
     startkey: 't/' + seqid.pad16(monthStart),
     endkey: 't/' + seqid.pad16(monthEnd),
@@ -44,34 +52,32 @@ const readCurrentMonthDocs = function *(cb) {
   return docs;
 };
 
-const put = function *(doc) {
-  yield putDoc(extend({}, doc, {
-    _id: dbClient.tkuri(doc.event_guid, doc.timestamp)
-  }));
+const put = function*(doc) {
+  yield putDoc(
+    extend({}, doc, {
+      _id: dbClient.tkuri(doc.event_guid, doc.timestamp)
+    })
+  );
 };
 
-const isDbAvailable = function *() {
+const isDbAvailable = function*() {
   try {
     yield readCurrentMonthDocs();
     return true;
-  }
-  catch(error) {
+  } catch (error) {
     return false;
   }
 };
 
-const setup = function *() {
-  if (!process.env.DB)
-    lifecycleManager.startModules([lifecycleManager.modules.pouchserver]);
-  else
-    yield drop(process.env.DB, /^abacus-/);
+const setup = function*() {
+  if (!process.env.DB) lifecycleManager.startModules([lifecycleManager.modules.pouchserver]);
+  else yield drop(process.env.DB, /^abacus-/);
 
   yield waitUntil(isDbAvailable);
 };
 
 const teardown = () => {
-  if (!process.env.DB)
-    lifecycleManager.stopAllStarted();
+  if (!process.env.DB) lifecycleManager.stopAllStarted();
 };
 
 module.exports.readCurrentMonthDocs = readCurrentMonthDocs;

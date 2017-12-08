@@ -52,10 +52,8 @@ const onCloseHandlers = {
 
     return (eventId, cb) => {
       currentAttempt++;
-      if (currentAttempt == successfulAttempt)
-        cb();
-      else
-        cb(new Error());
+      if (currentAttempt == successfulAttempt) cb();
+      else cb(new Error());
     };
   }
 };
@@ -68,7 +66,8 @@ const stubChildProcessWith = (onCloseFn) => {
   const executable = {
     stdout: stdEvent,
     stderr: stdEvent,
-    on: stub().withArgs('close', sinon.match.any)
+    on: stub()
+      .withArgs('close', sinon.match.any)
       .callsFake(onCloseFn)
   };
 
@@ -128,15 +127,11 @@ describe('Test command line args', () => {
   });
 
   it('verify optional arguments', () => {
-    assert.calledWith(commander.option, '-c, --conf [value]',
-      sinon.match.any, process.env.CONF);
-    assert.calledWith(commander.option, '-b, --buildpack [value]',
-      sinon.match.any, process.env.BUILDPACK);
-    assert.calledWith(commander.option, '-x, --prefix [value]',
-      sinon.match.any, process.env.ABACUS_PREFIX);
+    assert.calledWith(commander.option, '-c, --conf [value]', sinon.match.any, process.env.CONF);
+    assert.calledWith(commander.option, '-b, --buildpack [value]', sinon.match.any, process.env.BUILDPACK);
+    assert.calledWith(commander.option, '-x, --prefix [value]', sinon.match.any, process.env.ABACUS_PREFIX);
     assert.calledWith(commander.option, '-s, --start');
-    assert.calledWith(commander.option, '-r, --retries [value]',
-      sinon.match.any, defaultRetriesAttempts);
+    assert.calledWith(commander.option, '-r, --retries [value]', sinon.match.any, defaultRetriesAttempts);
     assert.calledWith(commander.option, '-z, --prepare-zdm [boolean]');
   });
 
@@ -145,7 +140,7 @@ describe('Test command line args', () => {
     assert.calledWith(commander.option, '-i, --instances <nb>');
   });
 
-  after(()=>{
+  after(() => {
     async.series.restore();
   });
 });
@@ -161,7 +156,6 @@ describe('Test abacus cfpush', () => {
   });
 
   context('when application is successfully pushed', () => {
-
     before(() => {
       stubChildProcessWith(onCloseHandlers.alwaysSuccessfulPush);
       cfpush.runCLI();
@@ -172,27 +166,20 @@ describe('Test abacus cfpush', () => {
     });
 
     it('verify CF_HOME content is copied to tmp dir', () => {
-      assert.calledWithExactly(
-        fs.copySync,
-        `${cfHomeDirectory}/.cf`,
-        `${tmpDir.name}/.cf`);
+      assert.calledWithExactly(fs.copySync, `${cfHomeDirectory}/.cf`, `${tmpDir.name}/.cf`);
     });
 
     it('verify manifest is adjusted', () => {
       assert.calledOnce(fs.writeFile);
-      assert.calledWithExactly(fs.writeFile,
-        manifestPath,
-        adjustedManifest,
-        sinon.match.any);
+      assert.calledWithExactly(fs.writeFile, manifestPath, adjustedManifest, sinon.match.any);
     });
 
     it('verify prepareZdm', () => {
       const appName = `${prefix}${adjustedName}`;
       const orderedCommands = {
-        cfApp : `cf app ${appName}`,
-        cfDelete : `cf delete -f ${appName}-old`,
-        cfRename :
-          `cf rename ${appName} ${appName}-old`
+        cfApp: `cf app ${appName}`,
+        cfDelete: `cf delete -f ${appName}-old`,
+        cfRename: `cf rename ${appName} ${appName}-old`
       };
       const envMock = sinon.match.has('env', { CF_HOME: tmpDir.name });
 
@@ -202,9 +189,8 @@ describe('Test abacus cfpush', () => {
 
       // verify order of execution
       const calls = cp.exec.getCalls();
-      for(let i = 0; i < Object.keys(orderedCommands).length; i++)
-        assert.match(calls[i].args[0],
-          orderedCommands[Object.keys(orderedCommands)[i]]);
+      for (let i = 0; i < Object.keys(orderedCommands).length; i++)
+        assert.match(calls[i].args[0], orderedCommands[Object.keys(orderedCommands)[i]]);
     });
 
     it('verify cf push executed', () => {
@@ -214,59 +200,54 @@ describe('Test abacus cfpush', () => {
       assert.calledWithExactly(
         cp.exec,
         `cf push --no-start -f ${manifestPath}`,
-        sinon.match.has('env',
-          { CF_HOME: tmpDir.name }));
+        sinon.match.has('env', { CF_HOME: tmpDir.name })
+      );
     });
   });
 
   context('when application push fails', () => {
-
     before(() => {
       commander.prepareZdm = false;
     });
 
     const verifyPushRetryAttempts = (expectedAttempts) => {
       assert.callCount(cp.exec, expectedAttempts);
-      assert.alwaysCalledWithExactly(cp.exec,
+      assert.alwaysCalledWithExactly(
+        cp.exec,
         `cf push --no-start -f ${manifestPath}`,
-        sinon.match.has('env', { CF_HOME: tmpDir.name }));
+        sinon.match.has('env', { CF_HOME: tmpDir.name })
+      );
       assert.callCount(tmpDir.removeCallback, expectedAttempts);
 
       assert.callCount(fs.copySync, expectedAttempts);
-      assert.alwaysCalledWithExactly(fs.copySync, `${cfHomeDirectory}/.cf`,
-        `${tmpDir.name}/.cf`);
+      assert.alwaysCalledWithExactly(fs.copySync, `${cfHomeDirectory}/.cf`, `${tmpDir.name}/.cf`);
     };
 
     afterEach(() => {
       clearStubs();
     });
 
-    it('verify cf push was retried until retry attempts is reached',
-      () => {
-        stubChildProcessWith(onCloseHandlers.alwaysFailingPush);
+    it('verify cf push was retried until retry attempts is reached', () => {
+      stubChildProcessWith(onCloseHandlers.alwaysFailingPush);
 
-        try {
-          cfpush.runCLI();
-          assert.fail('Expected error to be thrown.');
-        }
-        catch (e) {
+      try {
+        cfpush.runCLI();
+        assert.fail('Expected error to be thrown.');
+      } catch (e) {
         // This is expected behavior
-          noop();
-        }
+        noop();
+      }
 
-        verifyPushRetryAttempts(retryAttepmts);
-      });
+      verifyPushRetryAttempts(retryAttepmts);
+    });
 
     it('verify cf push was retried until successful push', () => {
       const successfulAttempt = 2;
-      stubChildProcessWith(
-        onCloseHandlers.successfullPushOn(successfulAttempt));
+      stubChildProcessWith(onCloseHandlers.successfullPushOn(successfulAttempt));
 
       cfpush.runCLI();
 
       verifyPushRetryAttempts(successfulAttempt);
     });
-
   });
-
 });

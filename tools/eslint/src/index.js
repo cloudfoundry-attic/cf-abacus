@@ -13,8 +13,7 @@ const optionator = require('optionator');
 // Run the ESLint CLI
 const runCLI = () => {
   // Parse command line options
-  commander
-    .parse(process.argv);
+  commander.parse(process.argv);
 
   const engine = new CLIEngine({
     eslintrc: true,
@@ -34,8 +33,7 @@ const runCLI = () => {
   }).parse('src');
   const report = engine.executeOnFiles(files._);
 
-  if (process.env.ESLINT_FIX)
-    CLIEngine.outputFixes(report);
+  if (process.env.ESLINT_FIX) CLIEngine.outputFixes(report);
 
   const formatter = engine.getFormatter('stylish');
   const output = formatter(report.results);
@@ -46,4 +44,3 @@ const runCLI = () => {
 
 // Export our module function
 module.exports.runCLI = runCLI;
-

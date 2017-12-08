@@ -12,8 +12,7 @@ const request = require('abacus-request');
 const argv = clone(process.argv);
 argv.splice(1, 1, 'secured-itest');
 commander
-  .option('-t, --start-timeout <n>',
-    'external processes start timeout in milliseconds', parseInt)
+  .option('-t, --start-timeout <n>', 'external processes start timeout in milliseconds', parseInt)
   .allowUnknownOption(true)
   .parse(argv);
 
@@ -41,23 +40,17 @@ describe('eureka', function() {
     eureka = require('abacus-eureka');
 
     lifecycleManager = createLifecycleManager();
-    const modules = [
-      lifecycleManager.modules.authServerPlugin,
-      lifecycleManager.modules.eurekaPlugin
-    ];
+    const modules = [lifecycleManager.modules.authServerPlugin, lifecycleManager.modules.eurekaPlugin];
 
     const startModules = () => {
       lifecycleManager.startModules(modules);
-      request.waitFor('http://localhost::p',
-        { p: 9990 }, startTimeout, done);
+      request.waitFor('http://localhost::p', { p: 9990 }, startTimeout, done);
     };
 
     if (!process.env.DB) {
       modules.push(lifecycleManager.modules.pouchserver);
       startModules();
-    }
-    else
-      dbclient.drop(process.env.DB, /^abacus-/, startModules);
+    } else dbclient.drop(process.env.DB, /^abacus-/, startModules);
   });
 
   after(() => {
@@ -66,10 +59,8 @@ describe('eureka', function() {
 
   const checkInstance = (app, uri, expectToBeFound, done) => {
     eureka.instance(eureka.server(), app, uri, (err, instance) => {
-      if (expectToBeFound)
-        expect(instance.app).to.equal(app.toUpperCase());
-      else
-        expect(instance).to.equal(undefined);
+      if (expectToBeFound) expect(instance.app).to.equal(app.toUpperCase());
+      else expect(instance).to.equal(undefined);
       done(err);
     });
   };
@@ -79,12 +70,11 @@ describe('eureka', function() {
   });
 
   it('registers an apps', (done) => {
-    eureka.register(eureka.server(), 'test', 1234, '127.0.0.1',
-      (err, response) => {
-        expect(err).to.equal(undefined);
-        expect(response.statusCode).to.equal(204);
-        done();
-      });
+    eureka.register(eureka.server(), 'test', 1234, '127.0.0.1', (err, response) => {
+      expect(err).to.equal(undefined);
+      expect(response.statusCode).to.equal(204);
+      done();
+    });
   });
 
   it('deregisters an apps', (done) => {
@@ -95,5 +85,4 @@ describe('eureka', function() {
       checkInstance('test', 'localhost', false, done);
     });
   });
-
 });

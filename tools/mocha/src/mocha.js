@@ -24,7 +24,7 @@ const inThisModule = (file) => {
 };
 
 // Return true if a file is in a test directory
-const inTestDir = (file) =>{
+const inTestDir = (file) => {
   const rel = path.relative(process.cwd(), file);
   return /^(src|lib)\/test\//.test(rel);
 };
@@ -34,10 +34,9 @@ const inTestDir = (file) =>{
 // module or any module name matching the given include pattern, excluding
 // files in test directories.
 const instrumentMatcher = (include) => {
-  const ix = new RegExp('\/' + include + '[^\/]*\/lib\/([^\/]*\/)?[^\/]*\.js$');
+  const ix = new RegExp('/' + include + '[^/]*/lib/([^/]*/)?[^/]*.js$');
   const inIncludedModule = (file) => ix.test(file);
-  return (file) => (inThisModule(file) || inIncludedModule(file)) &&
-    !inTestDir(file);
+  return (file) => (inThisModule(file) || inIncludedModule(file)) && !inTestDir(file);
 };
 
 // Return a transform function that transforms a file and records the original
@@ -52,19 +51,16 @@ const transformer = (sources, maps, transformers) => {
   // Return the configured transform function
   return (code, file) => {
     // Skip files that contain /istanbul ignore file/
-    if (/istanbul ignore file/.test(code))
-      return code;
+    if (/istanbul ignore file/.test(code)) return code;
 
-    if (transformers[file])
-      return transformers[file];
+    if (transformers[file]) return transformers[file];
 
     // Save the original source of each instrumented file
     sources[file] = fs.readFileSync(file).toString();
 
     // Record the corresponding source map
     const sm = csmap.fromSource(code);
-    if (sm)
-      maps[file] = new smap.SourceMapConsumer(sm.sourcemap);
+    if (sm) maps[file] = new smap.SourceMapConsumer(sm.sourcemap);
 
     // Instrument with Istanbul
     const transformer = instrumenter.instrumentSync(code, file);
@@ -75,18 +71,16 @@ const transformer = (sources, maps, transformers) => {
 
 // Remap Istanbul statement, function and branch coverage maps to the original
 // source code using the given set of source maps
-const remap = (coverage, maps) =>{
+const remap = (coverage, maps) => {
   map(values(coverage), (cov) => {
     const m = maps[cov.path];
     if (!m) return;
 
     const reloc = (l) => {
       const start = m.originalPositionFor(l.start);
-      if (start.line !== null)
-        l.start = start;
+      if (start.line !== null) l.start = start;
       const end = m.originalPositionFor(l.end);
-      if (end.line !== null)
-        l.end = end;
+      if (end.line !== null) l.end = end;
     };
 
     map(values(cov.statementMap), (s) => {
@@ -112,8 +106,7 @@ const runCLI = () => {
   commander
     .option('-f, --file <regex>', 'test file [test.js]', 'test.js')
     .option('--no-istanbul', 'do not instrument with Istanbul')
-    .option('-i, --istanbul-includes <regex>',
-      'instrument matching modules with Istanbul [abacus]', 'abacus')
+    .option('-i, --istanbul-includes <regex>', 'instrument matching modules with Istanbul [abacus]', 'abacus')
     .option('--no-color', 'do not colorify output')
     .option('-t, --timeout <number>', 'timeout [60000]', 60000)
     .allowUnknownOption(true)
@@ -139,9 +132,7 @@ const runCLI = () => {
   const maps = [];
   const transformers = [];
   if (commander.istanbul)
-    istanbul.hook.hookRequire(
-      instrumentMatcher(commander.istanbulIncludes),
-      transformer(sources, maps, transformers));
+    istanbul.hook.hookRequire(instrumentMatcher(commander.istanbulIncludes), transformer(sources, maps, transformers));
 
   // Save the original process send method as it may be mocked by the tests
   const processSend = process.send.bind(process);
@@ -149,26 +140,31 @@ const runCLI = () => {
   // Run the test with Mocha
   mocha.addFile(commander.file);
   mocha.run((failures) => {
-    if (!global.__coverage)
-      process.exit(failures);
+    if (!global.__coverage) process.exit(failures);
 
     // Remap the generated source coverage maps using the collected source
     // maps
     remap(global.__coverage, maps);
 
     // Send the results to the parent process
-    async.series([
-      (callback) =>{
-        processSend({
-          coverage: global.__coverage,
-          sources: sources
-        }, (err) => {
-          callback(err);
-        });
+    async.series(
+      [
+        (callback) => {
+          processSend(
+            {
+              coverage: global.__coverage,
+              sources: sources
+            },
+            (err) => {
+              callback(err);
+            }
+          );
+        }
+      ],
+      (err) => {
+        process.exit(failures);
       }
-    ], (err) => {
-      process.exit(failures);
-    });
+    );
   });
 };
 

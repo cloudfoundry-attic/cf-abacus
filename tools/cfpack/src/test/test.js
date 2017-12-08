@@ -12,8 +12,7 @@ describe('CF Pack', () => {
       rimraf('.cfpack', () => {
         done();
       });
-    else
-      done();
+    else done();
   });
 
   context('When executing CF pack command', () => {
@@ -23,10 +22,10 @@ describe('CF Pack', () => {
         const npmShrinkwrapJson = require('./.cfpack/npm-shrinkwrap.json');
         const npmShrinkwrapJsonOrig = require('./npm-shrinkwrap.json');
         const packageJson = require('./.cfpack/package.json');
-        expect(packageJson.dependencies['abacus-batch']).
-          to.equal(npmShrinkwrapJson.dependencies['abacus-batch'].resolved);
-        expect(npmShrinkwrapJsonOrig.dependencies.underscore).
-          to.deep.equal(npmShrinkwrapJson.dependencies.underscore);
+        expect(packageJson.dependencies['abacus-batch']).to.equal(
+          npmShrinkwrapJson.dependencies['abacus-batch'].resolved
+        );
+        expect(npmShrinkwrapJsonOrig.dependencies.underscore).to.deep.equal(npmShrinkwrapJson.dependencies.underscore);
         done();
       });
     });

@@ -17,7 +17,10 @@ const wait = require('../utils/wait');
 const waitUntil = yieldable(wait.until);
 
 const now = moment.now();
-const startOfCurrentMonth = moment.utc(now).startOf('month').valueOf();
+const startOfCurrentMonth = moment
+  .utc(now)
+  .startOf('month')
+  .valueOf();
 const startOfLastMonth = moment
   .utc(now)
   .subtract(1, 'month')
@@ -34,7 +37,10 @@ const outOfSlackCarryOverDoc = {
   collector_id: 0,
   event_guid: 'event-guid-0',
   state: 'STARTED',
-  timestamp: moment.utc(startOfLastMonth).subtract(100, 'days').valueOf()
+  timestamp: moment
+    .utc(startOfLastMonth)
+    .subtract(100, 'days')
+    .valueOf()
 };
 const unsupportedCarryOverDoc = {
   collector_id: 1,
@@ -61,74 +67,69 @@ const endOfLastMonthCarryOverDoc = {
   timestamp: endOfLastMonth
 };
 
-const startOfLastMonthAbacusUsage = fixture.usage.create()
+const startOfLastMonthAbacusUsage = fixture.usage
+  .create()
   .withTimestamp(startOfLastMonth)
   .withOrganizationId('org-id-1')
   .withCurrentInstances(2)
   .withPreviousInstances(1)
   .build();
-const middleOfLastMonthAbacusUsage = fixture.usage.create()
+const middleOfLastMonthAbacusUsage = fixture.usage
+  .create()
   .withTimestamp(middleOfLastMonth)
   .withOrganizationId('org-id-2')
   .withCurrentInstances(4)
   .withPreviousInstances(2)
   .build();
-const endOfLastMonthAbacusUsage = fixture.usage.create()
+const endOfLastMonthAbacusUsage = fixture.usage
+  .create()
   .withTimestamp(endOfLastMonth)
   .withOrganizationId('org-id-3')
   .withCurrentInstances(1)
   .withPreviousInstances(0)
   .build();
 
-
 describe('renewer standard flow', () => {
   let externalSystemsMocks;
 
-  before(yieldable.functioncb(function *() {
-    externalSystemsMocks = fixture.externalSystemsMocks();
+  before(
+    yieldable.functioncb(function*() {
+      externalSystemsMocks = fixture.externalSystemsMocks();
 
-    externalSystemsMocks
-      .uaaServer
-      .tokenService
-      .whenScopesAre(fixture.abacusCollectorScopes)
-      .return(fixture.abacusCollectorToken);
+      externalSystemsMocks.uaaServer.tokenService
+        .whenScopesAre(fixture.abacusCollectorScopes)
+        .return(fixture.abacusCollectorToken);
 
-    externalSystemsMocks
-      .abacusCollector
-      .getUsageService
-      .return
-      .series([{
-        statusCode: 200,
-        body: startOfLastMonthAbacusUsage
-      },{
-        statusCode: 200,
-        body: middleOfLastMonthAbacusUsage
-      },{
-        statusCode: 200,
-        body: endOfLastMonthAbacusUsage
-      }]);
+      externalSystemsMocks.abacusCollector.getUsageService.return.series([
+        {
+          statusCode: 200,
+          body: startOfLastMonthAbacusUsage
+        },
+        {
+          statusCode: 200,
+          body: middleOfLastMonthAbacusUsage
+        },
+        {
+          statusCode: 200,
+          body: endOfLastMonthAbacusUsage
+        }
+      ]);
 
-    externalSystemsMocks
-      .abacusCollector
-      .collectUsageService
-      .return
-      .always(httpStatus.CREATED);
+      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
 
-    externalSystemsMocks.startAll();
+      externalSystemsMocks.startAll();
 
-    yield carryOverDb.setup();
-    yield carryOverDb.put(outOfSlackCarryOverDoc);
-    yield carryOverDb.put(unsupportedCarryOverDoc);
-    yield carryOverDb.put(startOfLastMonthCarryOverDoc);
-    yield carryOverDb.put(middleOfLastMonthCarryOverDoc);
-    yield carryOverDb.put(endOfLastMonthCarryOverDoc);
-    fixture.renewer.start(externalSystemsMocks);
+      yield carryOverDb.setup();
+      yield carryOverDb.put(outOfSlackCarryOverDoc);
+      yield carryOverDb.put(unsupportedCarryOverDoc);
+      yield carryOverDb.put(startOfLastMonthCarryOverDoc);
+      yield carryOverDb.put(middleOfLastMonthCarryOverDoc);
+      yield carryOverDb.put(endOfLastMonthCarryOverDoc);
+      fixture.renewer.start(externalSystemsMocks);
 
-    yield waitUntil(
-      serviceMock(
-        externalSystemsMocks.abacusCollector.collectUsageService
-      ).received(3));
-  }));
+      yield waitUntil(serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(3));
+    })
+  );
 
   after((done) => {
     fixture.renewer.stop();
@@ -169,41 +170,50 @@ describe('renewer standard flow', () => {
     expect(abacusCollectorMock.collectUsageService.request(2).token).to.equal(expectedToken);
   });
 
-  it('records entries in carry-over', yieldable.functioncb(function *() {
-    const abacusCollectorMock = externalSystemsMocks.abacusCollector;
-    const docs = yield carryOverDb.readCurrentMonthDocs();
-    const expectedNewDocuments = [{
-      collector_id: abacusCollectorMock.resourceLocation,
-      event_guid: startOfLastMonthCarryOverDoc.event_guid,
-      state: startOfLastMonthCarryOverDoc.state,
-      timestamp: startOfCurrentMonth
-    },{
-      collector_id: abacusCollectorMock.resourceLocation,
-      event_guid: middleOfLastMonthCarryOverDoc.event_guid,
-      state: middleOfLastMonthCarryOverDoc.state,
-      timestamp: startOfCurrentMonth
-    },{
-      collector_id: abacusCollectorMock.resourceLocation,
-      event_guid: endOfLastMonthCarryOverDoc.event_guid,
-      state: endOfLastMonthCarryOverDoc.state,
-      timestamp: startOfCurrentMonth
-    }];
-    expect(docs).to.deep.equal(expectedNewDocuments);
-  }));
+  it(
+    'records entries in carry-over',
+    yieldable.functioncb(function*() {
+      const abacusCollectorMock = externalSystemsMocks.abacusCollector;
+      const docs = yield carryOverDb.readCurrentMonthDocs();
+      const expectedNewDocuments = [
+        {
+          collector_id: abacusCollectorMock.resourceLocation,
+          event_guid: startOfLastMonthCarryOverDoc.event_guid,
+          state: startOfLastMonthCarryOverDoc.state,
+          timestamp: startOfCurrentMonth
+        },
+        {
+          collector_id: abacusCollectorMock.resourceLocation,
+          event_guid: middleOfLastMonthCarryOverDoc.event_guid,
+          state: middleOfLastMonthCarryOverDoc.state,
+          timestamp: startOfCurrentMonth
+        },
+        {
+          collector_id: abacusCollectorMock.resourceLocation,
+          event_guid: endOfLastMonthCarryOverDoc.event_guid,
+          state: endOfLastMonthCarryOverDoc.state,
+          timestamp: startOfCurrentMonth
+        }
+      ];
+      expect(docs).to.deep.equal(expectedNewDocuments);
+    })
+  );
 
-  it('exposes correct statistics', yieldable.functioncb(function *() {
-    const response = yield fixture.renewer.readStats.withValidToken();
-    expect(response.statusCode).to.equal(httpStatus.OK);
-    const usageStats = response.body.statistics.usage;
-    expect(usageStats.report).to.deep.equal({
-      success: 3,
-      conflicts : 0,
-      failures : 0
-    });
-    expect(omit(usageStats.get, 'missingToken')).to.deep.equal({
-      success: 3,
-      failures : 0
-    });
-  }));
-
+  it(
+    'exposes correct statistics',
+    yieldable.functioncb(function*() {
+      const response = yield fixture.renewer.readStats.withValidToken();
+      expect(response.statusCode).to.equal(httpStatus.OK);
+      const usageStats = response.body.statistics.usage;
+      expect(usageStats.report).to.deep.equal({
+        success: 3,
+        conflicts: 0,
+        failures: 0
+      });
+      expect(omit(usageStats.get, 'missingToken')).to.deep.equal({
+        success: 3,
+        failures: 0
+      });
+    })
+  );
 });

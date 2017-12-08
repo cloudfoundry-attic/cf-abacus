@@ -22,7 +22,7 @@ module.exports = {
           context.report({
             node,
             message: 'Non-utc time. Use `abacus-moment.utc()` instead'
-        });
+          });
       }
     };
   }
