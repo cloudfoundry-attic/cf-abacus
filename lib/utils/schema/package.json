@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "abacus-debug": "file:../debug",
-    "eslint": "^3.19.0",
+    "eslint": "^4.1.7",
     "graphql": "^0.4.14",
     "is-my-json-valid": "^2.12.0"
   },
