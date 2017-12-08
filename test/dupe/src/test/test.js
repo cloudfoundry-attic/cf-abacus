@@ -77,16 +77,16 @@ const organization = commander.organizationGuid || 'test-org';
 const totalTimeout = Math.max(60000 + delay * num, 65000);
 
 // Use secure routes or not
-const secured = () => (process.env.SECURED === 'true' ? true : false);
+const secured = () => process.env.SECURED === 'true' ? true : false;
 
 // Token fetchers
 const objectStorageToken = secured()
   ? oauth.cache(
-      authServer,
-      process.env.CLIENT_ID,
-      process.env.CLIENT_SECRET,
-      'abacus.usage.object-storage.write abacus.usage.object-storage.read'
-    )
+    authServer,
+    process.env.CLIENT_ID,
+    process.env.CLIENT_SECRET,
+    'abacus.usage.object-storage.write abacus.usage.object-storage.read'
+  )
   : undefined;
 const systemToken = secured()
   ? oauth.cache(authServer, process.env.CLIENT_ID, process.env.CLIENT_SECRET, 'abacus.usage.read')
@@ -95,10 +95,10 @@ const systemToken = secured()
 const authHeader = (token) =>
   token
     ? {
-        headers: {
-          authorization: token()
-        }
+      headers: {
+        authorization: token()
       }
+    }
     : {};
 
 const prune = (v, k) => {

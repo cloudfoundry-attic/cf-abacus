@@ -47,7 +47,7 @@ const runCLI = (stdin, stdout) => {
   // Read HTML Hogan template
   fs.readFile(path.resolve(__dirname, '../html/index.html'), (err, template) => {
     if (err) {
-      process.stderr.write(util.format("Couldn't read HTML template %s\n", err));
+      process.stderr.write(util.format('Couldn\'t read HTML template %s\n', err));
       return;
     }
 

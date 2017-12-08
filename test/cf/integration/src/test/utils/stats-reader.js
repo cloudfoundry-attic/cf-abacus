@@ -12,8 +12,8 @@ const get = yieldable(request.get);
 const readStats = function*(config) {
   const headers = config.token
     ? {
-        authorization: `Bearer ${config.token}`
-      }
+      authorization: `Bearer ${config.token}`
+    }
     : undefined;
 
   return yield get('http://localhost::port/v1/stats', {

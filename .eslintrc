@@ -37,7 +37,7 @@ rules:
   quotes: [2, 'single']
   space-infix-ops: 2
   no-else-return: 2
-  no-extra-parens: 2
+  no-extra-parens: [2, "all", { "nestedBinaryExpressions": false }]
   no-eq-null: 2
   no-floating-decimal: 2
   no-param-reassign: 2

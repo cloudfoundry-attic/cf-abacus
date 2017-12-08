@@ -37,13 +37,13 @@ const inside = (pos, spans) =>
 const nextpos = (pos, c) =>
   c === '\n'
     ? {
-        line: pos.line + 1,
-        column: 0
-      }
+      line: pos.line + 1,
+      column: 0
+    }
     : {
-        line: pos.line,
-        column: pos.column + 1
-      };
+      line: pos.line,
+      column: pos.column + 1
+    };
 
 // Return source code annotated with colors or markup indicating code coverage
 const annotatedSource = (source, coveredSpans, uncoveredSpans, opt) => {
@@ -51,43 +51,43 @@ const annotatedSource = (source, coveredSpans, uncoveredSpans, opt) => {
   // non-code text sections.
   const marks = opt.color
     ? {
-        // Uncovered code is underlined red, covered code is green, non-code
-        // text is blue
-        uncovered: {
-          start: '\u001b[31m\u001b[4m',
-          end: '\u001b[0m'
-        },
-        covered: {
-          start: '\u001b[32m',
-          end: '\u001b[0m'
-        },
-        text: {
-          start: '\u001b[34m',
-          end: '\u001b[0m'
-        },
-        none: {
-          start: '\u001b[0m',
-          end: '\u001b[0m'
-        }
+      // Uncovered code is underlined red, covered code is green, non-code
+      // text is blue
+      uncovered: {
+        start: '\u001b[31m\u001b[4m',
+        end: '\u001b[0m'
+      },
+      covered: {
+        start: '\u001b[32m',
+        end: '\u001b[0m'
+      },
+      text: {
+        start: '\u001b[34m',
+        end: '\u001b[0m'
+      },
+      none: {
+        start: '\u001b[0m',
+        end: '\u001b[0m'
       }
+    }
     : {
-        uncovered: {
-          start: '<U>',
-          end: '</U>'
-        },
-        covered: {
-          start: '<C>',
-          end: '</C>'
-        },
-        text: {
-          start: '',
-          end: ''
-        },
-        none: {
-          start: '',
-          end: ''
-        }
-      };
+      uncovered: {
+        start: '<U>',
+        end: '</U>'
+      },
+      covered: {
+        start: '<C>',
+        end: '</C>'
+      },
+      text: {
+        start: '',
+        end: ''
+      },
+      none: {
+        start: '',
+        end: ''
+      }
+    };
 
   // Return an array of characters representing the source document marked
   // with marks indicating covered code, uncovered code and text sections
@@ -153,7 +153,7 @@ const printCoverage = (coverage, sources, opt) => {
     let fullcov = percent.l === 100 && percent.s === 100;
 
     // Print code coverage in green for 100% coverage and red under 100%
-    const color = opt.color ? (fullcov ? '\u001b[32m' : '\u001b[31m') : '';
+    const color = opt.color ? fullcov ? '\u001b[32m' : '\u001b[31m' : '';
     const reset = opt.color ? '\u001b[0m' : '';
 
     // Under 100% coverage, print the annotated source

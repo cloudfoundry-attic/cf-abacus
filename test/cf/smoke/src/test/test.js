@@ -64,16 +64,16 @@ const totalTimeout = commander.totalTimeout || 60000;
 const now = moment.utc().toDate();
 
 // Use secure routes or not
-const secured = () => (process.env.SECURED === 'true' ? true : false);
+const secured = () => process.env.SECURED === 'true' ? true : false;
 
 // Token fetchers
 const objectStorageToken = secured()
   ? oauth.cache(
-      authServer,
-      process.env.OBJECT_STORAGE_CLIENT_ID,
-      process.env.OBJECT_STORAGE_CLIENT_SECRET,
-      'abacus.usage.object-storage.write'
-    )
+    authServer,
+    process.env.OBJECT_STORAGE_CLIENT_ID,
+    process.env.OBJECT_STORAGE_CLIENT_SECRET,
+    'abacus.usage.object-storage.write'
+  )
   : undefined;
 const systemToken = secured()
   ? oauth.cache(authServer, process.env.SYSTEM_CLIENT_ID, process.env.SYSTEM_CLIENT_SECRET, 'abacus.usage.read')
@@ -129,15 +129,15 @@ const deltaCompare = (currentWindow, previousWindow, ch, s, q, c) => {
 };
 
 // Leave only the current month charge in "windows"
-const prune = (value, key) => (key === 'windows' && value[4] ? value[4][0] : value);
+const prune = (value, key) => key === 'windows' && value[4] ? value[4][0] : value;
 
 const authHeader = (token) =>
   token
     ? {
-        headers: {
-          authorization: token()
-        }
+      headers: {
+        authorization: token()
       }
+    }
     : {};
 
 describe('abacus-smoke-test', function() {

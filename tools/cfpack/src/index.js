@@ -153,21 +153,21 @@ const run = (root, additional, cb) => {
   // Create the directories we need
   mkdirs(root, additional, (err) => {
     if (err) {
-      console.log("Couldn't setup cfpack layout -", err);
+      console.log('Couldn\'t setup cfpack layout -', err);
       cb(err);
     }
 
     // Generate the repackaged package.json
     repackage(root, additional, (err) => {
       if (err) {
-        console.log("Couldn't write package.json -", err);
+        console.log('Couldn\'t write package.json -', err);
         cb(err);
       }
       // Produce the packaged app zip
       // zip(path.join(commander.root, '.gitignore'), (err) => {
       zip(path.join(root, '.gitignore'), additional ? path.join('.cfpack', additionalDir) : '', (err) => {
         if (err) {
-          console.log("Couldn't produce .cfpack/app.zip -", err);
+          console.log('Couldn\'t produce .cfpack/app.zip -', err);
           cb(err);
         }
         cb();

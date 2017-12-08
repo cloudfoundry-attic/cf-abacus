@@ -165,7 +165,7 @@ const runCLI = () => {
     ],
     (error, results) => {
       if (error) {
-        console.log("Couldn't push app %s -", commander.name, error);
+        console.log('Couldn\'t push app %s -', commander.name, error);
         throw error;
       }
     }

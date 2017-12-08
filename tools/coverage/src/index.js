@@ -70,8 +70,8 @@ const covfiles = (cb) => {
           err
             ? []
             : map(files, (file) => {
-                return path.join('node_modules', file, '.coverage', 'coverage.json');
-              })
+              return path.join('node_modules', file, '.coverage', 'coverage.json');
+            })
         ),
         fs.existsSync
       )
@@ -163,14 +163,14 @@ const runCLI = () => {
 
   // Collect all the individual json coverage reports for our modules
   collect(root, (err, collector) => {
-    if (err) fail(util.format("Couldn't collect coverage files", err));
+    if (err) fail(util.format('Couldn\'t collect coverage files', err));
 
     // Combine all the individual reports and write overall coverage
     // reports in LCOV and JSON formats
     const reporter = new istanbul.Reporter(undefined, '.coverage');
     reporter.addAll(['lcovonly', 'json']);
     reporter.write(collector, false, (err) => {
-      if (err) fail(util.format("Couldn't write coverage reports", err, '\n'));
+      if (err) fail(util.format('Couldn\'t write coverage reports', err, '\n'));
 
       // Compute and report overall line and statement coverage
       const percent = percentages(collector.getFinalCoverage());

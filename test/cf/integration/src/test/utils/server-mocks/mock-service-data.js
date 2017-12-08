@@ -20,12 +20,12 @@ module.exports = () => {
       return returnSeries[requestNumber];
     },
     return: {
-      firstTime: (value) => (returnSeries[0] = value),
-      secondTime: (value) => (returnSeries[1] = value),
-      series: (values) => (returnSeries = values),
-      always: (value) => (returnAlways = value),
+      firstTime: (value) => returnSeries[0] = value,
+      secondTime: (value) => returnSeries[1] = value,
+      series: (values) => returnSeries = values,
+      always: (value) => returnAlways = value,
       for: (key) => ({
-        value: (returnValue) => (returnKeyValue[key] = returnValue)
+        value: (returnValue) => returnKeyValue[key] = returnValue
       })
     }
   };

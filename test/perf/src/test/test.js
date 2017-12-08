@@ -100,15 +100,15 @@ const reporting = commander.reporting;
 const authServer = commander.authServer;
 
 // Use secure routes or not
-const secured = () => (process.env.SECURED === 'true' ? true : false);
+const secured = () => process.env.SECURED === 'true' ? true : false;
 
 const objectStorageToken = secured()
   ? oauth.cache(
-      authServer,
-      process.env.OBJECT_STORAGE_CLIENT_ID,
-      process.env.OBJECT_STORAGE_CLIENT_SECRET,
-      'abacus.usage.object-storage.write'
-    )
+    authServer,
+    process.env.OBJECT_STORAGE_CLIENT_ID,
+    process.env.OBJECT_STORAGE_CLIENT_SECRET,
+    'abacus.usage.object-storage.write'
+  )
   : undefined;
 
 const systemToken = secured()
@@ -367,10 +367,10 @@ describe('abacus-perf-test', () => {
     const authHeader = (token) =>
       token
         ? {
-            headers: {
-              authorization: token()
-            }
+          headers: {
+            authorization: token()
           }
+        }
         : {};
 
     // Post one usage doc, throttled to 1000 concurrent requests

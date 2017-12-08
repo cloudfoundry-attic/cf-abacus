@@ -128,11 +128,11 @@ const buildAggregatedWindows = (p, u, ri, tri, count, end, f, price) => {
     return price === undefined
       ? [{ quantity: q }]
       : [
-          {
-            quantity: q,
-            cost: new BigNumber(q).mul(price).toNumber()
-          }
-        ];
+        {
+          quantity: q,
+          cost: new BigNumber(q).mul(price).toNumber()
+        }
+      ];
   });
 };
 
@@ -196,16 +196,16 @@ describe('abacus-usage-aggregator-itest', () => {
       ['bbeae239-f3f8-483c-9dd0-de6781c38bab', o + 1, ri % 2 === 0 ? 1 : 2, ri % 8 < 4 ? 1 : 2].join('-');
 
     // One of the two plans based on resource instance index
-    const pid = (ri) => (ri % 4 < 2 ? 'basic' : 'standard');
+    const pid = (ri) => ri % 4 < 2 ? 'basic' : 'standard';
 
     // The metering plan id
     const mpid = (ri) => 'test-metering-plan';
 
     // One of the two rating plans based on resource instance index
-    const ppid = (ri) => (ri % 4 < 2 ? 'test-pricing-basic' : 'test-pricing-standard');
+    const ppid = (ri) => ri % 4 < 2 ? 'test-pricing-basic' : 'test-pricing-standard';
 
     // One of the two pricing plans based on resource instance index
-    const rpid = (ri) => (ri % 4 < 2 ? 'test-rating-plan' : 'test-rating-plan-standard');
+    const rpid = (ri) => ri % 4 < 2 ? 'test-rating-plan' : 'test-rating-plan-standard';
 
     // Resource instance id based on org and resouce instance indices
     const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87', o + 1, ri + 1].join('-');
@@ -295,8 +295,8 @@ describe('abacus-usage-aggregator-itest', () => {
           tri,
           count,
           end,
-          (p, u, ri, tri, count) => (u === 0 ? count(ri, p) : count(tri, p)),
-          addCost ? (p === 0 ? 1 : 0.5) : undefined
+          (p, u, ri, tri, count) => u === 0 ? count(ri, p) : count(tri, p),
+          addCost ? p === 0 ? 1 : 0.5 : undefined
         )
       },
       {
@@ -309,7 +309,7 @@ describe('abacus-usage-aggregator-itest', () => {
           count,
           end,
           (p, u, ri, tri, count) => count(ri, p) + u * count(tri, p),
-          addCost ? (p === 0 ? 0.03 : 0.04) : undefined
+          addCost ? p === 0 ? 0.03 : 0.04 : undefined
         )
       },
       {
@@ -322,7 +322,7 @@ describe('abacus-usage-aggregator-itest', () => {
           count,
           end,
           (p, u, ri, tri, count) => 100 * (count(ri, p) + u * count(tri, p)),
-          addCost ? (p === 0 ? 0.15 : 0.18) : undefined
+          addCost ? p === 0 ? 0.15 : 0.18 : undefined
         )
       }
     ];
@@ -353,7 +353,7 @@ describe('abacus-usage-aggregator-itest', () => {
     const scpagg = (o, ri, u, s, c, conid) => {
       // Resource instance index shift to locate a value at count number
       // sequence specified below
-      const shift = (p) => (s === 0 ? (c === 0 ? 8 : 4) : c === 0 ? 7 : 3) - (p === 0 ? 0 : 2);
+      const shift = (p) => (s === 0 ? c === 0 ? 8 : 4 : c === 0 ? 7 : 3) - (p === 0 ? 0 : 2);
 
       // Number sequence representing count for a given space, consumer and
       // plan based on specified spread using id generators
@@ -363,7 +363,7 @@ describe('abacus-usage-aggregator-itest', () => {
 
       // Number of plans at a given space, consumer and
       // resource instance indices
-      const plans = () => ((u === 0 && ri <= (c === 0 ? 1 + s : 5 + s)) || tri <= (c === 0 ? 1 + s : 5 + s) ? 1 : 2);
+      const plans = () => (u === 0 && ri <= (c === 0 ? 1 + s : 5 + s)) || tri <= (c === 0 ? 1 + s : 5 + s) ? 1 : 2;
 
       // Create plan aggregations
       return create(plans, (i) => ({
@@ -385,7 +385,7 @@ describe('abacus-usage-aggregator-itest', () => {
     // Consumer-level Resource Aggregation
     const cagg = (o, ri, u, s) => {
       // Number of consumers at a given resource instance and space indices
-      const consumers = () => ((u === 0 && ri <= 3 + s) || tri <= 3 + s ? 1 : 2);
+      const consumers = () => (u === 0 && ri <= 3 + s) || tri <= 3 + s ? 1 : 2;
 
       // Create resource aggregations
       return create(consumers, (i) => ({
@@ -425,7 +425,7 @@ describe('abacus-usage-aggregator-itest', () => {
     // Consumer ids for a given space
     const scagg = (o, ri, u, s) => {
       // Number of consumers at a given resource instance and space indices
-      const consumers = () => ((u === 0 && ri <= 3 + s) || tri <= 3 + s ? 1 : 2);
+      const consumers = () => (u === 0 && ri <= 3 + s) || tri <= 3 + s ? 1 : 2;
 
       // Create resource aggregations
       return create(consumers, (i) => ({
@@ -443,7 +443,7 @@ describe('abacus-usage-aggregator-itest', () => {
       const count = (n, p) => Math.round((n + shift(p)) / 4 - 0.25);
 
       // Number of plans at a given resource instance and space indices
-      const plans = () => ((u === 0 && ri <= 1 + s) || tri <= 1 + s ? 1 : 2);
+      const plans = () => (u === 0 && ri <= 1 + s) || tri <= 1 + s ? 1 : 2;
 
       // Create plan level aggregations
       return create(plans, (i) => ({
@@ -458,7 +458,7 @@ describe('abacus-usage-aggregator-itest', () => {
     // Space level resource aggregations for a given organization
     const osagg = (o, ri, u) => {
       // Number of spaces at a given resource index
-      const spaces = () => ((u === 0 && ri === 0) || tri === 0 ? 1 : 2);
+      const spaces = () => (u === 0 && ri === 0) || tri === 0 ? 1 : 2;
 
       // Create resource instance aggregations
       return create(spaces, (i) => ({
@@ -476,7 +476,7 @@ describe('abacus-usage-aggregator-itest', () => {
     // Resource plan level aggregations for a given organization
     const opagg = (o, ri, u) => {
       // Resource instance index shift
-      const shift = (p) => (p === 0 ? 2 : 0);
+      const shift = (p) => p === 0 ? 2 : 0;
 
       // Number sequence of count
       // 0, 0, 1, 2, 2, 2, 3, 4, 4, 4, 5, 6, 6, 6, 7, 8, 8, 8, ...........
@@ -487,7 +487,7 @@ describe('abacus-usage-aggregator-itest', () => {
       };
 
       // Number of plans at a given resource instance index
-      const plans = () => ((u === 0 && ri <= 1) || tri <= 1 ? 1 : 2);
+      const plans = () => (u === 0 && ri <= 1) || tri <= 1 ? 1 : 2;
 
       // Create plan aggregations
       return create(plans, (i) => ({
@@ -541,7 +541,7 @@ describe('abacus-usage-aggregator-itest', () => {
     // Aggregated usage for a given consumer
     const consumerTemplate = (o, ri, u) => {
       // Number of spaces at a given resource index
-      const spaces = () => ((u === 0 && ri === 0) || tri === 0 ? 1 : 2);
+      const spaces = () => (u === 0 && ri === 0) || tri === 0 ? 1 : 2;
 
       return create(spaces, (i) => {
         return extend(

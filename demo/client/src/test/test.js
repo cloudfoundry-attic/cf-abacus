@@ -70,19 +70,19 @@ const secured = () => process.env.SECURED === 'true';
 // Token fetchers
 const objectStorageWriteToken = secured()
   ? oauth.cache(
-      authServer,
-      process.env.OBJECT_STORAGE_CLIENT_ID,
-      process.env.OBJECT_STORAGE_CLIENT_SECRET,
-      'abacus.usage.object-storage.write'
-    )
+    authServer,
+    process.env.OBJECT_STORAGE_CLIENT_ID,
+    process.env.OBJECT_STORAGE_CLIENT_SECRET,
+    'abacus.usage.object-storage.write'
+  )
   : undefined;
 const objectStorageReadToken = secured()
   ? oauth.cache(
-      authServer,
-      process.env.SYSTEM_CLIENT_ID,
-      process.env.SYSTEM_CLIENT_SECRET,
-      'abacus.usage.object-storage.read'
-    )
+    authServer,
+    process.env.SYSTEM_CLIENT_ID,
+    process.env.SYSTEM_CLIENT_SECRET,
+    'abacus.usage.object-storage.read'
+  )
   : undefined;
 
 // Builds the expected window value based upon the
@@ -117,11 +117,7 @@ const prune = (v, k) => {
 
 const authHeader = (token) =>
   token
-    ? {
-        headers: {
-          authorization: token()
-        }
-      }
+    ? { headers: { authorization: token() } }
     : {};
 
 describe('abacus-demo-client', function() {
