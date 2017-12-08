@@ -49,7 +49,7 @@ rules:
   no-lonely-if: 2
   space-in-parens: [2, "never"]
   space-before-function-paren: [2, "never"]
-  generator-star-spacing: [2, "before"]
+  generator-star-spacing: [2, "neither"]
   spaced-comment: [2, "always"]
   eol-last: 2
   no-multi-spaces: 2
