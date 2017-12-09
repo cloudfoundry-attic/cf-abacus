@@ -28,8 +28,8 @@ const defaultUsageEvent = {
   serviceLabel: 'test-service',
   eventGuid: 'event-guid',
   orgGuid: 'test-org',
-  spaceGuid:'space-guid',
-  servicePlanName:'test-plan',
+  spaceGuid: 'space-guid',
+  servicePlanName: 'test-plan',
   serviceInstanceGuid: 'service-instance-guid'
 };
 
@@ -40,7 +40,7 @@ const bridge = createBridge({
     SERVICES: `{
       "${defaultUsageEvent.serviceLabel}":{"plans":["${defaultUsageEvent.servicePlanName}"]}
     }`,
-    ORGS_TO_REPORT : `["${defaultUsageEvent.orgGuid}"]`
+    ORGS_TO_REPORT: `["${defaultUsageEvent.orgGuid}"]`
   }
 });
 
@@ -105,15 +105,17 @@ collectorUsage = (eventTimestamp) => ({
   consumer_id: `service:${defaultUsageEvent.serviceInstanceGuid}`,
   resource_id: defaultUsageEvent.serviceLabel,
   plan_id: defaultUsageEvent.servicePlanName,
-  resource_instance_id: `service:${defaultUsageEvent.serviceInstanceGuid}:${defaultUsageEvent.servicePlanName}:${defaultUsageEvent.serviceLabel}`,
+  resource_instance_id: `service:${defaultUsageEvent.serviceInstanceGuid}:${defaultUsageEvent.servicePlanName}:${
+    defaultUsageEvent.serviceLabel
+  }`,
   measured_usage: [
     {
       measure: 'current_instances',
-      quantity : 1
+      quantity: 1
     },
     {
       measure: 'previous_instances',
-      quantity : 0
+      quantity: 0
     }
   ]
 });

@@ -6,8 +6,7 @@ module.exports = (creators) => {
   let result;
 
   const externalSystemsMocks = () => {
-    if (result)
-      return result;
+    if (result) return result;
 
     const serverMocks = Object.keys(creators).reduce((accumulated, key) => {
       accumulated[key] = creators[key]();
@@ -19,10 +18,7 @@ module.exports = (creators) => {
         Object.keys(serverMocks).forEach((key) => serverMocks[key].start());
       },
       stopAll: (done) => {
-        async.forEach(
-          Object.keys(serverMocks),
-          (key, stopped) => serverMocks[key].stop(stopped),
-          done);
+        async.forEach(Object.keys(serverMocks), (key, stopped) => serverMocks[key].stop(stopped), done);
       }
     };
 

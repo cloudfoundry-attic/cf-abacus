@@ -21,24 +21,18 @@ const parseCommandLineArgs = (args) => {
     .parse(args);
 };
 
-const escapeRegExp = (str) =>
-  str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
+const escapeRegExp = (str) => str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
 
-const replaceAll = (str, find, replace) =>
-  str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+const replaceAll = (str, find, replace) => str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
 
 const replaceValues = (root, credentials, credentialsKey) => {
-  if (!root)
-    return;
+  if (!root) return;
 
   for (let key in root)
     if (root.hasOwnProperty(key)) {
       const value = root[key];
-      if (typeof value === 'string')
-        root[key] = replaceAll(value,
-          credentialsKey, credentials[credentialsKey]);
-      if (typeof value === 'object')
-        replaceValues(value, credentials, credentialsKey);
+      if (typeof value === 'string') root[key] = replaceAll(value, credentialsKey, credentials[credentialsKey]);
+      if (typeof value === 'object') replaceValues(value, credentials, credentialsKey);
     }
 };
 
@@ -46,8 +40,7 @@ const replaceFiles = (credentials, files) => {
   console.log('Substituting in:');
   for (let templateFile of files)
     fs.readFile(templateFile, 'utf8', function(err, content) {
-      if (err)
-        throw err;
+      if (err) throw err;
 
       const templateYml = yaml.load(content);
 
@@ -62,8 +55,7 @@ const replaceFiles = (credentials, files) => {
 
       const manifestContent = yaml.dump(templateYml);
       fs.writeFile(manifestFile, manifestContent, 'utf8', (err) => {
-        if (err)
-          throw err;
+        if (err) throw err;
       });
       console.log('   %s', manifestFile);
     });
@@ -77,8 +69,7 @@ const runCLI = () => {
     process.exit(1);
   }
   if (!fs.statSync(abacusConfigDir).isDirectory()) {
-    console.error('Invalid abacus-config directory %s specified!',
-      abacusConfigDir);
+    console.error('Invalid abacus-config directory %s specified!', abacusConfigDir);
     process.exit(1);
   }
   console.log('Abacus config: %s', abacusConfigDir);
@@ -87,8 +78,7 @@ const runCLI = () => {
   if (credentialsFile) {
     console.log('Using credentials file: %s', credentialsFile);
     fs.readFile(credentialsFile, 'utf8', (err, content) => {
-      if (err)
-        throw err;
+      if (err) throw err;
 
       const credentialsYml = yaml.load(content);
       for (let key in credentialsYml)
@@ -97,8 +87,7 @@ const runCLI = () => {
           credentials[envVariableName] = credentialsYml[key];
         }
     });
-  }
-  else {
+  } else {
     console.log('Using environment variables');
     for (let key in process.env)
       if (process.env.hasOwnProperty(key)) {
@@ -108,8 +97,7 @@ const runCLI = () => {
   }
 
   glob(abacusConfigDir + '/lib/**/manifest.yml.template', (err, files) => {
-    if (err)
-      throw err;
+    if (err) throw err;
     replaceFiles(credentials, files);
   });
 };

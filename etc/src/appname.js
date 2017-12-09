@@ -19,8 +19,7 @@ const runCLI = () => {
     .parse(process.argv);
 
   // Load the app's manifest and print its name
-  const manifestPath = path.join(path.resolve(process.cwd(), commander.dir),
-    'manifest.yml');
+  const manifestPath = path.join(path.resolve(process.cwd(), commander.dir), 'manifest.yml');
   const content = fs.readFileSync(manifestPath);
   const manifest = yaml.load(content);
   process.stdout.write(util.format('%s\n', manifest.applications[0].name));
@@ -28,4 +27,3 @@ const runCLI = () => {
 
 // Export our CLI
 module.exports.runCLI = runCLI;
-

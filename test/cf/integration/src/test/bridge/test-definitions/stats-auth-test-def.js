@@ -12,31 +12,28 @@ const waitUntil = yieldable(wait.until);
 let fixture;
 
 const build = () => {
-
   context('when requesting statistics', () => {
     let externalSystemsMocks;
 
-    before(yieldable.functioncb(function *() {
-      externalSystemsMocks = fixture.externalSystemsMocks();
-      externalSystemsMocks.startAll();
+    before(
+      yieldable.functioncb(function*() {
+        externalSystemsMocks = fixture.externalSystemsMocks();
+        externalSystemsMocks.startAll();
 
-      externalSystemsMocks
-        .uaaServer
-        .tokenService
-        .whenScopesAre(fixture.oauth.abacusCollectorScopes)
-        .return(fixture.oauth.abacusCollectorToken);
+        externalSystemsMocks.uaaServer.tokenService
+          .whenScopesAre(fixture.oauth.abacusCollectorScopes)
+          .return(fixture.oauth.abacusCollectorToken);
 
-      externalSystemsMocks
-        .uaaServer
-        .tokenService
-        .whenScopesAre(fixture.oauth.cfAdminScopes)
-        .return(fixture.oauth.cfAdminToken);
+        externalSystemsMocks.uaaServer.tokenService
+          .whenScopesAre(fixture.oauth.cfAdminScopes)
+          .return(fixture.oauth.cfAdminToken);
 
-      yield carryOverDb.setup();
-      fixture.bridge.start(externalSystemsMocks);
+        yield carryOverDb.setup();
+        fixture.bridge.start(externalSystemsMocks);
 
-      yield waitUntil(fixture.bridge.readStats.isEndpointAvailable);
-    }));
+        yield waitUntil(fixture.bridge.readStats.isEndpointAvailable);
+      })
+    );
 
     after((done) => {
       fixture.bridge.stop();
@@ -45,19 +42,24 @@ const build = () => {
     });
 
     context('With NO token', () => {
-      it('UNAUTHORIZED is returned', yieldable.functioncb(function *() {
-        const response = yield fixture.bridge.readStats.withoutToken();
-        expect(response.statusCode).to.equal(httpStatus.UNAUTHORIZED);
-      }));
+      it(
+        'UNAUTHORIZED is returned',
+        yieldable.functioncb(function*() {
+          const response = yield fixture.bridge.readStats.withoutToken();
+          expect(response.statusCode).to.equal(httpStatus.UNAUTHORIZED);
+        })
+      );
     });
 
     context('With token without required scopes', () => {
-      it('FORBIDDEN is returned', yieldable.functioncb(function *() {
-        const response = yield fixture.bridge.readStats.withMissingScope();
-        expect(response.statusCode).to.equal(httpStatus.FORBIDDEN);
-      }));
+      it(
+        'FORBIDDEN is returned',
+        yieldable.functioncb(function*() {
+          const response = yield fixture.bridge.readStats.withMissingScope();
+          expect(response.statusCode).to.equal(httpStatus.FORBIDDEN);
+        })
+      );
     });
-
   });
 };
 
@@ -70,4 +72,3 @@ const testDef = {
 };
 
 module.exports = testDef;
-

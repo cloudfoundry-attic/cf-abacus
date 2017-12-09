@@ -21,8 +21,7 @@ module.exports = {
         if (node.callee.name === 'Date')
           context.report({
             node,
-            message: 'Direct usage of Date class is prohibited. ' +
-              'Use `abacus-moment` library instead.'
+            message: 'Direct usage of Date class is prohibited. ' + 'Use `abacus-moment` library instead.'
           });
       }
     };

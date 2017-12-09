@@ -9,26 +9,28 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 
 const manifest = {
-  applications: [{
-    name: 'abacus-usage-accumulator',
-    host: 'abacus-usage-accumulator',
-    path: '.cfpack/app.zip',
-    instances: 1,
-    memory: '512M',
-    disk_quota: '512M',
-    env: {
-      CONF: 'default',
-      DEBUG: 'e-abacus-*',
-      DBCLIENT: 'abacus-mongoclient',
-      AGGREGATOR: 'abacus-usage-aggregator',
-      PROVISIONING: 'abacus-provisioning-plugin',
-      ACCOUNT: 'abacus-account-plugin',
-      EUREKA: 'abacus-eureka-plugin',
-      NODE_MODULES_CACHE: false,
-      SLACK: '5D',
-      SECURED: true
+  applications: [
+    {
+      name: 'abacus-usage-accumulator',
+      host: 'abacus-usage-accumulator',
+      path: '.cfpack/app.zip',
+      instances: 1,
+      memory: '512M',
+      disk_quota: '512M',
+      env: {
+        CONF: 'default',
+        DEBUG: 'e-abacus-*',
+        DBCLIENT: 'abacus-mongoclient',
+        AGGREGATOR: 'abacus-usage-aggregator',
+        PROVISIONING: 'abacus-provisioning-plugin',
+        ACCOUNT: 'abacus-account-plugin',
+        EUREKA: 'abacus-eureka-plugin',
+        NODE_MODULES_CACHE: false,
+        SLACK: '5D',
+        SECURED: true
+      }
     }
-  }]
+  ]
 };
 
 const createManifestContent = (appName, testEnv) => {
@@ -42,28 +44,26 @@ const createManifestContent = (appName, testEnv) => {
   return yaml.dump(content);
 };
 
-const templateContent =
-  createManifestContent('$ACCUMULATOR_NAME', {
-    TEST_VARIABLE: '$TEST_VARIABLE',
-    TWO_TIMES_TEST_VARIABLE: '$TEST_VARIABLE$TEST_VARIABLE',
-    ANOTHER_TEST_VARIABLE: '$ANOTHER_TEST_VARIABLE'
-  });
-const expectedManifestContent =
-  createManifestContent('abacus-usage-accumulator', {
-    TEST_VARIABLE: 'value1',
-    TWO_TIMES_TEST_VARIABLE: 'value1value1',
-    ANOTHER_TEST_VARIABLE: 'value2'
-  });
+const templateContent = createManifestContent('$ACCUMULATOR_NAME', {
+  TEST_VARIABLE: '$TEST_VARIABLE',
+  TWO_TIMES_TEST_VARIABLE: '$TEST_VARIABLE$TEST_VARIABLE',
+  ANOTHER_TEST_VARIABLE: '$ANOTHER_TEST_VARIABLE'
+});
+const expectedManifestContent = createManifestContent('abacus-usage-accumulator', {
+  TEST_VARIABLE: 'value1',
+  TWO_TIMES_TEST_VARIABLE: 'value1value1',
+  ANOTHER_TEST_VARIABLE: 'value2'
+});
 
-const credentialsContent = '---\n' +
+const credentialsContent =
+  '---\n' +
   'accumulator-name: abacus-usage-accumulator\n' +
   'test-variable: value1\n' +
   'another-test-variable: value2';
 
 const replaceTemplateRoot = __dirname + '/../..';
 
-const createTemporaryFiles = (tempDir, tempTemplateFile,
-  tempCredentailsFile, done) => {
+const createTemporaryFiles = (tempDir, tempTemplateFile, tempCredentailsFile, done) => {
   mkdirp(tempDir, (err) => {
     expect(err).to.equal(null);
     fs.writeFile(tempTemplateFile, templateContent, (err) => {
@@ -77,13 +77,11 @@ const createTemporaryFiles = (tempDir, tempTemplateFile,
 };
 
 const deleteFolderRecursive = (path) => {
-  if(fs.existsSync(path)) {
+  if (fs.existsSync(path)) {
     fs.readdirSync(path).forEach((file) => {
       const curPath = path + '/' + file;
-      if(fs.lstatSync(curPath).isDirectory())
-        deleteFolderRecursive(curPath);
-      else
-        fs.unlinkSync(curPath);
+      if (fs.lstatSync(curPath).isDirectory()) deleteFolderRecursive(curPath);
+      else fs.unlinkSync(curPath);
     });
     fs.rmdirSync(path);
   }
@@ -91,10 +89,8 @@ const deleteFolderRecursive = (path) => {
 
 const runScript = (abacusConfigDir, credentialsFile, environment, done) => {
   const args = [];
-  if (abacusConfigDir)
-    args.push(abacusConfigDir);
-  if (credentialsFile)
-    args.push(credentialsFile);
+  if (abacusConfigDir) args.push(abacusConfigDir);
+  if (credentialsFile) args.push(credentialsFile);
 
   const replaceTemplate = child.spawn('./replace-template', args, {
     cwd: replaceTemplateRoot,
@@ -126,8 +122,7 @@ describe('replace-templates', () => {
   const tempCredentialsFile = tempWorkingDir + '/credentials.yml';
 
   beforeEach((done) => {
-    createTemporaryFiles(tempWorkingDir, tempTemplateFile,
-      tempCredentialsFile, done);
+    createTemporaryFiles(tempWorkingDir, tempTemplateFile, tempCredentialsFile, done);
   });
 
   afterEach(() => {
@@ -136,14 +131,19 @@ describe('replace-templates', () => {
 
   context('when using environment variables', () => {
     beforeEach((done) => {
-      runScript(tempConfigDir, undefined, {
-        ACCUMULATOR_NAME: 'abacus-usage-accumulator',
-        TEST_VARIABLE: 'value1',
-        ANOTHER_TEST_VARIABLE: 'value2'
-      }, (code) => {
-        expect(code).to.equal(0);
-        done();
-      });
+      runScript(
+        tempConfigDir,
+        undefined,
+        {
+          ACCUMULATOR_NAME: 'abacus-usage-accumulator',
+          TEST_VARIABLE: 'value1',
+          ANOTHER_TEST_VARIABLE: 'value2'
+        },
+        (code) => {
+          expect(code).to.equal(0);
+          done();
+        }
+      );
     });
 
     it('replaces all placeholders in template', (done) => {
@@ -166,13 +166,18 @@ describe('replace-templates', () => {
 
   context('with both credentials file and environment', () => {
     beforeEach((done) => {
-      runScript(tempConfigDir, tempCredentialsFile, {
-        TEST_VARIABLE: 'invalid_value1',
-        ANOTHER_TEST_VARIABLE: 'invalid_value2'
-      }, (code) => {
-        expect(code).to.equal(0);
-        done();
-      });
+      runScript(
+        tempConfigDir,
+        tempCredentialsFile,
+        {
+          TEST_VARIABLE: 'invalid_value1',
+          ANOTHER_TEST_VARIABLE: 'invalid_value2'
+        },
+        (code) => {
+          expect(code).to.equal(0);
+          done();
+        }
+      );
     });
 
     it('replaces all placeholders using credentials file', (done) => {

@@ -15,18 +15,12 @@ const unhandleableEvents = (fixture) => {
     .overwriteState('UNSUPPORTED')
     .get();
 
-  return [
-    unsupportedOrganzationUsageEvent,
-    unsupportedStateUsageEvent
-  ];
+  return [unsupportedOrganzationUsageEvent, unsupportedStateUsageEvent];
 };
 
 describe('applications-bridge unhandleable events tests', () => {
-
   unhandleableEventsTestsDefinition
     .fixture(applicationFixture)
     .unhandleableEvents(unhandleableEvents)
     .build();
-
 });
-

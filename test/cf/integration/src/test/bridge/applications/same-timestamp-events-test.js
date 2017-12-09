@@ -6,10 +6,5 @@ const sameTimestampEventsTestsDefinition = require('../test-definitions/same-tim
 const applicationFixture = require('./fixture');
 
 describe('applications-bridge unhandleable events tests', () => {
-
-  sameTimestampEventsTestsDefinition
-    .fixture(applicationFixture)
-    .build();
-
+  sameTimestampEventsTestsDefinition.fixture(applicationFixture).build();
 });
-

@@ -1,4 +1,8 @@
 ---
+plugins:
+  - mocha
+  - nodate
+
 parser: espree
 
 env:
@@ -23,7 +27,6 @@ rules:
   # ERRORS
   space-before-blocks: 2
   indent: [2, 2, { "SwitchCase": 1 }]
-  #strict: [2, "global"]
   semi: [2, "always"]
   comma-dangle: [2, "never"]
   no-unused-expressions: 2
@@ -34,48 +37,43 @@ rules:
   quotes: [2, 'single']
   space-infix-ops: 2
   no-else-return: 2
-  no-extra-parens: 2
+  no-extra-parens: [2, "all", { "nestedBinaryExpressions": false }]
   no-eq-null: 2
   no-floating-decimal: 2
   no-param-reassign: 2
   no-self-compare: 2
   wrap-iife: [2, "inside"]
-  brace-style: [2, "stroustrup", { "allowSingleLine": false }]
+  brace-style: [2, "1tbs", { "allowSingleLine": false }]
   object-curly-spacing: [1, "always"]
   func-style: [2, "expression"]
   no-lonely-if: 2
   space-in-parens: [2, "never"]
   space-before-function-paren: [2, "never"]
-  generator-star-spacing: [2, "before"]
+  generator-star-spacing: [2, "neither"]
   spaced-comment: [2, "always"]
   eol-last: 2
   no-multi-spaces: 2
   curly: [2, "multi"]
   camelcase: [2, {properties: "never"}]
   no-eval: 2
-  #require-yield: 2
   no-var: 2
-  max-len: [2, 80]
+  max-len: [2, 120]
   complexity: [2, 6]
   arrow-parens: [2, "always"]
+  nodate/no-date: 2 # use of Date (instead of abacus-moment)
+  nodate/no-new-date: 2
+  nodate/no-moment: 2
+  nodate/no-moment-without-utc: 2
 
   # WARNINGS
-  # We use this for functions that reference each other
-  no-use-before-define: 1
-
-  # WISHLIST.
-  # valid-jsdoc: 1
+  no-use-before-define: 1 # We use this for functions that reference each other
+  mocha/no-exclusive-tests: 1 # warn for exclusive (.only) tests
+  valid-jsdoc: 1
 
   # DISABLED. These aren't compatible with our style
-  # We use this for private/internal variables
-  no-underscore-dangle: 0
-  # We pass constructors around / access them from members
-  new-cap: 0
-  # We do this in a few places to align values
-  key-spacing: 0
-  # We do this a lot
-  space-after-keywords: 0
-  # We do this mostly for callbacks
-  no-shadow: 0
-  # We do not use spaces in brackets but use spaces in braces
-  space-in-brackets: 0
+  no-underscore-dangle: 0 # We use this for private/internal variables
+  new-cap: 0 # We pass constructors around / access them from members
+  key-spacing: 0 # We do this in a few places to align values
+  space-after-keywords: 0 # We do this a lot
+  no-shadow: 0 # We do this mostly for callbacks
+  space-in-brackets: 0 # We do not use spaces in brackets but use spaces in braces

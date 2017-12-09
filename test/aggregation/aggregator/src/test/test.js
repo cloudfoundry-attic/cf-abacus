@@ -41,12 +41,9 @@ commander
   .option('-o, --orgs <n>', 'number of organizations', parseInt)
   .option('-i, --instances <n>', 'number of resource instances', parseInt)
   .option('-u, --usagedocs <n>', 'number of usage docs', parseInt)
-  .option('-d, --day <d>',
-    'usage time shift using number of days', parseInt)
-  .option('-t, --start-timeout <n>',
-    'external processes start timeout in milliseconds', parseInt)
-  .option('-x, --total-timeout <n>',
-    'test timeout in milliseconds', parseInt)
+  .option('-d, --day <d>', 'usage time shift using number of days', parseInt)
+  .option('-t, --start-timeout <n>', 'external processes start timeout in milliseconds', parseInt)
+  .option('-x, --total-timeout <n>', 'test timeout in milliseconds', parseInt)
   .allowUnknownOption(true)
   .parse(argv);
 
@@ -70,20 +67,17 @@ const totalTimeout = commander.totalTimeout || 60000;
 
 // Prunes all the windows of everything but the monthly quantity and cost
 const pruneWindows = (v, k) => {
-  if(k === 'windows') {
+  if (k === 'windows') {
     const nwin = {};
     const sumWindowValue = (w1, w2, k) => {
-      if(typeof w1[k] !== 'undefined')
-        nwin[k] = w2 ? w1[k] + w2[k] : w1[k];
+      if (typeof w1[k] !== 'undefined') nwin[k] = w2 ? w1[k] + w2[k] : w1[k];
     };
     sumWindowValue(v[4][0], v[4][1], 'quantity');
     sumWindowValue(v[4][0], v[4][1], 'cost');
     return nwin;
   }
-  if(k === 'consumers')
-    return map(v, (c) => omit(c, 't'));
-  if(k === 'resource_instances')
-    return map(v, (ri) => omit(ri, 'processed'));
+  if (k === 'consumers') return map(v, (c) => omit(c, 't'));
+  if (k === 'resource_instances') return map(v, (ri) => omit(ri, 'processed'));
   return v;
 };
 
@@ -93,8 +87,7 @@ const calculateQuantityByWindow = (e, u, w, m, f) => {
   const time = moment.utc(e + u).toDate();
 
   // Get the millisecond equivalent of the very start of the given window
-  return f(m, Math.min(time.getTime() -
-    timewindow.zeroLowerTimeDimensions(time, w).getTime(), u));
+  return f(m, Math.min(time.getTime() - timewindow.zeroLowerTimeDimensions(time, w).getTime(), u));
 };
 
 // Dimensions for a time window
@@ -105,16 +98,24 @@ const dimensions = ['s', 'm', 'h', 'D', 'M'];
 const buildAccumulatedWindows = (e, u, m, f, price) => {
   const windows = map(dimensions, (d) => {
     // If this is the first usage, only return current
-    if(u === 0)
-      return [{ quantity: { current: f(m, u + 1) } }];
+    if (u === 0) return [{ quantity: { current: f(m, u + 1) } }];
     // Return a properly accumulated current & previous
-    return [{
-      quantity: {
-        previous: calculateQuantityByWindow(e, u, d, m, f),
-        current: calculateQuantityByWindow(e, u + 1, d, m, f) } }];
+    return [
+      {
+        quantity: {
+          previous: calculateQuantityByWindow(e, u, d, m, f),
+          current: calculateQuantityByWindow(e, u + 1, d, m, f)
+        }
+      }
+    ];
   });
-  return map(windows, (w) => map(w, (q) => extend(q, {
-    cost: new BigNumber(q.quantity.current).mul(price).toNumber() })));
+  return map(windows, (w) =>
+    map(w, (q) =>
+      extend(q, {
+        cost: new BigNumber(q.quantity.current).mul(price).toNumber()
+      })
+    )
+  );
 };
 
 // Builds the quantity array in the aggregated usage
@@ -123,25 +124,26 @@ const buildAggregatedWindows = (p, u, ri, tri, count, end, f, price) => {
     const time = moment.utc(end + u).toDate();
     const windowTime = timewindow.zeroLowerTimeDimensions(time, d);
 
-    const q = f(p, Math.min(time.getTime() - windowTime.getTime(), u),
-      ri, tri, count);
-    return price === undefined ? [{ quantity: q }] : [{ quantity: q,
-      cost: new BigNumber(q).mul(price).toNumber() }];
+    const q = f(p, Math.min(time.getTime() - windowTime.getTime(), u), ri, tri, count);
+    return price === undefined
+      ? [{ quantity: q }]
+      : [
+        {
+          quantity: q,
+          cost: new BigNumber(q).mul(price).toNumber()
+        }
+      ];
   });
 };
 
 describe('abacus-usage-aggregator-itest', () => {
   before(() => {
-    const modules = [
-      lifecycleManager.modules.accountPlugin,
-      lifecycleManager.modules.aggregator
-    ];
+    const modules = [lifecycleManager.modules.accountPlugin, lifecycleManager.modules.aggregator];
 
     if (!process.env.DB) {
       modules.push(lifecycleManager.modules.pouchserver);
       lifecycleManager.startModules(modules);
-    }
-    else
+    } else
       dbclient.drop(process.env.DB, /^abacus-/, () => {
         lifecycleManager.startModules(modules);
       });
@@ -154,8 +156,7 @@ describe('abacus-usage-aggregator-itest', () => {
   it('aggregator accumulated usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs or
     // predefined timeout
-    const timeout = Math.max(totalTimeout,
-      100 * orgs * resourceInstances * usage);
+    const timeout = Math.max(totalTimeout, 100 * orgs * resourceInstances * usage);
     this.timeout(timeout + 2000);
     const processingDeadline = moment.now() + timeout;
 
@@ -184,17 +185,15 @@ describe('abacus-usage-aggregator-itest', () => {
     //    1           1            1    0        1-0
 
     // Organization id based on org index
-    const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-      o + 1].join('-');
+    const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27', o + 1].join('-');
 
     // One of the two spaces at a given org based on resource instance index
-    const sid = (o, ri) => ['aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-      o + 1, ri % 2 === 0 ? 1 : 2].join('-');
+    const sid = (o, ri) => ['aaeae239-f3f8-483c-9dd0-de5d41c38b6a', o + 1, ri % 2 === 0 ? 1 : 2].join('-');
 
     // One of the two consumers at a given org and derived space based on
     // resource instance index
-    const cid = (o, ri) => ['bbeae239-f3f8-483c-9dd0-de6781c38bab',
-      o + 1, ri % 2 === 0 ? 1 : 2, ri % 8 < 4 ? 1 : 2].join('-');
+    const cid = (o, ri) =>
+      ['bbeae239-f3f8-483c-9dd0-de6781c38bab', o + 1, ri % 2 === 0 ? 1 : 2, ri % 8 < 4 ? 1 : 2].join('-');
 
     // One of the two plans based on resource instance index
     const pid = (ri) => ri % 4 < 2 ? 'basic' : 'standard';
@@ -203,21 +202,17 @@ describe('abacus-usage-aggregator-itest', () => {
     const mpid = (ri) => 'test-metering-plan';
 
     // One of the two rating plans based on resource instance index
-    const ppid = (ri) => ri % 4 < 2 ? 'test-pricing-basic' :
-      'test-pricing-standard';
+    const ppid = (ri) => ri % 4 < 2 ? 'test-pricing-basic' : 'test-pricing-standard';
 
     // One of the two pricing plans based on resource instance index
-    const rpid = (ri) => ri % 4 < 2 ? 'test-rating-plan' :
-      'test-rating-plan-standard';
+    const rpid = (ri) => ri % 4 < 2 ? 'test-rating-plan' : 'test-rating-plan-standard';
 
     // Resource instance id based on org and resouce instance indices
-    const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87',
-      o + 1, ri + 1].join('-');
+    const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87', o + 1, ri + 1].join('-');
 
     // Usage and usage batch ids
     const utime = moment.now();
-    const uid = (o, ri, u) => dbclient.kturi(
-      [start, o + 1, ri + 1, u + 1].join('-'), utime + u + 1);
+    const uid = (o, ri, u) => dbclient.kturi([start, o + 1, ri + 1, u + 1].join('-'), utime + u + 1);
     const bid = (u) => [start, u + 1].join('-');
 
     // Accumulated usage for given org, resource instance and usage #s
@@ -240,31 +235,36 @@ describe('abacus-usage-aggregator-itest', () => {
       pricing_plan_id: ppid(ri),
       prices: {
         metrics: [
-          { name: 'storage',
-            price: pid(ri) === 'basic' ? 1 : 0.5 },
-          { name: 'thousand_light_api_calls',
-            price: pid(ri) === 'basic' ? 0.03 : 0.04 },
-          { name: 'heavy_api_calls',
-            price: pid(ri) === 'basic' ? 0.15 : 0.18 },
-          { name: 'memory',
-            price: pid(ri) === 'basic' ? 0.00014 : 0.00028 }
+          {
+            name: 'storage',
+            price: pid(ri) === 'basic' ? 1 : 0.5
+          },
+          {
+            name: 'thousand_light_api_calls',
+            price: pid(ri) === 'basic' ? 0.03 : 0.04
+          },
+          {
+            name: 'heavy_api_calls',
+            price: pid(ri) === 'basic' ? 0.15 : 0.18
+          },
+          {
+            name: 'memory',
+            price: pid(ri) === 'basic' ? 0.00014 : 0.00028
+          }
         ]
       },
       accumulated_usage: [
         {
           metric: 'storage',
-          windows: buildAccumulatedWindows(end, u, 1, (m, u) => m,
-            pid(ri) === 'basic' ? 1 : 0.5)
+          windows: buildAccumulatedWindows(end, u, 1, (m, u) => m, pid(ri) === 'basic' ? 1 : 0.5)
         },
         {
           metric: 'thousand_light_api_calls',
-          windows: buildAccumulatedWindows(end, u, 1, (m, u) => m * u,
-            pid(ri) === 'basic' ? 0.03 : 0.04)
+          windows: buildAccumulatedWindows(end, u, 1, (m, u) => m * u, pid(ri) === 'basic' ? 0.03 : 0.04)
         },
         {
           metric: 'heavy_api_calls',
-          windows: buildAccumulatedWindows(end, u, 100, (m, u) => m * u,
-            pid(ri) === 'basic' ? 0.15 : 0.18)
+          windows: buildAccumulatedWindows(end, u, 100, (m, u) => m * u, pid(ri) === 'basic' ? 0.15 : 0.18)
         }
       ]
     });
@@ -277,8 +277,7 @@ describe('abacus-usage-aggregator-itest', () => {
     const tri = resourceInstances - 1;
 
     // Create an array of objects based on a range and a creator function
-    const create = (number, creator) =>
-      map(range(number()), (i) => creator(i));
+    const create = (number, creator) => map(range(number()), (i) => creator(i));
 
     // Aggregate metrics based on ressource instance, usage and plan indices
     // For max, we use either the current count or the totat count based on
@@ -287,71 +286,106 @@ describe('abacus-usage-aggregator-itest', () => {
     // and usage index
     /* eslint complexity: [1, 6] */
     const a = (ri, u, p, count, addCost) => [
-      { metric: 'storage',
-        windows: buildAggregatedWindows(p, u, ri, tri, count, end,
+      {
+        metric: 'storage',
+        windows: buildAggregatedWindows(
+          p,
+          u,
+          ri,
+          tri,
+          count,
+          end,
           (p, u, ri, tri, count) => u === 0 ? count(ri, p) : count(tri, p),
-          addCost ? p === 0 ? 1 : 0.5 : undefined) },
-      { metric: 'thousand_light_api_calls',
-        windows: buildAggregatedWindows(p, u, ri, tri, count, end,
+          addCost ? p === 0 ? 1 : 0.5 : undefined
+        )
+      },
+      {
+        metric: 'thousand_light_api_calls',
+        windows: buildAggregatedWindows(
+          p,
+          u,
+          ri,
+          tri,
+          count,
+          end,
           (p, u, ri, tri, count) => count(ri, p) + u * count(tri, p),
-          addCost ? p === 0 ? 0.03 : 0.04 : undefined) },
-      { metric: 'heavy_api_calls',
-        windows: buildAggregatedWindows(p, u, ri, tri, count, end,
+          addCost ? p === 0 ? 0.03 : 0.04 : undefined
+        )
+      },
+      {
+        metric: 'heavy_api_calls',
+        windows: buildAggregatedWindows(
+          p,
+          u,
+          ri,
+          tri,
+          count,
+          end,
           (p, u, ri, tri, count) => 100 * (count(ri, p) + u * count(tri, p)),
-          addCost ? p === 0 ? 0.15 : 0.18 : undefined) }
+          addCost ? p === 0 ? 0.15 : 0.18 : undefined
+        )
+      }
     ];
 
     const riagg = (o, ri, u, conid, planid) => {
       const instances = () => ri + 1;
-      return map(filter(create(instances, (i) => {
-        return {
-          id: riid(o, i),
-          t: dbclient.t(uid(o, ri, u)),
-          conid: cid(o, i),
-          planid: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2),
-            rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/')
-        };
-      }), (c) => {
-        return c.conid === conid && c.planid === planid;
-      }), (p) => pick(p, 't', 'id'));
+      return map(
+        filter(
+          create(instances, (i) => {
+            return {
+              id: riid(o, i),
+              t: dbclient.t(uid(o, ri, u)),
+              conid: cid(o, i),
+              planid: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2), rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join(
+                '/'
+              )
+            };
+          }),
+          (c) => {
+            return c.conid === conid && c.planid === planid;
+          }
+        ),
+        (p) => pick(p, 't', 'id')
+      );
     };
 
     // Resource plan level aggregations for a given consumer at given space
     const scpagg = (o, ri, u, s, c, conid) => {
       // Resource instance index shift to locate a value at count number
       // sequence specified below
-      const shift = (p) =>
-        (s === 0 ? c === 0 ? 8 : 4 : c === 0 ? 7 : 3) - (p === 0 ? 0 : 2);
+      const shift = (p) => (s === 0 ? c === 0 ? 8 : 4 : c === 0 ? 7 : 3) - (p === 0 ? 0 : 2);
 
       // Number sequence representing count for a given space, consumer and
       // plan based on specified spread using id generators
       // 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
       // 2, 2, 2, 2, 2, 2, 2, 2, 3, ......
-      const count = (n, p) => Math.round((n + shift(p)) / 8 - 0.50);
+      const count = (n, p) => Math.round((n + shift(p)) / 8 - 0.5);
 
       // Number of plans at a given space, consumer and
       // resource instance indices
-      const plans = () => u === 0 && ri <= (c === 0 ? 1 + s : 5 + s) ||
-        tri <= (c === 0 ? 1 + s : 5 + s) ? 1 : 2;
+      const plans = () => (u === 0 && ri <= (c === 0 ? 1 + s : 5 + s)) || tri <= (c === 0 ? 1 + s : 5 + s) ? 1 : 2;
 
       // Create plan aggregations
       return create(plans, (i) => ({
-        plan_id: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2),
-          rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
+        plan_id: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2), rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
         metering_plan_id: mpid(i === 0 ? 0 : 2),
         rating_plan_id: rpid(i === 0 ? 0 : 2),
         pricing_plan_id: ppid(i === 0 ? 0 : 2),
         aggregated_usage: a(ri, u, i, count, true),
-        resource_instances: riagg(o, ri, u, conid, [pid(i === 0 ? 0 : 2),
-          mpid(i === 0 ? 0 : 2), rpid(i === 0 ? 0 : 2),
-          ppid(i === 0 ? 0 : 2)].join('/'))
+        resource_instances: riagg(
+          o,
+          ri,
+          u,
+          conid,
+          [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2), rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/')
+        )
       }));
     };
 
     // Consumer-level Resource Aggregation
     const cagg = (o, ri, u, s) => {
       // Number of consumers at a given resource instance and space indices
-      const consumers = () => u === 0 && ri <= 3 + s || tri <= 3 + s ? 1 : 2;
+      const consumers = () => (u === 0 && ri <= 3 + s) || tri <= 3 + s ? 1 : 2;
 
       // Create resource aggregations
       return create(consumers, (i) => ({
@@ -361,27 +395,37 @@ describe('abacus-usage-aggregator-itest', () => {
         pricing_country: 'USA',
         prices: {
           metrics: [
-            { name: 'storage',
-              price: pid(ri) === 'basic' ? 1 : 0.5 },
-            { name: 'thousand_light_api_calls',
-              price: pid(ri) === 'basic' ? 0.03 : 0.04 },
-            { name: 'heavy_api_calls',
-              price: pid(ri) === 'basic' ? 0.15 : 0.18 },
-            { name: 'memory',
-              price: pid(ri) === 'basic' ? 0.00014 : 0.00028 }
+            {
+              name: 'storage',
+              price: pid(ri) === 'basic' ? 1 : 0.5
+            },
+            {
+              name: 'thousand_light_api_calls',
+              price: pid(ri) === 'basic' ? 0.03 : 0.04
+            },
+            {
+              name: 'heavy_api_calls',
+              price: pid(ri) === 'basic' ? 0.15 : 0.18
+            },
+            {
+              name: 'memory',
+              price: pid(ri) === 'basic' ? 0.00014 : 0.00028
+            }
           ]
         },
-        resources: [{
-          resource_id: 'test-resource',
-          plans: scpagg(o, ri, u, s, i, cid(o, i === 0 ? s : s === 0 ? 4 : 5))
-        }]
+        resources: [
+          {
+            resource_id: 'test-resource',
+            plans: scpagg(o, ri, u, s, i, cid(o, i === 0 ? s : s === 0 ? 4 : 5))
+          }
+        ]
       }));
     };
 
     // Consumer ids for a given space
     const scagg = (o, ri, u, s) => {
       // Number of consumers at a given resource instance and space indices
-      const consumers = () => u === 0 && ri <= 3 + s || tri <= 3 + s ? 1 : 2;
+      const consumers = () => (u === 0 && ri <= 3 + s) || tri <= 3 + s ? 1 : 2;
 
       // Create resource aggregations
       return create(consumers, (i) => ({
@@ -399,12 +443,11 @@ describe('abacus-usage-aggregator-itest', () => {
       const count = (n, p) => Math.round((n + shift(p)) / 4 - 0.25);
 
       // Number of plans at a given resource instance and space indices
-      const plans = () => u === 0 && ri <= 1 + s || tri <= 1 + s ? 1 : 2;
+      const plans = () => (u === 0 && ri <= 1 + s) || tri <= 1 + s ? 1 : 2;
 
       // Create plan level aggregations
       return create(plans, (i) => ({
-        plan_id: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2),
-          rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
+        plan_id: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2), rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
         metering_plan_id: mpid(i === 0 ? 0 : 2),
         rating_plan_id: rpid(i === 0 ? 0 : 2),
         pricing_plan_id: ppid(i === 0 ? 0 : 2),
@@ -415,15 +458,17 @@ describe('abacus-usage-aggregator-itest', () => {
     // Space level resource aggregations for a given organization
     const osagg = (o, ri, u) => {
       // Number of spaces at a given resource index
-      const spaces = () => u === 0 && ri === 0 || tri === 0 ? 1 : 2;
+      const spaces = () => (u === 0 && ri === 0) || tri === 0 ? 1 : 2;
 
       // Create resource instance aggregations
       return create(spaces, (i) => ({
         space_id: sid(o, i),
-        resources: [{
-          resource_id: 'test-resource',
-          plans: spagg(o, ri, u, i)
-        }],
+        resources: [
+          {
+            resource_id: 'test-resource',
+            plans: spagg(o, ri, u, i)
+          }
+        ],
         consumers: scagg(o, ri, u, i)
       }));
     };
@@ -438,17 +483,15 @@ describe('abacus-usage-aggregator-itest', () => {
       const count = (n, p) => {
         const nri = n + shift(p);
 
-        return Math.round(nri / 2 +
-          (nri % 2 === 0 ? 0 : 0.5) * ((nri / 2 - 0.5) % 2 === 0 ? -1 : 1));
+        return Math.round(nri / 2 + (nri % 2 === 0 ? 0 : 0.5) * ((nri / 2 - 0.5) % 2 === 0 ? -1 : 1));
       };
 
       // Number of plans at a given resource instance index
-      const plans = () => u === 0 && ri <= 1 || tri <= 1 ? 1 : 2;
+      const plans = () => (u === 0 && ri <= 1) || tri <= 1 ? 1 : 2;
 
       // Create plan aggregations
       return create(plans, (i) => ({
-        plan_id: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2),
-          rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
+        plan_id: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2), rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
         metering_plan_id: mpid(i === 0 ? 0 : 2),
         rating_plan_id: rpid(i === 0 ? 0 : 2),
         pricing_plan_id: ppid(i === 0 ? 0 : 2),
@@ -466,186 +509,262 @@ describe('abacus-usage-aggregator-itest', () => {
       pricing_country: 'USA',
       prices: {
         metrics: [
-          { name: 'storage',
-            price: pid(ri) === 'basic' ? 1 : 0.5 },
-          { name: 'thousand_light_api_calls',
-            price: pid(ri) === 'basic' ? 0.03 : 0.04 },
-          { name: 'heavy_api_calls',
-            price: pid(ri) === 'basic' ? 0.15 : 0.18 },
-          { name: 'memory',
-            price: pid(ri) === 'basic' ? 0.00014 : 0.00028 }
+          {
+            name: 'storage',
+            price: pid(ri) === 'basic' ? 1 : 0.5
+          },
+          {
+            name: 'thousand_light_api_calls',
+            price: pid(ri) === 'basic' ? 0.03 : 0.04
+          },
+          {
+            name: 'heavy_api_calls',
+            price: pid(ri) === 'basic' ? 0.15 : 0.18
+          },
+          {
+            name: 'memory',
+            price: pid(ri) === 'basic' ? 0.00014 : 0.00028
+          }
         ]
       },
       start: end + u,
       end: end + u,
-      resources: [{
-        resource_id: 'test-resource',
-        plans: opagg(o, ri, u)
-      }],
+      resources: [
+        {
+          resource_id: 'test-resource',
+          plans: opagg(o, ri, u)
+        }
+      ],
       spaces: osagg(o, ri, u)
     });
 
     // Aggregated usage for a given consumer
     const consumerTemplate = (o, ri, u) => {
       // Number of spaces at a given resource index
-      const spaces = () => u === 0 && ri === 0 || tri === 0 ? 1 : 2;
+      const spaces = () => (u === 0 && ri === 0) || tri === 0 ? 1 : 2;
 
       return create(spaces, (i) => {
-        return extend({
-          organization_id: oid(o),
-          space_id: sid(o, i)
-        }, cagg(o, ri, u, i)[0]);
+        return extend(
+          {
+            organization_id: oid(o),
+            space_id: sid(o, i)
+          },
+          cagg(o, ri, u, i)[0]
+        );
       })[0];
     };
 
-    const expected = clone(aggregatedTemplate(
-      orgs - 1, resourceInstances - 1, usage - 1), pruneWindows);
-    const expectedConsumer = clone(consumerTemplate(
-      orgs - 1, resourceInstances - 1, usage - 1), pruneWindows);
+    const expected = clone(aggregatedTemplate(orgs - 1, resourceInstances - 1, usage - 1), pruneWindows);
+    const expectedConsumer = clone(consumerTemplate(orgs - 1, resourceInstances - 1, usage - 1), pruneWindows);
 
     // Post an accumulated usage doc, throttled to default concurrent requests
     const post = throttle((o, ri, u, cb) => {
-      debug('Submit accumulated usage for org%d instance%d usage%d',
-        o + 1, ri + 1, u + 1);
+      debug('Submit accumulated usage for org%d instance%d usage%d', o + 1, ri + 1, u + 1);
 
-      brequest.post('http://localhost::p/v1/metering/accumulated/usage',
-        { p: 9300, body: accumulatedTemplate(o, ri, u) }, (err, val) => {
+      brequest.post(
+        'http://localhost::p/v1/metering/accumulated/usage',
+        { p: 9300, body: accumulatedTemplate(o, ri, u) },
+        (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);
           expect(val.headers.location).to.not.equal(undefined);
 
-          debug('Accumulated usage for org%d instance%d' +
-            ' usage%d, verifying it...', o + 1, ri + 1, u + 1);
+          debug('Accumulated usage for org%d instance%d' + ' usage%d, verifying it...', o + 1, ri + 1, u + 1);
 
           brequest.get(val.headers.location, undefined, (err, val) => {
-            debug('Verify accumulated usage for org%d instance%d usage%d',
-              o + 1, ri + 1, u + 1);
+            debug('Verify accumulated usage for org%d instance%d usage%d', o + 1, ri + 1, u + 1);
 
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(200);
 
-            expect(omit(val.body,
-              'id', 'processed', 'processed_id', 'accumulated_usage_id'))
-              .to.deep.equal(omit(
-                accumulatedTemplate(o, ri, u),
-                'id', 'processed', 'processed_id'));
+            expect(omit(val.body, 'id', 'processed', 'processed_id', 'accumulated_usage_id')).to.deep.equal(
+              omit(accumulatedTemplate(o, ri, u), 'id', 'processed', 'processed_id')
+            );
 
-            debug('Verified accumulated usage for org%d instance%d usage%d',
-              o + 1, ri + 1, u + 1);
+            debug('Verified accumulated usage for org%d instance%d usage%d', o + 1, ri + 1, u + 1);
 
             cb();
           });
-        });
+        }
+      );
     });
 
     // Post the requested number of accumulated usage docs
     const submit = (done) => {
       let posts = 0;
       const cb = () => {
-        if(++posts === orgs * resourceInstances * usage) done();
+        if (++posts === orgs * resourceInstances * usage) done();
       };
 
       // Submit usage for all orgs and resource instances
-      map(range(usage), (u) => map(range(resourceInstances),
-        (ri) => map(range(orgs), (o) => post(o, ri, u, cb))));
+      map(range(usage), (u) => map(range(resourceInstances), (ri) => map(range(orgs), (o) => post(o, ri, u, cb))));
     };
 
     const verifyRating = (done) => {
-      const startDate = moment.utc().endOf('month').valueOf();
-      const endDate = moment.utc().startOf('month').valueOf();
+      const startDate = moment
+        .utc()
+        .endOf('month')
+        .valueOf();
+      const endDate = moment
+        .utc()
+        .startOf('month')
+        .valueOf();
 
-      const sid = dbclient.kturi(expected.organization_id,
-        seqid.pad16(startDate));
-      const eid = dbclient.kturi(expected.organization_id,
-        seqid.pad16(endDate));
+      const sid = dbclient.kturi(expected.organization_id, seqid.pad16(startDate));
+      const eid = dbclient.kturi(expected.organization_id, seqid.pad16(endDate));
       debug('comparing latest record within %s and %s', sid, eid);
-      db.allDocs({ limit: 1, startkey: sid, endkey: eid, descending: true,
-        include_docs: true },
-      (err, val) => {
-        try {
-          expect(clone(omit(val.rows[0].doc, ['id', 'processed',
-            'processed_id', 'consumer_id', 'resource_instance_id',
-            '_id', '_rev', 'accumulated_usage_id', 'start']),
-          pruneWindows)).to.deep.equal(omit(expected, ['start']));
-          done();
-        }
-        catch (e) {
-          // If the test cannot verify the actual data with the expected
-          // data within the giveup time, forward the exception
-          if(moment.now() >= processingDeadline) {
-            debug('Unable to properly verify the last record');
-            expect(clone(omit(val.rows[0].doc, ['id', 'processed',
-              'processed_id', 'consumer_id', 'resource_instance_id',
-              '_id', '_rev', 'accumulated_usage_id', 'start']),
-            pruneWindows)).to.deep.equal(omit(expected, ['start']));
+      db.allDocs(
+        {
+          limit: 1,
+          startkey: sid,
+          endkey: eid,
+          descending: true,
+          include_docs: true
+        },
+        (err, val) => {
+          try {
+            expect(
+              clone(
+                omit(val.rows[0].doc, [
+                  'id',
+                  'processed',
+                  'processed_id',
+                  'consumer_id',
+                  'resource_instance_id',
+                  '_id',
+                  '_rev',
+                  'accumulated_usage_id',
+                  'start'
+                ]),
+                pruneWindows
+              )
+            ).to.deep.equal(omit(expected, ['start']));
+            done();
+          } catch (e) {
+            // If the test cannot verify the actual data with the expected
+            // data within the giveup time, forward the exception
+            if (moment.now() >= processingDeadline) {
+              debug('Unable to properly verify the last record');
+              expect(
+                clone(
+                  omit(val.rows[0].doc, [
+                    'id',
+                    'processed',
+                    'processed_id',
+                    'consumer_id',
+                    'resource_instance_id',
+                    '_id',
+                    '_rev',
+                    'accumulated_usage_id',
+                    'start'
+                  ]),
+                  pruneWindows
+                )
+              ).to.deep.equal(omit(expected, ['start']));
+            } else
+              // Try the expected test again
+              setTimeout(function() {
+                verifyRating(done);
+              }, 250);
           }
-          else
-          // Try the expected test again
-            setTimeout(function() {
-              verifyRating(done);
-            }, 250);
         }
-      });
+      );
     };
 
     const verifyConsumerRating = (done) => {
-      const startDate = moment.utc().endOf('month').valueOf();
-      const endDate = moment.utc().startOf('month').valueOf();
+      const startDate = moment
+        .utc()
+        .endOf('month')
+        .valueOf();
+      const endDate = moment
+        .utc()
+        .startOf('month')
+        .valueOf();
 
-      const sid = dbclient.kturi([expectedConsumer.organization_id,
-        expectedConsumer.space_id, expectedConsumer.consumer_id].join('/'),
-      seqid.pad16(startDate));
-      const eid = dbclient.kturi([expectedConsumer.organization_id,
-        expectedConsumer.space_id, expectedConsumer.consumer_id].join('/'),
-      seqid.pad16(endDate));
+      const sid = dbclient.kturi(
+        [expectedConsumer.organization_id, expectedConsumer.space_id, expectedConsumer.consumer_id].join('/'),
+        seqid.pad16(startDate)
+      );
+      const eid = dbclient.kturi(
+        [expectedConsumer.organization_id, expectedConsumer.space_id, expectedConsumer.consumer_id].join('/'),
+        seqid.pad16(endDate)
+      );
       debug('%o', expectedConsumer);
       debug('comparing latest consumer record within %s and %s', sid, eid);
-      db.allDocs({ limit: 1, startkey: sid, endkey: eid, descending: true,
-        include_docs: true },
-      (err, val) => {
-        try {
-          map(val.rows[0].doc.resources, (r) => {
-            map(r.plans, (p) => {
-              p.resource_instances = map(p.resource_instances, (ri) => {
-                return omit(ri, 'p');
+      db.allDocs(
+        {
+          limit: 1,
+          startkey: sid,
+          endkey: eid,
+          descending: true,
+          include_docs: true
+        },
+        (err, val) => {
+          try {
+            map(val.rows[0].doc.resources, (r) => {
+              map(r.plans, (p) => {
+                p.resource_instances = map(p.resource_instances, (ri) => {
+                  return omit(ri, 'p');
+                });
               });
             });
-          });
-          expect(clone(omit(val.rows[0].doc, ['id', 'processed', '_id',
-            '_rev', 'processed_id', 'resource_instance_id', 'organization_id',
-            'accumulated_usage_id', 'start', 'end']),
-          pruneWindows)).to.deep.equal(omit(expectedConsumer, ['start',
-            'end', 'organization_id', 'space_id' ]));
-          done();
-        }
-        catch (e) {
-          // If the test cannot verify the actual data with the expected
-          // data within the giveup time, forward the exception
-          if(moment.now() >= processingDeadline) {
-            debug('Unable to properly verify the last record');
-            expect(clone(omit(val.rows[0].doc, ['id', 'processed', '_id',
-              '_rev', 'processed_id', 'resource_instance_id',
-              'organization_id', 'accumulated_usage_id', 'start', 'end']),
-            pruneWindows)).to.deep.equal(omit(expectedConsumer, ['start',
-              'end', 'organization_id', 'space_id']));
+            expect(
+              clone(
+                omit(val.rows[0].doc, [
+                  'id',
+                  'processed',
+                  '_id',
+                  '_rev',
+                  'processed_id',
+                  'resource_instance_id',
+                  'organization_id',
+                  'accumulated_usage_id',
+                  'start',
+                  'end'
+                ]),
+                pruneWindows
+              )
+            ).to.deep.equal(omit(expectedConsumer, ['start', 'end', 'organization_id', 'space_id']));
+            done();
+          } catch (e) {
+            // If the test cannot verify the actual data with the expected
+            // data within the giveup time, forward the exception
+            if (moment.now() >= processingDeadline) {
+              debug('Unable to properly verify the last record');
+              expect(
+                clone(
+                  omit(val.rows[0].doc, [
+                    'id',
+                    'processed',
+                    '_id',
+                    '_rev',
+                    'processed_id',
+                    'resource_instance_id',
+                    'organization_id',
+                    'accumulated_usage_id',
+                    'start',
+                    'end'
+                  ]),
+                  pruneWindows
+                )
+              ).to.deep.equal(omit(expectedConsumer, ['start', 'end', 'organization_id', 'space_id']));
+            } else
+              // Try the expected test again
+              setTimeout(function() {
+                verifyConsumerRating(done);
+              }, 250);
           }
-          else
-          // Try the expected test again
-            setTimeout(function() {
-              verifyConsumerRating(done);
-            }, 250);
         }
-      });
+      );
     };
 
     // Wait for usage aggregator to start
-    request.waitFor('http://localhost::p/batch',
-      { p: 9300 }, startTimeout, (err, value) => {
-        // Failed to ping usage aggregator before timing out
-        if (err) throw err;
+    request.waitFor('http://localhost::p/batch', { p: 9300 }, startTimeout, (err, value) => {
+      // Failed to ping usage aggregator before timing out
+      if (err) throw err;
 
-        // Submit accumulated usage and verify
-        submit(() => verifyRating(() => verifyConsumerRating(() => done())));
-      });
+      // Submit accumulated usage and verify
+      submit(() => verifyRating(() => verifyConsumerRating(() => done())));
+    });
   });
 });

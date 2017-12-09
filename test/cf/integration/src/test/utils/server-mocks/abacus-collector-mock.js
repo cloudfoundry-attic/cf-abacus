@@ -12,8 +12,7 @@ const resourceLocation = 'http://location.com';
 
 // OAuth Authorization header format: "Bearer <token-value>"
 const extractOAuthToken = (authHeader) => {
-  if (authHeader)
-    return authHeader.split(' ')[1];
+  if (authHeader) return authHeader.split(' ')[1];
 
   return undefined;
 };
@@ -40,17 +39,14 @@ module.exports = () => {
 
       const responseCode = collectUsageServiceData.nextResponse();
 
-      if (responseCode === httpStatus.CREATED)
-        res.header('Location', resourceLocation);
+      if (responseCode === httpStatus.CREATED) res.header('Location', resourceLocation);
 
       let responseBody;
-      if (responseCode === httpStatus.CONFLICT)
-        responseBody = { error: 'Conflict' };
+      if (responseCode === httpStatus.CONFLICT) responseBody = { error: 'Conflict' };
 
       debug('[/v1/metering/collected/usage] response code: %d', responseCode);
       res.status(responseCode).send(responseBody);
     });
-
 
     routes.get('/v1/metering/collected/usage/:usage_id', (req, res) => {
       debug('[v1/metering/collected/usage/%s] was called', req.params.usage_id);

@@ -323,9 +323,9 @@
       "resolved": "https://registry.npmjs.org/after/-/after-0.8.2.tgz"
     },
     "ajv": {
-      "version": "5.5.0",
+      "version": "5.5.1",
       "from": "ajv@>=5.1.0 <6.0.0",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-5.5.0.tgz",
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-5.5.1.tgz",
       "dependencies": {
         "co": {
           "version": "4.6.0",

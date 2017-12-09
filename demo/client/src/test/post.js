@@ -8,16 +8,18 @@ const moment = require('abacus-moment');
 
 // Parse command line options
 commander
-  .option('-c, --collector <uri>',
-    'Usage collector URL or domain name [http://localhost:9080]',
-    'http://localhost:9080')
   .option(
-    '-t, --time <t>', 'Usage time in milli-seconds', parseInt)
+    '-c, --collector <uri>',
+    'Usage collector URL or domain name [http://localhost:9080]',
+    'http://localhost:9080'
+  )
+  .option('-t, --time <t>', 'Usage time in milli-seconds', parseInt)
   .parse(process.argv);
 
 // Collector service URL
-const collector = /:/.test(commander.collector) ? commander.collector :
-  'https://abacus-usage-collector.' + commander.collector;
+const collector = /:/.test(commander.collector)
+  ? commander.collector
+  : 'https://abacus-usage-collector.' + commander.collector;
 
 // Usage time in milli-seconds
 const time = commander.time || moment.now();
@@ -32,29 +34,34 @@ const usage = {
   resource_id: 'object-storage',
   plan_id: 'basic',
   resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
-  measured_usage: [{
-    measure: 'storage',
-    quantity: 1073741824
-  }, {
-    measure: 'light_api_calls',
-    quantity: 1000
-  }, {
-    measure: 'heavy_api_calls',
-    quantity: 100
-  }]
+  measured_usage: [
+    {
+      measure: 'storage',
+      quantity: 1073741824
+    },
+    {
+      measure: 'light_api_calls',
+      quantity: 1000
+    },
+    {
+      measure: 'heavy_api_calls',
+      quantity: 100
+    }
+  ]
 };
 
-request.post(collector + '/v1/metering/collected/usage', {
-  rejectUnauthorized: !process.env.SKIP_SSL_VALIDATION,
-  body: usage
-}, (err, val) => {
-  if(err)
-    console.log('Error', err);
-  if(val) {
-    console.log('Status %d', val.statusCode);
-    if(val.headers.location)
-      console.log('Location %s', val.headers.location);
-    if(val.body)
-      console.log('Body', val.body);
+request.post(
+  collector + '/v1/metering/collected/usage',
+  {
+    rejectUnauthorized: !process.env.SKIP_SSL_VALIDATION,
+    body: usage
+  },
+  (err, val) => {
+    if (err) console.log('Error', err);
+    if (val) {
+      console.log('Status %d', val.statusCode);
+      if (val.headers.location) console.log('Location %s', val.headers.location);
+      if (val.body) console.log('Body', val.body);
+    }
   }
-});
+);

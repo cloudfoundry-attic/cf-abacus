@@ -27,9 +27,17 @@ const hourInMillis = 3600000;
 // to assure that tests work as expected.
 const now = moment.now();
 const isLastHourOfCurrentMonth = () =>
-  now > moment.utc(now).endOf('month').subtract(1, 'hour').valueOf() &&
-  now <= moment.utc(now).endOf('month').valueOf();
-
+  now >
+    moment
+      .utc(now)
+      .endOf('month')
+      .subtract(1, 'hour')
+      .valueOf() &&
+  now <=
+    moment
+      .utc(now)
+      .endOf('month')
+      .valueOf();
 
 // Use value larger then the months' length in order to force renewer to start
 // independently of current date (renewer starts working only if current date
@@ -39,11 +47,11 @@ const slack = '32D';
 const getEnviornmentVars = (externalSystemsMocks) => ({
   ABACUS_CLIENT_ID: env.abacusClientId,
   ABACUS_CLIENT_SECRET: env.abacusClientSecret,
-  SECURED : 'true',
-  AUTH_SERVER : `http://localhost:${externalSystemsMocks.uaaServer.address().port}`,
-  COLLECTOR : `http://localhost:${externalSystemsMocks.abacusCollector.address().port}`,
-  JWTKEY : env.tokenSecret,
-  JWTALGO : env.tokenAlgorithm,
+  SECURED: 'true',
+  AUTH_SERVER: `http://localhost:${externalSystemsMocks.uaaServer.address().port}`,
+  COLLECTOR: `http://localhost:${externalSystemsMocks.abacusCollector.address().port}`,
+  JWTKEY: env.tokenSecret,
+  JWTALGO: env.tokenAlgorithm,
   RETRIES: env.retryCount,
   ABACUS_TIME_OFFSET: isLastHourOfCurrentMonth() ? -hourInMillis : 0,
   SLACK: slack
@@ -56,14 +64,8 @@ module.exports = (customEnv) => ({
     tokenSecret: env.tokenSecret
   }),
   start: (externalSystemsMocks) => {
-    const renewerEnv = extend({},
-      process.env,
-      getEnviornmentVars(externalSystemsMocks),
-      customEnv
-    );
-    lifecycleManager
-      .useEnv(renewerEnv)
-      .startModules([lifecycleManager.modules.renewer]);
+    const renewerEnv = extend({}, process.env, getEnviornmentVars(externalSystemsMocks), customEnv);
+    lifecycleManager.useEnv(renewerEnv).startModules([lifecycleManager.modules.renewer]);
   },
   stop: lifecycleManager.stopAllStarted
 });

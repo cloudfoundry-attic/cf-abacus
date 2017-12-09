@@ -13,4 +13,3 @@ describe('another-abacus-mocha', () => {
     done();
   });
 });
-

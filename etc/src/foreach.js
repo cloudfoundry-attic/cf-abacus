@@ -37,17 +37,22 @@ const throttle = (fn, max) => {
 
     running = running + 1;
     const cb = last(callargs);
-    return fn.apply(null, initial(callargs).concat([(err, val) => {
-      cb(err, val);
+    return fn.apply(
+      null,
+      initial(callargs).concat([
+        (err, val) => {
+          cb(err, val);
 
-      running = running - 1;
-      if (queue.length) {
-        const next = queue.shift();
-        setImmediate(() => {
-          run(next);
-        });
-      }
-    }]));
+          running = running - 1;
+          if (queue.length) {
+            const next = queue.shift();
+            setImmediate(() => {
+              run(next);
+            });
+          }
+        }
+      ])
+    );
   };
 
   return function() {
@@ -86,8 +91,7 @@ const exec = throttle((cmd, cwd, cb) => {
     // Call back when done
     cb(code !== 0 ? code : undefined, true);
   });
-}, process.env.JOBS ?
-  parseInt(process.env.JOBS) : Math.min(os.cpus().length, 8));
+}, process.env.JOBS ? parseInt(process.env.JOBS) : Math.min(os.cpus().length, 8));
 
 // Execute a build command for each Abacus module
 const runCLI = () => {
@@ -104,10 +108,8 @@ const runCLI = () => {
 
   // Running an npm command with program options requires '--'
   // before the program options
-  const oidx = findIndex(commander.args, (arg) =>
-    /^-/.test(arg) && /^--/.test(arg) && !/^--\s/.test(arg));
-  if (commander.cmd === 'npm' && oidx >= 0)
-    commander.args.splice(oidx, 0, '--');
+  const oidx = findIndex(commander.args, (arg) => /^-/.test(arg) && /^--/.test(arg) && !/^--\s/.test(arg));
+  if (commander.cmd === 'npm' && oidx >= 0) commander.args.splice(oidx, 0, '--');
 
   // Use the given regular expression to filter modules
   const rx = new RegExp(commander.regexp);
@@ -115,19 +117,21 @@ const runCLI = () => {
   // Look for modules in the dependencies and devDependencies of the current
   // module
   const mod = require(path.join(process.cwd(), 'package.json'));
-  map(filter(pairs(mod.dependencies).concat(pairs(mod.devDependencies)),
-    (dep) => rx.test(dep[0]) && /^file:/.test(dep[1])), (dependency) => {
-    const resolve = (s) => s.replace(/\:name/, dependency[0])
-      .replace(/:path/, dependency[1].split(':')[1]);
+  map(
+    filter(
+      pairs(mod.dependencies).concat(pairs(mod.devDependencies)),
+      (dep) => rx.test(dep[0]) && /^file:/.test(dep[1])
+    ),
+    (dependency) => {
+      const resolve = (s) => s.replace(/\:name/, dependency[0]).replace(/:path/, dependency[1].split(':')[1]);
 
-    // Run the given command on each module
-    exec(resolve([commander.cmd].concat(commander.args).join(' ')),
-      resolve(commander.dir), (err, val) => {
-        if(err) process.exit(err);
+      // Run the given command on each module
+      exec(resolve([commander.cmd].concat(commander.args).join(' ')), resolve(commander.dir), (err, val) => {
+        if (err) process.exit(err);
       });
-  });
+    }
+  );
 };
 
 // Export our CLI
 module.exports.runCLI = runCLI;
-

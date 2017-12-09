@@ -55,25 +55,26 @@ const getModuleDir = (module) => {
 
 const start = (module, env) => {
   const moduleDir = getModuleDir(module);
-  debug(`Executing "start" operation on module ${module} in ` +
-    `directory ${moduleDir} with environment %o`, env);
+  debug(`Executing "start" operation on module ${module} in ` + `directory ${moduleDir} with environment %o`, env);
 
   const startOperation = 'npm run start';
-  return cp.exec(startOperation, {
-    cwd: moduleDir,
-    env
-  }, (err, stdout, stderr) => {
-    debug(`stdout > ${stdout}`);
-    edebug(err);
-    edebug(`stderr > ${stderr}`);
-  });
-
+  return cp.exec(
+    startOperation,
+    {
+      cwd: moduleDir,
+      env
+    },
+    (err, stdout, stderr) => {
+      debug(`stdout > ${stdout}`);
+      edebug(err);
+      edebug(`stderr > ${stderr}`);
+    }
+  );
 };
 
 const stop = (module, env) => {
   const moduleDir = getModuleDir(module);
-  debug('Executing "stop" operation on module "%s" in directory %s',
-    module, moduleDir);
+  debug('Executing "stop" operation on module "%s" in directory %s', module, moduleDir);
 
   const stopOperation = 'npm run stop';
   return cp.execSync(stopOperation, {
@@ -87,8 +88,7 @@ module.exports = () => {
   let env = clone(process.env);
 
   const startModules = (modules) => {
-    if (!modules || modules.length === 0)
-      return;
+    if (!modules || modules.length === 0) return;
 
     forEach(modules, (module) => {
       debug('Starting %s ...', module);
@@ -98,8 +98,7 @@ module.exports = () => {
   };
 
   const stopAllStarted = () => {
-    if (startedModules.size === 0)
-      return;
+    if (startedModules.size === 0) return;
 
     startedModules.forEach((module) => {
       debug('Stopping %s ...', module);
@@ -122,6 +121,4 @@ module.exports = () => {
       };
     }
   };
-
-
 };

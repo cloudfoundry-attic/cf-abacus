@@ -287,9 +287,9 @@
       "resolved": "https://registry.npmjs.org/after/-/after-0.8.2.tgz"
     },
     "ajv": {
-      "version": "5.5.0",
+      "version": "5.5.1",
       "from": "ajv@>=5.1.0 <6.0.0",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-5.5.0.tgz",
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-5.5.1.tgz",
       "dependencies": {
         "co": {
           "version": "4.6.0",
@@ -936,9 +936,9 @@
       "resolved": "https://registry.npmjs.org/destroy/-/destroy-1.0.4.tgz"
     },
     "detective": {
-      "version": "4.6.0",
+      "version": "4.7.0",
       "from": "detective@>=4.3.1 <5.0.0",
-      "resolved": "https://registry.npmjs.org/detective/-/detective-4.6.0.tgz"
+      "resolved": "https://registry.npmjs.org/detective/-/detective-4.7.0.tgz"
     },
     "diff": {
       "version": "3.2.0",
@@ -3609,9 +3609,9 @@
       "resolved": "https://registry.npmjs.org/xmlhttprequest/-/xmlhttprequest-1.8.0.tgz"
     },
     "xmlhttprequest-cookie": {
-      "version": "0.9.4",
+      "version": "0.9.5",
       "from": "xmlhttprequest-cookie@>=0.9.2 <0.10.0",
-      "resolved": "https://registry.npmjs.org/xmlhttprequest-cookie/-/xmlhttprequest-cookie-0.9.4.tgz"
+      "resolved": "https://registry.npmjs.org/xmlhttprequest-cookie/-/xmlhttprequest-cookie-0.9.5.tgz"
     },
     "xtend": {
       "version": "4.0.1",

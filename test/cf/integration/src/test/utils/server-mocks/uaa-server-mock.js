@@ -12,8 +12,7 @@ const randomPort = 0;
 
 const extractCredentials = (authHeader) => {
   const encodedCredentials = authHeader.split(' ')[1];
-  const decodedCredentials = Buffer.from(encodedCredentials, 'base64')
-    .toString();
+  const decodedCredentials = Buffer.from(encodedCredentials, 'base64').toString();
   const credentialsArray = decodedCredentials.split(':');
 
   return {
@@ -40,8 +39,7 @@ module.exports = () => {
     });
 
     app.post('/oauth/token', (request, response) => {
-      debug('Called /oauth/token endpoint with query %j and headers: %j',
-        request.query, request.headers);
+      debug('Called /oauth/token endpoint with query %j and headers: %j', request.query, request.headers);
       const queryScopes = request.query.scope || '';
       serviceData.requests().push({
         credentials: extractCredentials(request.header('Authorization')),
@@ -72,9 +70,7 @@ module.exports = () => {
       requestsCount: () => serviceData.requests().length,
       requests: {
         withScopes: (scopes) => {
-          return serviceData
-            .requests()
-            .filter((request) => isEqual(request.scopes, scopes));
+          return serviceData.requests().filter((request) => isEqual(request.scopes, scopes));
         }
       },
       whenScopesAre: (scopes) => {

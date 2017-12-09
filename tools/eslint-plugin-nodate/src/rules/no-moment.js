@@ -18,12 +18,10 @@ module.exports = {
   create(context) {
     return {
       CallExpression(node) {
-        if (node.callee.name === 'require' &&
-          node.arguments[0].value === 'moment')
+        if (node.callee.name === 'require' && node.arguments[0].value === 'moment')
           context.report({
             node,
-            message: 'Direct requiring of moment.js is prohibited. ' +
-            'Use `abacus-moment` library instead.'
+            message: 'Direct requiring of moment.js is prohibited. ' + 'Use `abacus-moment` library instead.'
           });
       }
     };

@@ -21,8 +21,7 @@ module.exports = {
         if (node.object.name === 'Date')
           context.report({
             node,
-            message: 'Direct reference of Date class is prohibited. ' +
-            'Use `abacus-moment` library instead.'
+            message: 'Direct reference of Date class is prohibited. ' + 'Use `abacus-moment` library instead.'
           });
       }
     };

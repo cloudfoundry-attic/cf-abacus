@@ -2,8 +2,7 @@
 
 const renewer = require('./renewer')();
 
-const createAbacusCollectorMock =
-  require('../utils/server-mocks/abacus-collector-mock');
+const createAbacusCollectorMock = require('../utils/server-mocks/abacus-collector-mock');
 const createUAAServerMock = require('../utils/server-mocks/uaa-server-mock');
 const externalSystemsMocks = require('../utils/external-systems')({
   abacusCollector: createAbacusCollectorMock,
@@ -48,11 +47,11 @@ const createUsage = () => {
       measured_usage: [
         {
           measure: 'current_instances',
-          quantity : currentInstances
+          quantity: currentInstances
         },
         {
           measure: 'previous_instances',
-          quantity : previousInstances
+          quantity: previousInstances
         }
       ]
     })
@@ -82,8 +81,7 @@ const modifyUsage = (usage) => {
         usage.end = timestamp;
       }
 
-      if (previousInstances != undefined)
-        usage.measured_usage[1].quantity = previousInstances;
+      if (previousInstances != undefined) usage.measured_usage[1].quantity = previousInstances;
 
       return usage;
     }

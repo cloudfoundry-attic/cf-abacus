@@ -14,22 +14,19 @@ describe('cmdline-exec-utility', () => {
     sandbox.restore();
   });
 
-  it('executes command that writes in stdout' +
-  ' (command is included in stdout)', () => {
+  it('executes command that writes in stdout' + ' (command is included in stdout)', () => {
     const result = exec('ls -l');
     expect(result !== null);
     expect(console.log.calledOnce).to.be.equal(true);
   });
 
-  it('executes command that writes in stdout' +
-  ' (command is not included in stdout)', () => {
+  it('executes command that writes in stdout' + ' (command is not included in stdout)', () => {
     const result = exec('ls -l', false);
     expect(result !== null);
     expect(console.log.calledOnce).to.be.equal(false);
   });
 
-  it('executes command that writes in stderr' +
-  ' (command is included in stdout)', () => {
+  it('executes command that writes in stderr' + ' (command is included in stdout)', () => {
     expect(() => exec('ls foo')).to.throw();
     expect(console.log.calledOnce).to.be.equal(true);
   });

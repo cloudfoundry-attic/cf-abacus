@@ -16,10 +16,8 @@ const deleteFolderRecursive = (path) => {
   if (fs.existsSync(path)) {
     fs.readdirSync(path).forEach((file) => {
       const curPath = `${path}/${file}`;
-      if (fs.lstatSync(curPath).isDirectory())
-        deleteFolderRecursive(curPath);
-      else
-        fs.unlinkSync(curPath);
+      if (fs.lstatSync(curPath).isDirectory()) deleteFolderRecursive(curPath);
+      else fs.unlinkSync(curPath);
     });
     fs.rmdirSync(path);
   }
@@ -35,12 +33,10 @@ describe('abacus-coverage', () => {
   afterEach(() => {
     process.exit = exit;
 
-    if (process.env.NO_ISTANBUL)
-      deleteFolderRecursive('.coverage');
+    if (process.env.NO_ISTANBUL) deleteFolderRecursive('.coverage');
   });
 
   it('reports overall code coverage', (done) => {
-
     // Spy on the Istanbul coverage reporter
     const reporters = [];
     const Reporter = istanbul.Reporter;
@@ -83,4 +79,3 @@ describe('abacus-coverage', () => {
     });
   });
 });
-

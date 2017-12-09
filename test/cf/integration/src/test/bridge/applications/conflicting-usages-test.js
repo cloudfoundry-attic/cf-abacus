@@ -6,9 +6,5 @@ const conflictingEventsTestsDefinition = require('../test-definitions/conflictin
 const applicationFixture = require('./fixture');
 
 describe('applications-bridge conflicting events tests', () => {
-
-  conflictingEventsTestsDefinition
-    .fixture(applicationFixture)
-    .build();
+  conflictingEventsTestsDefinition.fixture(applicationFixture).build();
 });
-

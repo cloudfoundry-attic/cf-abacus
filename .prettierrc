@@ -1,0 +1,4 @@
+# .prettierrc
+arrowParens: always
+singleQuote: true
+printWidth: 120

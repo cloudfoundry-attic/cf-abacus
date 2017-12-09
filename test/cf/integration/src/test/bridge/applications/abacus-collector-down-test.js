@@ -6,10 +6,5 @@ const abacusCollectorDownTestsDefinition = require('../test-definitions/abacus-c
 const applicationFixture = require('./fixture');
 
 describe('applications-bridge abacus collector down tests', () => {
-
-  abacusCollectorDownTestsDefinition
-    .fixture(applicationFixture)
-    .build();
-
+  abacusCollectorDownTestsDefinition.fixture(applicationFixture).build();
 });
-

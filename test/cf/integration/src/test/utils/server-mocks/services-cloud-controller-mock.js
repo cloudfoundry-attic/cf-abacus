@@ -25,8 +25,7 @@ const convert = (serviceGuids) => {
 
 // OAuth Authorization header format: "Bearer <token-value>"
 const extractOAuthToken = (authHeader) => {
-  if (authHeader)
-    return authHeader.split(' ')[1];
+  if (authHeader) return authHeader.split(' ')[1];
 
   return undefined;
 };
@@ -71,8 +70,7 @@ module.exports = () => {
     });
 
     app.get('/v2/services', (req, res) => {
-      debug('Retrieved request for services. Headers: %j, Query params: %j',
-        req.headers, req.query);
+      debug('Retrieved request for services. Headers: %j, Query params: %j', req.headers, req.query);
 
       serviceGuidsData.requests().push({
         token: extractOAuthToken(req.header('Authorization')),
@@ -82,7 +80,6 @@ module.exports = () => {
       const services = convert(serviceGuidsData.nextResponse());
       res.send(services);
     });
-
 
     server = app.listen(randomPort);
     return server.address();

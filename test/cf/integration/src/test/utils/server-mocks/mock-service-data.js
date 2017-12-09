@@ -14,8 +14,7 @@ module.exports = () => {
       return returnKeyValue[key];
     },
     nextResponse: (scopes) => {
-      if (returnAlways)
-        return returnAlways;
+      if (returnAlways) return returnAlways;
 
       const requestNumber = serviceRequests.length - 1;
       return returnSeries[requestNumber];
@@ -30,4 +29,4 @@ module.exports = () => {
       })
     }
   };
-};;
+};

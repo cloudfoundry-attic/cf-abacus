@@ -32,7 +32,6 @@ const unhandleableEvents = (fixture) => {
 };
 
 describe('services-bridge unhandleable events tests', () => {
-
   before(() => {
     servicesFixture.externalSystemsMocks().cloudController.serviceGuids.return.always({
       [servicesFixture.defaultUsageEvent.serviceLabel]: servicesFixture.defaultUsageEvent.serviceGuid
@@ -43,6 +42,4 @@ describe('services-bridge unhandleable events tests', () => {
     .fixture(servicesFixture)
     .unhandleableEvents(unhandleableEvents)
     .build();
-
 });
-
