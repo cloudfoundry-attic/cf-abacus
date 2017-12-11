@@ -1,0 +1,43 @@
+{
+  "name": "abacus-rabbitmq",
+  "description": "RabbitMQ amqplib wrapper client",
+  "license": "Apache-2.0",
+  "version": "1.0.0",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/rabbitmq",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus",
+    "rabbitmq"
+  ],
+  "files": [
+    ".npmrc",
+    "src/"
+  ],
+  "main": "src/index.js",
+  "scripts": {
+    "test": "eslint && mocha",
+    "lint": "eslint",
+    "pub": "publish"
+  },
+  "dependencies": {
+    "amqp-connection-manager": "^1.3.7",
+    "amqplib": "^0.5.2"
+  },
+  "devDependencies": {
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-publish": "file:../../../tools/publish"
+  },
+  "engines": {
+    "node": ">=6.11.4 <9.0.0",
+    "npm": "<5.0.0"
+  }
+}
