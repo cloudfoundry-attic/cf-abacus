@@ -111,6 +111,7 @@
     "abacus-partition": "file:lib/utils/partition",
     "abacus-perf": "file:lib/utils/perf",
     "abacus-plan-mappings": "file:lib/config/mappings",
+    "abacus-plan-tester": "file:lib/config/plan-tester",
     "abacus-pouchserver": "file:lib/utils/pouchserver",
     "abacus-pricing-config": "file:lib/config/pricing",
     "abacus-provisioning-plugin": "file:lib/plugins/provisioning",

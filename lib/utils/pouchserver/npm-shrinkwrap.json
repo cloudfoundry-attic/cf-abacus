@@ -48,9 +48,9 @@
           "dev": true
         },
         "eslint": {
-          "version": "4.12.1",
+          "version": "4.13.1",
           "from": "eslint@>=4.1.7 <5.0.0",
-          "resolved": "https://registry.npmjs.org/eslint/-/eslint-4.12.1.tgz",
+          "resolved": "https://registry.npmjs.org/eslint/-/eslint-4.13.1.tgz",
           "dev": true,
           "dependencies": {
             "optionator": {
@@ -1005,16 +1005,9 @@
       "resolved": "https://registry.npmjs.org/equals/-/equals-1.0.5.tgz"
     },
     "errno": {
-      "version": "0.1.4",
+      "version": "0.1.6",
       "from": "errno@>=0.1.1 <0.2.0",
-      "resolved": "https://registry.npmjs.org/errno/-/errno-0.1.4.tgz",
-      "dependencies": {
-        "prr": {
-          "version": "0.0.0",
-          "from": "prr@>=0.0.0 <0.1.0",
-          "resolved": "https://registry.npmjs.org/prr/-/prr-0.0.0.tgz"
-        }
-      }
+      "resolved": "https://registry.npmjs.org/errno/-/errno-0.1.6.tgz"
     },
     "es3ify": {
       "version": "0.1.4",
@@ -1383,9 +1376,9 @@
       "resolved": "https://registry.npmjs.org/glob/-/glob-5.0.15.tgz"
     },
     "globals": {
-      "version": "11.0.1",
+      "version": "11.1.0",
       "from": "globals@>=11.0.1 <12.0.0",
-      "resolved": "https://registry.npmjs.org/globals/-/globals-11.0.1.tgz",
+      "resolved": "https://registry.npmjs.org/globals/-/globals-11.1.0.tgz",
       "dev": true
     },
     "globby": {
@@ -1682,9 +1675,9 @@
       "dev": true
     },
     "is-resolvable": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "from": "is-resolvable@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/is-resolvable/-/is-resolvable-1.0.0.tgz",
+      "resolved": "https://registry.npmjs.org/is-resolvable/-/is-resolvable-1.0.1.tgz",
       "dev": true
     },
     "is-string": {
@@ -2167,9 +2160,9 @@
       }
     },
     "moment": {
-      "version": "2.19.3",
+      "version": "2.19.4",
       "from": "moment@>=2.17.1 <3.0.0",
-      "resolved": "https://registry.npmjs.org/moment/-/moment-2.19.3.tgz"
+      "resolved": "https://registry.npmjs.org/moment/-/moment-2.19.4.tgz"
     },
     "morgan": {
       "version": "1.9.0",
@@ -3432,12 +3425,6 @@
       "version": "1.0.2",
       "from": "truncate-utf8-bytes@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/truncate-utf8-bytes/-/truncate-utf8-bytes-1.0.2.tgz"
-    },
-    "tryit": {
-      "version": "1.0.3",
-      "from": "tryit@>=1.0.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/tryit/-/tryit-1.0.3.tgz",
-      "dev": true
     },
     "tunnel-agent": {
       "version": "0.6.0",
