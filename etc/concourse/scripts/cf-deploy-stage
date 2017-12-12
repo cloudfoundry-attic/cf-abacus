@@ -44,5 +44,5 @@ if [ "$BIND_DB_SERVICE" == "true" ]; then
   bindService ${ABACUS_PREFIX}abacus-usage-aggregator $DB_AGGREGATOR
   bindService ${ABACUS_PREFIX}abacus-usage-reporting $DB_AGGREGATOR,$DB_ACCUMULATOR
   bindService ${ABACUS_PREFIX}abacus-applications-bridge,${ABACUS_PREFIX}abacus-services-bridge,${ABACUS_PREFIX}abacus-cf-renewer $DB_BRIDGE
-  bindService ${ABACUS_PREFIX}abacus-provisioning-plugin,${ABACUS_PREFIX}abacus-account-plugin $DB_PLUGINS
+  bindService ${ABACUS_PREFIX}abacus-provisioning-plugin,${ABACUS_PREFIX}abacus-account-plugin,${ABACUS_PREFIX}abacus-eureka-plugin $DB_PLUGINS
 fi
