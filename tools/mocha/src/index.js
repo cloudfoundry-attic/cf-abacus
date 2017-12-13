@@ -4,9 +4,6 @@
 
 // Test a module using Istanbul and Mocha
 
-// Implemented in ES5 for now
-/* eslint no-var: 0 */
-
 const recursiveReadSync = require('recursive-readdir-sync');
 
 if (process.env.LONGJOHN) require('longjohn');
