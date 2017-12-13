@@ -23,26 +23,16 @@
   "main": "src/index.js",
   "scripts": {
     "acceptance": "mocha --command",
-    "itest": "true",
     "test": "eslint",
     "lint": "eslint",
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-bridge": "file:../../../lib/utils/bridge",
-    "abacus-client": "file:../../../lib/utils/client",
     "abacus-cmdline": "file:../../../tools/cmdline",
-    "abacus-debug": "file:../../../lib/utils/debug",
-    "abacus-launcher": "file:../../../lib/utils/launcher",
-    "abacus-moment": "file:../../../lib/utils/moment",
     "abacus-oauth": "file:../../../lib/utils/oauth",
-    "abacus-request": "file:../../../lib/utils/request",
-    "abacus-webapp": "file:../../../lib/utils/webapp",
-    "abacus-doc": "file:../../../doc",
-    "abacus-etc": "file:../../../etc",
-    "underscore": "^1.8.3",
-    "commander": "2.8.1"
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-paging": "file:../../../lib/utils/paging",
+    "abacus-wait": "file:../../lib/wait"
   },
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",

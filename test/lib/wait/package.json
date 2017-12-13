@@ -1,10 +1,10 @@
 {
-  "name": "abacus-lifecycle-manager",
-  "description": "Abacus Lifecycle Manager",
+  "name": "abacus-wait",
+  "description": "Abacus Wait",
   "license": "Apache-2.0",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/lifecycle-manager",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/abacus-wait",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -21,14 +21,12 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "itest": "eslint && mocha",
-    "test": "eslint",
-    "lint": "eslint",
-    "pub": "publish"
+    "test": "eslint"
   },
   "dependencies": {
     "abacus-debug": "file:../../../lib/utils/debug",
-    "underscore": "^1.8.3"
+    "abacus-moment": "file:../../../lib/utils/moment",
+    "abacus-yieldable": "file:../../../lib/utils/yieldable"
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",

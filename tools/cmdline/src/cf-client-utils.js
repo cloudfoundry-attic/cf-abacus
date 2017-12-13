@@ -14,9 +14,24 @@ const getSpaceId = (spaceName) =>
     .toString()
     .trim();
 
-const createSpace = (org, space) => execute(`cf create-space -o ${org} ${space}`);
+const createOrg = (org) =>
+  execute(`cf create-org ${org}`);
 
-const deployApplication = (name, options = '') => execute(`cf push ${name} ${options}`);
+const deleteOrg = (org) =>
+  execute(`cf delete-org ${org} -f`);
+
+const createSpace = (org, space) =>
+  execute(`cf create-space -o ${org} ${space}`);
+
+const deployApplication = (name, options = {}) => {
+  const path = options.path ? `-p ${options.path}` : '';
+  const memory = options.memory ? `-m ${options.memory}` : '';
+  const buildpack = options.buildpack ? `-b ${options.buildpack}` : '';
+  const manifest = options.manifest ? `-f ${options.manifest}` : '';
+  const noStart = options.noStart ? '--no-start' : '';
+
+  execute(`cf push ${name} ${path} ${memory} ${buildpack} ${manifest} ${noStart}`);
+};
 
 const startApplication = (name) => execute(`cf start ${name}`);
 
@@ -25,12 +40,12 @@ const restartApplication = (name) => execute(`cf restart ${name}`);
 const deleteApplication = (name, deleteRoute) => execute(`cf delete -f ${deleteRoute ? '-r' : ''} ${name}`);
 
 const createServiceInstance = (service, plan, serviceName, parameters) => {
-  const cmd = `cf create-service ${service} ${plan} ${serviceName}` + `${parameters ? ` -c '${parameters}'` : ''}`;
+  const cmd = `cf create-service ${service} ${plan} ${serviceName}` + (parameters ? ` -c ${parameters}` : '') ;
   return execute(cmd);
 };
 
 const updateServiceInstance = (serviceName, parameters) => {
-  const cmd = `cf update-service ${serviceName}` + `${parameters ? ` -c '${parameters}'` : ''}`;
+  const cmd = `cf update-service ${serviceName}` + (parameters ? ` -c '${parameters}'` : '');
   return execute(cmd);
 };
 
@@ -64,21 +79,23 @@ const login = (apiEndpoint, user, password) => {
   execute(`cf api ${apiEndpoint} --skip-ssl-validation`);
   execute(`cf auth ${user} ${password}`, false);
   return {
-    getOrgId: getOrgId,
-    getSpaceId: getSpaceId,
-    deployApplication: deployApplication,
-    startApplication: startApplication,
-    restartApplication: restartApplication,
-    deleteApplication: deleteApplication,
-    createServiceInstance: createServiceInstance,
-    updateServiceInstance: updateServiceInstance,
-    getServiceInstanceGuid: getServiceInstanceGuid,
-    getServiceStatus: getServiceStatus,
-    bindServiceInstance: bindServiceInstance,
-    unbindServiceInstance: unbindServiceInstance,
-    deleteServiceInstance: deleteServiceInstance,
-    target: target,
-    createSpace: createSpace
+    getOrgId,
+    getSpaceId,
+    deployApplication,
+    startApplication,
+    restartApplication,
+    deleteApplication,
+    createServiceInstance,
+    updateServiceInstance,
+    getServiceInstanceGuid,
+    getServiceStatus,
+    bindServiceInstance,
+    unbindServiceInstance,
+    deleteServiceInstance,
+    target,
+    createSpace,
+    createOrg,
+    deleteOrg
   };
 };
 

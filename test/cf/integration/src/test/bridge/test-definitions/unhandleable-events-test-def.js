@@ -4,10 +4,10 @@ const httpStatus = require('http-status-codes');
 const yieldable = require('abacus-yieldable');
 
 const carryOverDb = require('../../utils/carry-over-db');
-const serviceMock = require('../../utils/service-mock-util');
-const wait = require('../../utils/wait');
+const serviceMock = require('../..//utils/service-mock-util');
+const createWait = require('abacus-wait');
 
-const waitUntil = yieldable(wait.until);
+const waitUntil = yieldable(createWait().until);
 
 let fixture;
 let createUnhandleableEvents;

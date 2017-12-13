@@ -5,9 +5,9 @@ const httpStatus = require('http-status-codes');
 const yieldable = require('abacus-yieldable');
 
 const fixture = require('./fixture');
-const wait = require('../utils/wait');
+const createWait = require('abacus-wait');
 
-const waitUntil = yieldable(wait.until);
+const waitUntil = yieldable(createWait().until);
 const statsEndpointIsAvailable = fixture.renewer.readStats.isEndpointAvailable;
 
 describe('renewer stats auth tests', () => {
