@@ -4,24 +4,20 @@
 
 const execute = require('./cmdline.js').execute;
 
-const getOrgId = (orgName) =>
-  execute(`cf org ${orgName} --guid`)
+const org = {
+  getId: (orgName) => execute(`cf org ${orgName} --guid`)
     .toString()
-    .trim();
+    .trim(),
+  create: (org) => execute(`cf create-org ${org}`),
+  delete:  (org) => execute(`cf delete-org ${org} -f`)
+};
 
-const getSpaceId = (spaceName) =>
-  execute(`cf space ${spaceName} --guid`)
+const space = {
+  getId: (spaceName) => execute(`cf space ${spaceName} --guid`)
     .toString()
-    .trim();
-
-const createOrg = (org) =>
-  execute(`cf create-org ${org}`);
-
-const deleteOrg = (org) =>
-  execute(`cf delete-org ${org} -f`);
-
-const createSpace = (org, space) =>
-  execute(`cf create-space -o ${org} ${space}`);
+    .trim(),
+  create: (org, space) => execute(`cf create-space -o ${org} ${space}`)
+};
 
 const deployApplication = (name, options = {}) => {
   const path = options.path ? `-p ${options.path}` : '';
@@ -33,69 +29,42 @@ const deployApplication = (name, options = {}) => {
   execute(`cf push ${name} ${path} ${memory} ${buildpack} ${manifest} ${noStart}`);
 };
 
-const startApplication = (name) => execute(`cf start ${name}`);
-
-const restartApplication = (name) => execute(`cf restart ${name}`);
-
-const deleteApplication = (name, deleteRoute) => execute(`cf delete -f ${deleteRoute ? '-r' : ''} ${name}`);
-
-const createServiceInstance = (service, plan, serviceName, parameters) => {
-  const cmd = `cf create-service ${service} ${plan} ${serviceName}` + (parameters ? ` -c ${parameters}` : '') ;
-  return execute(cmd);
+const application = {
+  deploy: deployApplication,
+  start: (name) => execute(`cf start ${name}`),
+  restart: (name) => execute(`cf restart ${name}`),
+  delete: (name, deleteRoute) => execute(`cf delete -f ${deleteRoute ? '-r' : ''} ${name}`)
 };
-
-const updateServiceInstance = (serviceName, parameters) => {
-  const cmd = `cf update-service ${serviceName}` + (parameters ? ` -c '${parameters}'` : '');
-  return execute(cmd);
-};
-
-const getServiceInstanceGuid = (serviceName) =>
-  execute(`cf service ${serviceName} --guid`)
-    .toString()
-    .trim();
 
 const getServiceStatus = (serviceName) => {
-  const serviceInfo = execute(`cf service ${serviceName}`)
-    .toString()
-    .trim();
+  const serviceInfo = execute(`cf service ${serviceName}`).toString().trim();
   return serviceInfo.match(new RegExp(/status: (.*)/, 'i'))[1];
 };
 
-const bindServiceInstance = (serviceName, appName) =>
-  execute(`cf bind-service ${appName} ${serviceName}`)
-    .toString()
-    .trim();
-
-const unbindServiceInstance = (serviceName, appName) =>
-  execute(`cf unbind-service ${appName} ${serviceName}`)
-    .toString()
-    .trim();
-
-const deleteServiceInstance = (serviceName) => execute(`cf delete-service -f ${serviceName}`);
+const serviceInstance = {
+  getId:  (serviceName) => execute(`cf service ${serviceName} --guid`).toString().trim(),
+  getStatus: getServiceStatus,
+  create: (service, plan, serviceName, parameters) =>
+    execute(`cf create-service ${service} ${plan} ${serviceName}` + (parameters ? ` -c ${parameters}` : '')),
+  update: (serviceName, parameters) =>
+    execute(`cf update-service ${serviceName}` + (parameters ? ` -c '${parameters}'` : '')),
+  delete: (serviceName) => execute(`cf delete-service -f ${serviceName}`),
+  bind: (serviceName, appName) => execute(`cf bind-service ${appName} ${serviceName}`).toString().trim(),
+  unbind: (serviceName, appName) => execute(`cf unbind-service ${appName} ${serviceName}`).toString().trim()
+};
 
 const target = (org, space) => execute(`cf target -o ${org} -s ${space}`);
 
 const login = (apiEndpoint, user, password) => {
   execute(`cf api ${apiEndpoint} --skip-ssl-validation`);
   execute(`cf auth ${user} ${password}`, false);
+
   return {
-    getOrgId,
-    getSpaceId,
-    deployApplication,
-    startApplication,
-    restartApplication,
-    deleteApplication,
-    createServiceInstance,
-    updateServiceInstance,
-    getServiceInstanceGuid,
-    getServiceStatus,
-    bindServiceInstance,
-    unbindServiceInstance,
-    deleteServiceInstance,
     target,
-    createSpace,
-    createOrg,
-    deleteOrg
+    org,
+    space,
+    application,
+    serviceInstance
   };
 };
 

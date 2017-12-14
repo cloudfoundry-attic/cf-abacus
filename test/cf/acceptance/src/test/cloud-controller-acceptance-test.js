@@ -27,11 +27,11 @@ describe('usage events tests', () => {
   let orgGuid;
 
   before(functioncb(function*() {
-    cmdline.createOrg(testOrg);
-    cmdline.createSpace(testOrg, testSpace);
+    cmdline.org.create(testOrg);
+    cmdline.space.create(testOrg, testSpace);
     cmdline.target(testOrg, testSpace);
 
-    orgGuid = cmdline.getOrgId(testOrg);
+    orgGuid = cmdline.org.getId(testOrg);
 
     token = oauth.cache(
       env.api,
@@ -50,7 +50,7 @@ describe('usage events tests', () => {
   }));
 
   after(() => {
-    cmdline.deleteOrg(testOrg);
+    cmdline.org.delete(testOrg);
   });
 
   describe('app_usage_events', () => {
@@ -65,12 +65,12 @@ describe('usage events tests', () => {
       const lastEvent = yield eventReader.readLastEvent();
       const lastGuid = lastEvent.metadata.guid;
 
-      cmdline.deployApplication(testApp, {
+      cmdline.application.deploy(testApp, {
         path: `${__dirname}/static-app`,
         buildpack: 'staticfile_buildpack',
         memory: `${testAppMemoryInMb}M`
       });
-      cmdline.deleteApplication(testApp);
+      cmdline.application.delete(testApp);
 
       events = yield eventReader.read({
         afterGuid: lastGuid
@@ -122,8 +122,8 @@ describe('usage events tests', () => {
       const lastEvent = yield eventReader.readLastEvent();
       const lastGuid = lastEvent.metadata.guid;
 
-      cmdline.createServiceInstance(testServiceName, testServicePlanName, testServiceInstanceName);
-      cmdline.deleteServiceInstance(testServiceInstanceName);
+      cmdline.serviceInstance.create(testServiceName, testServicePlanName, testServiceInstanceName);
+      cmdline.serviceInstance.delete(testServiceInstanceName);
 
       events = yield eventReader.read({
         afterGuid: lastGuid
