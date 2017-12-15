@@ -46,15 +46,7 @@
       "version": "1.0.0",
       "from": "test/cf/acceptance",
       "resolved": "file:test/cf/acceptance",
-      "dev": true,
-      "dependencies": {
-        "commander": {
-          "version": "2.8.1",
-          "from": "commander@2.8.1",
-          "resolved": "https://registry.npmjs.org/commander/-/commander-2.8.1.tgz",
-          "dev": true
-        }
-      }
+      "dev": true
     },
     "abacus-cf-applications": {
       "version": "1.0.0",
@@ -117,6 +109,12 @@
       "version": "1.0.0",
       "from": "lib/utils/cluster",
       "resolved": "file:lib/utils/cluster"
+    },
+    "abacus-cmdline": {
+      "version": "0.0.6-dev.9",
+      "from": "tools/cmdline",
+      "resolved": "file:tools/cmdline",
+      "dev": true
     },
     "abacus-couchclient": {
       "version": "1.0.0",
@@ -656,6 +654,12 @@
       "version": "1.0.0",
       "from": "lib/utils/vcapenv",
       "resolved": "file:lib/utils/vcapenv"
+    },
+    "abacus-wait": {
+      "version": "1.0.0",
+      "from": "test/lib/wait",
+      "resolved": "file:test/lib/wait",
+      "dev": true
     },
     "abacus-webapp": {
       "version": "1.0.0",
