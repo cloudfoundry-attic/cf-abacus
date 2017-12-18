@@ -4,6 +4,7 @@ README.html
 CHANGES.html
 node_modules/**
 **/node_modules/**
+.nyc_output
 tmp/**
 **/tmp/**
 tmp*

@@ -22,7 +22,8 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "test": "eslint && mocha",
+    "test": "eslint && nyc mocha",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint",
     "pub": "publish"
   },
@@ -48,6 +49,16 @@
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish",
     "underscore": "^1.8.3"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
   },
   "engines": {
     "node": ">=0.10.0",

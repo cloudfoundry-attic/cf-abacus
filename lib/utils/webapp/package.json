@@ -26,7 +26,8 @@
     "webapp": "./webapp"
   },
   "scripts": {
-    "test": "eslint && mocha",
+    "test": "eslint && nyc mocha",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint",
     "pub": "publish"
   },
@@ -49,6 +50,16 @@
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish",
     "abacus-request": "file:../request"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",

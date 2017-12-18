@@ -33,6 +33,7 @@
   },
   "scripts": {
     "test": "eslint",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint",
     "pub": "publish"
   },
@@ -45,6 +46,16 @@
   "devDependencies": {
     "abacus-eslint": "file:../tools/eslint",
     "abacus-publish": "file:../tools/publish"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",

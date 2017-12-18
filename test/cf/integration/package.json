@@ -24,6 +24,7 @@
   "scripts": {
     "itest": "mocha --command",
     "test": "eslint",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint",
     "pub": "publish"
   },
@@ -47,6 +48,16 @@
     "abacus-request": "file:../../../lib/utils/request",
     "abacus-router": "file:../../../lib/utils/router",
     "abacus-wait": "file:../../lib/wait"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",

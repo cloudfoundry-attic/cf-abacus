@@ -26,7 +26,8 @@
     "cfpack": "./cfpack"
   },
   "scripts": {
-    "test": "eslint && mocha",
+    "test": "eslint && nyc mocha",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint",
     "pub": "publish"
   },
@@ -39,6 +40,16 @@
     "abacus-mocha": "file:../mocha",
     "abacus-publish": "file:../publish",
     "rimraf": "^2.6.1"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",

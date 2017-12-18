@@ -1,6 +1,0 @@
-#!/usr/bin/env node
-'use strict';
-
-// Run our webproxy shell
-require('./src/index.js').runCLI();
-

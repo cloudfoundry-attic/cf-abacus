@@ -28,6 +28,16 @@
     "abacus-moment": "file:../../../lib/utils/moment",
     "abacus-yieldable": "file:../../../lib/utils/yieldable"
   },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
+  },
   "engines": {
     "node": ">=6.11.4 <9.0.0",
     "npm": "<5.0.0"
