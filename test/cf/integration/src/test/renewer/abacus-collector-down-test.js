@@ -11,9 +11,9 @@ const fixture = require('./fixture');
 
 const carryOverDb = require('../utils/carry-over-db');
 const serviceMock = require('../utils/service-mock-util');
-const wait = require('../utils/wait');
+const createWait = require('abacus-wait');
 
-const waitUntil = yieldable(wait.until);
+const waitUntil = yieldable(createWait().until);
 
 const now = moment.now();
 const endOfLasMonth = moment
