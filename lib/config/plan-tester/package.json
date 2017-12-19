@@ -24,7 +24,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "eslint && nyc mocha",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "coveralls": "true",
     "lint": "eslint",
     "pub": "publish"
   },

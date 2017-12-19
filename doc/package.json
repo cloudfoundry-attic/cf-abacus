@@ -28,7 +28,7 @@
     "confdoc": "cat conf.md | mddoc >conf.html",
     "designdoc": "cat design.md | mddoc >design.html",
     "test": "true",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "coveralls": "true",
     "lint": "true",
     "pub": "publish"
   },

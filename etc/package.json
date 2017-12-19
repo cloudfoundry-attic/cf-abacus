@@ -33,7 +33,7 @@
   },
   "scripts": {
     "test": "eslint",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "coveralls": "true",
     "lint": "eslint",
     "pub": "publish"
   },
