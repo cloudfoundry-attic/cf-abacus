@@ -12,6 +12,7 @@ env:
     - CF_TEST=false
     - START_TIMEOUT=20000
     - TOTAL_TIMEOUT=120000
+    - COVERALLS_PARALLEL=true
 
 matrix:
   fast_finish: true

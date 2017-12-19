@@ -12,7 +12,6 @@ const runCLI = () => {
   // Parse command line options
   commander
     .option('-f, --file <regex>', 'test file [test.js]', 'test.js')
-    .option('--no-istanbul', 'do not instrument with Istanbul')
     .option('--no-color', 'do not colorify output')
     .option('-t, --timeout <number>', 'timeout [60000]', 60000)
     .allowUnknownOption(true)

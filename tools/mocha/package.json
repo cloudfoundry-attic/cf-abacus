@@ -26,7 +26,7 @@
     "mocha": "./mocha"
   },
   "scripts": {
-    "test": "eslint && ./mocha",
+    "test": "eslint && nyc ./mocha",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint",
     "pub": "publish"

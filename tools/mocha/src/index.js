@@ -7,7 +7,11 @@
 const recursiveReadSync = require('recursive-readdir-sync');
 
 if (process.env.LONGJOHN) require('longjohn');
+
 const _ = require('underscore');
+const contains = _.contains;
+const memoize = _.memoize;
+
 const path = require('path');
 const util = require('util');
 const fs = require('fs');
@@ -15,9 +19,6 @@ const tty = require('tty');
 const commander = require('commander');
 const childProcess = require('child_process');
 const async = require('async');
-
-const contains = _.contains;
-const memoize = _.memoize;
 
 /* eslint no-process-exit: 0 */
 /* jshint evil: true */
@@ -46,7 +47,6 @@ const runCLI = () => {
   } else
     commander
       .option('-f, --file <suffix>', 'test file should end with the suffix' + ' provided [test.js]', 'test.js')
-      .option('--no-istanbul', 'do not instrument with Istanbul')
       .option('--no-color', 'do not colorify output')
       .option('-t, --timeout <number>', 'timeout [60000]', 60000)
       .parse(process.argv);
@@ -78,7 +78,7 @@ const runCLI = () => {
       if (!colorify(commander)) args.push('--no-color');
 
       // Spawn child process
-      const child = childProcess.fork(__dirname + '/mocha.js', args);
+      const child = childProcess.fork(`${__dirname}/mocha.js`, args);
 
       // Listen for exit events from the child process
       child.on('exit', (code) => {
