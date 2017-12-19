@@ -1,6 +1,0 @@
-#!/usr/bin/env node
-'use strict';
-
-// Report overall code coverage from Istanbul coverage files.
-require('./src/index.js').runCLI();
-
