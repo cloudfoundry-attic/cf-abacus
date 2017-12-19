@@ -24,7 +24,7 @@
   "scripts": {
     "demo": "mocha --command",
     "test": "eslint",
-    "coveralls": "true",
+    "report-coverage": "true",
     "lint": "eslint",
     "pub": "publish"
   },

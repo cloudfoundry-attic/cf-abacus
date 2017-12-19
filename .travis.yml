@@ -12,7 +12,6 @@ env:
     - CF_TEST=false
     - START_TIMEOUT=20000
     - TOTAL_TIMEOUT=120000
-    - COVERALLS_PARALLEL=true
 
 matrix:
   fast_finish: true
@@ -23,7 +22,7 @@ matrix:
       - JOBS=1
       node_js: 8.9.0
       script:
-        - npm run build && npm run coveralls
+        - npm run build && npm run report-coverage
     - env:
       - DESCRIPTION=unit-tests-couchdb
       - DBCLIENT=abacus-couchclient
@@ -33,7 +32,7 @@ matrix:
       services:
         - couchdb
       script:
-        - npm run build && npm run coveralls
+        - npm run build && npm run report-coverage
     - env:
       - DESCRIPTION=unit-tests-mongodb
       - DBCLIENT=abacus-mongoclient
@@ -43,7 +42,7 @@ matrix:
       services:
         - mongodb
       script:
-        - npm run build && npm run coveralls
+        - npm run build && npm run report-coverage
 
     - env:
       - DESCRIPTION=itests-pouchdb
@@ -153,4 +152,3 @@ notifications:
     - chat.freenode.net#cf-abacus
   slack:
     secure: ZanKYSBhluB1KMzd003+7PiASbgKKwNKl3Ucc4B3wuFWdpdNp/K4/AxPnjGTIRvFtyMtvHf+392bURxBWQMypyW+FMQXGOnJD+bVrVhzxAVc10smkT59NcemWry4gwHQlPF22MB+EoYqnsqXLFltMalEzRC+sjiXED7ZguUD7SJquRmydIlBHkU8hqbGwLg78oNS9WarhvikjsrKchNfSLe3pOMCspgpNQ4KAY+KdrUB4hAqlaul+WdUz3ivaazQZXtV4Rq9i9ADHh7WgyF1SYSWrqAQXuiM5KnwaD/m3lL01F9wxfK/NbuPH6gYg1XZhxhGBw4uT+udWZ3YFQy/G3YRu8URx1er+evI8JMhjjO+BIO1K3geEQ1Kmu1FdCeuhtbWVo0fokLkQGISVc0llgjIC1PR8NMMtDHTvUiK44F8GRONnT9tmKTyJBfRCwD23NV6oWPH2LL6uCya4CmveaKSz1G3IjulGGCdxCkIMjraw/J7fkg8INc9lhEl8Uim7pIJkDjuNp8zf4AGOTUpX1O9RMMvQkWqmpkf4Gug/JFcMAiX1WEQ6/5M3Q3HBLW3fe2DEp1H+A9RakA/QMGIytFm9oAnUGhad20wmvPlAaWxY+UpLHH/VNx7X5k/DhygSKnORuHLuR821LXCuLROEh5dtxdZckxXWFJH11xXhlw=
-  webhooks: https://coveralls.io/webhook?repo_token=BfhxEf2Dy96VvDMnLdko0bkFyqsEJMwAB

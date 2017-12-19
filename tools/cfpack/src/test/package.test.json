@@ -25,7 +25,7 @@
   },
   "scripts": {
     "test": "eslint",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "lint": "eslint",
     "pub": "publish"
   },

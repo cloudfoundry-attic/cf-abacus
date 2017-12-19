@@ -4,8 +4,8 @@ README.html
 CHANGES.html
 node_modules/**
 **/node_modules/**
-.nyc_output
-coverage
+.nyc_output/**
+coverage/**
 tmp/**
 **/tmp/**
 tmp*

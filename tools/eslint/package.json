@@ -29,7 +29,7 @@
   "scripts": {
     "lint": "eslint -f stylish -c .eslintrc src",
     "test": "eslint -f stylish -c .eslintrc src",
-    "coveralls": "true",
+    "report-coverage": "true",
     "pub": "publish"
   },
   "dependencies": {

@@ -24,7 +24,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "eslint && nyc mocha",
-    "coveralls": "true",
+    "report-coverage": "true",
     "lint": "eslint",
     "pub": "publish"
   },
