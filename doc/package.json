@@ -28,7 +28,7 @@
     "confdoc": "cat conf.md | mddoc >conf.html",
     "designdoc": "cat design.md | mddoc >design.html",
     "test": "true",
-    "report-coverage": "true",
+    "generate-coverage": "true",
     "lint": "true",
     "pub": "publish"
   },

@@ -25,7 +25,7 @@
   },
   "scripts": {
     "test": "eslint",
-    "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
+    "generate-coverage": "nyc report --reporter=lcovonly",
     "lint": "eslint",
     "pub": "publish"
   },

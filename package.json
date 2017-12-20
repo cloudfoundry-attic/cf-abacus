@@ -45,7 +45,8 @@
     "citest": "bin/citest",
     "cftest": "bin/cftest",
     "cibuild": "npm run build && npm run citest && npm run cftest",
-    "report-coverage": "foreach abacus node_modules/:name npm run report-coverage",
+    "generate-coverage": "foreach abacus node_modules/:name npm run generate-coverage",
+    "report-coverage": "lcov-result-merger 'node_modules/**/coverage/lcov.info' | codecov",
     "dupcode": "jsinspect",
     "doc": "cat README.md | mddoc >README.html && cat CHANGES.md | mddoc >CHANGES.html",
     "start": "bin/start",
@@ -164,6 +165,7 @@
     "eslint-plugin-nodate": "file:tools/eslint-plugin-nodate",
     "jshint": "^2.8.0",
     "jsinspect": "^0.6.1",
+    "lcov-result-merger": "^1.2.0",
     "nyc": "^11.4.1"
   },
   "engines": {
