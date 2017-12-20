@@ -22,7 +22,7 @@ matrix:
       - JOBS=1
       node_js: 8.9.0
       script:
-        - npm run build && npm run report-coverage
+        - npm run build && npm run generate-coverage && npm run report-coverage
     - env:
       - DESCRIPTION=unit-tests-couchdb
       - DBCLIENT=abacus-couchclient
@@ -32,7 +32,7 @@ matrix:
       services:
         - couchdb
       script:
-        - npm run build && npm run report-coverage
+        - npm run build && npm run generate-coverage && npm run report-coverage
     - env:
       - DESCRIPTION=unit-tests-mongodb
       - DBCLIENT=abacus-mongoclient
@@ -42,7 +42,7 @@ matrix:
       services:
         - mongodb
       script:
-        - npm run build && npm run report-coverage
+        - npm run build && npm run generate-coverage && npm run report-coverage
 
     - env:
       - DESCRIPTION=itests-pouchdb
