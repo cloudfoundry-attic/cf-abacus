@@ -215,11 +215,6 @@
       "from": "../../utils/oauth",
       "resolved": "file:../../utils/oauth"
     },
-    "abacus-paging": {
-      "version": "1.0.0",
-      "from": "../../utils/paging",
-      "resolved": "file:../../utils/paging"
-    },
     "abacus-partition": {
       "version": "1.0.0",
       "from": "../../utils/partition",
