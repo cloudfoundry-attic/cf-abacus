@@ -17,20 +17,29 @@
     "abacus"
   ],
   "files": [
-    ".npmrc",
-    "manifest.yml",
     "src/"
   ],
   "main": "src/index.js",
   "scripts": {
     "itest": "eslint && mocha",
     "test": "eslint",
+    "report-coverage": "true",
     "lint": "eslint",
     "pub": "publish"
   },
   "dependencies": {
     "abacus-debug": "file:../../../lib/utils/debug",
     "underscore": "^1.8.3"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",

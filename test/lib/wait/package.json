@@ -1,0 +1,45 @@
+{
+  "name": "abacus-wait",
+  "description": "Abacus Wait",
+  "license": "Apache-2.0",
+  "version": "1.0.0",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/abacus-wait",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    "src/"
+  ],
+  "main": "src/index.js",
+  "scripts": {
+    "test": "eslint"
+  },
+  "dependencies": {
+    "abacus-debug": "file:../../../lib/utils/debug",
+    "abacus-moment": "file:../../../lib/utils/moment",
+    "abacus-yieldable": "file:../../../lib/utils/yieldable"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
+  },
+  "engines": {
+    "node": ">=6.11.4 <9.0.0",
+    "npm": "<5.0.0"
+  }
+}

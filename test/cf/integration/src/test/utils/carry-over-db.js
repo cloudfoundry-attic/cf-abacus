@@ -11,7 +11,7 @@ const seqid = require('abacus-seqid');
 const urienv = require('abacus-urienv');
 const yieldable = require('abacus-yieldable');
 
-const wait = require('./wait');
+const createWait = require('abacus-wait');
 
 const checkKeyPart = partition.partitioner(
   partition.bucket,
@@ -30,7 +30,7 @@ const db = dbClient(checkKeyPart, dbClient.dburi(uris[dbalias], 'abacus-carry-ov
 const getAllDocs = yieldable(db.allDocs);
 const putDoc = yieldable(db.put);
 const drop = yieldable(dbClient.drop);
-const waitUntil = yieldable(wait.until);
+const waitUntil = yieldable(createWait().until);
 
 const readCurrentMonthDocs = function*(cb) {
   const monthStart = moment

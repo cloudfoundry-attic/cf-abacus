@@ -27,6 +27,7 @@
   },
   "scripts": {
     "test": "eslint",
+    "report-coverage": "true",
     "lint": "eslint",
     "pub": "npm install && ./publish"
   },
@@ -37,6 +38,16 @@
   "devDependencies": {
     "abacus-eslint": "file:../eslint",
     "abacus-mocha": "file:../mocha"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",

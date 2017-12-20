@@ -24,6 +24,7 @@
   "scripts": {
     "itest": "mocha --command",
     "test": "eslint",
+    "report-coverage": "true",
     "lint": "eslint",
     "pub": "publish"
   },
@@ -38,6 +39,16 @@
     "abacus-publish": "file:../../tools/publish",
     "underscore": "^1.8.3",
     "commander": "2.8.1"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",

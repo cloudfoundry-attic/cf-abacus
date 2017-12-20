@@ -23,27 +23,31 @@
   "main": "src/index.js",
   "scripts": {
     "acceptance": "mocha --command",
-    "itest": "true",
     "test": "eslint",
+    "report-coverage": "true",
     "lint": "eslint",
     "pub": "publish"
   },
   "dependencies": {
+    "abacus-cmdline": "file:../../../tools/cmdline",
+    "abacus-oauth": "file:../../../lib/utils/oauth",
     "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-client": "file:../../../lib/utils/client",
-    "abacus-debug": "file:../../../lib/utils/debug",
-    "abacus-launcher": "file:../../../lib/utils/launcher",
-    "abacus-moment": "file:../../../lib/utils/moment",
-    "abacus-request": "file:../../../lib/utils/request",
-    "abacus-webapp": "file:../../../lib/utils/webapp",
-    "abacus-doc": "file:../../../doc",
-    "abacus-etc": "file:../../../etc",
-    "underscore": "^1.8.3",
-    "commander": "2.8.1"
+    "abacus-paging": "file:../../../lib/utils/paging",
+    "abacus-wait": "file:../../lib/wait"
   },
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-publish": "file:../../../tools/publish"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",

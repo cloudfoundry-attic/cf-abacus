@@ -26,7 +26,8 @@
     "cfpush": "./cfpush"
   },
   "scripts": {
-    "test": "eslint && mocha",
+    "test": "eslint && nyc mocha",
+    "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "lint": "eslint",
     "pub": "publish"
   },
@@ -41,6 +42,16 @@
     "abacus-eslint": "file:../eslint",
     "abacus-mocha": "file:../mocha",
     "abacus-publish": "file:../publish"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",

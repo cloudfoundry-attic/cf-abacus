@@ -29,7 +29,6 @@ const clone = _.clone;
 const forEach = _.forEach;
 
 const debug = require('abacus-debug')('abacus-lifecycle-manager');
-const edebug = require('abacus-debug')('e-abacus-lifecycle-manager');
 const cp = require('child_process');
 
 const modules = {
@@ -57,19 +56,13 @@ const start = (module, env) => {
   const moduleDir = getModuleDir(module);
   debug(`Executing "start" operation on module ${module} in ` + `directory ${moduleDir} with environment %o`, env);
 
-  const startOperation = 'npm run start';
-  return cp.exec(
-    startOperation,
-    {
-      cwd: moduleDir,
-      env
-    },
-    (err, stdout, stderr) => {
-      debug(`stdout > ${stdout}`);
-      edebug(err);
-      edebug(`stderr > ${stderr}`);
-    }
-  );
+  const c = cp.spawn('npm', ['run', 'start'], {
+    cwd: moduleDir,
+    env
+  });
+
+  c.stdout.pipe(process.stdout);
+  c.stderr.pipe(process.stderr);
 };
 
 const stop = (module, env) => {

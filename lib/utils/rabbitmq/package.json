@@ -23,13 +23,13 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "test": "eslint && mocha",
+    "test": "eslint && nyc mocha",
+    "report-coverage": "nyc report --reporter=lcov > coverage.lcov && codecov",
     "lint": "eslint",
     "pub": "publish"
   },
   "dependencies": {
     "abacus-debug": "file:../debug",
-    "abacus-yieldable": "file:../yieldable",
     "amqp-connection-manager": "^1.3.7",
     "amqplib": "^0.5.2",
     "underscore": "^1.8.3"
@@ -38,6 +38,16 @@
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",

@@ -1,0 +1,56 @@
+{
+  "name": "abacus-plan-tester",
+  "description": "Plan tester",
+  "license": "Apache-2.0",
+  "version": "1.0.0",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tools/plan-tester",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "mocha",
+    "src/"
+  ],
+  "main": "src/index.js",
+  "scripts": {
+    "test": "eslint && nyc mocha",
+    "report-coverage": "true",
+    "lint": "eslint",
+    "pub": "publish"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-metering-config": "../metering",
+    "abacus-publish": "file:../../../tools/publish",
+    "abacus-pricing-config": "../pricing",
+    "abacus-rating-config": "../rating",
+    "bignumber.js": "^5.0.0"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
+  },
+  "engines": {
+    "node": ">=6.11.4 <9.0.0",
+    "npm": "<5.0.0"
+  }
+}
