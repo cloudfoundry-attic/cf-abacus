@@ -46,7 +46,7 @@
     "cftest": "bin/cftest",
     "cibuild": "npm run build && npm run citest && npm run cftest",
     "generate-coverage": "foreach abacus node_modules/:name npm run generate-coverage",
-    "report-coverage": "lcov-result-merger 'node_modules/**/coverage/lcov.info' | codecov",
+    "report-coverage": "lcov-result-merger 'node_modules/**/coverage/lcov.info' coverage.out && codecov",
     "dupcode": "jsinspect",
     "doc": "cat README.md | mddoc >README.html && cat CHANGES.md | mddoc >CHANGES.html",
     "start": "bin/start",
