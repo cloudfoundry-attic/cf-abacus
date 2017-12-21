@@ -14,7 +14,7 @@ npm install -g npm@4
 
 # Build Abacus
 cd cf-abacus
-npm run build
+npm run provision
 
 # Test your plan
 cd lib/config/plan-tester
