@@ -30,6 +30,9 @@
     "eslint": "^4.1.7",
     "mocha": "^3.2.0"
   },
+  "peerDependencies": {
+    "eslint": "^4.1.7"
+  },
   "nyc": {
     "cache": true,
     "reporter": [
