@@ -35,6 +35,7 @@
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
+    "nyc": "^11.4.1",
     "abacus-publish": "file:../../../tools/publish"
   },
   "nyc": {

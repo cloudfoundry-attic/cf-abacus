@@ -32,6 +32,7 @@
     "abacus-cmdline": "file:../../../tools/cmdline",
     "abacus-oauth": "file:../../../lib/utils/oauth",
     "abacus-mocha": "file:../../../tools/mocha",
+    "nyc": "^11.4.1",
     "abacus-paging": "file:../../../lib/utils/paging",
     "abacus-wait": "file:../../lib/wait"
   },
