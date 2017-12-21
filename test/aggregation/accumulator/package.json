@@ -37,6 +37,7 @@
     "abacus-debug": "file:../../../lib/utils/debug",
     "abacus-express": "file:../../../lib/utils/express",
     "abacus-mocha": "file:../../../tools/mocha",
+    "nyc": "^11.4.1",
     "abacus-request": "file:../../../lib/utils/request",
     "abacus-router": "file:../../../lib/utils/router",
     "abacus-seqid": "file:../../../lib/utils/seqid",

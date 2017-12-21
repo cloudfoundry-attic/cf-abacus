@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "abacus-mocha": "file:../../../tools/mocha",
+    "nyc": "^11.4.1",
     "abacus-batch": "file:../../../lib/utils/batch",
     "abacus-clone": "file:../../../lib/utils/clone",
     "abacus-throttle": "file:../../../lib/utils/throttle",

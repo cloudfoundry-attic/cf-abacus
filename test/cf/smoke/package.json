@@ -32,6 +32,7 @@
     "abacus-clone": "file:../../../lib/utils/clone",
     "abacus-dbclient": "file:../../../lib/utils/dbclient",
     "abacus-mocha": "file:../../../tools/mocha",
+    "nyc": "^11.4.1",
     "abacus-moment": "file:../../../lib/utils/moment",
     "abacus-oauth": "file:../../../lib/utils/oauth",
     "abacus-request": "file:../../../lib/utils/request",
