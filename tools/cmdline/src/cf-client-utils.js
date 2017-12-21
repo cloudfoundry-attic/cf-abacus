@@ -45,7 +45,7 @@ const serviceInstance = {
   getId:  (serviceName) => execute(`cf service ${serviceName} --guid`).toString().trim(),
   getStatus: getServiceStatus,
   create: (service, plan, serviceName, parameters) =>
-    execute(`cf create-service ${service} ${plan} ${serviceName}` + (parameters ? ` -c ${parameters}` : '')),
+    execute(`cf create-service ${service} ${plan} ${serviceName}` + (parameters ? ` -c '${parameters}'` : '')),
   update: (serviceName, parameters) =>
     execute(`cf update-service ${serviceName}` + (parameters ? ` -c '${parameters}'` : '')),
   delete: (serviceName) => execute(`cf delete-service -f ${serviceName}`),

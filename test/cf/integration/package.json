@@ -24,6 +24,7 @@
   "scripts": {
     "itest": "mocha --command",
     "test": "eslint",
+    "generate-coverage": "true",
     "lint": "eslint",
     "pub": "publish"
   },
@@ -44,9 +45,20 @@
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-moment": "file:../../../lib/utils/moment",
     "abacus-lifecycle-manager": "file:../../lib/lifecycle-manager",
+    "abacus-pouchserver": "file:../../../lib/utils/pouchserver",
     "abacus-request": "file:../../../lib/utils/request",
     "abacus-router": "file:../../../lib/utils/router",
     "abacus-wait": "file:../../lib/wait"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",

@@ -26,7 +26,8 @@
   "scripts": {
     "start": "launch webapp start",
     "stop": "webapp stop",
-    "test": "eslint && mocha",
+    "test": "eslint && nyc mocha",
+    "generate-coverage": "nyc report --reporter=lcovonly",
     "lint": "eslint",
     "pub": "publish",
     "cfpack": "cfpack",
@@ -44,7 +45,6 @@
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-moment": "file:../../utils/moment",
     "abacus-oauth": "file:../../utils/oauth",
-    "abacus-paging": "file:../../utils/paging",
     "abacus-partition": "file:../../utils/partition",
     "abacus-perf": "file:../../utils/perf",
     "abacus-request": "file:../../utils/request",
@@ -66,6 +66,16 @@
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",

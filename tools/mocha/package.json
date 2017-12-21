@@ -1,6 +1,6 @@
 {
   "name": "abacus-mocha",
-  "description": "Painless testing and code coverage with Mocha and Istanbul",
+  "description": "Painless testing with Mocha",
   "license": "Apache-2.0",
   "version": "1.0.0",
   "private": true,
@@ -26,7 +26,8 @@
     "mocha": "./mocha"
   },
   "scripts": {
-    "test": "eslint && ./mocha",
+    "test": "eslint && nyc ./mocha",
+    "generate-coverage": "nyc report --reporter=lcovonly",
     "lint": "eslint",
     "pub": "publish"
   },
@@ -34,18 +35,25 @@
     "async": "^2.1.4",
     "chai": "^3.0.0",
     "commander": "^2.8.1",
-    "convert-source-map": "^1.1.1",
-    "istanbul": "^0.4.0",
     "longjohn": "^0.2.9",
     "mocha": "^3.2.0",
     "recursive-readdir-sync": "1.0.6",
     "sinon": "^2.4.1",
-    "source-map": "^0.5.3",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-eslint": "file:../eslint",
     "abacus-publish": "file:../publish"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",

@@ -29,6 +29,7 @@
   "scripts": {
     "lint": "eslint -f stylish -c .eslintrc src",
     "test": "eslint -f stylish -c .eslintrc src",
+    "generate-coverage": "true",
     "pub": "publish"
   },
   "dependencies": {
@@ -38,6 +39,16 @@
   },
   "devDependencies": {
     "abacus-publish": "file:../publish"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",

@@ -23,7 +23,8 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "test": "eslint && mocha",
+    "test": "eslint && nyc mocha",
+    "generate-coverage": "nyc report --reporter=lcovonly",
     "lint": "eslint",
     "pub": "publish"
   },
@@ -33,6 +34,7 @@
     "abacus-moment": "file:../../utils/moment",
     "abacus-request": "file:../request",
     "abacus-urienv": "file:../urienv",
+    "http-status-codes": "^1.3.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
@@ -40,6 +42,16 @@
     "abacus-express": "file:../express",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",

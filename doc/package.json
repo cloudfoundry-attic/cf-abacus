@@ -28,12 +28,23 @@
     "confdoc": "cat conf.md | mddoc >conf.html",
     "designdoc": "cat design.md | mddoc >design.html",
     "test": "true",
+    "generate-coverage": "true",
     "lint": "true",
     "pub": "publish"
   },
   "dependencies": {
     "abacus-mddoc": "file:../tools/mddoc",
     "abacus-publish": "file:../tools/publish"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
   },
   "engines": {
     "node": ">=6.11.4 <9.0.0",

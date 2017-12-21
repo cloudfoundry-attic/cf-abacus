@@ -5,6 +5,10 @@ plugins:
 
 parser: espree
 
+parserOptions:
+  ecmaVersion: 2017
+  sourceType: "module"
+
 env:
   browser: true
   node: true
@@ -19,9 +23,6 @@ globals:
   chai: true
   spy: true
   stub: true
-
-parserOptions:
-  sourceType: "module"
 
 rules:
   # ERRORS
