@@ -3,13 +3,12 @@
 const { functioncb, yieldable } = require('abacus-yieldable');
 const createEventReader = require('./helpers/event-reader');
 
-
 const env = {
-  api: process.env.CF_API,
+  api: process.env.CF_API_URI,
   user: process.env.CF_ADMIN_USER,
   password: process.env.CF_ADMIN_PASSWORD,
-  cloudControllerClientId: process.env.BRIDGE_CLIENT_ID,
-  cloudControllerClientSecret: process.env.BRIDGE_CLIENT_SECRET
+  cloudControllerClientId: process.env.CLOUD_CONTROLLER_CLIENT_ID,
+  cloudControllerClientSecret: process.env.CLOUD_CONTROLLER_CLIENT_SECRET
 };
 
 const oauth = require('abacus-oauth');
