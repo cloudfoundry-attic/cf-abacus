@@ -6,6 +6,7 @@ const extend = require('underscore').extend;
 const lifecycleManager = require('abacus-lifecycle-manager')();
 
 const createStatsReader = require('../utils/stats-reader');
+const createHealthcheckClient = require('../utils/healthcheck-client');
 
 const env = {
   tokenSecret: 'secret',
@@ -40,6 +41,7 @@ module.exports = (config) => ({
     port: config.port,
     tokenSecret: env.tokenSecret
   }),
+  healthcheck: createHealthcheckClient(config.port),
   start: (externalSystemsMocks) => {
     const bridgeEnv = extend({}, process.env, getEnviornmentVars(externalSystemsMocks), config.customEnv);
 

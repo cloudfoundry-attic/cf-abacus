@@ -1,7 +1,5 @@
 'use strict';
 
-/* eslint-disable max-len */
-
 const _ = require('underscore');
 const isEqual = _.isEqual;
 
