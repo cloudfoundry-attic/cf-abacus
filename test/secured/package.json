@@ -35,6 +35,7 @@
     "abacus-authserver-plugin": "file:../../lib/plugins/authserver",
     "abacus-eslint": "file:../../tools/eslint",
     "abacus-mocha": "file:../../tools/mocha",
+    "nyc": "^11.4.1",
     "abacus-lifecycle-manager": "file:../lib/lifecycle-manager",
     "abacus-publish": "file:../../tools/publish",
     "underscore": "^1.8.3",

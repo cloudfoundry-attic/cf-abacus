@@ -9,15 +9,11 @@ Prerequisites:
 # Clone Abacus
 git clone https://github.com/cloudfoundry-incubator/cf-abacus.git
 
-# Install npm 4
-npm install -g npm@4
-
-# Build Abacus
-cd cf-abacus
-npm run build
+# Install dependencies
+cd cf-abacus/lib/config/plan-tester
+npm install
 
 # Test your plan
-cd lib/config/plan-tester
 export TEST_PLAN=path_to_your_plan
 npm test
 ```

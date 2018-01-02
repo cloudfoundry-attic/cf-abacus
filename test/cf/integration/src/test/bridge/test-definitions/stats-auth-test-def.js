@@ -42,23 +42,18 @@ const build = () => {
     });
 
     context('With NO token', () => {
-      it(
-        'UNAUTHORIZED is returned',
-        yieldable.functioncb(function*() {
-          const response = yield fixture.bridge.readStats.withoutToken();
-          expect(response.statusCode).to.equal(httpStatus.UNAUTHORIZED);
-        })
+      it('UNAUTHORIZED is returned', yieldable.functioncb(function*() {
+        const response = yield fixture.bridge.readStats.withoutToken();
+        expect(response.statusCode).to.equal(httpStatus.UNAUTHORIZED);
+      })
       );
     });
 
     context('With token without required scopes', () => {
-      it(
-        'FORBIDDEN is returned',
-        yieldable.functioncb(function*() {
-          const response = yield fixture.bridge.readStats.withMissingScope();
-          expect(response.statusCode).to.equal(httpStatus.FORBIDDEN);
-        })
-      );
+      it('FORBIDDEN is returned', yieldable.functioncb(function*() {
+        const response = yield fixture.bridge.readStats.withMissingScope();
+        expect(response.statusCode).to.equal(httpStatus.FORBIDDEN);
+      }));
     });
   });
 };

@@ -1,7 +1,5 @@
 'use strict';
 
-/* eslint-disable max-len */
-
 const unhandleableEventsTestsDefinition = require('../test-definitions/unhandleable-events-test-def');
 const applicationFixture = require('./fixture');
 

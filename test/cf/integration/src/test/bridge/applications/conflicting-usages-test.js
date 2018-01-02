@@ -1,7 +1,5 @@
 'use strict';
 
-/* eslint-disable max-len */
-
 const conflictingEventsTestsDefinition = require('../test-definitions/conflicting-events-test-def');
 const applicationFixture = require('./fixture');
 

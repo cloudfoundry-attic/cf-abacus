@@ -1,14 +1,14 @@
 'use strict';
 
-const statsAuthTestsDefinition = require('../test-definitions/stats-auth-test-def');
+const healthcheckTestsDefinition = require('../test-definitions/healthcheck-test-def');
 const servicesFixture = require('./fixture');
 
-describe('services-bridge stats auth tests', () => {
+describe('services-bridge healthcheck tests', () => {
   before(() => {
     servicesFixture.externalSystemsMocks().cloudController.serviceGuids.return.always({
       [servicesFixture.defaultUsageEvent.serviceLabel]: servicesFixture.defaultUsageEvent.serviceGuid
     });
   });
 
-  statsAuthTestsDefinition.fixture(servicesFixture).build();
+  healthcheckTestsDefinition.fixture(servicesFixture).build();
 });

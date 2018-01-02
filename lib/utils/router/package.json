@@ -38,6 +38,7 @@
     "abacus-batch": "file:../batch",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
+    "nyc": "^11.4.1",
     "abacus-publish": "file:../../../tools/publish",
     "abacus-request": "file:../request",
     "abacus-express": "file:../express"
