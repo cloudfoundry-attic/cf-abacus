@@ -48,7 +48,7 @@ module.exports = () => {
 
       const responseToken = serviceData.responseFor(queryScopes);
 
-      debug('Returning Oauth Token: %s', responseToken);
+      debug('Returning OAuth Token: %s', responseToken);
       response.status(httpStatus.OK).send({
         access_token: responseToken,
         expires_in: 5 * 60
@@ -57,6 +57,8 @@ module.exports = () => {
 
     server = app.listen(randomPort);
     address = server.address();
+
+    debug('UAA server started on port: %d', address.port);
   };
 
   const stop = (cb) => {
@@ -67,6 +69,7 @@ module.exports = () => {
     start,
     address: () => server.address(),
     tokenService: {
+      clear: serviceData.clear,
       requestsCount: () => serviceData.requests().length,
       requests: {
         withScopes: (scopes) => {

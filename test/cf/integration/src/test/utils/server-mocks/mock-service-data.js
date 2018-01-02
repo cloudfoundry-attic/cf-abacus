@@ -1,11 +1,11 @@
 'use strict';
 
 module.exports = () => {
-  const serviceRequests = [];
+  let serviceRequests = [];
 
   let returnAlways;
   let returnSeries = [];
-  const returnKeyValue = {};
+  let returnKeyValue = {};
 
   return {
     request: (n) => serviceRequests[n],
@@ -27,6 +27,9 @@ module.exports = () => {
       for: (key) => ({
         value: (returnValue) => returnKeyValue[key] = returnValue
       })
+    },
+    clear: () => {
+      serviceRequests = [];
     }
   };
 };

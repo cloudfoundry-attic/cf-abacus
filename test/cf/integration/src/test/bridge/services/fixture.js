@@ -1,7 +1,5 @@
 'use sterict';
 
-/* eslint-disable max-len */
-
 const lifecycleManager = require('abacus-lifecycle-manager')();
 
 const createAbacusCollectorMock = require('../../utils/server-mocks/abacus-collector-mock');

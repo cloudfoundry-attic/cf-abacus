@@ -37,6 +37,7 @@ module.exports = () => {
     });
 
     server = app.listen(randomPort);
+    debug('Cloud controller started on port: %d', server.address().port);
     return server.address();
   };
 

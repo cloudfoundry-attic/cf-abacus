@@ -137,47 +137,29 @@ const build = () => {
         );
       });
 
-      it(
-        'Writes an entry in carry-over',
-        yieldable.functioncb(function*() {
-          const docs = yield carryOverDb.readCurrentMonthDocs();
-          const expectedCollectorId = externalSystemsMocks.abacusCollector.resourceLocation;
-          expect(docs).to.deep.equal([
-            {
-              collector_id: expectedCollectorId,
-              event_guid: secondEventGuid,
-              state: fixture.defaultUsageEvent.state,
-              timestamp: secondUsageEventTimestamp
-            }
-          ]);
-        })
-      );
+      it('Writes an entry in carry-over', yieldable.functioncb(function*() {
+        const docs = yield carryOverDb.readCurrentMonthDocs();
+        const expectedCollectorId = externalSystemsMocks.abacusCollector.resourceLocation;
+        expect(docs).to.deep.equal([{
+          collector_id: expectedCollectorId,
+          event_guid: secondEventGuid,
+          state: fixture.defaultUsageEvent.state,
+          timestamp: secondUsageEventTimestamp
+        }]);
+      }));
 
-      context('With token without required scopes', () => {
-        it(
-          'FORBIDDEN is returned',
-          yieldable.functioncb(function*() {
-            const response = yield fixture.bridge.readStats.withMissingScope();
-            expect(response.statusCode).to.equal(httpStatus.FORBIDDEN);
-          })
-        );
-      });
-
-      it(
-        'Exposes correct statistics',
-        yieldable.functioncb(function*() {
-          const response = yield fixture.bridge.readStats.withValidToken();
-          expect(response.statusCode).to.equal(httpStatus.OK);
-          expect(response.body.statistics.usage).to.deep.equal({
-            success: {
-              all: 2,
-              conflicts: 0,
-              skips: 0
-            },
-            failures: 0
-          });
-        })
-      );
+      it('Exposes correct statistics', yieldable.functioncb(function*() {
+        const response = yield fixture.bridge.readStats.withValidToken();
+        expect(response.statusCode).to.equal(httpStatus.OK);
+        expect(response.body.statistics.usage).to.deep.equal({
+          success: {
+            all: 2,
+            conflicts: 0,
+            skips: 0
+          },
+          failures: 0
+        });
+      }));
     });
   });
 };
