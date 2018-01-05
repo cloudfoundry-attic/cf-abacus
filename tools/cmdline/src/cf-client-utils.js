@@ -38,7 +38,8 @@ const application = {
 
 const getServiceStatus = (serviceName) => {
   const serviceInfo = execute(`cf service ${serviceName}`).toString().trim();
-  return serviceInfo.match(new RegExp(/status: (.*)/, 'i'))[1];
+  const status = serviceInfo.match(new RegExp(/status: (.*)/, 'i'))[1];
+  return status.trim();
 };
 
 const serviceInstance = {
