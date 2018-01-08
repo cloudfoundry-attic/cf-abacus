@@ -48,7 +48,8 @@ const getEnviornmentVars = (externalSystemsMocks) => ({
   ABACUS_CLIENT_ID: env.abacusClientId,
   ABACUS_CLIENT_SECRET: env.abacusClientSecret,
   SECURED: 'true',
-  AUTH_SERVER: `http://localhost:${externalSystemsMocks.uaaServer.address().port}`,
+  AUTH_SERVER: `http://localhost:${externalSystemsMocks.cloudController.address().port}`,
+  API: `http://localhost:${externalSystemsMocks.cloudController.address().port}`,
   COLLECTOR: `http://localhost:${externalSystemsMocks.abacusCollector.address().port}`,
   JWTKEY: env.tokenSecret,
   JWTALGO: env.tokenAlgorithm,
@@ -64,6 +65,10 @@ module.exports = (customEnv) => ({
     tokenSecret: env.tokenSecret
   }),
   start: (externalSystemsMocks) => {
+    externalSystemsMocks
+      .cloudController
+      .infoService
+      .returnUaaAddress(`http://localhost:${externalSystemsMocks.uaaServer.address().port}`);
     const renewerEnv = extend({}, process.env, getEnviornmentVars(externalSystemsMocks), customEnv);
     lifecycleManager.useEnv(renewerEnv).startModules([lifecycleManager.modules.renewer]);
   },

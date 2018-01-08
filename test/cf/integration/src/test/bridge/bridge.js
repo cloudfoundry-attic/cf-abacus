@@ -25,7 +25,7 @@ const getEnviornmentVars = (externalSystems) => ({
   CF_CLIENT_ID: env.cfClientId,
   CF_CLIENT_SECRET: env.cfClientSecret,
   SECURED: 'true',
-  AUTH_SERVER: `http://localhost:${externalSystems.uaaServer.address().port}`,
+  AUTH_SERVER: `http://localhost:${externalSystems.cloudController.address().port}`,
   API: `http://localhost:${externalSystems.cloudController.address().port}`,
   COLLECTOR: `http://localhost:${externalSystems.abacusCollector.address().port}`,
   MIN_INTERVAL_TIME: 10,
@@ -43,6 +43,11 @@ module.exports = (config) => ({
   }),
   healthcheck: createHealthcheckClient(config.port),
   start: (externalSystemsMocks) => {
+    externalSystemsMocks
+      .cloudController
+      .infoService
+      .returnUaaAddress(`http://localhost:${externalSystemsMocks.uaaServer.address().port}`);
+
     const bridgeEnv = extend({}, process.env, getEnviornmentVars(externalSystemsMocks), config.customEnv);
 
     lifecycleManager.useEnv(bridgeEnv).startModules([config.bridge]);
