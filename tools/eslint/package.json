@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "commander": "^2.8.1",
-    "eslint": "^4.1.7",
+    "eslint": "~4.13.0",
     "eslint-plugin-mocha": "^4.8.0",
     "eslint-plugin-nodate": "file:../eslint-plugin-nodate",
     "optionator": "^0.6.0"
