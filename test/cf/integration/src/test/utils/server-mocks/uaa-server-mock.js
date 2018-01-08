@@ -31,12 +31,6 @@ module.exports = () => {
     app = express();
 
     let address;
-    app.get('/v2/info', (req, res) => {
-      debug('Retrieving cf info...');
-      res.send({
-        token_endpoint: `http://localhost:${address.port}`
-      });
-    });
 
     app.post('/oauth/token', (request, response) => {
       debug('Called /oauth/token endpoint with query %j and headers: %j', request.query, request.headers);

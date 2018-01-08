@@ -3,9 +3,11 @@
 const renewer = require('./renewer')();
 
 const createAbacusCollectorMock = require('../utils/server-mocks/abacus-collector-mock');
+const createCloudControllerMock = require('../utils/server-mocks/applications-cloud-controller-mock');
 const createUAAServerMock = require('../utils/server-mocks/uaa-server-mock');
 const externalSystemsMocks = require('../utils/external-systems')({
   abacusCollector: createAbacusCollectorMock,
+  cloudController: createCloudControllerMock,
   uaaServer: createUAAServerMock
 });
 

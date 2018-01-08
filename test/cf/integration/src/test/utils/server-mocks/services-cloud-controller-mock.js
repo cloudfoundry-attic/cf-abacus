@@ -48,9 +48,17 @@ module.exports = () => {
 
   const serviceUsageEventsData = createMockServiceData();
   const serviceGuidsData = createMockServiceData();
+  let returnUaaAddress;
 
   const start = () => {
     app = express();
+
+    app.get('/v2/info', (req, res) => {
+      debug('Retrieving cf info...');
+      res.send({
+        token_endpoint: returnUaaAddress
+      });
+    });
 
     app.get('/v2/service_usage_events', (req, res) => {
       debug('Retrieved service usage events request. Query: %j', req.query);
@@ -93,6 +101,9 @@ module.exports = () => {
   return {
     start,
     address: () => server.address(),
+    infoService: {
+      returnUaaAddress: (value) => returnUaaAddress = value
+    },
     serviceGuids: serviceGuidsData,
     usageEvents: serviceUsageEventsData,
     stop
