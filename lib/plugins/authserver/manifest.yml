@@ -1,7 +1,7 @@
 applications:
 - name: abacus-authserver-plugin
   host: abacus-authserver-plugin
-  path: .cfpack/app.zip
+  path: .
   instances: 1
   memory: 512M
   disk_quota: 512M

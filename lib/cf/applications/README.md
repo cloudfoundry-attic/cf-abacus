@@ -87,7 +87,7 @@ Edit the `manifest.yml` to look like this:
 applications:
 - name: abacus-cf-applications
   host: abacus-cf-applications
-  path: .cfpack/app.zip
+  path: .
   instances: 1
   memory: 512M
   disk_quota: 512M
