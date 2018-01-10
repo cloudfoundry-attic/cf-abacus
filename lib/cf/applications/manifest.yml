@@ -1,7 +1,7 @@
 applications:
 - name: abacus-cf-applications
   host: abacus-cf-applications
-  path: .cfpack/app.zip
+  path: .
   instances: 1
   memory: 512M
   disk_quota: 512M
@@ -15,7 +15,6 @@ applications:
     DBCLIENT: abacus-couchclient
     CF_CLIENT_ID: abacus-cf-applications
     CF_CLIENT_SECRET: secret
-    NODE_MODULES_CACHE: false
     SECURED: false
     AUTH_SERVER: api
     CLIENT_ID: abacus-linux-container

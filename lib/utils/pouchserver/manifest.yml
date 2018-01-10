@@ -1,11 +1,10 @@
 applications:
 - name: abacus-pouchserver
   host: abacus-pouchserver
-  path: .cfpack/app.zip
+  path: .
   instances: 1
   memory: 1G
   disk_quota: 512M
   env:
     CONF: default
     DEBUG: e-abacus-*
-    NODE_MODULES_CACHE: false

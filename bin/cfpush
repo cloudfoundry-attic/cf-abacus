@@ -2,8 +2,10 @@
 
 set -e
 
-# Push all the Abacus apps to Cloud Foundry
+# Push all the Abacus apps to Cloud Foundry, without starting them
 export CONF=${1:-default}
+
+CURRENT_DIR=$( pwd -P )
 
 MAX_PROCESSES=$(node -e "console.log(require('os').cpus().length)")
 if [ -n "$JOBS" ]; then
@@ -18,12 +20,12 @@ for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $C
   APPNAME=$(node_modules/abacus-etc/appname $MODULE)
   INSTANCES=$(node_modules/abacus-etc/apprc $MODULE/.apprc $CONF INSTANCES)
   APPS=$(( $(node_modules/abacus-etc/apprc $MODULE/.apprc $CONF APPS) - 1 ))
-  (cd $MODULE && npm run cfpack)
+  (cd $MODULE && npm install --production)
   if [ "$APPS" == "0" ]; then
-    COMMANDS+=("(cd $MODULE && npm run cfpush -- -n $APPNAME -i $INSTANCES -c $CONF -s -r $PUSH_RETRIES)")
+    COMMANDS+=("(npm run cfpush -- -n $APPNAME -p $MODULE -i $INSTANCES -c $CONF -s -r $PUSH_RETRIES)")
   else
     for I in $(seq 0 $APPS); do
-      COMMANDS+=("(cd $MODULE && npm run cfpush -- -n $APPNAME-$I -i $INSTANCES -c $CONF -s -r $PUSH_RETRIES)")
+      COMMANDS+=("(npm run cfpush -- -n $APPNAME-$I -p $MODULE -i $INSTANCES -c $CONF -s -r $PUSH_RETRIES)")
     done
   fi
 done
@@ -33,4 +35,8 @@ for i in "${COMMANDS[@]}"; do
   CMD_STRING+=$(printf '%q ' "$i")
 done
 
-echo $CMD_STRING | xargs -n 1 -P $MAX_PROCESSES /bin/bash -c
+ pushd "$CURRENT_DIR"
+   echo $CMD_STRING | xargs -n 1 -P $MAX_PROCESSES /bin/bash -c
+ popd
+
+

@@ -19,15 +19,15 @@ tmp.setGracefulCleanup();
 const originalManifestFilename = 'manifest.yml';
 const defaultPushRetries = 1;
 
-const createCfPushDir = (cb) => {
-  fs.mkdir('.cfpush', (err) => {
+const createCfPushDir = (props, cb) => {
+  fs.mkdir(path.join(process.cwd(), props.path, '.cfpush'), (err) => {
     if (err) noop();
     cb();
   });
 };
 
 const remanifest = (props, cb) => {
-  fs.readFile(path.join(process.cwd(), originalManifestFilename), (err, originalManifestContent) => {
+  fs.readFile(path.join(process.cwd(), props.path, originalManifestFilename), (err, originalManifestContent) => {
     if (err) {
       cb(err);
       return;
@@ -35,7 +35,9 @@ const remanifest = (props, cb) => {
 
     const adjustedManifest = remanifester.adjustManifest(originalManifestContent, props);
 
-    const adjustedManifestPath = path.join('.cfpush', [props.name, originalManifestFilename].join('-'));
+    const adjustedManifestPath = 
+      path.join(process.cwd(), props.path, '.cfpush', [props.name, originalManifestFilename].join('-'));
+
     fs.writeFile(adjustedManifestPath, adjustedManifest, cb);
   });
 };
@@ -50,7 +52,8 @@ const prepareTmpDir = () => {
   const cfTmpDir = path.join(tmpDir.name, '.cf');
   const cfHomeDir = path.join(process.env.CF_HOME || process.env.HOME, '.cf');
 
-  if (fs.existsSync(cfHomeDir)) fs.copySync(cfHomeDir, cfTmpDir);
+  if (fs.existsSync(cfHomeDir))
+    fs.copySync(cfHomeDir, cfTmpDir);
 
   return tmpDir;
 };
@@ -74,8 +77,11 @@ const executeCommand = (command, cb) => {
 };
 
 const push = (props, cb) => {
+
   const startParam = props.start ? '' : '--no-start';
-  const command = `cf push ${startParam} -f .cfpush/${props.name}-${originalManifestFilename}`;
+  const manifestPath = `${props.path}/.cfpush/${props.name}-${originalManifestFilename}`;
+  const command = `cf push ${startParam} -p ${props.path} -f ${manifestPath}`;
+
   executeCommand(command, cb);
 };
 
@@ -138,6 +144,7 @@ const runCLI = () => {
     .option('-c, --conf [value]', 'configuration name', process.env.CONF)
     .option('-b, --buildpack [value]', 'buildpack name or location', process.env.BUILDPACK)
     .option('-x, --prefix [value]', 'host prefix', process.env.ABACUS_PREFIX)
+    .option('-p, --path [value]', 'path to the application', '.')
     .option('-s, --start', 'starts an app after pushing')
     .option('-r, --retries [value]', 'number of retries if app push fails', defaultPushRetries)
     .option('-z, --prepare-zdm [boolean]', 'perform zero downtime (blue-green) deployment')
@@ -151,25 +158,23 @@ const runCLI = () => {
     conf: commander.conf,
     buildpack: commander.buildpack,
     prefix: commander.prefix,
+    path: commander.path,
     start: commander.start,
     retries: commander.retries,
     prepareZdm: requestZdm
   };
 
-  async.series(
-    [
-      (callback) => createCfPushDir(callback),
-      (callback) => remanifest(commanderProps, callback),
-      (callback) => prepareZdm(commanderProps, callback),
-      (callback) => retryPush(commanderProps, callback)
-    ],
-    (error, results) => {
-      if (error) {
-        console.log('Couldn\'t push app %s -', commander.name, error);
-        throw error;
-      }
+  async.series([
+    (callback) => createCfPushDir(commanderProps, callback),
+    (callback) => remanifest(commanderProps, callback),
+    (callback) => prepareZdm(commanderProps, callback),
+    (callback) => retryPush(commanderProps, callback)
+  ],(error, results) => {
+    if (error) {
+      console.log('Couldn\'t push app %s -', commander.name, error);
+      throw error;
     }
-  );
+  });
 };
 
 module.exports.runCLI = runCLI;
