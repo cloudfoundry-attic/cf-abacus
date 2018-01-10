@@ -24,13 +24,14 @@ describe('usage events tests', () => {
 
   let token;
   let orgGuid;
+  let spaceGuid;
 
   before(functioncb(function*() {
-    cmdline.org.create(testOrg);
-    cmdline.space.create(testOrg, testSpace);
+    const createdOrg = cmdline.org.create(testOrg);
+    orgGuid = createdOrg.metadata.guid;
+    const createdSpace = cmdline.space.create(orgGuid, testSpace);
+    spaceGuid = createdSpace.metadata.guid;
     cmdline.target(testOrg, testSpace);
-
-    orgGuid = cmdline.org.getId(testOrg);
 
     token = oauth.cache(
       env.api,
@@ -49,7 +50,7 @@ describe('usage events tests', () => {
   }));
 
   after(() => {
-    cmdline.org.delete(testOrg);
+    cmdline.org.delete(orgGuid);
   });
 
   describe('app_usage_events', () => {
@@ -57,7 +58,7 @@ describe('usage events tests', () => {
     let events;
 
     before(functioncb(function*() {
-      // Application start and stop could be slow if landscape is overloaded
+      // Application start and stop could be slow if landscapecd .. is overloaded
       this.timeout(fiveMinutesInMillis);
 
       const eventReader = createEventReader(env.api, 'app_usage_events', orgGuid, token);
@@ -121,8 +122,12 @@ describe('usage events tests', () => {
       const lastEvent = yield eventReader.readLastEvent();
       const lastGuid = lastEvent.metadata.guid;
 
-      cmdline.serviceInstance.create(testServiceName, testServicePlanName, testServiceInstanceName);
-      cmdline.serviceInstance.delete(testServiceInstanceName);
+      const serviceInstance = cmdline.serviceInstance.create(
+        testServiceInstanceName,
+        testServiceName,
+        testServicePlanName,
+        spaceGuid);
+      cmdline.serviceInstance.delete(serviceInstance.metadata.guid);
 
       events = yield eventReader.read({
         afterGuid: lastGuid
