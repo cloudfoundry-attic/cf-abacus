@@ -4,6 +4,8 @@
 const cfCurl = require('./cf-curl');
 const execute = require('../cmdline.js').execute;
 
+const target = (org, space) => execute(`cf target -o ${org} -s ${space}`);
+
 const deployApplication = (name, options = {}) => {
   const path = options.path ? `-p ${options.path}` : '';
   const memory = options.memory ? `-m ${options.memory}` : '';
@@ -14,10 +16,13 @@ const deployApplication = (name, options = {}) => {
   execute(`cf push ${name} ${path} ${memory} ${buildpack} ${manifest} ${noStart}`);
 };
 
-module.exports = {
-  get: (spaceGuid, appName) => cfCurl.getSingleResult(`/v2/spaces/${spaceGuid}/apps?q=name:${appName}`),
-  deploy: deployApplication,
-  start: (name) => execute(`cf start ${name}`),
-  restart: (name) => execute(`cf restart ${name}`),
-  delete: (name, deleteRoute) => execute(`cf delete -f ${deleteRoute ? '-r' : ''} ${name}`)
+module.exports = (targetOrg, targetSpace) => {
+  target(targetOrg, targetSpace);
+  return {
+    get: (spaceGuid, appName) => cfCurl.getSingleResult(`/v2/spaces/${spaceGuid}/apps?q=name:${appName}`),
+    deploy: deployApplication,
+    start: (name) => execute(`cf start ${name}`),
+    restart: (name) => execute(`cf restart ${name}`),
+    delete: (name, deleteRoute) => execute(`cf delete -f ${deleteRoute ? '-r' : ''} ${name}`)
+  };
 };

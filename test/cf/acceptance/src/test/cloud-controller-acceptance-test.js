@@ -31,7 +31,6 @@ describe('usage events tests', () => {
     orgGuid = createdOrg.metadata.guid;
     const createdSpace = cmdline.space.create(orgGuid, testSpace);
     spaceGuid = createdSpace.metadata.guid;
-    cmdline.target(testOrg, testSpace);
 
     token = oauth.cache(
       env.api,
@@ -65,12 +64,13 @@ describe('usage events tests', () => {
       const lastEvent = yield eventReader.readLastEvent();
       const lastGuid = lastEvent.metadata.guid;
 
-      cmdline.application.deploy(testApp, {
+      const application = cmdline.application(testOrg, testSpace);
+      application.deploy(testApp, {
         path: `${__dirname}/static-app`,
         buildpack: 'staticfile_buildpack',
         memory: `${testAppMemoryInMb}M`
       });
-      cmdline.application.delete(testApp);
+      application.delete(testApp);
 
       events = yield eventReader.read({
         afterGuid: lastGuid
