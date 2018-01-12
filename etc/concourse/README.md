@@ -197,7 +197,6 @@ applications:
     PROVISIONING: abacus-provisioning-plugin
     ACCOUNT: abacus-account-plugin
     EUREKA: abacus-eureka-plugin
-    NODE_MODULES_CACHE: false
     SLACK: 5D
     SECURED: true
     AUTH_SERVER: $AUTH_SERVER

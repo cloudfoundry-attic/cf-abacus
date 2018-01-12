@@ -9,7 +9,7 @@ if [ -n "$1" ]; then
 fi
 
 for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
-  (cd $MODULE && npm run cfpack)
+  (cd $MODULE && npm install)
 done
 
 (cd etc/bosh && bosh create release --force --name cf-abacus)

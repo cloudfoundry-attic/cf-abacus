@@ -13,7 +13,6 @@ applications:
     DB: abacus-pouchserver
     ACCOUNT: abacus-account-plugin
     EUREKA: abacus-eureka-plugin
-    NODE_MODULES_CACHE: false
     SECURED: false
     # AUTH_SERVER:
     # CLIENT_ID:

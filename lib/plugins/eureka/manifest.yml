@@ -9,7 +9,6 @@ applications:
     CONF: default
     DEBUG: e-abacus-*
     DB: abacus-pouchserver
-    NODE_MODULES_CACHE: false
     SECURED: false
     # JWTKEY:
     # JWTALGO:

@@ -19,7 +19,6 @@ log*
 *.out
 *.crt
 *.key
-**/.cfpack/**
 **/.cfpush/**
 .publish/**
 **/.publish/**
