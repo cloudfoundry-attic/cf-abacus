@@ -1,8 +1,28 @@
 {
   "name": "abacus-usage-collector",
+  "description": "Usage collector service",
+  "license": "Apache-2.0",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/metering/collector",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".apprc",
+    ".npmrc",
+    "manifest.yml",
+    "src/"
+  ],
+  "main": "src/index.js",
   "scripts": {
     "start": "launch webapp start",
     "stop": "webapp stop",
@@ -13,23 +33,16 @@
     "cfpack": "cfpack",
     "cfpush": "cfpush"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cloudfoundry-incubator/cf-abacus.git"
-  },
-  "keywords": [
-    "abacus",
-    "metering",
-    "consumption"
-  ],
   "dependencies": {
     "abacus-batch": "file:../../utils/batch",
     "abacus-breaker": "file:../../utils/breaker",
-    "abacus-retry": "file:../../utils/retry",
+    "abacus-cluster": "file:../../utils/cluster",
     "abacus-request": "file:../../utils/request",
-    "abacus-usage-schemas": "file:../../config/schemas",
-    "abacus-yieldable": "file:../../utils/yieldable",
+    "abacus-retry": "file:../../utils/retry",
     "abacus-urienv": "file:../../utils/urienv",
+    "abacus-usage-schemas": "file:../../config/schemas",
+    "abacus-webapp": "file:../../utils/webapp",
+    "abacus-yieldable": "file:../../utils/yieldable",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
@@ -37,13 +50,18 @@
     "abacus-cfpush": "file:../../../tools/cfpush",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-publish": "file:../../../tools/publish",
     "nyc": "^11.4.1",
-    "abacus-publish": "file:../../../tools/publish"
+    "supertest": "^3.0.0"
   },
-  "author": "SAP Labs",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
-  },
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus#readme"
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
+  }
 }
