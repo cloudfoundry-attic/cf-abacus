@@ -51,7 +51,7 @@ case "$CI_TEST" in
     export JWTKEY=encode
     export JWTALGO=HS256
     npm start
-    sleep 3s
+    sleep 6s
     npm run perf -- -o 4 -i 4 -u 4 $@
     npm stop
 
