@@ -36,7 +36,7 @@ debug:
 # Set this to true to skip ssl validation
 skip-ssl-validation: true
 
-# new abacus uaa admin user that will be created
+# cf uaa admin client credentials required to authenticate using uaac
 uaa-admin: admin
 
 # Password for the uaa-admin user
