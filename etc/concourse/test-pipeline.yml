@@ -38,10 +38,12 @@ jobs:
             - name: abacus
           params:
             CF_SYS_DOMAIN: {{cf-sys-domain}}
+            SKIP_CREATE_USER: {{skip-create-user}}
             CF_USER: {{cf-user}}
             CF_PASSWORD: {{cf-password}}
             CF_ADMIN_USER: {{cf-admin-user}}
             CF_ADMIN_PASSWORD: {{cf-admin-password}}
+            SKIP_CREATE_ORG: {{skip-create-org}}
             CF_ORG: {{cf-org}}
             CF_SPACE: {{cf-space}}
             CF_DOMAIN: {{cf-domain}}
