@@ -152,7 +152,6 @@
     "abacus-eslint": "file:tools/eslint",
     "abacus-mddoc": "file:tools/mddoc",
     "abacus-mocha": "file:tools/mocha",
-    "nyc": "^11.4.1",
     "abacus-perf-test": "file:test/perf",
     "abacus-publish": "file:tools/publish",
     "abacus-replace-template": "file:tools/replace-template",
