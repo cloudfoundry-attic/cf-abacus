@@ -98,7 +98,7 @@ matrix:
         - npm run provision
         - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
     - env:
-      - DESCRIPTION=extended-tests-couchdb
+      - DESCRIPTION=extended-tests-mongodb
       - DBCLIENT=abacus-mongoclient
       - DB=mongodb://localhost:27017
       - JOBS=1
@@ -131,7 +131,7 @@ matrix:
         - npm run provision
         - travis_retry npm run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
     - env:
-      - DESCRIPTION=perf-tests-couchdb
+      - DESCRIPTION=perf-tests-mongodb
       - DBCLIENT=abacus-mongoclient
       - DB=mongodb://localhost:27017
       - JOBS=1

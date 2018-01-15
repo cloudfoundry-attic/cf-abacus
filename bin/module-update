@@ -19,7 +19,7 @@ for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $C
     rm -rf node_modules
     rm npm-shrinkwrap.json
     set -e
-    npm install
-    npm shrinkwrap
+    npm install --production
+    npm shrinkwrap --production
   popd
 done

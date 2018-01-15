@@ -12,8 +12,13 @@ fi
 cf api $skip https://api.$CF_SYS_DOMAIN
 echo "" | cf login -u $CF_ADMIN_USER -p $CF_ADMIN_PASSWORD
 
-echo "Recreating organization and space ..."
-cf delete-org -f $CF_ORG
+if [ "$SKIP_CREATE_ORG" == "true" ]; then
+  echo "Using existing org $CF_ORG ..."
+else
+  echo "Recreating organization and space ..."
+  cf delete-org -f $CF_ORG
+fi
+
 cf create-quota $CF_ORG -m 40g -i 4g -r 40 -s 1 --allow-paid-service-plans
 cf create-org $CF_ORG -q $CF_ORG
 cf create-space $CF_SPACE -o $CF_ORG
@@ -25,6 +30,7 @@ else
   cf delete-user -f "$CF_USER"
   cf create-user "$CF_USER" "$CF_PASSWORD"
 fi
+
 cf set-org-role $CF_USER $CF_ORG OrgManager
 cf set-space-role $CF_USER $CF_ORG $CF_SPACE SpaceManager
 cf set-space-role $CF_USER $CF_ORG $CF_SPACE SpaceDeveloper
