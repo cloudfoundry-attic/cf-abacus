@@ -99,6 +99,7 @@ applications:
     EUREKA: abacus-eureka-plugin
     API: https://api.bosh-lite.com:443
     AUTH_SERVER: https://api.bosh-lite.com:443
+    NODE_MODULES_CACHE: false
     CF_CLIENT_ID: abacus-cf-applications
     CF_CLIENT_SECRET: secret
 ```
@@ -122,8 +123,7 @@ Add the DB client implementation you would like to use with the applications bri
 
 Build, pack and push the applications bridge to Cloud Foundry:
 ```bash
-npm install && npm run lint && npm test &&
-&& npm run cfpush
+npm install && npm run lint && npm test && npm run cfpush
 ```
 
 Create a database service instance, called `db` and bind it to `abacus-cf-applications`:

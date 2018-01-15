@@ -8,3 +8,4 @@ applications:
   env:
     CONF: default
     DEBUG: e-abacus-*
+    NODE_MODULES_CACHE: false

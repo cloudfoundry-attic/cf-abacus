@@ -12,6 +12,7 @@ applications:
     EUREKA: abacus-eureka-plugin
     DB: abacus-pouchserver
     DBCLIENT: abacus-couchclient
+    NODE_MODULES_CACHE: false
     SECURED: false
     AUTH_SERVER: api
     ABACUS_CLIENT_ID: abacus

@@ -12,6 +12,7 @@ applications:
     PROVISIONING: abacus-provisioning-plugin
     DB: abacus-pouchserver
     EUREKA: abacus-eureka-plugin
+    NODE_MODULES_CACHE: false
     SECURED: false
     # AUTH_SERVER:
     # CLIENT_ID:
