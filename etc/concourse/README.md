@@ -185,7 +185,7 @@ An example template can look like this:
 applications:
 - name: abacus-usage-accumulator
   host: abacus-usage-accumulator
-  path: .cfpack/app.zip
+  path: .
   instances: 1
   memory: 512M
   disk_quota: 512M

@@ -1,7 +1,7 @@
 applications:
 - name: abacus-account-plugin
   host: abacus-account-plugin
-  path: .cfpack/app.zip
+  path: .
   instances: 1
   memory: 512M
   disk_quota: 512M
