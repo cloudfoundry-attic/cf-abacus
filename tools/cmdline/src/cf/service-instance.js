@@ -4,7 +4,7 @@
 const cfCurl = require('./cf-curl');
 
 module.exports = {
-  get: (guid) => cfCurl.getSingleResult(`/v2/service_instances/${guid}`),
+  get: (guid) => cfCurl.get(`/v2/service_instances/${guid}`),
   create: (instanceName, serviceName, planName, spaceGuid, parameters) => {
     const service = cfCurl.getSingleResult(`/v2/services?q=label:${serviceName}`);
     const plansResponse = cfCurl.get(`/v2/services/${service.metadata.guid}/service_plans`);

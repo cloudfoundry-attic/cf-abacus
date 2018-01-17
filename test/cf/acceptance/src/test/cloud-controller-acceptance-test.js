@@ -57,7 +57,7 @@ describe('usage events tests', () => {
     let events;
 
     before(functioncb(function*() {
-      // Application start and stop could be slow if landscapecd .. is overloaded
+      // Application start and stop could be slow if landscape is overloaded
       this.timeout(fiveMinutesInMillis);
 
       const eventReader = createEventReader(env.api, 'app_usage_events', orgGuid, token);
