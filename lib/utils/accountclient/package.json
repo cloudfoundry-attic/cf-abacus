@@ -1,10 +1,10 @@
 {
-  "name": "abacus-usage-collector",
-  "description": "Usage collector service",
+  "name": "abacus-accountclient",
+  "description": "Communicates with account plugin",
   "license": "Apache-2.0",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/metering/collector",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/accountclient",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -17,43 +17,30 @@
     "abacus"
   ],
   "files": [
-    ".apprc",
     ".npmrc",
-    "manifest.yml",
     "src/"
   ],
   "main": "src/index.js",
   "scripts": {
-    "start": "launch webapp start",
-    "stop": "webapp stop",
     "test": "eslint && nyc mocha",
     "generate-coverage": "nyc report --reporter=lcovonly",
     "lint": "eslint",
-    "pub": "publish",
-    "cfpack": "cfpack",
-    "cfpush": "cfpush"
+    "pub": "publish"
   },
   "dependencies": {
+    "abacus-debug": "file:../debug",
     "abacus-batch": "file:../../utils/batch",
     "abacus-breaker": "file:../../utils/breaker",
-    "abacus-cluster": "file:../../utils/cluster",
-    "abacus-rabbitmq": "file:../../utils/rabbitmq",
     "abacus-request": "file:../../utils/request",
     "abacus-retry": "file:../../utils/retry",
     "abacus-urienv": "file:../../utils/urienv",
-    "abacus-usage-schemas": "file:../../config/schemas",
-    "abacus-webapp": "file:../../utils/webapp",
-    "abacus-accountclient": "file:../../utils/accountclient",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "abacus-cfpack": "file:../../../tools/cfpack",
-    "abacus-cfpush": "file:../../../tools/cfpush",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-publish": "file:../../../tools/publish",
     "nyc": "^11.4.1",
-    "supertest": "^3.0.0"
+    "abacus-publish": "file:../../../tools/publish"
   },
   "nyc": {
     "cache": true,
@@ -64,5 +51,9 @@
     "exclude": [
       "src/test/**"
     ]
+  },
+  "engines": {
+    "node": ">=6.11.4 <9.0.0",
+    "npm": "<5.0.0"
   }
 }
