@@ -232,22 +232,3 @@ You should have running Concourse and fly-cli installed. If not refer to `Runnin
 echo "y" | fly --target=lite set-pipeline --pipeline=monitor-abacus --config=monitor-pipeline.yml --load-vars-from=monitor-pipeline-vars.yml --non-interactive
 fly --target=lite unpause-pipeline --pipeline=monitor-abacus
 ```
-
-## Docker files
-
-The `docker` directory contains the `Dockerfile`s needed to build the custom images used in the pipeline.
-
-You can build and push the images to your own repo, using the `publish` script:
-```bash
-cd ~/workspace/cf-abacus/etc/concourse/docker
-./publish myrepository
-```
-
-To build & push changes in a single image (for example `node-mongodb-0.12`), execute:
-
-```bash
-cd docker/node-mongodb-0.12
-docker build -t myrepository/node-mongodb:0.12 .
-docker login
-docker push myrepository/node-mongodb:0.12
-```
