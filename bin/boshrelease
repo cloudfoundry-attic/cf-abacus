@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+
+# Create a BOSH release for Abacus
+export CONF=default
+if [ -n "$1" ]; then
+  export CONF=$1
+fi
+
+for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
+  (cd $MODULE && npm run cfpack)
+done
+
+(cd etc/bosh && bosh create release --force --name cf-abacus)
+

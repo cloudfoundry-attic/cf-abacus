@@ -146,6 +146,7 @@
     "abacus-cf-acceptance-test": "file:test/cf/acceptance",
     "abacus-cf-integration-itest": "file:test/cf/integration",
     "abacus-cf-smoke": "file:test/cf/smoke",
+    "abacus-cfpack": "file:tools/cfpack",
     "abacus-cfpush": "file:tools/cfpush",
     "abacus-dupe-test": "file:test/dupe",
     "abacus-eslint": "file:tools/eslint",
