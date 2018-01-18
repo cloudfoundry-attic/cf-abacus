@@ -30,6 +30,7 @@
     "generate-coverage": "nyc report --reporter=lcovonly",
     "lint": "eslint",
     "pub": "publish",
+    "cfpack": "cfpack",
     "cfpush": "cfpush"
   },
   "dependencies": {
@@ -42,6 +43,7 @@
   },
   "devDependencies": {
     "abacus-cluster": "file:../../utils/cluster",
+    "abacus-cfpack": "file:../../../tools/cfpack",
     "abacus-cfpush": "file:../../../tools/cfpush",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",

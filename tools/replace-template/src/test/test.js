@@ -13,7 +13,7 @@ const manifest = {
     {
       name: 'abacus-usage-accumulator',
       host: 'abacus-usage-accumulator',
-      path: '.',
+      path: '.cfpack/app.zip',
       instances: 1,
       memory: '512M',
       disk_quota: '512M',

@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+'use strict';
+
+// Package an app for deployment to Cloud Foundry
+require('./src/index.js').runCLI();
+

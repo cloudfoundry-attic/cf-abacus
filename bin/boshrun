@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+# Run the Abacus BOSH errand job to deploy the Abacus apps to CF
+bosh run errand deploy-abacus
+

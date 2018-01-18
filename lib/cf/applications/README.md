@@ -87,7 +87,7 @@ Edit the `manifest.yml` to look like this:
 applications:
 - name: abacus-cf-applications
   host: abacus-cf-applications
-  path: .
+  path: .cfpack/app.zip
   instances: 1
   memory: 512M
   disk_quota: 512M
@@ -123,7 +123,8 @@ Add the DB client implementation you would like to use with the applications bri
 
 Build, pack and push the applications bridge to Cloud Foundry:
 ```bash
-npm install && npm run lint && npm test && npm run cfpush
+npm install && npm run lint && npm test &&
+npm run cfpack && npm run cfpush
 ```
 
 Create a database service instance, called `db` and bind it to `abacus-cf-applications`:
