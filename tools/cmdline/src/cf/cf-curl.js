@@ -7,8 +7,8 @@ const get = (path) => JSON.parse(execute(`cf curl ${path}`));
 
 const getSingleResult = (path) => {
   const response = get(path);
-  if (!response || !response.total_results || response.total_results != 1)
-    throw new Error('Invalid response. Expected single result but received: ', JSON.stringify(response));
+  if (!response || !response.total_results || response.total_results !== 1)
+    throw new Error(`Invalid response. Expected single result but received: ${JSON.stringify(response)}`);
 
   return response.resources[0];
 };
