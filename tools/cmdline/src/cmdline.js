@@ -4,10 +4,12 @@ const fs = require('fs');
 const tmp = require('tmp');
 const execSync = require('child_process').execSync;
 
+const escapeQuates = (string) => string.replace(/"/g, '\\"');;
+
 const execute = (command, showLog = true) => {
   if (showLog) console.log('> ' + command);
   const tmpFile = tmp.fileSync();
-  const cmd = 'bash -c ' + `"set -o pipefail; ${command} 2>&1 | tee ${tmpFile.name}"`;
+  const cmd = 'bash -c ' + `"set -o pipefail; ${escapeQuates(command)} 2>&1 | tee ${tmpFile.name}"`;
   try {
     execSync(cmd, { stdio: ['ignore', process.stdout, process.stderr] });
     return fs.readFileSync(tmpFile.name).toString();
