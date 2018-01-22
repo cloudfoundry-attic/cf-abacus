@@ -122,7 +122,7 @@ For a list of all available tests check [doc/tests.md](doc/tests.md).
 Deploying to Cloud Foundry
 ---
 
-Check our [wiki](https://github.com/cloudfoundry-incubator/cf-abacus/wiki/Installation) on how to deploy Abacus to Cloud Foundry.
+Check our [wiki](https://github.com/cloudfoundry-incubator/cf-abacus/wiki) on how to deploy Abacus to Cloud Foundry.
 
 Concourse pipelines
 ---
