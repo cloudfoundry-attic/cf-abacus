@@ -1,8 +1,5 @@
 'use strict';
 
-const _ = require('underscore');
-const noop = _.noop;
-
 const cfpush = require('..');
 const cp = require('child_process');
 const fs = require('fs-extra');
@@ -11,8 +8,9 @@ const commander = require('commander');
 const async = require('async');
 const remanifester = require('../lib/remanifester.js');
 
-const preparedManifest = 'manifest';
-const adjustedManifest = 'adjusted-manifest';
+const originalManifestFilename = 'manifest.yml';
+const preparedManifestContent = 'original manifest content';
+const adjustedManifestContent = 'adjusted manifest content';
 
 const prefix = 'prefix-';
 const adjustedName = 'adjusted-name';
@@ -20,16 +18,20 @@ const adjustedInstances = 3;
 const adjustedConf = 'adjusted-conf';
 const adjustedBuildpack = 'adjusted-buildpack';
 const retryAttepmts = 3;
-// const prepareZdm = true;
+
+const originalManifestRelativePath = 'path';
+const unexistingManifestPath = 'error';
 
 const stubFileSystem = () => {
   stub(fs, 'mkdir').callsFake((dirName, cb) => {
     cb();
   });
 
-  stub(fs, 'readFile').callsFake((filename, cb) => {
-    cb(undefined, preparedManifest);
-  });
+  const readFileStub = stub(fs, 'readFile');
+  readFileStub.withArgs(`${process.cwd()}/${originalManifestRelativePath}/${originalManifestFilename}`)
+    .yields(undefined, preparedManifestContent);
+  readFileStub.withArgs(`${process.cwd()}/${unexistingManifestPath}/${originalManifestFilename}`)
+    .yields(new Error());
 
   stub(fs, 'writeFile').callsFake((filename, content, cb) => {
     cb();
@@ -82,14 +84,15 @@ const stubCommander = () => {
   commander.buildpack = adjustedBuildpack;
   commander.conf = adjustedConf;
   commander.prefix = prefix;
+  commander.path = originalManifestRelativePath;
   commander.retries = retryAttepmts;
   commander.prepareZdm = true;
 };
 
 const stubRemanifester = () => {
   stub(remanifester, 'adjustManifest')
-    .withArgs(preparedManifest)
-    .returns(adjustedManifest);
+    .withArgs(preparedManifestContent)
+    .returns(adjustedManifestContent);
 };
 
 const tmpDir = {
@@ -121,7 +124,7 @@ describe('Test command line args', () => {
   });
 
   it('verify all arguments parsed', () => {
-    const commandLineArgsCount = 8;
+    const commandLineArgsCount = 9;
     assert.callCount(commander.option, commandLineArgsCount);
     assert.calledOnce(commander.parse);
   });
@@ -130,6 +133,7 @@ describe('Test command line args', () => {
     assert.calledWith(commander.option, '-c, --conf [value]', sinon.match.any, process.env.CONF);
     assert.calledWith(commander.option, '-b, --buildpack [value]', sinon.match.any, process.env.BUILDPACK);
     assert.calledWith(commander.option, '-x, --prefix [value]', sinon.match.any, process.env.ABACUS_PREFIX);
+    assert.calledWith(commander.option, '-p, --path [value]', sinon.match.any, '.');
     assert.calledWith(commander.option, '-s, --start');
     assert.calledWith(commander.option, '-r, --retries [value]', sinon.match.any, defaultRetriesAttempts);
     assert.calledWith(commander.option, '-z, --prepare-zdm [boolean]');
@@ -146,7 +150,8 @@ describe('Test command line args', () => {
 });
 
 describe('Test abacus cfpush', () => {
-  const manifestPath = `.cfpush/${adjustedName}-manifest.yml`;
+  const adjustedManifestRelativePath = 
+    `${originalManifestRelativePath}/.cfpush/${adjustedName}-${originalManifestFilename}`;
   const cfHomeDirectory = 'path';
 
   before(() => {
@@ -170,8 +175,9 @@ describe('Test abacus cfpush', () => {
     });
 
     it('verify manifest is adjusted', () => {
+      const manifestPath = `${process.cwd()}/${adjustedManifestRelativePath}`;
       assert.calledOnce(fs.writeFile);
-      assert.calledWithExactly(fs.writeFile, manifestPath, adjustedManifest, sinon.match.any);
+      assert.calledWithExactly(fs.writeFile, manifestPath, adjustedManifestContent, sinon.match.any);
     });
 
     it('verify prepareZdm', () => {
@@ -199,7 +205,7 @@ describe('Test abacus cfpush', () => {
       assert.callCount(tmpDir.removeCallback, executeCommandCalls);
       assert.calledWithExactly(
         cp.exec,
-        `cf push --no-start -f ${manifestPath}`,
+        `cf push --no-start -p ${originalManifestRelativePath} -f ${adjustedManifestRelativePath}`,
         sinon.match.has('env', { CF_HOME: tmpDir.name })
       );
     });
@@ -214,7 +220,7 @@ describe('Test abacus cfpush', () => {
       assert.callCount(cp.exec, expectedAttempts);
       assert.alwaysCalledWithExactly(
         cp.exec,
-        `cf push --no-start -f ${manifestPath}`,
+        `cf push --no-start -p ${originalManifestRelativePath} -f ${adjustedManifestRelativePath}`,
         sinon.match.has('env', { CF_HOME: tmpDir.name })
       );
       assert.callCount(tmpDir.removeCallback, expectedAttempts);
@@ -230,13 +236,7 @@ describe('Test abacus cfpush', () => {
     it('verify cf push was retried until retry attempts is reached', () => {
       stubChildProcessWith(onCloseHandlers.alwaysFailingPush);
 
-      try {
-        cfpush.runCLI();
-        assert.fail('Expected error to be thrown.');
-      } catch (e) {
-        // This is expected behavior
-        noop();
-      }
+      expect(cfpush.runCLI).to.throw();
 
       verifyPushRetryAttempts(retryAttepmts);
     });
@@ -250,4 +250,16 @@ describe('Test abacus cfpush', () => {
       verifyPushRetryAttempts(successfulAttempt);
     });
   });
+
+  context('with missing app manifest', () => {
+    before(() => {
+      commander.prepareZdm = false;
+      commander.path = unexistingManifestPath;
+    });
+
+    it('fails', () => {
+      expect(cfpush.runCLI).to.throw();
+    });
+  });
+
 });

@@ -13,7 +13,7 @@ const manifest = {
     {
       name: 'abacus-usage-accumulator',
       host: 'abacus-usage-accumulator',
-      path: '.cfpack/app.zip',
+      path: '.',
       instances: 1,
       memory: '512M',
       disk_quota: '512M',
@@ -25,7 +25,6 @@ const manifest = {
         PROVISIONING: 'abacus-provisioning-plugin',
         ACCOUNT: 'abacus-account-plugin',
         EUREKA: 'abacus-eureka-plugin',
-        NODE_MODULES_CACHE: false,
         SLACK: '5D',
         SECURED: true
       }
