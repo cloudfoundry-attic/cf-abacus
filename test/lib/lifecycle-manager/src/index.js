@@ -56,7 +56,7 @@ const start = (module, env) => {
   const moduleDir = getModuleDir(module);
   debug(`Executing "start" operation on module ${module} in ` + `directory ${moduleDir} with environment %o`, env);
 
-  const c = cp.spawn('npm', ['run', 'start'], {
+  const c = cp.spawn('yarn', ['run', 'start'], {
     cwd: moduleDir,
     env
   });
@@ -69,7 +69,7 @@ const stop = (module, env) => {
   const moduleDir = getModuleDir(module);
   debug('Executing "stop" operation on module "%s" in directory %s', module, moduleDir);
 
-  const stopOperation = 'npm run stop';
+  const stopOperation = 'yarn run stop';
   return cp.execSync(stopOperation, {
     cwd: moduleDir,
     env

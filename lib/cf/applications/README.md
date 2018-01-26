@@ -61,12 +61,12 @@ export DEBUG=abacus-cf-*
 Finally start the applications bridge with:
 ```bash
 cd ~/workspace/cf-abacus
-npm start -- cf
+yarn start -- cf
 ```
 
 To stop the applications bridge:
 ```bash
-npm stop cf
+yarn stop cf
 ```
 
 ### Cloud Foundry
@@ -122,8 +122,8 @@ Add the DB client implementation you would like to use with the applications bri
 
 Build, pack and push the applications bridge to Cloud Foundry:
 ```bash
-npm install && npm run lint && npm test &&
-&& npm run cfpush
+yarn install && yarn run lint && yarn test &&
+&& yarn run cfpush
 ```
 
 Create a database service instance, called `db` and bind it to `abacus-cf-applications`:

@@ -10,12 +10,12 @@ pushd built-project
   echo "Using start timeout of $TIMEOUT seconds"
 
   echo "Running demo ..."
-  npm start
+  yarn start
   sleep $TIMEOUT
-  npm run demo -- --start-timeout $CI_START_TIMEOUT --total-timeout $CI_PIPELINE_TIMEOUT
+  yarn run demo -- --start-timeout $CI_START_TIMEOUT --total-timeout $CI_PIPELINE_TIMEOUT
 
   echo "Stopping Abacus ..."
-  npm stop
+  yarn stop
 popd
 
 echo "Deleting DB files ..."
