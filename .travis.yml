@@ -48,7 +48,7 @@ matrix:
       node_js: 8.9.4
       script:
         - yarn run provision
-        - travis_retry yarn run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
     - env:
       - DESCRIPTION=itests-couchdb
       - DBCLIENT=abacus-couchclient
@@ -60,7 +60,7 @@ matrix:
         - couchdb
       script:
         - yarn run provision
-        - travis_retry yarn run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
     - env:
       - DESCRIPTION=itests-mongodb
       - DBCLIENT=abacus-mongoclient
@@ -72,7 +72,7 @@ matrix:
         - mongodb
       script:
         - yarn run provision
-        - travis_retry yarn run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
 
     - env:
       - DESCRIPTION=extended-tests-pouchdb
@@ -81,7 +81,7 @@ matrix:
       node_js: 8.9.4
       script:
         - yarn run provision
-        - travis_retry yarn run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
     - env:
       - DESCRIPTION=extended-tests-couchdb
       - DBCLIENT=abacus-couchclient
@@ -93,7 +93,7 @@ matrix:
         - couchdb
       script:
         - yarn run provision
-        - travis_retry yarn run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
     - env:
       - DESCRIPTION=extended-tests-mongodb
       - DBCLIENT=abacus-mongoclient
@@ -105,7 +105,7 @@ matrix:
         - mongodb
       script:
         - yarn run provision
-        - travis_retry yarn run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
 
     - env:
       - DESCRIPTION=perf-tests-pouchdb
@@ -114,7 +114,7 @@ matrix:
       node_js: 8.9.4
       script:
         - yarn run provision
-        - travis_retry yarn run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
     - env:
       - DESCRIPTION=perf-tests-couchdb
       - DBCLIENT=abacus-couchclient
@@ -126,7 +126,7 @@ matrix:
         - couchdb
       script:
         - yarn run provision
-        - travis_retry yarn run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
     - env:
       - DESCRIPTION=perf-tests-mongodb
       - DBCLIENT=abacus-mongoclient
@@ -138,7 +138,7 @@ matrix:
         - mongodb
       script:
         - yarn run provision
-        - travis_retry yarn run citest -- --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
 
 notifications:
   irc:

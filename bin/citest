@@ -8,14 +8,14 @@ case "$CI_TEST" in
     # integration test matrix, we would need 2197 (= 13 * 13 * 13)
     # usage submissions to get above 90 percent regression coverage
 
-    yarn run itest -- -o 4 -i 4 -u 4 $@
+    yarn run itest -o 4 -i 4 -u 4 $@
     ;;
 
   extended)
     # Run dupe test without security
     yarn start
     sleep 3s
-    yarn run dupe -- --synthetic
+    yarn run dupe --synthetic
     yarn stop
 
     # Run smoke test
@@ -43,7 +43,7 @@ case "$CI_TEST" in
     # Run perf test without security
     yarn start
     sleep 3s
-    yarn run perf -- -o 4 -i 4 -u 4 $@
+    yarn run perf -o 4 -i 4 -u 4 $@
     yarn stop
 
     # Run perf test with security
@@ -51,14 +51,14 @@ case "$CI_TEST" in
     export JWTKEY=encode
     export JWTALGO=HS256
     yarn start
-    sleep 6s
-    yarn run perf -- -o 4 -i 4 -u 4 $@
+    sleep 10s
+    yarn run perf -o 4 -i 4 -u 4 $@
     yarn stop
 
     # Test for concurrency
     yarn start small
-    sleep 6s
-    yarn run perf -- -o 1 -i 8 -u 8 $@
+    sleep 10s
+    yarn run perf -o 1 -i 8 -u 8 $@
     yarn stop
     ;;
 

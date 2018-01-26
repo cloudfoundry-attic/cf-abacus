@@ -47,7 +47,7 @@ pushd $project_dir
   restartAppsWithRetry
 
   echo "Starting Demo ..."
-  yarn run demo -- \
+  yarn run demo \
   --collector https://${ABACUS_PREFIX}abacus-usage-collector.$CF_DOMAIN \
   --reporting https://${ABACUS_PREFIX}abacus-usage-reporting.$CF_DOMAIN
 
