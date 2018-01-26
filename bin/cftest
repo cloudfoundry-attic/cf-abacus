@@ -51,7 +51,7 @@ if [ "$CF_TEST" == "true" ]; then
     yarn run cfstart medium
 
     # Run the demo
-    yarn run demo -- --collector https://abacus-usage-collector.$CF_DOMAIN --reporting https://abacus-usage-reporting.$CF_DOMAIN
+    yarn run demo --collector https://abacus-usage-collector.$CF_DOMAIN --reporting https://abacus-usage-reporting.$CF_DOMAIN
 
   else
     echo "Warning: skipping CF test as CF_SYS_DOMAIN is not configured" >&2

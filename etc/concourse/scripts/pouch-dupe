@@ -9,7 +9,7 @@ pushd built-project
   echo "Running the duplicate usage detection tests ..."
   yarn start
   sleep $TIMEOUT
-  yarn run dupe -- --start-timeout $CI_START_TIMEOUT --synthetic
+  yarn run dupe --start-timeout $CI_START_TIMEOUT --synthetic
 
   echo "Stopping Abacus ..."
   yarn stop

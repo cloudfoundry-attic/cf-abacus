@@ -8,7 +8,6 @@ const filter = _.filter;
 const initial = _.initial;
 const last = _.last;
 const pairs = _.pairs;
-const findIndex = _.findIndex;
 
 const path = require('path');
 const util = require('util');
@@ -105,12 +104,6 @@ const runCLI = () => {
       commander.args = args;
     })
     .parse(process.argv);
-
-  // Running yarn command with program options requires '--'
-  // before the program options
-  const oidx = findIndex(commander.args, (arg) => /^-/.test(arg) && /^--/.test(arg) && !/^--\s/.test(arg));
-  if ((commander.cmd === 'npm' || commander.cmd === 'yarn') && oidx >= 0)
-    commander.args.splice(oidx, 0, '--');
 
   // Use the given regular expression to filter modules
   const rx = new RegExp(commander.regexp);

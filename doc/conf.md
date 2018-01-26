@@ -96,16 +96,16 @@ You can use Cloud Foundry service instance, instead of hard-coded DB URL. To do 
 * Linux:
 
    ```bash
-   yarn run cfstage -- large
+   yarn run cfstage large
    cf apps | tail -n +5 | awk '{print $1}' | xargs -n1 | xargs -P 5 -i cf bind-service {} db
-   yarn run cfstart -- large
+   yarn run cfstart large
    ```
 * OS X:
 
    ```bash
-   yarn cfpush cfstage -- large
+   yarn cfpush cfstage large
    cf apps | tail -n +5 | awk '{print $1}' | xargs -n1 | xargs -P 5 -n 1 -J {} cf bind-service {} db
-   yarn run cfstart -- large
+   yarn run cfstart large
    ```
 
 This will stage all Abacus applications without starting them. Then we'll bind the `db` service instance to all of them, and finally we'll start the applications so they can make use of the bound service instance.

@@ -42,7 +42,7 @@ yarn stop
 
 The smoke test can also verify Abacus, running on Cloud Foundry. It can be configured with command line options. Check the available options with:
 ```sh
-yarn run smoke -- --help
+yarn run smoke --help
 ```
 
 To run the test against secured Abacus installation on Cloud Foundry set:
@@ -75,7 +75,7 @@ yarn run acceptance
 
 The command line options of the acceptance test can be listed with:
 ```sh
-yarn run acceptance -- --help
+yarn run acceptance --help
 ```
 
 
@@ -93,7 +93,7 @@ yarn stop
 
 With Abacus on Cloud Foundry configure the test with the command line options listed here:
 ```sh
-yarn run dupe -- --help
+yarn run dupe --help
 ```
 
 Set these variables to run the test against secured Abacus on Cloud Foundry:
@@ -120,7 +120,7 @@ yarn stop
 
 Check the command line options of the test with:
 ```sh
-yarn run perf -- --help
+yarn run perf --help
 ```
 
 

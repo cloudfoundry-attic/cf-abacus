@@ -14,7 +14,7 @@ cf login -a https://api.$CF_SYS_DOMAIN -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s
 
 echo "Pushing $ABACUS_PROFILE Abacus installation ..."
 pushd built-project
-  yarn run cfstage -- $ABACUS_PROFILE
+  yarn run cfstage $ABACUS_PROFILE
 
   collectorApps=$(node_modules/abacus-etc/apprc lib/metering/collector/.apprc $ABACUS_PROFILE APPS)
   meterApps=$(node_modules/abacus-etc/apprc lib/metering/meter/.apprc $ABACUS_PROFILE APPS)

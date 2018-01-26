@@ -12,7 +12,7 @@ pushd built-project
   echo "Running performance test without security ..."
   yarn start
   sleep $TIMEOUT
-  yarn run perf -- -o 1 -i 1 -u 1 -t $CI_START_TIMEOUT -x $CI_PIPELINE_TIMEOUT
+  yarn run perf -o 1 -i 1 -u 1 -t $CI_START_TIMEOUT -x $CI_PIPELINE_TIMEOUT
   yarn stop
 
   echo "Running performance test with security ..."
@@ -21,7 +21,7 @@ pushd built-project
   export JWTALGO=HS256
   yarn start
   sleep $TIMEOUT
-  yarn run perf -- -o 4 -i 4 -u 4 -t $CI_START_TIMEOUT -x $CI_PIPELINE_TIMEOUT
+  yarn run perf -o 4 -i 4 -u 4 -t $CI_START_TIMEOUT -x $CI_PIPELINE_TIMEOUT
 
   echo "Stopping Abacus ..."
   yarn stop
