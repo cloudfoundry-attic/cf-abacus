@@ -36,7 +36,7 @@ const publicize = (deps) =>
 const pack = (name, version, pubdir, cb) => {
   const tgz = name + '-' + version + '.tgz';
   fs.unlink(path.resolve(pubdir, tgz), () => {
-    const ex = cp.exec('npm pack ..', {
+    const ex = cp.exec('yarn pack ..', {
       cwd: pubdir
     });
     ex.stdout.on('data', (data) => {
@@ -78,7 +78,7 @@ const publish = (tgz, pubdir, cb) => {
       tgz +
       ' && rm ' +
       tar +
-      ' && npm publish ./' +
+      ' && yarn publish ./' +
       tgz,
     { cwd: pubdir }
   );

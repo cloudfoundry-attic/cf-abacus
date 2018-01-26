@@ -77,9 +77,9 @@ To select the DB:
 
 ```bash
 . ./bin/localcouchdb
-npm run build
-npm start
-npm run demo
+yarn run build
+yarn start
+yarn run demo
 ```
 
 *Note:* The `local*` scripts sets `JOBS=1` to force serial execution of tests and prevent multiple tests working with the same DB.
@@ -96,16 +96,16 @@ You can use Cloud Foundry service instance, instead of hard-coded DB URL. To do 
 * Linux:
 
    ```bash
-   npm run cfstage -- large
+   yarn run cfstage -- large
    cf apps | tail -n +5 | awk '{print $1}' | xargs -n1 | xargs -P 5 -i cf bind-service {} db
-   npm run cfstart -- large
+   yarn run cfstart -- large
    ```
 * OS X:
 
    ```bash
-   npm cfpush cfstage -- large
+   yarn cfpush cfstage -- large
    cf apps | tail -n +5 | awk '{print $1}' | xargs -n1 | xargs -P 5 -n 1 -J {} cf bind-service {} db
-   npm run cfstart -- large
+   yarn run cfstart -- large
    ```
 
 This will stage all Abacus applications without starting them. Then we'll bind the `db` service instance to all of them, and finally we'll start the applications so they can make use of the bound service instance.
@@ -120,7 +120,7 @@ The path to which the data will be posted is `/v1/metering/aggregated/usage`
 To post the documents to `http://example.com/v1/metering/aggregated/usage` export the `SINK` variable and start Abacus:
 ```bash
 export SINK=http://example.com
-npm run start
+yarn run start
 ```
 
 For Cloud Foundry deployment you need to add `SINK` and `AGGREGATOR_SINK_APPS` variables to the aggregator's [manifest](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/lib/aggregation/aggregator/manifest.yml).

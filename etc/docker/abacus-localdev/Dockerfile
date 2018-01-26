@@ -5,15 +5,14 @@ RUN apt-get install -y zip
 RUN apt-get clean
 
 ENV NPM_CONFIG_LOGLEVEL=warn
-RUN npm install -g npm@4
 
 RUN mkdir -p ~/workspace
 WORKDIR ~/workspace
 RUN git clone --depth 1 --recurse-submodules https://github.com/cloudfoundry-incubator/cf-abacus.git
 
 WORKDIR cf-abacus
-RUN npm run provision
-CMD npm run start && sleep infinity
+RUN yarn run provision
+CMD yarn run start && sleep infinity
 
 # PouchDB
 EXPOSE 5984

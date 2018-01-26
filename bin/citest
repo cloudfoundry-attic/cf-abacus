@@ -8,58 +8,58 @@ case "$CI_TEST" in
     # integration test matrix, we would need 2197 (= 13 * 13 * 13)
     # usage submissions to get above 90 percent regression coverage
 
-    npm run itest -- -o 4 -i 4 -u 4 $@
+    yarn run itest -- -o 4 -i 4 -u 4 $@
     ;;
 
   extended)
     # Run dupe test without security
-    npm start
+    yarn start
     sleep 3s
-    npm run dupe -- --synthetic
-    npm stop
+    yarn run dupe -- --synthetic
+    yarn stop
 
     # Run smoke test
-    npm start
+    yarn start
     sleep 3s
-    npm run smoke
-    npm stop
+    yarn run smoke
+    yarn stop
 
     # Run demo and smoke tests without security
-    npm start
+    yarn start
     sleep 3s
-    npm run demo
-    npm run smoke
-    npm stop
+    yarn run demo
+    yarn run smoke
+    yarn stop
 
     # Run demo test with the smalldb config
-    npm start smalldb
+    yarn start smalldb
     sleep 3s
-    npm run demo
-    npm stop
+    yarn run demo
+    yarn stop
 
     ;;
 
   perf)
     # Run perf test without security
-    npm start
+    yarn start
     sleep 3s
-    npm run perf -- -o 4 -i 4 -u 4 $@
-    npm stop
+    yarn run perf -- -o 4 -i 4 -u 4 $@
+    yarn stop
 
     # Run perf test with security
     export SECURED=true
     export JWTKEY=encode
     export JWTALGO=HS256
-    npm start
+    yarn start
     sleep 6s
-    npm run perf -- -o 4 -i 4 -u 4 $@
-    npm stop
+    yarn run perf -- -o 4 -i 4 -u 4 $@
+    yarn stop
 
     # Test for concurrency
-    npm start small
+    yarn start small
     sleep 6s
-    npm run perf -- -o 1 -i 8 -u 8 $@
-    npm stop
+    yarn run perf -- -o 1 -i 8 -u 8 $@
+    yarn stop
     ;;
 
   *)

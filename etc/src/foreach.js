@@ -106,10 +106,11 @@ const runCLI = () => {
     })
     .parse(process.argv);
 
-  // Running an npm command with program options requires '--'
+  // Running yarn command with program options requires '--'
   // before the program options
   const oidx = findIndex(commander.args, (arg) => /^-/.test(arg) && /^--/.test(arg) && !/^--\s/.test(arg));
-  if (commander.cmd === 'npm' && oidx >= 0) commander.args.splice(oidx, 0, '--');
+  if ((commander.cmd === 'npm' || commander.cmd === 'yarn') && oidx >= 0)
+    commander.args.splice(oidx, 0, '--');
 
   // Use the given regular expression to filter modules
   const rx = new RegExp(commander.regexp);

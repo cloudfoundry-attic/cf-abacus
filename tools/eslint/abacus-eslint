@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+'use strict';
+
+// Lint a module using ESLint
+require('./src/index.js').runCLI();
+

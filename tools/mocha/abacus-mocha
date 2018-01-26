@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+'use strict';
+
+// Test a module using Istanbul and Mocha
+require('./src/index.js').runCLI();
+

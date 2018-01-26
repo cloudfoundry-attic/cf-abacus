@@ -7,7 +7,7 @@ export CONF=${1:-default}
 
 for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
   APPNAME=$(node_modules/abacus-etc/appname $MODULE)
-  (cd node_modules/$APPNAME && npm stop)&
+  (cd node_modules/$APPNAME && yarn stop)&
 done
 
 wait
