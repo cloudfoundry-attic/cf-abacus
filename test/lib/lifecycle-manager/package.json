@@ -21,7 +21,7 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "itest": "eslint && mocha",
+    "itest": "abacus-eslint && mocha",
     "test": "abacus-eslint",
     "generate-coverage": "true",
     "lint": "abacus-eslint",

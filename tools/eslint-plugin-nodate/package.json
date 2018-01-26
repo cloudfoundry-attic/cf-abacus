@@ -21,7 +21,7 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha src/test --recursive"
+    "test": "abacus-mocha src/test --recursive"
   },
   "dependencies": {
     "requireindex": "~1.1.0"
