@@ -1,32 +1,11 @@
 # abacus-pipeline
 CF-Abacus [Concourse](http://concourse.ci/) Pipelines
 
-## Setting up Concourse
+## Setting up the pipeline
 
-1. Start Concourse:
+1. [Install Concourse](http://concourse.ci/installing.html)
 
-  ```bash
-   cd ~/workspace/cf-abacus/etc/concourse
-   vagrant up
-   ```
-
-1. Download `fly` CLI:
-
-   Mac OSX:
-   ```bash
-   curl 'http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=darwin' --compressed -o fly
-   chmod +x fly
-   ```
-   Linux:
-   ```bash
-   curl 'http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=linux' --compressed -o fly
-   chmod +x fly
-   ```
-
-   Windows:
-   Go to http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=windows
-
-1. Add `fly` to your path
+1. Check the [Using Concourse](http://concourse.ci/using-concourse.html) guide
 
 1. Create a "landscape" repository that contains submodules for:
    * anything else specific for the landscape (Cloud Foundry, DBs, ...)
