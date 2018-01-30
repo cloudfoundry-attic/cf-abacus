@@ -22,7 +22,7 @@ cp -r $abacus_config_dir/. built-project
 
 echo "Building Abacus ..."
 pushd built-project
-  yarn run provision
+  npm run provision
 popd
 
 echo "Done."

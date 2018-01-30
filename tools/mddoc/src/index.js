@@ -20,7 +20,7 @@ const wrap = _.wrap;
 
 const runCLI = (stdin, stdout) => {
   // Parse command line options
-  commander.parse(process.argv);
+  commander.allowUnknownOption(true).parse(process.argv);
 
   const sin = stdin || process.stdin;
   const sout = stdout || process.stdout;

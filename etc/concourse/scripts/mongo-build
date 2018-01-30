@@ -11,7 +11,7 @@ sleep $TIMEOUT
 
 echo "Building Abacus ..."
 pushd abacus
-  yarn run build
+  npm run build
 popd
 
 echo "Copying built project ..."

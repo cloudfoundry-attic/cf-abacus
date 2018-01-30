@@ -10,12 +10,12 @@ pushd built-project
   echo "Using start timeout of $TIMEOUT seconds"
 
   echo "Running the duplicate usage detection tests ..."
-  yarn start
+  npm start
   sleep $TIMEOUT
-  yarn run dupe --start-timeout $CI_START_TIMEOUT --synthetic
+  npm run dupe -- --start-timeout $CI_START_TIMEOUT --synthetic
 
   echo "Stopping Abacus ..."
-  yarn stop
+  npm stop
 popd
 
 echo "Deleting DB files ..."

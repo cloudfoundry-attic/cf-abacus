@@ -12,6 +12,6 @@ abacus_config_dir=$(cd "$1"; pwd)
 
 echo "Running manifest substitution in $abacus_config_dir"
 pushd $(dirname $0)/../../../tools/replace-template
-  yarn install
+  npm install
   ./replace-template $abacus_config_dir
 popd

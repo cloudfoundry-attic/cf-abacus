@@ -31,14 +31,14 @@ The Abacus FAQ can be found in [doc/faq.md](doc/faq.md).
 Building
 ---
 
-Abacus requires Node.js >= 8.9.4 and Yarn > 1.3.2
+Abacus requires LTS Node.js 8 and Npm < 5.0.0.
 
 ```sh
 cd cf-abacus
 
 # Bootstrap the build environment
 # install the Node.js module dependencies and run the tests
-yarn run build
+npm run build
 ```
 
 Running Abacus on localhost
@@ -50,34 +50,34 @@ The Abacus apps can also run on your local host in a shell environment outside o
 cd cf-abacus
 
 # Start the Abacus apps
-yarn start
+npm start
 
 # Wait a bit until all the apps have started
 
 # Run the demo script
-yarn run demo
+npm run demo
 
 # Stop everything
-yarn stop
+npm stop
 ```
 
 Dependency management
 ---
 
-Abacus uses `yarn` to fix the versions of a package's dependencies. Fixed dependencies are
-persisted in `yarn.lock` file which is located at the same directory where `package.json` file
-exists.
+Abacus uses `npm shrinkwrap` to fix the versions of a package's dependencies. Fixed dependecies are
+persisted in `npm-shrinkwrap.json` file which is located at the same directory where `package.json` file
+exsists.
 
 Updating dependencies
 * Automatically
 Dependencies could be updated automatically for the whole repository by executing the steps bellow. As a result
-this script will regenerate all lock files.
+this script will regenerate all shrinkwrap files.
 
 ```sh
 cd cf-abacus
 
-# Generates the yarn.lock files
-bin/update-locks
+# Generates the corresponding npm-shrinkwrap.json files
+bin/module-update
 ```
 
 * Manually
@@ -89,14 +89,19 @@ cd cf-abacus/lib/<module>
 # Delete existing dependencies
 rm -rf node_modules/
 
-# Delete existing lock file
-rm yarn.lock
+# Delete existing shrinkwrap file
+rm npm-shrinkwrap.json
 
-# Install/Update dependency/cies in package.json file either manually or via yarn
-yarn add <dependency>
+# Install/Update dependency/cies in package.json file either manually or via npm
+npm install <dependency> --save
+or
+npm update <dependency> --save
 
-# Add dependency
-yarn install
+# Install dependencies
+npm install
+
+# Generate shrinkwrap files
+npm shrinkwrap
 ```
 
 Testing
@@ -106,10 +111,10 @@ Testing
 cd cf-abacus
 
 # Run eslint on the Abacus modules
-yarn run lint
+npm run lint
 
 # Run the tests
-yarn test
+npm test
 ```
 
 For a list of all available tests check [doc/tests.md](doc/tests.md).
@@ -196,14 +201,14 @@ First, bootstrap your Abacus development environment:
 cd cf-abacus
 
 # Setup the base Node.js tools and dependencies used by the Abacus build
-yarn run bootstrap
+npm run bootstrap
 ```
 
-Then install your module's dependencies as usual with yarn:
+Then install your module's dependencies as usual with npm:
 
 ```sh
 cd cf-abacus/lib/metering/collector
-yarn install
+npm install
 ```
 
 At this point your development cycle boils down to:
@@ -212,21 +217,21 @@ At this point your development cycle boils down to:
 cd cf-abacus/lib/metering/collector
 
 # Run ESLint on your code and run the module's unit tests
-yarn test
+npm test
 ```
 
 To run the collector app you can do this:
 
 ```sh
 cd cf-abacus/lib/metering/collector
-yarn start
+npm start
 ```
 
 To push the app to your Cloud Foundry instance, do this:
 
 ```sh
 cd cf-abacus/lib/metering/collector
-yarn run cfpush
+npm run cfpush
 ```
 
 Finally, to rebuild everything once you're happy with your module:
@@ -237,13 +242,13 @@ cd cf-abacus
 git add <your changes>
 
 # Does a git clean to make sure the build starts fresh
-yarn run clean
+npm run clean
 
 # Build and unit test all the modules
-yarn run build
+npm run build
 
 # Or to run what our Travis-CI build runs, including integration tests
-yarn run cibuild
+npm run cibuild
 ```
 
 People

@@ -11,8 +11,8 @@ WORKDIR ~/workspace
 RUN git clone --depth 1 --recurse-submodules https://github.com/cloudfoundry-incubator/cf-abacus.git
 
 WORKDIR cf-abacus
-RUN yarn run provision
-CMD yarn run start && sleep infinity
+RUN npm run provision
+CMD npm run start && sleep infinity
 
 # PouchDB
 EXPOSE 5984

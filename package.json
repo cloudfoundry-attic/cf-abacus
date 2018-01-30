@@ -20,7 +20,7 @@
     ".eslintrc",
     ".jshintrc",
     ".jsinspectrc",
-    ".yarnrc",
+    ".npmrc",
     ".travis.yml",
     "LICENSE",
     "NOTICE",
@@ -33,19 +33,19 @@
     "tools/"
   ],
   "scripts": {
-    "bootstrap": "yarn add check-node-version && check-node-version --package",
-    "provision": "yarn run bootstrap && yarn install",
-    "build": "yarn run provision && yarn test",
+    "bootstrap": "npm install check-node-version && check-node-version --package --print",
+    "provision": "npm run bootstrap && npm install",
+    "build": "npm run provision && npm test",
     "clean": "git clean -df",
-    "rebuild": "yarn run clean && yarn run build",
-    "update": "bin/module-update",
-    "lint": "foreach abacus :path yarn run lint",
+    "rebuild": "npm run clean && npm run build",
+    "update-dependencies": "bin/update-dependencies",
+    "lint": "foreach abacus :path npm run lint",
     "hint": "foreach abacus :path jshint src",
-    "test": "foreach abacus node_modules/:name yarn test",
+    "test": "foreach abacus node_modules/:name npm test",
     "citest": "bin/citest",
     "cftest": "bin/cftest",
-    "cibuild": "yarn run build && yarn run citest && yarn run cftest",
-    "generate-coverage": "foreach abacus node_modules/:name yarn run generate-coverage",
+    "cibuild": "npm run build && npm run citest && npm run cftest",
+    "generate-coverage": "foreach abacus node_modules/:name npm run generate-coverage",
     "report-coverage": "lcov-result-merger 'node_modules/**/coverage/lcov.info' coverage.out && codecov",
     "dupcode": "jsinspect",
     "doc": "cat README.md | mddoc >README.html && cat CHANGES.md | mddoc >CHANGES.html",
@@ -55,10 +55,10 @@
     "demo": "bin/demo",
     "dupe": "bin/dupe",
     "perf": "bin/perf",
-    "itest": "export JOBS=1 && foreach itest node_modules/:name yarn run itest",
-    "smoke": "export JOBS=1 && foreach smoke node_modules/:name yarn run smoke",
-    "acceptance": "export JOBS=1 && foreach acceptance node_modules/:name yarn run acceptance",
-    "pub": "foreach abacus :path yarn run pub && publish",
+    "itest": "export JOBS=1 && foreach itest node_modules/:name npm run itest --",
+    "smoke": "export JOBS=1 && foreach smoke node_modules/:name npm run smoke --",
+    "acceptance": "export JOBS=1 && foreach acceptance node_modules/:name npm run acceptance --",
+    "pub": "foreach abacus :path npm run pub && publish",
     "cfpush": "cfpush",
     "cfstage": "bin/cfstage",
     "cfdelete": "bin/cfdelete",
@@ -140,6 +140,7 @@
     "abacus-yieldable": "file:lib/utils/yieldable",
     "async": "^2.6.0",
     "http-status-codes": "^1.3.0",
+    "npm": "^4.6.1",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
@@ -164,11 +165,11 @@
     "codecov": "^3.0.0",
     "jshint": "^2.8.0",
     "jsinspect": "^0.6.1",
-    "lcov-result-merger": "^1.2.0",
+    "lcov-result-merger": "^2.0.0",
     "nyc": "^11.4.1"
   },
   "engines": {
     "node": ">=8.9.4 <9.0.0",
-    "yarn": ">=1.2.1"
+    "npm": "<5.0.0"
   }
 }

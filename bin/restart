@@ -9,14 +9,14 @@ MODULES=$(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF ap
 
 for MODULE in $MODULES; do
   APPNAME=$(node_modules/abacus-etc/appname $MODULE)
-  (cd node_modules/$APPNAME && yarn stop)&
+  (cd node_modules/$APPNAME && npm stop)&
 done
 
 wait
 
 for MODULE in $MODULES; do
   APPNAME=$(node_modules/abacus-etc/appname $MODULE)
-  (cd node_modules/$APPNAME && yarn start)&
+  (cd node_modules/$APPNAME && npm start)&
 done
 
 wait

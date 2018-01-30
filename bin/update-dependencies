@@ -1,0 +1,24 @@
+#!/bin/bash
+
+export CONF=${1:-cf}
+
+echo "Updating root dependencies ..."
+rm -rf node_modules
+rm npm-shrinkwrap.json
+
+set -e
+
+npm run provision
+npm shrinkwrap
+
+for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
+  echo "Updating ${MODULE} dependencies ..."
+  pushd $MODULE
+    set +e
+    rm -rf node_modules
+    rm npm-shrinkwrap.json
+    set -e
+    npm install --production
+    npm shrinkwrap --production
+  popd
+done
