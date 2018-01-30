@@ -36,7 +36,9 @@ CF-Abacus [Concourse](http://concourse.ci/) Pipelines
     │       │   └── reporting
     │       │       └── manifest.yml.template
     │       ├── cf
-    │       │   ├── bridge
+    │       │   ├── applications
+    │       │   │   └── manifest.yml.template
+    │       │   ├── services
     │       │   │   └── manifest.yml.template
     │       │   └── renewer
     │       │       └── manifest.yml.template
