@@ -6,7 +6,7 @@ CF app usage reporting bridge.
 The bridge reports the metrics defined in [linux-container](https://github.com/cloudfoundry-incubator/cf-abacus/blob/6a575e590cdd28181c4912cc530a7b6ea07744ed/lib/plugins/provisioning/src/plans/metering/basic-linux-container.js) resource:
 - instance_memory [GB]
 - running_instances [number]
-
+ 
 For every app usage event from CF the bridge POSTs time-based usage report as follows:
 - for STOPPED event: reports 0 memory and 0 insances since the timestamp in the STOPPED event
 - for other events: reports the actual memory and number of instances since the timestamp of the event
@@ -61,12 +61,12 @@ export DEBUG=abacus-cf-*
 Finally start the applications bridge with:
 ```bash
 cd ~/workspace/cf-abacus
-yarn start cf
+npm start -- cf
 ```
 
 To stop the applications bridge:
 ```bash
-yarn stop cf
+npm stop cf
 ```
 
 ### Cloud Foundry
@@ -110,7 +110,7 @@ In case you are running a secured Abacus installation, add the following entries
     CLIENT_SECRET: secret
     JWTKEY: |+
       -----BEGIN PUBLIC KEY-----
-      ... <UAA public key in PEM format> ...
+      ... <UAA public key in PEM format> ... 
       -----END PUBLIC KEY-----
     JWTALGO: RS256
 ```
@@ -122,8 +122,8 @@ Add the DB client implementation you would like to use with the applications bri
 
 Build, pack and push the applications bridge to Cloud Foundry:
 ```bash
-yarn install && yarn run lint && yarn test &&
-&& yarn run cfpush
+npm install && npm run lint && npm test &&
+&& npm run cfpush
 ```
 
 Create a database service instance, called `db` and bind it to `abacus-cf-applications`:
@@ -166,7 +166,7 @@ Bridge internal timeouts can be configured by modifying these environment variab
 * MAX_INTERVAL_TIME
    * maximum time [milliseconds] between app usage calls to CF
    * maximum time between Abacus reporting attempts
-* GUID_MIN_AGE - determines how old an app usage events should be to be reported to Abacus. New events order is not guaranteed in CC database. That's why we store only events older than the GUID_MIN_AGE.
+* GUID_MIN_AGE - determines how old an app usage events should be to be reported to Abacus. New events order is not guaranteed in CC database. That's why we store only events older than the GUID_MIN_AGE. 
 
 Note: The timeout between CF API calls and Abacus usage retries is increased exponentially with each failed attempt.
 
