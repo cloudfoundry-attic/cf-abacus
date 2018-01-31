@@ -4,6 +4,10 @@ sudo: false
 git:
   depth: 3
 
+before_install:
+  - npm i -g npm@latest-4
+  - npm run bootstrap
+
 env:
   global:
     - CF_TEST=false
