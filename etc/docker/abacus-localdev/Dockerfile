@@ -5,6 +5,7 @@ RUN apt-get install -y zip
 RUN apt-get clean
 
 ENV NPM_CONFIG_LOGLEVEL=warn
+RUN npm install -g npm@4
 
 RUN mkdir -p ~/workspace
 WORKDIR ~/workspace
