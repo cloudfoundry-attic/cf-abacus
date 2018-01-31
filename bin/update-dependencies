@@ -3,8 +3,7 @@
 export CONF=${1:-cf}
 
 echo "Updating root level locks ..."
-rm -rf node_modules
-rm yarn.lock
+rm -rf node_modules/ yarn.lock package-lock.json npm-shrinkwrap.json
 
 set -e
 
@@ -15,9 +14,9 @@ for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $C
   echo "Updating ${MODULE} locks ... "
   pushd $MODULE
     set +e
-    rm -rf node_modules
-    rm yarn.lock
+    rm -rf node_modules/ yarn.lock package-lock.json npm-shrinkwrap.json
     set -e
-    yarn install --production
+    npm install --production
+    npm shrinkwrap --production
   popd
 done

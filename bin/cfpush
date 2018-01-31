@@ -20,7 +20,12 @@ for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $C
   APPNAME=$(node_modules/abacus-etc/appname $MODULE)
   INSTANCES=$(node_modules/abacus-etc/apprc $MODULE/.apprc $CONF INSTANCES)
   APPS=$(( $(node_modules/abacus-etc/apprc $MODULE/.apprc $CONF APPS) - 1 ))
-  (cd $MODULE && yarn install --production)
+
+  pushd $MODULE
+    rm -rf node_modules/ yarn.lock package-lock.json
+    npm install --production
+  popd
+
   if [ "$APPS" == "0" ]; then
     COMMANDS+=("(yarn run cfpush -n $APPNAME -p $MODULE -i $INSTANCES -c $CONF -s -r $PUSH_RETRIES)")
   else
