@@ -117,10 +117,12 @@ const runCLI = () => {
       (dep) => rx.test(dep[0]) && /^file:/.test(dep[1])
     ),
     (dependency) => {
-      const resolve = (s) => s.replace(/\:name/, dependency[0]).replace(/:path/, dependency[1].split(':')[1]);
+      const resolve = (s) => s.replace(/:name/, dependency[0]).replace(/:path/, dependency[1].split(':')[1]);
 
       // Run the given command on each module
-      exec(resolve([commander.cmd].concat(commander.args).join(' ')), resolve(commander.dir), (err, val) => {
+      const command = resolve([commander.cmd].concat(commander.args).join(' '));
+      const workDir = resolve(commander.dir);
+      exec(command, workDir, (err, val) => {
         if (err) process.exit(err);
       });
     }
