@@ -30,6 +30,7 @@ const runCLI = () => {
   global.spy = global.sinon.spy;
   global.stub = global.sinon.stub;
   global.assert = global.sinon.assert;
+  global.stubModule = require('./lib/stubber');
 
   // Save the original process send method as it may be mocked by the tests
   const processSend = process.send.bind(process);
