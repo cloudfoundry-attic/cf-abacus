@@ -32,22 +32,28 @@ const version = (file) =>
 const publicize = (deps) =>
   object(map(pairs(deps), (dep) => /^file:/.test(dep[1]) ? [dep[0], '^' + version(dep[1])] : dep));
 
+const execCommand = (command, workDir) => {
+  console.log(`${workDir}> ${command}`);
+  const ex = cp.exec(command, { cwd: workDir });
+
+  ex.stdout.on('data', (data) => {
+    process.stdout.write(data);
+  });
+  ex.stderr.on('data', (data) => {
+    process.stderr.write(data);
+  });
+  ex.on('close', (code) => {
+    cb(code);
+  });
+};
+
 // Pack a module
 const pack = (name, version, pubdir, cb) => {
   const tgz = name + '-v' + version + '.tgz';
   const command = `yarn pack --filename ${pubdir}/${tgz}`;
 
   fs.unlink(path.resolve(pubdir, tgz), () => {
-    console.log(`${pubdir}> ${command}`);
-    const ex = cp.exec(command, { cwd: pubdir });
-
-    ex.stdout.on('data', (data) => {
-      process.stdout.write(data);
-    });
-    ex.stderr.on('data', (data) => {
-      process.stderr.write(data);
-    });
-    ex.on('close', (code) => {
+    execCommand(command, pubdir, (code) => {
       cb(code, tgz);
     });
   });
@@ -72,18 +78,7 @@ const publish = (tgz, pubdir, cb) => {
   const command =
     `gunzip ${tgz} && tar -uf ${tar} package && gzip -c ${tar} > ${tgz} && rm ${tar} && yarn publish ./${tgz}`;
 
-  console.log(`${pubdir}> ${command}`);
-  const ex = cp.exec(command, { cwd: pubdir });
-
-  ex.stdout.on('data', (data) => {
-    process.stdout.write(data);
-  });
-  ex.stderr.on('data', (data) => {
-    process.stderr.write(data);
-  });
-  ex.on('close', (code) => {
-    cb(code);
-  });
+  execCommand(command, pubdir, cb);
 };
 
 // Publish a module to npm
