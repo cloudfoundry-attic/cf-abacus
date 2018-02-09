@@ -34,11 +34,13 @@ const publicize = (deps) =>
 
 // Pack a module
 const pack = (name, version, pubdir, cb) => {
-  const tgz = name + '-' + version + '.tgz';
+  const tgz = name + '-v' + version + '.tgz';
+  const command = `yarn pack --filename ${pubdir}/${tgz}`;
+
   fs.unlink(path.resolve(pubdir, tgz), () => {
-    const ex = cp.exec('yarn pack ..', {
-      cwd: pubdir
-    });
+    console.log(`${pubdir}> ${command}`);
+    const ex = cp.exec(command, { cwd: pubdir });
+
     ex.stdout.on('data', (data) => {
       process.stdout.write(data);
     });
@@ -67,21 +69,12 @@ const repackage = (mod, pubdir, cb) => {
 // Publish a module
 const publish = (tgz, pubdir, cb) => {
   const tar = tgz.replace(/\.tgz$/, '.tar');
-  const ex = cp.exec(
-    'gunzip ' +
-      tgz +
-      ' && tar -uf ' +
-      tar +
-      ' package && gzip -c ' +
-      tar +
-      ' > ' +
-      tgz +
-      ' && rm ' +
-      tar +
-      ' && yarn publish ./' +
-      tgz,
-    { cwd: pubdir }
-  );
+  const command =
+    `gunzip ${tgz} && tar -uf ${tar} package && gzip -c ${tar} > ${tgz} && rm ${tar} && yarn publish ./${tgz}`;
+
+  console.log(`${pubdir}> ${command}`);
+  const ex = cp.exec(command, { cwd: pubdir });
+
   ex.stdout.on('data', (data) => {
     process.stdout.write(data);
   });
