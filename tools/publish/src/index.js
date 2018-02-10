@@ -44,7 +44,7 @@ const execCommand = (command, workDir) => new Promise((resolve, reject) => {
 });
 
 const publishModule = async(version, workDir) =>
-  await execCommand(`yarn publishe --new-version ${version}`, workDir);
+  await execCommand(`yarn publish --new-version ${version}`, workDir);
 
 const runCLI = () => {
   commander.parse(process.argv);
