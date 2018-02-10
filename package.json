@@ -58,7 +58,7 @@
     "itest": "export JOBS=1 && foreach itest node_modules/:name yarn run itest --",
     "smoke": "export JOBS=1 && foreach smoke node_modules/:name yarn run smoke --",
     "acceptance": "export JOBS=1 && foreach acceptance node_modules/:name yarn run acceptance --",
-    "pub": "foreach abacus :path yarn run pub && publish",
+    "pub": "export JOBS=1 && publish && foreach abacus :path yarn run pub --",
     "cfpush": "cfpush",
     "cfstage": "bin/cfstage",
     "cfdelete": "bin/cfdelete",

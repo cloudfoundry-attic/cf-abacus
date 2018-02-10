@@ -47,7 +47,9 @@ const publishModule = async(version, workDir) =>
   await execCommand(`yarn publish --new-version ${version}`, workDir);
 
 const runCLI = () => {
-  commander.parse(process.argv);
+  commander
+    .option('-i, --ignore-failures', 'Ignore publish errors')
+    .parse(process.argv);
 
   const moduleDir = process.cwd();
   const packageFile = path.join(moduleDir, 'package.json');
@@ -55,10 +57,13 @@ const runCLI = () => {
   const module = JSON.parse(moduleContent);
 
   createPublicizedPackageFile(packageFile, module);
-  // duplicate then & catch until finally is available without flag in Node
   publishModule(module.version, moduleDir)
     .then(() => storeModule(packageFile, moduleContent))
-    .catch(() => storeModule(packageFile, moduleContent));
+    .catch(() => {
+      storeModule(packageFile, moduleContent);
+      if (!commander.ignoreFailures)
+        process.exit(1); // eslint no-process-exit: 1
+    });
 };
 
 // Export our CLI
