@@ -2,24 +2,11 @@
 
 // Publish a module to the npm registry.
 
-const _ = require('underscore');
+const { map, pairs, object, extend } = require('underscore');
+const commander = require('commander');
+const cp = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const cp = require('child_process');
-const commander = require('commander');
-
-const map = _.map;
-const pairs = _.pairs;
-const object = _.object;
-const extend = _.extend;
-
-const mkdirs = (pubdir, cb) => {
-  fs.mkdir(pubdir, () => {
-    fs.mkdir(path.resolve(pubdir, 'package'), () => {
-      cb();
-    });
-  });
-};
 
 const localDependencyVersion = (file) =>
   JSON.parse(fs.readFileSync(path.resolve(process.cwd(), file.substr(5), 'package.json')).toString()).version;
@@ -27,7 +14,19 @@ const localDependencyVersion = (file) =>
 const publicizeDependency = (deps) =>
   object(map(pairs(deps), (dep) => /^file:/.test(dep[1]) ? [dep[0], '^' + localDependencyVersion(dep[1])] : dep));
 
-const execCommand = (command, workDir, cb) => {
+const storeModule = (packageFile, content) =>
+  fs.writeFileSync(packageFile, content);
+
+const createPublicizedPackageFile = (packageFile, module) => {
+  const publicizedModule = extend({}, module, {
+    private: false,
+    dependencies: publicizeDependency(module.dependencies),
+    devDependencies: publicizeDependency(module.devDependencies)
+  });
+  storeModule(packageFile, JSON.stringify(publicizedModule, undefined, 2));
+};
+
+const execCommand = (command, workDir) => new Promise((resolve, reject) => {
   const ex = cp.exec(command, { cwd: workDir });
 
   ex.stdout.on('data', (data) => {
@@ -37,100 +36,29 @@ const execCommand = (command, workDir, cb) => {
     process.stderr.write(data);
   });
   ex.on('close', (code) => {
-    cb(code);
+    if (code === 0)
+      resolve();
+    else
+      reject(code);
   });
-};
+});
 
-const packModule = (name, version, pubdir, cb) => {
-  const tgz = name + '-v' + version + '.tgz';
-  const command = `yarn pack --filename ${pubdir}/${tgz}`;
+const publishModule = async(version, workDir) =>
+  await execCommand(`yarn publishe --new-version ${version}`, workDir);
 
-  fs.unlink(path.resolve(pubdir, tgz), () => {
-    execCommand(command, pubdir, (code) => {
-      cb(code, tgz);
-    });
-  });
-};
-
-const createPublicizedPackageFile = (mod, pubdir, cb) => {
-  const rmod = extend({}, mod, {
-    private: false,
-    dependencies: publicizeDependency(mod.dependencies),
-    devDependencies: publicizeDependency(mod.devDependencies)
-  });
-  const pkg = path.resolve(pubdir, 'package/package.json');
-
-  fs.unlink(pkg, (err) => {
-    if (err) {
-      cb(err);
-      return;
-    }
-    fs.writeFile(pkg, JSON.stringify(rmod, undefined, 2), (err) => {
-      if (err) {
-        cb(err);
-        return;
-      }
-
-      cb();
-    });
-  });
-};
-
-const repackageWithPublicDependencies = (mod, tgz, pubdir, cb) => {
-  execCommand(`tar -xf ${tgz}`, pubdir, (err) => {
-    if (err) {
-      cb(err);
-      return;
-    }
-    createPublicizedPackageFile(mod, pubdir, (err) => {
-      if (err) {
-        cb(err);
-        return;
-      }
-
-      execCommand(`rm ${tgz} && tar -czf ${tgz} package`, pubdir, cb);
-    });
-  });
-};
-
-const publishModule = (tgz, pubdir, cb) => {
-  execCommand(`yarn publish ./${tgz}`, pubdir, cb);
-};
-
-// Publish a module to npm
 const runCLI = () => {
   commander.parse(process.argv);
 
-  const pubdir = path.resolve(process.cwd(), '.publish');
-  mkdirs(pubdir, (err) => {
-    /* eslint no-process-exit: 1 */
-    if (err) {
-      console.log('Couldn\'t setup publish layout -', err);
-      process.exit(1);
-    }
+  const moduleDir = process.cwd();
+  const packageFile = path.join(moduleDir, 'package.json');
+  const moduleContent = fs.readFileSync(packageFile, { encoding: 'UTF-8' });
+  const module = JSON.parse(moduleContent);
 
-    const mod = require(path.join(process.cwd(), 'package.json'));
-    packModule(mod.name, mod.version, pubdir, (err, tgz) => {
-      if (err) {
-        console.log('Couldn\'t pack module -', err);
-        process.exit(err);
-      }
-
-      repackageWithPublicDependencies(mod, tgz, pubdir, (err) => {
-        if (err) {
-          console.log('Couldn\'t repackage module -', err);
-          process.exit(1);
-        }
-
-        publishModule(tgz, pubdir, (err) => {
-          if (err) {
-            console.log('Couldn\'t publish module -', err);
-            process.exit(1);
-          }
-        });
-      });
-    });
-  });
+  createPublicizedPackageFile(packageFile, module);
+  // duplicate then & catch until finally is available without flag in Node
+  publishModule(module.version, moduleDir)
+    .then(() => storeModule(packageFile, moduleContent))
+    .catch(() => storeModule(packageFile, moduleContent));
 };
 
 // Export our CLI
