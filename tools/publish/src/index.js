@@ -13,9 +13,6 @@ const pairs = _.pairs;
 const object = _.object;
 const extend = _.extend;
 
-/* eslint no-process-exit: 1 */
-
-// Create the directories we need
 const mkdirs = (pubdir, cb) => {
   fs.mkdir(pubdir, () => {
     fs.mkdir(path.resolve(pubdir, 'package'), () => {
@@ -24,16 +21,13 @@ const mkdirs = (pubdir, cb) => {
   });
 };
 
-// Return the version of a local dependency
-const version = (file) =>
+const localDependencyVersion = (file) =>
   JSON.parse(fs.readFileSync(path.resolve(process.cwd(), file.substr(5), 'package.json')).toString()).version;
 
-// Convert local dependencies to public versioned dependencies
-const publicize = (deps) =>
-  object(map(pairs(deps), (dep) => /^file:/.test(dep[1]) ? [dep[0], '^' + version(dep[1])] : dep));
+const publicizeDependency = (deps) =>
+  object(map(pairs(deps), (dep) => /^file:/.test(dep[1]) ? [dep[0], '^' + localDependencyVersion(dep[1])] : dep));
 
-const execCommand = (command, workDir) => {
-  console.log(`${workDir}> ${command}`);
+const execCommand = (command, workDir, cb) => {
   const ex = cp.exec(command, { cwd: workDir });
 
   ex.stdout.on('data', (data) => {
@@ -47,8 +41,7 @@ const execCommand = (command, workDir) => {
   });
 };
 
-// Pack a module
-const pack = (name, version, pubdir, cb) => {
+const packModule = (name, version, pubdir, cb) => {
   const tgz = name + '-v' + version + '.tgz';
   const command = `yarn pack --filename ${pubdir}/${tgz}`;
 
@@ -59,58 +52,77 @@ const pack = (name, version, pubdir, cb) => {
   });
 };
 
-// Convert local dependencies to public npm dependencies
-const repackage = (mod, pubdir, cb) => {
+const createPublicizedPackageFile = (mod, pubdir, cb) => {
+  const rmod = extend({}, mod, {
+    private: false,
+    dependencies: publicizeDependency(mod.dependencies),
+    devDependencies: publicizeDependency(mod.devDependencies)
+  });
   const pkg = path.resolve(pubdir, 'package/package.json');
-  fs.unlink(pkg, () => {
-    const rmod = extend({}, mod, {
-      private: false,
-      dependencies: publicize(mod.dependencies),
-      devDependencies: publicize(mod.devDependencies)
+
+  fs.unlink(pkg, (err) => {
+    if (err) {
+      cb(err);
+      return;
+    }
+    fs.writeFile(pkg, JSON.stringify(rmod, undefined, 2), (err) => {
+      if (err) {
+        cb(err);
+        return;
+      }
+
+      cb();
     });
-    fs.writeFile(pkg, JSON.stringify(rmod, undefined, 2), cb);
   });
 };
 
-// Publish a module
-const publish = (tgz, pubdir, cb) => {
-  const tar = tgz.replace(/\.tgz$/, '.tar');
-  const command =
-    `gunzip ${tgz} && tar -uf ${tar} package && gzip -c ${tar} > ${tgz} && rm ${tar} && yarn publish ./${tgz}`;
+const repackageWithPublicDependencies = (mod, tgz, pubdir, cb) => {
+  execCommand(`tar -xf ${tgz}`, pubdir, (err) => {
+    if (err) {
+      cb(err);
+      return;
+    }
+    createPublicizedPackageFile(mod, pubdir, (err) => {
+      if (err) {
+        cb(err);
+        return;
+      }
 
-  execCommand(command, pubdir, cb);
+      execCommand(`rm ${tgz} && tar -czf ${tgz} package`, pubdir, cb);
+    });
+  });
+};
+
+const publishModule = (tgz, pubdir, cb) => {
+  execCommand(`yarn publish ./${tgz}`, pubdir, cb);
 };
 
 // Publish a module to npm
 const runCLI = () => {
-  // Parse command line options
   commander.parse(process.argv);
 
-  // Create the directories we need
   const pubdir = path.resolve(process.cwd(), '.publish');
   mkdirs(pubdir, (err) => {
+    /* eslint no-process-exit: 1 */
     if (err) {
       console.log('Couldn\'t setup publish layout -', err);
       process.exit(1);
     }
 
-    // Pack the module
     const mod = require(path.join(process.cwd(), 'package.json'));
-    pack(mod.name, mod.version, pubdir, (code, tgz) => {
-      if (code) {
-        console.log('Couldn\'t pack module -', code);
-        process.exit(code);
+    packModule(mod.name, mod.version, pubdir, (err, tgz) => {
+      if (err) {
+        console.log('Couldn\'t pack module -', err);
+        process.exit(err);
       }
 
-      // Convert the module's package.json
-      repackage(mod, pubdir, (err, pkg) => {
+      repackageWithPublicDependencies(mod, tgz, pubdir, (err) => {
         if (err) {
-          console.log('Couldn\'t repackage package.json -', err);
+          console.log('Couldn\'t repackage module -', err);
           process.exit(1);
         }
 
-        // Publish the module
-        publish(tgz, pubdir, (err) => {
+        publishModule(tgz, pubdir, (err) => {
           if (err) {
             console.log('Couldn\'t publish module -', err);
             process.exit(1);
