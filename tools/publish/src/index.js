@@ -47,9 +47,7 @@ const publishModule = async(version, workDir) =>
   await execCommand(`yarn publish --new-version ${version}`, workDir);
 
 const runCLI = () => {
-  commander
-    .option('-i, --ignore-failures', 'Ignore publish errors')
-    .parse(process.argv);
+  commander.parse(process.argv);
 
   const moduleDir = process.cwd();
   const packageFile = path.join(moduleDir, 'package.json');
@@ -61,7 +59,7 @@ const runCLI = () => {
     .then(() => storeModule(packageFile, moduleContent))
     .catch(() => {
       storeModule(packageFile, moduleContent);
-      if (!commander.ignoreFailures)
+      if (!process.env.IGNORE_FAILURES)
         process.exit(1); // eslint no-process-exit: 1
     });
 };
