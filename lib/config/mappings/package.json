@@ -2,7 +2,7 @@
   "name": "abacus-plan-mappings",
   "description": "JSON mappings from (resource_type, provisioning plan_id) to example metering, rating and pricing plan ids.",
   "license": "Apache-2.0",
-  "version": "1.1.0-rc.1",
+  "version": "1.1.0",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/config/mappings",
   "bugs": {
