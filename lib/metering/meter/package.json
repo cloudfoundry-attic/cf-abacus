@@ -34,23 +34,27 @@
     "cfpush": "cfpush"
   },
   "dependencies": {
+    "abacus-accountclient": "file:../../utils/accountclient",
     "abacus-batch": "file:../../utils/batch",
     "abacus-breaker": "file:../../utils/breaker",
-    "abacus-oauth": "file:../../utils/oauth",
     "abacus-cluster": "file:../../utils/cluster",
     "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-debug": "file:../../utils/debug",
-    "abacus-request": "file:../../utils/request",
+    "abacus-express": "file:../../utils/express",
     "abacus-metering-config": "file:../../config/metering",
+    "abacus-oauth": "file:../../utils/oauth",
     "abacus-pricing-config": "file:../../config/pricing",
+    "abacus-rabbitmq": "file:../../utils/rabbitmq",
     "abacus-rating-config": "file:../../config/rating",
+    "abacus-request": "file:../../utils/request",
     "abacus-retry": "file:../../utils/retry",
     "abacus-router": "file:../../utils/router",
     "abacus-seqid": "file:../../utils/seqid",
     "abacus-throttle": "file:../../utils/throttle",
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-webapp": "file:../../utils/webapp",
-    "abacus-accountclient": "file:../../utils/accountclient",
+    "is-my-json-valid": "^2.12.0",
+    "request-debug": "^0.2.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
@@ -58,8 +62,8 @@
     "abacus-cfpush": "file:../../../tools/cfpush",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "nyc": "^11.4.1",
-    "abacus-publish": "file:../../../tools/publish"
+    "abacus-publish": "file:../../../tools/publish",
+    "nyc": "^11.4.1"
   },
   "nyc": {
     "cache": true,
