@@ -2,21 +2,7 @@
 
 set -e
 
-# Restart all the Abacus services
-export CONF=${1:-default}
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-MODULES=$(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps)
-
-for MODULE in $MODULES; do
-  APPNAME=$(node_modules/abacus-etc/appname $MODULE)
-  (cd node_modules/$APPNAME && yarn stop)&
-done
-
-wait
-
-for MODULE in $MODULES; do
-  APPNAME=$(node_modules/abacus-etc/appname $MODULE)
-  (cd node_modules/$APPNAME && yarn start)&
-done
-
-wait
+$SCRIPT_DIR/stop $1
+$SCRIPT_DIR/start $1
