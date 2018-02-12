@@ -1,0 +1,79 @@
+.no-event{
+	pointer-events: none;
+}
+
+.modal{
+	.themeMenu{
+		min-height: 200px;
+		max-height: 200px;
+		overflow: scroll;
+		padding-left: 12px;
+		overflow-x: hidden;
+	}
+	.theme-radio-option{
+		margin-bottom: 10px;
+		margin-right: 5px;
+	}
+}
+
+body{
+	#topnav{
+		> user-profile > .user-profile > button{
+			top: 10px;
+			border: none
+		}
+		> user-profile .user-profile-menu{
+			margin-left: -10px;
+			margin-right: 10px;
+		}
+	}
+	.dropdown{
+		> i.fa.fa-caret-down{
+			position: absolute;
+			top: 10px;
+			left: 96%;
+		}
+	}
+	.upload-inp > input{
+		display: inline-block;
+		border-radius: 4px;
+	}
+	.upload-inp > input {
+		// color: transparent;
+		width: 100%;
+		+ label {
+			float: left;
+			margin-top: -27px;
+			margin-left: 115px;
+		}
+	}
+	.upload-inp > input::-webkit-file-upload-button {
+		visibility: hidden;
+	}
+	.upload-inp > input::before {
+		content: 'Choose File';
+		display: inline-block;
+		border-radius: 3px;
+		padding: 5px 8px;
+		outline: none;
+		white-space: nowrap;
+		-webkit-user-select: none;
+		user-select: none;
+		cursor: pointer;
+	}
+	.upload-inp > input:disabled::before {
+		cursor: not-allowed;
+		opacity: 0.5;
+	}
+	.upload-inp > input:active {
+		outline: 0;
+	}
+	i.fa.fa-cloud-download {
+    padding-right: 5px;
+	}
+}
+
+// General css 
+.disabled{
+	display: none;
+}

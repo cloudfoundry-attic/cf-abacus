@@ -1,0 +1,17 @@
+{
+    "name": "",
+    "build": "",
+    "support": "https://help.cf.com",
+    "version": 0,
+    "description": "Cloud Foundry",
+    "authorization_endpoint": "https://login.cf.com",
+    "token_endpoint": "https://uaa.cf.com",
+    "min_cli_version": null,
+    "min_recommended_cli_version": null,
+    "api_version": "2.80.0",
+    "app_ssh_endpoint": "ssh.cf.com:2222",
+    "app_ssh_host_key_fingerprint": "abcdefgh",
+    "app_ssh_oauth_client": "ssh-proxy",
+    "logging_endpoint": "wss://loggregator.cf.com:443",
+    "doppler_logging_endpoint": "wss://doppler.cf.com:443"
+}

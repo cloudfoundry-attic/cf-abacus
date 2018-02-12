@@ -1,0 +1,19 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="TMC.onClose()">&times;</button>
+    <h4 class="modal-title" translate="ThemeModal_Header_XTIT"></h4>
+  </div>
+  <div class="modal-body">
+    <div class="spinner" ng-show="TMC.isLoadingSpinnerActive"></div>
+    <div ng-include src="'/components/userProfile/templates/themeSelTemplate.html'"></div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="TMC.uploadFile()" translate="ThemeModal_Upload_XBUT_XTXT"
+    ng-hide="TMC.type =='selTheme'" ng-disabled="TMC.upFileName=='No file chosen'"></button>
+    <button type="button" class="btn btn-default" ng-click="TMC.uploadFile(true)" translate="ThemeModal_Upload_AND_UPDATE_XBUT_XTXT"
+    ng-hide="TMC.type =='selTheme'" ng-disabled="TMC.upFileName=='No file chosen'"></button>
+    <button type="button" class="btn btn-default" ng-click="TMC.onSave()" translate="ThemeModal_Apply_Button_XTIT"
+    ng-hide="TMC.type =='upTheme'" ng-disabled="TMC.isDisable"></button>
+    <button type="button" class="btn btn-default" ng-click="TMC.onClose()" translate="ThemeModal_Cancel_Button_XTIT"></button>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+applications:
+- name: abacus-healthchecker
+  host: abacus-healthchecker
+  path: .
+  instances: 1
+  memory: 512M
+  disk_quota: 512M
+  env:
+    APPLICATION_GROUPS: '{"abacus-account-plugin":1,"abacus-broker":1,"abacus-cf-bridge":1,"abacus-cf-renewer":1,"abacus-eureka-plugin":1,"abacus-housekeeper":1,"abacus-provisioning-plugin":1,"abacus-usage-accumulator":2,"abacus-usage-aggregator":2,"abacus-usage-collector":1,"abacus-usage-meter":1,"abacus-usage-reporting":1}'
+    CF_API: https://api.
+    CF_DOMAIN: cfapps.
+    DEBUG: e-abacus-*
+    CLIENT_ID: client-id
+    CLIENT_SECRET: secret
+    CLIENT_SCOPES: 'abacus.system.read'
+    NODE_MODULES_CACHE: false
+    SECURED: false
+    # JWTALGO:
+    # JWTKEY:

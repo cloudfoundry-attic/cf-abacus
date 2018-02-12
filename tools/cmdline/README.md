@@ -1,4 +1,4 @@
-abacus-ext-cmdline
+abacus-cmdline
 ===
 
 Command line execution utility

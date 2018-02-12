@@ -4,17 +4,18 @@
   "license": "Apache-2.0",
   "version": "1.1.0",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/plugins/provisioning",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus-broker/lib/plugins/provisioning",
   "bugs": {
-    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus-broker/issues"
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus-broker.git"
   },
   "keywords": [
     "cf",
-    "abacus"
+    "abacus",
+    "broker"
   ],
   "files": [
     ".apprc",
@@ -30,19 +31,22 @@
     "generate-coverage": "nyc report --reporter=lcovonly",
     "lint": "abacus-eslint",
     "pub": "publish",
-    "cfpush": "cfpush"
+    "cfpush": "cfpush",
+    "store-defaults": "node src/tasks/store-default-mappings.js && node src/tasks/store-default-plans.js"
   },
   "dependencies": {
     "abacus-batch": "file:../../utils/batch",
     "abacus-breaker": "file:../../utils/breaker",
-    "abacus-oauth": "file:../../utils/oauth",
     "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-debug": "file:../../utils/debug",
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-lock": "file:../../utils/lock",
     "abacus-lrucache": "file:../../utils/lrucache",
+    "abacus-oauth": "file:../../utils/oauth",
     "abacus-partition": "file:../../utils/partition",
     "abacus-plan-mappings": "file:../../config/mappings",
+    "abacus-provisioning-plugin": "file:../../plugins/provisioning",
+    "abacus-request": "file:../../utils/request",
     "abacus-retry": "file:../../utils/retry",
     "abacus-router": "file:../../utils/router",
     "abacus-urienv": "file:../../utils/urienv",
@@ -58,7 +62,7 @@
     "abacus-mocha": "file:../../../tools/mocha",
     "nyc": "^11.4.1",
     "abacus-publish": "file:../../../tools/publish",
-    "abacus-request": "file:../../utils/request"
+    "jsonwebtoken": "^5.0.5"
   },
   "nyc": {
     "cache": true,

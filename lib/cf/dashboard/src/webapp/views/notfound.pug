@@ -1,0 +1,13 @@
+doctype
+html( lang="en" )
+    head
+        title Error
+        link(href="/node_modules/bootstrap/dist/css/bootstrap.min.css", rel="stylesheet")
+        link(href="/dist/css/main.css",rel="stylesheet")
+ 
+    body(style="padding-bottom:10rem;")
+        header#topnav.navbar.navbar-default.navbar-fixed-top.layout-boxed
+            span.header-title Resource Provider
+        .alert.alert-danger.custom-alert
+            i.glyphicon.glyphicon-exclamation-sign(aria-hidden=true)
+            strong  #{message}

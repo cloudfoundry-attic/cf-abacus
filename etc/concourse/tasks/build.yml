@@ -1,0 +1,14 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: node
+    tag: '6.9.1'
+
+inputs:
+  - name: cf-abacus-broker
+
+run:
+  path: cf-abacus-broker/etc/concourse/tasks/build.sh

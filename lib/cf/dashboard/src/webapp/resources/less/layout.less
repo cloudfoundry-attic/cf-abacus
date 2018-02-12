@@ -1,0 +1,183 @@
+@line-height: 1.45;
+@ace-editor-bg-color: #fafafa;
+@modal-spinner-bg-color: #666;
+
+html {
+    height: 100%;
+}
+
+.height100 {
+    height: 100%
+}
+
+.width100 {
+    width: 100%
+}
+
+.padding48 {
+    padding-top: 48px;
+}
+
+.layout-boxed {
+    max-width: 1600px;
+    min-width: 800px;
+    margin: 0 auto;
+}
+
+spinner {
+    width: 80px;
+    float: none;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.spinner i {
+    margin: 0 auto;
+    text-align: center;
+    display: block;
+    width: auto;
+    height: auto;
+}
+
+.spinner {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 10000000;
+    opacity: 0.4;
+    background: url(/resources/images/ajax-loader.gif) center center no-repeat;
+    background-color: #666;
+}
+.breadcrumb.custom-breadcrumb {
+    padding-top: 14px;
+    margin-bottom: 0;
+    height: 48px;
+}
+
+.modal-header {
+    text-align: center;
+    >.modal-header-div {
+        display: inline-block;
+    }
+    .modal-header-span {
+        vertical-align: middle;
+        .fa-exclamation-circle {
+            font-size: 1.5em;
+        }
+    }
+    .modal-title-div {
+        display: inline-block;
+    }
+}
+
+.custom-table {
+    &.table {
+        >tbody>tr>td,
+        >tbody>tr>th,
+        >tfoot>tr>td,
+        >tfoot>tr>th,
+        >thead>tr>td,
+        >thead>tr>th {
+            vertical-align: middle;
+        }
+    }
+}
+
+.second-header {
+    height: 48px;
+    line-height: 48px;
+}
+
+.custom-alert {
+    height: 40px;
+    height: 40px;
+    line-height: 40px;
+    margin-bottom: 0px;
+    padding-top: 0px;
+    margin-top: 48px;
+    &.alert-danger {
+        height: 40px;
+        line-height: 40px;
+        margin-bottom: 0px;
+        padding-top: 0px;
+        margin-top: 48px;
+        max-width: 1600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+[ng\:cloak],
+[ng-cloak],
+.ng-cloak {
+    display: none !important;
+}
+
+body {
+    line-height: @line-height;
+    margin: 0;
+    height: 100%;
+    #topnav {
+        text-align: center;
+        >span {
+            margin: 0 auto;
+            line-height: 46px;
+        }
+    }
+    #wrapper {
+        padding-top: 50px !important;
+        position: relative;
+    }
+    #plan-toolbar {
+        height: "55px";
+    }
+    .tabs-advanced {
+        &.nav-tabs {
+            padding-left: 15px;
+            >li>a {
+              padding-left: 0px;
+              padding-right: 0px;
+              margin-right: 15px;
+            }
+            >li.active>a,
+            >li.active>a:focus,
+            li.active>a:hover {
+                border-width: 0px 0px 2px 0px;
+                border-style: solid;
+            }
+            li>a:hover {
+                border: 0px;
+            }
+        }
+    }
+    .sub-header {
+        line-height: 30px;
+        height: 30px;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .ace_editor {
+        height: 400px;
+    }
+    span.font-icon {
+        padding: 5px;
+    }
+    .hideIcon {
+        display: none;
+    }
+    .metric-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .usage-modal .modal-body {
+        height : 50rem;
+        overflow : auto;
+        .document {
+            height: 46rem;
+            background-color: @ace-editor-bg-color;
+        }
+    }
+}

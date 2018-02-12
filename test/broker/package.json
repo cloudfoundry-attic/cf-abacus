@@ -1,0 +1,65 @@
+{
+  "name": "abacus-cf-broker-tests",
+  "description": "Abacus Broker Smoke & Acceptance test",
+  "license": "Apache-2.0",
+  "version": "1.1.0",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus-broker/test/broker",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus-broker/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus-broker.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus",
+    "broker"
+  ],
+  "files": [
+    ".npmrc",
+    "src/"
+  ],
+  "main": "src/index.js",
+  "scripts": {
+    "smoke": "abacus-mocha -f broker-smoke-test.js",
+    "acceptance": "abacus-mocha -f broker-acceptance-test.js",
+    "lint": "abacus-eslint",
+    "test": "abacus-eslint",
+    "generate-coverage": "true",
+    "pub": "publish"
+  },
+  "dependencies": {
+    "abacus-cf-broker": "file:../../lib/cf/broker",
+    "abacus-cmdline": "file:../../tools/cmdline",
+    "abacus-test-utils": "file:../test-utils",
+    "abacus-moment": "file:../../lib/utils/moment",
+    "abacus-oauth": "file:../../lib/utils/oauth",
+    "abacus-request": "file:../../lib/utils/request",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "abacus-eslint": "file:../../tools/eslint",
+    "abacus-mocha": "file:../../tools/mocha",
+    "nyc": "^11.4.1",
+    "eslint-plugin-nodate": "file:../../tools/eslint-plugin-nodate",
+    "abacus-yieldable": "file:../../lib/utils/yieldable",
+    "eslint-plugin-mocha": "^4.8.0"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
+  },
+  "engines": {
+    "node": ">=8.9.4 <9.0.0",
+    "npm": "<5.0.0",
+    "yarn": ">=1.2.1"
+  }
+}

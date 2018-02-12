@@ -10,6 +10,10 @@ default:
     - lib/aggregation/accumulator
     - lib/aggregation/aggregator
     - lib/aggregation/reporting
+    - lib/cf/broker
+    - lib/cf/dashboard
+    - lib/extensions/housekeeper
+    - lib/extensions/healthchecker
 
 small:
 
