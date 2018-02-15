@@ -65,22 +65,11 @@ function waitForServices {
 
 function createOrUpdateService {
   if cf service $1; then
-    if [ -z "$3" ]; then
-      echo "Updating DB service instance $1 with plan $2 ..."
-      cf update-service $1 -p $2
-    else
-      echo "Updating DB service instance $1 with plan $2 and option -c $3 ..."
-      cf update-service $1 -p $2 -c $3
-    fi
-
+    echo "Updating DB service instance $1 with plan $2 ..."
+    cf update-service $1 -p $2
   else
-    if [ -z "$3" ]; then
-      echo "Creating new DB service instance $1 with plan $2 ..."
-      cf create-service "$DB_SERVICE_NAME" $2 $1
-    else
-      echo "Creating new DB service instance $1 with plan $2 ..."
-      cf create-service "$DB_SERVICE_NAME" $2 $1 -c $3
-    fi
+    echo "Creating new DB service instance $1 with plan $2 ..."
+    cf create-service "$DB_SERVICE_NAME" $2 $1
   fi
 }
 
