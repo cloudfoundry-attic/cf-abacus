@@ -1,126 +1,126 @@
 {
-  "name": "abacus-ext-cf-broker",
-  "version": "0.0.6-dev.9",
+  "name": "abacus-cf-broker",
+  "version": "1.1.0",
   "dependencies": {
     "abacus-basic": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/basic",
-      "resolved": "file:../../../abacus/lib/utils/basic"
+      "version": "1.1.0",
+      "from": "../../utils/basic",
+      "resolved": "file:../../utils/basic"
     },
     "abacus-breaker": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/breaker",
-      "resolved": "file:../../../abacus/lib/utils/breaker"
+      "version": "1.1.0",
+      "from": "../../utils/breaker",
+      "resolved": "file:../../utils/breaker"
     },
     "abacus-cluster": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/cluster",
-      "resolved": "file:../../../abacus/lib/utils/cluster"
+      "version": "1.1.0",
+      "from": "../../utils/cluster",
+      "resolved": "file:../../utils/cluster"
     },
     "abacus-debug": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/debug",
-      "resolved": "file:../../../abacus/lib/utils/debug"
+      "version": "1.1.0",
+      "from": "../../utils/debug",
+      "resolved": "file:../../utils/debug"
     },
     "abacus-eureka": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/eureka",
-      "resolved": "file:../../../abacus/lib/utils/eureka"
+      "version": "1.1.0",
+      "from": "../../utils/eureka",
+      "resolved": "file:../../utils/eureka"
     },
     "abacus-events": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/events",
-      "resolved": "file:../../../abacus/lib/utils/events"
+      "version": "1.1.0",
+      "from": "../../utils/events",
+      "resolved": "file:../../utils/events"
     },
     "abacus-express": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/express",
-      "resolved": "file:../../../abacus/lib/utils/express"
+      "version": "1.1.0",
+      "from": "../../utils/express",
+      "resolved": "file:../../utils/express"
     },
     "abacus-hystrix": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/hystrix",
-      "resolved": "file:../../../abacus/lib/utils/hystrix"
+      "version": "1.1.0",
+      "from": "../../utils/hystrix",
+      "resolved": "file:../../utils/hystrix"
     },
     "abacus-launcher": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/launcher",
-      "resolved": "file:../../../abacus/lib/utils/launcher"
+      "version": "1.1.0",
+      "from": "../../utils/launcher",
+      "resolved": "file:../../utils/launcher"
     },
     "abacus-lock": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/lock",
-      "resolved": "file:../../../abacus/lib/utils/lock"
+      "version": "1.1.0",
+      "from": "../../utils/lock",
+      "resolved": "file:../../utils/lock"
     },
     "abacus-lrucache": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/lrucache",
-      "resolved": "file:../../../abacus/lib/utils/lrucache"
+      "version": "1.1.0",
+      "from": "../../utils/lrucache",
+      "resolved": "file:../../utils/lrucache"
     },
     "abacus-moment": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/moment",
-      "resolved": "file:../../../abacus/lib/utils/moment"
+      "version": "1.1.0",
+      "from": "../../utils/moment",
+      "resolved": "file:../../utils/moment"
     },
     "abacus-oauth": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/oauth",
-      "resolved": "file:../../../abacus/lib/utils/oauth"
+      "version": "1.1.0",
+      "from": "../../utils/oauth",
+      "resolved": "file:../../utils/oauth"
     },
     "abacus-perf": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/perf",
-      "resolved": "file:../../../abacus/lib/utils/perf"
+      "version": "1.1.0",
+      "from": "../../utils/perf",
+      "resolved": "file:../../utils/perf"
     },
     "abacus-rc": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/rc",
-      "resolved": "file:../../../abacus/lib/utils/rc"
+      "version": "1.1.0",
+      "from": "../../utils/rc",
+      "resolved": "file:../../utils/rc"
     },
     "abacus-request": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/request",
-      "resolved": "file:../../../abacus/lib/utils/request"
+      "version": "1.1.0",
+      "from": "../../utils/request",
+      "resolved": "file:../../utils/request"
     },
     "abacus-retry": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/retry",
-      "resolved": "file:../../../abacus/lib/utils/retry"
+      "version": "1.1.0",
+      "from": "../../utils/retry",
+      "resolved": "file:../../utils/retry"
     },
     "abacus-router": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/router",
-      "resolved": "file:../../../abacus/lib/utils/router"
+      "version": "1.1.0",
+      "from": "../../utils/router",
+      "resolved": "file:../../utils/router"
     },
     "abacus-throttle": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/throttle",
-      "resolved": "file:../../../abacus/lib/utils/throttle"
+      "version": "1.1.0",
+      "from": "../../utils/throttle",
+      "resolved": "file:../../utils/throttle"
     },
     "abacus-transform": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/transform",
-      "resolved": "file:../../../abacus/lib/utils/transform"
+      "version": "1.1.0",
+      "from": "../../utils/transform",
+      "resolved": "file:../../utils/transform"
     },
     "abacus-urienv": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/urienv",
-      "resolved": "file:../../../abacus/lib/utils/urienv"
+      "version": "1.1.0",
+      "from": "../../utils/urienv",
+      "resolved": "file:../../utils/urienv"
     },
     "abacus-vcapenv": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/vcapenv",
-      "resolved": "file:../../../abacus/lib/utils/vcapenv"
+      "version": "1.1.0",
+      "from": "../../utils/vcapenv",
+      "resolved": "file:../../utils/vcapenv"
     },
     "abacus-webapp": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/webapp",
-      "resolved": "file:../../../abacus/lib/utils/webapp"
+      "version": "1.1.0",
+      "from": "../../utils/webapp",
+      "resolved": "file:../../utils/webapp"
     },
     "abacus-yieldable": {
-      "version": "1.0.0",
-      "from": "../../../abacus/lib/utils/yieldable",
-      "resolved": "file:../../../abacus/lib/utils/yieldable"
+      "version": "1.1.0",
+      "from": "../../utils/yieldable",
+      "resolved": "file:../../utils/yieldable"
     },
     "accepts": {
       "version": "1.3.4",
@@ -226,14 +226,14 @@
       "resolved": "https://registry.npmjs.org/co/-/co-3.1.0.tgz"
     },
     "combined-stream": {
-      "version": "1.0.5",
+      "version": "1.0.6",
       "from": "combined-stream@>=1.0.5 <1.1.0",
-      "resolved": "https://registry.npmjs.org/combined-stream/-/combined-stream-1.0.5.tgz"
+      "resolved": "https://registry.npmjs.org/combined-stream/-/combined-stream-1.0.6.tgz"
     },
     "commander": {
-      "version": "2.13.0",
+      "version": "2.14.1",
       "from": "commander@>=2.8.1 <3.0.0",
-      "resolved": "https://registry.npmjs.org/commander/-/commander-2.13.0.tgz"
+      "resolved": "https://registry.npmjs.org/commander/-/commander-2.14.1.tgz"
     },
     "compressible": {
       "version": "2.0.12",
@@ -389,9 +389,9 @@
       "resolved": "https://registry.npmjs.org/forever-agent/-/forever-agent-0.6.1.tgz"
     },
     "form-data": {
-      "version": "2.3.1",
+      "version": "2.3.2",
       "from": "form-data@>=2.3.1 <2.4.0",
-      "resolved": "https://registry.npmjs.org/form-data/-/form-data-2.3.1.tgz"
+      "resolved": "https://registry.npmjs.org/form-data/-/form-data-2.3.2.tgz"
     },
     "forwarded": {
       "version": "0.1.2",
@@ -549,9 +549,9 @@
       "resolved": "https://registry.npmjs.org/lock/-/lock-0.1.4.tgz"
     },
     "lodash": {
-      "version": "4.17.4",
+      "version": "4.17.5",
       "from": "lodash@>=4.14.0 <5.0.0",
-      "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.4.tgz"
+      "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.5.tgz"
     },
     "lru-cache": {
       "version": "2.7.3",

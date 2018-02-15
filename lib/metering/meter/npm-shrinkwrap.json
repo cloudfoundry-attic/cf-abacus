@@ -290,7 +290,7 @@
     },
     "bignumber.js": {
       "version": "2.4.0",
-      "from": "bignumber.js@>=2.1.0 <3.0.0",
+      "from": "bignumber.js@^2.1.0",
       "resolved": "https://registry.npmjs.org/bignumber.js/-/bignumber.js-2.4.0.tgz"
     },
     "bindings": {
@@ -386,9 +386,9 @@
       "resolved": "https://registry.npmjs.org/code-point-at/-/code-point-at-1.1.0.tgz"
     },
     "combined-stream": {
-      "version": "1.0.5",
+      "version": "1.0.6",
       "from": "combined-stream@>=1.0.5 <1.1.0",
-      "resolved": "https://registry.npmjs.org/combined-stream/-/combined-stream-1.0.5.tgz"
+      "resolved": "https://registry.npmjs.org/combined-stream/-/combined-stream-1.0.6.tgz"
     },
     "commander": {
       "version": "2.14.1",
@@ -530,14 +530,14 @@
       "resolved": "https://registry.npmjs.org/encodeurl/-/encodeurl-1.0.2.tgz"
     },
     "encoding-down": {
-      "version": "3.0.1",
-      "from": "encoding-down@>=3.0.0 <3.1.0",
-      "resolved": "https://registry.npmjs.org/encoding-down/-/encoding-down-3.0.1.tgz",
+      "version": "4.0.0",
+      "from": "encoding-down@>=4.0.0 <4.1.0",
+      "resolved": "https://registry.npmjs.org/encoding-down/-/encoding-down-4.0.0.tgz",
       "dependencies": {
         "abstract-leveldown": {
-          "version": "3.0.0",
-          "from": "abstract-leveldown@>=3.0.0 <4.0.0",
-          "resolved": "https://registry.npmjs.org/abstract-leveldown/-/abstract-leveldown-3.0.0.tgz"
+          "version": "4.0.2",
+          "from": "abstract-leveldown@>=4.0.0 <5.0.0",
+          "resolved": "https://registry.npmjs.org/abstract-leveldown/-/abstract-leveldown-4.0.2.tgz"
         },
         "level-codec": {
           "version": "8.0.0",
@@ -557,9 +557,9 @@
       "resolved": "https://registry.npmjs.org/end-stream/-/end-stream-0.1.0.tgz"
     },
     "errno": {
-      "version": "0.1.6",
+      "version": "0.1.7",
       "from": "errno@>=0.1.1 <0.2.0",
-      "resolved": "https://registry.npmjs.org/errno/-/errno-0.1.6.tgz"
+      "resolved": "https://registry.npmjs.org/errno/-/errno-0.1.7.tgz"
     },
     "es6-promise": {
       "version": "3.2.1",
@@ -632,9 +632,9 @@
       "resolved": "https://registry.npmjs.org/forever-agent/-/forever-agent-0.6.1.tgz"
     },
     "form-data": {
-      "version": "2.3.1",
+      "version": "2.3.2",
       "from": "form-data@>=2.3.1 <2.4.0",
-      "resolved": "https://registry.npmjs.org/form-data/-/form-data-2.3.1.tgz"
+      "resolved": "https://registry.npmjs.org/form-data/-/form-data-2.3.2.tgz"
     },
     "forwarded": {
       "version": "0.1.2",
@@ -913,9 +913,9 @@
       }
     },
     "level-packager": {
-      "version": "2.1.0",
+      "version": "2.1.1",
       "from": "level-packager@>=2.0.2 <3.0.0",
-      "resolved": "https://registry.npmjs.org/level-packager/-/level-packager-2.1.0.tgz"
+      "resolved": "https://registry.npmjs.org/level-packager/-/level-packager-2.1.1.tgz"
     },
     "level-write-stream": {
       "version": "1.0.0",
