@@ -50,6 +50,7 @@
     "abacus-retry": "file:../../utils/retry",
     "abacus-router": "file:../../utils/router",
     "abacus-seqid": "file:../../utils/seqid",
+    "abacus-schema": "file:../../utils/schema",
     "abacus-throttle": "file:../../utils/throttle",
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-webapp": "file:../../utils/webapp",
