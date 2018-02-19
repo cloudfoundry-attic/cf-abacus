@@ -65,7 +65,8 @@ describe('abacus-usage-collector-itest', () => {
       modules.push(lifecycleManager.modules.pouchserver);
       lifecycleManager.startModules(modules);
     } else
-      dbclient.drop(process.env.DB, /^abacus-/, () => {
+    // drop all abacus collections except plans and plan-mappings
+      dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, () => {
         lifecycleManager.startModules(modules);
       });
   });

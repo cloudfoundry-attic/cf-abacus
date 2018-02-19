@@ -1,7 +1,8 @@
+#!/usr/bin/env node
 'use strict';
 
 const debug = require('abacus-debug')('abacus-provisioning-plugin');
-const provisioning = require('..');
+const provisioning = require('abacus-provisioning-plugin');
 
 provisioning.storeAllDefaultPlans(() => {
   debug('Default plans have been imported');

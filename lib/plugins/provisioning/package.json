@@ -23,6 +23,10 @@
     "manifest.yml",
     "src/"
   ],
+  "bin": {
+    "store-default-mappings": "store-default-mappings",
+    "store-default-plans": "store-default-plans"
+  },
   "main": "src/index.js",
   "scripts": {
     "start": "launch webapp start",
@@ -32,7 +36,7 @@
     "lint": "abacus-eslint",
     "pub": "publish",
     "cfpush": "cfpush",
-    "store-defaults": "node src/tasks/store-default-mappings.js && node src/tasks/store-default-plans.js"
+    "store-defaults": "store-default-mappings && store-default-plans"
   },
   "dependencies": {
     "abacus-batch": "file:../../utils/batch",
