@@ -125,8 +125,8 @@ describe('abacus-demo-client', function() {
     if (objectStorageWriteToken) objectStorageWriteToken.start();
     if (objectStorageReadToken) objectStorageReadToken.start();
 
-    // Delete test dbs on the configured db server
-    dbclient.drop(process.env.DB, /^abacus-/, done);
+    // drop all abacus collections except plans and plan-mappings
+    dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, done);
   });
 
   it('submits usage for a sample resource and retrieves an aggregated ' + 'usage report', function(done) {

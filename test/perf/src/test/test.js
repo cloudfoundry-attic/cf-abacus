@@ -129,9 +129,9 @@ describe('abacus-perf-test', () => {
         if (err) console.log('Could not fetch system token due to, %o', err);
       });
 
-    if (/.*localhost.*/.test(collector))
-      // Delete test dbs on the configured db server
-      dbclient.drop(process.env.DB, /^abacus-/, done);
+    if(/.*localhost.*/.test(collector))
+      // drop all abacus collections except plans and plan-mappings
+      dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, done);
     else done();
   });
 

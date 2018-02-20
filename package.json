@@ -53,9 +53,9 @@
     "start": "yarn run store-defaults && bin/start",
     "stop": "bin/stop",
     "restart": "yarn stop && yarn start",
-    "demo": "yarn run store-defaults && bin/demo",
-    "dupe": "yarn run store-defaults && bin/dupe",
-    "perf": "yarn run store-defaults && bin/perf",
+    "demo": "bin/demo",
+    "dupe": "bin/dupe",
+    "perf": "bin/perf",
     "itest": "export JOBS=1 && foreach itest node_modules/:name yarn run itest --",
     "smoke": "export JOBS=1 && foreach smoke node_modules/:name yarn run smoke --",
     "acceptance": "export JOBS=1 && foreach acceptance node_modules/:name yarn run acceptance --",
@@ -64,10 +64,7 @@
     "cfstage": "bin/cfstage",
     "cfdelete": "bin/cfdelete",
     "cfstart": "bin/cfstart",
-    "cfstop": "bin/cfstop",
-    "boshrelease": "bin/boshrelease",
-    "boshdeploy": "bin/boshdeploy",
-    "boshrun": "bin/boshrun"
+    "cfstop": "bin/cfstop"
   },
   "dependencies": {
     "abacus-account-plugin": "file:lib/plugins/account",
