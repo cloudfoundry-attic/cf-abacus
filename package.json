@@ -50,7 +50,7 @@
     "dupcode": "jsinspect",
     "doc": "cat README.md | mddoc >README.html && cat CHANGES.md | mddoc >CHANGES.html",
     "store-defaults": "store-default-plans && store-default-mappings",
-    "start": "yarn run store-defaults && bin/start",
+    "start": "bin/start && yarn run store-defaults",
     "stop": "bin/stop",
     "restart": "yarn stop && yarn start",
     "demo": "bin/demo",
