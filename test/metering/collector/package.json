@@ -22,8 +22,7 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "store-defaults": "store-default-plans && store-default-mappings",
-    "itest": "yarn store-defaults && abacus-mocha --command",
+    "itest": "abacus-mocha --command",
     "test": "abacus-eslint",
     "generate-coverage": "true",
     "lint": "abacus-eslint",
@@ -32,6 +31,7 @@
   "dependencies": {
     "abacus-account-plugin": "file:../../../lib/plugins/account",
     "abacus-batch": "file:../../../lib/utils/batch",
+    "abacus-cmdline": "file:../../../tools/cmdline",
     "abacus-debug": "file:../../../lib/utils/debug",
     "abacus-express": "file:../../../lib/utils/express",
     "abacus-lifecycle-manager": "file:../../lib/lifecycle-manager",
