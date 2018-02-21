@@ -11,11 +11,14 @@ if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
 fi
 
 cf login -a https://api.$CF_SYS_DOMAIN -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE $skip
-getApps '\-old '
+getApps '\-old'
 
 set +e
-echo "Deleting old applications ..."
-echo "Apps: ${APPS[@]}"
-echo ${APPS[@]} | xargs -n1 -P 50 cf delete -f
+if [ ${#APPS[@]} -eq 0 ]; then
+  echo "Found no old applications"
+else
+  echo "Deleting old applications: ${APPS[@]}"
+  echo ${APPS[@]} | xargs -n1 -P 50 cf delete -f
+fi
 
 echo "Clean-up finished"
