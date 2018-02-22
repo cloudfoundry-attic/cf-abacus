@@ -21,6 +21,10 @@ const oauth = {
   cfAdminToken: 'cfadmin-token'
 };
 
+const usageEventStates = {
+  default: 'STARTED'
+}
+
 const defaultUsageEvent = {
   state: 'STARTED',
   previousState: 'STOPPED',
@@ -120,11 +124,12 @@ collectorUsage = (eventTimestamp) => ({
 });
 
 module.exports = {
-  defaultUsageEvent,
+  oauth,
+  bridge,
   usageEvent,
   collectorUsage,
-  oauth,
   env: bridge.env,
+  usageEventStates,
+  defaultUsageEvent,
   externalSystemsMocks,
-  bridge
 };

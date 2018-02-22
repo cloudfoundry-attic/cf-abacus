@@ -69,13 +69,13 @@ const build = () => {
 
       it('First recieved usage is as it was sent', () => {
         expect(externalSystemsMocks.abacusCollector.collectUsageService.request(0).usage).to.deep.equal(
-          fixture.collectorUsage(usageEventsTimestamp)
+          fixture.collectorUsage(usageEventsTimestamp, fixture.usageEventStates.default)
         );
       });
 
       it('Second recieved usage timestamp is adjusted', () => {
         expect(externalSystemsMocks.abacusCollector.collectUsageService.request(1).usage).to.deep.equal(
-          fixture.collectorUsage(usageEventsTimestamp + 1)
+          fixture.collectorUsage(usageEventsTimestamp + 1, fixture.usageEventStates.default)
         );
       });
     });

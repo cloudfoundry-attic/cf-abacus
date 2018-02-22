@@ -61,6 +61,12 @@ const validUsageEvent = () => {
   };
 };
 
+const usageEventStates = {
+  default: 'CREATED',
+  deleted: 'DELETED',
+  updated: 'UPDATED'
+};
+
 const usageEvent = () => {
   const resultUsageEvent = validUsageEvent();
 
@@ -95,7 +101,7 @@ const usageEvent = () => {
   return overwritable;
 };
 
-collectorUsage = (eventTimestamp) => ({
+collectorUsage = (eventTimestamp, state) => ({
   start: eventTimestamp,
   end: eventTimestamp,
   organization_id: defaultUsageEvent.orgGuid,
@@ -109,21 +115,22 @@ collectorUsage = (eventTimestamp) => ({
   measured_usage: [
     {
       measure: 'current_instances',
-      quantity: 1
+      quantity: state === 'CREATED' ? 1 : 0
     },
     {
       measure: 'previous_instances',
-      quantity: 0
+      quantity: state === 'CREATED' ? 0 : 1
     }
   ]
 });
 
 module.exports = {
-  defaultUsageEvent,
+  oauth,
+  bridge,
   usageEvent,
   collectorUsage,
-  oauth,
   env: bridge.env,
-  externalSystemsMocks,
-  bridge
+  usageEventStates,
+  defaultUsageEvent,
+  externalSystemsMocks
 };

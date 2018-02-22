@@ -73,30 +73,27 @@ const build = () => {
 
     it('Abacus Collector receives the same requests', () => {
       // retryCount+1 failing requests, and one successful.
-      const expecedRequestsCount = fixture.env.retryCount + 2;
-      const expectedRequests = _(expecedRequestsCount).times(() => ({
+      const expectedRequestsCount = fixture.env.retryCount + 2;
+      const expectedRequests = _(expectedRequestsCount).times(() => ({
         token: fixture.oauth.abacusCollectorToken,
-        usage: fixture.collectorUsage(usageEventMetadata.created_at)
+        usage: fixture.collectorUsage(usageEventMetadata.created_at, fixture.usageEventStates.default)
       }));
 
       expect(externalSystemsMocks.abacusCollector.collectUsageService.requests()).to.deep.equal(expectedRequests);
     });
 
-    it(
-      'Exposes correct statistics',
-      yieldable.functioncb(function*() {
-        const response = yield fixture.bridge.readStats.withValidToken();
-        expect(response.statusCode).to.equal(httpStatus.OK);
-        expect(response.body.statistics.usage).to.deep.equal({
-          success: {
-            all: 1,
-            conflicts: 0,
-            skips: 0
-          },
-          failures: 1
-        });
-      })
-    );
+    it('Exposes correct statistics', yieldable.functioncb(function*() {
+      const response = yield fixture.bridge.readStats.withValidToken();
+      expect(response.statusCode).to.equal(httpStatus.OK);
+      expect(response.body.statistics.usage).to.deep.equal({
+        success: {
+          all: 1,
+          conflicts: 0,
+          skips: 0
+        },
+        failures: 1
+      });
+    }));
   });
 };
 
