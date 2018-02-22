@@ -43,10 +43,10 @@ In this section we'll explain how to build, deploy and configure the demo. Addit
 ### Building
 ```bash
 # Clone the demo app
-git clone https://github.com/cloudfoundry-incubator/cf-abacus-broker.git
+git clone https://github.com/cloudfoundry-incubator/cf-abacus.git
 
 # Build the app
-cd cf-abacus-broker/demo/java-demo-client/
+cd cf-abacus/demo/java-demo-client/
 mvn clean package
 ```
 
@@ -66,7 +66,7 @@ By default the app sends:
   ]
   ```
 
-If you want to send different usage you can configure it from [`webapp/App.js`](https://github.com/cloudfoundry-incubator/cf-abacus-broker/blob/master/demo/java-demo-client/src/main/webapp/App.js#L12-L14).
+If you want to send different usage you can configure it from [`webapp/App.js`](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/demo/java-demo-client/src/main/webapp/App.js#L12-L14).
 
 ### Deploying
 At this point you will have to have configured the `manifest.yml`. You can deploy the app to a Cloud Foundry space of your choice with the following steps:

@@ -4,13 +4,13 @@
   "license": "Apache-2.0",
   "version": "1.1.0",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus-broker/lib/cf/broker",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/cf/broker",
   "bugs": {
-    "url": "https://github.com/cloudfoundry-incubator/cf-abacus-broker/issues"
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cloudfoundry-incubator/cf-abacus-broker.git"
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus.git"
   },
   "keywords": [
     "cf",
