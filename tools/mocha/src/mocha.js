@@ -3,6 +3,9 @@
 const Mocha = require('mocha');
 const commander = require('commander');
 const async = require('async');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
 
 /* eslint no-process-exit: 0 */
 /* jshint evil: true */
@@ -24,7 +27,7 @@ const runCLI = () => {
   });
 
   // Install Chai expect and Sinon spy and stub as globals
-  global.chai = require('chai');
+  global.chai = chai;
   global.expect = global.chai.expect;
   global.sinon = require('sinon');
   global.spy = global.sinon.spy;
