@@ -27,10 +27,10 @@ for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $C
   popd
 
   if [ "$APPS" == "0" ]; then
-    COMMANDS+=("(yarn run cfpush -n $APPNAME -p $MODULE -i $INSTANCES -c $CONF -s -r $PUSH_RETRIES)")
+    COMMANDS+=("cfpush -n $APPNAME -p $MODULE -i $INSTANCES -c $CONF -s -r $PUSH_RETRIES")
   else
     for I in $(seq 0 $APPS); do
-      COMMANDS+=("(yarn run cfpush -n $APPNAME-$I -p $MODULE -i $INSTANCES -c $CONF -s -r $PUSH_RETRIES)")
+      COMMANDS+=("cfpush -n $APPNAME-$I -p $MODULE -i $INSTANCES -c $CONF -s -r $PUSH_RETRIES")
     done
   fi
 done

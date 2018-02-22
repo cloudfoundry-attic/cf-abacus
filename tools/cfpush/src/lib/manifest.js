@@ -1,6 +1,10 @@
 'use strict';
 
+const fs = require('fs-extra');
+const path = require('path');
 const yaml = require('js-yaml');
+
+const { originalManifestFilename } = require(`${__dirname}/constants.js`);
 
 const buildAppName = (prefix, name) => {
   return prefix ? prefix + name : name;
@@ -45,4 +49,15 @@ const adjustManifest = (manifest, properties) => {
   return yaml.dump(parsedManifest);
 };
 
+const blueGreen = (appPath = '.') => {
+  const manifestLoc = path.join(process.cwd(), appPath, originalManifestFilename);
+  try {
+    const manifest = yaml.load(fs.readFileSync(manifestLoc));
+    return manifest.applications[0].zdm === true;
+  } catch (err) {
+    return false;
+  }
+};
+
 module.exports.adjustManifest = adjustManifest;
+module.exports.blueGreen = blueGreen;

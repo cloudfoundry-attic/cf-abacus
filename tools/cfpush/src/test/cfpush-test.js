@@ -6,9 +6,9 @@ const fs = require('fs-extra');
 const tmp = require('tmp');
 const commander = require('commander');
 const async = require('async');
-const remanifester = require('../lib/remanifester.js');
+const manifest = require('../lib/manifest.js');
 
-const originalManifestFilename = 'manifest.yml';
+const { originalManifestFilename } = require(`${__dirname}/../lib/constants.js`);
 const preparedManifestContent = 'original manifest content';
 const adjustedManifestContent = 'adjusted manifest content';
 
@@ -33,6 +33,12 @@ const stubFileSystem = () => {
   readFileStub.withArgs(`${process.cwd()}/${unexistingManifestPath}/${originalManifestFilename}`)
     .yields(new Error());
 
+  const readFileSyncStub = stub(fs, 'readFileSync');
+  readFileSyncStub.withArgs(`${process.cwd()}/${originalManifestRelativePath}/${originalManifestFilename}`)
+    .returns(preparedManifestContent);
+  readFileSyncStub.withArgs(`${process.cwd()}/${unexistingManifestPath}/${originalManifestFilename}`)
+    .throws(new Error());
+
   stub(fs, 'writeFile').callsFake((filename, content, cb) => {
     cb();
   });
@@ -54,7 +60,7 @@ const onCloseHandlers = {
 
     return (eventId, cb) => {
       currentAttempt++;
-      if (currentAttempt == successfulAttempt) cb();
+      if (currentAttempt === successfulAttempt) cb();
       else cb(new Error());
     };
   }
@@ -89,8 +95,8 @@ const stubCommander = () => {
   commander.prepareZdm = true;
 };
 
-const stubRemanifester = () => {
-  stub(remanifester, 'adjustManifest')
+const stubManifest = () => {
+  stub(manifest, 'adjustManifest')
     .withArgs(preparedManifestContent)
     .returns(adjustedManifestContent);
 };
@@ -110,7 +116,7 @@ const clearStubs = () => {
 stubFileSystem();
 stubTmp(tmpDir);
 stubCommander();
-stubRemanifester();
+stubManifest();
 
 describe('Test command line args', () => {
   const defaultRetriesAttempts = 1;
