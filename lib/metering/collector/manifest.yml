@@ -1,0 +1,21 @@
+applications:
+- name: abacus-usage-collector
+  host: abacus-usage-collector
+  path: .
+  instances: 1
+  memory: 512M
+  disk_quota: 512M
+  env:
+    CONF: default
+    DEBUG: e-abacus-*
+    METER: abacus-usage-meter
+    PROVISIONING: abacus-provisioning-plugin
+    DB: abacus-pouchserver
+    ACCOUNT: abacus-account-plugin
+    EUREKA: abacus-eureka-plugin
+    SECURED: false
+    # AUTH_SERVER:
+    # CLIENT_ID:
+    # CLIENT_SECRET:
+    # JWTKEY:
+    # JWTALGO:

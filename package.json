@@ -69,6 +69,7 @@
     "boshrun": "bin/boshrun"
   },
   "dependencies": {
+    "abacus-accountclient": "file:lib/utils/accountclient",
     "abacus-account-plugin": "file:lib/plugins/account",
     "abacus-audit": "file:lib/utils/audit",
     "abacus-authserver-plugin": "file:lib/plugins/authserver",
