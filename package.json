@@ -59,7 +59,7 @@
     "smoke": "export JOBS=1 && foreach smoke node_modules/:name yarn run smoke --",
     "acceptance": "export JOBS=1 && foreach acceptance node_modules/:name yarn run acceptance --",
     "pub": "export JOBS=1 && foreach abacus :path yarn run pub && publish",
-    "cfpush": "cfpush",
+    "cfpush": "bin/cfpush",
     "cfstage": "bin/cfstage",
     "cfdelete": "bin/cfdelete",
     "cfstart": "bin/cfstart",
