@@ -1,10 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const request = require('request-promise-native').defaults({
-  resolveWithFullResponse: true,
-  json: true,
-  rejectUnauthorized: false
-});
+const request = require('abacus-request');
 const oauth = require('abacus-oauth');
 const app = express();
 require('request-debug')(request);
@@ -35,33 +31,39 @@ app.get('/credentials', (req, res) => {
   res.status(200).send(meteringServiceCredentials);
 });
 
-app.get('/summary/:orgid', async(req, res) => {
+app.get('/summary/:orgid', (req, res) => {
   console.log(`Requesting summary report for ${req.params.orgid}`);
-  try {
-    const response = await request.get(`${reportingURL}/${req.params.orgid}/aggregated/usage`, {
-      headers: { 'Authorization': usageToken() }
-    });
+  request.get(`${reportingURL}/${req.params.orgid}/aggregated/usage`, {
+    headers: {
+      'Authorization': usageToken()
+    }
+  }, (error, response) => {
+    if (error) {
+      console.log(`Error getting report: ${error}`);
+      res.status(500).send(error);
+      return;
+    }
     res.status(response.statusCode).send(response.body);
-  } catch (e) {
-    console.log(`Error getting report: ${e}`);
-    res.status(500).send(e);
-  }
+  });
 });
 
-app.post('/usage', async(req, res) => {
+app.post('/usage', (req, res) => {
   const usage = req.body;
   console.log(`Posting usage ${JSON.stringify(usage)} to collector ${collectorURL}`);
-  try {
-    const response = await request.post({
-      uri: collectorURL,
-      headers: { 'Authorization': usageToken() },
-      body: usage
-    });
+  request.post({
+    uri: collectorURL,
+    headers: {
+      'Authorization': usageToken()
+    },
+    body: usage
+  }, (error, response) => {
+    if (error) {
+      console.log(`Error posting usage: ${error}`);
+      res.status(500).send(error);
+      return;
+    }
     res.status(response.statusCode).send(response.message);
-  } catch (e) {
-    console.log(`Error posting usage: ${e}`);
-    res.status(500).send(e);
-  }
+  });
 });
 
 usageToken.start(() => {

@@ -2,11 +2,11 @@
   "name": "abacus-broker-test-app",
   "version": "1.1.0",
   "dependencies": {
-    "abacus-oauth": "1.0.0",
+    "abacus-request": "1.1.0",
+    "abacus-oauth": "1.1.0",
     "body-parser": "^1.17.1",
     "express": "4.15.5",
-    "request-debug": "^0.2.0",
-    "request-promise-native": "1.0.0"
+    "request-debug": "^0.2.0"
   },
   "engines": {
     "node": ">=8.9.4 <9.0.0",

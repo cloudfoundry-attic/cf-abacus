@@ -1,8 +1,10 @@
 ---
-applications:
-- name: abacus-broker-test-app
-  buildpack: https://github.com/cloudfoundry/nodejs-buildpack.git#v1.6.16
-  command: node app.js
-  memory: 128M
-  instances: 1
-  path: .
+  applications:
+  - name: abacus-broker-test-app
+    buildpack: https://github.com/cloudfoundry/nodejs-buildpack.git#v1.6.16
+    command: node app.js
+    memory: 128M
+    instances: 1
+    path: .
+    env:
+      SKIP_SSL_VALIDATION: true
