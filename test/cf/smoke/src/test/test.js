@@ -4,16 +4,15 @@
 // verifies the submission by retrieving a usage report.
 
 const _ = require('underscore');
-const map = _.map;
-const omit = _.omit;
-const extend = _.extend;
+const { extend, map, omit } = require('underscore');
 
-const request = require('abacus-request');
-const util = require('util');
 const commander = require('commander');
 const clone = require('abacus-clone');
 const oauth = require('abacus-oauth');
 const moment = require('abacus-moment');
+const request = require('abacus-request');
+const timewindow = require('abacus-timewindow');
+const util = require('util');
 
 // Parse command line options
 const argv = clone(process.argv);
@@ -79,14 +78,28 @@ const systemToken = secured()
   ? oauth.cache(authServer, process.env.SYSTEM_CLIENT_ID, process.env.SYSTEM_CLIENT_SECRET, 'abacus.usage.read')
   : undefined;
 
+const initWindows = (win, dimension) => {
+  const windows = [win];
+
+  const windowsSizes = process.env.TIME_WINDOWS_SIZES ? JSON.parse(process.env.TIME_WINDOWS_SIZES) : undefined;
+
+  if(windowsSizes && windowsSizes[dimension])
+    _(windowsSizes[dimension] - 1).times(() => windows.push(null));
+
+  else 
+    windows.push(null);
+  
+  return windows;
+};
+
 const buildExpectedWindows = (charge, summary, quantity, cost) => {
+
   const addProperty = (key, value, obj) => {
-    if (value !== undefined)
+    if (value)
       obj[key] = value;
   };
 
   const win = {};
-
   addProperty('charge', charge, win);
   addProperty('summary', summary, win);
   addProperty('quantity', quantity, win);
@@ -96,8 +109,8 @@ const buildExpectedWindows = (charge, summary, quantity, cost) => {
     [null],
     [null],
     [null],
-    [win, null],
-    [win, null]
+    initWindows(win, timewindow.dimension.day),
+    initWindows(win, timewindow.dimension.month)
   ];
 };
 
