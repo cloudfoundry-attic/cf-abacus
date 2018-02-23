@@ -36,7 +36,7 @@
     "lint": "abacus-eslint",
     "pub": "publish",
     "cfpush": "cfpush",
-    "store-defaults": "store-default-mappings && store-default-plans"
+    "store-defaults": "node store-default-mappings && node store-default-plans"
   },
   "dependencies": {
     "abacus-batch": "file:../../utils/batch",
