@@ -52,17 +52,13 @@ const build = () => {
       expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(0);
     });
 
-    it(
-      'Does not write an entry in carry over',
-      yieldable.functioncb(function*() {
+    it('Does not write an entry in carry over', yieldable.functioncb(function*() {
         const docs = yield carryOverDb.readCurrentMonthDocs();
         expect(docs).to.deep.equal([]);
       })
     );
 
-    it(
-      'Exposes correct statistics',
-      yieldable.functioncb(function*() {
+    it('Exposes correct statistics', yieldable.functioncb(function*() {
         const response = yield fixture.bridge.readStats.withValidToken();
         expect(response.statusCode).to.equal(httpStatus.OK);
         expect(response.body.statistics.usage).to.deep.equal({

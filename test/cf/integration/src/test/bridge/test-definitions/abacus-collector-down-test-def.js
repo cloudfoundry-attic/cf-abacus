@@ -6,7 +6,7 @@ const _ = require('underscore');
 const yieldable = require('abacus-yieldable');
 
 const carryOverDb = require('../../utils/carry-over-db');
-const serviceMock = require('../..//utils/service-mock-util');
+const serviceMock = require('../../utils/service-mock-util');
 const createWait = require('abacus-wait');
 
 const waitUntil = yieldable(createWait().until);
@@ -35,7 +35,6 @@ const build = () => {
         usageEventMetadata = serviceUsageEvent.metadata;
 
         externalSystemsMocks.cloudController.usageEvents.return.firstTime([serviceUsageEvent]);
-
         externalSystemsMocks.cloudController.usageEvents.return.secondTime([serviceUsageEvent]);
 
         // Event reporter (abacus-client) will retry 'fixture.env.retryCount'

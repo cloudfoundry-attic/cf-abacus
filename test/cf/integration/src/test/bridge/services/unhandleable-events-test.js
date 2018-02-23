@@ -10,7 +10,7 @@ const unhandleableEvents = (fixture) => {
     .get();
   const unsupportedStateUsageEvent = fixture
     .usageEvent()
-    .overwriteState('UPDATE')
+    .overwriteState('UPDATED')
     .get();
   const unsupportedServiceUsageEvent = fixture
     .usageEvent()

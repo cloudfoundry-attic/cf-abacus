@@ -2,11 +2,13 @@
 
 const async = require('async');
 const { extend } = require('underscore');
+
 module.exports = (creators) => {
   let result;
 
   const externalSystemsMocks = () => {
-    if (result) return result;
+    if (result) 
+      return result;
 
     const serverMocks = Object.keys(creators).reduce((accumulated, key) => {
       accumulated[key] = creators[key]();
