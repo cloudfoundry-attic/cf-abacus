@@ -1,0 +1,28 @@
+{
+  "plan_id": "test-metering-plan",
+  "measures": [
+    {
+      "name": "current_instance_memory",
+      "unit": "GIGABYTE"
+    },
+    {
+      "name": "current_running_instances",
+      "unit": "NUMBER"
+    },
+    {
+      "name": "previous_instance_memory",
+      "unit": "GIGABYTE"
+    },
+    {
+      "name": "previous_running_instances",
+      "unit": "NUMBER"
+    }
+  ],
+  "metrics": [
+    {
+      "name": "new-memory",
+      "unit": "MegaByte",
+      "type": "discrete"
+    }
+  ]
+}

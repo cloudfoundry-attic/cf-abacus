@@ -1,0 +1,91 @@
+.spinner {
+  background-color: #666
+}
+#spinner-modal .modal-dialog,
+#spinner-modal .modal-content,
+#spinner-modal .modal-body {
+  background: transparent;
+  color: #fff;
+  box-shadow: none;
+  border: none
+}
+.modal-header.alert-header {
+  box-shadow: inset 0 -0.125rem #ee0000
+}
+.modal-header .modal-header-span {
+  color: #ee0000
+}
+.breadcrumb {
+  background-color: #ededed
+}
+.table>thead {
+  background-color: #ededed
+}
+.table>tbody>tr>td,
+.table>tbody>tr>th,
+.table>tfoot>tr>td,
+.table>tfoot>tr>th,
+.table>thead>tr>td,
+.table>thead>tr>th {
+  border-color: #e5e5e5;
+  border-bottom: 1px solid #e5e5e5
+}
+.navbar-default {
+  background-color: #222222
+}
+.nav-tabs {
+  background-color: #ededed
+}
+.nav-tabs a {
+  color: #666666
+}
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:focus,
+.nav-tabs li.active>a:hover {
+  background-color: #ededed;
+  color: #427eac;
+  border-color: black
+}
+.nav-tabs.nav>li>a:focus,
+.nav-tabs.nav>li>a:hover {
+  background-color: #ededed
+}
+body {
+  background-color: #ffffff;
+  font-family: 'Arial', 'Helvetica', 'sans-serif';
+  font-size: 14px;
+  border: 1px solid #ccc
+}
+body #topnav>span {
+  color: #ffffff;
+  font-size: 16px
+}
+body #topnav>user-profile>.user-profile>button {
+  background: transparent;
+  color: white
+}
+body #wrapper {
+  background: #ffffff
+}
+body .sub-header {
+  background-color: #ededed
+}
+body .ace_editor {
+  background-color: #fafafa
+}
+body .ace_editor.editor_mode {
+  box-shadow: 1px 1px 4px #bfbfbf
+}
+body span.font-icon {
+  padding: 5px
+}
+body .fa-2x {
+  font-size: 2rem;
+  color: #666666
+}
+body .header-font {
+  font-size: 16px
+}
+body .upload-inp>input {
+  border: 1px solid #ccc
+}

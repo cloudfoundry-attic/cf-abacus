@@ -1,0 +1,26 @@
+default:
+  PORT: 9883
+  APPS: 1
+  INSTANCES: 1
+  DB_PARTITIONS: 1
+  DB: 5984
+  EUREKA: 9990
+  SECURED: false
+  JWTKEY:
+  JWTALGO:
+
+small:
+  APPS: 1
+  INSTANCES: 1
+  DB_PARTITIONS: 1
+
+medium:
+  APPS: 1
+  INSTANCES: 1
+  DB_PARTITIONS: 1
+
+large:
+  APPS: 1
+  INSTANCES: 1
+  DB_PARTITIONS: 1
+

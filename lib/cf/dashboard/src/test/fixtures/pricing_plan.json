@@ -1,0 +1,14 @@
+{
+  "plan_id": "test-metering-plan",
+  "metrics": [
+    {
+      "name": "memory",
+      "prices": [
+        {
+          "country": "sampleCountry",
+          "price": 0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "name": "abacus-service-dashboard",
+  "description": "",
+  "version": "1.1.0",
+  "private": true,
+  "dependencies": {
+    "jquery": "3.2.1",
+    "ace-builds": "1.2.6",
+    "angular": "1.5.10",
+    "angular-ui-router": "0.2.13",
+    "angular-ui-bootstrap": "2.5.0",
+    "angular-breadcrumb": "0.5.0",
+    "angular-mocks": "1.4.8",
+    "angular-translate": "2.15.0",
+    "angular-translate-loader-partial": "2.9.1",
+    "bootstrap": "3.3.7",
+    "lodash": "4.16.4",
+    "font-awesome": "4.7.0",
+    "angular-animate": "1.5.10",
+    "angular-ui-ace": "0.2.3",
+    "angular-sanitize": "1.4.8",
+    "karma-read-json": "1.1.0",
+    "ngclipboard": "1.1.1",
+    "ng-file-upload": "12.2.13"
+  }
+}

@@ -1,0 +1,14 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" translate-cloak>
+  <span class="header-font" translate="ResourceProvider_MeteringView_HDR_XTIT"
+  translate-value-planid="{{plan.plan_id}}"></span>
+</div>
+<div>
+  <tabs pane-changed="paneChanged(selectedPane)">
+    <pane title="{{'ResourceProvider_MeteringPlan_Measures_XTIT' | translate}}">
+      <div ng-include src="'/components/metering/templates/measures-tabular-view.html'"></div>
+    </pane>
+    <pane title="{{'ResourceProvider_MeteringPlan_Metrics_XTIT' | translate}}">
+      <div ng-include src="'/components/metering/templates/metrics-tabular-view.html'"></div>
+    </pane>
+  </tabs>
+</div>

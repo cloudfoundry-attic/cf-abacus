@@ -3,135 +3,136 @@
 
 
 "abacus-account-plugin@file:lib/plugins/account":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
-    abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
-    abacus-dbclient "file:../../Library/Caches/Yarn/utils/dbclient"
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
-    abacus-lock "file:../../Library/Caches/Yarn/utils/lock"
-    abacus-lrucache "file:../../Library/Caches/Yarn/utils/lrucache"
-    abacus-oauth "file:../../Library/Caches/Yarn/utils/oauth"
-    abacus-partition "file:../../Library/Caches/Yarn/utils/partition"
-    abacus-plan-mappings "file:../../Library/Caches/Yarn/config/mappings"
-    abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
-    abacus-router "file:../../Library/Caches/Yarn/utils/router"
-    abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
-    abacus-usage-schemas "file:../../Library/Caches/Yarn/config/schemas"
-    abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
-    abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    abacus-batch "file:../../../Library/Caches/Yarn/utils/batch"
+    abacus-breaker "file:../../../Library/Caches/Yarn/utils/breaker"
+    abacus-dbclient "file:../../../Library/Caches/Yarn/utils/dbclient"
+    abacus-debug "file:../../../Library/Caches/Yarn/utils/debug"
+    abacus-launcher "file:../../../Library/Caches/Yarn/utils/launcher"
+    abacus-lock "file:../../../Library/Caches/Yarn/utils/lock"
+    abacus-lrucache "file:../../../Library/Caches/Yarn/utils/lrucache"
+    abacus-oauth "file:../../../Library/Caches/Yarn/utils/oauth"
+    abacus-partition "file:../../../Library/Caches/Yarn/utils/partition"
+    abacus-plan-mappings "file:../../../Library/Caches/Yarn/config/mappings"
+    abacus-request "file:../../../Library/Caches/Yarn/utils/request"
+    abacus-retry "file:../../../Library/Caches/Yarn/utils/retry"
+    abacus-router "file:../../../Library/Caches/Yarn/utils/router"
+    abacus-urienv "file:../../../Library/Caches/Yarn/utils/urienv"
+    abacus-usage-schemas "file:../../../Library/Caches/Yarn/config/schemas"
+    abacus-webapp "file:../../../Library/Caches/Yarn/utils/webapp"
+    abacus-yieldable "file:../../../Library/Caches/Yarn/utils/yieldable"
     underscore "^1.8.3"
 
 "abacus-audit@file:lib/utils/audit":
-  version "1.0.0"
+  version "1.1.0"
 
 "abacus-authserver-plugin@file:lib/plugins/authserver":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
-    abacus-router "file:../../Library/Caches/Yarn/utils/router"
-    abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
+    abacus-debug "file:../../../Library/Caches/Yarn/utils/debug"
+    abacus-launcher "file:../../../Library/Caches/Yarn/utils/launcher"
+    abacus-router "file:../../../Library/Caches/Yarn/utils/router"
+    abacus-webapp "file:../../../Library/Caches/Yarn/utils/webapp"
     jsonwebtoken "^5.0.5"
     underscore "^1.8.3"
 
 "abacus-basic@file:lib/utils/basic":
-  version "1.0.0"
+  version "1.1.0"
 
 "abacus-batch@file:lib/utils/batch":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-moment "file:../../Library/Caches/Yarn/v1/moment"
-    abacus-transform "file:../../Library/Caches/Yarn/v1/transform"
-    abacus-yieldable "file:../../Library/Caches/Yarn/v1/yieldable"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-moment "file:../../../Library/Caches/Yarn/v1/moment"
+    abacus-transform "file:../../../Library/Caches/Yarn/v1/transform"
+    abacus-yieldable "file:../../../Library/Caches/Yarn/v1/yieldable"
     underscore "^1.8.3"
 
 "abacus-breaker@file:lib/utils/breaker":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-moment "file:../../Library/Caches/Yarn/utils/moment"
-    abacus-perf "file:../../Library/Caches/Yarn/v1/perf"
-    abacus-yieldable "file:../../Library/Caches/Yarn/v1/yieldable"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-moment "file:../../../Library/Caches/Yarn/utils/moment"
+    abacus-perf "file:../../../Library/Caches/Yarn/v1/perf"
+    abacus-yieldable "file:../../../Library/Caches/Yarn/v1/yieldable"
     underscore "^1.8.3"
 
 "abacus-bridge@file:lib/utils/bridge":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-batch "file:../../Library/Caches/Yarn/v1/batch"
-    abacus-breaker "file:../../Library/Caches/Yarn/v1/breaker"
-    abacus-carryover "file:../../Library/Caches/Yarn/utils/carryover"
-    abacus-client "file:../../Library/Caches/Yarn/utils/client"
-    abacus-cluster "file:../../Library/Caches/Yarn/utils/cluster"
-    abacus-dbclient "file:../../Library/Caches/Yarn/v1/dbclient"
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-moment "file:../../Library/Caches/Yarn/v1/moment"
-    abacus-oauth "file:../../Library/Caches/Yarn/v1/oauth"
-    abacus-paging "file:../../Library/Caches/Yarn/v1/paging"
-    abacus-partition "file:../../Library/Caches/Yarn/v1/partition"
-    abacus-perf "file:../../Library/Caches/Yarn/v1/perf"
-    abacus-retry "file:../../Library/Caches/Yarn/v1/retry"
-    abacus-router "file:../../Library/Caches/Yarn/utils/router"
-    abacus-throttle "file:../../Library/Caches/Yarn/v1/throttle"
-    abacus-urienv "file:../../Library/Caches/Yarn/v1/urienv"
-    abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
-    abacus-yieldable "file:../../Library/Caches/Yarn/v1/yieldable"
+    abacus-batch "file:../../../Library/Caches/Yarn/v1/batch"
+    abacus-breaker "file:../../../Library/Caches/Yarn/v1/breaker"
+    abacus-carryover "file:../../../Library/Caches/Yarn/utils/carryover"
+    abacus-client "file:../../../Library/Caches/Yarn/utils/client"
+    abacus-cluster "file:../../../Library/Caches/Yarn/utils/cluster"
+    abacus-dbclient "file:../../../Library/Caches/Yarn/v1/dbclient"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-moment "file:../../../Library/Caches/Yarn/v1/moment"
+    abacus-oauth "file:../../../Library/Caches/Yarn/v1/oauth"
+    abacus-paging "file:../../../Library/Caches/Yarn/v1/paging"
+    abacus-partition "file:../../../Library/Caches/Yarn/v1/partition"
+    abacus-perf "file:../../../Library/Caches/Yarn/v1/perf"
+    abacus-retry "file:../../../Library/Caches/Yarn/v1/retry"
+    abacus-router "file:../../../Library/Caches/Yarn/utils/router"
+    abacus-throttle "file:../../../Library/Caches/Yarn/v1/throttle"
+    abacus-urienv "file:../../../Library/Caches/Yarn/v1/urienv"
+    abacus-webapp "file:../../../Library/Caches/Yarn/utils/webapp"
+    abacus-yieldable "file:../../../Library/Caches/Yarn/v1/yieldable"
     underscore "^1.8.3"
 
 "abacus-carryover@file:lib/utils/carryover":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
-    abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
-    abacus-carryover "file:../../Library/Caches/Yarn/utils/carryover"
-    abacus-dbclient "file:../../Library/Caches/Yarn/utils/dbclient"
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-moment "file:../../Library/Caches/Yarn/utils/moment"
-    abacus-partition "file:../../Library/Caches/Yarn/utils/partition"
-    abacus-perf "file:../../Library/Caches/Yarn/utils/perf"
-    abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
-    abacus-throttle "file:../../Library/Caches/Yarn/utils/throttle"
-    abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
+    abacus-batch "file:../../../Library/Caches/Yarn/utils/batch"
+    abacus-breaker "file:../../../Library/Caches/Yarn/utils/breaker"
+    abacus-carryover "file:../../../Library/Caches/Yarn/utils/carryover"
+    abacus-dbclient "file:../../../Library/Caches/Yarn/utils/dbclient"
+    abacus-debug "file:../../../Library/Caches/Yarn/utils/debug"
+    abacus-moment "file:../../../Library/Caches/Yarn/utils/moment"
+    abacus-partition "file:../../../Library/Caches/Yarn/utils/partition"
+    abacus-perf "file:../../../Library/Caches/Yarn/utils/perf"
+    abacus-retry "file:../../../Library/Caches/Yarn/utils/retry"
+    abacus-throttle "file:../../../Library/Caches/Yarn/utils/throttle"
+    abacus-urienv "file:../../../Library/Caches/Yarn/utils/urienv"
     moment "^2.12.0"
     underscore "^1.8.3"
 
 "abacus-cf-acceptance-test@file:test/cf/acceptance":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-cmdline "file:../../Library/Caches/tools/cmdline"
-    abacus-mocha "file:../../Library/Caches/tools/mocha"
-    abacus-oauth "file:../../Library/Caches/lib/utils/oauth"
-    abacus-paging "file:../../Library/Caches/lib/utils/paging"
-    abacus-wait "file:../../Library/Caches/Yarn/lib/wait"
+    abacus-cmdline "file:../../../Library/Caches/tools/cmdline"
+    abacus-mocha "file:../../../Library/Caches/tools/mocha"
+    abacus-oauth "file:../../../Library/Caches/lib/utils/oauth"
+    abacus-paging "file:../../../Library/Caches/lib/utils/paging"
+    abacus-wait "file:../../../Library/Caches/Yarn/lib/wait"
     nyc "^11.4.1"
 
 "abacus-cf-applications@file:lib/cf/applications":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-bridge "file:../../Library/Caches/Yarn/utils/bridge"
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
-    abacus-moment "file:../../Library/Caches/Yarn/utils/moment"
+    abacus-bridge "file:../../../Library/Caches/Yarn/utils/bridge"
+    abacus-debug "file:../../../Library/Caches/Yarn/utils/debug"
+    abacus-launcher "file:../../../Library/Caches/Yarn/utils/launcher"
+    abacus-moment "file:../../../Library/Caches/Yarn/utils/moment"
 
 "abacus-cf-integration-itest@file:test/cf/integration":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-cf-applications "file:../../Library/Caches/lib/cf/applications"
-    abacus-cf-renewer "file:../../Library/Caches/lib/cf/renewer"
-    abacus-cf-services "file:../../Library/Caches/lib/cf/services"
-    abacus-dbclient "file:../../Library/Caches/lib/utils/dbclient"
-    abacus-debug "file:../../Library/Caches/lib/utils/debug"
-    abacus-eslint "file:../../Library/Caches/tools/eslint"
-    abacus-express "file:../../Library/Caches/lib/utils/express"
-    abacus-lifecycle-manager "file:../../Library/Caches/Yarn/lib/lifecycle-manager"
-    abacus-mocha "file:../../Library/Caches/tools/mocha"
-    abacus-moment "file:../../Library/Caches/lib/utils/moment"
-    abacus-pouchserver "file:../../Library/Caches/lib/utils/pouchserver"
-    abacus-request "file:../../Library/Caches/lib/utils/request"
-    abacus-router "file:../../Library/Caches/lib/utils/router"
-    abacus-wait "file:../../Library/Caches/Yarn/lib/wait"
+    abacus-cf-applications "file:../../../Library/Caches/lib/cf/applications"
+    abacus-cf-renewer "file:../../../Library/Caches/lib/cf/renewer"
+    abacus-cf-services "file:../../../Library/Caches/lib/cf/services"
+    abacus-dbclient "file:../../../Library/Caches/lib/utils/dbclient"
+    abacus-debug "file:../../../Library/Caches/lib/utils/debug"
+    abacus-eslint "file:../../../Library/Caches/tools/eslint"
+    abacus-express "file:../../../Library/Caches/lib/utils/express"
+    abacus-lifecycle-manager "file:../../../Library/Caches/Yarn/lib/lifecycle-manager"
+    abacus-mocha "file:../../../Library/Caches/tools/mocha"
+    abacus-moment "file:../../../Library/Caches/lib/utils/moment"
+    abacus-pouchserver "file:../../../Library/Caches/lib/utils/pouchserver"
+    abacus-request "file:../../../Library/Caches/lib/utils/request"
+    abacus-router "file:../../../Library/Caches/lib/utils/router"
+    abacus-wait "file:../../../Library/Caches/Yarn/lib/wait"
     async "^2.3.0"
     http-status-codes "^1.3.0"
     jsonwebtoken "^5.0.5"
@@ -140,62 +141,62 @@
     underscore "^1.8.3"
 
 "abacus-cf-renewer@file:lib/cf/renewer":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
-    abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
-    abacus-carryover "file:../../Library/Caches/Yarn/utils/carryover"
-    abacus-client "file:../../Library/Caches/Yarn/utils/client"
-    abacus-cluster "file:../../Library/Caches/Yarn/utils/cluster"
-    abacus-dataflow "file:../../Library/Caches/Yarn/utils/dataflow"
-    abacus-dbclient "file:../../Library/Caches/Yarn/utils/dbclient"
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
-    abacus-moment "file:../../Library/Caches/Yarn/utils/moment"
-    abacus-oauth "file:../../Library/Caches/Yarn/utils/oauth"
-    abacus-partition "file:../../Library/Caches/Yarn/utils/partition"
-    abacus-perf "file:../../Library/Caches/Yarn/utils/perf"
-    abacus-request "file:../../Library/Caches/Yarn/utils/request"
-    abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
-    abacus-router "file:../../Library/Caches/Yarn/utils/router"
-    abacus-seqid "file:../../Library/Caches/Yarn/utils/seqid"
-    abacus-throttle "file:../../Library/Caches/Yarn/utils/throttle"
-    abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
-    abacus-usage-schemas "file:../../Library/Caches/Yarn/config/schemas"
-    abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
-    abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    abacus-batch "file:../../../Library/Caches/Yarn/utils/batch"
+    abacus-breaker "file:../../../Library/Caches/Yarn/utils/breaker"
+    abacus-carryover "file:../../../Library/Caches/Yarn/utils/carryover"
+    abacus-client "file:../../../Library/Caches/Yarn/utils/client"
+    abacus-cluster "file:../../../Library/Caches/Yarn/utils/cluster"
+    abacus-dataflow "file:../../../Library/Caches/Yarn/utils/dataflow"
+    abacus-dbclient "file:../../../Library/Caches/Yarn/utils/dbclient"
+    abacus-debug "file:../../../Library/Caches/Yarn/utils/debug"
+    abacus-launcher "file:../../../Library/Caches/Yarn/utils/launcher"
+    abacus-moment "file:../../../Library/Caches/Yarn/utils/moment"
+    abacus-oauth "file:../../../Library/Caches/Yarn/utils/oauth"
+    abacus-partition "file:../../../Library/Caches/Yarn/utils/partition"
+    abacus-perf "file:../../../Library/Caches/Yarn/utils/perf"
+    abacus-request "file:../../../Library/Caches/Yarn/utils/request"
+    abacus-retry "file:../../../Library/Caches/Yarn/utils/retry"
+    abacus-router "file:../../../Library/Caches/Yarn/utils/router"
+    abacus-seqid "file:../../../Library/Caches/Yarn/utils/seqid"
+    abacus-throttle "file:../../../Library/Caches/Yarn/utils/throttle"
+    abacus-urienv "file:../../../Library/Caches/Yarn/utils/urienv"
+    abacus-usage-schemas "file:../../../Library/Caches/Yarn/config/schemas"
+    abacus-webapp "file:../../../Library/Caches/Yarn/utils/webapp"
+    abacus-yieldable "file:../../../Library/Caches/Yarn/utils/yieldable"
     async "^2.3.0"
     jsonwebtoken "^5.0.5"
     underscore "^1.8.3"
 
 "abacus-cf-services@file:lib/cf/services":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-bridge "file:../../Library/Caches/Yarn/utils/bridge"
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
-    abacus-moment "file:../../Library/Caches/Yarn/utils/moment"
-    abacus-paging "file:../../Library/Caches/Yarn/utils/paging"
-    abacus-perf "file:../../Library/Caches/Yarn/utils/perf"
-    abacus-plan-mappings "file:../../Library/Caches/Yarn/config/mappings"
-    abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
+    abacus-bridge "file:../../../Library/Caches/Yarn/utils/bridge"
+    abacus-debug "file:../../../Library/Caches/Yarn/utils/debug"
+    abacus-launcher "file:../../../Library/Caches/Yarn/utils/launcher"
+    abacus-moment "file:../../../Library/Caches/Yarn/utils/moment"
+    abacus-paging "file:../../../Library/Caches/Yarn/utils/paging"
+    abacus-perf "file:../../../Library/Caches/Yarn/utils/perf"
+    abacus-plan-mappings "file:../../../Library/Caches/Yarn/config/mappings"
+    abacus-retry "file:../../../Library/Caches/Yarn/utils/retry"
     underscore "^1.8.3"
 
 "abacus-cf-smoke@file:test/cf/smoke":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-clone "file:../../Library/Caches/lib/utils/clone"
-    abacus-dbclient "file:../../Library/Caches/lib/utils/dbclient"
-    abacus-mocha "file:../../Library/Caches/tools/mocha"
-    abacus-moment "file:../../Library/Caches/lib/utils/moment"
-    abacus-oauth "file:../../Library/Caches/lib/utils/oauth"
-    abacus-request "file:../../Library/Caches/lib/utils/request"
+    abacus-clone "file:../../../Library/Caches/lib/utils/clone"
+    abacus-dbclient "file:../../../Library/Caches/lib/utils/dbclient"
+    abacus-mocha "file:../../../Library/Caches/tools/mocha"
+    abacus-moment "file:../../../Library/Caches/lib/utils/moment"
+    abacus-oauth "file:../../../Library/Caches/lib/utils/oauth"
+    abacus-request "file:../../../Library/Caches/lib/utils/request"
     commander "^2.8.1"
     nyc "^11.4.1"
     underscore "^1.8.3"
 
 "abacus-cfpush@file:tools/cfpush":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
     commander "^2.8.1"
     fs-extra "^3.0.1"
@@ -204,148 +205,148 @@
     underscore "^1.8.3"
 
 "abacus-client@file:lib/utils/client":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
-    abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-moment "file:../../Library/Caches/Yarn/utils/moment"
-    abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
-    abacus-throttle "file:../../Library/Caches/Yarn/utils/throttle"
-    abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
+    abacus-batch "file:../../../Library/Caches/Yarn/utils/batch"
+    abacus-breaker "file:../../../Library/Caches/Yarn/utils/breaker"
+    abacus-debug "file:../../../Library/Caches/Yarn/utils/debug"
+    abacus-moment "file:../../../Library/Caches/Yarn/utils/moment"
+    abacus-retry "file:../../../Library/Caches/Yarn/utils/retry"
+    abacus-throttle "file:../../../Library/Caches/Yarn/utils/throttle"
+    abacus-urienv "file:../../../Library/Caches/Yarn/utils/urienv"
     moment "^2.12.0"
     underscore "^1.8.3"
 
 "abacus-clone@file:lib/utils/clone":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
     underscore "^1.8.3"
 
 "abacus-cluster@file:lib/utils/cluster":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-events "file:../../Library/Caches/Yarn/v1/events"
-    abacus-moment "file:../../Library/Caches/Yarn/utils/moment"
-    abacus-vcapenv "file:../../Library/Caches/Yarn/v1/vcapenv"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-events "file:../../../Library/Caches/Yarn/v1/events"
+    abacus-moment "file:../../../Library/Caches/Yarn/utils/moment"
+    abacus-vcapenv "file:../../../Library/Caches/Yarn/v1/vcapenv"
     underscore "^1.8.3"
 
 "abacus-cmdline@file:tools/cmdline":
-  version "1.0.0"
+  version "1.1.0"
 
 "abacus-couchclient@file:lib/utils/couchclient":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-dbcommons "file:../../Library/Caches/Yarn/v1/dbcommons"
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-moment "file:../../Library/Caches/Yarn/utils/moment"
-    abacus-partition "file:../../Library/Caches/Yarn/v1/partition"
-    abacus-perf "file:../../Library/Caches/Yarn/v1/perf"
-    abacus-request "file:../../Library/Caches/Yarn/v1/request"
-    abacus-transform "file:../../Library/Caches/Yarn/v1/transform"
+    abacus-dbcommons "file:../../../Library/Caches/Yarn/v1/dbcommons"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-moment "file:../../../Library/Caches/Yarn/utils/moment"
+    abacus-partition "file:../../../Library/Caches/Yarn/v1/partition"
+    abacus-perf "file:../../../Library/Caches/Yarn/v1/perf"
+    abacus-request "file:../../../Library/Caches/Yarn/v1/request"
+    abacus-transform "file:../../../Library/Caches/Yarn/v1/transform"
     memdown "1.2.4"
     pouchdb "^6.1.2"
     pouchdb-adapter-memory "^6.1.2"
     underscore "^1.8.3"
 
 "abacus-couchstore@file:lib/utils/couchstore":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-dbclient "file:../../Library/Caches/Yarn/v1/dbclient"
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-moment "file:../../Library/Caches/Yarn/v1/moment"
+    abacus-dbclient "file:../../../Library/Caches/Yarn/v1/dbclient"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-moment "file:../../../Library/Caches/Yarn/v1/moment"
     express-session "1.15.2"
 
 "abacus-counter@file:lib/utils/counter":
-  version "1.0.0"
+  version "1.1.0"
 
 "abacus-dataflow@file:lib/utils/dataflow":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-audit "file:../../Library/Caches/Yarn/v1/audit"
-    abacus-batch "file:../../Library/Caches/Yarn/v1/batch"
-    abacus-breaker "file:../../Library/Caches/Yarn/v1/breaker"
-    abacus-cluster "file:../../Library/Caches/Yarn/v1/cluster"
-    abacus-dbclient "file:../../Library/Caches/Yarn/v1/dbclient"
-    abacus-dbcommons "file:../../Library/Caches/Yarn/v1/dbcommons"
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-dedupe "file:../../Library/Caches/Yarn/v1/dedupe"
-    abacus-eureka "file:../../Library/Caches/Yarn/v1/eureka"
-    abacus-lock "file:../../Library/Caches/Yarn/v1/lock"
-    abacus-lrucache "file:../../Library/Caches/Yarn/v1/lrucache"
-    abacus-moment "file:../../Library/Caches/Yarn/v1/moment"
-    abacus-oauth "file:../../Library/Caches/Yarn/v1/oauth"
-    abacus-partition "file:../../Library/Caches/Yarn/v1/partition"
-    abacus-request "file:../../Library/Caches/Yarn/v1/request"
-    abacus-retry "file:../../Library/Caches/Yarn/v1/retry"
-    abacus-router "file:../../Library/Caches/Yarn/v1/router"
-    abacus-seqid "file:../../Library/Caches/Yarn/v1/seqid"
-    abacus-throttle "file:../../Library/Caches/Yarn/v1/throttle"
-    abacus-transform "file:../../Library/Caches/Yarn/v1/transform"
-    abacus-urienv "file:../../Library/Caches/Yarn/v1/urienv"
-    abacus-vcapenv "file:../../Library/Caches/Yarn/v1/vcapenv"
-    abacus-yieldable "file:../../Library/Caches/Yarn/v1/yieldable"
+    abacus-audit "file:../../../Library/Caches/Yarn/v1/audit"
+    abacus-batch "file:../../../Library/Caches/Yarn/v1/batch"
+    abacus-breaker "file:../../../Library/Caches/Yarn/v1/breaker"
+    abacus-cluster "file:../../../Library/Caches/Yarn/v1/cluster"
+    abacus-dbclient "file:../../../Library/Caches/Yarn/v1/dbclient"
+    abacus-dbcommons "file:../../../Library/Caches/Yarn/v1/dbcommons"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-dedupe "file:../../../Library/Caches/Yarn/v1/dedupe"
+    abacus-eureka "file:../../../Library/Caches/Yarn/v1/eureka"
+    abacus-lock "file:../../../Library/Caches/Yarn/v1/lock"
+    abacus-lrucache "file:../../../Library/Caches/Yarn/v1/lrucache"
+    abacus-moment "file:../../../Library/Caches/Yarn/v1/moment"
+    abacus-oauth "file:../../../Library/Caches/Yarn/v1/oauth"
+    abacus-partition "file:../../../Library/Caches/Yarn/v1/partition"
+    abacus-request "file:../../../Library/Caches/Yarn/v1/request"
+    abacus-retry "file:../../../Library/Caches/Yarn/v1/retry"
+    abacus-router "file:../../../Library/Caches/Yarn/v1/router"
+    abacus-seqid "file:../../../Library/Caches/Yarn/v1/seqid"
+    abacus-throttle "file:../../../Library/Caches/Yarn/v1/throttle"
+    abacus-transform "file:../../../Library/Caches/Yarn/v1/transform"
+    abacus-urienv "file:../../../Library/Caches/Yarn/v1/urienv"
+    abacus-vcapenv "file:../../../Library/Caches/Yarn/v1/vcapenv"
+    abacus-yieldable "file:../../../Library/Caches/Yarn/v1/yieldable"
     underscore "^1.8.3"
 
 "abacus-dbclient@file:lib/utils/dbclient":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-couchclient "file:../../Library/Caches/Yarn/v1/couchclient"
-    abacus-dbcommons "file:../../Library/Caches/Yarn/v1/dbcommons"
-    abacus-mongoclient "file:../../Library/Caches/Yarn/v1/mongoclient"
+    abacus-couchclient "file:../../../Library/Caches/Yarn/v1/couchclient"
+    abacus-dbcommons "file:../../../Library/Caches/Yarn/v1/dbcommons"
+    abacus-mongoclient "file:../../../Library/Caches/Yarn/v1/mongoclient"
 
 "abacus-dbcommons@file:lib/utils/dbcommons":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-transform "file:../../Library/Caches/Yarn/v1/transform"
+    abacus-transform "file:../../../Library/Caches/Yarn/v1/transform"
 
 "abacus-debug@file:lib/utils/debug":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-events "file:../../Library/Caches/Yarn/v1/events"
-    abacus-moment "file:../../Library/Caches/Yarn/v1/moment"
+    abacus-events "file:../../../Library/Caches/Yarn/v1/events"
+    abacus-moment "file:../../../Library/Caches/Yarn/v1/moment"
     debug "^2.4.5"
     underscore "^1.8.3"
 
 "abacus-dedupe@file:lib/utils/dedupe":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-lrucache "file:../../Library/Caches/Yarn/v1/lrucache"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-lrucache "file:../../../Library/Caches/Yarn/v1/lrucache"
     bloem "^0.2.4"
     underscore "^1.8.3"
 
 "abacus-demo-client@file:demo/client":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-clone "file:../../Library/Caches/Yarn/lib/utils/clone"
-    abacus-mocha "file:../../Library/Caches/Yarn/tools/mocha"
-    abacus-moment "file:../../Library/Caches/Yarn/lib/utils/moment"
-    abacus-oauth "file:../../Library/Caches/Yarn/lib/utils/oauth"
-    abacus-request "file:../../Library/Caches/Yarn/lib/utils/request"
+    abacus-clone "file:../../../Library/Caches/Yarn/lib/utils/clone"
+    abacus-mocha "file:../../../Library/Caches/Yarn/tools/mocha"
+    abacus-moment "file:../../../Library/Caches/Yarn/lib/utils/moment"
+    abacus-oauth "file:../../../Library/Caches/Yarn/lib/utils/oauth"
+    abacus-request "file:../../../Library/Caches/Yarn/lib/utils/request"
     commander "^2.8.1"
     nyc "^11.4.1"
     underscore "^1.8.3"
 
 "abacus-doc@file:doc":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-mddoc "file:../../Library/Caches/Yarn/v1/tools/mddoc"
-    abacus-publish "file:../../Library/Caches/Yarn/v1/tools/publish"
+    abacus-mddoc "file:../../../Library/Caches/Yarn/v1/tools/mddoc"
+    abacus-publish "file:../../../Library/Caches/Yarn/v1/tools/publish"
 
 "abacus-dupe-test@file:test/dupe":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-batch "file:../../Library/Caches/Yarn/lib/utils/batch"
-    abacus-clone "file:../../Library/Caches/Yarn/lib/utils/clone"
-    abacus-dbclient "file:../../Library/Caches/Yarn/lib/utils/dbclient"
-    abacus-debug "file:../../Library/Caches/Yarn/lib/utils/debug"
-    abacus-mocha "file:../../Library/Caches/Yarn/tools/mocha"
-    abacus-moment "file:../../Library/Caches/Yarn/lib/utils/moment"
-    abacus-oauth "file:../../Library/Caches/Yarn/lib/utils/oauth"
-    abacus-request "file:../../Library/Caches/Yarn/lib/utils/request"
-    abacus-throttle "file:../../Library/Caches/Yarn/lib/utils/throttle"
+    abacus-batch "file:../../../Library/Caches/Yarn/lib/utils/batch"
+    abacus-clone "file:../../../Library/Caches/Yarn/lib/utils/clone"
+    abacus-dbclient "file:../../../Library/Caches/Yarn/lib/utils/dbclient"
+    abacus-debug "file:../../../Library/Caches/Yarn/lib/utils/debug"
+    abacus-mocha "file:../../../Library/Caches/Yarn/tools/mocha"
+    abacus-moment "file:../../../Library/Caches/Yarn/lib/utils/moment"
+    abacus-oauth "file:../../../Library/Caches/Yarn/lib/utils/oauth"
+    abacus-request "file:../../../Library/Caches/Yarn/lib/utils/request"
+    abacus-throttle "file:../../../Library/Caches/Yarn/lib/utils/throttle"
     bignumber.js "^2.1.0"
     commander "2.8.1"
     jsonwebtoken "^5.0.5"
@@ -353,16 +354,16 @@
     underscore "^1.8.3"
 
 "abacus-eslint@file:tools/eslint":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
     commander "^2.8.1"
     eslint "~4.13.0"
     eslint-plugin-mocha "^4.8.0"
-    eslint-plugin-nodate "file:../../Library/Caches/Yarn/v1/eslint-plugin-nodate"
+    eslint-plugin-nodate "file:../../../Library/Caches/Yarn/v1/eslint-plugin-nodate"
     optionator "^0.6.0"
 
 "abacus-etc@file:etc":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
     commander "^2.8.1"
     js-yaml "^3.4.3"
@@ -370,53 +371,53 @@
     underscore "^1.8.3"
 
 "abacus-eureka-plugin@file:lib/plugins/eureka":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
-    abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
-    abacus-dbclient "file:../../Library/Caches/Yarn/utils/dbclient"
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
-    abacus-moment "file:../../Library/Caches/Yarn/utils/moment"
-    abacus-oauth "file:../../Library/Caches/Yarn/utils/oauth"
-    abacus-partition "file:../../Library/Caches/Yarn/utils/partition"
-    abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
-    abacus-router "file:../../Library/Caches/Yarn/utils/router"
-    abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
-    abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
-    abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    abacus-batch "file:../../../Library/Caches/Yarn/utils/batch"
+    abacus-breaker "file:../../../Library/Caches/Yarn/utils/breaker"
+    abacus-dbclient "file:../../../Library/Caches/Yarn/utils/dbclient"
+    abacus-debug "file:../../../Library/Caches/Yarn/utils/debug"
+    abacus-launcher "file:../../../Library/Caches/Yarn/utils/launcher"
+    abacus-moment "file:../../../Library/Caches/Yarn/utils/moment"
+    abacus-oauth "file:../../../Library/Caches/Yarn/utils/oauth"
+    abacus-partition "file:../../../Library/Caches/Yarn/utils/partition"
+    abacus-retry "file:../../../Library/Caches/Yarn/utils/retry"
+    abacus-router "file:../../../Library/Caches/Yarn/utils/router"
+    abacus-urienv "file:../../../Library/Caches/Yarn/utils/urienv"
+    abacus-webapp "file:../../../Library/Caches/Yarn/utils/webapp"
+    abacus-yieldable "file:../../../Library/Caches/Yarn/utils/yieldable"
     underscore "^1.8.3"
 
 "abacus-eureka@file:lib/utils/eureka":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-request "file:../../Library/Caches/Yarn/v1/request"
-    abacus-urienv "file:../../Library/Caches/Yarn/v1/urienv"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-request "file:../../../Library/Caches/Yarn/v1/request"
+    abacus-urienv "file:../../../Library/Caches/Yarn/v1/urienv"
 
 "abacus-eval@file:lib/utils/eval":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
     underscore "^1.8.3"
     vm2 "^3.4.6"
 
 "abacus-events@file:lib/utils/events":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
     emit-stream "^0.1.2"
     through "^2.3.4"
     underscore "^1.8.3"
 
 "abacus-express@file:lib/utils/express":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-events "file:../../Library/Caches/Yarn/v1/events"
-    abacus-moment "file:../../Library/Caches/Yarn/v1/moment"
-    abacus-oauth "file:../../Library/Caches/Yarn/v1/oauth"
-    abacus-rc "file:../../Library/Caches/Yarn/v1/rc"
-    abacus-vcapenv "file:../../Library/Caches/Yarn/v1/vcapenv"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-events "file:../../../Library/Caches/Yarn/v1/events"
+    abacus-moment "file:../../../Library/Caches/Yarn/v1/moment"
+    abacus-oauth "file:../../../Library/Caches/Yarn/v1/oauth"
+    abacus-rc "file:../../../Library/Caches/Yarn/v1/rc"
+    abacus-vcapenv "file:../../../Library/Caches/Yarn/v1/vcapenv"
     body-parser "^1.4.3"
     commander "^2.8.1"
     compression "^1.0.8"
@@ -428,55 +429,55 @@
     underscore "^1.8.3"
 
 "abacus-hystrix@file:lib/utils/hystrix":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-basic "file:../../Library/Caches/Yarn/v1/basic"
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-moment "file:../../Library/Caches/Yarn/v1/moment"
-    abacus-oauth "file:../../Library/Caches/Yarn/v1/oauth"
-    abacus-perf "file:../../Library/Caches/Yarn/v1/perf"
-    abacus-urienv "file:../../Library/Caches/Yarn/v1/urienv"
+    abacus-basic "file:../../../Library/Caches/Yarn/v1/basic"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-moment "file:../../../Library/Caches/Yarn/v1/moment"
+    abacus-oauth "file:../../../Library/Caches/Yarn/v1/oauth"
+    abacus-perf "file:../../../Library/Caches/Yarn/v1/perf"
+    abacus-urienv "file:../../../Library/Caches/Yarn/v1/urienv"
     underscore "^1.8.3"
 
 "abacus-launcher@file:lib/utils/launcher":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-rc "file:../../Library/Caches/Yarn/v1/rc"
-    abacus-vcapenv "file:../../Library/Caches/Yarn/v1/vcapenv"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-rc "file:../../../Library/Caches/Yarn/v1/rc"
+    abacus-vcapenv "file:../../../Library/Caches/Yarn/v1/vcapenv"
     commander "^2.8.1"
     underscore "^1.8.3"
 
 "abacus-lifecycle-manager@file:test/lib/lifecycle-manager":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/lib/utils/debug"
+    abacus-debug "file:../../../Library/Caches/lib/utils/debug"
     underscore "^1.8.3"
 
 "abacus-lock@file:lib/utils/lock":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
     lock "^0.1.2"
 
 "abacus-lrucache@file:lib/utils/lrucache":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
     lru-cache "^2.6.5"
     underscore "^1.8.3"
 
 "abacus-lrudown@file:lib/utils/lrudown":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-lrucache "file:../../Library/Caches/Yarn/v1/lrucache"
-    abacus-moment "file:../../Library/Caches/Yarn/v1/moment"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-lrucache "file:../../../Library/Caches/Yarn/v1/lrucache"
+    abacus-moment "file:../../../Library/Caches/Yarn/v1/moment"
     abstract-leveldown "^2.4.1"
     underscore "^1.8.3"
 
 "abacus-mddoc@file:tools/mddoc":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
     bootstrap "^3.3.5"
     commander "^2.8.1"
@@ -490,22 +491,22 @@
     underscore "^1.8.3"
 
 "abacus-metering-config@file:lib/config/metering":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
-    abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-eval "file:../../Library/Caches/Yarn/utils/eval"
-    abacus-lock "file:../../Library/Caches/Yarn/utils/lock"
-    abacus-lrucache "file:../../Library/Caches/Yarn/utils/lrucache"
-    abacus-request "file:../../Library/Caches/Yarn/utils/request"
-    abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
-    abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
+    abacus-batch "file:../../../Library/Caches/Yarn/utils/batch"
+    abacus-breaker "file:../../../Library/Caches/Yarn/utils/breaker"
+    abacus-debug "file:../../../Library/Caches/Yarn/utils/debug"
+    abacus-eval "file:../../../Library/Caches/Yarn/utils/eval"
+    abacus-lock "file:../../../Library/Caches/Yarn/utils/lock"
+    abacus-lrucache "file:../../../Library/Caches/Yarn/utils/lrucache"
+    abacus-request "file:../../../Library/Caches/Yarn/utils/request"
+    abacus-retry "file:../../../Library/Caches/Yarn/utils/retry"
+    abacus-urienv "file:../../../Library/Caches/Yarn/utils/urienv"
     bignumber.js "^2.1.0"
     underscore "^1.8.3"
 
 "abacus-mocha@file:tools/mocha":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
     async "^2.1.4"
     chai "^3.0.0"
@@ -517,63 +518,63 @@
     underscore "^1.8.3"
 
 "abacus-moment@file:lib/utils/moment":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
     moment "^2.17.1"
 
 "abacus-mongoclient@file:lib/utils/mongoclient":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-dbcommons "file:../../Library/Caches/Yarn/v1/dbcommons"
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-moment "file:../../Library/Caches/Yarn/utils/moment"
-    abacus-partition "file:../../Library/Caches/Yarn/v1/partition"
-    abacus-perf "file:../../Library/Caches/Yarn/v1/perf"
-    abacus-request "file:../../Library/Caches/Yarn/v1/request"
-    abacus-transform "file:../../Library/Caches/Yarn/v1/transform"
+    abacus-dbcommons "file:../../../Library/Caches/Yarn/v1/dbcommons"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-moment "file:../../../Library/Caches/Yarn/utils/moment"
+    abacus-partition "file:../../../Library/Caches/Yarn/v1/partition"
+    abacus-perf "file:../../../Library/Caches/Yarn/v1/perf"
+    abacus-request "file:../../../Library/Caches/Yarn/v1/request"
+    abacus-transform "file:../../../Library/Caches/Yarn/v1/transform"
     mongodb "^2.1"
     underscore "^1.8.3"
 
 "abacus-oauth@file:lib/utils/oauth":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-basic "file:../../Library/Caches/Yarn/v1/basic"
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-moment "file:../../Library/Caches/Yarn/v1/moment"
-    abacus-request "file:../../Library/Caches/Yarn/v1/request"
-    abacus-retry "file:../../Library/Caches/Yarn/v1/retry"
+    abacus-basic "file:../../../Library/Caches/Yarn/v1/basic"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-moment "file:../../../Library/Caches/Yarn/v1/moment"
+    abacus-request "file:../../../Library/Caches/Yarn/v1/request"
+    abacus-retry "file:../../../Library/Caches/Yarn/v1/retry"
     jsonwebtoken "^5.0.5"
     underscore "^1.8.3"
 
 "abacus-paging@file:lib/utils/paging":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-dbclient "file:../../Library/Caches/Yarn/utils/dbclient"
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-moment "file:../../Library/Caches/Yarn/utils/moment"
-    abacus-request "file:../../Library/Caches/Yarn/v1/request"
-    abacus-urienv "file:../../Library/Caches/Yarn/v1/urienv"
+    abacus-dbclient "file:../../../Library/Caches/Yarn/utils/dbclient"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-moment "file:../../../Library/Caches/Yarn/utils/moment"
+    abacus-request "file:../../../Library/Caches/Yarn/v1/request"
+    abacus-urienv "file:../../../Library/Caches/Yarn/v1/urienv"
     http-status-codes "^1.3.0"
     underscore "^1.8.3"
 
 "abacus-partition@file:lib/utils/partition":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-moment "file:../../Library/Caches/Yarn/v1/moment"
-    abacus-transform "file:../../Library/Caches/Yarn/v1/transform"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-moment "file:../../../Library/Caches/Yarn/v1/moment"
+    abacus-transform "file:../../../Library/Caches/Yarn/v1/transform"
     murmurhash "0.0.2"
     underscore "^1.8.3"
 
 "abacus-perf-test@file:test/perf":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-batch "file:../../Library/Caches/Yarn/lib/utils/batch"
-    abacus-dbclient "file:../../Library/Caches/Yarn/lib/utils/dbclient"
-    abacus-debug "file:../../Library/Caches/Yarn/lib/utils/debug"
-    abacus-mocha "file:../../Library/Caches/Yarn/tools/mocha"
-    abacus-moment "file:../../Library/Caches/Yarn/lib/utils/moment"
-    abacus-throttle "file:../../Library/Caches/Yarn/lib/utils/throttle"
+    abacus-batch "file:../../../Library/Caches/Yarn/lib/utils/batch"
+    abacus-dbclient "file:../../../Library/Caches/Yarn/lib/utils/dbclient"
+    abacus-debug "file:../../../Library/Caches/Yarn/lib/utils/debug"
+    abacus-mocha "file:../../../Library/Caches/Yarn/tools/mocha"
+    abacus-moment "file:../../../Library/Caches/Yarn/lib/utils/moment"
+    abacus-throttle "file:../../../Library/Caches/Yarn/lib/utils/throttle"
     bignumber.js "^2.1.0"
     commander "2.8.1"
     jsonwebtoken "^5.0.5"
@@ -581,28 +582,28 @@
     underscore "^1.8.3"
 
 "abacus-perf@file:lib/utils/perf":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-events "file:../../Library/Caches/Yarn/v1/events"
-    abacus-moment "file:../../Library/Caches/Yarn/v1/moment"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-events "file:../../../Library/Caches/Yarn/v1/events"
+    abacus-moment "file:../../../Library/Caches/Yarn/v1/moment"
     underscore "^1.8.3"
 
 "abacus-plan-mappings@file:lib/config/mappings":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
     underscore "^1.8.3"
 
 "abacus-plan-tester@file:lib/config/plan-tester":
-  version "1.0.0"
+  version "1.1.0"
 
 "abacus-pouchserver@file:lib/utils/pouchserver":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-cluster "file:../../Library/Caches/Yarn/v1/cluster"
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-launcher "file:../../Library/Caches/Yarn/v1/launcher"
-    abacus-webapp "file:../../Library/Caches/Yarn/v1/webapp"
+    abacus-cluster "file:../../../Library/Caches/Yarn/v1/cluster"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-launcher "file:../../../Library/Caches/Yarn/v1/launcher"
+    abacus-webapp "file:../../../Library/Caches/Yarn/v1/webapp"
     commander "^2.8.1"
     express "^4.14.1"
     express-pouchdb "^2.2.1"
@@ -611,79 +612,80 @@
     underscore "^1.8.3"
 
 "abacus-pricing-config@file:lib/config/pricing":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
-    abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-lock "file:../../Library/Caches/Yarn/utils/lock"
-    abacus-lrucache "file:../../Library/Caches/Yarn/utils/lrucache"
-    abacus-request "file:../../Library/Caches/Yarn/utils/request"
-    abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
-    abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
+    abacus-batch "file:../../../Library/Caches/Yarn/utils/batch"
+    abacus-breaker "file:../../../Library/Caches/Yarn/utils/breaker"
+    abacus-debug "file:../../../Library/Caches/Yarn/utils/debug"
+    abacus-lock "file:../../../Library/Caches/Yarn/utils/lock"
+    abacus-lrucache "file:../../../Library/Caches/Yarn/utils/lrucache"
+    abacus-request "file:../../../Library/Caches/Yarn/utils/request"
+    abacus-retry "file:../../../Library/Caches/Yarn/utils/retry"
+    abacus-urienv "file:../../../Library/Caches/Yarn/utils/urienv"
     underscore "^1.8.3"
 
 "abacus-provisioning-plugin@file:lib/plugins/provisioning":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
-    abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
-    abacus-dbclient "file:../../Library/Caches/Yarn/utils/dbclient"
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
-    abacus-lock "file:../../Library/Caches/Yarn/utils/lock"
-    abacus-lrucache "file:../../Library/Caches/Yarn/utils/lrucache"
-    abacus-oauth "file:../../Library/Caches/Yarn/utils/oauth"
-    abacus-partition "file:../../Library/Caches/Yarn/utils/partition"
-    abacus-plan-mappings "file:../../Library/Caches/Yarn/config/mappings"
-    abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
-    abacus-router "file:../../Library/Caches/Yarn/utils/router"
-    abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
-    abacus-usage-schemas "file:../../Library/Caches/Yarn/config/schemas"
-    abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
-    abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    abacus-batch "file:../../../Library/Caches/Yarn/utils/batch"
+    abacus-breaker "file:../../../Library/Caches/Yarn/utils/breaker"
+    abacus-dbclient "file:../../../Library/Caches/Yarn/utils/dbclient"
+    abacus-debug "file:../../../Library/Caches/Yarn/utils/debug"
+    abacus-launcher "file:../../../Library/Caches/Yarn/utils/launcher"
+    abacus-lock "file:../../../Library/Caches/Yarn/utils/lock"
+    abacus-lrucache "file:../../../Library/Caches/Yarn/utils/lrucache"
+    abacus-oauth "file:../../../Library/Caches/Yarn/utils/oauth"
+    abacus-partition "file:../../../Library/Caches/Yarn/utils/partition"
+    abacus-plan-mappings "file:../../../Library/Caches/Yarn/config/mappings"
+    abacus-request "file:../../../Library/Caches/Yarn/utils/request"
+    abacus-retry "file:../../../Library/Caches/Yarn/utils/retry"
+    abacus-router "file:../../../Library/Caches/Yarn/utils/router"
+    abacus-urienv "file:../../../Library/Caches/Yarn/utils/urienv"
+    abacus-usage-schemas "file:../../../Library/Caches/Yarn/config/schemas"
+    abacus-webapp "file:../../../Library/Caches/Yarn/utils/webapp"
+    abacus-yieldable "file:../../../Library/Caches/Yarn/utils/yieldable"
     underscore "^1.8.3"
 
 "abacus-publish@file:tools/publish":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
     commander "^2.8.1"
     underscore "^1.8.3"
 
 "abacus-rabbitmq@file:lib/utils/rabbitmq":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
     amqp-connection-manager "^1.3.7"
     amqplib "^0.5.2"
     underscore "^1.8.3"
 
 "abacus-rating-config@file:lib/config/rating":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
-    abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-eval "file:../../Library/Caches/Yarn/utils/eval"
-    abacus-lock "file:../../Library/Caches/Yarn/utils/lock"
-    abacus-lrucache "file:../../Library/Caches/Yarn/utils/lrucache"
-    abacus-request "file:../../Library/Caches/Yarn/utils/request"
-    abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
-    abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
+    abacus-batch "file:../../../Library/Caches/Yarn/utils/batch"
+    abacus-breaker "file:../../../Library/Caches/Yarn/utils/breaker"
+    abacus-debug "file:../../../Library/Caches/Yarn/utils/debug"
+    abacus-eval "file:../../../Library/Caches/Yarn/utils/eval"
+    abacus-lock "file:../../../Library/Caches/Yarn/utils/lock"
+    abacus-lrucache "file:../../../Library/Caches/Yarn/utils/lrucache"
+    abacus-request "file:../../../Library/Caches/Yarn/utils/request"
+    abacus-retry "file:../../../Library/Caches/Yarn/utils/retry"
+    abacus-urienv "file:../../../Library/Caches/Yarn/utils/urienv"
     bignumber.js "^2.1.0"
     underscore "^1.8.3"
 
 "abacus-rc@file:lib/utils/rc":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
     js-yaml "^3.4.3"
     rc "^1.1.2"
     strip-json-comments "0.1.x"
     underscore "^1.8.3"
 
 "abacus-replace-template@file:tools/replace-template":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
     commander "^2.8.1"
     js-yaml "^3.4.3"
@@ -691,357 +693,358 @@
     underscore "^1.8.3"
 
 "abacus-request@file:lib/utils/request":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-lock "file:../../Library/Caches/Yarn/v1/lock"
-    abacus-lrucache "file:../../Library/Caches/Yarn/v1/lrucache"
-    abacus-moment "file:../../Library/Caches/Yarn/v1/moment"
-    abacus-transform "file:../../Library/Caches/Yarn/v1/transform"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-lock "file:../../../Library/Caches/Yarn/v1/lock"
+    abacus-lrucache "file:../../../Library/Caches/Yarn/v1/lrucache"
+    abacus-moment "file:../../../Library/Caches/Yarn/v1/moment"
+    abacus-transform "file:../../../Library/Caches/Yarn/v1/transform"
     commander "^2.8.1"
     request "^2.79.0"
     underscore "^1.8.3"
 
 "abacus-retry@file:lib/utils/retry":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-yieldable "file:../../Library/Caches/Yarn/v1/yieldable"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-yieldable "file:../../../Library/Caches/Yarn/v1/yieldable"
     retry "^0.10.1"
     underscore "^1.8.3"
 
 "abacus-rewire@file:lib/utils/rewire":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
     underscore "^1.8.3"
 
 "abacus-router@file:lib/utils/router":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-transform "file:../../Library/Caches/Yarn/v1/transform"
-    abacus-yieldable "file:../../Library/Caches/Yarn/v1/yieldable"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-transform "file:../../../Library/Caches/Yarn/v1/transform"
+    abacus-yieldable "file:../../../Library/Caches/Yarn/v1/yieldable"
     express "^4.14.1"
     underscore "^1.8.3"
 
 "abacus-schema@file:lib/utils/schema":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
     eslint "~4.13.0"
     graphql "^0.4.14"
     is-my-json-valid "^2.12.0"
 
 "abacus-secured-itest@file:test/secured":
-  version "1.0.0"
+  version "1.1.0"
 
 "abacus-seqid@file:lib/utils/seqid":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-cluster "file:../../Library/Caches/Yarn/v1/cluster"
-    abacus-moment "file:../../Library/Caches/Yarn/v1/moment"
-    abacus-vcapenv "file:../../Library/Caches/Yarn/v1/vcapenv"
+    abacus-cluster "file:../../../Library/Caches/Yarn/v1/cluster"
+    abacus-moment "file:../../../Library/Caches/Yarn/v1/moment"
+    abacus-vcapenv "file:../../../Library/Caches/Yarn/v1/vcapenv"
 
 "abacus-throttle@file:lib/utils/throttle":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-moment "file:../../Library/Caches/Yarn/v1/moment"
-    abacus-yieldable "file:../../Library/Caches/Yarn/v1/yieldable"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-moment "file:../../../Library/Caches/Yarn/v1/moment"
+    abacus-yieldable "file:../../../Library/Caches/Yarn/v1/yieldable"
     underscore "^1.8.3"
 
 "abacus-timewindow@file:lib/utils/timewindow":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-moment "file:../../Library/Caches/Yarn/v1/moment"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-moment "file:../../../Library/Caches/Yarn/v1/moment"
     underscore "^1.8.3"
 
 "abacus-transform@file:lib/utils/transform":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-yieldable "file:../../Library/Caches/Yarn/v1/yieldable"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-yieldable "file:../../../Library/Caches/Yarn/v1/yieldable"
     underscore "^1.8.3"
 
 "abacus-urienv@file:lib/utils/urienv":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-vcapenv "file:../../Library/Caches/Yarn/v1/vcapenv"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-vcapenv "file:../../../Library/Caches/Yarn/v1/vcapenv"
     underscore "^1.8.3"
 
 "abacus-usage-accumulator-itest@file:test/aggregation/accumulator":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-account-plugin "file:../../Library/Caches/lib/plugins/account"
-    abacus-batch "file:../../Library/Caches/lib/utils/batch"
-    abacus-clone "file:../../Library/Caches/lib/utils/clone"
-    abacus-dataflow "file:../../Library/Caches/lib/utils/dataflow"
-    abacus-dbclient "file:../../Library/Caches/lib/utils/dbclient"
-    abacus-debug "file:../../Library/Caches/lib/utils/debug"
-    abacus-express "file:../../Library/Caches/lib/utils/express"
-    abacus-lifecycle-manager "file:../../Library/Caches/Yarn/lib/lifecycle-manager"
-    abacus-mocha "file:../../Library/Caches/tools/mocha"
-    abacus-moment "file:../../Library/Caches/lib/utils/moment"
-    abacus-pouchserver "file:../../Library/Caches/lib/utils/pouchserver"
-    abacus-request "file:../../Library/Caches/lib/utils/request"
-    abacus-router "file:../../Library/Caches/lib/utils/router"
-    abacus-seqid "file:../../Library/Caches/lib/utils/seqid"
-    abacus-throttle "file:../../Library/Caches/lib/utils/throttle"
-    abacus-timewindow "file:../../Library/Caches/lib/utils/timewindow"
-    abacus-usage-accumulator "file:../../Library/Caches/lib/aggregation/accumulator"
-    abacus-yieldable "file:../../Library/Caches/lib/utils/yieldable"
+    abacus-account-plugin "file:../../../Library/Caches/lib/plugins/account"
+    abacus-batch "file:../../../Library/Caches/lib/utils/batch"
+    abacus-clone "file:../../../Library/Caches/lib/utils/clone"
+    abacus-dataflow "file:../../../Library/Caches/lib/utils/dataflow"
+    abacus-dbclient "file:../../../Library/Caches/lib/utils/dbclient"
+    abacus-debug "file:../../../Library/Caches/lib/utils/debug"
+    abacus-express "file:../../../Library/Caches/lib/utils/express"
+    abacus-lifecycle-manager "file:../../../Library/Caches/Yarn/lib/lifecycle-manager"
+    abacus-mocha "file:../../../Library/Caches/tools/mocha"
+    abacus-moment "file:../../../Library/Caches/lib/utils/moment"
+    abacus-pouchserver "file:../../../Library/Caches/lib/utils/pouchserver"
+    abacus-request "file:../../../Library/Caches/lib/utils/request"
+    abacus-router "file:../../../Library/Caches/lib/utils/router"
+    abacus-seqid "file:../../../Library/Caches/lib/utils/seqid"
+    abacus-throttle "file:../../../Library/Caches/lib/utils/throttle"
+    abacus-timewindow "file:../../../Library/Caches/lib/utils/timewindow"
+    abacus-usage-accumulator "file:../../../Library/Caches/lib/aggregation/accumulator"
+    abacus-yieldable "file:../../../Library/Caches/lib/utils/yieldable"
     bignumber.js "^2.1.0"
     commander "2.8.1"
     nyc "^11.4.1"
     underscore "^1.8.3"
 
 "abacus-usage-accumulator@file:lib/aggregation/accumulator":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-cluster "file:../../Library/Caches/Yarn/utils/cluster"
-    abacus-dataflow "file:../../Library/Caches/Yarn/utils/dataflow"
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
-    abacus-metering-config "file:../../Library/Caches/Yarn/config/metering"
-    abacus-oauth "file:../../Library/Caches/Yarn/utils/oauth"
-    abacus-rating-config "file:../../Library/Caches/Yarn/config/rating"
-    abacus-request "file:../../Library/Caches/Yarn/utils/request"
-    abacus-router "file:../../Library/Caches/Yarn/utils/router"
-    abacus-seqid "file:../../Library/Caches/Yarn/utils/seqid"
-    abacus-timewindow "file:../../Library/Caches/Yarn/utils/timewindow"
-    abacus-transform "file:../../Library/Caches/Yarn/utils/transform"
-    abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
-    abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
-    abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    abacus-cluster "file:../../../Library/Caches/Yarn/utils/cluster"
+    abacus-dataflow "file:../../../Library/Caches/Yarn/utils/dataflow"
+    abacus-debug "file:../../../Library/Caches/Yarn/utils/debug"
+    abacus-launcher "file:../../../Library/Caches/Yarn/utils/launcher"
+    abacus-metering-config "file:../../../Library/Caches/Yarn/config/metering"
+    abacus-oauth "file:../../../Library/Caches/Yarn/utils/oauth"
+    abacus-rating-config "file:../../../Library/Caches/Yarn/config/rating"
+    abacus-request "file:../../../Library/Caches/Yarn/utils/request"
+    abacus-router "file:../../../Library/Caches/Yarn/utils/router"
+    abacus-seqid "file:../../../Library/Caches/Yarn/utils/seqid"
+    abacus-timewindow "file:../../../Library/Caches/Yarn/utils/timewindow"
+    abacus-transform "file:../../../Library/Caches/Yarn/utils/transform"
+    abacus-urienv "file:../../../Library/Caches/Yarn/utils/urienv"
+    abacus-webapp "file:../../../Library/Caches/Yarn/utils/webapp"
+    abacus-yieldable "file:../../../Library/Caches/Yarn/utils/yieldable"
     underscore "^1.8.3"
 
 "abacus-usage-aggregator-itest@file:test/aggregation/aggregator":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-account-plugin "file:../../Library/Caches/lib/plugins/account"
-    abacus-batch "file:../../Library/Caches/lib/utils/batch"
-    abacus-clone "file:../../Library/Caches/lib/utils/clone"
-    abacus-dataflow "file:../../Library/Caches/lib/utils/dataflow"
-    abacus-dbclient "file:../../Library/Caches/lib/utils/dbclient"
-    abacus-debug "file:../../Library/Caches/lib/utils/debug"
-    abacus-express "file:../../Library/Caches/lib/utils/express"
-    abacus-lifecycle-manager "file:../../Library/Caches/Yarn/lib/lifecycle-manager"
-    abacus-mocha "file:../../Library/Caches/tools/mocha"
-    abacus-pouchserver "file:../../Library/Caches/lib/utils/pouchserver"
-    abacus-request "file:../../Library/Caches/lib/utils/request"
-    abacus-router "file:../../Library/Caches/lib/utils/router"
-    abacus-seqid "file:../../Library/Caches/lib/utils/seqid"
-    abacus-throttle "file:../../Library/Caches/lib/utils/throttle"
-    abacus-timewindow "file:../../Library/Caches/lib/utils/timewindow"
-    abacus-usage-aggregator "file:../../Library/Caches/lib/aggregation/aggregator"
-    abacus-yieldable "file:../../Library/Caches/lib/utils/yieldable"
+    abacus-account-plugin "file:../../../Library/Caches/lib/plugins/account"
+    abacus-batch "file:../../../Library/Caches/lib/utils/batch"
+    abacus-clone "file:../../../Library/Caches/lib/utils/clone"
+    abacus-dataflow "file:../../../Library/Caches/lib/utils/dataflow"
+    abacus-dbclient "file:../../../Library/Caches/lib/utils/dbclient"
+    abacus-debug "file:../../../Library/Caches/lib/utils/debug"
+    abacus-express "file:../../../Library/Caches/lib/utils/express"
+    abacus-lifecycle-manager "file:../../../Library/Caches/Yarn/lib/lifecycle-manager"
+    abacus-mocha "file:../../../Library/Caches/tools/mocha"
+    abacus-pouchserver "file:../../../Library/Caches/lib/utils/pouchserver"
+    abacus-request "file:../../../Library/Caches/lib/utils/request"
+    abacus-router "file:../../../Library/Caches/lib/utils/router"
+    abacus-seqid "file:../../../Library/Caches/lib/utils/seqid"
+    abacus-throttle "file:../../../Library/Caches/lib/utils/throttle"
+    abacus-timewindow "file:../../../Library/Caches/lib/utils/timewindow"
+    abacus-usage-aggregator "file:../../../Library/Caches/lib/aggregation/aggregator"
+    abacus-yieldable "file:../../../Library/Caches/lib/utils/yieldable"
     bignumber.js "^2.1.0"
     commander "2.8.1"
     nyc "^11.4.1"
     underscore "^1.8.3"
 
 "abacus-usage-aggregator@file:lib/aggregation/aggregator":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-cluster "file:../../Library/Caches/Yarn/utils/cluster"
-    abacus-dataflow "file:../../Library/Caches/Yarn/utils/dataflow"
-    abacus-dbclient "file:../../Library/Caches/Yarn/utils/dbclient"
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
-    abacus-lock "file:../../Library/Caches/Yarn/utils/lock"
-    abacus-metering-config "file:../../Library/Caches/Yarn/config/metering"
-    abacus-moment "file:../../Library/Caches/Yarn/utils/moment"
-    abacus-oauth "file:../../Library/Caches/Yarn/utils/oauth"
-    abacus-rating-config "file:../../Library/Caches/Yarn/config/rating"
-    abacus-request "file:../../Library/Caches/Yarn/utils/request"
-    abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
-    abacus-router "file:../../Library/Caches/Yarn/utils/router"
-    abacus-seqid "file:../../Library/Caches/Yarn/utils/seqid"
-    abacus-timewindow "file:../../Library/Caches/Yarn/utils/timewindow"
-    abacus-transform "file:../../Library/Caches/Yarn/utils/transform"
-    abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
-    abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
-    abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    abacus-cluster "file:../../../Library/Caches/Yarn/utils/cluster"
+    abacus-dataflow "file:../../../Library/Caches/Yarn/utils/dataflow"
+    abacus-dbclient "file:../../../Library/Caches/Yarn/utils/dbclient"
+    abacus-debug "file:../../../Library/Caches/Yarn/utils/debug"
+    abacus-launcher "file:../../../Library/Caches/Yarn/utils/launcher"
+    abacus-lock "file:../../../Library/Caches/Yarn/utils/lock"
+    abacus-metering-config "file:../../../Library/Caches/Yarn/config/metering"
+    abacus-moment "file:../../../Library/Caches/Yarn/utils/moment"
+    abacus-oauth "file:../../../Library/Caches/Yarn/utils/oauth"
+    abacus-rating-config "file:../../../Library/Caches/Yarn/config/rating"
+    abacus-request "file:../../../Library/Caches/Yarn/utils/request"
+    abacus-retry "file:../../../Library/Caches/Yarn/utils/retry"
+    abacus-router "file:../../../Library/Caches/Yarn/utils/router"
+    abacus-seqid "file:../../../Library/Caches/Yarn/utils/seqid"
+    abacus-timewindow "file:../../../Library/Caches/Yarn/utils/timewindow"
+    abacus-transform "file:../../../Library/Caches/Yarn/utils/transform"
+    abacus-urienv "file:../../../Library/Caches/Yarn/utils/urienv"
+    abacus-webapp "file:../../../Library/Caches/Yarn/utils/webapp"
+    abacus-yieldable "file:../../../Library/Caches/Yarn/utils/yieldable"
     underscore "^1.8.3"
 
 "abacus-usage-collector-itest@file:test/metering/collector":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-account-plugin "file:../../Library/Caches/lib/plugins/account"
-    abacus-batch "file:../../Library/Caches/lib/utils/batch"
-    abacus-debug "file:../../Library/Caches/lib/utils/debug"
-    abacus-express "file:../../Library/Caches/lib/utils/express"
-    abacus-lifecycle-manager "file:../../Library/Caches/Yarn/lib/lifecycle-manager"
-    abacus-mocha "file:../../Library/Caches/tools/mocha"
-    abacus-moment "file:../../Library/Caches/lib/utils/moment"
-    abacus-pouchserver "file:../../Library/Caches/lib/utils/pouchserver"
-    abacus-provisioning-plugin "file:../../Library/Caches/lib/plugins/provisioning"
-    abacus-request "file:../../Library/Caches/lib/utils/request"
-    abacus-router "file:../../Library/Caches/lib/utils/router"
-    abacus-throttle "file:../../Library/Caches/lib/utils/throttle"
-    abacus-usage-collector "file:../../Library/Caches/lib/metering/collector"
+    abacus-account-plugin "file:../../../Library/Caches/lib/plugins/account"
+    abacus-batch "file:../../../Library/Caches/lib/utils/batch"
+    abacus-cmdline "file:../../../Library/Caches/tools/cmdline"
+    abacus-debug "file:../../../Library/Caches/lib/utils/debug"
+    abacus-express "file:../../../Library/Caches/lib/utils/express"
+    abacus-lifecycle-manager "file:../../../Library/Caches/Yarn/lib/lifecycle-manager"
+    abacus-mocha "file:../../../Library/Caches/tools/mocha"
+    abacus-moment "file:../../../Library/Caches/lib/utils/moment"
+    abacus-pouchserver "file:../../../Library/Caches/lib/utils/pouchserver"
+    abacus-provisioning-plugin "file:../../../Library/Caches/lib/plugins/provisioning"
+    abacus-request "file:../../../Library/Caches/lib/utils/request"
+    abacus-router "file:../../../Library/Caches/lib/utils/router"
+    abacus-throttle "file:../../../Library/Caches/lib/utils/throttle"
+    abacus-usage-collector "file:../../../Library/Caches/lib/metering/collector"
     commander "2.8.1"
     nyc "^11.4.1"
     underscore "^1.8.3"
 
 "abacus-usage-collector@file:lib/metering/collector":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
-    abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
-    abacus-cluster "file:../../Library/Caches/Yarn/utils/cluster"
-    abacus-dataflow "file:../../Library/Caches/Yarn/utils/dataflow"
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
-    abacus-lrucache "file:../../Library/Caches/Yarn/utils/lrucache"
-    abacus-metering-config "file:../../Library/Caches/Yarn/config/metering"
-    abacus-oauth "file:../../Library/Caches/Yarn/utils/oauth"
-    abacus-pricing-config "file:../../Library/Caches/Yarn/config/pricing"
-    abacus-rating-config "file:../../Library/Caches/Yarn/config/rating"
-    abacus-request "file:../../Library/Caches/Yarn/utils/request"
-    abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
-    abacus-router "file:../../Library/Caches/Yarn/utils/router"
-    abacus-seqid "file:../../Library/Caches/Yarn/utils/seqid"
-    abacus-transform "file:../../Library/Caches/Yarn/utils/transform"
-    abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
-    abacus-usage-schemas "file:../../Library/Caches/Yarn/config/schemas"
-    abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
-    abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    abacus-batch "file:../../../Library/Caches/Yarn/utils/batch"
+    abacus-breaker "file:../../../Library/Caches/Yarn/utils/breaker"
+    abacus-cluster "file:../../../Library/Caches/Yarn/utils/cluster"
+    abacus-dataflow "file:../../../Library/Caches/Yarn/utils/dataflow"
+    abacus-debug "file:../../../Library/Caches/Yarn/utils/debug"
+    abacus-launcher "file:../../../Library/Caches/Yarn/utils/launcher"
+    abacus-lrucache "file:../../../Library/Caches/Yarn/utils/lrucache"
+    abacus-metering-config "file:../../../Library/Caches/Yarn/config/metering"
+    abacus-oauth "file:../../../Library/Caches/Yarn/utils/oauth"
+    abacus-pricing-config "file:../../../Library/Caches/Yarn/config/pricing"
+    abacus-rating-config "file:../../../Library/Caches/Yarn/config/rating"
+    abacus-request "file:../../../Library/Caches/Yarn/utils/request"
+    abacus-retry "file:../../../Library/Caches/Yarn/utils/retry"
+    abacus-router "file:../../../Library/Caches/Yarn/utils/router"
+    abacus-seqid "file:../../../Library/Caches/Yarn/utils/seqid"
+    abacus-transform "file:../../../Library/Caches/Yarn/utils/transform"
+    abacus-urienv "file:../../../Library/Caches/Yarn/utils/urienv"
+    abacus-usage-schemas "file:../../../Library/Caches/Yarn/config/schemas"
+    abacus-webapp "file:../../../Library/Caches/Yarn/utils/webapp"
+    abacus-yieldable "file:../../../Library/Caches/Yarn/utils/yieldable"
     underscore "^1.8.3"
 
 "abacus-usage-meter-itest@file:test/metering/meter":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-batch "file:../../Library/Caches/lib/utils/batch"
-    abacus-debug "file:../../Library/Caches/lib/utils/debug"
-    abacus-express "file:../../Library/Caches/lib/utils/express"
-    abacus-lifecycle-manager "file:../../Library/Caches/Yarn/lib/lifecycle-manager"
-    abacus-mocha "file:../../Library/Caches/tools/mocha"
-    abacus-moment "file:../../Library/Caches/lib/utils/moment"
-    abacus-pouchserver "file:../../Library/Caches/lib/utils/pouchserver"
-    abacus-request "file:../../Library/Caches/lib/utils/request"
-    abacus-router "file:../../Library/Caches/lib/utils/router"
-    abacus-throttle "file:../../Library/Caches/lib/utils/throttle"
-    abacus-usage-meter "file:../../Library/Caches/lib/metering/meter"
+    abacus-batch "file:../../../Library/Caches/lib/utils/batch"
+    abacus-debug "file:../../../Library/Caches/lib/utils/debug"
+    abacus-express "file:../../../Library/Caches/lib/utils/express"
+    abacus-lifecycle-manager "file:../../../Library/Caches/Yarn/lib/lifecycle-manager"
+    abacus-mocha "file:../../../Library/Caches/tools/mocha"
+    abacus-moment "file:../../../Library/Caches/lib/utils/moment"
+    abacus-pouchserver "file:../../../Library/Caches/lib/utils/pouchserver"
+    abacus-request "file:../../../Library/Caches/lib/utils/request"
+    abacus-router "file:../../../Library/Caches/lib/utils/router"
+    abacus-throttle "file:../../../Library/Caches/lib/utils/throttle"
+    abacus-usage-meter "file:../../../Library/Caches/lib/metering/meter"
     commander "2.8.1"
     nyc "^11.4.1"
     underscore "^1.8.3"
 
 "abacus-usage-meter@file:lib/metering/meter":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
-    abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
-    abacus-cluster "file:../../Library/Caches/Yarn/utils/cluster"
-    abacus-dataflow "file:../../Library/Caches/Yarn/utils/dataflow"
-    abacus-dbclient "file:../../Library/Caches/Yarn/utils/dbclient"
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
-    abacus-metering-config "file:../../Library/Caches/Yarn/config/metering"
-    abacus-oauth "file:../../Library/Caches/Yarn/utils/oauth"
-    abacus-request "file:../../Library/Caches/Yarn/utils/request"
-    abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
-    abacus-router "file:../../Library/Caches/Yarn/utils/router"
-    abacus-seqid "file:../../Library/Caches/Yarn/utils/seqid"
-    abacus-throttle "file:../../Library/Caches/Yarn/utils/throttle"
-    abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
-    abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
-    abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    abacus-batch "file:../../../Library/Caches/Yarn/utils/batch"
+    abacus-breaker "file:../../../Library/Caches/Yarn/utils/breaker"
+    abacus-cluster "file:../../../Library/Caches/Yarn/utils/cluster"
+    abacus-dataflow "file:../../../Library/Caches/Yarn/utils/dataflow"
+    abacus-dbclient "file:../../../Library/Caches/Yarn/utils/dbclient"
+    abacus-debug "file:../../../Library/Caches/Yarn/utils/debug"
+    abacus-launcher "file:../../../Library/Caches/Yarn/utils/launcher"
+    abacus-metering-config "file:../../../Library/Caches/Yarn/config/metering"
+    abacus-oauth "file:../../../Library/Caches/Yarn/utils/oauth"
+    abacus-request "file:../../../Library/Caches/Yarn/utils/request"
+    abacus-retry "file:../../../Library/Caches/Yarn/utils/retry"
+    abacus-router "file:../../../Library/Caches/Yarn/utils/router"
+    abacus-seqid "file:../../../Library/Caches/Yarn/utils/seqid"
+    abacus-throttle "file:../../../Library/Caches/Yarn/utils/throttle"
+    abacus-urienv "file:../../../Library/Caches/Yarn/utils/urienv"
+    abacus-webapp "file:../../../Library/Caches/Yarn/utils/webapp"
+    abacus-yieldable "file:../../../Library/Caches/Yarn/utils/yieldable"
     underscore "^1.8.3"
 
 "abacus-usage-reporting-itest@file:test/aggregation/reporting":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-account-plugin "file:../../Library/Caches/lib/plugins/account"
-    abacus-batch "file:../../Library/Caches/lib/utils/batch"
-    abacus-dbclient "file:../../Library/Caches/lib/utils/dbclient"
-    abacus-debug "file:../../Library/Caches/lib/utils/debug"
-    abacus-express "file:../../Library/Caches/lib/utils/express"
-    abacus-lifecycle-manager "file:../../Library/Caches/Yarn/lib/lifecycle-manager"
-    abacus-mocha "file:../../Library/Caches/tools/mocha"
-    abacus-pouchserver "file:../../Library/Caches/lib/utils/pouchserver"
-    abacus-request "file:../../Library/Caches/lib/utils/request"
-    abacus-router "file:../../Library/Caches/lib/utils/router"
-    abacus-throttle "file:../../Library/Caches/lib/utils/throttle"
-    abacus-urienv "file:../../Library/Caches/lib/utils/urienv"
-    abacus-usage-reporting "file:../../Library/Caches/lib/aggregation/reporting"
-    abacus-yieldable "file:../../Library/Caches/lib/utils/yieldable"
+    abacus-account-plugin "file:../../../Library/Caches/lib/plugins/account"
+    abacus-batch "file:../../../Library/Caches/lib/utils/batch"
+    abacus-dbclient "file:../../../Library/Caches/lib/utils/dbclient"
+    abacus-debug "file:../../../Library/Caches/lib/utils/debug"
+    abacus-express "file:../../../Library/Caches/lib/utils/express"
+    abacus-lifecycle-manager "file:../../../Library/Caches/Yarn/lib/lifecycle-manager"
+    abacus-mocha "file:../../../Library/Caches/tools/mocha"
+    abacus-pouchserver "file:../../../Library/Caches/lib/utils/pouchserver"
+    abacus-request "file:../../../Library/Caches/lib/utils/request"
+    abacus-router "file:../../../Library/Caches/lib/utils/router"
+    abacus-throttle "file:../../../Library/Caches/lib/utils/throttle"
+    abacus-urienv "file:../../../Library/Caches/lib/utils/urienv"
+    abacus-usage-reporting "file:../../../Library/Caches/lib/aggregation/reporting"
+    abacus-yieldable "file:../../../Library/Caches/lib/utils/yieldable"
     bignumber.js "^2.1.0"
     commander "2.8.1"
     nyc "^11.4.1"
     underscore "^1.8.3"
 
 "abacus-usage-reporting@file:lib/aggregation/reporting":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
-    abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
-    abacus-cluster "file:../../Library/Caches/Yarn/utils/cluster"
-    abacus-counter "file:../../Library/Caches/Yarn/utils/counter"
-    abacus-dataflow "file:../../Library/Caches/Yarn/utils/dataflow"
-    abacus-dbclient "file:../../Library/Caches/Yarn/utils/dbclient"
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
-    abacus-lrucache "file:../../Library/Caches/Yarn/utils/lrucache"
-    abacus-metering-config "file:../../Library/Caches/Yarn/config/metering"
-    abacus-moment "file:../../Library/Caches/Yarn/utils/moment"
-    abacus-oauth "file:../../Library/Caches/Yarn/utils/oauth"
-    abacus-rating-config "file:../../Library/Caches/Yarn/config/rating"
-    abacus-request "file:../../Library/Caches/Yarn/utils/request"
-    abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
-    abacus-router "file:../../Library/Caches/Yarn/utils/router"
-    abacus-schema "file:../../Library/Caches/Yarn/utils/schema"
-    abacus-seqid "file:../../Library/Caches/Yarn/utils/seqid"
-    abacus-throttle "file:../../Library/Caches/Yarn/utils/throttle"
-    abacus-timewindow "file:../../Library/Caches/Yarn/utils/timewindow"
-    abacus-transform "file:../../Library/Caches/Yarn/utils/transform"
-    abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
-    abacus-usage-schemas "file:../../Library/Caches/Yarn/config/schemas"
-    abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
-    abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    abacus-batch "file:../../../Library/Caches/Yarn/utils/batch"
+    abacus-breaker "file:../../../Library/Caches/Yarn/utils/breaker"
+    abacus-cluster "file:../../../Library/Caches/Yarn/utils/cluster"
+    abacus-counter "file:../../../Library/Caches/Yarn/utils/counter"
+    abacus-dataflow "file:../../../Library/Caches/Yarn/utils/dataflow"
+    abacus-dbclient "file:../../../Library/Caches/Yarn/utils/dbclient"
+    abacus-debug "file:../../../Library/Caches/Yarn/utils/debug"
+    abacus-launcher "file:../../../Library/Caches/Yarn/utils/launcher"
+    abacus-lrucache "file:../../../Library/Caches/Yarn/utils/lrucache"
+    abacus-metering-config "file:../../../Library/Caches/Yarn/config/metering"
+    abacus-moment "file:../../../Library/Caches/Yarn/utils/moment"
+    abacus-oauth "file:../../../Library/Caches/Yarn/utils/oauth"
+    abacus-rating-config "file:../../../Library/Caches/Yarn/config/rating"
+    abacus-request "file:../../../Library/Caches/Yarn/utils/request"
+    abacus-retry "file:../../../Library/Caches/Yarn/utils/retry"
+    abacus-router "file:../../../Library/Caches/Yarn/utils/router"
+    abacus-schema "file:../../../Library/Caches/Yarn/utils/schema"
+    abacus-seqid "file:../../../Library/Caches/Yarn/utils/seqid"
+    abacus-throttle "file:../../../Library/Caches/Yarn/utils/throttle"
+    abacus-timewindow "file:../../../Library/Caches/Yarn/utils/timewindow"
+    abacus-transform "file:../../../Library/Caches/Yarn/utils/transform"
+    abacus-urienv "file:../../../Library/Caches/Yarn/utils/urienv"
+    abacus-usage-schemas "file:../../../Library/Caches/Yarn/config/schemas"
+    abacus-webapp "file:../../../Library/Caches/Yarn/utils/webapp"
+    abacus-yieldable "file:../../../Library/Caches/Yarn/utils/yieldable"
     bignumber.js "^2.1.0"
     underscore "^1.8.3"
 
 "abacus-usage-schemas@file:lib/config/schemas":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-schema "file:../../Library/Caches/Yarn/utils/schema"
+    abacus-schema "file:../../../Library/Caches/Yarn/utils/schema"
     underscore "^1.8.3"
 
 "abacus-vcapenv@file:lib/utils/vcapenv":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
     underscore "^1.8.3"
 
 "abacus-wait@file:test/lib/wait":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-debug "file:../../Library/Caches/lib/utils/debug"
-    abacus-moment "file:../../Library/Caches/lib/utils/moment"
-    abacus-yieldable "file:../../Library/Caches/lib/utils/yieldable"
+    abacus-debug "file:../../../Library/Caches/lib/utils/debug"
+    abacus-moment "file:../../../Library/Caches/lib/utils/moment"
+    abacus-yieldable "file:../../../Library/Caches/lib/utils/yieldable"
 
 "abacus-webapp@file:lib/utils/webapp":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
-    abacus-basic "file:../../Library/Caches/Yarn/v1/basic"
-    abacus-cluster "file:../../Library/Caches/Yarn/v1/cluster"
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    abacus-eureka "file:../../Library/Caches/Yarn/v1/eureka"
-    abacus-express "file:../../Library/Caches/Yarn/v1/express"
-    abacus-hystrix "file:../../Library/Caches/Yarn/v1/hystrix"
-    abacus-perf "file:../../Library/Caches/Yarn/v1/perf"
-    abacus-rc "file:../../Library/Caches/Yarn/v1/rc"
-    abacus-urienv "file:../../Library/Caches/Yarn/v1/urienv"
-    abacus-vcapenv "file:../../Library/Caches/Yarn/v1/vcapenv"
+    abacus-basic "file:../../../Library/Caches/Yarn/v1/basic"
+    abacus-cluster "file:../../../Library/Caches/Yarn/v1/cluster"
+    abacus-debug "file:../../../Library/Caches/Yarn/v1/debug"
+    abacus-eureka "file:../../../Library/Caches/Yarn/v1/eureka"
+    abacus-express "file:../../../Library/Caches/Yarn/v1/express"
+    abacus-hystrix "file:../../../Library/Caches/Yarn/v1/hystrix"
+    abacus-perf "file:../../../Library/Caches/Yarn/v1/perf"
+    abacus-rc "file:../../../Library/Caches/Yarn/v1/rc"
+    abacus-urienv "file:../../../Library/Caches/Yarn/v1/urienv"
+    abacus-vcapenv "file:../../../Library/Caches/Yarn/v1/vcapenv"
     commander "^2.8.1"
     node-inspect "^1.11.3"
     underscore "^1.8.3"
 
 "abacus-yieldable@file:lib/utils/yieldable":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
     co "^3.0.6"
     thunkify "^2.1.2"
@@ -1063,7 +1066,13 @@ abstract-leveldown@^2.4.1:
   dependencies:
     xtend "~4.0.0"
 
-abstract-leveldown@^3.0.0, abstract-leveldown@~3.0.0:
+abstract-leveldown@^4.0.0, abstract-leveldown@~4.0.0:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/abstract-leveldown/-/abstract-leveldown-4.0.3.tgz#cb636f4965fbe117f5c8b76a7d51dd42aaed0580"
+  dependencies:
+    xtend "~4.0.0"
+
+abstract-leveldown@~3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/abstract-leveldown/-/abstract-leveldown-3.0.0.tgz#5cb89f958a44f526779d740d1440e743e0c30a57"
   dependencies:
@@ -1098,9 +1107,9 @@ acorn@^3.0.4:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-3.3.0.tgz#45e37fb39e8da3f25baee3ff5369e2bb5f22017a"
 
-acorn@^5.2.1:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.3.0.tgz#7446d39459c54fb49a80e6ee6478149b940ec822"
+acorn@^5.2.1, acorn@^5.4.0:
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.4.1.tgz#fdc58d9d17f4a4e98d102ded826a9b9759125102"
 
 ajv-keywords@^2.1.0:
   version "2.1.1"
@@ -1169,7 +1178,7 @@ ansi-styles@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
 
-ansi-styles@^3.1.0:
+ansi-styles@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-3.2.0.tgz#c159b8d5be0f9e5a6f346dab94f16ce022161b88"
   dependencies:
@@ -1197,8 +1206,8 @@ are-we-there-yet@~1.1.2:
     readable-stream "^2.0.6"
 
 argparse@^1.0.7, argparse@~1.0.2:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/argparse/-/argparse-1.0.9.tgz#73d83bc263f86e97f8cc4f6bae1b0e90a7d22c86"
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/argparse/-/argparse-1.0.10.tgz#bcd6791ea5ae09725e17e5ad988134cd40b3d911"
   dependencies:
     sprintf-js "~1.0.2"
 
@@ -1309,8 +1318,8 @@ babel-code-frame@^6.22.0, babel-code-frame@^6.26.0:
     js-tokens "^3.0.2"
 
 babel-generator@^6.18.0:
-  version "6.26.0"
-  resolved "https://registry.yarnpkg.com/babel-generator/-/babel-generator-6.26.0.tgz#ac1ae20070b79f6e3ca1d3269613053774f20dc5"
+  version "6.26.1"
+  resolved "https://registry.yarnpkg.com/babel-generator/-/babel-generator-6.26.1.tgz#1844408d3b8f0d35a404ea7ac180f087a601bd90"
   dependencies:
     babel-messages "^6.23.0"
     babel-runtime "^6.26.0"
@@ -1318,7 +1327,7 @@ babel-generator@^6.18.0:
     detect-indent "^4.0.0"
     jsesc "^1.3.0"
     lodash "^4.17.4"
-    source-map "^0.5.6"
+    source-map "^0.5.7"
     trim-right "^1.0.1"
 
 babel-messages@^6.23.0:
@@ -1386,8 +1395,8 @@ base62@0.1.1:
   resolved "https://registry.yarnpkg.com/base62/-/base62-0.1.1.tgz#7b4174c2f94449753b11c2651c083da841a7b084"
 
 base62@^1.1.0:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/base62/-/base62-1.2.1.tgz#95a5a22350b0a557f3f081247fc2c398803ecb0c"
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/base62/-/base62-1.2.7.tgz#5c01aad73c0124f9535cff1bdb9c4e6ccf838cfb"
 
 base64url@2.0.0, base64url@^2.0.0:
   version "2.0.0"
@@ -1497,8 +1506,8 @@ bootstrap@^3.3.5:
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.3.7.tgz#5a389394549f23330875a3b150656574f8a9eb71"
 
 brace-expansion@^1.1.7:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.8.tgz#c07b211c7c952ec1f8efd51a77ef0d1d3990a292"
+  version "1.1.11"
+  resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.11.tgz#3c7fcbf529d87226f3d2f52b966ff5271eb441dd"
   dependencies:
     balanced-match "^1.0.0"
     concat-map "0.0.1"
@@ -1602,12 +1611,12 @@ chai@^3.0.0:
     type-detect "^1.0.0"
 
 chalk@*, chalk@^2.0.0, chalk@^2.1.0, chalk@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.3.0.tgz#b5ea48efc9c1793dccc9b4767c93914d3f2d52ba"
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.3.1.tgz#523fe2678aec7b04e8041909292fe8b17059b796"
   dependencies:
-    ansi-styles "^3.1.0"
+    ansi-styles "^3.2.0"
     escape-string-regexp "^1.0.5"
-    supports-color "^4.0.0"
+    supports-color "^5.2.0"
 
 chalk@^1.1.3:
   version "1.1.3"
@@ -1718,15 +1727,15 @@ color-name@^1.1.1:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.3.tgz#a7d0558bd89c42f795dd42328f740831ca53bc25"
 
-combined-stream@^1.0.5, combined-stream@~1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.5.tgz#938370a57b4a51dea2c77c15d5c5fdf895164009"
+combined-stream@1.0.6, combined-stream@^1.0.5, combined-stream@~1.0.5:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.6.tgz#723e7df6e801ac5613113a7e445a9b69cb632818"
   dependencies:
     delayed-stream "~1.0.0"
 
 commander@*, commander@^2.5.0, commander@^2.8.1:
-  version "2.13.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
+  version "2.14.1"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.14.1.tgz#2235123e37af8ca3c65df45b026dbd357b01b9aa"
 
 commander@2.8.1:
   version "2.8.1"
@@ -1758,19 +1767,19 @@ commoner@^0.10.1:
     q "^1.1.2"
     recast "^0.11.17"
 
-compressible@~2.0.11:
-  version "2.0.12"
-  resolved "https://registry.yarnpkg.com/compressible/-/compressible-2.0.12.tgz#c59a5c99db76767e9876500e271ef63b3493bd66"
+compressible@~2.0.13:
+  version "2.0.13"
+  resolved "https://registry.yarnpkg.com/compressible/-/compressible-2.0.13.tgz#0d1020ab924b2fdb4d6279875c7d6daba6baa7a9"
   dependencies:
-    mime-db ">= 1.30.0 < 2"
+    mime-db ">= 1.33.0 < 2"
 
 compression@^1.0.8, compression@^1.6.2:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/compression/-/compression-1.7.1.tgz#eff2603efc2e22cf86f35d2eb93589f9875373db"
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/compression/-/compression-1.7.2.tgz#aaffbcd6aaf854b44ebb280353d5ad1651f59a69"
   dependencies:
     accepts "~1.3.4"
     bytes "3.0.0"
-    compressible "~2.0.11"
+    compressible "~2.0.13"
     debug "2.6.9"
     on-headers "~1.0.1"
     safe-buffer "5.1.1"
@@ -1975,6 +1984,12 @@ decamelize@^1.0.0, decamelize@^1.1.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
 
+decompress-response@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/decompress-response/-/decompress-response-3.3.0.tgz#80a4dd323748384bfa248083622aedec982adff3"
+  dependencies:
+    mimic-response "^1.0.0"
+
 deep-eql@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/deep-eql/-/deep-eql-0.1.3.tgz#ef558acab8de25206cd713906d74e56930eb69f2"
@@ -2000,6 +2015,12 @@ deferred-leveldown@~2.0.2:
   resolved "https://registry.yarnpkg.com/deferred-leveldown/-/deferred-leveldown-2.0.3.tgz#91fbc7699ac85f3920df035792d96d97cbf50c0f"
   dependencies:
     abstract-leveldown "~3.0.0"
+
+deferred-leveldown@~3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/deferred-leveldown/-/deferred-leveldown-3.0.0.tgz#bff7241bf156aa3635f520bedf34330c408d3307"
+  dependencies:
+    abstract-leveldown "~4.0.0"
 
 define-properties@^1.1.2:
   version "1.1.2"
@@ -2040,7 +2061,7 @@ depd@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.1.tgz#5783b4e1c459f06fa5ca27f991f3d06e7a310359"
 
-depd@~1.1.0, depd@~1.1.1:
+depd@~1.1.0, depd@~1.1.1, depd@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.2.tgz#9bcd52e14c097763e749b274c4346ed2e560b5a9"
 
@@ -2157,15 +2178,15 @@ emit-stream@^0.1.2:
   dependencies:
     through "~2.3.4"
 
-encodeurl@~1.0.1:
+encodeurl@~1.0.1, encodeurl@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
 
-encoding-down@~3.0.0:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/encoding-down/-/encoding-down-3.0.1.tgz#80a4415ec4d2805a02a67e5eac880d9754b796e0"
+encoding-down@~4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/encoding-down/-/encoding-down-4.0.0.tgz#f71c8addc51f0ed186784e79b8ac75cfaa44119f"
   dependencies:
-    abstract-leveldown "^3.0.0"
+    abstract-leveldown "^4.0.0"
     level-codec "^8.0.0"
     level-errors "^1.0.4"
 
@@ -2196,8 +2217,8 @@ equals@^1.0.5:
     jkroso-type "1"
 
 errno@~0.1.1:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/errno/-/errno-0.1.6.tgz#c386ce8a6283f14fc09563b71560908c9bf53026"
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/errno/-/errno-0.1.7.tgz#4684d71779ad39af177e3f007996f7c67c852618"
   dependencies:
     prr "~1.0.1"
 
@@ -2246,7 +2267,7 @@ eslint-plugin-mocha@^4.8.0:
     ramda "^0.24.1"
 
 "eslint-plugin-nodate@file:tools/eslint-plugin-nodate":
-  version "1.0.0"
+  version "1.1.0"
   dependencies:
     requireindex "~1.1.0"
 
@@ -2304,10 +2325,10 @@ esmangle-evaluator@^1.0.0:
   resolved "https://registry.yarnpkg.com/esmangle-evaluator/-/esmangle-evaluator-1.0.1.tgz#620d866ef4861b3311f75766d52a8572bb3c6336"
 
 espree@^3.5.2:
-  version "3.5.2"
-  resolved "https://registry.yarnpkg.com/espree/-/espree-3.5.2.tgz#756ada8b979e9dcfcdb30aad8d1a9304a905e1ca"
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/espree/-/espree-3.5.3.tgz#931e0af64e7fbbed26b050a29daad1fc64799fa6"
   dependencies:
-    acorn "^5.2.1"
+    acorn "^5.4.0"
     acorn-jsx "^3.0.0"
 
 esprima-fb@^15001.1.0-dev-harmony-fb:
@@ -2673,11 +2694,11 @@ form-data@~2.1.1:
     mime-types "^2.1.12"
 
 form-data@~2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.3.1.tgz#6fb94fbd71885306d73d15cc497fe4cc4ecd44bf"
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.3.2.tgz#4970498be604c20c005d4f5c23aecd21d6b49099"
   dependencies:
     asynckit "^0.4.0"
-    combined-stream "^1.0.5"
+    combined-stream "1.0.6"
     mime-types "^2.1.12"
 
 formatio@1.2.0:
@@ -2924,9 +2945,9 @@ has-flag@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-1.0.0.tgz#9d9e793165ce017a00f00418c43f942a7b1d11fa"
 
-has-flag@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-2.0.0.tgz#e8207af1cc7b30d446cc70b734b5e8be18f88d51"
+has-flag@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-3.0.0.tgz#b5d454dc2199ae225699f3467e5a07f3b955bafd"
 
 has-own-property-x@^3.1.1:
   version "3.2.0"
@@ -2989,8 +3010,8 @@ hoek@2.x.x:
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-2.16.3.tgz#20bb7403d3cea398e91dc4710a8ff1b8274a25ed"
 
 hoek@4.x.x:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/hoek/-/hoek-4.2.0.tgz#72d9d0754f7fe25ca2d01ad8f8f9a9449a89526d"
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/hoek/-/hoek-4.2.1.tgz#9634502aa12c445dd5a7c5734b572bb8738aacbb"
 
 hogan.js@^3.0.2:
   version "3.0.2"
@@ -3150,8 +3171,8 @@ inquirer@^3.0.6:
     through "^2.3.6"
 
 invariant@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.2.tgz#9e1f56ac0acdb6bf303306f338be3b204ae60360"
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.3.tgz#1a827dfde7dcbd7c323f0ca826be8fa7c5e9d688"
   dependencies:
     loose-envify "^1.0.0"
 
@@ -3159,9 +3180,9 @@ invert-kv@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-1.0.0.tgz#104a8e4aaca6d3d8cd157a8ef8bfab2d7a3ffdb6"
 
-ipaddr.js@1.5.2:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.5.2.tgz#d4b505bde9946987ccf0fc58d9010ff9607e3fa0"
+ipaddr.js@1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.6.0.tgz#e3fa357b773da619f26e95f049d055c72796f86b"
 
 is-array-buffer-x@^1.0.13:
   version "1.7.0"
@@ -3285,12 +3306,17 @@ is-index-x@^1.0.0:
     to-number-x "^2.0.0"
     to-string-symbols-supported-x "^1.0.0"
 
+is-my-ip-valid@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/is-my-ip-valid/-/is-my-ip-valid-1.0.0.tgz#7b351b8e8edd4d3995d4d066680e664d94696824"
+
 is-my-json-valid@^2.12.0:
-  version "2.17.1"
-  resolved "https://registry.yarnpkg.com/is-my-json-valid/-/is-my-json-valid-2.17.1.tgz#3da98914a70a22f0a8563ef1511a246c6fc55471"
+  version "2.17.2"
+  resolved "https://registry.yarnpkg.com/is-my-json-valid/-/is-my-json-valid-2.17.2.tgz#6b2103a288e94ef3de5cf15d29dd85fc4b78d65c"
   dependencies:
     generate-function "^2.0.0"
     generate-object-property "^1.1.0"
+    is-my-ip-valid "^1.0.0"
     jsonpointer "^4.0.0"
     xtend "^4.0.0"
 
@@ -3406,9 +3432,9 @@ isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
-istanbul-lib-coverage@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/istanbul-lib-coverage/-/istanbul-lib-coverage-1.1.1.tgz#73bfb998885299415c93d38a3e9adf784a77a9da"
+istanbul-lib-coverage@^1.1.1, istanbul-lib-coverage@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/istanbul-lib-coverage/-/istanbul-lib-coverage-1.1.2.tgz#4113c8ff6b7a40a1ef7350b01016331f63afde14"
 
 istanbul-lib-hook@^1.1.0:
   version "1.1.0"
@@ -3417,39 +3443,39 @@ istanbul-lib-hook@^1.1.0:
     append-transform "^0.4.0"
 
 istanbul-lib-instrument@^1.9.1:
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/istanbul-lib-instrument/-/istanbul-lib-instrument-1.9.1.tgz#250b30b3531e5d3251299fdd64b0b2c9db6b558e"
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/istanbul-lib-instrument/-/istanbul-lib-instrument-1.9.2.tgz#84905bf47f7e0b401d6b840da7bad67086b4aab6"
   dependencies:
     babel-generator "^6.18.0"
     babel-template "^6.16.0"
     babel-traverse "^6.18.0"
     babel-types "^6.18.0"
     babylon "^6.18.0"
-    istanbul-lib-coverage "^1.1.1"
+    istanbul-lib-coverage "^1.1.2"
     semver "^5.3.0"
 
 istanbul-lib-report@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/istanbul-lib-report/-/istanbul-lib-report-1.1.2.tgz#922be27c13b9511b979bd1587359f69798c1d425"
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/istanbul-lib-report/-/istanbul-lib-report-1.1.3.tgz#2df12188c0fa77990c0d2176d2d0ba3394188259"
   dependencies:
-    istanbul-lib-coverage "^1.1.1"
+    istanbul-lib-coverage "^1.1.2"
     mkdirp "^0.5.1"
     path-parse "^1.0.5"
     supports-color "^3.1.2"
 
 istanbul-lib-source-maps@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/istanbul-lib-source-maps/-/istanbul-lib-source-maps-1.2.2.tgz#750578602435f28a0c04ee6d7d9e0f2960e62c1c"
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/istanbul-lib-source-maps/-/istanbul-lib-source-maps-1.2.3.tgz#20fb54b14e14b3fb6edb6aca3571fd2143db44e6"
   dependencies:
     debug "^3.1.0"
-    istanbul-lib-coverage "^1.1.1"
+    istanbul-lib-coverage "^1.1.2"
     mkdirp "^0.5.1"
     rimraf "^2.6.1"
     source-map "^0.5.3"
 
 istanbul-reports@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/istanbul-reports/-/istanbul-reports-1.1.3.tgz#3b9e1e8defb6d18b1d425da8e8b32c5a163f2d10"
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/istanbul-reports/-/istanbul-reports-1.1.4.tgz#5ccba5e22b7b5a5d91d5e0a830f89be334bf97bd"
   dependencies:
     handlebars "^4.0.3"
 
@@ -3653,10 +3679,10 @@ level-iterator-stream@~2.0.0:
     xtend "^4.0.0"
 
 level-packager@^2.0.2:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/level-packager/-/level-packager-2.1.0.tgz#d81d81c5cb6d44e87ce2d71baca35eb945cf4d45"
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/level-packager/-/level-packager-2.1.1.tgz#10b653decb67b0a09c4e961ae84f196edaad205a"
   dependencies:
-    encoding-down "~3.0.0"
+    encoding-down "~4.0.0"
     levelup "^2.0.0"
 
 level-write-stream@1.0.0:
@@ -3682,11 +3708,20 @@ leveldown@2.1.1, leveldown@^2.1.1:
     nan "~2.8.0"
     prebuild-install "^2.1.0"
 
-levelup@2.0.1, levelup@^2.0.0:
+levelup@2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/levelup/-/levelup-2.0.1.tgz#3dc91b3e632d37c9e546239c864118b004c9f860"
   dependencies:
     deferred-leveldown "~2.0.2"
+    level-errors "~1.1.0"
+    level-iterator-stream "~2.0.0"
+    xtend "~4.0.0"
+
+levelup@^2.0.0:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/levelup/-/levelup-2.0.2.tgz#83dd22ffd5ee14482143c37cddfb8457854d3727"
+  dependencies:
+    deferred-leveldown "~3.0.0"
     level-errors "~1.1.0"
     level-iterator-stream "~2.0.0"
     xtend "~4.0.0"
@@ -3813,8 +3848,8 @@ lodash@3.7.x:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.7.0.tgz#3678bd8ab995057c07ade836ed2ef087da811d45"
 
 lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.4, lodash@^4.3.0:
-  version "4.17.4"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
+  version "4.17.5"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
 
 lolex@^1.6.0:
   version "1.6.0"
@@ -3984,27 +4019,27 @@ micromatch@^2.3.11, micromatch@^2.3.7:
     parse-glob "^3.0.4"
     regex-cache "^0.4.2"
 
-"mime-db@>= 1.30.0 < 2":
-  version "1.32.0"
-  resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.32.0.tgz#485b3848b01a3cda5f968b4882c0771e58e09414"
+"mime-db@>= 1.33.0 < 2", mime-db@~1.33.0:
+  version "1.33.0"
+  resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.33.0.tgz#a3492050a5cb9b63450541e39d9788d2272783db"
 
-mime-db@~1.30.0:
-  version "1.30.0"
-  resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.30.0.tgz#74c643da2dd9d6a45399963465b26d5ca7d71f01"
-
-mime-types@^2.1.12, mime-types@~2.1.15, mime-types@~2.1.16, mime-types@~2.1.17, mime-types@~2.1.7:
-  version "2.1.17"
-  resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.17.tgz#09d7a393f03e995a79f8af857b70a9e0ab16557a"
+mime-types@^2.1.12, mime-types@~2.1.16, mime-types@~2.1.17, mime-types@~2.1.18, mime-types@~2.1.7:
+  version "2.1.18"
+  resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.18.tgz#6f323f60a83d11146f831ff11fd66e2fe5503bb8"
   dependencies:
-    mime-db "~1.30.0"
+    mime-db "~1.33.0"
 
 mime@1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.4.1.tgz#121f9ebc49e3766f311a76e1fa1c8003c4b03aa6"
 
 mimic-fn@^1.0.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/mimic-fn/-/mimic-fn-1.1.0.tgz#e667783d92e89dbd342818b5230b9d62a672ad18"
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/mimic-fn/-/mimic-fn-1.2.0.tgz#820c86a39334640e99516928bd03fca88057d022"
+
+mimic-response@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/mimic-response/-/mimic-response-1.0.0.tgz#df3d3652a73fded6b9b0b24146e6fd052353458e"
 
 "minimatch@2 || 3", minimatch@^3.0.2, minimatch@^3.0.4, minimatch@~3.0.2:
   version "3.0.4"
@@ -4134,7 +4169,7 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
-node-abi@^2.1.1:
+node-abi@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/node-abi/-/node-abi-2.2.0.tgz#e802ac7a2408e2c0593fb3176ffdf8a99a9b4dec"
   dependencies:
@@ -4505,45 +4540,45 @@ pluralize@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-7.0.0.tgz#298b89df8b93b0221dbf421ad2b1b1ea23fc6777"
 
-pouchdb-adapter-leveldb-core@6.4.2:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/pouchdb-adapter-leveldb-core/-/pouchdb-adapter-leveldb-core-6.4.2.tgz#f5e48cdb8f4a557b089e454cfcf3383d9f936c78"
+pouchdb-adapter-leveldb-core@6.4.3:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/pouchdb-adapter-leveldb-core/-/pouchdb-adapter-leveldb-core-6.4.3.tgz#0b623fc12e63acbf5606508ba2008e501803076a"
   dependencies:
     argsarray "0.0.1"
     buffer-from "0.1.1"
     double-ended-queue "2.1.0-0"
     levelup "2.0.1"
-    pouchdb-adapter-utils "6.4.2"
-    pouchdb-binary-utils "6.4.2"
-    pouchdb-collections "6.4.2"
-    pouchdb-errors "6.4.2"
-    pouchdb-json "6.4.2"
-    pouchdb-md5 "6.4.2"
-    pouchdb-merge "6.4.2"
-    pouchdb-promise "6.4.2"
-    pouchdb-utils "6.4.2"
-    sublevel-pouchdb "6.4.2"
+    pouchdb-adapter-utils "6.4.3"
+    pouchdb-binary-utils "6.4.3"
+    pouchdb-collections "6.4.3"
+    pouchdb-errors "6.4.3"
+    pouchdb-json "6.4.3"
+    pouchdb-md5 "6.4.3"
+    pouchdb-merge "6.4.3"
+    pouchdb-promise "6.4.3"
+    pouchdb-utils "6.4.3"
+    sublevel-pouchdb "6.4.3"
     through2 "2.0.3"
 
 pouchdb-adapter-memory@^6.1.2:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/pouchdb-adapter-memory/-/pouchdb-adapter-memory-6.4.2.tgz#15a66a8b840ff5594837d5e0e45a3b0be06fe383"
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/pouchdb-adapter-memory/-/pouchdb-adapter-memory-6.4.3.tgz#06edb687be9d063b27e9b58ca30ea1a08a9b94f4"
   dependencies:
     memdown "1.2.4"
-    pouchdb-adapter-leveldb-core "6.4.2"
-    pouchdb-utils "6.4.2"
+    pouchdb-adapter-leveldb-core "6.4.3"
+    pouchdb-utils "6.4.3"
 
-pouchdb-adapter-utils@6.4.2:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/pouchdb-adapter-utils/-/pouchdb-adapter-utils-6.4.2.tgz#eb725dd5687bbf70a4e9cfe8eea905f08dc20d5a"
+pouchdb-adapter-utils@6.4.3:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/pouchdb-adapter-utils/-/pouchdb-adapter-utils-6.4.3.tgz#384bb1bcd37dc7d473016eb450cec53d665bcae4"
   dependencies:
-    pouchdb-binary-utils "6.4.2"
-    pouchdb-collections "6.4.2"
-    pouchdb-errors "6.4.2"
-    pouchdb-md5 "6.4.2"
-    pouchdb-merge "6.4.2"
-    pouchdb-promise "6.4.2"
-    pouchdb-utils "6.4.2"
+    pouchdb-binary-utils "6.4.3"
+    pouchdb-collections "6.4.3"
+    pouchdb-errors "6.4.3"
+    pouchdb-md5 "6.4.3"
+    pouchdb-merge "6.4.3"
+    pouchdb-promise "6.4.3"
+    pouchdb-utils "6.4.3"
 
 pouchdb-all-dbs@^1.0.2:
   version "1.0.2"
@@ -4572,9 +4607,9 @@ pouchdb-auth@^2.1.1:
     promise-nodify "^1.0.0"
     secure-random "^1.1.1"
 
-pouchdb-binary-utils@6.4.2:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/pouchdb-binary-utils/-/pouchdb-binary-utils-6.4.2.tgz#58e5549fbd002d309fde07724203c89f087cd1fc"
+pouchdb-binary-utils@6.4.3:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/pouchdb-binary-utils/-/pouchdb-binary-utils-6.4.3.tgz#ba6d9b9d289a359d47b53c1ec017fd9715a777a9"
   dependencies:
     buffer-from "0.1.1"
 
@@ -4592,13 +4627,13 @@ pouchdb-collate@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/pouchdb-collate/-/pouchdb-collate-1.2.0.tgz#cae3b830fca124b7f97d23046e4faa311ec3828c"
 
-pouchdb-collections@6.4.2, pouchdb-collections@^6.1.2:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/pouchdb-collections/-/pouchdb-collections-6.4.2.tgz#f7f25f5e7e96e06a8aabd64c829cc24db010ac4a"
+pouchdb-collections@6.4.3, pouchdb-collections@^6.1.2:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/pouchdb-collections/-/pouchdb-collections-6.4.3.tgz#2b70ca3143134c361dba6e466518b4f4d8e92ff4"
 
-pouchdb-errors@6.4.2:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/pouchdb-errors/-/pouchdb-errors-6.4.2.tgz#0bbebdb3a5294853199893f6449b201a162651ea"
+pouchdb-errors@6.4.3:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/pouchdb-errors/-/pouchdb-errors-6.4.3.tgz#9fa4a13f64ee50c8d593e3235b18b1458977f8d1"
   dependencies:
     inherits "2.0.3"
 
@@ -4624,9 +4659,9 @@ pouchdb-find@^0.10.4:
     pouchdb-upsert "~2.0.1"
     spark-md5 "2.0.2"
 
-pouchdb-json@6.4.2:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/pouchdb-json/-/pouchdb-json-6.4.2.tgz#f511604174181d1b649840e402ee14def3030a79"
+pouchdb-json@6.4.3:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/pouchdb-json/-/pouchdb-json-6.4.3.tgz#a1702c8eb9d656f6566920aaec9fb3e7e1265132"
   dependencies:
     vuvuzela "1.0.3"
 
@@ -4642,16 +4677,16 @@ pouchdb-list@^1.1.0:
     pouchdb-req-http-query "^1.0.0"
     promise-nodify "^1.0.0"
 
-pouchdb-md5@6.4.2:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/pouchdb-md5/-/pouchdb-md5-6.4.2.tgz#f899ec4c431767915a541dca1006b872d5655ec7"
+pouchdb-md5@6.4.3:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/pouchdb-md5/-/pouchdb-md5-6.4.3.tgz#d414315366e4bb428fb6048a25655b1eca591797"
   dependencies:
-    pouchdb-binary-utils "6.4.2"
+    pouchdb-binary-utils "6.4.3"
     spark-md5 "3.0.0"
 
-pouchdb-merge@6.4.2:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/pouchdb-merge/-/pouchdb-merge-6.4.2.tgz#3442ccd9c7a18047597c538e600a6efcd69b70ef"
+pouchdb-merge@6.4.3:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/pouchdb-merge/-/pouchdb-merge-6.4.3.tgz#4ef901f4aaa27be6aec0108998a127fe55bb0628"
 
 pouchdb-plugin-error@^1.0.0, pouchdb-plugin-error@^1.0.1:
   version "1.0.1"
@@ -4669,9 +4704,9 @@ pouchdb-promise@5.4.3:
   dependencies:
     lie "3.0.4"
 
-pouchdb-promise@6.4.2, pouchdb-promise@^6.1.2, pouchdb-promise@^6.2.0:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/pouchdb-promise/-/pouchdb-promise-6.4.2.tgz#675c71d972dbf67c74e765ab994fd9c13f44f58f"
+pouchdb-promise@6.4.3, pouchdb-promise@^6.1.2, pouchdb-promise@^6.2.0:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/pouchdb-promise/-/pouchdb-promise-6.4.3.tgz#74516f4acf74957b54debd0fb2c0e5b5a68ca7b3"
   dependencies:
     lie "3.1.1"
 
@@ -4812,17 +4847,17 @@ pouchdb-upsert@~2.0.1:
   dependencies:
     pouchdb-promise "^5.4.3"
 
-pouchdb-utils@6.4.2:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/pouchdb-utils/-/pouchdb-utils-6.4.2.tgz#f93c71c47c0d99c385c33ef114611aea41d06493"
+pouchdb-utils@6.4.3:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/pouchdb-utils/-/pouchdb-utils-6.4.3.tgz#aeb6bb8cbd8cf2d9f04e499bc3b70d1ce2a6c78a"
   dependencies:
     argsarray "0.0.1"
     clone-buffer "1.0.0"
     immediate "3.0.6"
     inherits "2.0.3"
-    pouchdb-collections "6.4.2"
-    pouchdb-errors "6.4.2"
-    pouchdb-promise "6.4.2"
+    pouchdb-collections "6.4.3"
+    pouchdb-errors "6.4.3"
+    pouchdb-promise "6.4.3"
     uuid "3.2.1"
 
 pouchdb-validation@^1.1.0, pouchdb-validation@^1.2.1:
@@ -4851,8 +4886,8 @@ pouchdb-wrappers@^1.0.0, pouchdb-wrappers@^1.2.0, pouchdb-wrappers@^1.3.6:
     promise-nodify "^1.0.1"
 
 pouchdb@^6.1.2:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/pouchdb/-/pouchdb-6.4.2.tgz#88962aa545fed706981941d3c81bbfbd9c9ca294"
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/pouchdb/-/pouchdb-6.4.3.tgz#077e812a054ac44e13622a64e0c802325d1d44ad"
   dependencies:
     argsarray "0.0.1"
     buffer-from "0.1.1"
@@ -4876,24 +4911,24 @@ pouchdb@^6.1.2:
     vuvuzela "1.0.3"
 
 prebuild-install@^2.1.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/prebuild-install/-/prebuild-install-2.5.0.tgz#6fdd8436069971c76688071f4847d4c891a119f4"
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/prebuild-install/-/prebuild-install-2.5.1.tgz#0f234140a73760813657c413cdccdda58296b1da"
   dependencies:
     detect-libc "^1.0.3"
     expand-template "^1.0.2"
     github-from-package "0.0.0"
     minimist "^1.2.0"
     mkdirp "^0.5.1"
-    node-abi "^2.1.1"
+    node-abi "^2.2.0"
     noop-logger "^0.1.1"
     npmlog "^4.0.1"
     os-homedir "^1.0.1"
-    pump "^1.0.1"
+    pump "^2.0.1"
     rc "^1.1.6"
-    simple-get "^1.4.2"
+    simple-get "^2.7.0"
     tar-fs "^1.13.0"
     tunnel-agent "^0.6.0"
-    xtend "4.0.1"
+    which-pm-runs "^1.0.0"
 
 prelude-ls@~1.1.0, prelude-ls@~1.1.1, prelude-ls@~1.1.2:
   version "1.1.2"
@@ -4910,6 +4945,10 @@ private@^0.1.6, private@~0.1.5:
 process-nextick-args@~1.0.6:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-1.0.7.tgz#150e20b756590ad3f91093f25a4f2ad8bff30ba3"
+
+process-nextick-args@~2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-2.0.0.tgz#a37d732f4271b4ab1ad070d35508e8290788ffaa"
 
 progress@^2.0.0:
   version "2.0.0"
@@ -4931,11 +4970,11 @@ property-is-enumerable-x@^1.1.0:
     to-property-key-x "^2.0.1"
 
 proxy-addr@~2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/proxy-addr/-/proxy-addr-2.0.2.tgz#6571504f47bb988ec8180253f85dd7e14952bdec"
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/proxy-addr/-/proxy-addr-2.0.3.tgz#355f262505a621646b3130a728eb647e22055341"
   dependencies:
     forwarded "~0.1.2"
-    ipaddr.js "1.5.2"
+    ipaddr.js "1.6.0"
 
 prr@~1.0.1:
   version "1.0.1"
@@ -4945,9 +4984,16 @@ pseudomap@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/pseudomap/-/pseudomap-1.0.2.tgz#f052a28da70e618917ef0a8ac34c1ae5a68286b3"
 
-pump@^1.0.0, pump@^1.0.1:
+pump@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/pump/-/pump-1.0.3.tgz#5dfe8311c33bbf6fc18261f9f34702c47c08a954"
+  dependencies:
+    end-of-stream "^1.1.0"
+    once "^1.3.1"
+
+pump@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/pump/-/pump-2.0.1.tgz#12399add6e4cf7526d973cbc8b5ce2e2908b3909"
   dependencies:
     end-of-stream "^1.1.0"
     once "^1.3.1"
@@ -5077,13 +5123,13 @@ readable-stream@2.2.7:
     string_decoder "~0.10.x"
 
 readable-stream@^2.0.0, readable-stream@^2.0.1, readable-stream@^2.0.4, readable-stream@^2.0.5, readable-stream@^2.0.6, readable-stream@^2.1.5, readable-stream@^2.2.2:
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.3.tgz#368f2512d79f9d46fdfc71349ae7878bbc1eb95c"
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.4.tgz#c946c3f47fa7d8eabc0b6150f4a12f69a4574071"
   dependencies:
     core-util-is "~1.0.0"
     inherits "~2.0.3"
     isarray "~1.0.0"
-    process-nextick-args "~1.0.6"
+    process-nextick-args "~2.0.0"
     safe-buffer "~5.1.1"
     string_decoder "~1.0.3"
     util-deprecate "~1.0.1"
@@ -5303,8 +5349,8 @@ run-async@^2.2.0:
     is-promise "^2.1.0"
 
 run-parallel@^1.1.4:
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/run-parallel/-/run-parallel-1.1.6.tgz#29003c9a2163e01e2d2dfc90575f2c6c1d61a039"
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/run-parallel/-/run-parallel-1.1.7.tgz#d8f40854b9e19d18c2e0e70180cc05cfc86b650f"
 
 rx-lite-aggregates@^4.0.8:
   version "4.0.8"
@@ -5356,7 +5402,25 @@ send@0.16.1:
     range-parser "~1.2.0"
     statuses "~1.3.1"
 
-serve-static@1.13.1, serve-static@^1.3.2:
+send@0.16.2:
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/send/-/send-0.16.2.tgz#6ecca1e0f8c156d141597559848df64730a6bbc1"
+  dependencies:
+    debug "2.6.9"
+    depd "~1.1.2"
+    destroy "~1.0.4"
+    encodeurl "~1.0.2"
+    escape-html "~1.0.3"
+    etag "~1.8.1"
+    fresh "0.5.2"
+    http-errors "~1.6.2"
+    mime "1.4.1"
+    ms "2.0.0"
+    on-finished "~2.3.0"
+    range-parser "~1.2.0"
+    statuses "~1.4.0"
+
+serve-static@1.13.1:
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/serve-static/-/serve-static-1.13.1.tgz#4c57d53404a761d8f2e7c1e8a18a47dbf278a719"
   dependencies:
@@ -5364,6 +5428,15 @@ serve-static@1.13.1, serve-static@^1.3.2:
     escape-html "~1.0.3"
     parseurl "~1.3.2"
     send "0.16.1"
+
+serve-static@^1.3.2:
+  version "1.13.2"
+  resolved "https://registry.yarnpkg.com/serve-static/-/serve-static-1.13.2.tgz#095e8472fd5b46237db50ce486a43f4b86c6cec1"
+  dependencies:
+    encodeurl "~1.0.2"
+    escape-html "~1.0.3"
+    parseurl "~1.3.2"
+    send "0.16.2"
 
 set-blocking@^2.0.0, set-blocking@~2.0.0:
   version "2.0.0"
@@ -5395,13 +5468,17 @@ signal-exit@^3.0.0, signal-exit@^3.0.1, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
-simple-get@^1.4.2:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/simple-get/-/simple-get-1.4.3.tgz#e9755eda407e96da40c5e5158c9ea37b33becbeb"
+simple-concat@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/simple-concat/-/simple-concat-1.0.0.tgz#7344cbb8b6e26fb27d66b2fc86f9f6d5997521c6"
+
+simple-get@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/simple-get/-/simple-get-2.7.0.tgz#ad37f926d08129237ff08c4f2edfd6f10e0380b5"
   dependencies:
+    decompress-response "^3.3.0"
     once "^1.3.1"
-    unzip-response "^1.0.0"
-    xtend "^4.0.0"
+    simple-concat "^1.0.0"
 
 sinon@^2.4.1:
   version "2.4.1"
@@ -5456,7 +5533,7 @@ source-map@^0.4.2, source-map@^0.4.4:
   dependencies:
     amdefine ">=0.0.4"
 
-source-map@^0.5.3, source-map@^0.5.6, source-map@~0.5.0, source-map@~0.5.1:
+source-map@^0.5.3, source-map@^0.5.7, source-map@~0.5.0, source-map@~0.5.1:
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.7.tgz#8a039d2d1021d22d1ea14c80d8ea468ba2ef3fcc"
 
@@ -5521,7 +5598,7 @@ sshpk@^1.7.0:
     jsbn "~0.1.0"
     tweetnacl "~0.14.0"
 
-"statuses@>= 1.3.1 < 2":
+"statuses@>= 1.3.1 < 2", statuses@~1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.4.0.tgz#bb73d446da2796106efcc1b601a253d6c46bd087"
 
@@ -5630,9 +5707,9 @@ strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
 
-sublevel-pouchdb@6.4.2:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/sublevel-pouchdb/-/sublevel-pouchdb-6.4.2.tgz#011cb81e8c24ab396690ae9aedefa086b99a5c54"
+sublevel-pouchdb@6.4.3:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/sublevel-pouchdb/-/sublevel-pouchdb-6.4.3.tgz#e4eca52d8ac7ba17ff6c18fcdc51f5ecbbb15597"
   dependencies:
     inherits "2.0.3"
     level-codec "7.0.1"
@@ -5655,11 +5732,11 @@ supports-color@^3.1.2:
   dependencies:
     has-flag "^1.0.0"
 
-supports-color@^4.0.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-4.5.0.tgz#be7a0de484dec5c5cddf8b3d59125044912f635b"
+supports-color@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-5.2.0.tgz#b0d5333b1184dd3666cbe5aa0b45c5ac7ac17a4a"
   dependencies:
-    has-flag "^2.0.0"
+    has-flag "^3.0.0"
 
 table@^4.0.1:
   version "4.0.2"
@@ -5691,8 +5768,8 @@ tar-stream@^1.1.2:
     xtend "^4.0.0"
 
 test-exclude@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/test-exclude/-/test-exclude-4.1.1.tgz#4d84964b0966b0087ecc334a2ce002d3d9341e26"
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/test-exclude/-/test-exclude-4.2.0.tgz#07e3613609a362c74516a717515e13322ab45b3c"
   dependencies:
     arrify "^1.0.1"
     micromatch "^2.3.11"
@@ -5924,15 +6001,15 @@ type-detect@^1.0.0:
   resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-1.0.0.tgz#762217cc06db258ec48908a1298e8b95121e8ea2"
 
 type-detect@^4.0.0:
-  version "4.0.7"
-  resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-4.0.7.tgz#862bd2cf6058ad92799ff5a5b8cf7b6cec726198"
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-4.0.8.tgz#7646fb5f18871cfbb7749e69bd39a6388eb7450c"
 
 type-is@~1.6.15:
-  version "1.6.15"
-  resolved "https://registry.yarnpkg.com/type-is/-/type-is-1.6.15.tgz#cab10fb4909e441c82842eafe1ad646c81804410"
+  version "1.6.16"
+  resolved "https://registry.yarnpkg.com/type-is/-/type-is-1.6.16.tgz#f89ce341541c672b25ee7ae3c73dee3b2be50194"
   dependencies:
     media-typer "0.3.0"
-    mime-types "~2.1.15"
+    mime-types "~2.1.18"
 
 typedarray@^0.0.6, typedarray@~0.0.5:
   version "0.0.6"
@@ -5987,10 +6064,6 @@ unreachable-branch-transform@^0.3.0:
     esmangle-evaluator "^1.0.0"
     recast "^0.10.1"
     through2 "^0.6.2"
-
-unzip-response@^1.0.0:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/unzip-response/-/unzip-response-1.0.2.tgz#b984f0877fc0a89c2c773cc1ef7b5b232b5b06fe"
 
 urlgrey@0.4.4:
   version "0.4.4"
@@ -6089,6 +6162,10 @@ which-module@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/which-module/-/which-module-2.0.0.tgz#d9ef07dce77b9902b8a3a8fa4b31c3e3f7e6e87a"
 
+which-pm-runs@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/which-pm-runs/-/which-pm-runs-1.0.0.tgz#670b3afbc552e0b55df6b7780ca74615f23ad1cb"
+
 which@^1.2.9, which@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/which/-/which-1.3.0.tgz#ff04bdfc010ee547d780bec38e1ac1c2777d253a"
@@ -6162,7 +6239,7 @@ xmlhttprequest@>=1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/xmlhttprequest/-/xmlhttprequest-1.8.0.tgz#67fe075c5c24fef39f9d65f5f7b7fe75171968fc"
 
-xtend@4.0.1, "xtend@>=4.0.0 <4.1.0-0", xtend@^4.0.0, xtend@^4.0.1, xtend@~4.0.0, xtend@~4.0.1:
+"xtend@>=4.0.0 <4.1.0-0", xtend@^4.0.0, xtend@^4.0.1, xtend@~4.0.0, xtend@~4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.1.tgz#a5c6d532be656e23db820efb943a1f04998d63af"
 

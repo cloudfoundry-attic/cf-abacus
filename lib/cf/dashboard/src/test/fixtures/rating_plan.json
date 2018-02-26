@@ -1,0 +1,8 @@
+{
+  "plan_id": "test-metering-plan",
+  "metrics": [
+    {
+      "name": "memory"
+    }
+  ]
+}

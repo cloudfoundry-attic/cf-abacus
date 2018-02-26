@@ -14,7 +14,8 @@
   },
   "keywords": [
     "cf",
-    "abacus"
+    "abacus",
+    "broker"
   ],
   "files": [
     ".apprc",
@@ -22,6 +23,10 @@
     "manifest.yml",
     "src/"
   ],
+  "bin": {
+    "store-default-mappings": "store-default-mappings",
+    "store-default-plans": "store-default-plans"
+  },
   "main": "src/index.js",
   "scripts": {
     "start": "launch webapp start",
@@ -30,19 +35,21 @@
     "generate-coverage": "nyc report --reporter=lcovonly",
     "lint": "abacus-eslint",
     "pub": "publish",
-    "cfpush": "cfpush"
+    "cfpush": "cfpush",
+    "store-defaults": "node store-default-mappings && node store-default-plans"
   },
   "dependencies": {
     "abacus-batch": "file:../../utils/batch",
     "abacus-breaker": "file:../../utils/breaker",
-    "abacus-oauth": "file:../../utils/oauth",
     "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-debug": "file:../../utils/debug",
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-lock": "file:../../utils/lock",
     "abacus-lrucache": "file:../../utils/lrucache",
+    "abacus-oauth": "file:../../utils/oauth",
     "abacus-partition": "file:../../utils/partition",
     "abacus-plan-mappings": "file:../../config/mappings",
+    "abacus-request": "file:../../utils/request",
     "abacus-retry": "file:../../utils/retry",
     "abacus-router": "file:../../utils/router",
     "abacus-urienv": "file:../../utils/urienv",
@@ -58,7 +65,7 @@
     "abacus-mocha": "file:../../../tools/mocha",
     "nyc": "^11.4.1",
     "abacus-publish": "file:../../../tools/publish",
-    "abacus-request": "file:../../utils/request"
+    "jsonwebtoken": "^5.0.5"
   },
   "nyc": {
     "cache": true,

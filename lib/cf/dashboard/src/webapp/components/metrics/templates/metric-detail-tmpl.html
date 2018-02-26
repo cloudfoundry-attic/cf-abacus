@@ -1,0 +1,34 @@
+<div class="container-fluid">
+  <div class="row second-header"></div>
+  <form name="metricsCtrl.metricform" class="form-horizontal col-sm-6">
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="metricNameId" translate="ResourceProvider_Metric_MetricName_XFLD"></label>
+      <div class="col-sm-10">
+        <input class="form-control" id="metricNameId" name="metricName" placeholder="{{'ResourceProvider_Metric_MetricName_placeholder_XFLD' | translate}}"
+          ng-model="metric.name" ng-readonly="isReadOnly" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="metricUnitId" translate="ResourceProvider_Metric_MetricUnit_XFLD"></label>
+      <div class="col-sm-10">
+        <input class="form-control" id="metricUnitId" name="metricUnit" placeholder="{{'ResourceProvider_Metric_MetricUnit_placeholder_XFLD' | translate}}"
+          ng-model="metric.unit" ng-readonly="isReadOnly" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="metricUnitId" translate="ResourceProvider_Metric_MetricType_XFLD"></label>
+      <div class="col-sm-10">
+        <div class="radio">
+          <label>
+            <input type="radio" value="discrete" ng-disabled="isReadOnly" ng-model="metric.type"></input>
+            {{'ResourceProvider_Metric_MetricType_Discrete_XFLD' | translate}}
+            </label>
+          <label>
+            <input type="radio" value="time-based" ng-disabled="isReadOnly" ng-model="metric.type" ></input>
+            {{'ResourceProvider_Metric_MetricType_Time_based_XFLD' | translate}}
+          </label>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

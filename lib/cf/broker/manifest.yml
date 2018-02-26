@@ -1,0 +1,22 @@
+applications:
+- name: metering-broker
+  host: metering-broker
+  path: .
+  instances: 1
+  memory: 512M
+  disk_quota: 512M
+  env:
+    CONF: default
+    DEBUG: e-abacus-*
+    EUREKA: abacus-eureka-plugin
+    NODE_MODULES_CACHE: false
+    SERVICE_BROKER_CLIENT_ID: abacus-broker
+    SERVICE_BROKER_CLIENT_SECRET: secret
+    DASHBOARD_REDIRECT_URI: https://dashboard/redirect
+    API: https://api
+    AUTH_SERVER: https://uaa
+    PROVISIONING: https://abacus-provisioning-plugin
+    COLLECTOR: https://abacus-usage-collector
+    BROKER_USER: user
+    BROKER_PASSWORD: pass
+    DASHBOARD_URI: http://localhost/dashboard/

@@ -1,0 +1,7 @@
+{
+  "headers": {
+    "location": "https://abacus-usage-collector/v1/metering/collected/usage"
+  },
+  "statusCode": 201,
+  "statusMessage": "Created"
+}

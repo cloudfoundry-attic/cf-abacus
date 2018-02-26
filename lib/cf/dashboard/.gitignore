@@ -1,0 +1,7 @@
+node_modules/**
+bower_components/**
+coverage/**
+npm-debug.log
+src/test/frontend/coverage/**
+src/webapp/libs/**
+src/env
