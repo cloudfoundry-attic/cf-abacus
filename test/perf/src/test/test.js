@@ -12,7 +12,7 @@
 // - TODO add resource and space variations
 // - TODO submit batch of usage docs in each submission
 
-const _ = require('underscore');
+const { each, map, range, omit, extend, clone } = require('underscore');
 
 const commander = require('commander');
 
@@ -24,20 +24,8 @@ const dbclient = require('abacus-dbclient');
 const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');
 
-// BigNumber
-const BigNumber = require('bignumber.js');
-BigNumber.config({ ERRORS: false });
-
-const map = _.map;
-const range = _.range;
-const omit = _.omit;
-const extend = _.extend;
-const clone = _.clone;
-const last = _.last;
-const first = _.first;
-const keys = _.keys;
-
 const brequest = batch(request);
+const usage = require(`${__dirname}/usage.js`);
 
 // Setup the debug log
 const debug = require('abacus-debug')('abacus-perf-test');
@@ -79,7 +67,7 @@ const orgs = commander.orgs || 1;
 const resourceInstances = commander.instances || 1;
 
 // Number of usage docs
-const usage = commander.usagedocs || 1;
+const usagedocs = commander.usagedocs || 1;
 
 // Usage time window shift in milli-seconds
 const delta = commander.delta || 0;
@@ -100,7 +88,7 @@ const reporting = commander.reporting;
 const authServer = commander.authServer;
 
 // Use secure routes or not
-const secured = () => process.env.SECURED === 'true' ? true : false;
+const secured = () => process.env.SECURED === 'true';
 
 const objectStorageToken = secured()
   ? oauth.cache(
@@ -114,8 +102,6 @@ const objectStorageToken = secured()
 const systemToken = secured()
   ? oauth.cache(authServer, process.env.SYSTEM_CLIENT_ID, process.env.SYSTEM_CLIENT_SECRET, 'abacus.usage.read')
   : undefined;
-
-const timestamp = moment.now();
 
 describe('abacus-perf-test', () => {
   before((done) => {
@@ -138,231 +124,12 @@ describe('abacus-perf-test', () => {
   it('measures performance of concurrent usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs or
     // a preset timeout
-    console.log('Testing with %d orgs, %d resource instances, %d usage docs', orgs, resourceInstances, usage);
-    const timeout = Math.max(totalTimeout, 100 * orgs * resourceInstances * usage);
+    console.log('Testing with %d orgs, %d resource instances, %d usage docs', orgs, resourceInstances, usagedocs);
+    const timeout = Math.max(totalTimeout, 100 * orgs * resourceInstances * usagedocs);
     this.timeout(timeout + 2000);
     const processingDeadline = moment.now() + timeout;
 
     console.log('Timeout %d', timeout);
-
-    // Return a usage with unique start and end time based on a number
-    const start = moment.now() + delta;
-    const end = moment.now() + delta;
-    const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87', o + 1, ri + 1].join('-');
-    const orgid = (o) => ['org', timestamp, o + 1].join('-');
-
-    const usageTemplate = (o, ri, i) => ({
-      start: start + i,
-      end: end + i,
-      organization_id: orgid(o),
-      space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-      resource_id: 'object-storage',
-      plan_id: 'basic',
-      resource_instance_id: riid(o, ri),
-      measured_usage: [
-        {
-          measure: 'storage',
-          quantity: 1073741824
-        },
-        {
-          measure: 'light_api_calls',
-          quantity: 1000
-        },
-        {
-          measure: 'heavy_api_calls',
-          quantity: 100
-        }
-      ]
-    });
-
-    // Compute the test costs
-    const storageCost = (nri, n) => new BigNumber(1.0).mul(nri).toNumber();
-    const lightCost = (nri, n) =>
-      new BigNumber(0.03)
-        .mul(nri)
-        .mul(n)
-        .toNumber();
-    const heavyCost = (nri, n) =>
-      new BigNumber(0.15)
-        .mul(100)
-        .mul(nri)
-        .mul(n)
-        .toNumber();
-
-    const windows = (obj) => {
-      const timewindows = [];
-      for (let i = 0; i < 5; i++) timewindows.push([obj]);
-      return timewindows;
-    };
-    const rwindow = (nri, n, s, m, fn) => {
-      return windows({
-        charge: fn(nri, n)
-      });
-    };
-    const pwindow = (nri, n, s, m, fn) => {
-      return windows({
-        quantity: new BigNumber(m).mul(s).toNumber(),
-        summary: new BigNumber(m).mul(s).toNumber(),
-        cost: fn(nri, n),
-        charge: fn(nri, n)
-      });
-    };
-    const cwindow = (nri, n) => {
-      return windows({
-        charge: new BigNumber(storageCost(nri, n))
-          .add(lightCost(nri, n))
-          .add(heavyCost(nri, n))
-          .toNumber()
-      });
-    };
-
-    // Return the expected usage report for the test organization
-    const report = (o, nri, n) => ({
-      organization_id: orgid(o),
-      account_id: '1234',
-      windows: cwindow(nri, n),
-      resources: [
-        {
-          resource_id: 'object-storage',
-          windows: cwindow(nri, n),
-          aggregated_usage: [
-            {
-              metric: 'storage',
-              windows: rwindow(nri, n, nri, 1, storageCost)
-            },
-            {
-              metric: 'thousand_light_api_calls',
-              windows: rwindow(nri, n, nri * n, 1, lightCost)
-            },
-            {
-              metric: 'heavy_api_calls',
-              windows: rwindow(nri, n, nri * n, 100, heavyCost)
-            }
-          ],
-          plans: [
-            {
-              plan_id: 'basic/basic-object-storage/' + 'object-rating-plan/object-pricing-basic',
-              metering_plan_id: 'basic-object-storage',
-              rating_plan_id: 'object-rating-plan',
-              pricing_plan_id: 'object-pricing-basic',
-              windows: cwindow(nri, n),
-              aggregated_usage: [
-                {
-                  metric: 'storage',
-                  windows: pwindow(nri, n, nri, 1, storageCost)
-                },
-                {
-                  metric: 'thousand_light_api_calls',
-                  windows: pwindow(nri, n, nri * n, 1, lightCost)
-                },
-                {
-                  metric: 'heavy_api_calls',
-                  windows: pwindow(nri, n, nri * n, 100, heavyCost)
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      spaces: [
-        {
-          space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-          windows: cwindow(nri, n),
-          resources: [
-            {
-              resource_id: 'object-storage',
-              windows: cwindow(nri, n),
-              aggregated_usage: [
-                {
-                  metric: 'storage',
-                  windows: rwindow(nri, n, nri, 1, storageCost)
-                },
-                {
-                  metric: 'thousand_light_api_calls',
-                  windows: rwindow(nri, n, nri * n, 1, lightCost)
-                },
-                {
-                  metric: 'heavy_api_calls',
-                  windows: rwindow(nri, n, nri * n, 100, heavyCost)
-                }
-              ],
-              plans: [
-                {
-                  plan_id: 'basic/basic-object-storage/' + 'object-rating-plan/object-pricing-basic',
-                  metering_plan_id: 'basic-object-storage',
-                  rating_plan_id: 'object-rating-plan',
-                  pricing_plan_id: 'object-pricing-basic',
-                  windows: cwindow(nri, n),
-                  aggregated_usage: [
-                    {
-                      metric: 'storage',
-                      windows: pwindow(nri, n, nri, 1, storageCost)
-                    },
-                    {
-                      metric: 'thousand_light_api_calls',
-                      windows: pwindow(nri, n, nri * n, 1, lightCost)
-                    },
-                    {
-                      metric: 'heavy_api_calls',
-                      windows: pwindow(nri, n, nri * n, 100, heavyCost)
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          consumers: [
-            {
-              consumer_id: 'UNKNOWN',
-              windows: cwindow(nri, n),
-              resources: [
-                {
-                  resource_id: 'object-storage',
-                  windows: cwindow(nri, n),
-                  aggregated_usage: [
-                    {
-                      metric: 'storage',
-                      windows: rwindow(nri, n, nri, 1, storageCost)
-                    },
-                    {
-                      metric: 'thousand_light_api_calls',
-                      windows: rwindow(nri, n, nri * n, 1, lightCost)
-                    },
-                    {
-                      metric: 'heavy_api_calls',
-                      windows: rwindow(nri, n, nri * n, 100, heavyCost)
-                    }
-                  ],
-                  plans: [
-                    {
-                      plan_id: 'basic/basic-object-storage/' + 'object-rating-plan/object-pricing-basic',
-                      metering_plan_id: 'basic-object-storage',
-                      rating_plan_id: 'object-rating-plan',
-                      pricing_plan_id: 'object-pricing-basic',
-                      windows: cwindow(nri, n),
-                      aggregated_usage: [
-                        {
-                          metric: 'storage',
-                          windows: pwindow(nri, n, nri, 1, storageCost)
-                        },
-                        {
-                          metric: 'thousand_light_api_calls',
-                          windows: pwindow(nri, n, nri * n, 1, lightCost)
-                        },
-                        {
-                          metric: 'heavy_api_calls',
-                          windows: pwindow(nri, n, nri * n, 100, heavyCost)
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    });
 
     const authHeader = (token) =>
       token
@@ -375,74 +142,49 @@ describe('abacus-perf-test', () => {
 
     // Post one usage doc, throttled to 1000 concurrent requests
     const post = throttle((o, ri, i, cb) => {
-      debug('Submitting org%d instance%d usage%d', o + 1, ri + 1, i + 1);
-      brequest.post(
-        collector + '/v1/metering/collected/usage',
-        extend({}, authHeader(objectStorageToken), { body: usageTemplate(o, ri, i) }),
+      debug('Submitting org:%d instance:%d usage:%d', o + 1, ri + 1, i + 1);
+      brequest.post(`${collector}/v1/metering/collected/usage`,
+        extend({}, authHeader(objectStorageToken), {
+          body: usage.usageTemplate(o, ri, i, delta)
+        }),
         (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);
-          debug('Completed submission org%d instance%d usage%d', o + 1, ri + 1, i + 1);
+          debug('Completed submission org:%d instance:%d usage:%d', o + 1, ri + 1, i + 1);
           cb(err, val);
         }
       );
     });
 
     // Post the requested number of usage docs
-    let posts = 0;
     const submit = (done) => {
+      const numDocs = orgs * resourceInstances * usagedocs;
+      console.log('\nSubmitting %d usage docs ...', numDocs);
+      let posts = 0;
       const cb = () => {
-        if (++posts === orgs * resourceInstances * usage) done();
+        if (++posts === numDocs) done();
       };
-      map(range(usage), (u) => map(range(resourceInstances), (ri) => map(range(orgs), (o) => post(o, ri, u, cb))));
-    };
-
-    // Print the number of usage docs already processed given a get report
-    // response, determined from the aggregated usage quantity found in the
-    // report for our test resource
-    const processed = (val) => {
-      try {
-        return val.body.resources[0].plans[0].aggregated_usage[1].windows[4][0].summary;
-      } catch (e) {
-        // The response doesn't contain a valid report
-        return 0;
-      }
-    };
-
-    // Fix up the usage time windows, only keep the month window
-    // as we may cross the boundaries of the smaller windows during
-    // the execution of the test
-    const fixup = (val) => {
-      if (!val) return val;
-      if (val.windows) val.windows = [[first(last(val.windows))]];
-      map(keys(val), (k) => {
-        if (typeof val[k] === 'object') fixup(val[k]);
-        if (typeof val[k] === 'array') map(val[l], fixup);
-      });
-      return val;
+      each(range(usagedocs), (u) => map(range(resourceInstances), (ri) => map(range(orgs), (o) => post(o, ri, u, cb))));
     };
 
     // Get a usage report for the test organization
-    const get = throttle((o, done) => {
-      brequest.get(
-        reporting + '/v1/metering/organizations' + '/:organization_id/aggregated/usage',
-        extend({}, authHeader(systemToken), {
-          organization_id: orgid(o)
-        }),
+    const get = throttle((org, done) => {
+      brequest.get(`${reporting}/v1/metering/organizations/${usage.orgId(org)}/aggregated/usage`,
+        extend({}, authHeader(systemToken)),
         (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(200);
 
           // Compare the usage report we got with the expected report
-          debug('Processed %d usage docs for org%d', processed(val), o + 1);
+          debug('Processed %d usage docs for org%d', usage.processed(val), org + 1);
           try {
             // Can't check the dynamic time in resource_instances
             val.body.spaces[0].consumers[0].resources[0].plans[0] = omit(
               val.body.spaces[0].consumers[0].resources[0].plans[0],
               'resource_instances'
             );
-            const x = fixup(omit(val.body, 'id', 'processed', 'processed_id', 'start', 'end'));
-            const expected = fixup(report(o, resourceInstances, usage));
+            const x = usage.fixup(omit(val.body, 'id', 'processed', 'processed_id', 'start', 'end'));
+            const expected = usage.fixup(usage.report(org, resourceInstances, usagedocs));
             expect(x).to.deep.equal(expected);
 
             console.log(
@@ -455,6 +197,7 @@ describe('abacus-perf-test', () => {
 
             done();
           } catch (e) {
+            debug('Failed obtaining report %o', e);
             // If the comparison fails we'll be called again to retry
             // after 250 msec, but give up after the computed timeout
             if (moment.now() >= processingDeadline) {
@@ -475,20 +218,21 @@ describe('abacus-perf-test', () => {
     // Wait for the expected usage report for all organizations, get an
     // organization usage report every 250 msec until we get the expected
     // values indicating that all submitted usage has been processed
-    let verified = 0;
     const wait = (done) => {
-      console.log('\nRetrieving usage reports');
+      console.log('\nRetrieving usage reports ...');
+
+      let verified = 0;
       const cb = () => {
         if (++verified === orgs) done();
       };
 
-      map(range(orgs), (o) => {
-        const i = setInterval(() => get(o, () => cb(clearInterval(i))), 250);
+      each(range(orgs), (org) => {
+        const i = setInterval(() => get(org, () => cb(clearInterval(i))), 250);
       });
     };
 
     // Wait for usage reporter to start
-    request.waitFor(reporting + '/batch', extend({}, authHeader(systemToken)), startTimeout, (err, value) => {
+    request.waitFor(reporting + '/batch', extend({}, authHeader(systemToken)), startTimeout, (err) => {
       // Failed to ping usage reporter before timing out
       if (err) throw err;
 
