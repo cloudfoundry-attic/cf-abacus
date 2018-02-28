@@ -12,7 +12,7 @@
 // - TODO add resource and space variations
 // - TODO submit batch of usage docs in each submission
 
-const { each, map, range, omit, extend, clone } = require('underscore');
+const { each, range, omit, extend, clone } = require('underscore');
 
 const async = require('async');
 const commander = require('commander');
@@ -170,7 +170,7 @@ describe('abacus-perf-test', () => {
       each(range(usagedocs), (usageDoc) =>
         each(range(resourceInstances), (resourceInstance) =>
           each(range(orgs), (org) => {
-            functions.push((cb) => post(org, resourceInstance, usageDoc, commander.timestamp, cb))
+            functions.push((cb) => post(org, resourceInstance, usageDoc, commander.timestamp, cb));
           })));
 
       if (commander.sequential)
