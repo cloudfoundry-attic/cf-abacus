@@ -25,7 +25,7 @@ const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');
 
 const brequest = batch(request);
-const usage = require(`${__dirname}/usage.js`);
+const usage = require(`./usage.js`);
 
 // Setup the debug log
 const debug = require('abacus-debug')('abacus-perf-test');
@@ -37,6 +37,8 @@ const argv = clone(process.argv);
 argv.splice(1, 1, 'perf');
 commander
   .option('-o, --orgs <n>', 'number of organizations', parseInt)
+  .option('--no-timestamp', 'do not add timestamp to org names', false)
+  .option('--num-executions <n>', 'number of test executions', 1)
   .option('-i, --instances <n>', 'number of resource instances', parseInt)
   .option('-u, --usagedocs <n>', 'number of usage docs', parseInt)
   .option('-d, --delta <d>', 'usage time window shift in milli-seconds', parseInt)
@@ -141,16 +143,17 @@ describe('abacus-perf-test', () => {
         : {};
 
     // Post one usage doc, throttled to 1000 concurrent requests
-    const post = throttle((o, ri, i, cb) => {
-      debug('Submitting org:%d instance:%d usage:%d', o + 1, ri + 1, i + 1);
+    const post = throttle((organization, resourceInstance, docNumber, timestamp, cb) => {
+      const usageDoc = usage.usageTemplate(organization, resourceInstance, docNumber, delta, timestamp);
+      debug('Submitting org: %d instance: %d usage doc: %d %o',
+        organization + 1, resourceInstance + 1, docNumber + 1, usageDoc);
       brequest.post(`${collector}/v1/metering/collected/usage`,
-        extend({}, authHeader(objectStorageToken), {
-          body: usage.usageTemplate(o, ri, i, delta)
-        }),
+        extend({}, authHeader(objectStorageToken), { body: usageDoc }),
         (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);
-          debug('Completed submission org:%d instance:%d usage:%d', o + 1, ri + 1, i + 1);
+          debug('Completed submission org:%d instance:%d usage:%d',
+            organization + 1, resourceInstance + 1, docNumber + 1);
           cb(err, val);
         }
       );
@@ -164,12 +167,15 @@ describe('abacus-perf-test', () => {
       const cb = () => {
         if (++posts === numDocs) done();
       };
-      each(range(usagedocs), (u) => map(range(resourceInstances), (ri) => map(range(orgs), (o) => post(o, ri, u, cb))));
+      each(range(usagedocs), (usageDoc) =>
+        map(range(resourceInstances), (resourceInstance) =>
+          map(range(orgs), (org) =>
+            post(org, resourceInstance, usageDoc, commander.timestamp, cb))));
     };
 
     // Get a usage report for the test organization
     const get = throttle((org, done) => {
-      brequest.get(`${reporting}/v1/metering/organizations/${usage.orgId(org)}/aggregated/usage`,
+      brequest.get(`${reporting}/v1/metering/organizations/${usage.orgId(org, commander.timestamp)}/aggregated/usage`,
         extend({}, authHeader(systemToken)),
         (err, val) => {
           expect(err).to.equal(undefined);
@@ -183,17 +189,11 @@ describe('abacus-perf-test', () => {
               val.body.spaces[0].consumers[0].resources[0].plans[0],
               'resource_instances'
             );
-            const x = usage.fixup(omit(val.body, 'id', 'processed', 'processed_id', 'start', 'end'));
-            const expected = usage.fixup(usage.report(org, resourceInstances, usagedocs));
-            expect(x).to.deep.equal(expected);
-
-            console.log(
-              '\n',
-              util.inspect(val.body, {
-                depth: 20
-              }),
-              '\n'
+            const stippedResponse = usage.fixup(omit(val.body, 'id', 'processed', 'processed_id', 'start', 'end'));
+            const expected = usage.fixup(
+              usage.report(org, resourceInstances, usagedocs, commander.numExecutions, commander.timestamp)
             );
+            expect(stippedResponse).to.deep.equal(expected);
 
             done();
           } catch (e) {
