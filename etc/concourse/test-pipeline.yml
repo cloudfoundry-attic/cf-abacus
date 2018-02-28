@@ -85,8 +85,7 @@ jobs:
             CF_TEST: true
             # Uncomment to save file handlers and offload CF stagers
             # JOBS: 2
-            # Uncomment to use specific node.js buildpack
-            # BUILDPACK: https://github.com/cloudfoundry/nodejs-buildpack.git#v1.6.15
+            BUILDPACK: https://github.com/cloudfoundry/nodejs-buildpack.git#v1.6.15
             # Cloud Foundry infrastructure
             CF_SYS_DOMAIN: {{cf-sys-domain}}
             CF_USER: {{cf-user}}
