@@ -14,6 +14,7 @@
 
 const { each, map, range, omit, extend, clone } = require('underscore');
 
+const async = require('async');
 const commander = require('commander');
 
 const batch = require('abacus-batch');
@@ -25,7 +26,7 @@ const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');
 
 const brequest = batch(request);
-const usage = require(`./usage.js`);
+const usage = require('./usage.js');
 
 // Setup the debug log
 const debug = require('abacus-debug')('abacus-perf-test');
@@ -39,6 +40,7 @@ commander
   .option('-o, --orgs <n>', 'number of organizations', parseInt)
   .option('--no-timestamp', 'do not add timestamp to org names', false)
   .option('--num-executions <n>', 'number of test executions', 1)
+  .option('--sequential', 'submit usage sequentially', false)
   .option('-i, --instances <n>', 'number of resource instances', parseInt)
   .option('-u, --usagedocs <n>', 'number of usage docs', parseInt)
   .option('-d, --delta <d>', 'usage time window shift in milli-seconds', parseInt)
@@ -163,14 +165,18 @@ describe('abacus-perf-test', () => {
     const submit = (done) => {
       const numDocs = orgs * resourceInstances * usagedocs;
       console.log('\nSubmitting %d usage docs ...', numDocs);
-      let posts = 0;
-      const cb = () => {
-        if (++posts === numDocs) done();
-      };
+
+      const functions = [];
       each(range(usagedocs), (usageDoc) =>
-        map(range(resourceInstances), (resourceInstance) =>
-          map(range(orgs), (org) =>
-            post(org, resourceInstance, usageDoc, commander.timestamp, cb))));
+        each(range(resourceInstances), (resourceInstance) =>
+          each(range(orgs), (org) => {
+            functions.push((cb) => post(org, resourceInstance, usageDoc, commander.timestamp, cb))
+          })));
+
+      if (commander.sequential)
+        async.series(functions, done);
+      else
+        async.parallel(functions, done);
     };
 
     // Get a usage report for the test organization

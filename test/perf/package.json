@@ -29,17 +29,18 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-mocha": "file:../../tools/mocha",
-    "nyc": "^11.4.1",
     "abacus-batch": "file:../../lib/utils/batch",
     "abacus-dbclient": "file:../../lib/utils/dbclient",
+    "abacus-debug": "file:../../lib/utils/debug",
+    "abacus-mocha": "file:../../tools/mocha",
     "abacus-moment": "file:../../lib/utils/moment",
     "abacus-throttle": "file:../../lib/utils/throttle",
-    "abacus-debug": "file:../../lib/utils/debug",
+    "async": "^2.6.0",
     "bignumber.js": "^2.1.0",
+    "commander": "2.8.1",
     "jsonwebtoken": "^5.0.5",
-    "underscore": "^1.8.3",
-    "commander": "2.8.1"
+    "nyc": "^11.4.1",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-eslint": "file:../../tools/eslint",
