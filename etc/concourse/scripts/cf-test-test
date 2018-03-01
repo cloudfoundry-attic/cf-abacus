@@ -35,6 +35,9 @@ pushd $project_dir
   getApps
   echo ${APPS[@]} | xargs -n1 | xargs -P 20 -i cf delete -f -r {}
 
+
+  cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+
   echo "Deploying Abacus ..."
   yarn run cfstage medium
 
@@ -50,8 +53,10 @@ pushd $project_dir
   echo "Storing default plans and mappings in provisioning..."
   ./etc/concourse/scripts/run-cf-task "abacus-provisioning-plugin" "yarn run store-defaults"
 
-  echo "Starting Demo ..."
-  yarn run demo \
+  cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+
+  echo "Running smoke test ..."
+  yarn run smoke \
   --collector https://${ABACUS_PREFIX}abacus-usage-collector.$CF_DOMAIN \
   --reporting https://${ABACUS_PREFIX}abacus-usage-reporting.$CF_DOMAIN
 
