@@ -38,6 +38,7 @@ pushd $project_dir
   echo "Deploying Abacus ..."
   yarn run cfstage medium
 
+
   set +e
   echo "Start all apps in $CF_ORG/$CF_SPACE ..."
   getApps
@@ -45,6 +46,9 @@ pushd $project_dir
 
   echo "Restarting failed apps ..."
   restartAppsWithRetry
+
+  echo "Storing default plans and mappings in provisioning..."
+  ./etc/concourse/scripts/run-cf-task "abacus-provisioning-plugin" "yarn run store-defaults"
 
   echo "Starting Demo ..."
   yarn run demo \

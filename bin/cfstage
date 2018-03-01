@@ -23,14 +23,14 @@ for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $C
 
   pushd $MODULE
     rm -rf node_modules/ yarn.lock package-lock.json
-    npm install --production
+    npm install --production --depth -1
   popd
 
   if [ "$APPS" == "0" ]; then
-    COMMANDS+=("cfpush -n $APPNAME -p $MODULE -i $INSTANCES -c $CONF -r $PUSH_RETRIES")
+    COMMANDS+=("(cfpush -n $APPNAME -p $MODULE -i $INSTANCES -c $CONF -r $PUSH_RETRIES)")
   else
     for I in $(seq 0 $APPS); do
-      COMMANDS+=("cfpush -n $APPNAME-$I -p $MODULE -i $INSTANCES -c $CONF -r $PUSH_RETRIES")
+      COMMANDS+=("(cfpush -n $APPNAME-$I -p $MODULE -i $INSTANCES -c $CONF -r $PUSH_RETRIES)")
     done
   fi
 done
@@ -43,5 +43,3 @@ done
  pushd "$CURRENT_DIR"
    echo $CMD_STRING | xargs -n 1 -P $MAX_PROCESSES /bin/bash -c
  popd
-
-
