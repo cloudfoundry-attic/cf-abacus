@@ -18,18 +18,24 @@ const async = require('async');
 const commander = require('commander');
 
 const batch = require('abacus-batch');
+const breaker = require('abacus-breaker');
 const request = require('abacus-request');
-const throttle = require('abacus-throttle');
+const retry = require('abacus-retry');
 const util = require('util');
 const dbclient = require('abacus-dbclient');
 const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');
 
-const brequest = batch(request);
+const brequest = retry(breaker(batch(request)), {
+  retries: 20,
+  min: 1000,
+  max: Infinity
+});
 const usage = require('./usage.js');
 
 // Setup the debug log
 const debug = require('abacus-debug')('abacus-perf-test');
+const xdebug = require('abacus-debug')('x-abacus-perf-test');
 
 process.env.DB = process.env.DB || 'test';
 
@@ -38,12 +44,12 @@ const argv = clone(process.argv);
 argv.splice(1, 1, 'perf');
 commander
   .option('-o, --orgs <n>', 'number of organizations', parseInt)
-  .option('--no-timestamp', 'do not add timestamp to org names', false)
-  .option('--num-executions <n>', 'number of test executions', 1)
-  .option('--sequential', 'submit usage sequentially', false)
   .option('-i, --instances <n>', 'number of resource instances', parseInt)
   .option('-u, --usagedocs <n>', 'number of usage docs', parseInt)
   .option('-d, --delta <d>', 'usage time window shift in milli-seconds', parseInt)
+  .option('--no-timestamp', 'do not add timestamp to org names', false)
+  .option('--num-executions <n>', 'number of test executions', 1)
+  .option('--limit <n>', 'max number of parallel submissions', parseInt)
   .option('-t, --start-timeout <n>', 'external processes start timeout in milliseconds', parseInt)
   .option('-x, --total-timeout <n>', 'test timeout in milliseconds', parseInt)
   .option(
@@ -81,6 +87,12 @@ const startTimeout = commander.startTimeout || 10000;
 
 // This test timeout
 const totalTimeout = commander.totalTimeout || 60000;
+
+const numExecutions = commander.numExecutions;
+
+const timestamp = commander.timestamp;
+
+const limit = commander.limit;
 
 // Collector service URL
 const collector = commander.collector;
@@ -128,12 +140,13 @@ describe('abacus-perf-test', () => {
   it('measures performance of concurrent usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs or
     // a preset timeout
-    console.log('Testing with %d orgs, %d resource instances, %d usage docs', orgs, resourceInstances, usagedocs);
+    console.log('Testing with %d orgs, %d resource instances, %d usage docs with limit %d',
+      orgs, resourceInstances, usagedocs, limit);
     const timeout = Math.max(totalTimeout, 100 * orgs * resourceInstances * usagedocs);
     this.timeout(timeout + 2000);
     const processingDeadline = moment.now() + timeout;
 
-    console.log('Timeout %d', timeout);
+    console.log('Timeout %d, num executions %d', timeout, numExecutions);
 
     const authHeader = (token) =>
       token
@@ -144,51 +157,49 @@ describe('abacus-perf-test', () => {
         }
         : {};
 
-    // Post one usage doc, throttled to 1000 concurrent requests
-    const post = throttle((organization, resourceInstance, docNumber, timestamp, cb) => {
+    const post = (organization, resourceInstance, docNumber, timestamp, cb) => {
       const usageDoc = usage.usageTemplate(organization, resourceInstance, docNumber, delta, timestamp);
-      debug('Submitting org: %d instance: %d usage doc: %d %o',
+      xdebug('Submitting org: %d instance: %d usage doc: %d %o',
         organization + 1, resourceInstance + 1, docNumber + 1, usageDoc);
       brequest.post(`${collector}/v1/metering/collected/usage`,
         extend({}, authHeader(objectStorageToken), { body: usageDoc }),
         (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);
-          debug('Completed submission org:%d instance:%d usage:%d',
-            organization + 1, resourceInstance + 1, docNumber + 1);
+          debug('Submitted org:%d instance:%d usage:%d', organization + 1, resourceInstance + 1, docNumber + 1);
           cb(err, val);
         }
       );
-    });
+    };
 
     // Post the requested number of usage docs
     const submit = (done) => {
       const numDocs = orgs * resourceInstances * usagedocs;
-      console.log('\nSubmitting %d usage docs ...', numDocs);
 
       const functions = [];
       each(range(usagedocs), (usageDoc) =>
         each(range(resourceInstances), (resourceInstance) =>
           each(range(orgs), (org) => {
-            functions.push((cb) => post(org, resourceInstance, usageDoc, commander.timestamp, cb));
+            functions.push((cb) => post(org, resourceInstance, usageDoc, timestamp, cb));
           })));
 
-      if (commander.sequential)
-        async.series(functions, done);
-      else
+      console.log('Submitting %d usage docs ...', numDocs);
+      if (isNaN(limit))
         async.parallel(functions, done);
+      else
+        async.parallelLimit(functions, limit, done);
     };
 
     // Get a usage report for the test organization
-    const get = throttle((org, done) => {
-      brequest.get(`${reporting}/v1/metering/organizations/${usage.orgId(org, commander.timestamp)}/aggregated/usage`,
+    const get = (org, done) => {
+      brequest.get(`${reporting}/v1/metering/organizations/${usage.orgId(org, timestamp)}/aggregated/usage`,
         extend({}, authHeader(systemToken)),
         (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(200);
 
           // Compare the usage report we got with the expected report
-          debug('Processed %d usage docs for org%d', usage.processed(val), org + 1);
+          xdebug('Processed %d usage docs for org%d', usage.processed(val), org + 1);
           try {
             // Can't check the dynamic time in resource_instances
             val.body.spaces[0].consumers[0].resources[0].plans[0] = omit(
@@ -197,13 +208,14 @@ describe('abacus-perf-test', () => {
             );
             const stippedResponse = usage.fixup(omit(val.body, 'id', 'processed', 'processed_id', 'start', 'end'));
             const expected = usage.fixup(
-              usage.report(org, resourceInstances, usagedocs, commander.numExecutions, commander.timestamp)
+              usage.report(org, resourceInstances, usagedocs, numExecutions, timestamp)
             );
             expect(stippedResponse).to.deep.equal(expected);
+            debug('Report for org:%d verified successfully', org + 1);
 
             done();
           } catch (e) {
-            debug('Failed obtaining report %o', e);
+            xdebug('Failed obtaining report for org:%d, response: %s, %o', org + 1, val ? val.statusCode : 'error', e);
             // If the comparison fails we'll be called again to retry
             // after 250 msec, but give up after the computed timeout
             if (moment.now() >= processingDeadline) {
@@ -219,22 +231,23 @@ describe('abacus-perf-test', () => {
           }
         }
       );
-    });
+    };
 
-    // Wait for the expected usage report for all organizations, get an
-    // organization usage report every 250 msec until we get the expected
-    // values indicating that all submitted usage has been processed
+    // Wait for the expected usage report for all organizations, get an organization usage report until
+    // we get the expected values indicating that all submitted usage has been processed
     const wait = (done) => {
-      console.log('\nRetrieving usage reports ...');
-
-      let verified = 0;
-      const cb = () => {
-        if (++verified === orgs) done();
-      };
-
+      const functions = [];
       each(range(orgs), (org) => {
-        const i = setInterval(() => get(org, () => cb(clearInterval(i))), 250);
+        functions.push((cb) => {
+          const interval = setInterval(() => get(org, () => cb(clearInterval(interval))), 1000);
+        });
       });
+
+      console.log('\nRetrieving usage reports ...', isNaN(limit));
+      if (isNaN(limit))
+        async.parallel(functions, done);
+      else
+        async.parallelLimit(functions, limit, done);
     };
 
     // Wait for usage reporter to start

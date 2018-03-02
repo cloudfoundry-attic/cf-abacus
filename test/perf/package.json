@@ -30,11 +30,12 @@
   },
   "dependencies": {
     "abacus-batch": "file:../../lib/utils/batch",
+    "abacus-breaker": "file:../../lib/utils/breaker",
     "abacus-dbclient": "file:../../lib/utils/dbclient",
     "abacus-debug": "file:../../lib/utils/debug",
     "abacus-mocha": "file:../../tools/mocha",
     "abacus-moment": "file:../../lib/utils/moment",
-    "abacus-throttle": "file:../../lib/utils/throttle",
+    "abacus-retry": "file:../../lib/utils/retry",
     "async": "^2.6.0",
     "bignumber.js": "^2.1.0",
     "commander": "2.8.1",
