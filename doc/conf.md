@@ -24,6 +24,9 @@ These port numbers are used when running Abacus in a local dev environment.
 | 9881 | abacus-account-plugin      |
 | 9882 | abacus-authserver-plugin   |
 | 9990 | abacus-eureka-plugin       |
+|      |                            |
+| 9883 | abacus-ext-housekeeper     |
+| 9884 | abacus-ext-healthchecker   |
 
 ## Securing Abacus
 
