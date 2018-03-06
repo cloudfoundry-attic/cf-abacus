@@ -15,8 +15,8 @@ cf api $skip "https://api.$CF_SYS_DOMAIN"
 echo "" | cf login $skip -u "$CF_ADMIN_USER" -p "$CF_ADMIN_PASSWORD"
 
 echo "Recreating organization and space ..."
-cf create-quota "$CF_ORG" -m 80g -i 4g -r 200 -s 20 --allow-paid-service-plans
-cf update-quota "$CF_ORG" -m 80g -i 4g -r 200 -s 20 --allow-paid-service-plans
+cf create-quota "$CF_ORG" -m 300g -i 4g -r 200 -s 20 --allow-paid-service-plans
+cf update-quota "$CF_ORG" -m 300g -i 4g -r 200 -s 20 --allow-paid-service-plans
 cf create-org "$CF_ORG" -q "$CF_ORG"
 cf create-space "$CF_SPACE" -o "$CF_ORG"
 if [ "$ENABLE_SERVICE_ACCESS" == "true" ]; then
