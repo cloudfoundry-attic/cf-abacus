@@ -18,8 +18,7 @@ const build = () => {
     let externalSystemsMocks;
     let usageEventsTimestamp;
 
-    before(
-      yieldable.functioncb(function*() {
+    before(yieldable.functioncb(function*() {
         externalSystemsMocks = fixture.externalSystemsMocks();
         externalSystemsMocks.startAll();
 
@@ -53,8 +52,7 @@ const build = () => {
         fixture.bridge.start(externalSystemsMocks);
 
         yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(2));
-      })
-    );
+    }));
 
     after((done) => {
       fixture.bridge.stop();
@@ -69,20 +67,24 @@ const build = () => {
 
       it('First recieved usage is as it was sent', () => {
         expect(externalSystemsMocks.abacusCollector.collectUsageService.request(0).usage).to.deep.equal(
-          fixture.collectorUsage(usageEventsTimestamp, fixture.usageEventStates.default)
+          fixture.collectorUsage()
+            .overwriteUsageTime(usageEventsTimestamp)
+            .overwriteMeasuredUsage(fixture.usageEventStates.default)
+            .get()
         );
       });
 
       it('Second recieved usage timestamp is adjusted', () => {
         expect(externalSystemsMocks.abacusCollector.collectUsageService.request(1).usage).to.deep.equal(
-          fixture.collectorUsage(usageEventsTimestamp + 1, fixture.usageEventStates.default)
+          fixture.collectorUsage()
+            .overwriteUsageTime(usageEventsTimestamp + 1)
+            .overwriteMeasuredUsage(fixture.usageEventStates.default)
+            .get()
         );
       });
     });
 
-    it(
-      'Exposes correct statistics',
-      yieldable.functioncb(function*() {
+    it('Exposes correct statistics', yieldable.functioncb(function*() {
         const response = yield fixture.bridge.readStats.withValidToken();
         expect(response.statusCode).to.equal(httpStatus.OK);
         expect(response.body.statistics.usage).to.deep.equal({

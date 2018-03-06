@@ -8,10 +8,6 @@ const unhandleableEvents = (fixture) => {
     .usageEvent()
     .overwriteOrgGuid('unsupported')
     .get();
-  const unsupportedStateUsageEvent = fixture
-    .usageEvent()
-    .overwriteState('UPDATED')
-    .get();
   const unsupportedServiceUsageEvent = fixture
     .usageEvent()
     .overwriteServiceLabel('unsupported-service')
@@ -23,7 +19,6 @@ const unhandleableEvents = (fixture) => {
 
   return [
     unsupportedOrganzationUsageEvent,
-    unsupportedStateUsageEvent,
     unsupportedServiceUsageEvent,
     unsupportedServicePlanUsageEvent
   ];

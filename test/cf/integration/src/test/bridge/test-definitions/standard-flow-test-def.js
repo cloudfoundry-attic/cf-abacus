@@ -95,12 +95,18 @@ const build = () => {
 
         expect(externalSystemsMocks.abacusCollector.collectUsageService.request(0)).to.deep.equal({
           token: fixture.oauth.abacusCollectorToken,
-          usage: fixture.collectorUsage(firstUsageEventTimestamp, fixture.usageEventStates.default)
+          usage: fixture.collectorUsage()
+            .overwriteUsageTime(firstUsageEventTimestamp)
+            .overwriteMeasuredUsage(fixture.usageEventStates.default)
+            .get()
         });
 
         expect(externalSystemsMocks.abacusCollector.collectUsageService.request(1)).to.deep.equal({
           token: fixture.oauth.abacusCollectorToken,
-          usage: fixture.collectorUsage(secondUsageEventTimestamp, fixture.usageEventStates.default)
+          usage: fixture.collectorUsage()
+            .overwriteUsageTime(secondUsageEventTimestamp)
+            .overwriteMeasuredUsage(fixture.usageEventStates.default)
+            .get()
         });
       });
 

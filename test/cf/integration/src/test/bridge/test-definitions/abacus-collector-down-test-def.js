@@ -18,8 +18,7 @@ const build = () => {
     let externalSystemsMocks;
     let usageEventMetadata;
 
-    before(
-      yieldable.functioncb(function*() {
+    before(yieldable.functioncb(function*() {
         externalSystemsMocks = fixture.externalSystemsMocks();
         externalSystemsMocks.startAll();
 
@@ -75,7 +74,10 @@ const build = () => {
       const expectedRequestsCount = fixture.env.retryCount + 2;
       const expectedRequests = _(expectedRequestsCount).times(() => ({
         token: fixture.oauth.abacusCollectorToken,
-        usage: fixture.collectorUsage(usageEventMetadata.created_at, fixture.usageEventStates.default)
+        usage: fixture.collectorUsage()
+          .overwriteUsageTime(usageEventMetadata.created_at)
+          .overwriteMeasuredUsage(fixture.usageEventStates.default)
+          .get()
       }));
 
       expect(externalSystemsMocks.abacusCollector.collectUsageService.requests()).to.deep.equal(expectedRequests);

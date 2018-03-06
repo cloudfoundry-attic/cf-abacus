@@ -94,34 +94,50 @@ const usageEvent = () => {
   return overwritable;
 };
 
-collectorUsage = (eventTimestamp) => ({
-  start: eventTimestamp,
-  end: eventTimestamp,
-  organization_id: defaultUsageEvent.orgGuid,
-  space_id: defaultUsageEvent.spaceGuid,
-  consumer_id: `app:${defaultUsageEvent.appGuid}`,
-  resource_id: 'linux-container',
-  plan_id: 'standard',
-  resource_instance_id: `memory:${defaultUsageEvent.appGuid}`,
-  measured_usage: [
-    {
-      measure: 'current_instance_memory',
-      quantity: 2097152
+const collectorUsage = () => {
+  const defaultUsage = {
+    start: 'eventTimestamp',
+    end: 'eventTimestamp',
+    organization_id: defaultUsageEvent.orgGuid,
+    space_id: defaultUsageEvent.spaceGuid,
+    consumer_id: `app:${defaultUsageEvent.appGuid}`,
+    resource_id: 'linux-container',
+    plan_id: 'standard',
+    resource_instance_id: `memory:${defaultUsageEvent.appGuid}`,
+    measured_usage: [
+      {
+        measure: 'current_instance_memory',
+        quantity: 2097152
+      },
+      {
+        measure: 'current_running_instances',
+        quantity: 5
+      },
+      {
+        measure: 'previous_instance_memory',
+        quantity: 0
+      },
+      {
+        measure: 'previous_running_instances',
+        quantity: 0
+      }
+    ]
+  };
+  
+  const overwritable = {
+    overwriteUsageTime: (timestamp) => {
+      defaultUsage.start = timestamp;
+      defaultUsage.end = timestamp;
+      return overwritable;
     },
-    {
-      measure: 'current_running_instances',
-      quantity: 5
+    overwriteMeasuredUsage: (state) => {
+      return overwritable;
     },
-    {
-      measure: 'previous_instance_memory',
-      quantity: 0
-    },
-    {
-      measure: 'previous_running_instances',
-      quantity: 0
-    }
-  ]
-});
+    get: () => defaultUsage
+  };
+
+  return overwritable;
+};
 
 module.exports = {
   oauth,
