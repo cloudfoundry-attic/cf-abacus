@@ -2,6 +2,8 @@
 
 const { each, last, first, keys } = require('underscore');
 
+const uuid = require('uuid');
+
 const moment = require('abacus-moment');
 
 // BigNumber
@@ -56,18 +58,21 @@ const chargeWindow = (numberOfResourceInstances, numberOfUsageDocs, numberOfExec
 
 const startTime = moment.now();
 
-const resourceInstanceId = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87', o + 1, ri + 1].join('-');
-const orgId = (o, timestamp) => ['org', timestamp ? startTime : '', o + 1].join('-');
+const resourceInstanceId = (orgId, resourceInstance) => [orgId, resourceInstance + 1].join('-');
+const orgId = (organization, timestamp) =>
+  timestamp
+    ? `${uuid.v4()}-${startTime}-${organization + 1}`
+    : `org-${organization + 1}`;
 
-const usageTemplate = (organization, resourceInstance, documentNumber, delta, timestamp) => {
+const usageTemplate = (orgId, resourceInstance, documentNumber, delta) => {
   return {
     start: moment.now() + delta + documentNumber,
     end: moment.now() + delta + documentNumber,
-    organization_id: orgId(organization, timestamp),
+    organization_id: orgId,
     space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
     resource_id: 'object-storage',
     plan_id: 'basic',
-    resource_instance_id: resourceInstanceId(organization, resourceInstance),
+    resource_instance_id: resourceInstanceId(orgId, resourceInstance),
     measured_usage: [
       {
         measure: 'storage',
@@ -86,8 +91,8 @@ const usageTemplate = (organization, resourceInstance, documentNumber, delta, ti
 };
 
 // Return the expected usage report for the test organization
-const report = (organization, numberOfResourceInstances, numberOfUsageDocs, numberOfExecutions, timestamp) => ({
-  organization_id: orgId(organization, timestamp),
+const report = (orgId, numberOfResourceInstances, numberOfUsageDocs, numberOfExecutions) => ({
+  organization_id: orgId,
   account_id: '1234',
   windows: chargeWindow(numberOfResourceInstances, numberOfUsageDocs, numberOfExecutions),
   resources: [

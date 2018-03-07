@@ -19,5 +19,8 @@ yarn perf --collector <collector url> --reporting <reporting url> --auth-server 
 
 To execute a functional correctness test do:
 ```bash
+# Output the organization post status
+export DEBUG=abacus-perf-test
+# Run the test
 yarn perf --collector <collector url> --reporting <reporting url> --auth-server <cf api url> --orgs 20000 --no-timestamps --limit 20
 ```

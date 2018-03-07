@@ -12,7 +12,9 @@
 // - TODO add resource and space variations
 // - TODO submit batch of usage docs in each submission
 
-const { each, range, omit, extend, clone } = require('underscore');
+const { clone, each, extend, omit, range, shuffle } = require('underscore');
+
+const util = require('util');
 
 const async = require('async');
 const commander = require('commander');
@@ -21,7 +23,6 @@ const batch = require('abacus-batch');
 const breaker = require('abacus-breaker');
 const request = require('abacus-request');
 const retry = require('abacus-retry');
-const util = require('util');
 const dbclient = require('abacus-dbclient');
 const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');
@@ -157,49 +158,31 @@ describe('abacus-perf-test', () => {
         }
         : {};
 
-    const post = (organization, resourceInstance, docNumber, timestamp, cb) => {
-      const usageDoc = usage.usageTemplate(organization, resourceInstance, docNumber, delta, timestamp);
-      xdebug('Submitting org: %d instance: %d usage doc: %d %o',
-        organization + 1, resourceInstance + 1, docNumber + 1, usageDoc);
+    const post = (usageDoc, docNumber, cb) => {
+      xdebug('Submitting org:%s instance:%s usage:%s ...',
+        usageDoc.organization_id, usageDoc.resource_instance_id, docNumber + 1);
       brequest.post(`${collector}/v1/metering/collected/usage`,
         extend({}, authHeader(objectStorageToken), { body: usageDoc }),
         (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(201);
-          debug('Submitted org:%d instance:%d usage:%d', organization + 1, resourceInstance + 1, docNumber + 1);
+          debug('Submitted org:%s instance:%s usage:%s',
+            usageDoc.organization_id, usageDoc.resource_instance_id, docNumber + 1);
           cb(err, val);
         }
       );
     };
 
-    // Post the requested number of usage docs
-    const submit = (done) => {
-      const numDocs = orgs * resourceInstances * usagedocs;
-
-      const functions = [];
-      each(range(usagedocs), (usageDoc) =>
-        each(range(resourceInstances), (resourceInstance) =>
-          each(range(orgs), (org) => {
-            functions.push((cb) => post(org, resourceInstance, usageDoc, timestamp, cb));
-          })));
-
-      console.log('Submitting %d usage docs ...', numDocs);
-      if (isNaN(limit))
-        async.parallel(functions, done);
-      else
-        async.parallelLimit(functions, limit, done);
-    };
-
     // Get a usage report for the test organization
-    const get = (org, done) => {
-      brequest.get(`${reporting}/v1/metering/organizations/${usage.orgId(org, timestamp)}/aggregated/usage`,
+    const get = (orgId, done) => {
+      brequest.get(`${reporting}/v1/metering/organizations/${orgId}/aggregated/usage`,
         extend({}, authHeader(systemToken)),
         (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(200);
 
           // Compare the usage report we got with the expected report
-          xdebug('Processed %d usage docs for org%d', usage.processed(val), org + 1);
+          xdebug('Processed %d usage docs for org:%s', usage.processed(val), orgId);
           try {
             // Can't check the dynamic time in resource_instances
             val.body.spaces[0].consumers[0].resources[0].plans[0] = omit(
@@ -208,14 +191,14 @@ describe('abacus-perf-test', () => {
             );
             const stippedResponse = usage.fixup(omit(val.body, 'id', 'processed', 'processed_id', 'start', 'end'));
             const expected = usage.fixup(
-              usage.report(org, resourceInstances, usagedocs, numExecutions, timestamp)
+              usage.report(orgId, resourceInstances, usagedocs, numExecutions)
             );
             expect(stippedResponse).to.deep.equal(expected);
-            debug('Report for org:%d verified successfully', org + 1);
+            debug('Report for org:%s verified successfully', orgId);
 
             done();
           } catch (e) {
-            xdebug('Failed obtaining report for org:%d, response: %s, %o', org + 1, val ? val.statusCode : 'error', e);
+            xdebug('Failed obtaining report for org:%s, response: %s, %o', orgId, val ? val.statusCode : 'error', e);
             // If the comparison fails we'll be called again to retry
             // after 250 msec, but give up after the computed timeout
             if (moment.now() >= processingDeadline) {
@@ -233,17 +216,51 @@ describe('abacus-perf-test', () => {
       );
     };
 
-    // Wait for the expected usage report for all organizations, get an organization usage report until
-    // we get the expected values indicating that all submitted usage has been processed
-    const wait = (done) => {
-      const functions = [];
+    const buildFunctions = () => {
+      const postFunctions = [];
+      const reportFunctions = [];
       each(range(orgs), (org) => {
-        functions.push((cb) => {
-          const interval = setInterval(() => get(org, () => cb(clearInterval(interval))), 1000);
+
+        const orgId = usage.orgId(org, timestamp);
+        reportFunctions.push((cb) => {
+          const interval = setInterval(() => get(orgId, () => cb(clearInterval(interval))), 1000);
         });
+
+        each(range(usagedocs), (docNumber) =>
+          each(range(resourceInstances), (resourceInstance) => {
+            const usageDoc = usage.usageTemplate(orgId, resourceInstance, docNumber, delta);
+            postFunctions.push((cb) => post(usageDoc, docNumber, cb));
+          }));
       });
 
-      console.log('\nRetrieving usage reports ...', isNaN(limit));
+      return {
+        post: shuffle(postFunctions),
+        report: reportFunctions
+      };
+    };
+
+    // Post the requested number of usage docs
+    const submit = (functions, done) => {
+      const startTime = moment.now();
+      const finishCb = (err) => {
+        if (err)
+          xdebug('Failed to submit docs with %o', err);
+        else
+          console.log('Finished submitting docs for %d ms', moment.now() - startTime);
+        done(err);
+      };
+
+      console.log('Submitting %d usage docs ...', orgs * resourceInstances * usagedocs);
+      if (isNaN(limit))
+        async.parallel(functions, finishCb);
+      else
+        async.parallelLimit(functions, limit, finishCb);
+    };
+
+    // Wait for the expected usage report for all organizations, get an organization usage report until
+    // we get the expected values indicating that all submitted usage has been processed
+    const getReports = (functions, done) => {
+      console.log('\nRetrieving usage reports ...');
       if (isNaN(limit))
         async.parallel(functions, done);
       else
@@ -256,7 +273,8 @@ describe('abacus-perf-test', () => {
       if (err) throw err;
 
       // Run the above steps
-      submit(() => wait(done));
+      const functions = buildFunctions();
+      submit(functions.post, () => getReports(functions.report, done));
     });
   });
 });
