@@ -3,14 +3,13 @@
 // Simulate a service provider submitting usage for a resource, check the
 // usage report for those submissions and measure the performance.
 
-// TODO Use Hystrix metrics for internal performance measurements
-
 // Scenarios:
 // - Concurrently submit a usage doc for a resource instance
 // - Concurrently submit a usage doc for multiple resource instances
 // - Concurrently submit a usage doc for multiple organizations
-// - TODO add resource and space variations
-// - TODO submit batch of usage docs in each submission
+//
+// TODO add resource and space variations
+// TODO Use Hystrix metrics for internal performance measurements
 
 const { clone, each, extend, omit, range, shuffle } = require('underscore');
 
@@ -50,7 +49,7 @@ commander
   .option('-d, --delta <d>', 'usage time window shift in milli-seconds', parseInt)
   .option('--no-timestamp', 'do not add timestamp to org names', false)
   .option('--num-executions <n>', 'number of test executions', 1)
-  .option('--limit <n>', 'max number of parallel submissions', parseInt)
+  .option('-l, --limit <n>', 'max number of parallel submissions', parseInt)
   .option('-t, --start-timeout <n>', 'external processes start timeout in milliseconds', parseInt)
   .option('-x, --total-timeout <n>', 'test timeout in milliseconds', parseInt)
   .option(
@@ -163,12 +162,15 @@ describe('abacus-perf-test', () => {
         usageDoc.organization_id, usageDoc.resource_instance_id, docNumber + 1);
       brequest.post(`${collector}/v1/metering/collected/usage`,
         extend({}, authHeader(objectStorageToken), { body: usageDoc }),
-        (err, val) => {
+        (err, response) => {
           expect(err).to.equal(undefined);
-          expect(val.statusCode).to.equal(201);
+          const errorMessage = util.format('Unexpected response code with headers: %j, body: %j',
+            response.headers, response.body);
+          expect(response.statusCode, errorMessage).to.equal(201);
           debug('Submitted org:%s instance:%s usage:%s',
             usageDoc.organization_id, usageDoc.resource_instance_id, docNumber + 1);
-          cb(err, val);
+          process.stdout.write('.');
+          cb(err, response);
         }
       );
     };
@@ -211,6 +213,8 @@ describe('abacus-perf-test', () => {
               );
               throw e;
             }
+
+            done(e);
           }
         }
       );
@@ -223,7 +227,7 @@ describe('abacus-perf-test', () => {
 
         const orgId = usage.orgId(org, timestamp);
         reportFunctions.push((cb) => {
-          const interval = setInterval(() => get(orgId, () => cb(clearInterval(interval))), 1000);
+          async.retry({ times: Number.MAX_SAFE_INTEGER, interval: 1000 }, (done) => get(orgId, done), cb);
         });
 
         each(range(usagedocs), (docNumber) =>
@@ -246,11 +250,11 @@ describe('abacus-perf-test', () => {
         if (err)
           xdebug('Failed to submit docs with %o', err);
         else
-          console.log('Finished submitting docs for %d ms', moment.now() - startTime);
+          console.log('\nFinished submitting docs for %d ms', moment.now() - startTime);
         done(err);
       };
 
-      console.log('Submitting %d usage docs ...', orgs * resourceInstances * usagedocs);
+      process.stdout.write(util.format('Submitting %d usage docs ', orgs * resourceInstances * usagedocs));
       if (isNaN(limit))
         async.parallel(functions, finishCb);
       else
@@ -264,7 +268,7 @@ describe('abacus-perf-test', () => {
       if (isNaN(limit))
         async.parallel(functions, done);
       else
-        async.parallelLimit(functions, limit, done);
+        async.parallelLimit(functions, 180, done);
     };
 
     // Wait for usage reporter to start
