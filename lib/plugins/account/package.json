@@ -51,7 +51,8 @@
     "abacus-usage-schemas": "file:../../config/schemas",
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-yieldable": "file:../../utils/yieldable",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "ajv": "^6.0.0"
   },
   "devDependencies": {
     "abacus-cfpush": "file:../../../tools/cfpush",

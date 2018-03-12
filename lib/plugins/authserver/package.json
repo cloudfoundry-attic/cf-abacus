@@ -38,7 +38,8 @@
     "abacus-router": "file:../../utils/router",
     "abacus-webapp": "file:../../utils/webapp",
     "underscore": "^1.8.3",
-    "jsonwebtoken": "^5.0.5"
+    "jsonwebtoken": "^5.0.5",
+    "ajv": "^6.0.0"
   },
   "devDependencies": {
     "abacus-cluster": "file:../../utils/cluster",
