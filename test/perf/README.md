@@ -10,6 +10,7 @@ export OBJECT_STORAGE_CLIENT_ID=abacus-object-storage
 export OBJECT_STORAGE_CLIENT_SECRET=s3cret
 export SYSTEM_CLIENT_ID=abacus
 export SYSTEM_CLIENT_SECRET=s3cret
+export SKIP_SSL_VALIDATION=true # if you need to skip ssl validation
 ```
 
 To start a performance test use:
