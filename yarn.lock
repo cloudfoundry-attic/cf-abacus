@@ -32,6 +32,7 @@
     abacus-usage-schemas "file:../../Library/Caches/Yarn/config/schemas"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
     abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    ajv "^6.0.0"
     underscore "^1.8.3"
 
 "abacus-audit@file:lib/utils/audit":
@@ -44,6 +45,7 @@
     abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
     abacus-router "file:../../Library/Caches/Yarn/utils/router"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
+    ajv "^6.0.0"
     jsonwebtoken "^5.0.5"
     underscore "^1.8.3"
 
@@ -125,6 +127,7 @@
     abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
     abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
     abacus-moment "file:../../Library/Caches/Yarn/utils/moment"
+    ajv "^6.0.0"
 
 "abacus-cf-broker@file:lib/cf/broker":
   version "1.1.0"
@@ -143,6 +146,7 @@
     abacus-transform "file:../../Library/Caches/Yarn/utils/transform"
     abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
+    ajv "^6.0.0"
     async "^2.6.0"
     generate-password "^1.3.0"
     http-status-codes "^1.1.6"
@@ -201,6 +205,7 @@
     abacus-usage-schemas "file:../../Library/Caches/Yarn/config/schemas"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
     abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    ajv "^6.0.0"
     async "^2.6.0"
     jsonwebtoken "^5.0.5"
     underscore "^1.8.3"
@@ -216,6 +221,7 @@
     abacus-perf "file:../../Library/Caches/Yarn/utils/perf"
     abacus-plan-mappings "file:../../Library/Caches/Yarn/config/mappings"
     abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
+    ajv "^6.0.0"
     underscore "^1.8.3"
 
 "abacus-cf-smoke@file:test/cf/smoke":
@@ -422,6 +428,7 @@
     abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
     abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    ajv "^6.0.0"
     underscore "^1.8.3"
 
 "abacus-eureka@file:lib/utils/eureka":
@@ -458,6 +465,7 @@
     commander "^2.8.1"
     compression "^1.0.8"
     express "^4.14.1"
+    http-status-codes "^1.3.0"
     method-override "^2.0.2"
     morgan "^1.1.1"
     response-time "^2.0.0"
@@ -481,6 +489,7 @@
     abacus-transform "file:../../Library/Caches/Yarn/utils/transform"
     abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
+    ajv "^6.0.0"
     http-status-codes "^1.3.0"
     underscore "^1.8.3"
 
@@ -500,6 +509,7 @@
     abacus-transform "file:../../Library/Caches/Yarn/utils/transform"
     abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
+    ajv "^6.0.0"
     jsonwebtoken "^5.0.5"
     underscore "^1.8.3"
 
@@ -646,17 +656,19 @@
   version "1.1.0"
   dependencies:
     abacus-batch "file:../../Library/Caches/Yarn/lib/utils/batch"
+    abacus-breaker "file:../../Library/Caches/Yarn/lib/utils/breaker"
     abacus-dbclient "file:../../Library/Caches/Yarn/lib/utils/dbclient"
     abacus-debug "file:../../Library/Caches/Yarn/lib/utils/debug"
     abacus-mocha "file:../../Library/Caches/Yarn/tools/mocha"
     abacus-moment "file:../../Library/Caches/Yarn/lib/utils/moment"
-    abacus-throttle "file:../../Library/Caches/Yarn/lib/utils/throttle"
+    abacus-retry "file:../../Library/Caches/Yarn/lib/utils/retry"
     async "^2.6.0"
     bignumber.js "^2.1.0"
     commander "2.8.1"
     jsonwebtoken "^5.0.5"
     nyc "^11.4.1"
     underscore "^1.8.3"
+    uuid "^3.2.1"
 
 "abacus-perf@file:lib/utils/perf":
   version "1.1.0"
@@ -721,6 +733,7 @@
     abacus-usage-schemas "file:../../Library/Caches/Yarn/config/schemas"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
     abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    ajv "^6.0.0"
     underscore "^1.8.3"
 
 "abacus-publish@file:tools/publish":
@@ -833,6 +846,7 @@
     abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
     abacus-vcapenv "file:../../Library/Caches/Yarn/utils/vcapenv"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
+    ajv "^6.0.0"
     bluebird "3.4.6"
     body-parser "1.17.1"
     cfenv "1.0.3"
@@ -925,6 +939,7 @@
     abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
     abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    ajv "^6.0.0"
     underscore "^1.8.3"
 
 "abacus-usage-aggregator-itest@file:test/aggregation/aggregator":
@@ -974,6 +989,7 @@
     abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
     abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    ajv "^6.0.0"
     underscore "^1.8.3"
 
 "abacus-usage-collector-itest@file:test/metering/collector":
@@ -1020,6 +1036,7 @@
     abacus-usage-schemas "file:../../Library/Caches/Yarn/config/schemas"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
     abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    ajv "^6.0.0"
     underscore "^1.8.3"
 
 "abacus-usage-meter-itest@file:test/metering/meter":
@@ -1060,6 +1077,7 @@
     abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
     abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    ajv "^6.0.0"
     underscore "^1.8.3"
 
 "abacus-usage-reporting-itest@file:test/aggregation/reporting":
@@ -1112,6 +1130,7 @@
     abacus-usage-schemas "file:../../Library/Caches/Yarn/config/schemas"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
     abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
+    ajv "^6.0.0"
     bignumber.js "^2.1.0"
     underscore "^1.8.3"
 
@@ -1274,6 +1293,14 @@ ajv@^5.1.0, ajv@^5.3.0:
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-5.5.2.tgz#73b5eeca3fab653e3d3f9422b341ad42205dc965"
   dependencies:
     co "^4.6.0"
+    fast-deep-equal "^1.0.0"
+    fast-json-stable-stringify "^2.0.0"
+    json-schema-traverse "^0.3.0"
+
+ajv@^6.0.0:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.2.1.tgz#28a6abc493a2abe0fb4c8507acaedb43fa550671"
+  dependencies:
     fast-deep-equal "^1.0.0"
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
@@ -7693,7 +7720,7 @@ uuid@3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.1.0.tgz#3dd3d3e790abc24d7b0d3a034ffababe28ebbc04"
 
-uuid@3.2.1, uuid@^3.0.0, uuid@^3.0.1, uuid@^3.1.0:
+uuid@3.2.1, uuid@^3.0.0, uuid@^3.0.1, uuid@^3.1.0, uuid@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.2.1.tgz#12c528bb9d58d0b9265d9a2f6f0fe8be17ff1f14"
 
