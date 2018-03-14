@@ -46,7 +46,7 @@ if [ "$CREATE_DB_SERVICE" == "true" ]; then
     createOrUpdateService ${args[0]} ${args[1]}
     shouldWaitFor+=(${args[0]})
   done;
-  waitForServices $shouldWaitFor
+  waitForServices "${shouldWaitFor[@]}"
 else
   echo "Using DB URL provided in abacus-config !"
 fi

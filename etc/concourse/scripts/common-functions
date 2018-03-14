@@ -48,7 +48,7 @@ function restartAppsWithRetry {
 
 function waitForServices {
   echo "Waiting for DB creation or update ..."
-  services=$1
+  services=("$@")
   for service in "${services[@]}"
   do
     while [[ -z $(cf service $service | grep '\(create\|update\) succeeded\|\(create\|update\) failed') ]]; do
