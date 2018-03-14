@@ -1,10 +1,10 @@
 {
-  "name": "abacus-lifecycle-manager",
-  "description": "Abacus Lifecycle Manager",
+  "name": "abacus-extensions-itest",
+  "description": "Extensions integration tests",
   "license": "Apache-2.0",
   "version": "1.1.0",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/lifecycle-manager",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/extensions",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -17,19 +17,29 @@
     "abacus"
   ],
   "files": [
+    ".npmrc",
     "src/"
   ],
   "main": "src/index.js",
   "scripts": {
-    "itest": "abacus-eslint && abacus-mocha --command",
+    "extensions-itest": "abacus-eslint && abacus-mocha --command",
     "test": "abacus-eslint",
+    "itest": "true",
     "generate-coverage": "true",
     "lint": "abacus-eslint",
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-debug": "file:../../../lib/utils/debug",
+    "abacus-dbclient": "file:../../lib/utils/dbclient",
+    "abacus-debug": "file:../../lib/utils/debug",
+    "abacus-mocha": "file:../../tools/mocha",
+    "commander": "2.8.1",
+    "nyc": "^11.4.1",
     "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "abacus-eslint": "file:../../tools/eslint",
+    "abacus-publish": "file:../../tools/publish"
   },
   "nyc": {
     "cache": true,

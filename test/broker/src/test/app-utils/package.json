@@ -23,7 +23,7 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "itest": "abacus-eslint && abacus-mocha",
+    "itest": "abacus-eslint && abacus-mocha --command",
     "test": "abacus-eslint",
     "lint": "abacus-eslint",
     "pub": "publish"
