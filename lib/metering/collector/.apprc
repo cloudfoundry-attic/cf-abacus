@@ -15,6 +15,7 @@ default:
   CLIENT_SECRET:
   JWTKEY:
   JWTALGO:
+  SYSTEM_INFLIGHT_ENABLED: true
 
 smalldb:
   OUTPUT_DB: false

@@ -2,8 +2,6 @@
 
 /* eslint-disable nodate/no-moment, nodate/no-new-date, nodate/no-date */
 
-process.env.MAX_INTERNAL_INFLIGHT = 100;
-
 const _ = require('underscore');
 
 const commander = require('commander');
