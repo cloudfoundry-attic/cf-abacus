@@ -68,7 +68,8 @@
     "formidable": "1.1.1",
     "css": "2.2.1",
     "nano": "6.4.2",
-    "uuid": "3.1.0"
+    "uuid": "3.1.0",
+    "ajv": "^6.0.0"
   },
   "devDependencies": {
     "abacus-cfpush": "file:../../../tools/cfpush",
