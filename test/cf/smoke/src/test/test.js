@@ -78,6 +78,19 @@ const systemToken = secured()
   ? oauth.cache(authServer, process.env.SYSTEM_CLIENT_ID, process.env.SYSTEM_CLIENT_SECRET, 'abacus.usage.read')
   : undefined;
 
+// The scaling factor of each time window for creating the date string
+// [Second, Minute, Hour, Day, Month]
+const slack = () =>
+  /^[0-9]+[MDhms]$/.test(process.env.SLACK)
+    ? {
+      scale: process.env.SLACK.charAt(process.env.SLACK.length - 1),
+      width: process.env.SLACK.match(/[0-9]+/)[0]
+    }
+    : {
+      scale: timewindow.dimension.min,
+      width: 10
+    };
+
 const initWindows = (win, dimension) => {
   const windows = [win];
 
@@ -86,8 +99,10 @@ const initWindows = (win, dimension) => {
   if(windowsSizes && windowsSizes[dimension])
     _(windowsSizes[dimension] - 1).times(() => windows.push(null));
 
-  else 
-    windows.push(null);
+  else {
+    const timeWindows = timewindow.timeWindowsSizes(slack(), windowsSizes);  
+    _(timeWindows.getWindows(dimension).length - 1).times(() => windows.push(null));
+  }
   
   return windows;
 };
@@ -95,7 +110,7 @@ const initWindows = (win, dimension) => {
 const buildExpectedWindows = (charge, summary, quantity, cost) => {
 
   const addProperty = (key, value, obj) => {
-    if (value)
+    if (value != undefined)
       obj[key] = value;
   };
 

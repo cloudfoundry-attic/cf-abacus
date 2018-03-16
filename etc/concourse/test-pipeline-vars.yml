@@ -33,6 +33,9 @@ cf-admin-password: admin
 # Comma-separated debug logs
 debug:
 
+# SLACK configured
+slack:
+
 # Set this to true to skip ssl validation
 skip-ssl-validation: true
 
