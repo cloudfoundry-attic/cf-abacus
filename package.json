@@ -150,11 +150,11 @@
   "devDependencies": {
     "abacus-cf-acceptance-test": "file:test/cf/acceptance",
     "abacus-cf-integration-itest": "file:test/cf/integration",
-    "abacus-extensions-itest": "file:test/extensions",
     "abacus-cf-smoke": "file:test/cf/smoke",
     "abacus-cfpush": "file:tools/cfpush",
     "abacus-dupe-test": "file:test/dupe",
     "abacus-eslint": "file:tools/eslint",
+    "abacus-extensions-itest": "file:test/extensions",
     "abacus-mddoc": "file:tools/mddoc",
     "abacus-mocha": "file:tools/mocha",
     "abacus-perf-test": "file:test/perf",
