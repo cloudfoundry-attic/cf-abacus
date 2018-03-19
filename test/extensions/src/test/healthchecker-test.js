@@ -7,7 +7,7 @@ const commander = require('commander');
 const request = require('abacus-request');
 
 // Setup the debug log
-const debug = require('abacus-debug')('abacus-perf-test');
+const debug = require('abacus-debug')('abacus-extensions-healthchecker-test');
 
 // Parse command line options
 const argv = clone(process.argv);
