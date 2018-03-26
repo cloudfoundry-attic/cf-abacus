@@ -19,39 +19,38 @@ const build = () => {
     let usageEventMetadata;
 
     before(yieldable.functioncb(function*() {
-        externalSystemsMocks = fixture.externalSystemsMocks();
-        externalSystemsMocks.startAll();
+      externalSystemsMocks = fixture.externalSystemsMocks();
+      externalSystemsMocks.startAll();
 
-        externalSystemsMocks.uaaServer.tokenService
-          .whenScopesAre(fixture.oauth.abacusCollectorScopes)
-          .return(fixture.oauth.abacusCollectorToken);
+      externalSystemsMocks.uaaServer.tokenService
+        .whenScopesAre(fixture.oauth.abacusCollectorScopes)
+        .return(fixture.oauth.abacusCollectorToken);
 
-        externalSystemsMocks.uaaServer.tokenService
-          .whenScopesAre(fixture.oauth.cfAdminScopes)
-          .return(fixture.oauth.cfAdminToken);
+      externalSystemsMocks.uaaServer.tokenService
+        .whenScopesAre(fixture.oauth.cfAdminScopes)
+        .return(fixture.oauth.cfAdminToken);
 
-        const serviceUsageEvent = fixture.usageEvent().get();
-        usageEventMetadata = serviceUsageEvent.metadata;
+      const serviceUsageEvent = fixture.usageEvent().get();
+      usageEventMetadata = serviceUsageEvent.metadata;
 
-        externalSystemsMocks.cloudController.usageEvents.return.firstTime([serviceUsageEvent]);
-        externalSystemsMocks.cloudController.usageEvents.return.secondTime([serviceUsageEvent]);
+      externalSystemsMocks.cloudController.usageEvents.return.firstTime([serviceUsageEvent]);
+      externalSystemsMocks.cloudController.usageEvents.return.secondTime([serviceUsageEvent]);
 
-        // Event reporter (abacus-client) will retry 'fixture.env.retryCount'
-        // times to report usage to abacus. After that the whole process is
-        // retried (i.e. start reading again the events).  Stub Abacus Collector
-        // so that it will force the bridge to retry the whole proces.
-        const failRequetsCount = fixture.env.retryCount + 1;
-        const responses = _(failRequetsCount).times(() => httpStatus.BAD_GATEWAY);
-        responses.push(httpStatus.CREATED);
+      // Event reporter (abacus-client) will retry 'fixture.env.retryCount'
+      // times to report usage to abacus. After that the whole process is
+      // retried (i.e. start reading again the events).  Stub Abacus Collector
+      // so that it will force the bridge to retry the whole proces.
+      const failRequetsCount = fixture.env.retryCount + 1;
+      const responses = _(failRequetsCount).times(() => httpStatus.BAD_GATEWAY);
+      responses.push(httpStatus.CREATED);
 
-        externalSystemsMocks.abacusCollector.collectUsageService.return.series(responses);
+      externalSystemsMocks.abacusCollector.collectUsageService.return.series(responses);
 
-        yield carryOverDb.setup();
-        fixture.bridge.start(externalSystemsMocks);
+      yield carryOverDb.setup();
+      fixture.bridge.start(externalSystemsMocks);
 
-        yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(3));
-      })
-    );
+      yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(3));
+    }));
 
     after((done) => {
       fixture.bridge.stop();

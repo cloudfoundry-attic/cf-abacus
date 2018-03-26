@@ -19,39 +19,39 @@ const build = () => {
     let usageEventsTimestamp;
 
     before(yieldable.functioncb(function*() {
-        externalSystemsMocks = fixture.externalSystemsMocks();
-        externalSystemsMocks.startAll();
+      externalSystemsMocks = fixture.externalSystemsMocks();
+      externalSystemsMocks.startAll();
 
-        externalSystemsMocks.uaaServer.tokenService
-          .whenScopesAre(fixture.oauth.abacusCollectorScopes)
-          .return(fixture.oauth.abacusCollectorToken);
+      externalSystemsMocks.uaaServer.tokenService
+        .whenScopesAre(fixture.oauth.abacusCollectorScopes)
+        .return(fixture.oauth.abacusCollectorToken);
 
-        externalSystemsMocks.uaaServer.tokenService
-          .whenScopesAre(fixture.oauth.cfAdminScopes)
-          .return(fixture.oauth.cfAdminToken);
+      externalSystemsMocks.uaaServer.tokenService
+        .whenScopesAre(fixture.oauth.cfAdminScopes)
+        .return(fixture.oauth.cfAdminToken);
 
-        const now = moment.now();
-        usageEventsTimestamp = moment
-          .utc(now)
-          .subtract(fixture.env.minimalAgeInMinutes + 1, 'minutes')
-          .valueOf();
-        const firstUsageEvent = fixture
-          .usageEvent()
-          .overwriteCreatedAt(usageEventsTimestamp)
-          .get();
-        const secondUsageEvent = fixture
-          .usageEvent()
-          .overwriteCreatedAt(usageEventsTimestamp)
-          .get();
+      const now = moment.now();
+      usageEventsTimestamp = moment
+        .utc(now)
+        .subtract(fixture.env.minimalAgeInMinutes + 1, 'minutes')
+        .valueOf();
+      const firstUsageEvent = fixture
+        .usageEvent()
+        .overwriteCreatedAt(usageEventsTimestamp)
+        .get();
+      const secondUsageEvent = fixture
+        .usageEvent()
+        .overwriteCreatedAt(usageEventsTimestamp)
+        .get();
 
-        externalSystemsMocks.cloudController.usageEvents.return.firstTime([firstUsageEvent, secondUsageEvent]);
+      externalSystemsMocks.cloudController.usageEvents.return.firstTime([firstUsageEvent, secondUsageEvent]);
 
-        externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
+      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
 
-        yield carryOverDb.setup();
-        fixture.bridge.start(externalSystemsMocks);
+      yield carryOverDb.setup();
+      fixture.bridge.start(externalSystemsMocks);
 
-        yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(2));
+      yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(2));
     }));
 
     after((done) => {
@@ -85,18 +85,17 @@ const build = () => {
     });
 
     it('Exposes correct statistics', yieldable.functioncb(function*() {
-        const response = yield fixture.bridge.readStats.withValidToken();
-        expect(response.statusCode).to.equal(httpStatus.OK);
-        expect(response.body.statistics.usage).to.deep.equal({
-          success: {
-            all: 2,
-            conflicts: 0,
-            skips: 0
-          },
-          failures: 0
-        });
-      })
-    );
+      const response = yield fixture.bridge.readStats.withValidToken();
+      expect(response.statusCode).to.equal(httpStatus.OK);
+      expect(response.body.statistics.usage).to.deep.equal({
+        success: {
+          all: 2,
+          conflicts: 0,
+          skips: 0
+        },
+        failures: 0
+      });
+    }));
   });
 };
 

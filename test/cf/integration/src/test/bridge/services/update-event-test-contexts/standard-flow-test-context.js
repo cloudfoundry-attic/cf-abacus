@@ -9,152 +9,135 @@ const waitUntil = yieldable(createWait().until);
 
 const serviceMock = require('../../../utils/service-mock-util');
 
-let test;
-let setup;
-let cleanUp;
-let fixture;
+let arrange;
 
-const run = () => {
+const run = (test) => {
   context('when reading UPDATE event from Cloud Controller', () => {
-
-    const createUsageEvent = fixture.usageEvent()
+    const createUsageEvent = arrange.fixture.usageEvent()
       .overwriteEventGuid('create-event-guid')
       .get();
   
-    const updateUsageEvent = fixture.usageEvent()
+    const updateUsageEvent = arrange.fixture.usageEvent()
       .overwriteEventGuid('update-event-guid')
-      .overwriteState(fixture.usageEventStates.updated)
-      .overwriteServicePlanName(fixture.planNames.custom)
+      .overwriteState(arrange.fixture.usageEventStates.updated)
+      .overwriteServicePlanName(arrange.fixture.planNames.custom)
       .get();
-
-    context('without previous CREATED event', () => {
-      const expectedStatistics = { success: {}, failures: {} };
-
+    const getExpectedCarryOverEntries = () => {
+      const carryOverEntries = [];
+      carryOverEntries.push({
+        guid: updateUsageEvent.metadata.guid,
+        state: arrange.fixture.usageEventStates.default,
+        planName: arrange.fixture.planNames.custom
+      });
+      carryOverEntries.push({
+        guid: updateUsageEvent.metadata.guid,
+        state: arrange.fixture.usageEventStates.deleted,
+        planName: arrange.fixture.planNames.default
+      });  
+      return carryOverEntries;
+    };
+    context('when preceding event is not found', () => {
+      const expectedNumBerOfCarryOverEntries = 0;
       const expectedCallsToCollectUsageService = 0;
       
-      const setExpectedStatistics = () => {
-        expectedStatistics.success = {
-          all: 1,
-          conflicts: 0,
-          skips: 1
-        }; 
-        expectedStatistics.failures = 0;
+      const getExpectedStatistics = () => {
+        return {
+          success: {
+            all: 1,
+            conflicts: 0,
+            skips: 1
+          }, failures: 0
+        };
       };
 
       const setCloudControllerResponse = () => {
-        fixture.externalSystemsMocks().cloudController.usageEvents.return.firstTime([updateUsageEvent]);
-      };
-
-      const customSetup = (fixture) => {
-        setExpectedStatistics();
-
-        setCloudControllerResponse();
-      };
-  
-      const waitLogic = function*(fixture) {
-        yield waitUntil(serviceMock(fixture.externalSystemsMocks().cloudController.usageEvents).received(1 + 1));
+        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.firstTime([updateUsageEvent]);
       };
 
       before(yieldable.functioncb(function*() {
-        setup.prepareCommonSetup(fixture);
-        setup.prepareCustomSetup(customSetup, fixture);
-        yield setup.finalizeTestSetup(waitLogic, fixture);  
+        arrange.init();
+        setCloudControllerResponse(); 
+        yield arrange.finalizeSetup();
+        yield waitUntil(
+          serviceMock(arrange.fixture.externalSystemsMocks().cloudController.usageEvents).received(1 + 1));
       }));
   
       after((done) => {
-        cleanUp(fixture, done);
+        arrange.cleanUp(done);
       });
 
-      test.collectUsageService(fixture, expectedCallsToCollectUsageService);
-      test.statistics(fixture, expectedStatistics);
+      test.collectUsageService(expectedCallsToCollectUsageService);
+      test.carryOver(expectedNumBerOfCarryOverEntries, []);
+      test.statistics(getExpectedStatistics());
     });
 
-    context('with previous CREATED event', () => {  
-      const expectedUsageDocs = [];
-      const expectedStatistics = { success: {}, failures: {} };
-
+    context('when preceding event is found', () => {  
+      const expectedNumBerOfCarryOverEntries = 2;
       const expectedCallsToCollectUsageService = 3;
 
-      const setExpectedUsageDocs = () => {
-        expectedUsageDocs.push(fixture.collectorUsage()
-          .overwriteMeasuredUsage(fixture.usageEventStates.default)
+      const getExpectedUsageDocs = () => {
+        const expectedUsageDocs = [];
+        expectedUsageDocs.push(arrange.fixture.collectorUsage()
+          .overwriteMeasuredUsage(arrange.fixture.usageEventStates.default)
           .overwriteUsageTime(createUsageEvent.metadata.created_at)
           .get());
-        expectedUsageDocs.push(fixture.collectorUsage()
-          .overwriteMeasuredUsage(fixture.usageEventStates.deleted)
+        expectedUsageDocs.push(arrange.fixture.collectorUsage()
+          .overwriteMeasuredUsage(arrange.fixture.usageEventStates.deleted)
           .overwriteUsageTime(updateUsageEvent.metadata.created_at)
           .get());
-        expectedUsageDocs.push(fixture.collectorUsage()
-          .overwriteMeasuredUsage(fixture.usageEventStates.default)
+        expectedUsageDocs.push(arrange.fixture.collectorUsage()
+          .overwriteMeasuredUsage(arrange.fixture.usageEventStates.default)
           .overwriteUsageTime(updateUsageEvent.metadata.created_at + 1)
-          .overwritePlanName(fixture.planNames.custom)
+          .overwritePlanName(arrange.fixture.planNames.custom)
           .get());
+        return expectedUsageDocs;
       };
 
-      const setExpectedStatistics = () => {
-        expectedStatistics.success = {
-          all: 2,
-          conflicts: 0,
-          skips: 0
-        }; 
-        expectedStatistics.failures = 0;
+      const getExpectedStatistics = () => {
+        return {
+          success: {
+            all: 2,
+            conflicts: 0,
+            skips: 0
+          }, 
+          failures: 0
+        };
       };
 
       const setCloudControllerResponse = () => {
-        fixture.externalSystemsMocks().cloudController.usageEvents.return.firstTime([createUsageEvent]);
-        fixture.externalSystemsMocks().cloudController.usageEvents.return.secondTime([updateUsageEvent]);
+        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.firstTime([createUsageEvent]);
+        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.secondTime([updateUsageEvent]);
       };
 
       const setAbacusCollectorResponse = () => {
         const responses = [];
         _(expectedCallsToCollectUsageService).times(() => responses.push(httpStatus.CREATED));
 
-        fixture.externalSystemsMocks().abacusCollector.collectUsageService.return.series(responses);
-      };
-
-      const customSetup = (fixture) => {  
-        setExpectedUsageDocs();
-        setExpectedStatistics();
-
-        setCloudControllerResponse();
-        setAbacusCollectorResponse();
-      };
-  
-      const waitLogic = function*(fixture) {
-        yield waitUntil(serviceMock(fixture.externalSystemsMocks().cloudController.usageEvents).received(4));
+        arrange.fixture.externalSystemsMocks().abacusCollector.collectUsageService.return.series(responses);
       };
 
       before(yieldable.functioncb(function*() {
-        setup.prepareCommonSetup(fixture);
-        setup.prepareCustomSetup(customSetup, fixture);
-        yield setup.finalizeTestSetup(waitLogic, fixture);  
+        arrange.init();
+        setCloudControllerResponse();
+        setAbacusCollectorResponse();
+        yield arrange.finalizeSetup();
+        yield waitUntil(serviceMock(arrange.fixture.externalSystemsMocks().cloudController.usageEvents).received(4));
       }));
   
       after((done) => {
-        cleanUp(fixture, done);
+        arrange.cleanUp(done);
       });
 
-      test.collectUsageService(fixture, expectedCallsToCollectUsageService, expectedUsageDocs);
-      test.statistics(fixture, expectedStatistics);
+      test.collectUsageService(expectedCallsToCollectUsageService, getExpectedUsageDocs());
+      test.statistics(getExpectedStatistics());
+      test.carryOver(expectedNumBerOfCarryOverEntries, getExpectedCarryOverEntries());
     });
   });
 };
 
 const testContext = {
-  fixture: (value) => {
-    fixture = value;
-    return testContext;
-  },
-  setup: (setupFn) => {
-    setup = setupFn;
-    return testContext;
-  },
-  commonTests: (tests) => {
-    test = tests;
-    return testContext;
-  },
-  cleanUp: (cleanUpFn) => {
-    cleanUp = cleanUpFn;
+  arrange: (testArrange) => {
+    arrange = testArrange;
     return testContext;
   },
   run

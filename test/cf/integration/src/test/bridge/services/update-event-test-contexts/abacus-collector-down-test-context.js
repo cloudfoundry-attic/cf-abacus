@@ -9,79 +9,94 @@ const waitUntil = yieldable(createWait().until);
 
 const serviceMock = require('../../../utils/service-mock-util');
 
-let test;
-let setup;
-let cleanUp;
-let fixture;
+let arrange;
 
-const run = () => {
+const run = (test) => {
   context('when abacus collector is down', () => {
     const expectedCallsToUsageEventsService = 4;
-    const createServiceUsageEvent = fixture.usageEvent()
+    const createServiceUsageEvent = arrange.fixture.usageEvent()
       .overwriteEventGuid('create-event-guid')
       .get();
         
-    const updateServiceUsageEvent = fixture.usageEvent()
+    const updateServiceUsageEvent = arrange.fixture.usageEvent()
       .overwriteEventGuid('update-event-guid')
-      .overwriteState(fixture.usageEventStates.updated)
-      .overwriteServicePlanName(fixture.planNames.custom)
+      .overwriteState(arrange.fixture.usageEventStates.updated)
+      .overwriteServicePlanName(arrange.fixture.planNames.custom)
       .get();
 
     // Event reporter (abacus-client) will retry 'fixture.env.retryCount'
     // times to report usage to abacus. After that the whole process is
     // retried (i.e. start reading again the events).  Stub Abacus Collector
     // so that it will force the bridge to retry the whole proces.
-    const failRequestsCount = fixture.env.retryCount + 1;
+    const failRequestsCount = arrange.fixture.env.retryCount + 1;
+
+    const getExpectedCarryOverEntries = () => {
+      const carryOverEntries = [];
+      carryOverEntries.push({
+        guid: updateServiceUsageEvent.metadata.guid,
+        state: arrange.fixture.usageEventStates.default,
+        planName: arrange.fixture.planNames.custom
+      });
+      carryOverEntries.push({
+        guid: updateServiceUsageEvent.metadata.guid,
+        state: arrange.fixture.usageEventStates.deleted,
+        planName: arrange.fixture.planNames.default
+      });  
+      return carryOverEntries;
+    };
 
     context('in the beggining of UPDATE event', () => { 
-      const expectedGuids = []; 
-      const expectedUsageDocs = [];
-      const expectedStatistics = { success: {}, failures: {} };
-      
+      const expectedNumBerOfCarryOverEntries = 2;
       const expectedCallsToCollectUsageService = 7;
       
-      const setExpectedUsageDocs = () => {
-        expectedUsageDocs.push(fixture.collectorUsage()
-          .overwriteMeasuredUsage(fixture.usageEventStates.default)
+      const getExpectedUsageDocs = () => {
+        const usageDocs = [];
+        usageDocs.push(arrange.fixture.collectorUsage()
+          .overwriteMeasuredUsage(arrange.fixture.usageEventStates.default)
           .overwriteUsageTime(createServiceUsageEvent.metadata.created_at)
-          .overwritePlanName(fixture.planNames.default)
+          .overwritePlanName(arrange.fixture.planNames.default)
           .get());
-        _(failRequestsCount).times(() => expectedUsageDocs.push(
-          fixture.collectorUsage()
-            .overwriteMeasuredUsage(fixture.usageEventStates.deleted)
+        _(failRequestsCount).times(() => 
+          usageDocs.push(arrange.fixture.collectorUsage()
+            .overwriteMeasuredUsage(arrange.fixture.usageEventStates.deleted)
             .overwriteUsageTime(updateServiceUsageEvent.metadata.created_at)
             .get()));
-        expectedUsageDocs.push(fixture.collectorUsage()
-          .overwriteMeasuredUsage(fixture.usageEventStates.deleted)
+        usageDocs.push(arrange.fixture.collectorUsage()
+          .overwriteMeasuredUsage(arrange.fixture.usageEventStates.deleted)
           .overwriteUsageTime(updateServiceUsageEvent.metadata.created_at)
           .get());
-        expectedUsageDocs.push(fixture.collectorUsage()
-          .overwriteMeasuredUsage(fixture.usageEventStates.default)
+        usageDocs.push(arrange.fixture.collectorUsage()
+          .overwriteMeasuredUsage(arrange.fixture.usageEventStates.default)
           .overwriteUsageTime(updateServiceUsageEvent.metadata.created_at + 1)
-          .overwritePlanName(fixture.planNames.custom)
+          .overwritePlanName(arrange.fixture.planNames.custom)
           .get());
+        return usageDocs;
       };
 
-      const setExpectedGuids = () => {
+      const getExpectedGuids = () => {
+        const expectedGuids = [];
         expectedGuids.push(undefined);
         expectedGuids.push(createServiceUsageEvent.metadata.guid);
         expectedGuids.push(createServiceUsageEvent.metadata.guid);
         expectedGuids.push(updateServiceUsageEvent.metadata.guid);
+        return expectedGuids;
       };
 
-      const setExpectedStatistics = () => {
-        expectedStatistics.success = {
-          all: 2,
-          conflicts: 0,
-          skips: 0
+      const getExpectedStatistics = () => {
+        return {
+          success: {
+            all: 2,
+            conflicts: 0,
+            skips: 0
+          },
+          failures: 1
         };
-        expectedStatistics.failures = 1;
       };
 
       const setCloudControllerResponse = () => {
-        fixture.externalSystemsMocks().cloudController.usageEvents.return.firstTime([createServiceUsageEvent]);
-        fixture.externalSystemsMocks().cloudController.usageEvents.return.secondTime([updateServiceUsageEvent]);
-        fixture.externalSystemsMocks().cloudController.usageEvents.return.thirdTime([updateServiceUsageEvent]);
+        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.firstTime([createServiceUsageEvent]);
+        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.secondTime([updateServiceUsageEvent]);
+        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.thirdTime([updateServiceUsageEvent]);
       };
 
       const setAbacusCollectorResponse = () => {
@@ -91,93 +106,86 @@ const run = () => {
         responses.push(httpStatus.CREATED); 
         responses.push(httpStatus.CREATED); 
 
-        fixture.externalSystemsMocks().abacusCollector.collectUsageService.return.series(responses);
+        arrange.fixture.externalSystemsMocks().abacusCollector.collectUsageService.return.series(responses);
       };
-
-      const customSetup = (fixture) => {
-        setExpectedGuids();
-        setExpectedUsageDocs();
-        setExpectedStatistics()
-
+  
+      before(yieldable.functioncb(function*() { 
+        arrange.init(); 
         setCloudControllerResponse();
         setAbacusCollectorResponse();
-      };
-  
-      const waitLogic = function*(fixture) {
-        yield waitUntil(serviceMock(fixture.externalSystemsMocks().cloudController.usageEvents)
+        yield arrange.finalizeSetup();
+        yield waitUntil(serviceMock(arrange.fixture.externalSystemsMocks().cloudController.usageEvents)
           .received(expectedCallsToUsageEventsService));
-        yield waitUntil(serviceMock(fixture.externalSystemsMocks().abacusCollector.collectUsageService)
+        yield waitUntil(serviceMock(arrange.fixture.externalSystemsMocks().abacusCollector.collectUsageService)
           .received(expectedCallsToCollectUsageService));
-      };
-  
-      before(yieldable.functioncb(function*() {   
-        setup.prepareCommonSetup(fixture);
-        setup.prepareCustomSetup(customSetup, fixture);
-        yield setup.finalizeTestSetup(waitLogic, fixture);
       }));
   
       after((done) => {
-        cleanUp(fixture, done);
+        arrange.cleanUp(done);
       });
 
-      test.collectUsageService(fixture, expectedCallsToCollectUsageService, expectedUsageDocs);
-      test.usageEventsService(fixture, expectedCallsToUsageEventsService, expectedGuids);
-      test.statistics(fixture, expectedStatistics);
+      test.collectUsageService(expectedCallsToCollectUsageService, getExpectedUsageDocs());
+      test.usageEventsService(expectedCallsToUsageEventsService, getExpectedGuids());
+      test.carryOver(expectedNumBerOfCarryOverEntries, getExpectedCarryOverEntries());
+      test.statistics(getExpectedStatistics());
     });
 
-    context('in the middle of UPDATE event', () => { 
-      const expectedGuids = []; 
-      const expectedUsageDocs = [];
-      const expectedStatistics = { success: {}, failures: {} };
-      
+    context('in the middle of UPDATE event', () => {   
+      const expectedNumBerOfCarryOverEntries = 2;
       const expectedCallsToCollectUsageService = 8;
 
-      const setExpectedUsageDocs = () => {
-        expectedUsageDocs.push(fixture.collectorUsage()
+      const getExpectedUsageDocs = () => {
+        const usageDocs = [];
+        usageDocs.push(arrange.fixture.collectorUsage()
           .overwriteUsageTime(createServiceUsageEvent.metadata.created_at)
-          .overwriteMeasuredUsage(fixture.usageEventStates.default)
+          .overwriteMeasuredUsage(arrange.fixture.usageEventStates.default)
           .get());
-        expectedUsageDocs.push(fixture.collectorUsage()
+        usageDocs.push(arrange.fixture.collectorUsage()
           .overwriteUsageTime(updateServiceUsageEvent.metadata.created_at)
-          .overwriteMeasuredUsage(fixture.usageEventStates.deleted)
+          .overwriteMeasuredUsage(arrange.fixture.usageEventStates.deleted)
           .get());
-        _(failRequestsCount).times(() => expectedUsageDocs.push(
-          fixture.collectorUsage()
-            .overwriteMeasuredUsage(fixture.usageEventStates.default)
+        _(failRequestsCount).times(() => 
+          usageDocs.push(arrange.fixture.collectorUsage()
+            .overwriteMeasuredUsage(arrange.fixture.usageEventStates.default)
             .overwriteUsageTime(updateServiceUsageEvent.metadata.created_at + 1)
-            .overwritePlanName(fixture.planNames.custom)
+            .overwritePlanName(arrange.fixture.planNames.custom)
             .get()));
-        expectedUsageDocs.push(fixture.collectorUsage()
+        usageDocs.push(arrange.fixture.collectorUsage()
           .overwriteUsageTime(updateServiceUsageEvent.metadata.created_at)
-          .overwriteMeasuredUsage(fixture.usageEventStates.deleted)
+          .overwriteMeasuredUsage(arrange.fixture.usageEventStates.deleted)
           .get()); 
-        expectedUsageDocs.push(fixture.collectorUsage()
+        usageDocs.push(arrange.fixture.collectorUsage()
           .overwriteUsageTime(updateServiceUsageEvent.metadata.created_at + 1)
-          .overwriteMeasuredUsage(fixture.usageEventStates.default)
-          .overwritePlanName(fixture.planNames.custom)
+          .overwriteMeasuredUsage(arrange.fixture.usageEventStates.default)
+          .overwritePlanName(arrange.fixture.planNames.custom)
           .get());
+        return usageDocs;
       };
 
-      const setExpectedGuids = () => {
-        expectedGuids.push(undefined);
-        expectedGuids.push(createServiceUsageEvent.metadata.guid);
-        expectedGuids.push(createServiceUsageEvent.metadata.guid);
-        expectedGuids.push(updateServiceUsageEvent.metadata.guid);
+      const getExpectedGuids = () => {
+        const guids = [];
+        guids.push(undefined);
+        guids.push(createServiceUsageEvent.metadata.guid);
+        guids.push(createServiceUsageEvent.metadata.guid);
+        guids.push(updateServiceUsageEvent.metadata.guid);
+        return guids;
       };
 
-      const setExpectedStatistics = () => {
-        expectedStatistics.success = {
-          all: 2,
-          conflicts: 0,
-          skips: 0
+      const getExpectedStatistics = () => {
+        return {
+          success: {
+            all: 2,
+            conflicts: 1,
+            skips: 0
+          }, 
+          failures: 1
         };
-        expectedStatistics.failures = 1;
       };
 
       const setCloudControllerResponse = () => {
-        fixture.externalSystemsMocks().cloudController.usageEvents.return.firstTime([createServiceUsageEvent]);
-        fixture.externalSystemsMocks().cloudController.usageEvents.return.secondTime([updateServiceUsageEvent]);
-        fixture.externalSystemsMocks().cloudController.usageEvents.return.thirdTime([updateServiceUsageEvent]);
+        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.firstTime([createServiceUsageEvent]);
+        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.secondTime([updateServiceUsageEvent]);
+        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.thirdTime([updateServiceUsageEvent]);
       };
 
       const setAbacusCollectorResponse = () => {
@@ -185,60 +193,38 @@ const run = () => {
         responses.push(httpStatus.CREATED);
         responses.push(httpStatus.CREATED);
         _(failRequestsCount).times(() => responses.push(httpStatus.BAD_GATEWAY));
-        responses.push(httpStatus.CREATED);
+        responses.push(httpStatus.CONFLICT);
         responses.push(httpStatus.CREATED);
 
-        fixture.externalSystemsMocks().abacusCollector.collectUsageService.return.series(responses);
+        arrange.fixture.externalSystemsMocks().abacusCollector.collectUsageService.return.series(responses);
       };
-      
-      const customSetup = (fixture) => {
-        setExpectedGuids();
-        setExpectedUsageDocs();
-        setExpectedStatistics()
-
+  
+      before(yieldable.functioncb(function*() { 
+        arrange.init();  
         setCloudControllerResponse();
         setAbacusCollectorResponse();
-      };
-  
-      const waitLogic = function*(fixture) {
-        yield waitUntil(serviceMock(fixture.externalSystemsMocks().cloudController.usageEvents)
+        yield arrange.finalizeSetup();
+        yield waitUntil(serviceMock(arrange.fixture.externalSystemsMocks().cloudController.usageEvents)
           .received(expectedCallsToUsageEventsService));
-        yield waitUntil(serviceMock(fixture.externalSystemsMocks().abacusCollector.collectUsageService)
+        yield waitUntil(serviceMock(arrange.fixture.externalSystemsMocks().abacusCollector.collectUsageService)
           .received(expectedCallsToCollectUsageService));
-      };
-  
-      before(yieldable.functioncb(function*() {   
-        setup.prepareCommonSetup(fixture);
-        setup.prepareCustomSetup(customSetup, fixture);
-        yield setup.finalizeTestSetup(waitLogic, fixture);
       }));
   
       after((done) => {
-        cleanUp(fixture, done);
+        arrange.cleanUp(done);
       });
 
-      test.collectUsageService(fixture, expectedCallsToCollectUsageService, expectedUsageDocs);
-      test.usageEventsService(fixture, expectedCallsToUsageEventsService, expectedGuids);
-      test.statistics(fixture, expectedStatistics);
+      test.collectUsageService(expectedCallsToCollectUsageService, getExpectedUsageDocs());
+      test.usageEventsService(expectedCallsToUsageEventsService, getExpectedGuids());
+      test.carryOver(expectedNumBerOfCarryOverEntries, getExpectedCarryOverEntries());
+      test.statistics(getExpectedStatistics());
     });
   });
 };
 
 const testContext = {
-  fixture: (value) => {
-    fixture = value;
-    return testContext;
-  },
-  setup: (setupFn) => {
-    setup = setupFn;
-    return testContext;
-  },
-  commonTests: (tests) => {
-    test = tests;
-    return testContext;
-  },
-  cleanUp: (cleanUpFn) => {
-    cleanUp = cleanUpFn;
+  arrange: (testArrange) => {
+    arrange = testArrange;
     return testContext;
   },
   run

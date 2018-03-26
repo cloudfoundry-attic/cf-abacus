@@ -48,6 +48,7 @@ const bridge = createBridge({
 });
 
 const eventTimestampGenerator = createEventTimestampGenerator(bridge.env.minimalAgeInMinutes + 1);
+
 const validUsageEvent = () => {
   const createdAt = eventTimestampGenerator.next().value;
   return {
@@ -115,7 +116,8 @@ const collectorUsage = () => {
     consumer_id: `service:${defaultUsageEvent.serviceInstanceGuid}`,
     resource_id: defaultUsageEvent.serviceLabel,
     plan_id: planNames.default,
-    resource_instance_id: `service:${defaultUsageEvent.serviceInstanceGuid}:${planNames.default}:${defaultUsageEvent.serviceLabel}`,
+    resource_instance_id: 
+      `service:${defaultUsageEvent.serviceInstanceGuid}:${planNames.default}:${defaultUsageEvent.serviceLabel}`,
     measured_usage: [
       {
         measure: 'current_instances',
@@ -141,14 +143,15 @@ const collectorUsage = () => {
     },
     overwritePlanName: (planName) => {
       defaultUsage.plan_id = planName;
-      defaultUsage.resource_instance_id = `service:${defaultUsageEvent.serviceInstanceGuid}:${planName}:${defaultUsageEvent.serviceLabel}`;
+      defaultUsage.resource_instance_id = 
+        `service:${defaultUsageEvent.serviceInstanceGuid}:${planName}:${defaultUsageEvent.serviceLabel}`;
       return overwritable;
     },
     get: () => defaultUsage
   };
 
   return overwritable;
-}
+};
 
 module.exports = {
   oauth,

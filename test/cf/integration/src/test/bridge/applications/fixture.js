@@ -23,7 +23,7 @@ const oauth = {
 
 const usageEventStates = {
   default: 'STARTED'
-}
+};
 
 const defaultUsageEvent = {
   state: 'STARTED',
@@ -147,5 +147,5 @@ module.exports = {
   env: bridge.env,
   usageEventStates,
   defaultUsageEvent,
-  externalSystemsMocks,
+  externalSystemsMocks
 };

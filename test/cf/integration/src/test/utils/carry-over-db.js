@@ -48,7 +48,7 @@ const readCurrentMonthDocs = function*(cb) {
     include_docs: true
   });
 
-  const docs = result.rows.map((row) => omit(row.doc, '_rev', '_id'));
+  const docs = result.rows.map((row) => omit(row.doc, '_rev', '_id'));  
   return docs;
 };
 
