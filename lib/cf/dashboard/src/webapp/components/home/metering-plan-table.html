@@ -23,9 +23,14 @@
               <i class="fa fa-cloud-upload fa-2x" data-ng-click="hvc.onSubmitUsageClick(plan.plan_id)" aria-hidden="true"
               uib-tooltip="{{'ResourceProvider_Metering_submitUsageDialog_XTIT' | translate}}"></i>
             </span>
+          <span class="font-icon" ng-show="false">
+              <i class="fa fa-cloud-download fa-2x" data-ng-click="hvc.onDownloadPlanClick(plan.plan_id)" aria-hidden="true"
+              uib-tooltip="{{'ResourceProvider_Metering_ImportPlan_XTIT' | translate}}"></i>
+            </span>
         </div>
       </td>
-      <td class="text-right"><a ui-sref="metering({plan_id:plan.plan_id,instance_id:instance_id,binding_id:binding_id})"><i class="fa fa-angle-right fa-2x" aria-hidden="true"></i></a></td>
+      <td class="text-right"><a ui-sref="metering({plan_id:plan.plan_id,instance_id:instance_id,binding_id:binding_id})">
+          <i class="fa fa-angle-right fa-2x" aria-hidden="true"></i></a></td>
     </tr>
   </tbody>
 </table>

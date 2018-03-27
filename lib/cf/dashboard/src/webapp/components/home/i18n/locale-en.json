@@ -22,5 +22,9 @@
   "ResourceProvider_Metering_submitUsageDialog_Cancel_XBUT_TXT": "Cancel",
   "ResourceProvider_Metering_submitUsageDialog_Ok_XBUT_TXT": "Ok",
   "ResourceProvider_ErrorBox_GetPlan_XMSG": "Unable to get metering plan '{{planId}}' : {{statusText}}",
-  "ResourceProvider_ErrorBox_usageDialog_XMSG": "Unable to get sample usage document : {{statusText}}"
+  "ResourceProvider_ErrorBox_usageDialog_XMSG": "Unable to get sample usage document : {{statusText}}",
+  "ResourceProvider_Metering_ImportPlan_XTIT" : "Download plan",
+  "ResourceProvider_Metering_viewPlanDialog_XTIT": "Metering Plan",
+  "ResourceProvider_Metering_viewPlanDialog_Download_XBUT_TXT" : "Download",
+  "ResourceProvider_Metering_viewPlanDialog_Ok_XBUT_TXT" : "Ok"
 }

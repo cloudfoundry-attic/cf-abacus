@@ -1,0 +1,17 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="onOk()">&times;</button>
+    <div class="modal-header-div"><span class="modal-header-span"></span>
+      <h4 class="modal-title modal-title-div" translate="ResourceProvider_Metering_viewPlanDialog_XTIT"></h4>
+    </div>
+  </div>
+  <div class="modal-body">
+    <pre class="document" ng-model="doc.metering">{{doc.metering}}</pre>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-default" ng-click="onDownload()" translate="ResourceProvider_Metering_viewPlanDialog_Download_XBUT_TXT">
+      </button>
+    <button class="btn btn-default" ng-click="onOk()" translate="ResourceProvider_Metering_viewPlanDialog_Ok_XBUT_TXT">
+      </button>
+  </div>
+</div>
