@@ -50,6 +50,7 @@ commander
   .option('--no-timestamp', 'do not add timestamp to org names', false)
   .option('--num-executions <n>', 'number of test executions', 1)
   .option('-l, --limit <n>', 'max number of parallel submissions', parseInt)
+  .option('--plan-type <type>', '"basic" or "standard"', 'basic')
   .option('-t, --start-timeout <n>', 'external processes start timeout in milliseconds', parseInt)
   .option('-x, --total-timeout <n>', 'test timeout in milliseconds', parseInt)
   .option(
@@ -78,6 +79,9 @@ const resourceInstances = commander.instances || 1;
 
 // Number of usage docs
 const usagedocs = commander.usagedocs || 1;
+
+// Plan type
+const planType = commander.planType;
 
 // Usage time window shift in milli-seconds
 const delta = commander.delta || 0;
@@ -140,8 +144,8 @@ describe('abacus-perf-test', () => {
   it('measures performance of concurrent usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs or
     // a preset timeout
-    console.log('Testing with %d orgs, %d resource instances, %d usage docs with limit %d',
-      orgs, resourceInstances, usagedocs, limit);
+    console.log('Testing with %d orgs, %d resource instances, %d usage docs with limit %d and plan type %s',
+      orgs, resourceInstances, usagedocs, limit, planType);
     const timeout = Math.max(totalTimeout, 100 * orgs * resourceInstances * usagedocs);
     this.timeout(timeout + 2000);
     const processingDeadline = moment.now() + timeout;
@@ -163,10 +167,13 @@ describe('abacus-perf-test', () => {
       brequest.post(`${collector}/v1/metering/collected/usage`,
         extend({}, authHeader(objectStorageToken), { body: usageDoc }),
         (err, response) => {
-          expect(err).to.equal(undefined);
-          const errorMessage = util.format('Unexpected response code with headers: %j, body: %j',
+          const errorMessage = util.format('Response error: %j', err);
+          expect(err).to.equal(undefined, errorMessage);
+
+          const responseErrorMessage = util.format('Unexpected response code with headers: %j, body: %j',
             response.headers, response.body);
-          expect(response.statusCode, errorMessage).to.equal(201);
+          expect(response.statusCode, responseErrorMessage).to.equal(201);
+
           debug('Submitted org:%s instance:%s usage:%s',
             usageDoc.organization_id, usageDoc.resource_instance_id, docNumber + 1);
           process.stdout.write('.');
@@ -176,7 +183,7 @@ describe('abacus-perf-test', () => {
     };
 
     // Get a usage report for the test organization
-    const get = (orgId, done) => {
+    const get = (orgId, planType, done) => {
       brequest.get(`${reporting}/v1/metering/organizations/${orgId}/aggregated/usage`,
         extend({}, authHeader(systemToken)),
         (err, val) => {
@@ -193,7 +200,7 @@ describe('abacus-perf-test', () => {
             );
             const stippedResponse = usage.fixup(omit(val.body, 'id', 'processed', 'processed_id', 'start', 'end'));
             const expected = usage.fixup(
-              usage.report(orgId, resourceInstances, usagedocs, numExecutions)
+              usage.report(orgId, planType, resourceInstances, usagedocs, numExecutions)
             );
             expect(stippedResponse).to.deep.equal(expected);
             debug('Report for org:%s verified successfully', orgId);
@@ -227,12 +234,12 @@ describe('abacus-perf-test', () => {
 
         const orgId = usage.orgId(org, timestamp);
         reportFunctions.push((cb) => {
-          async.retry({ times: Number.MAX_SAFE_INTEGER, interval: 1000 }, (done) => get(orgId, done), cb);
+          async.retry({ times: Number.MAX_SAFE_INTEGER, interval: 1000 }, (done) => get(orgId, planType, done), cb);
         });
 
         each(range(usagedocs), (docNumber) =>
           each(range(resourceInstances), (resourceInstance) => {
-            const usageDoc = usage.usageTemplate(orgId, resourceInstance, docNumber, delta);
+            const usageDoc = usage.usageTemplate(orgId, resourceInstance, docNumber, planType, delta);
             postFunctions.push((cb) => post(usageDoc, docNumber, cb));
           }));
       });
