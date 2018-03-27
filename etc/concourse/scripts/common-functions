@@ -73,6 +73,16 @@ function createOrUpdateService {
   fi
 }
 
+function createOrUpdateRabbitService {
+  if cf service $1; then
+    echo "Updating Rabbit service instance $1 with plan $2 ..."
+    cf update-service $1 -p $2
+  else
+    echo "Creating new Rabbit service instance $1 with plan $2 ..."
+    cf create-service "$RABBIT_SERVICE_NAME" $2 $1
+  fi
+}
+
 function bindService {
   instances=($DB_SERVICE_INSTANCES)
   for dbalias in $(echo $2 | sed "s/,/ /g" | xargs -n1 | sort -u | xargs); do
@@ -132,11 +142,11 @@ function deleteObsoleteApps {
 
 function purge {
   echo "Purging usage events ..."
-  
+
   if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
     insecure='--insecure'
   fi
-  
+
   url_path=$1
   response_code=$(curl $insecure -s -o /dev/null -w "%{http_code}" -X POST -H "Authorization: bearer $token" -i "https://api.$CF_SYS_DOMAIN/$url_path")
   if [ "$response_code" == "204" ]; then
