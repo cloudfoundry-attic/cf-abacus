@@ -6,7 +6,7 @@ const _ = require('underscore');
 const yieldable = require('abacus-yieldable');
 
 const carryOverDb = require('../../utils/carry-over-db');
-const serviceMock = require('../../utils/service-mock-util');
+const serviceMock = require('../..//utils/service-mock-util');
 const createWait = require('abacus-wait');
 
 const waitUntil = yieldable(createWait().until);
@@ -95,18 +95,12 @@ const build = () => {
 
         expect(externalSystemsMocks.abacusCollector.collectUsageService.request(0)).to.deep.equal({
           token: fixture.oauth.abacusCollectorToken,
-          usage: fixture.collectorUsage()
-            .overwriteUsageTime(firstUsageEventTimestamp)
-            .overwriteMeasuredUsage(fixture.usageEventStates.default)
-            .get()
+          usage: fixture.collectorUsage(firstUsageEventTimestamp)
         });
 
         expect(externalSystemsMocks.abacusCollector.collectUsageService.request(1)).to.deep.equal({
           token: fixture.oauth.abacusCollectorToken,
-          usage: fixture.collectorUsage()
-            .overwriteUsageTime(secondUsageEventTimestamp)
-            .overwriteMeasuredUsage(fixture.usageEventStates.default)
-            .get()
+          usage: fixture.collectorUsage(secondUsageEventTimestamp)
         });
       });
 

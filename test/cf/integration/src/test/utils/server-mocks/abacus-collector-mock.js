@@ -10,9 +10,9 @@ const createMockServiceData = require('./mock-service-data');
 const randomPort = 0;
 const resourceLocation = 'http://location.com';
 
+// OAuth Authorization header format: "Bearer <token-value>"
 const extractOAuthToken = (authHeader) => {
-  if (authHeader) 
-    return authHeader.split(' ')[1];
+  if (authHeader) return authHeader.split(' ')[1];
 
   return undefined;
 };
