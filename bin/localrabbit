@@ -1,0 +1,4 @@
+#!/bin/bash
+
+export RABBIT_URIT=amqp://localhost:5672
+
