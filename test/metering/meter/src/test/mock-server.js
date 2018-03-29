@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 
 const process = (req, resp, alias) => {
   const result = getNextResponse(alias);
-  console.log('>>>>>>>', result);
   resp.status(result.statusCode).send(result.body);
   if (cb)
     cb(req);
@@ -24,7 +23,8 @@ const addResponse = (alias, response, responseMap) => {
   if (!resp)
     resp = {
       index: 0,
-      responses: []
+      responses: [],
+      callCount: 0
     };
   resp.responses.push(response);
   responseMap.set(alias, resp);
@@ -41,6 +41,7 @@ module.exports = {
       if (resp) {
         if (resp.index === resp.responses.length)
           resp.index = 0;
+        resp.callCount++;
         return resp.responses[resp.index++];
       }
       return 'Not found';
@@ -50,7 +51,6 @@ module.exports = {
       const result = [];
       for (let r of req.body)
         result.push(getNextResponse(r.uri));
-      console.log('BATCH! >>>> %j --- %j', req.body, result);
       res.status(200).send(result);
       if (cb)
         cb(req);
@@ -60,7 +60,13 @@ module.exports = {
       addAlias: (alias) => addAlias(alias, app, cb),
       addResponse: (alias, response) => addResponse(alias, response, responseMap),
       setCallback: (alias, callback) => setCallback(alias, callback, app),
-      startApp: (port) => app.listen(port)
+      startApp: (port) => app.listen(port),
+      getCallCount: (alias) => {
+        const resp = responseMap.get(alias);
+        if (resp)
+          return resp.callCount;
+        return 0;
+      }
     };
   }
 };

@@ -1,4 +1,5 @@
 'use strict';
+const moment = require('abacus-moment');
 process.env.CLUSTER = false;
 const rabbitUri = 'amqp://localhost:5672';
 const queueName = 'abacus-collect-queue';
@@ -7,9 +8,10 @@ const accountStub = mockServer.app();
 const provisioningStub = mockServer.app();
 const { Producer, ConnectionManager } = require('abacus-rabbitmq');
 
+const time = moment.now();
 const usageDoc = {
-  start: 1420243200000,
-  end: 1420245000000,
+  start: time,
+  end: time,
   organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
   space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
   consumer_id: 'external:bbeae239-f3f8-483c-9dd0-de6781c38bab',
@@ -45,17 +47,16 @@ describe('test meter app', () => {
       await producer.connect();
       await producer.send(usageDoc);
     });
-
+    let accumStub;
     beforeEach((done) => {
       process.env.CLIENT_ID = '';
       process.env.CLIENT_SECRET = '';
       process.env.RABBIT_URI = rabbitUri;
       const cb = (req) => {
-        console.log('REQ>>>>>>> ', req.path, req.body);
         if (req.path == '/batch' && req.body[0].uri == '/v1/metering/metered/usage')
           done();
       };
-      const accumStub = require('./mock-server').app(cb);
+      accumStub = require('./mock-server').app(cb);
       provisioningStub.addAlias('/v1/provisioning/resources/test-resource/type');
       provisioningStub.addResponse('/v1/provisioning/resources/test-resource/type',
         { statusCode: 200, body: 'resource-type' });
@@ -63,47 +64,38 @@ describe('test meter app', () => {
         { statusCode: 200, body: { name: 'storage', price: 1 } });
 
       provisioningStub.startApp(9880);
-      accountStub.addResponse('/v1/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/account/1420245000000',
+      accountStub.addResponse(`/v1/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/account/${time}`,
         { statusCode: 200, body: { account_id: 'test-account-id',
           pricing_country: 'test-pricing' , organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27' } });
       accountStub.addResponse('/v1/metering/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/resource_types/' +
-        'resource-type/plans/basic/time/1420245000000/metering_plan/id',
+        `resource-type/plans/basic/time/${time}/metering_plan/id`,
       { statusCode: 200, body:  'test-metering-plan' });
       accountStub.addResponse('/v1/rating/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/resource_types/' +
-        'resource-type/plans/basic/time/1420245000000/rating_plan/id',
+        `resource-type/plans/basic/time/${time}/rating_plan/id`,
       { statusCode: 200, body:  'test-rating-plan-id' });
 
       // TODO check countryPrices method in pconfig
       accountStub.addResponse('/v1/pricing/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/resource_types/' +
-        'resource-type/plans/basic/time/1420245000000/pricing_plan/id',
+        `resource-type/plans/basic/time/${time}/pricing_plan/id`,
       { statusCode: 200, body: 'test-pricing-standard' });
       accountStub.startApp(9881);
       accountStub.addAlias('/v1/metering/metered/usage');
       accumStub.addResponse('/v1/metering/metered/usage', { statusCode: 201, body: 'CREATED' });
       accumStub.startApp(9200);
 
-      const meterApp = require('..');
-      console.log('RUN');
+      const meterApp = require('abacus-usage-meter');
+
       meterApp().then((s) => server = s);
-      console.log('RDY');
     });
 
     afterEach(() => {
-      // console.log(server);
       if(server)
         server.close();
     });
 
-    it('consumes messages', () => {
-
-      // expect(postStub.callCount).to.equal(1);
-      // expect(provisioningStub.callCount).to.equal(1);
-      // expect(accountStub.callCount).to.equal(1);
-      // const consumerStub = sandbox.stub(Consumer.prototype, 'consume');
-
-      // server = meterApp();
-
-      // assert.calledOnce(consumerStub);
+    it('consumes messages', (done) => {
+      expect(accumStub.getCallCount('/v1/metering/metered/usage')).to.equal(1);
+      setTimeout(done, 1000);
     });
   });
 

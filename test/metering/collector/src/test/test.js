@@ -9,6 +9,8 @@ const express = require('abacus-express');
 const dbclient = require('abacus-dbclient');
 const moment = require('abacus-moment');
 const lifecycleManager = require('abacus-lifecycle-manager')();
+const { Consumer, ConnectionManager, amqpMessageToJSON } = require('abacus-rabbitmq');
+const util = require('util');
 
 const _ = require('underscore');
 const map = _.map;
@@ -141,27 +143,18 @@ describe('abacus-usage-collector-itest', () => {
         };
 
         // Verify submitted usage docs
-        map([val.headers.location], (l, i) => {
-          brequest.get(l, undefined, (err, val) => {
-            debug(
-              'Verify usage #%d for org %d instance %d usage %d ' + 'from location %s',
-              i + 1,
-              o + 1,
-              ri + 1,
-              u + 1,
-              l
-            );
+        const handleMsg = async(msg) => {
+          const doc = JSON.parse(msg.content.toString());
+          expect(omit(doc, 'id', 'processed', 'processed_id', 'collected_usage_id')).to.deep.equal(usage);
+          gcb();
+        };
 
-            expect(err).to.equal(undefined);
-            expect(val.statusCode).to.equal(200);
-
-            expect(omit(val.body, 'id', 'processed', 'processed_id', 'collected_usage_id')).to.deep.equal(usage);
-
-            debug('Verified usage #%d for org %d instance %d usage %d', i + 1, o + 1, ri + 1, u + 1);
-
-            gcb();
-          });
-        });
+        const rabbitUri = 'amqp://localhost:5672';
+        const queueName = 'abacus-collect-queue';
+        const prefetchLimit = 100;
+        const connectionManager = new ConnectionManager([rabbitUri]);
+        const consumer = new Consumer(connectionManager, queueName, prefetchLimit);
+        consumer.process({ handle: handleMsg });
       });
     });
 
@@ -169,27 +162,13 @@ describe('abacus-usage-collector-itest', () => {
     const submit = (done) => {
       let posts = 0;
       const cb = () => {
-        if (++posts === orgs * resourceInstances * usage) done();
+        if (++posts === orgs * resourceInstances * usage)
+          done();
+
       };
 
       // Submit measured usage for all orgs and resource instances
       map(range(usage), (u) => map(range(resourceInstances), (ri) => map(range(orgs), (o) => post(o, ri, u, cb))));
-    };
-
-    const verifyMetering = (done) => {
-      try {
-        debug('Verifying metering calls %d to equal to %d', meter.callCount, orgs * resourceInstances * usage);
-
-        // TODO check the values of the normalized usage
-        expect(meter.callCount).to.equal(orgs * resourceInstances * usage);
-        done();
-      } catch (e) {
-        // If the comparison fails we'll be called again to retry
-        // after 250 msec, but give up after deadline
-        if (moment.now() >= processingDeadline) throw e;
-
-        debug('Gave up after %d ms', processingDeadline);
-      }
     };
 
     // Wait for usage collector to start
@@ -199,8 +178,9 @@ describe('abacus-usage-collector-itest', () => {
 
       // Submit measured usage and verify
       submit(() => {
-        const i = setInterval(() => verifyMetering(() => done(clearInterval(i))), 250);
+        const i = setInterval(() => done(clearInterval(i)), 250);
       });
     });
   });
+
 });
