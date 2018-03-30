@@ -13,8 +13,8 @@ module.exports = (cfUtils) => {
         spaceGuid,
         parameters);
 
-      if (serviceInstance.entity.last_operation.state != 'succeeded')
-        throw new Error('Error while trying to create service instance. Response: ', JSON.stringify(serviceInstance));
+      if (serviceInstance.entity.last_operation.state !== 'succeeded')
+        throw new Error(`Error while trying to create service instance. Response: ${JSON.stringify(serviceInstance)}`);
 
       const update = (parameters) => cfUtils.serviceInstance.update(serviceInstance.metadata.guid, parameters);
       const bind = (appGuid) => cfUtils.serviceInstance.bind(serviceInstance.metadata.guid, appGuid);

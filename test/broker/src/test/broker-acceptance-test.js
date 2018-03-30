@@ -5,6 +5,8 @@
 const _ = require('underscore');
 const findWhere = _.findWhere;
 
+const util = require('util');
+
 const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');
 const request = require('abacus-request');
@@ -138,7 +140,7 @@ describe('Abacus Broker Acceptance test', function() {
     if (app) app.destroy();
   });
 
-  context('when "Resource provider" is not prvodied', () => {
+  context('when "Resource provider" is not provided', () => {
 
     const validateInstance = function*(instance, measuredUsage) {
       instance.bind(app.guid);
@@ -263,7 +265,7 @@ describe('Abacus Broker Acceptance test', function() {
     });
   });
 
-  context('when "Resource provider" is prvodied', () => {
+  context('when "Resource provider" is provided', () => {
     const testServiceName = 'test-service';
     const testServicePlanName = 'test-service-plan-name';
     const mappingAppName = 'service-mapping-test-app';
@@ -316,12 +318,12 @@ describe('Abacus Broker Acceptance test', function() {
       return yield yGet(`${mappingApp.getUrl()}/v1/provisioning/mappings/services`);
     };
 
-    it('Mapping API has recieved resource provider data', functioncb(function*() {
+    it('Mapping API has received resource provider data', functioncb(function*() {
       const getResponse = yield getServiceMappings();
       expect(getResponse.statusCode).to.equal(200);
 
       const data = getResponse.body;
-      expect(data.length).to.equal(1);
+      expect(data.length, util.format('Expected 1 element, but found %j', data)).to.equal(1);
 
       const mappingValue = data[0][1];
 
@@ -332,5 +334,39 @@ describe('Abacus Broker Acceptance test', function() {
         'service_plan_name': testServicePlanName
       });
     }));
+
+    context.only('on update', () => {
+      before(() => {
+        const changedResourceProvider = {
+          plans: [
+            {
+              plan: testPlan,
+              resource_provider: {
+                service_name: 'name',
+                service_plan_name: 'plan'
+              }
+            }
+          ]
+        };
+        serviceInstance.update(changedResourceProvider);
+      });
+
+      it('Mapping API has updated the resource provider data', functioncb(function*() {
+        const getResponse = yield getServiceMappings();
+        expect(getResponse.statusCode).to.equal(200);
+
+        const data = getResponse.body;
+        expect(data.length, util.format('Expected 1 element, but found %j', data)).to.equal(1);
+
+        const mappingValue = data[0][1];
+
+        expect(mappingValue).to.deep.equal({
+          organization_guid: orgId,
+          space_guid: spaceId,
+          service_name: 'name',
+          service_plan_name: 'plan'
+        });
+      }));
+    });
   });
 });
