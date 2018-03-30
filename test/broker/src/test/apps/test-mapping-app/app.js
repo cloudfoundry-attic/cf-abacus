@@ -32,7 +32,7 @@ const updateMapping = (req, res) => {
     return res.status(500).send(errorMessage);
   }
 
-  data.set({ resource, plan }, req.body);
+  data.set(`${resource}#${plan}`, req.body);
   console.log('Data', data);
   return res.status(200).send();
 };
@@ -45,7 +45,15 @@ app.put('/v1/provisioning/mappings/services/resource/:resource/plan/:plan',
 
 app.get('/v1/provisioning/mappings/services', (req, res) => {
   console.log('Test mapping api GET current data: %o', data);
-  res.status(200).json(Array.from(data));
+
+  const result = [];
+  data.forEach((plans, key) => {
+    const [ resource, plan ] = key.split('#');
+    result.push([ { resource, plan }, plans ]);
+  });
+
+  console.log('Returning %o', result);
+  res.status(200).json(result);
 });
 
 app.listen(port, () => {

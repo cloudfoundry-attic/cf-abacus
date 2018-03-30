@@ -335,7 +335,7 @@ describe('Abacus Broker Acceptance test', function() {
       });
     }));
 
-    context.only('on update', () => {
+    context('on update', () => {
       before(() => {
         const changedResourceProvider = {
           plans: [
