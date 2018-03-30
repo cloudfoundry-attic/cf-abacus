@@ -29,14 +29,18 @@ cp -R $config_dir/* $project_dir
 
 pushd $project_dir
   echo "Building Abacus ..."
-  npm run provision
+  yarn run provision
 
   echo "Deleting all apps in $CF_ORG/$CF_SPACE ..."
   getApps
   echo ${APPS[@]} | xargs -n1 | xargs -P 20 -i cf delete -f -r {}
 
+
+  cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+
   echo "Deploying Abacus ..."
-  npm run cfstage medium
+  yarn run cfstage medium
+
 
   set +e
   echo "Start all apps in $CF_ORG/$CF_SPACE ..."
@@ -46,8 +50,13 @@ pushd $project_dir
   echo "Restarting failed apps ..."
   restartAppsWithRetry
 
-  echo "Starting Demo ..."
-  npm run demo -- \
+  echo "Storing default plans and mappings in provisioning..."
+  ./etc/concourse/scripts/run-cf-task "abacus-provisioning-plugin" "yarn run store-defaults"
+
+  cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
+
+  echo "Running smoke test ..."
+  yarn run smoke \
   --collector https://${ABACUS_PREFIX}abacus-usage-collector.$CF_DOMAIN \
   --reporting https://${ABACUS_PREFIX}abacus-usage-reporting.$CF_DOMAIN
 

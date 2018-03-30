@@ -2,7 +2,7 @@
   "name": "abacus-dupe-test",
   "description": "End to end duplicate usage detection test",
   "license": "Apache-2.0",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/dupe",
   "bugs": {
@@ -22,10 +22,10 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "dupe": "mocha --command",
-    "test": "eslint",
+    "dupe": "abacus-mocha --command",
+    "test": "abacus-eslint",
     "generate-coverage": "true",
-    "lint": "eslint",
+    "lint": "abacus-eslint",
     "pub": "publish"
   },
   "dependencies": {
@@ -59,7 +59,8 @@
     ]
   },
   "engines": {
-    "node": ">=6.11.4 <9.0.0",
-    "npm": "<5.0.0"
+    "node": ">=8.9.4 <9.0.0",
+    "npm": "<5.0.0",
+    "yarn": ">=1.2.1"
   }
 }

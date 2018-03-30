@@ -2,7 +2,7 @@
   "name": "abacus-perf-test",
   "description": "End to end performance test",
   "license": "Apache-2.0",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/perf",
   "bugs": {
@@ -22,24 +22,27 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "perf": "mocha --command",
-    "test": "eslint",
+    "perf": "abacus-mocha --command",
+    "test": "abacus-eslint",
     "generate-coverage": "true",
-    "lint": "eslint",
+    "lint": "abacus-eslint",
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-mocha": "file:../../tools/mocha",
-    "nyc": "^11.4.1",
     "abacus-batch": "file:../../lib/utils/batch",
+    "abacus-breaker": "file:../../lib/utils/breaker",
     "abacus-dbclient": "file:../../lib/utils/dbclient",
-    "abacus-moment": "file:../../lib/utils/moment",
-    "abacus-throttle": "file:../../lib/utils/throttle",
     "abacus-debug": "file:../../lib/utils/debug",
+    "abacus-mocha": "file:../../tools/mocha",
+    "abacus-moment": "file:../../lib/utils/moment",
+    "abacus-retry": "file:../../lib/utils/retry",
+    "async": "^2.6.0",
     "bignumber.js": "^2.1.0",
+    "commander": "2.8.1",
     "jsonwebtoken": "^5.0.5",
+    "nyc": "^11.4.1",
     "underscore": "^1.8.3",
-    "commander": "2.8.1"
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
     "abacus-eslint": "file:../../tools/eslint",
@@ -56,7 +59,8 @@
     ]
   },
   "engines": {
-    "node": ">=6.11.4 <9.0.0",
-    "npm": "<5.0.0"
+    "node": ">=8.9.4 <9.0.0",
+    "npm": "<5.0.0",
+    "yarn": ">=1.2.1"
   }
 }

@@ -3,5 +3,5 @@
 set -e
 
 # Run the duplicate usage detection tests
-(cd node_modules/abacus-dupe-test && npm run dupe -- $@)
+(cd node_modules/abacus-dupe-test && yarn run dupe $@)
 

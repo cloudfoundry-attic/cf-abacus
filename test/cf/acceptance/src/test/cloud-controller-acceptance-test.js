@@ -3,13 +3,12 @@
 const { functioncb, yieldable } = require('abacus-yieldable');
 const createEventReader = require('./helpers/event-reader');
 
-
 const env = {
-  api: process.env.CF_API,
+  api: process.env.CF_API_URI,
   user: process.env.CF_ADMIN_USER,
   password: process.env.CF_ADMIN_PASSWORD,
-  cloudControllerClientId: process.env.BRIDGE_CLIENT_ID,
-  cloudControllerClientSecret: process.env.BRIDGE_CLIENT_SECRET
+  cloudControllerClientId: process.env.CLOUD_CONTROLLER_CLIENT_ID,
+  cloudControllerClientSecret: process.env.CLOUD_CONTROLLER_CLIENT_SECRET
 };
 
 const oauth = require('abacus-oauth');
@@ -25,13 +24,13 @@ describe('usage events tests', () => {
 
   let token;
   let orgGuid;
+  let spaceGuid;
 
   before(functioncb(function*() {
-    cmdline.org.create(testOrg);
-    cmdline.space.create(testOrg, testSpace);
-    cmdline.target(testOrg, testSpace);
-
-    orgGuid = cmdline.org.getId(testOrg);
+    const createdOrg = cmdline.org.create(testOrg);
+    orgGuid = createdOrg.metadata.guid;
+    const createdSpace = cmdline.space.create(orgGuid, testSpace);
+    spaceGuid = createdSpace.metadata.guid;
 
     token = oauth.cache(
       env.api,
@@ -50,7 +49,7 @@ describe('usage events tests', () => {
   }));
 
   after(() => {
-    cmdline.org.delete(testOrg);
+    cmdline.org.delete(orgGuid);
   });
 
   describe('app_usage_events', () => {
@@ -65,12 +64,13 @@ describe('usage events tests', () => {
       const lastEvent = yield eventReader.readLastEvent();
       const lastGuid = lastEvent.metadata.guid;
 
-      cmdline.application.deploy(testApp, {
+      const application = cmdline.application(testOrg, testSpace);
+      application.deploy(testApp, {
         path: `${__dirname}/static-app`,
         buildpack: 'staticfile_buildpack',
         memory: `${testAppMemoryInMb}M`
       });
-      cmdline.application.delete(testApp);
+      application.delete(testApp);
 
       events = yield eventReader.read({
         afterGuid: lastGuid
@@ -122,8 +122,12 @@ describe('usage events tests', () => {
       const lastEvent = yield eventReader.readLastEvent();
       const lastGuid = lastEvent.metadata.guid;
 
-      cmdline.serviceInstance.create(testServiceName, testServicePlanName, testServiceInstanceName);
-      cmdline.serviceInstance.delete(testServiceInstanceName);
+      const serviceInstance = cmdline.serviceInstance.create(
+        testServiceInstanceName,
+        testServiceName,
+        testServicePlanName,
+        spaceGuid);
+      cmdline.serviceInstance.delete(serviceInstance.metadata.guid);
 
       events = yield eventReader.read({
         afterGuid: lastGuid

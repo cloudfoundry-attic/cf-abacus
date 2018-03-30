@@ -1,0 +1,43 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="onOk()">&times;</button>
+    <div class="modal-header-div"><span class="modal-header-span"></span>
+      <h4 class="modal-title modal-title-div" translate="ResourceProvider_Metering_submitUsageDialog_XTIT">
+      </h4>
+    </div>
+  </div>
+  <div class="modal-body">
+    <pre class="document"ng-if="!doc.isUsageDocSubmitted" ng-model="doc.usageDoc" contenteditable="true">{{doc.usageDoc}}
+        </pre>
+    <uib-accordion ng-if="doc.isUsageDocSubmitted" close-others="doc.oneAtATime">
+      <div uib-accordion-group class="panel-default" is-open="doc.isUsageDocOpen">
+        <uib-accordion-heading>{{'ResourceProvider_Metering_submitUsageDialog_accord_Request_HDR' | translate}}
+          <i class="pull-right glyphicon"
+          ng-class="{'glyphicon-chevron-down': doc.isUsageDocOpen, 'glyphicon-chevron-right': !doc.isUsageDocOpen}"></i>
+        </uib-accordion-heading>
+        <pre class="document" ng-model="doc.usageDoc">{{doc.usageDoc}}
+        </pre>
+      </div>
+      <div uib-accordion-group ng-class="{'panel-success':doc.isUsageRespSuccess,'panel-danger':!doc.isUsageRespSuccess}" 
+      is-open="doc.isUsageRespOpen">
+        <uib-accordion-heading>{{'ResourceProvider_Metering_submitUsageDialog_accord_Resp_HDR' | translate}}
+          <i class="pull-right glyphicon"
+          ng-class="{'glyphicon-chevron-down': doc.isUsageRespOpen, 'glyphicon-chevron-right': !doc.isUsageRespOpen}"></i>
+        </uib-accordion-heading>
+        <pre id="usageDocument">{{doc.usageResp}}
+        </pre>
+      </div>
+    </uib-accordion>
+  </div>
+  <div class="modal-footer">
+    <div ng-if="!doc.isUsageDocSubmitted">
+      <button class="btn btn-default" ng-click="onSubmit()" translate="ResourceProvider_Metering_submitUsageDialog_Submit_XBUT_TXT">
+      </button>
+      <button type="button" class="btn btn-default" ng-click="onOk()"
+        translate="ResourceProvider_Metering_submitUsageDialog_Cancel_XBUT_TXT">
+      </button>
+    </div>
+    <button ng-if="doc.isUsageDocSubmitted" type="button" class="btn btn-default" ng-click="onOk()"
+     translate="ResourceProvider_Metering_submitUsageDialog_Ok_XBUT_TXT"> </button>
+  </div>
+</div>

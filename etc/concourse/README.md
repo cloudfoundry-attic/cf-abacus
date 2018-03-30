@@ -1,32 +1,11 @@
 # abacus-pipeline
 CF-Abacus [Concourse](http://concourse.ci/) Pipelines
 
-## Setting up Concourse
+## Setting up the pipeline
 
-1. Start Concourse:
+1. [Install Concourse](http://concourse.ci/installing.html)
 
-  ```bash
-   cd ~/workspace/cf-abacus/etc/concourse
-   vagrant up
-   ```
-
-1. Download `fly` CLI:
-
-   Mac OSX:
-   ```bash
-   curl 'http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=darwin' --compressed -o fly
-   chmod +x fly
-   ```
-   Linux:
-   ```bash
-   curl 'http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=linux' --compressed -o fly
-   chmod +x fly
-   ```
-
-   Windows:
-   Go to http://192.168.100.4:8080/api/v1/cli?arch=amd64&platform=windows
-
-1. Add `fly` to your path
+1. Check the [Using Concourse](http://concourse.ci/using-concourse.html) guide
 
 1. Create a "landscape" repository that contains submodules for:
    * anything else specific for the landscape (Cloud Foundry, DBs, ...)
@@ -57,7 +36,9 @@ CF-Abacus [Concourse](http://concourse.ci/) Pipelines
     │       │   └── reporting
     │       │       └── manifest.yml.template
     │       ├── cf
-    │       │   ├── bridge
+    │       │   ├── applications
+    │       │   │   └── manifest.yml.template
+    │       │   ├── services
     │       │   │   └── manifest.yml.template
     │       │   └── renewer
     │       │       └── manifest.yml.template
@@ -185,7 +166,7 @@ An example template can look like this:
 applications:
 - name: abacus-usage-accumulator
   host: abacus-usage-accumulator
-  path: .cfpack/app.zip
+  path: .
   instances: 1
   memory: 512M
   disk_quota: 512M
@@ -197,7 +178,6 @@ applications:
     PROVISIONING: abacus-provisioning-plugin
     ACCOUNT: abacus-account-plugin
     EUREKA: abacus-eureka-plugin
-    NODE_MODULES_CACHE: false
     SLACK: 5D
     SECURED: true
     AUTH_SERVER: $AUTH_SERVER
@@ -231,23 +211,4 @@ You should have running Concourse and fly-cli installed. If not refer to `Runnin
 ``` bash
 echo "y" | fly --target=lite set-pipeline --pipeline=monitor-abacus --config=monitor-pipeline.yml --load-vars-from=monitor-pipeline-vars.yml --non-interactive
 fly --target=lite unpause-pipeline --pipeline=monitor-abacus
-```
-
-## Docker files
-
-The `docker` directory contains the `Dockerfile`s needed to build the custom images used in the pipeline.
-
-You can build and push the images to your own repo, using the `publish` script:
-```bash
-cd ~/workspace/cf-abacus/etc/concourse/docker
-./publish myrepository
-```
-
-To build & push changes in a single image (for example `node-mongodb-0.12`), execute:
-
-```bash
-cd docker/node-mongodb-0.12
-docker build -t myrepository/node-mongodb:0.12 .
-docker login
-docker push myrepository/node-mongodb:0.12
 ```

@@ -1,3 +1,7 @@
 #!/bin/bash
 
+if [[ $1 == stop ]]; then
+  NODE_OPTS=""
+fi
+
 exec node $NODE_OPTS -e "require('abacus-webapp').runCLI()" $0 $@

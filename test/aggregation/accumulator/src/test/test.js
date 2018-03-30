@@ -1,6 +1,6 @@
 'use strict';
 
-const _ = require('underscore');
+const { extend, omit, range, map } = require('underscore');
 
 const commander = require('commander');
 
@@ -18,11 +18,6 @@ const moment = require('abacus-moment');
 
 const BigNumber = require('bignumber.js');
 BigNumber.config({ ERRORS: false });
-
-const map = _.map;
-const range = _.range;
-const omit = _.omit;
-const extend = _.extend;
 
 const lifecycleManager = require('abacus-lifecycle-manager')();
 
@@ -129,7 +124,6 @@ describe('abacus-usage-accumulator-itest', () => {
     // a predefined timeout
     const timeout = Math.max(totalTimeout, 100 * orgs * resourceInstances * usage);
     this.timeout(timeout + 2000);
-    const processingDeadline = moment.now() + timeout;
 
     // Setup aggregator spy
     const aggregator = spy((req, res, next) => {
@@ -159,14 +153,14 @@ describe('abacus-usage-accumulator-itest', () => {
     const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87', o + 1, ri + 1].join('-');
 
     const uid = (o, ri, u) => [start, o + 1, ri + 1, u + 1].join('-');
-    const bid = (u) => [start, u + 1].join('-');
+    const bid = (u) => [u + 1].join('-');
 
     // Return a usage with unique start and end time based on a number
     const meteredTemplate = (o, ri, u) => ({
       id: uid(o, ri, u),
       collected_usage_id: bid(o, ri, u),
       start: start + u,
-      end: end + u,
+      end: start + u,
       organization_id: oid(o),
       space_id: sid(o, ri),
       resource_id: 'test-resource',
@@ -230,7 +224,7 @@ describe('abacus-usage-accumulator-itest', () => {
 
     // Post a metered usage doc, throttled to default concurrent requests
     const post = throttle((o, ri, u, cb) => {
-      debug('Submit metered usage for org%d instance%d usage%d', o + 1, ri + 1, u + 1);
+      debug('Submit metered usage for org:%d instance:%d usage:%d', o + 1, ri + 1, u + 1);
 
       brequest.post(
         'http://localhost::p/v1/metering/metered/usage',
@@ -240,10 +234,10 @@ describe('abacus-usage-accumulator-itest', () => {
           expect(val.statusCode).to.equal(201);
           expect(val.headers.location).to.not.equal(undefined);
 
-          debug('Metered usage for org%d instance%d' + ' usage%d, verifying it...', o + 1, ri + 1, u + 1);
+          debug('Metered usage for org:%d instance:%d usage:%d, verifying it...', o + 1, ri + 1, u + 1);
 
           brequest.get(val.headers.location, undefined, (err, val) => {
-            debug('Verify metered usage for org%d instance%d usage%d', o + 1, ri + 1, u + 1);
+            debug('Verify metered usage for org:%d instance:%d usage:%d', o + 1, ri + 1, u + 1);
 
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(200);
@@ -252,7 +246,7 @@ describe('abacus-usage-accumulator-itest', () => {
               omit(meteredTemplate(o, ri, u), 'id', 'processed', 'processed_id')
             );
 
-            debug('Verified metered usage for org%d instance%d usage%d', o + 1, ri + 1, u + 1);
+            debug('Verified metered usage for org:%d instance:%d usage:%d', o + 1, ri + 1, u + 1);
 
             cb();
           });
@@ -304,7 +298,7 @@ describe('abacus-usage-accumulator-itest', () => {
         ].join('/'),
         seqid.pad16(endDate)
       );
-      debug('comparing latest record within %s and %s', sid, eid);
+      debug('Comparing latest record in [%s, %s]', sid, eid);
       db.allDocs(
         {
           limit: 1,
@@ -314,27 +308,18 @@ describe('abacus-usage-accumulator-itest', () => {
           include_docs: true
         },
         (err, val) => {
-          try {
-            expect(
-              clone(
-                omit(val.rows[0].doc, ['processed', 'processed_id', '_rev', '_id', 'id', 'metered_usage_id']),
-                pruneWindows
-              )
-            ).to.deep.equal(expected);
-            done();
-          } catch (e) {
-            if (moment.now() >= processingDeadline)
-              expect(
-                clone(
-                  omit(val.rows[0].doc, ['processed', 'processed_id', '_rev', '_id', 'id', 'metered_usage_id']),
-                  pruneWindows
-                )
-              ).to.deep.equal(expected);
-            else
-              setTimeout(function() {
-                verifyAggregator(done);
-              }, 250);
-          }
+          // Documents might arrive out-of-order in accumulator
+          // We do not care for the order (start/end), therefore we remove it from actual & expected doc
+          const actualDoc = clone(
+            omit(val.rows[0].doc, [
+              'processed', 'processed_id', '_rev', '_id', 'id', 'metered_usage_id', 'start', 'end'
+            ]),
+            pruneWindows
+          );
+          const expectedDoc = omit(expected, [ 'start', 'end' ]);
+
+          expect(actualDoc).to.deep.equal(expectedDoc);
+          done();
         }
       );
     };

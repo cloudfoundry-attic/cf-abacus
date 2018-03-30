@@ -8,7 +8,7 @@ export CONF=${1:-default}
 for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
   APPNAME=$(node_modules/abacus-etc/appname $MODULE)
   if [ -z "$DB" -o -z "$DBCLIENT" -o $APPNAME != "abacus-pouchserver" ]; then
-    (cd node_modules/$APPNAME && npm start)&
+    (cd node_modules/$APPNAME && yarn start)&
   fi
 done
 

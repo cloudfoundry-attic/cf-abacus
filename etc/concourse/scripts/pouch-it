@@ -7,5 +7,5 @@ pushd built-project
   # Based on default limits in throttle and batch processing and
   # integration test matrix, we would need 2197 (= 13 * 13 * 13)
   # usage submissions to get above 90 percent regression coverage
-  npm run itest -- -o 4 -i 4 -u 4 -t $CI_START_TIMEOUT -x $CI_PIPELINE_TIMEOUT
+  yarn run itest -o 4 -i 4 -u 4 -t $CI_START_TIMEOUT -x $CI_PIPELINE_TIMEOUT
 popd

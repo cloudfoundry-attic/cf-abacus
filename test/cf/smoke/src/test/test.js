@@ -4,16 +4,15 @@
 // verifies the submission by retrieving a usage report.
 
 const _ = require('underscore');
-const map = _.map;
-const omit = _.omit;
-const extend = _.extend;
+const { extend, map, omit } = require('underscore');
 
-const request = require('abacus-request');
-const util = require('util');
 const commander = require('commander');
 const clone = require('abacus-clone');
 const oauth = require('abacus-oauth');
 const moment = require('abacus-moment');
+const request = require('abacus-request');
+const timewindow = require('abacus-timewindow');
+const util = require('util');
 
 // Parse command line options
 const argv = clone(process.argv);
@@ -79,18 +78,55 @@ const systemToken = secured()
   ? oauth.cache(authServer, process.env.SYSTEM_CLIENT_ID, process.env.SYSTEM_CLIENT_SECRET, 'abacus.usage.read')
   : undefined;
 
-// Builds the expected window value based upon the
-// charge summary, quantity, cost, and window
-const buildWindow = (ch, s, q, c) => {
+// The scaling factor of each time window for creating the date string
+// [Second, Minute, Hour, Day, Month]
+const slack = () =>
+  /^[0-9]+[MDhms]$/.test(process.env.SLACK)
+    ? {
+      scale: process.env.SLACK.charAt(process.env.SLACK.length - 1),
+      width: process.env.SLACK.match(/[0-9]+/)[0]
+    }
+    : {
+      scale: timewindow.dimension.min,
+      width: 10
+    };
+
+const initWindows = (win, dimension) => {
+  const windows = [win];
+
+  const windowsSizes = process.env.TIME_WINDOWS_SIZES ? JSON.parse(process.env.TIME_WINDOWS_SIZES) : undefined;
+
+  if(windowsSizes && windowsSizes[dimension])
+    _(windowsSizes[dimension] - 1).times(() => windows.push(null));
+
+  else {
+    const timeWindows = timewindow.timeWindowsSizes(slack(), windowsSizes);  
+    _(timeWindows.getWindows(dimension).length - 1).times(() => windows.push(null));
+  }
+  
+  return windows;
+};
+
+const buildExpectedWindows = (charge, summary, quantity, cost) => {
+
   const addProperty = (key, value, obj) => {
-    if (typeof value !== 'undefined') obj[key] = value;
+    if (value != undefined)
+      obj[key] = value;
   };
+
   const win = {};
-  addProperty('charge', ch, win);
-  addProperty('summary', s, win);
-  addProperty('quantity', q, win);
-  addProperty('cost', c, win);
-  return win;
+  addProperty('charge', charge, win);
+  addProperty('summary', summary, win);
+  addProperty('quantity', quantity, win);
+  addProperty('cost', cost, win);
+
+  return [
+    [null],
+    [null],
+    [null],
+    initWindows(win, timewindow.dimension.day),
+    initWindows(win, timewindow.dimension.month)
+  ];
 };
 
 // Compares the previous and expected window values based upon the
@@ -127,9 +163,6 @@ const deltaCompare = (currentWindow, previousWindow, ch, s, q, c) => {
   checkIfNear('quantity', q, currentWindow, previousWindow);
   checkIfNear('cost', c, currentWindow, previousWindow);
 };
-
-// Leave only the current month charge in "windows"
-const prune = (value, key) => key === 'windows' && value[4] ? value[4][0] : value;
 
 const authHeader = (token) =>
   token
@@ -191,23 +224,23 @@ describe('abacus-smoke-test', function() {
     const initialExpectedReport = {
       organization_id: 'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
       account_id: '1234',
-      windows: buildWindow(46.09),
+      windows: buildExpectedWindows(46.09),
       resources: [
         {
           resource_id: 'object-storage',
-          windows: buildWindow(46.09),
+          windows: buildExpectedWindows(46.09),
           aggregated_usage: [
             {
               metric: 'storage',
-              windows: buildWindow(1)
+              windows: buildExpectedWindows(1)
             },
             {
               metric: 'thousand_light_api_calls',
-              windows: buildWindow(0.09)
+              windows: buildExpectedWindows(0.09)
             },
             {
               metric: 'heavy_api_calls',
-              windows: buildWindow(45)
+              windows: buildExpectedWindows(45)
             }
           ],
           plans: [
@@ -216,19 +249,19 @@ describe('abacus-smoke-test', function() {
               metering_plan_id: 'basic-object-storage',
               rating_plan_id: 'object-rating-plan',
               pricing_plan_id: 'object-pricing-basic',
-              windows: buildWindow(46.09),
+              windows: buildExpectedWindows(46.09),
               aggregated_usage: [
                 {
                   metric: 'storage',
-                  windows: buildWindow(1, 1, 1, 1)
+                  windows: buildExpectedWindows(1, 1, 1, 1)
                 },
                 {
                   metric: 'thousand_light_api_calls',
-                  windows: buildWindow(0.09, 3, 3, 0.09)
+                  windows: buildExpectedWindows(0.09, 3, 3, 0.09)
                 },
                 {
                   metric: 'heavy_api_calls',
-                  windows: buildWindow(45, 300, 300, 45)
+                  windows: buildExpectedWindows(45, 300, 300, 45)
                 }
               ]
             }
@@ -238,23 +271,23 @@ describe('abacus-smoke-test', function() {
       spaces: [
         {
           space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-          windows: buildWindow(46.09),
+          windows: buildExpectedWindows(46.09),
           resources: [
             {
               resource_id: 'object-storage',
-              windows: buildWindow(46.09),
+              windows: buildExpectedWindows(46.09),
               aggregated_usage: [
                 {
                   metric: 'storage',
-                  windows: buildWindow(1)
+                  windows: buildExpectedWindows(1)
                 },
                 {
                   metric: 'thousand_light_api_calls',
-                  windows: buildWindow(0.09)
+                  windows: buildExpectedWindows(0.09)
                 },
                 {
                   metric: 'heavy_api_calls',
-                  windows: buildWindow(45)
+                  windows: buildExpectedWindows(45)
                 }
               ],
               plans: [
@@ -263,19 +296,19 @@ describe('abacus-smoke-test', function() {
                   metering_plan_id: 'basic-object-storage',
                   rating_plan_id: 'object-rating-plan',
                   pricing_plan_id: 'object-pricing-basic',
-                  windows: buildWindow(46.09),
+                  windows: buildExpectedWindows(46.09),
                   aggregated_usage: [
                     {
                       metric: 'storage',
-                      windows: buildWindow(1, 1, 1, 1)
+                      windows: buildExpectedWindows(1, 1, 1, 1)
                     },
                     {
                       metric: 'thousand_light_api_calls',
-                      windows: buildWindow(0.09, 3, 3, 0.09)
+                      windows: buildExpectedWindows(0.09, 3, 3, 0.09)
                     },
                     {
                       metric: 'heavy_api_calls',
-                      windows: buildWindow(45, 300, 300, 45)
+                      windows: buildExpectedWindows(45, 300, 300, 45)
                     }
                   ]
                 }
@@ -285,23 +318,23 @@ describe('abacus-smoke-test', function() {
           consumers: [
             {
               consumer_id: 'app:bbeae239-f3f8-483c-9dd0-de6781c38bab',
-              windows: buildWindow(46.09),
+              windows: buildExpectedWindows(46.09),
               resources: [
                 {
                   resource_id: 'object-storage',
-                  windows: buildWindow(46.09),
+                  windows: buildExpectedWindows(46.09),
                   aggregated_usage: [
                     {
                       metric: 'storage',
-                      windows: buildWindow(1)
+                      windows: buildExpectedWindows(1)
                     },
                     {
                       metric: 'thousand_light_api_calls',
-                      windows: buildWindow(0.09)
+                      windows: buildExpectedWindows(0.09)
                     },
                     {
                       metric: 'heavy_api_calls',
-                      windows: buildWindow(45)
+                      windows: buildExpectedWindows(45)
                     }
                   ],
                   plans: [
@@ -310,7 +343,7 @@ describe('abacus-smoke-test', function() {
                       metering_plan_id: 'basic-object-storage',
                       rating_plan_id: 'object-rating-plan',
                       pricing_plan_id: 'object-pricing-basic',
-                      windows: buildWindow(46.09),
+                      windows: buildExpectedWindows(46.09),
                       resource_instances: [
                         {
                           id: '0b39fa70-a65f-4183-bae8-385633ca5c87'
@@ -319,15 +352,15 @@ describe('abacus-smoke-test', function() {
                       aggregated_usage: [
                         {
                           metric: 'storage',
-                          windows: buildWindow(1, 1, 1, 1)
+                          windows: buildExpectedWindows(1, 1, 1, 1)
                         },
                         {
                           metric: 'thousand_light_api_calls',
-                          windows: buildWindow(0.09, 3, 3, 0.09)
+                          windows: buildExpectedWindows(0.09, 3, 3, 0.09)
                         },
                         {
                           metric: 'heavy_api_calls',
-                          windows: buildWindow(45, 300, 300, 45)
+                          windows: buildExpectedWindows(45, 300, 300, 45)
                         }
                       ]
                     }
@@ -507,7 +540,7 @@ describe('abacus-smoke-test', function() {
             util.format('Response code: %d; headers: %j; body: %j', val.statusCode, val.headers, val.body)
           );
 
-          const actual = clone(omit(val.body, 'id', 'processed', 'processed_id', 'start', 'end'), prune);
+          const actual = clone(omit(val.body, 'id', 'processed', 'processed_id', 'start', 'end'));
 
           cb(actual, processed(val));
         }

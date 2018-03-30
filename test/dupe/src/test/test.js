@@ -5,8 +5,8 @@
 
 const _ = require('underscore');
 const extend = _.extend;
-const map = _.map;
-const omit = _.omit;
+const filter = _.filter;
+const each = _.each;
 
 const request = require('abacus-request');
 const commander = require('commander');
@@ -101,19 +101,6 @@ const authHeader = (token) =>
     }
     : {};
 
-const prune = (v, k) => {
-  if (k === 'windows')
-    map(v, (w) => {
-      map(w, (tw) => {
-        if (tw) {
-          if (tw.charge) tw.charge = 0;
-          if (tw.summary) tw.summary = 0;
-        }
-      });
-    });
-  return v;
-};
-
 // Test usage to be submitted by the client
 const buildUsage = (orgGuid) => ({
   start: usageTime,
@@ -149,15 +136,19 @@ describe('abacus-dupe', function() {
   this.timeout(totalTimeout);
 
   before((done) => {
-    if (objectStorageToken) objectStorageToken.start();
-    if (systemToken) systemToken.start();
+    if (objectStorageToken)
+      objectStorageToken.start();
 
-    // Delete test dbs on the configured db server
-    dbclient.drop(process.env.DB, /^abacus-/, () => {
+    if (systemToken)
+      systemToken.start();
+
+    // drop all abacus collections except plans and plan-mappings
+    dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, () => {
       // Wait for usage reporter to start
       request.waitFor(reporting + '/batch', {}, startTimeout, (err) => {
         // Failed to ping usage reporter before timing out
-        if (err) throw err;
+        if (err)
+          throw err;
 
         done();
       });
@@ -165,64 +156,78 @@ describe('abacus-dupe', function() {
   });
 
   context('with organization ' + organization, () => {
+
     it('submits duplicated usage for a sample resource and retrieves ' + 'an aggregated usage report', (done) => {
-      // Submit usage for sample resource with 10 GB, 1000 light API calls,
-      // and 100 heavy API calls
-      let posts = 0;
-      let previousReport;
-      const post = (u, done) => {
-        console.log('\nPosting document', posts + 1);
 
-        request.post(
-          collector + '/v1/metering/collected/usage',
-          extend({ body: u }, authHeader(objectStorageToken)),
-          (err, val) => {
-            if (posts === 0) {
-              // Expect a 201 with the location of the accumulated usage
-              expect(err).to.equal(undefined);
-              expect(val.statusCode).to.equal(201);
-              expect(val.headers.location).to.not.equal(undefined);
-            } else {
-              // Expect 409 conflict without location
-              expect(err).to.equal(undefined);
-              expect(val.statusCode).to.equal(409);
-              expect(val.headers.location).to.equal(undefined);
+      let posts = 1;
+
+      const validateAggregatedUsage = (aggregatedUsage, metric) => {
+        const memoryAggregation = filter(aggregatedUsage, (aggregation) => {
+          return aggregation.metric === metric ? aggregation : undefined;
+        });
+
+        const windows = memoryAggregation[0].windows;
+        each(windows, (window) => {
+          each(window, (element) => {
+            if (element !== null) {
+              expect(element.quantity.consuming).to.equal(0.5);
+              expect(element.cost.consuming).to.equal(0.5);
             }
-
-            posts++;
-            done();
-          }
-        );
+          });
+        });
       };
 
-      // Get a usage report for the test organization
-      const get = (u, done) => {
+      const get = (done) => {
         console.log('Retrieving Usage Report');
-        request.get(
-          [reporting, 'v1/metering/organizations', organization, 'aggregated/usage'].join('/'),
+
+        request.get([reporting, 'v1/metering/organizations', organization, 'aggregated/usage'].join('/'),
           extend({}, authHeader(systemToken)),
           (err, val) => {
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(200);
 
-            // Only check the previous report if it exists
-            if (!previousReport) {
-              console.log('Setting report');
-              previousReport = clone(omit(val.body, 'id', 'processed', 'processed_id', 'start', 'end'), prune);
+            const report = val.body;
+            expect(report.resources.length).to.equal(1);
+            expect(report.resources[0].plans.length).to.equal(1);
+            const resourceAggregatedUsage = report.resources[0].plans[0].aggregated_usage;
+            validateAggregatedUsage(resourceAggregatedUsage, 'memory');
+
+            expect(report.spaces[0].resources.length).to.equal(1);
+            expect(report.spaces[0].resources[0].plans.length).to.equal(1);
+            const spaceAggregatedUsage = val.body.spaces[0].resources[0].plans[0].aggregated_usage;
+            validateAggregatedUsage(spaceAggregatedUsage, 'memory');
+
+            done();
+          }
+        );
+      };
+
+      const post = (u, done) => {
+        console.log('\nPosting document', posts);
+
+        request.post(collector + '/v1/metering/collected/usage',
+          extend({ body: u }, authHeader(objectStorageToken)),
+          (err, val) => {
+            if (posts === 1) {
+              // Expect a 201 with the location of the accumulated usage
+              console.log('No document Conflict');
+              expect(err).to.equal(undefined);
+              expect(val.statusCode).to.equal(201);
+              expect(val.headers.location).to.not.equal(undefined);
             } else {
-              expect(previousReport).to.deep.equal(
-                clone(omit(val.body, 'id', 'processed', 'processed_id', 'start', 'end'), prune)
-              );
-              console.log('No change in report');
+              // Expect 409 conflict without location
+              console.log('Document Conflict');
+              expect(err).to.equal(undefined);
+              expect(val.statusCode).to.equal(409);
+              expect(val.headers.location).to.equal(undefined);
             }
 
-            // Exit if all submissions are done, otherwise wait and post again
-            if (posts === num) {
+            if (posts++ === num) {
               console.log('No duplicates aggregated. Ending test.');
-              done();
+              get(done);
             } else {
               console.log('Waiting', delay, 'milliseconds before submitting');
-              setTimeout(() => post(u, () => get(u, done)), delay);
+              setTimeout(() => post(u, done), delay);
             }
           }
         );
@@ -231,7 +236,7 @@ describe('abacus-dupe', function() {
       // Run the above steps
       console.log('Will attempt %d submissions in organization %s', num, organization);
       const usage = buildUsage(organization);
-      post(usage, () => get(usage, done));
+      post(usage, done);
     });
   });
 

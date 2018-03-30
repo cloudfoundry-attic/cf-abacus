@@ -2,7 +2,7 @@
   "name": "abacus-doc",
   "description": "The Abacus project documentation",
   "license": "Apache-2.0",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/doc",
   "bugs": {
@@ -22,7 +22,7 @@
     "flow.png"
   ],
   "scripts": {
-    "doc": "npm run apidoc && npm run faqdoc && npm run confdoc && npm run designdoc",
+    "doc": "yarn run apidoc && yarn run faqdoc && yarn run confdoc && yarn run designdoc",
     "apidoc": "cat api.md | mddoc >api.html",
     "faqdoc": "cat faq.md | mddoc >faq.html",
     "confdoc": "cat conf.md | mddoc >conf.html",
@@ -47,7 +47,8 @@
     ]
   },
   "engines": {
-    "node": ">=6.11.4 <9.0.0",
-    "npm": "<5.0.0"
+    "node": ">=8.9.4 <9.0.0",
+    "npm": "<5.0.0",
+    "yarn": ">=1.2.1"
   }
 }

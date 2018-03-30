@@ -1,4 +1,4 @@
-FROM node:8.9.0
+FROM node:8.9.4
 
 RUN apt-get update -y
 RUN apt-get install -y zip
@@ -12,8 +12,8 @@ WORKDIR ~/workspace
 RUN git clone --depth 1 --recurse-submodules https://github.com/cloudfoundry-incubator/cf-abacus.git
 
 WORKDIR cf-abacus
-RUN npm run provision
-CMD npm run start && sleep infinity
+RUN yarn run provision
+CMD yarn run start && sleep infinity
 
 # PouchDB
 EXPOSE 5984

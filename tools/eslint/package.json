@@ -2,7 +2,7 @@
   "name": "abacus-eslint",
   "description": "ESLint configuration and build script.",
   "license": "Apache-2.0",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tools/eslint",
   "bugs": {
@@ -18,23 +18,25 @@
   ],
   "files": [
     ".eslintrc",
-    "eslint",
+    "abacus-eslint",
     ".npmrc",
     "src/"
   ],
   "main": "src/index.js",
   "bin": {
-    "eslint": "./eslint"
+    "abacus-eslint": "./abacus-eslint"
   },
   "scripts": {
     "lint": "eslint -f stylish -c .eslintrc src",
-    "test": "eslint -f stylish -c .eslintrc src",
+    "test": "abacus-eslint -f stylish -c .eslintrc src",
     "generate-coverage": "true",
     "pub": "publish"
   },
   "dependencies": {
     "commander": "^2.8.1",
-    "eslint": "^4.1.7",
+    "eslint": "~4.13.0",
+    "eslint-plugin-mocha": "^4.8.0",
+    "eslint-plugin-nodate": "file:../eslint-plugin-nodate",
     "optionator": "^0.6.0"
   },
   "devDependencies": {
@@ -51,7 +53,8 @@
     ]
   },
   "engines": {
-    "node": ">=6.11.4 <9.0.0",
-    "npm": "<5.0.0"
+    "node": ">=8.9.4 <9.0.0",
+    "npm": "<5.0.0",
+    "yarn": ">=1.2.1"
   }
 }

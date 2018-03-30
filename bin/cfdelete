@@ -2,7 +2,7 @@
 
 set -e
 
-# Delete all the Abacus apps on Cloud Foundry
+# Delete all Abacus apps on Cloud Foundry
 export CONF=${1:-default}
 
 MAX_PROCESSES=$(node -e "console.log(require('os').cpus().length)")

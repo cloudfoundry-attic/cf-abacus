@@ -6,6 +6,7 @@ const extend = require('underscore').extend;
 const lifecycleManager = require('abacus-lifecycle-manager')();
 
 const createStatsReader = require('../utils/stats-reader');
+const createHealthcheckClient = require('../utils/healthcheck-client');
 
 const env = {
   tokenSecret: 'secret',
@@ -24,7 +25,7 @@ const getEnviornmentVars = (externalSystems) => ({
   CF_CLIENT_ID: env.cfClientId,
   CF_CLIENT_SECRET: env.cfClientSecret,
   SECURED: 'true',
-  AUTH_SERVER: `http://localhost:${externalSystems.uaaServer.address().port}`,
+  AUTH_SERVER: `http://localhost:${externalSystems.cloudController.address().port}`,
   API: `http://localhost:${externalSystems.cloudController.address().port}`,
   COLLECTOR: `http://localhost:${externalSystems.abacusCollector.address().port}`,
   MIN_INTERVAL_TIME: 10,
@@ -40,7 +41,13 @@ module.exports = (config) => ({
     port: config.port,
     tokenSecret: env.tokenSecret
   }),
+  healthcheck: createHealthcheckClient(config.port),
   start: (externalSystemsMocks) => {
+    externalSystemsMocks
+      .cloudController
+      .infoService
+      .returnUaaAddress(`http://localhost:${externalSystemsMocks.uaaServer.address().port}`);
+
     const bridgeEnv = extend({}, process.env, getEnviornmentVars(externalSystemsMocks), config.customEnv);
 
     lifecycleManager.useEnv(bridgeEnv).startModules([config.bridge]);

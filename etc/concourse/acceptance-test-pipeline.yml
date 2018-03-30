@@ -63,7 +63,7 @@ jobs:
             type: docker-image
             source:
               repository: godofcontainers/node-mongodb
-              tag: 8.9.0
+              tag: 8.9.4
           inputs:
             - name: landscape
           params:

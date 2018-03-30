@@ -2,7 +2,7 @@
   "name": "abacus-cf-renewer",
   "description": "CF App Usage renewer",
   "license": "Apache-2.0",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/cf/renewer",
   "bugs": {
@@ -26,11 +26,10 @@
   "scripts": {
     "start": "launch webapp start",
     "stop": "webapp stop",
-    "test": "eslint && nyc mocha",
+    "test": "abacus-eslint && nyc abacus-mocha",
     "generate-coverage": "nyc report --reporter=lcovonly",
-    "lint": "eslint",
+    "lint": "abacus-eslint",
     "pub": "publish",
-    "cfpack": "cfpack",
     "cfpush": "cfpush"
   },
   "dependencies": {
@@ -56,12 +55,12 @@
     "abacus-usage-schemas": "file:../../config/schemas",
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-yieldable": "file:../../utils/yieldable",
-    "async": "^2.3.0",
+    "async": "^2.6.0",
     "jsonwebtoken": "^5.0.5",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "ajv": "^6.0.0"
   },
   "devDependencies": {
-    "abacus-cfpack": "file:../../../tools/cfpack",
     "abacus-cfpush": "file:../../../tools/cfpush",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
@@ -79,7 +78,8 @@
     ]
   },
   "engines": {
-    "node": ">=6.11.4 <9.0.0",
-    "npm": "<5.0.0"
+    "node": ">=8.9.4 <9.0.0",
+    "npm": "<5.0.0",
+    "yarn": ">=1.2.1"
   }
 }

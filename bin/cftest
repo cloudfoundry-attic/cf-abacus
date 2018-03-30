@@ -44,14 +44,14 @@ if [ "$CF_TEST" == "true" ]; then
     cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
 
     # Start clean
-    npm run cfdelete medium
+    yarn run cfdelete medium
 
     # Stage and start the apps
-    npm run cfstage medium
-    npm run cfstart medium
+    yarn run cfstage medium
+    yarn run cfstart medium
 
     # Run the demo
-    npm run demo -- --collector https://abacus-usage-collector.$CF_DOMAIN --reporting https://abacus-usage-reporting.$CF_DOMAIN
+    yarn run demo --collector https://abacus-usage-collector.$CF_DOMAIN --reporting https://abacus-usage-reporting.$CF_DOMAIN
 
   else
     echo "Warning: skipping CF test as CF_SYS_DOMAIN is not configured" >&2

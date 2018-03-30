@@ -1,0 +1,11 @@
+---
+applications:
+- name: metering-abacus-usage-example
+  memory: 1G
+  instances: 1
+  host: demo-metering-abacus-usage-example
+  path: target/ROOT.war
+  env:
+    ORG_GUID: your-org-guid-here
+    REPORTING_URL: https://<reportin-app-url-here>/v1/metering/organizations
+

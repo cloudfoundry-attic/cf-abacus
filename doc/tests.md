@@ -9,7 +9,7 @@ Run the tests with:
 ```sh
 cd cf-abacus
 
-npm test
+yarn test
 ```
 
 You can also [select the used database](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/conf.md#local-configuration).
@@ -22,7 +22,7 @@ To run the end-to-end integration tests execute:
 ```sh
 cd cf-abacus
 
-npm run itest
+yarn run itest
 ```
 
 See the [conf.md](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/conf.md#local-configuration) on how to set the database.
@@ -35,14 +35,14 @@ You can run the `smoke` test locally with:
 ```sh
 cd cf-abacus
 
-npm start
-npm run smoke
-npm stop
+yarn start
+yarn run smoke
+yarn stop
 ```
 
 The smoke test can also verify Abacus, running on Cloud Foundry. It can be configured with command line options. Check the available options with:
 ```sh
-npm run smoke -- --help
+yarn run smoke --help
 ```
 
 To run the test against secured Abacus installation on Cloud Foundry set:
@@ -70,12 +70,12 @@ Then run the tests with
 ```sh
 cd cf-abacus
 
-npm run acceptance
+yarn run acceptance
 ```
 
 The command line options of the acceptance test can be listed with:
 ```sh
-npm run acceptance -- --help
+yarn run acceptance --help
 ```
 
 
@@ -86,14 +86,14 @@ You can run the `dupe` test locally with:
 ```sh
 cd cf-abacus
 
-npm start
-npm run smoke
-npm stop
+yarn start
+yarn run smoke
+yarn stop
 ```
 
 With Abacus on Cloud Foundry configure the test with the command line options listed here:
 ```sh
-npm run dupe -- --help
+yarn run dupe --help
 ```
 
 Set these variables to run the test against secured Abacus on Cloud Foundry:
@@ -113,14 +113,14 @@ You can run the `perf` test locally with:
 ```sh
 cd cf-abacus
 
-npm start
-npm run perf
-npm stop
+yarn start
+yarn run perf
+yarn stop
 ```
 
 Check the command line options of the test with:
 ```sh
-npm run perf -- --help
+yarn run perf --help
 ```
 
 

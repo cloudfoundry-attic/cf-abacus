@@ -9,15 +9,15 @@ function getApps {
     echo "No apps found"
     APPS=()
   else
-    APPS=($(cf apps | tail -n +5 | grep "$1" | awk '{print $1}'))
+    APPS=($(cf apps | tail -n +5 | grep -E "$1" | awk '{print $1}'))
     echo "Found ${#APPS[@]} applications ..."
   fi
 }
 
 function restartApps {
-  getApps '?'
+  getApps '\?'
   echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
-  getApps '0/'
+  getApps '.*\s+0/\d+.*'
   echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
 }
 
@@ -48,7 +48,7 @@ function restartAppsWithRetry {
 
 function waitForServices {
   echo "Waiting for DB creation or update ..."
-  services=$1
+  services=("$@")
   for service in "${services[@]}"
   do
     while [[ -z $(cf service $service | grep '\(create\|update\) succeeded\|\(create\|update\) failed') ]]; do

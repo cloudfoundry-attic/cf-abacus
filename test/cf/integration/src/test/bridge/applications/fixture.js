@@ -1,7 +1,5 @@
 'use sterict';
 
-/* eslint-disable max-len */
-
 const lifecycleManager = require('abacus-lifecycle-manager')();
 
 const createAbacusCollectorMock = require('../../utils/server-mocks/abacus-collector-mock');
@@ -17,7 +15,7 @@ const createEventTimestampGenerator = require('../event-timestamp-generator');
 const createBridge = require('../bridge');
 
 const oauth = {
-  abacusCollectorScopes: ['abacus.usage.linux-container.write', 'abacus.usage.linux-container.read'],
+  abacusCollectorScopes: ['abacus.usage.write', 'abacus.usage.read'],
   cfAdminScopes: [],
   abacusCollectorToken: 'abacus-collector-token',
   cfAdminToken: 'cfadmin-token'

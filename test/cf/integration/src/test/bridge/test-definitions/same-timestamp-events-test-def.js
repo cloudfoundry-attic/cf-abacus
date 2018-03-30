@@ -1,7 +1,5 @@
 'use strict';
 
-/* eslint-disable max-len */
-
 const httpStatus = require('http-status-codes');
 
 const moment = require('abacus-moment');

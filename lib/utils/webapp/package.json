@@ -2,7 +2,7 @@
   "name": "abacus-webapp",
   "description": "Setup Express with a process cluster and a selection of useful Express middleware",
   "license": "Apache-2.0",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/webapp",
   "bugs": {
@@ -26,9 +26,9 @@
     "webapp": "./webapp"
   },
   "scripts": {
-    "test": "eslint && nyc mocha",
+    "test": "abacus-eslint && nyc abacus-mocha",
     "generate-coverage": "nyc report --reporter=lcovonly",
-    "lint": "eslint",
+    "lint": "abacus-eslint",
     "pub": "publish"
   },
   "dependencies": {
@@ -43,14 +43,15 @@
     "abacus-urienv": "file:../urienv",
     "abacus-vcapenv": "file:../vcapenv",
     "commander": "^2.8.1",
+    "node-inspect": "^1.11.3",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "nyc": "^11.4.1",
     "abacus-publish": "file:../../../tools/publish",
-    "abacus-request": "file:../request"
+    "abacus-request": "file:../request",
+    "nyc": "^11.4.1"
   },
   "nyc": {
     "cache": true,
@@ -63,7 +64,8 @@
     ]
   },
   "engines": {
-    "node": ">=6.11.4 <9.0.0",
-    "npm": "<5.0.0"
+    "node": ">=8.9.4 <9.0.0",
+    "npm": "<5.0.0",
+    "yarn": ">=1.2.1"
   }
 }

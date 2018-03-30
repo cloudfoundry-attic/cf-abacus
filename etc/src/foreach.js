@@ -8,7 +8,6 @@ const filter = _.filter;
 const initial = _.initial;
 const last = _.last;
 const pairs = _.pairs;
-const findIndex = _.findIndex;
 
 const path = require('path');
 const util = require('util');
@@ -106,11 +105,6 @@ const runCLI = () => {
     })
     .parse(process.argv);
 
-  // Running an npm command with program options requires '--'
-  // before the program options
-  const oidx = findIndex(commander.args, (arg) => /^-/.test(arg) && /^--/.test(arg) && !/^--\s/.test(arg));
-  if (commander.cmd === 'npm' && oidx >= 0) commander.args.splice(oidx, 0, '--');
-
   // Use the given regular expression to filter modules
   const rx = new RegExp(commander.regexp);
 
@@ -123,10 +117,12 @@ const runCLI = () => {
       (dep) => rx.test(dep[0]) && /^file:/.test(dep[1])
     ),
     (dependency) => {
-      const resolve = (s) => s.replace(/\:name/, dependency[0]).replace(/:path/, dependency[1].split(':')[1]);
+      const resolve = (s) => s.replace(/:name/, dependency[0]).replace(/:path/, dependency[1].split(':')[1]);
 
       // Run the given command on each module
-      exec(resolve([commander.cmd].concat(commander.args).join(' ')), resolve(commander.dir), (err, val) => {
+      const command = resolve([commander.cmd].concat(commander.args).join(' '));
+      const workDir = resolve(commander.dir);
+      exec(command, workDir, (err, val) => {
         if (err) process.exit(err);
       });
     }

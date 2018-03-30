@@ -22,7 +22,7 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "test": "eslint && nyc mocha",
+    "test": "abacus-eslint && nyc abacus-mocha",
     "generate-coverage": "nyc report --reporter=lcovonly",
     "lint": "eslint",
     "pub": "publish"

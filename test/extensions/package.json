@@ -1,0 +1,59 @@
+{
+  "name": "abacus-extensions-itest",
+  "description": "Extensions integration tests",
+  "license": "Apache-2.0",
+  "version": "1.1.0",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/extensions",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "src/"
+  ],
+  "main": "src/index.js",
+  "scripts": {
+    "extensions-itest": "abacus-eslint && abacus-mocha --command",
+    "test": "abacus-eslint",
+    "itest": "true",
+    "generate-coverage": "true",
+    "lint": "abacus-eslint",
+    "pub": "publish"
+  },
+  "dependencies": {
+    "abacus-dbclient": "file:../../lib/utils/dbclient",
+    "abacus-debug": "file:../../lib/utils/debug",
+    "abacus-mocha": "file:../../tools/mocha",
+    "commander": "2.8.1",
+    "nyc": "^11.4.1",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "abacus-eslint": "file:../../tools/eslint",
+    "abacus-publish": "file:../../tools/publish"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
+  },
+  "engines": {
+    "node": ">=8.9.4 <9.0.0",
+    "npm": "<5.0.0",
+    "yarn": ">=1.2.1"
+  }
+}

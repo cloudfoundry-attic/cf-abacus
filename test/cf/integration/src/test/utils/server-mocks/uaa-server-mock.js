@@ -31,12 +31,6 @@ module.exports = () => {
     app = express();
 
     let address;
-    app.get('/v2/info', (req, res) => {
-      debug('Retrieving cf info...');
-      res.send({
-        token_endpoint: `http://localhost:${address.port}`
-      });
-    });
 
     app.post('/oauth/token', (request, response) => {
       debug('Called /oauth/token endpoint with query %j and headers: %j', request.query, request.headers);
@@ -48,7 +42,7 @@ module.exports = () => {
 
       const responseToken = serviceData.responseFor(queryScopes);
 
-      debug('Returning Oauth Token: %s', responseToken);
+      debug('Returning OAuth Token: %s', responseToken);
       response.status(httpStatus.OK).send({
         access_token: responseToken,
         expires_in: 5 * 60
@@ -57,6 +51,8 @@ module.exports = () => {
 
     server = app.listen(randomPort);
     address = server.address();
+
+    debug('UAA server started on port: %d', address.port);
   };
 
   const stop = (cb) => {
@@ -67,6 +63,7 @@ module.exports = () => {
     start,
     address: () => server.address(),
     tokenService: {
+      clear: serviceData.clear,
       requestsCount: () => serviceData.requests().length,
       requests: {
         withScopes: (scopes) => {

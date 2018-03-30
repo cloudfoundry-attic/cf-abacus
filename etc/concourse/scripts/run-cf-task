@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
+  skip='--skip-ssl-validation'
+fi
+
+cf api "https://api.$CF_SYS_DOMAIN" "$skip"
+echo "" | cf login -u "$CF_ADMIN_USER" -p "$CF_ADMIN_PASSWORD"
+
+echo "Targeting abacus org and space..."
+cf target -o "$CF_ORG" -s "$CF_SPACE"
+
+app_name=$1
+task_command=$2
+task_name="$(date +%s)-db-setup-task"
+
+echo "Starting the provisioning plugin..."
+cf start "${ABACUS_PREFIX}${app_name}"
+
+echo "Executing $task_name task on ${ABACUS_PREFIX}$app_name..."
+cf run-task "${ABACUS_PREFIX}${app_name}" "$task_command" --name "$task_name"
+
+cf tasks "${ABACUS_PREFIX}${app_name}" | grep -m 1 "$task_name" | awk '{print $3}'
+
+for _ in {1..30}; do
+  running_task=$(cf tasks "${ABACUS_PREFIX}${app_name}" | grep -m 1 "$task_name")
+  if [ "$(echo "$running_task" | awk '{print $3}')" == 'RUNNING' ]; then
+    sleep 10
+  elif [ "$(echo "$running_task" | awk '{print $3}')" == 'SUCCEEDED' ]; then
+    echo "Executing $task_name task on $app_name succeeded"
+    break
+  else
+    echo "Executing $task_name task on $app_name failed"
+    exit 1
+  fi
+done

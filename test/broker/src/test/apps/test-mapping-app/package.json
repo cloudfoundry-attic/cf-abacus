@@ -1,0 +1,16 @@
+{
+  "name": "service-mapping-test-app",
+  "version": "1.1.0",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "4.15.5"
+  },
+  "engines": {
+    "node": ">=8.9.4 <9.0.0",
+    "npm": "<5.0.0",
+    "yarn": ">=1.2.1"
+  },
+  "scripts": {
+    "start": "node app.js"
+  }
+}

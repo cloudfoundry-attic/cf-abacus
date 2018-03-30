@@ -2,7 +2,7 @@
   "name": "abacus-rabbitmq-itest",
   "description": "Rabbitmq integration tests",
   "license": "Apache-2.0",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/metering/rabbitmq",
   "bugs": {
@@ -22,10 +22,10 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "itest": "mocha --command",
-    "test": "eslint",
-    "coveralls": "true",
-    "lint": "eslint",
+    "itest": "abacus-eslint && abacus-mocha --command",
+    "test": "abacus-eslint",
+    "generate-coverage": "true",
+    "lint": "abacus-eslint",
     "pub": "publish"
   },
   "dependencies": {
@@ -38,7 +38,8 @@
     "abacus-mocha": "file:../../../tools/mocha"
   },
   "engines": {
-    "node": ">=6.11.4 <9.0.0",
-    "npm": "<5.0.0"
+    "node": ">=8.9.4 <9.0.0",
+    "npm": "<5.0.0",
+    "yarn": ">=1.2.1"
   }
 }

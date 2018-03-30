@@ -2,7 +2,7 @@
   "name": "eslint-plugin-nodate",
   "description": "ESLint plugin that disallows usage of Date object",
   "license": "Apache-2.0",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tools/eslint-plugin-nodate",
   "bugs": {
@@ -21,14 +21,17 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha src/test --recursive"
+    "test": "abacus-mocha src/test --recursive"
   },
   "dependencies": {
     "requireindex": "~1.1.0"
   },
   "devDependencies": {
-    "eslint": "^4.1.7",
+    "eslint": "~4.13.0",
     "mocha": "^3.2.0"
+  },
+  "peerDependencies": {
+    "eslint": "~4.13.0"
   },
   "nyc": {
     "cache": true,
@@ -41,7 +44,8 @@
     ]
   },
   "engines": {
-    "node": ">=6.11.4 <9.0.0",
-    "npm": "<5.0.0"
+    "node": ">=8.9.4 <9.0.0",
+    "npm": "<5.0.0",
+    "yarn": ">=1.2.1"
   }
 }

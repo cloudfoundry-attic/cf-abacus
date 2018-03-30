@@ -1,0 +1,14 @@
+{
+  "start": "date",
+  "end": "date",
+  "organization_id": "idz:sampleIdentityZoneId",
+  "space_id": "sampleSpaceId",
+  "consumer_id": "sampleConsumerId",
+  "resource_id": "sampleResourceId",
+  "plan_id": "standard",
+  "resource_instance_id": "sampleResourceInstanceId",
+  "measured_usage": {
+    "measure": "sampleMeasure",
+    "quantity": "sampleQuantity"
+  }
+}

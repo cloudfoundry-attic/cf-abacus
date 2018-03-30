@@ -135,7 +135,7 @@ The previous approach becomes pretty cumbersome once Abacus is scaled and there 
  cd ~/workspace/cf-abacus
  # Set EUREKA environment variable to http://localhost:8080
  export EUREKA=http://localhost:8080
- npm start
+ yarn start
  ```
 
 * Run the dashboard using Jetty
@@ -177,7 +177,6 @@ To add monitoring capabilities to your Abacus installation follow these steps:
      CONF: default
      DEBUG: e-abacus-*
      DB: abacus-pouchserver
-     NODE_MODULES_CACHE: false
      SECURED: false
      JBP_CONFIG_TOMCAT: "{tomcat: { context_path: eureka }}"
      # JWTKEY:
@@ -187,8 +186,8 @@ To add monitoring capabilities to your Abacus installation follow these steps:
 * Stage and start Abacus applications:
  ```bash
  cd ~/workspace/cf-abacus
- npm run cfstage
- npm run cfstart
+ yarn run cfstage
+ yarn run cfstart
  ```
 
 * Check if Eureka knows about all Abacus applications:
