@@ -20,11 +20,13 @@ module.exports = {
       parameters
     });
   },
-  update: (serviceInstanceGuid, parameters) => cfCurl.put(`/v2/service_instances/${serviceInstanceGuid}`,
-    { parameters: parameters }),
-  delete: (serviceInstanceGuid) => cfCurl.delete(`/v2/service_instances/${serviceInstanceGuid}?recursive=true`),
-  bind: (serviceInstanceGuid, appGuid) => cfCurl.post('/v2/service_bindings', {
-    service_instance_guid: serviceInstanceGuid,
-    app_guid: appGuid
-  })
+  update: (serviceInstanceGuid, parameters) =>
+    cfCurl.put(`/v2/service_instances/${serviceInstanceGuid}`, { parameters: parameters }),
+  delete: (serviceInstanceGuid) =>
+    cfCurl.delete(`/v2/service_instances/${serviceInstanceGuid}?recursive=true`),
+  bind: (serviceInstanceGuid, appGuid) =>
+    cfCurl.post('/v2/service_bindings', {
+      service_instance_guid: serviceInstanceGuid,
+      app_guid: appGuid
+    })
 };

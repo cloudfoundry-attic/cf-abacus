@@ -32,7 +32,7 @@ const updateMapping = (req, res) => {
     return res.status(500).send(errorMessage);
   }
 
-  data.set({resource, plan}, req.body);
+  data.set({ resource, plan }, req.body);
   console.log('Data', data);
   return res.status(200).send();
 };
@@ -40,7 +40,7 @@ const updateMapping = (req, res) => {
 app.post('/v1/provisioning/mappings/services/resource/:resource/plan/:plan',
   (req, res) => updateMapping(req, res));
 
- app.put('/v1/provisioning/mappings/services/resource/:resource/plan/:plan',
+app.put('/v1/provisioning/mappings/services/resource/:resource/plan/:plan',
   (req, res) => updateMapping(req, res));
 
 app.get('/v1/provisioning/mappings/services', (req, res) => {
