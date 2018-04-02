@@ -48,7 +48,7 @@ const readCurrentMonthDocs = function*(cb) {
     include_docs: true
   });
 
-  const docs = result.rows.map((row) => omit(row.doc, '_rev', '_id'));  
+  const docs = result.rows.map((row) => omit(row.doc, '_rev', '_id'));
   return docs;
 };
 
@@ -70,10 +70,8 @@ const isDbAvailable = function*() {
 };
 
 const setup = function*() {
-  if (!process.env.DB) 
-    lifecycleManager.startModules([lifecycleManager.modules.pouchserver]);
-  else 
-    yield drop(process.env.DB, /^abacus-/);
+  if (!process.env.DB) lifecycleManager.startModules([lifecycleManager.modules.pouchserver]);
+  else yield drop(process.env.DB, /^abacus-/);
 
   yield waitUntil(isDbAvailable);
 };

@@ -22,13 +22,11 @@ module.exports = () => {
     return: {
       firstTime: (value) => returnSeries[0] = value,
       secondTime: (value) => returnSeries[1] = value,
-      thirdTime: (value) => returnSeries[2] = value,
       series: (values) => returnSeries = values,
       always: (value) => returnAlways = value,
       for: (key) => ({
         value: (returnValue) => returnKeyValue[key] = returnValue
-      }),
-      nothing: () => returnSeries = []
+      })
     },
     clear: () => {
       serviceRequests = [];

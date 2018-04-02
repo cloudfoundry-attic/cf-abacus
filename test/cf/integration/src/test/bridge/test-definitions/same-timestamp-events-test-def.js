@@ -18,41 +18,43 @@ const build = () => {
     let externalSystemsMocks;
     let usageEventsTimestamp;
 
-    before(yieldable.functioncb(function*() {
-      externalSystemsMocks = fixture.externalSystemsMocks();
-      externalSystemsMocks.startAll();
+    before(
+      yieldable.functioncb(function*() {
+        externalSystemsMocks = fixture.externalSystemsMocks();
+        externalSystemsMocks.startAll();
 
-      externalSystemsMocks.uaaServer.tokenService
-        .whenScopesAre(fixture.oauth.abacusCollectorScopes)
-        .return(fixture.oauth.abacusCollectorToken);
+        externalSystemsMocks.uaaServer.tokenService
+          .whenScopesAre(fixture.oauth.abacusCollectorScopes)
+          .return(fixture.oauth.abacusCollectorToken);
 
-      externalSystemsMocks.uaaServer.tokenService
-        .whenScopesAre(fixture.oauth.cfAdminScopes)
-        .return(fixture.oauth.cfAdminToken);
+        externalSystemsMocks.uaaServer.tokenService
+          .whenScopesAre(fixture.oauth.cfAdminScopes)
+          .return(fixture.oauth.cfAdminToken);
 
-      const now = moment.now();
-      usageEventsTimestamp = moment
-        .utc(now)
-        .subtract(fixture.env.minimalAgeInMinutes + 1, 'minutes')
-        .valueOf();
-      const firstUsageEvent = fixture
-        .usageEvent()
-        .overwriteCreatedAt(usageEventsTimestamp)
-        .get();
-      const secondUsageEvent = fixture
-        .usageEvent()
-        .overwriteCreatedAt(usageEventsTimestamp)
-        .get();
+        const now = moment.now();
+        usageEventsTimestamp = moment
+          .utc(now)
+          .subtract(fixture.env.minimalAgeInMinutes + 1, 'minutes')
+          .valueOf();
+        const firstUsageEvent = fixture
+          .usageEvent()
+          .overwriteCreatedAt(usageEventsTimestamp)
+          .get();
+        const secondUsageEvent = fixture
+          .usageEvent()
+          .overwriteCreatedAt(usageEventsTimestamp)
+          .get();
 
-      externalSystemsMocks.cloudController.usageEvents.return.firstTime([firstUsageEvent, secondUsageEvent]);
+        externalSystemsMocks.cloudController.usageEvents.return.firstTime([firstUsageEvent, secondUsageEvent]);
 
-      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
+        externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
 
-      yield carryOverDb.setup();
-      fixture.bridge.start(externalSystemsMocks);
+        yield carryOverDb.setup();
+        fixture.bridge.start(externalSystemsMocks);
 
-      yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(2));
-    }));
+        yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(2));
+      })
+    );
 
     after((done) => {
       fixture.bridge.stop();
@@ -67,35 +69,32 @@ const build = () => {
 
       it('First recieved usage is as it was sent', () => {
         expect(externalSystemsMocks.abacusCollector.collectUsageService.request(0).usage).to.deep.equal(
-          fixture.collectorUsage()
-            .overwriteUsageTime(usageEventsTimestamp)
-            .overwriteMeasuredUsage(fixture.usageEventStates.default)
-            .get()
+          fixture.collectorUsage(usageEventsTimestamp)
         );
       });
 
       it('Second recieved usage timestamp is adjusted', () => {
         expect(externalSystemsMocks.abacusCollector.collectUsageService.request(1).usage).to.deep.equal(
-          fixture.collectorUsage()
-            .overwriteUsageTime(usageEventsTimestamp + 1)
-            .overwriteMeasuredUsage(fixture.usageEventStates.default)
-            .get()
+          fixture.collectorUsage(usageEventsTimestamp + 1)
         );
       });
     });
 
-    it('Exposes correct statistics', yieldable.functioncb(function*() {
-      const response = yield fixture.bridge.readStats.withValidToken();
-      expect(response.statusCode).to.equal(httpStatus.OK);
-      expect(response.body.statistics.usage).to.deep.equal({
-        success: {
-          all: 2,
-          conflicts: 0,
-          skips: 0
-        },
-        failures: 0
-      });
-    }));
+    it(
+      'Exposes correct statistics',
+      yieldable.functioncb(function*() {
+        const response = yield fixture.bridge.readStats.withValidToken();
+        expect(response.statusCode).to.equal(httpStatus.OK);
+        expect(response.body.statistics.usage).to.deep.equal({
+          success: {
+            all: 2,
+            conflicts: 0,
+            skips: 0
+          },
+          failures: 0
+        });
+      })
+    );
   });
 };
 
