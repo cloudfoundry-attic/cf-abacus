@@ -35,6 +35,17 @@
     ajv "^6.0.0"
     underscore "^1.8.3"
 
+"abacus-accountclient@file:lib/utils/accountclient":
+  version "1.0.0"
+  dependencies:
+    abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
+    abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
+    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
+    abacus-request "file:../../Library/Caches/Yarn/utils/request"
+    abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
+    abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
+    underscore "^1.8.3"
+
 "abacus-audit@file:lib/utils/audit":
   version "1.1.0"
 
@@ -1026,32 +1037,24 @@
 "abacus-usage-collector@file:lib/metering/collector":
   version "1.1.0"
   dependencies:
+    abacus-accountclient "file:../../Library/Caches/Yarn/utils/accountclient"
     abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
     abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
     abacus-cluster "file:../../Library/Caches/Yarn/utils/cluster"
-    abacus-dataflow "file:../../Library/Caches/Yarn/utils/dataflow"
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
-    abacus-lrucache "file:../../Library/Caches/Yarn/utils/lrucache"
-    abacus-metering-config "file:../../Library/Caches/Yarn/config/metering"
-    abacus-oauth "file:../../Library/Caches/Yarn/utils/oauth"
-    abacus-pricing-config "file:../../Library/Caches/Yarn/config/pricing"
-    abacus-rating-config "file:../../Library/Caches/Yarn/config/rating"
+    abacus-rabbitmq "file:../../Library/Caches/Yarn/utils/rabbitmq"
     abacus-request "file:../../Library/Caches/Yarn/utils/request"
     abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
-    abacus-router "file:../../Library/Caches/Yarn/utils/router"
-    abacus-seqid "file:../../Library/Caches/Yarn/utils/seqid"
-    abacus-transform "file:../../Library/Caches/Yarn/utils/transform"
     abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
     abacus-usage-schemas "file:../../Library/Caches/Yarn/config/schemas"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
-    abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
     ajv "^6.0.0"
+    http-status-codes "^1.3.0"
     underscore "^1.8.3"
 
 "abacus-usage-meter-itest@file:test/metering/meter":
   version "1.1.0"
   dependencies:
+    abacus-account-plugin "file:../../Library/Caches/lib/plugins/account"
     abacus-batch "file:../../Library/Caches/lib/utils/batch"
     abacus-debug "file:../../Library/Caches/lib/utils/debug"
     abacus-express "file:../../Library/Caches/lib/utils/express"
@@ -1059,9 +1062,11 @@
     abacus-mocha "file:../../Library/Caches/tools/mocha"
     abacus-moment "file:../../Library/Caches/lib/utils/moment"
     abacus-pouchserver "file:../../Library/Caches/lib/utils/pouchserver"
+    abacus-provisioning-plugin "file:../../Library/Caches/lib/plugins/provisioning"
     abacus-request "file:../../Library/Caches/lib/utils/request"
     abacus-router "file:../../Library/Caches/lib/utils/router"
     abacus-throttle "file:../../Library/Caches/lib/utils/throttle"
+    abacus-usage-collector "file:../../Library/Caches/lib/metering/collector"
     abacus-usage-meter "file:../../Library/Caches/lib/metering/meter"
     commander "2.8.1"
     nyc "^11.4.1"
@@ -1070,24 +1075,31 @@
 "abacus-usage-meter@file:lib/metering/meter":
   version "1.1.0"
   dependencies:
+    abacus-accountclient "file:../../Library/Caches/Yarn/utils/accountclient"
     abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
     abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
     abacus-cluster "file:../../Library/Caches/Yarn/utils/cluster"
-    abacus-dataflow "file:../../Library/Caches/Yarn/utils/dataflow"
     abacus-dbclient "file:../../Library/Caches/Yarn/utils/dbclient"
     abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
+    abacus-express "file:../../Library/Caches/Yarn/utils/express"
     abacus-metering-config "file:../../Library/Caches/Yarn/config/metering"
     abacus-oauth "file:../../Library/Caches/Yarn/utils/oauth"
+    abacus-pricing-config "file:../../Library/Caches/Yarn/config/pricing"
+    abacus-rabbitmq "file:../../Library/Caches/Yarn/utils/rabbitmq"
+    abacus-rating-config "file:../../Library/Caches/Yarn/config/rating"
     abacus-request "file:../../Library/Caches/Yarn/utils/request"
     abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
     abacus-router "file:../../Library/Caches/Yarn/utils/router"
+    abacus-schema "file:../../Library/Caches/Yarn/utils/schema"
     abacus-seqid "file:../../Library/Caches/Yarn/utils/seqid"
     abacus-throttle "file:../../Library/Caches/Yarn/utils/throttle"
     abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
-    abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
     ajv "^6.0.0"
+    body-parser "^1.18.2"
+    express "^4.16.2"
+    is-my-json-valid "^2.12.0"
+    request-debug "^0.2.0"
     underscore "^1.8.3"
 
 "abacus-usage-reporting-itest@file:test/aggregation/reporting":
@@ -1226,7 +1238,7 @@ accepts@1.3.3:
     mime-types "~2.1.11"
     negotiator "0.6.1"
 
-accepts@~1.3.3:
+accepts@~1.3.3, accepts@~1.3.5:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/accepts/-/accepts-1.3.5.tgz#eb777df6011723a3b14e8a72c0805c8e86746bd2"
   dependencies:
@@ -1353,6 +1365,10 @@ amqplib@^0.5.2:
     buffer-more-ints "0.0.2"
     readable-stream "1.x >=1.1.9"
     safe-buffer "^5.0.1"
+
+angular@1.5.10:
+  version "1.5.10"
+  resolved "https://registry.yarnpkg.com/angular/-/angular-1.5.10.tgz#e87fd35b2ed2fea3723de958e9ccf0a4b9125ef0"
 
 ansi-escapes@^3.0.0:
   version "3.0.0"
@@ -1746,7 +1762,7 @@ body-parser@1.17.1:
     raw-body "~2.2.0"
     type-is "~1.6.14"
 
-body-parser@1.18.2, body-parser@^1.16.1, body-parser@^1.4.3:
+body-parser@1.18.2, body-parser@^1.16.1, body-parser@^1.18.2, body-parser@^1.4.3:
   version "1.18.2"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.18.2.tgz#87678a19d84b47d859b83199bd59bce222b10454"
   dependencies:
@@ -2291,7 +2307,7 @@ cookiejar@2.0.x:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/cookiejar/-/cookiejar-2.0.6.tgz#0abf356ad00d1c5a219d88d44518046dd026acfe"
 
-cookiejar@^2.0.6:
+cookiejar@^2.0.6, cookiejar@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/cookiejar/-/cookiejar-2.1.1.tgz#41ad57b1b555951ec171412a81942b1e8200d34a"
 
@@ -3170,6 +3186,41 @@ express@^4.10.4, express@^4.14.1:
     utils-merge "1.0.1"
     vary "~1.1.2"
 
+express@^4.16.2:
+  version "4.16.3"
+  resolved "https://registry.yarnpkg.com/express/-/express-4.16.3.tgz#6af8a502350db3246ecc4becf6b5a34d22f7ed53"
+  dependencies:
+    accepts "~1.3.5"
+    array-flatten "1.1.1"
+    body-parser "1.18.2"
+    content-disposition "0.5.2"
+    content-type "~1.0.4"
+    cookie "0.3.1"
+    cookie-signature "1.0.6"
+    debug "2.6.9"
+    depd "~1.1.2"
+    encodeurl "~1.0.2"
+    escape-html "~1.0.3"
+    etag "~1.8.1"
+    finalhandler "1.1.1"
+    fresh "0.5.2"
+    merge-descriptors "1.0.1"
+    methods "~1.1.2"
+    on-finished "~2.3.0"
+    parseurl "~1.3.2"
+    path-to-regexp "0.1.7"
+    proxy-addr "~2.0.3"
+    qs "6.5.1"
+    range-parser "~1.2.0"
+    safe-buffer "5.1.1"
+    send "0.16.2"
+    serve-static "1.13.2"
+    setprototypeof "1.1.0"
+    statuses "~1.4.0"
+    type-is "~1.6.16"
+    utils-merge "1.0.1"
+    vary "~1.1.2"
+
 extend-shallow@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/extend-shallow/-/extend-shallow-2.0.1.tgz#51af7d614ad9a9f610ea1bafbb989d6b1c56890f"
@@ -3316,6 +3367,18 @@ finalhandler@1.1.0:
     statuses "~1.3.1"
     unpipe "~1.0.0"
 
+finalhandler@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/finalhandler/-/finalhandler-1.1.1.tgz#eebf4ed840079c83f4249038c9d703008301b105"
+  dependencies:
+    debug "2.6.9"
+    encodeurl "~1.0.2"
+    escape-html "~1.0.3"
+    on-finished "~2.3.0"
+    parseurl "~1.3.2"
+    statuses "~1.4.0"
+    unpipe "~1.0.0"
+
 finalhandler@~1.0.0:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/finalhandler/-/finalhandler-1.0.6.tgz#007aea33d1a4d3e42017f624848ad58d212f814f"
@@ -3399,20 +3462,20 @@ form-data@1.0.0-rc4:
     combined-stream "^1.0.5"
     mime-types "^2.1.10"
 
+form-data@^2.3.1, form-data@~2.3.1:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.3.2.tgz#4970498be604c20c005d4f5c23aecd21d6b49099"
+  dependencies:
+    asynckit "^0.4.0"
+    combined-stream "1.0.6"
+    mime-types "^2.1.12"
+
 form-data@~2.1.1:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.1.4.tgz#33c183acf193276ecaa98143a69e94bfee1750d1"
   dependencies:
     asynckit "^0.4.0"
     combined-stream "^1.0.5"
-    mime-types "^2.1.12"
-
-form-data@~2.3.1:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.3.2.tgz#4970498be604c20c005d4f5c23aecd21d6b49099"
-  dependencies:
-    asynckit "^0.4.0"
-    combined-stream "1.0.6"
     mime-types "^2.1.12"
 
 formatio@1.2.0:
@@ -3424,6 +3487,10 @@ formatio@1.2.0:
 formidable@1.1.1, formidable@^1.0.17:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/formidable/-/formidable-1.1.1.tgz#96b8886f7c3c3508b932d6bd70c4d3a88f35f1a9"
+
+formidable@^1.1.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/formidable/-/formidable-1.2.1.tgz#70fb7ca0290ee6ff961090415f4b3df3d2082659"
 
 forwarded@~0.1.0, forwarded@~0.1.2:
   version "0.1.2"
@@ -5110,7 +5177,7 @@ mime@1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.4.1.tgz#121f9ebc49e3766f311a76e1fa1c8003c4b03aa6"
 
-mime@^1.3.4:
+mime@^1.3.4, mime@^1.4.1:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.6.0.tgz#32cd9e5c64553bd58d19a568af452acff04981b1"
 
@@ -6249,7 +6316,7 @@ proxy-addr@~1.1.3:
     forwarded "~0.1.0"
     ipaddr.js "1.4.0"
 
-proxy-addr@~2.0.2:
+proxy-addr@~2.0.2, proxy-addr@~2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/proxy-addr/-/proxy-addr-2.0.3.tgz#355f262505a621646b3130a728eb647e22055341"
   dependencies:
@@ -6397,7 +6464,7 @@ qs@6.4.0, qs@~6.4.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.4.0.tgz#13e26d28ad6b0ffaa91312cd3bf708ed351e7233"
 
-qs@6.5.1, qs@^6.0.2, qs@^6.1.0, qs@^6.2.0, qs@~6.5.1:
+qs@6.5.1, qs@^6.0.2, qs@^6.1.0, qs@^6.2.0, qs@^6.5.1, qs@~6.5.1:
   version "6.5.1"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.1.tgz#349cdf6eef89ec45c12d7d5eb3fc0c870343a6d8"
 
@@ -6913,7 +6980,7 @@ serve-static@1.13.1:
     parseurl "~1.3.2"
     send "0.16.1"
 
-serve-static@^1.3.2:
+serve-static@1.13.2, serve-static@^1.3.2:
   version "1.13.2"
   resolved "https://registry.yarnpkg.com/serve-static/-/serve-static-1.13.2.tgz#095e8472fd5b46237db50ce486a43f4b86c6cec1"
   dependencies:
@@ -7296,6 +7363,28 @@ superagent@^2.0.0:
     qs "^6.1.0"
     readable-stream "^2.0.5"
 
+superagent@^3.0.0:
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/superagent/-/superagent-3.8.2.tgz#e4a11b9d047f7d3efeb3bbe536d9ec0021d16403"
+  dependencies:
+    component-emitter "^1.2.0"
+    cookiejar "^2.1.0"
+    debug "^3.1.0"
+    extend "^3.0.0"
+    form-data "^2.3.1"
+    formidable "^1.1.1"
+    methods "^1.1.1"
+    mime "^1.4.1"
+    qs "^6.5.1"
+    readable-stream "^2.0.5"
+
+supertest@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/supertest/-/supertest-3.0.0.tgz#8d4bb68fd1830ee07033b1c5a5a9a4021c965296"
+  dependencies:
+    methods "~1.1.2"
+    superagent "^3.0.0"
+
 supports-color@3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-3.1.2.tgz#72a262894d9d408b956ca05ff37b2ed8a6e2a2d5"
@@ -7622,7 +7711,7 @@ type-detect@^4.0.0:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-4.0.8.tgz#7646fb5f18871cfbb7749e69bd39a6388eb7450c"
 
-type-is@~1.6.14, type-is@~1.6.15:
+type-is@~1.6.14, type-is@~1.6.15, type-is@~1.6.16:
   version "1.6.16"
   resolved "https://registry.yarnpkg.com/type-is/-/type-is-1.6.16.tgz#f89ce341541c672b25ee7ae3c73dee3b2be50194"
   dependencies:
