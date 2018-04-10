@@ -14,7 +14,8 @@
   },
   "keywords": [
     "cf",
-    "abacus"
+    "abacus",
+    "broker"
   ],
   "files": [
     ".apprc",
@@ -43,13 +44,15 @@
     "abacus-oauth": "file:../../utils/oauth",
     "abacus-partition": "file:../../utils/partition",
     "abacus-plan-mappings": "file:../../config/mappings",
+    "abacus-request": "file:../../utils/request",
     "abacus-retry": "file:../../utils/retry",
     "abacus-router": "file:../../utils/router",
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-usage-schemas": "file:../../config/schemas",
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-yieldable": "file:../../utils/yieldable",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "ajv": "^6.0.0"
   },
   "devDependencies": {
     "abacus-cfpush": "file:../../../tools/cfpush",
@@ -57,8 +60,7 @@
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "nyc": "^11.4.1",
-    "abacus-publish": "file:../../../tools/publish",
-    "abacus-request": "file:../../utils/request"
+    "abacus-publish": "file:../../../tools/publish"
   },
   "nyc": {
     "cache": true,

@@ -1,0 +1,10 @@
+default:
+  PORT: 9503
+  APPS: 1
+  INSTANCES: 1
+  DB_PARTITIONS: 1
+  EUREKA: 9990
+  DB: 5984
+  UAA:
+  API:
+

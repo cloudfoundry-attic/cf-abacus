@@ -1,0 +1,36 @@
+{
+  "plan_id": "test-metering-plan",
+  "measures": [
+    {
+      "name": "current_instance_memory",
+      "unit": "GIGABYTE"
+    },
+    {
+      "name": "current_running_instances",
+      "unit": "NUMBER"
+    },
+    {
+      "name": "previous_instance_memory",
+      "unit": "GIGABYTE"
+    },
+    {
+      "name": "previous_running_instances",
+      "unit": "NUMBER"
+    },
+    {
+      "name": "new-measure",
+      "unit": "new-unit"
+    }
+  ],
+  "metrics": [
+    {
+      "name": "memory",
+      "unit": "GIGABYTE",
+      "type": "time-based",
+      "meter": "(m) => ({previous_consuming: new BigNumber(m.previous_instance_memory || 0).div(1073741824).mul(m.previous_running_instances || 0)+.mul(-1).toNumber(),consuming: new BigNumber(m.current_instance_memory || 0).div(1073741824).mul(m.current_running_instances || 0).toNumber()})",
+      "accumulate": "(a, qty, start, end, from, to, twCell) => {\n        // Do not accumulate usage out of boundary\n        if (end < from || end >= to)\n          return null;\n\n        const past = from - start;\n        const future = to - start;\n        const td = past + future;\n        return {\n          // Keep the consuming & since to the latest value\n          consuming: a && a.since > start ? a.consuming : qty.consuming,\n          consumed: new BigNumber(qty.consuming).mul(td)\n            .add(new BigNumber(qty.previous_consuming).mul(td))\n            .add(a ? a.consumed : 0).toNumber(),\n          since: a && a.since > start ? a.since : start\n        };\n      }",
+      "aggregate": "(a, prev, curr, aggTwCell, accTwCell) => {\n        // Usage was rejected by accumulate\n        if (!curr)\n          return a;\n\n        const consuming = new BigNumber(curr.consuming)\n          .sub(prev ? prev.consuming : 0);\n        const consumed = new BigNumber(curr.consumed)\n          .sub(prev ? prev.consumed : 0);\n        return {\n          consuming: consuming.add(a ? a.consuming : 0).toNumber(),\n          consumed: consumed.add(a ? a.consumed : 0).toNumber()\n        };\n      }",
+      "summarize": "(t, qty, from, to) => {\n        // no usage\n        if (!qty)\n          return 0;\n        // Apply stop on running instance\n        const rt = Math.min(t, to ? to : t);\n        const past = from - rt;\n        const future = to - rt;\n        const td = past + future;\n        const consumed = new BigNumber(qty.consuming)\n          .mul(-1).mul(td).toNumber();\n        return new BigNumber(qty.consumed).add(consumed)\n          .div(2).div(3600000).toNumber();\n      }"
+    }
+  ]
+}

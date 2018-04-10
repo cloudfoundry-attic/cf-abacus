@@ -1,0 +1,11 @@
+<div class="container-fluid">
+    <div class="row second-header"></div>
+    <div ng-class="{ 'editor_mode': !isReadOnly}" ui-ace="{onLoad: metricsCtrl.onLoad,onChange:metricsCtrl.onChange,'mode':'javascript',rendererOptions: {
+      maxLinks: Infinity
+  }, require: ['ace/ext/language_tools'],
+  advanced: {
+      enableSnippets: true,
+      enableBasicAutocompletion: true,
+      enableLiveAutocompletion: true
+  }}" ng-readonly="isReadOnly"></div>
+</div>

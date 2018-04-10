@@ -1,0 +1,2 @@
+--require ./lib/index.js
+--reporter spec

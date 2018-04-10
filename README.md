@@ -77,7 +77,7 @@ this script will regenerate all lock files.
 cd cf-abacus
 
 # Generates the yarn.lock files
-bin/update-locks
+bin/update-dependencies
 ```
 
 * Manually

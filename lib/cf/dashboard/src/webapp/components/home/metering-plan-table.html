@@ -1,0 +1,31 @@
+<table class="table custom-table">
+  <thead>
+    <tr>
+      <th class="col-md-2" translate="ResourceProvider_Metering_Column_Name_HDR"></th>
+      <th class="col-md-5" translate="ResourceProvider_Metering_Column_Measures_HDR"></th>
+      <th class="col-md-4" translate="ResourceProvider_Metering_Column_Metrics_HDR"></th>
+      <th class="col-md-4 text-center" translate="ResourceProvider_Metering_Column_Actions_HDR"></th>
+      <th class="col-md-1"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="plan in plans">
+      <td>{{plan.plan_id}}</td>
+      <td>{{hvc.formatMeasures(plan.measures)}}</td>
+      <td>{{hvc.formatMeasures(plan.metrics)}}</td>
+      <td class="text-center">
+        <div>
+          <span class="font-icon">
+              <i class="fa fa-file-text-o fa-2x" data-ng-click="hvc.onViewUsageClick(plan.plan_id)"
+                aria-hidden="true" uib-tooltip="{{'ResourceProvider_Metering_viewUsageDialog_XTIT' | translate}}"></i>
+            </span>
+          <span class="font-icon">
+              <i class="fa fa-cloud-upload fa-2x" data-ng-click="hvc.onSubmitUsageClick(plan.plan_id)" aria-hidden="true"
+              uib-tooltip="{{'ResourceProvider_Metering_submitUsageDialog_XTIT' | translate}}"></i>
+            </span>
+        </div>
+      </td>
+      <td class="text-right"><a ui-sref="metering({plan_id:plan.plan_id,instance_id:instance_id,binding_id:binding_id})"><i class="fa fa-angle-right fa-2x" aria-hidden="true"></i></a></td>
+    </tr>
+  </tbody>
+</table>

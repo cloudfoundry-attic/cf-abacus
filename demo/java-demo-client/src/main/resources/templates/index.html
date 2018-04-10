@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Metering on Cloud Foundry - Simple Demo</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<script id="sap-ui-bootstrap" type="text/javascript"
+				src="https://openui5.hana.ondemand.com/1.44.10/resources/sap-ui-core.js"
+				data-sap-ui-theme="sap_bluecrystal"
+				data-sap-ui-libs="sap.m,sap.ui.commons,sap.ui.table">
+		</script>
+		<style type="text/css">
+			textarea {
+				background-color: #fff !important;
+				font-family: monospace !important;
+			}
+			.customTileFontStyle {
+				font-family: arial !important;
+			}
+		</style>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+
+			// Here we set variables that are passed via the templating framework
+			var detailsModelData = [
+					{"key": "CF Application ID",  "value": [[${config.getAppId()}]]},
+					{"key": "CF Space ID",        "value": [[${config.getSpaceId()}]]},
+					{"key": "CF Organization ID", "value": [[${config.getOrgId()}]]}
+			];
+
+		/*]]>*/
+		</script>
+		<script type="text/javascript" src="App.js"></script>
+	</head>
+	<body>
+		<div id="content"></div>
+	</body>
+</html>

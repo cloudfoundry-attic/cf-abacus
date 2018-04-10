@@ -1,0 +1,6 @@
+{
+    "meter" : "(m) => {\n return m.name \n }",
+    "accumulate":"(a, qty, start, end, from, to, twCell) => {\n return end < from || end >= to ? null : new BigNumber(a || 0).add(qty || 0).toNumber()\n}",
+    "aggregate":"(a, prev, curr, aggTwCell, accTwCell) =>{\n return new BigNumber(a || 0).add(curr || 0).sub(prev || 0).toNumber()\n}",
+    "summarize":"(t, qty) => {\n return qty ? qty : 0\n}"
+}

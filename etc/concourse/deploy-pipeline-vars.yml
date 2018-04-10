@@ -25,6 +25,15 @@ cf-admin-password: admin
 # Abacus profile (default, small, medium, large)
 abacus-profile: large
 
+# Abacus organization max memory
+abacus-org-memory-quota: 300g
+
+# Abacus organization max routes
+abacus-org-routes-quota: 200
+
+# Abacus organization max service instances
+abacus-org-services-quota: 20
+
 # Buildpack to use for pushing Abacus
 # Use name, GitHub URL or GitHuv URL and branch/tag
 nodejs-buildpack: nodejs_buildpack
@@ -39,7 +48,6 @@ create-db-service: true
 # Bind to a service instance or use hard-coded URL
 # Note: If you want to connect to already provisioned DB you should use "false" here
 bind-db-service: true
-
 
 # DB service (Couch or Mongo) to use for storing Abacus data
 # Note: Not used if create-db-service is false, but still required

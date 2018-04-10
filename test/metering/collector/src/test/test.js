@@ -2,6 +2,7 @@
 
 const commander = require('commander');
 const batch = require('abacus-batch');
+const execute = require('abacus-cmdline').execute;
 const throttle = require('abacus-throttle');
 const request = require('abacus-request');
 const router = require('abacus-router');
@@ -53,6 +54,9 @@ const startTimeout = commander.startTimeout || 30000;
 // This test timeout
 const totalTimeout = commander.totalTimeout || 60000;
 
+// Is pouchDB used
+const isPouchDB = !process.env.DB;
+
 describe('abacus-usage-collector-itest', () => {
   before(() => {
     const modules = [
@@ -61,11 +65,12 @@ describe('abacus-usage-collector-itest', () => {
       lifecycleManager.modules.collector
     ];
 
-    if (!process.env.DB) {
+    if (isPouchDB) {
       modules.push(lifecycleManager.modules.pouchserver);
       lifecycleManager.startModules(modules);
     } else
-      dbclient.drop(process.env.DB, /^abacus-/, () => {
+    // drop all abacus collections except plans and plan-mappings
+      dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, () => {
         lifecycleManager.startModules(modules);
       });
   });
@@ -192,15 +197,36 @@ describe('abacus-usage-collector-itest', () => {
       }
     };
 
+    const submitUsageAndVerify = () => {
     // Wait for usage collector to start
-    request.waitFor('http://localhost::p/batch', { p: 9080 }, startTimeout, (err, value) => {
-      // Failed to ping usage collector before timing out
-      if (err) throw err;
+      request.waitFor('http://localhost::p/batch', { p: 9080 }, startTimeout, (err, value) => {
+        // Failed to ping usage collector before timing out
+        if (err) throw err;
 
-      // Submit measured usage and verify
-      submit(() => {
-        const i = setInterval(() => verifyMetering(() => done(clearInterval(i))), 250);
+        // Submit measured usage and verify
+        submit(() => {
+          const i = setInterval(() => verifyMetering(() => done(clearInterval(i))), 250);
+        });
       });
-    });
+    };
+
+    const storeDefaults = () => {
+      const storeDefaultsOperation = 'store-default-plans && store-default-mappings';
+      execute(storeDefaultsOperation);
+    };
+
+    const performCollectorItest = () => {
+      storeDefaults();
+      submitUsageAndVerify();
+    };
+
+    // in case of pouch, wait pouch to start then store defaults and perform test
+    if (isPouchDB)
+      request.waitFor('http://localhost::p/batch', { p: 5984 }, startTimeout, (err, value) => {
+        if (err) throw err;
+        performCollectorItest();
+      });
+    else performCollectorItest();
+
   });
 });
