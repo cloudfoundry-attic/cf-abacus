@@ -1,4 +1,4 @@
 abacus-cf-services
 ===
 
-Does not support update of service instances (`UPDATED` events).
+Does not support failed create of asynchronous services.

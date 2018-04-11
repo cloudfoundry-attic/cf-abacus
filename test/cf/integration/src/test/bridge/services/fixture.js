@@ -20,14 +20,19 @@ const oauth = {
   cfAdminToken: 'cfadmin-token'
 };
 
+const planNames = {
+  default: 'default-plan',
+  custom: 'custom-plan'
+};
+
 const defaultUsageEvent = {
   state: 'CREATED',
-  serviceGuid: 'test-service-guid',
-  serviceLabel: 'test-service',
-  eventGuid: 'event-guid',
   orgGuid: 'test-org',
   spaceGuid: 'space-guid',
-  servicePlanName: 'test-plan',
+  eventGuid: 'event-guid',
+  serviceGuid: 'test-service-guid',
+  serviceLabel: 'test-service',
+  servicePlanName: planNames.default,
   serviceInstanceGuid: 'service-instance-guid'
 };
 
@@ -36,13 +41,14 @@ const bridge = createBridge({
   port: 9502,
   customEnv: {
     SERVICES: `{
-      "${defaultUsageEvent.serviceLabel}":{"plans":["${defaultUsageEvent.servicePlanName}"]}
+      "${defaultUsageEvent.serviceLabel}":{"plans":["${planNames.default}", "${planNames.custom}"]}
     }`,
     ORGS_TO_REPORT: `["${defaultUsageEvent.orgGuid}"]`
   }
 });
 
 const eventTimestampGenerator = createEventTimestampGenerator(bridge.env.minimalAgeInMinutes + 1);
+
 const validUsageEvent = () => {
   const createdAt = eventTimestampGenerator.next().value;
   return {
@@ -59,6 +65,12 @@ const validUsageEvent = () => {
       service_instance_guid: defaultUsageEvent.serviceInstanceGuid
     }
   };
+};
+
+const usageEventStates = {
+  default: 'CREATED',
+  deleted: 'DELETED',
+  updated: 'UPDATED'
 };
 
 const usageEvent = () => {
@@ -95,35 +107,60 @@ const usageEvent = () => {
   return overwritable;
 };
 
-collectorUsage = (eventTimestamp) => ({
-  start: eventTimestamp,
-  end: eventTimestamp,
-  organization_id: defaultUsageEvent.orgGuid,
-  space_id: defaultUsageEvent.spaceGuid,
-  consumer_id: `service:${defaultUsageEvent.serviceInstanceGuid}`,
-  resource_id: defaultUsageEvent.serviceLabel,
-  plan_id: defaultUsageEvent.servicePlanName,
-  resource_instance_id: `service:${defaultUsageEvent.serviceInstanceGuid}:${defaultUsageEvent.servicePlanName}:${
-    defaultUsageEvent.serviceLabel
-  }`,
-  measured_usage: [
-    {
-      measure: 'current_instances',
-      quantity: 1
+const collectorUsage = () => {
+  const defaultUsage = {
+    start: 'default-value',
+    end: 'default-value',
+    organization_id: defaultUsageEvent.orgGuid,
+    space_id: defaultUsageEvent.spaceGuid,
+    consumer_id: `service:${defaultUsageEvent.serviceInstanceGuid}`,
+    resource_id: defaultUsageEvent.serviceLabel,
+    plan_id: planNames.default,
+    resource_instance_id: 
+      `service:${defaultUsageEvent.serviceInstanceGuid}:${planNames.default}:${defaultUsageEvent.serviceLabel}`,
+    measured_usage: [
+      {
+        measure: 'current_instances',
+        quantity: 1
+      },
+      {
+        measure: 'previous_instances',
+        quantity: 0
+      }
+    ]
+  };
+  
+  const overwritable = {
+    overwriteUsageTime: (timestamp) => {
+      defaultUsage.start = timestamp;
+      defaultUsage.end = timestamp;
+      return overwritable;
     },
-    {
-      measure: 'previous_instances',
-      quantity: 0
-    }
-  ]
-});
+    overwriteMeasuredUsage: (state) => {
+      defaultUsage.measured_usage[0].quantity = state === 'CREATED' ? 1 : 0;
+      defaultUsage.measured_usage[1].quantity = state === 'CREATED' ? 0 : 1;
+      return overwritable;
+    },
+    overwritePlanName: (planName) => {
+      defaultUsage.plan_id = planName;
+      defaultUsage.resource_instance_id = 
+        `service:${defaultUsageEvent.serviceInstanceGuid}:${planName}:${defaultUsageEvent.serviceLabel}`;
+      return overwritable;
+    },
+    get: () => defaultUsage
+  };
+
+  return overwritable;
+};
 
 module.exports = {
-  defaultUsageEvent,
+  oauth,
+  bridge,
+  planNames,
   usageEvent,
   collectorUsage,
-  oauth,
   env: bridge.env,
-  externalSystemsMocks,
-  bridge
+  usageEventStates,
+  defaultUsageEvent,
+  externalSystemsMocks
 };
