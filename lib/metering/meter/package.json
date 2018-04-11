@@ -54,6 +54,7 @@
     "abacus-throttle": "file:../../utils/throttle",
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-webapp": "file:../../utils/webapp",
+    "abacus-vcapenv": "file:../../utils/vcapenv",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "is-my-json-valid": "^2.12.0",
