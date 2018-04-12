@@ -1,9 +1,20 @@
 'use strict';
 
+const fs = require('fs-extra');
+const remanifester = require('../lib/manifest.js');
 const yaml = require('js-yaml');
-const remanifester = require('../lib/remanifester.js');
 
-describe('Test adjusting manifest', () => {
+const testAppName = 'test-app-name';
+const preparedManifestContent = `
+      applications:
+        - name: test-application
+          path: test-path
+      `;
+const manifestRelativePath = 'path';
+const unexistingManifestPath = 'error';
+const { originalManifestFilename } = require(`${__dirname}/../lib/constants.js`);
+
+describe('adjusting manifest', () => {
   context('when wrong manifest is provided', () => {
     it('should fail if no application is available', () => {
       expect(() => remanifester.adjustManifest('wrong_manifest:', {})).to.throw(Error);
@@ -18,28 +29,22 @@ describe('Test adjusting manifest', () => {
     });
   });
 
-  const testAppName = 'test-app-name';
-  const preparedManifest = `
-      applications:
-        - name: test-application
-          path: test-path
-      `;
-
   context('should return the same manifest', () => {
     it('when undefined properties are provided', () => {
-      const adjustedManifest = remanifester.adjustManifest(preparedManifest, undefined);
-      expect(adjustedManifest).to.equal(preparedManifest);
+      const adjustedManifest = remanifester.adjustManifest(preparedManifestContent, undefined);
+      expect(adjustedManifest).to.equal(preparedManifestContent);
     });
 
     it('when empty properties are provided', () => {
-      const adjustedManifest = remanifester.adjustManifest(preparedManifest, {});
-      expect(adjustedManifest).to.equal(preparedManifest);
+      const adjustedManifest = remanifester.adjustManifest(preparedManifestContent, {});
+      expect(adjustedManifest).to.equal(preparedManifestContent);
     });
   });
 
   context('adjusting mandatory properties', () => {
     const test = (prefix, expectedAppName) => {
-      const adjustedManifest = remanifester.adjustManifest(preparedManifest, { name: testAppName, prefix: prefix });
+      const adjustedManifest =
+        remanifester.adjustManifest(preparedManifestContent, { name: testAppName, prefix: prefix });
 
       const manifest = yaml.load(adjustedManifest);
       expect(manifest.applications.length).to.equal(1);
@@ -74,7 +79,7 @@ describe('Test adjusting manifest', () => {
     };
 
     const veryfyOptionalProperty = (properties, expectedPropertyName, expectedPropertyValue) => {
-      const adjustedManifest = remanifester.adjustManifest(preparedManifest, properties);
+      const adjustedManifest = remanifester.adjustManifest(preparedManifestContent, properties);
 
       const manifest = yaml.load(adjustedManifest);
       expect(manifest.applications.length).to.equal(1);
@@ -94,6 +99,88 @@ describe('Test adjusting manifest', () => {
 
     it('should adjust manifest configuration', () => {
       veryfyOptionalProperty(properties('conf', 'test-conf'), 'env', { CONF: 'test-conf' });
+    });
+  });
+});
+
+describe('blue-green', () => {
+  context('without zdm flag in manifest', () => {
+    before(() => {
+      const readFileSyncStub = stub(fs, 'readFileSync');
+      readFileSyncStub.withArgs(`${process.cwd()}/${manifestRelativePath}/${originalManifestFilename}`)
+        .returns(preparedManifestContent);
+      readFileSyncStub.withArgs(`${process.cwd()}/${unexistingManifestPath}/${originalManifestFilename}`)
+        .throws(new Error());
+    });
+
+    after(() => {
+      fs.readFileSync.restore();
+    });
+
+    it('with app path returns false', () => {
+      expect(remanifester.blueGreen(manifestRelativePath)).to.equal(false);
+    });
+
+    it('without app path returns false', () => {
+      expect(remanifester.blueGreen()).to.equal(false);
+    });
+  });
+
+  context('with "zdm: true" in manifest', () => {
+    before(() => {
+      const zdmTrueManifestContent = `
+      applications:
+        - name: test-application
+          path: test-path
+          zdm: true
+      `;
+
+      const readFileSyncStub = stub(fs, 'readFileSync');
+      readFileSyncStub.withArgs(`${process.cwd()}/${manifestRelativePath}/${originalManifestFilename}`)
+        .returns(zdmTrueManifestContent);
+      readFileSyncStub.withArgs(`${process.cwd()}/${unexistingManifestPath}/${originalManifestFilename}`)
+        .throws(new Error());
+    });
+
+    after(() => {
+      fs.readFileSync.restore();
+    });
+
+    it('with app path returns true', () => {
+      expect(remanifester.blueGreen(manifestRelativePath)).to.equal(true);
+    });
+
+    it('without app path returns false', () => {
+      expect(remanifester.blueGreen()).to.equal(false);
+    });
+  });
+
+  context('with "zdm: false" in manifest', () => {
+    before(() => {
+      const zdmFalseManifestContent = `
+      applications:
+        - name: test-application
+          path: test-path
+          zdm: false
+      `;
+
+      const readFileSyncStub = stub(fs, 'readFileSync');
+      readFileSyncStub.withArgs(`${process.cwd()}/${manifestRelativePath}/${originalManifestFilename}`)
+        .returns(zdmFalseManifestContent);
+      readFileSyncStub.withArgs(`${process.cwd()}/${unexistingManifestPath}/${originalManifestFilename}`)
+        .throws(new Error());
+    });
+
+    after(() => {
+      fs.readFileSync.restore();
+    });
+
+    it('with app path returns false', () => {
+      expect(remanifester.blueGreen(manifestRelativePath)).to.equal(false);
+    });
+
+    it('without app path returns false', () => {
+      expect(remanifester.blueGreen()).to.equal(false);
     });
   });
 });

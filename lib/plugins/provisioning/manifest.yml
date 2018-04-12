@@ -10,6 +10,7 @@ applications:
     DEBUG: e-abacus-*
     DB: abacus-pouchserver
     EUREKA: abacus-eureka-plugin
+    NODE_MODULES_CACHE: false
     SECURED: false
     # JWTKEY:
     # JWTALGO:

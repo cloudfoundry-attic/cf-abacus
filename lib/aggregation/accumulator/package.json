@@ -48,7 +48,8 @@
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-yieldable": "file:../../utils/yieldable",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "ajv": "^6.0.0"
   },
   "devDependencies": {
     "abacus-batch": "file:../../utils/batch",

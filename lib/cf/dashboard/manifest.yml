@@ -1,0 +1,23 @@
+applications:
+- name: metering-dashboard
+  host: metering-dashboard
+  path: .
+  instances: 1
+  memory: 512M
+  disk_quota: 512M
+  services:
+  - db-session
+  env:
+    API: https://api
+    AUTH_SERVER: https://uaa
+    CF_CLIENT_ID: abacus_db_client
+    CF_CLIENT_SECRET: secret
+    CF_COOKIE_SECRET: secret
+    NODE_TLS_REJECT_UNAUTHORIZED: 0
+    PROVISIONING: abacus-provisioning-plugin
+    DEBUG: e-abacus*
+    DBALIAS: db-session
+    DBCLIENT: abacus-mongoclient
+    AUTO_REMOVE_INTERVAL: 10
+    PRE_PROVIDED_DEFAULT_THEME_NAME: Default
+    ENABLE_UPLOAD_THEME_FEATURE: false

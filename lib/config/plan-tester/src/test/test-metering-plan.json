@@ -1,20 +1,20 @@
 {
-  "plan_id": "0ed25699-100d-4586-860e-2ae2db8905d1-0ed25699-100d-4586-860e-2ae2db8905d1",
+  "plan_id": "average_value",
   "measures": [
     {
-      "name": "api_calls",
-      "unit": "CALL"
+      "name": "store",
+      "unit": "BYTE"
     }
   ],
   "metrics": [
     {
-      "meter": "(m) => { return m.api_calls }",
-      "accumulate": "(a, qty) => { return a ? a + qty : qty}",
-      "aggregate": "(a, prev, current) => { return a ? a + (current || 0) - (prev || 0) : current}",
-      "summarize": "(t, qty) => { return qty ? qty : 0}",
+      "name": "store",
+      "unit": "GIGABYTE",
       "type": "discrete",
-      "name": "feature_toggle_api_calls",
-      "unit": "CALL"
+      "meter": "(m) => new BigNumber(m.store).div(1073741824).toNumber()",
+      "accumulate": "(a, current) => a ? { sum: a.sum + current, count: a.count + 1 } : { sum: current, count: 1 }",
+      "aggregate": "(a, previous, current) => current",
+      "summarize": "(t, qty) => new BigNumber(qty.sum).div(qty.count).toNumber()"
     }
   ]
 }

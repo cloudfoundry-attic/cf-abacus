@@ -1,0 +1,7 @@
+<ol class="breadcrumb">
+    <li ng-repeat="step in steps | limitTo:(steps.length-1)">
+        <a href="{{step.ncyBreadcrumbLink}}" ng-bind-html="step.ncyBreadcrumbLabel"></a>
+    </li>
+    <li ng-repeat="step in steps | limitTo:-1" class="active dropdown" ng-class="{'dropdown':step.ncyBreadcrumbParent==='metering'}" ng-bind-html="step.ncyBreadcrumbLabel | trustAsHtml">
+    </li>
+</ol>

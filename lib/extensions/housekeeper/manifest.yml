@@ -1,0 +1,18 @@
+applications:
+- name: abacus-housekeeper
+  host: abacus-housekeeper
+  path: .
+  instances: 1
+  memory: 512M
+  disk_quota: 512M
+  env:
+    CONF: default
+    DB: abacus-pouchserver
+    API: https://api
+    AUTH_SERVER: https://uaa
+    DEBUG: e-abacus-*
+    EUREKA: abacus-eureka-plugin
+    NODE_MODULES_CACHE: false
+    SECURED: false
+    # JWTKEY:
+    # JWTALGO:

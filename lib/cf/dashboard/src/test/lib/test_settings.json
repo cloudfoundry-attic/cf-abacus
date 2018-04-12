@@ -1,0 +1,10 @@
+{
+    "API": "https://api.com",
+    "CF_CLIENT_ID": "test_client",
+    "CF_CLIENT_SECRET": "secret",
+    "CF_CALLBACK_URL": "/login/callback",
+    "CF_COOKIE_SECRET": "secret",
+    "AUTH_SERVER": "https://login.com",
+    "PROVISIONING": "https://abacus-provisioning-plugin",
+    "DBCLIENT": "abacus-mongoclient"
+}

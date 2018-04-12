@@ -15,8 +15,8 @@ cf api $skip "https://api.$CF_SYS_DOMAIN"
 echo "" | cf login $skip -u "$CF_ADMIN_USER" -p "$CF_ADMIN_PASSWORD"
 
 echo "Recreating organization and space ..."
-cf create-quota "$CF_ORG" -m 80g -i 4g -r 80 -s 10 --allow-paid-service-plans
-cf update-quota "$CF_ORG" -m 80g -i 4g -r 80 -s 10 --allow-paid-service-plans
+cf create-quota "$CF_ORG" -m "$ABACUS_ORG_MEMORY_QUOTA" -i 4g -r "$ABACUS_ORG_ROUTES_QUOTA" -s "$ABACUS_ORG_SERVICES_QUOTA" --allow-paid-service-plans
+cf update-quota "$CF_ORG" -m "$ABACUS_ORG_MEMORY_QUOTA" -i 4g -r "$ABACUS_ORG_ROUTES_QUOTA" -s "$ABACUS_ORG_SERVICES_QUOTA" --allow-paid-service-plans
 cf create-org "$CF_ORG" -q "$CF_ORG"
 cf create-space "$CF_SPACE" -o "$CF_ORG"
 if [ "$ENABLE_SERVICE_ACCESS" == "true" ]; then
@@ -46,7 +46,7 @@ if [ "$CREATE_DB_SERVICE" == "true" ]; then
     createOrUpdateService ${args[0]} ${args[1]}
     shouldWaitFor+=(${args[0]})
   done;
-  waitForServices $shouldWaitFor
+  waitForServices "${shouldWaitFor[@]}"
 else
   echo "Using DB URL provided in abacus-config !"
 fi

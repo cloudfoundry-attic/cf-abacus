@@ -142,8 +142,8 @@ describe('abacus-dupe', function() {
     if (systemToken)
       systemToken.start();
 
-    // Delete test dbs on the configured db server
-    dbclient.drop(process.env.DB, /^abacus-/, () => {
+    // drop all abacus collections except plans and plan-mappings
+    dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, () => {
       // Wait for usage reporter to start
       request.waitFor(reporting + '/batch', {}, startTimeout, (err) => {
         // Failed to ping usage reporter before timing out

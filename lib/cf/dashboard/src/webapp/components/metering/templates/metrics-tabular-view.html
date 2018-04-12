@@ -1,0 +1,33 @@
+<div class="container-fluid">
+  <div class="row second-header">
+    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+      <span translate="ResourceProvider_Toolbar_Metrics_XTIT" translate-value-metricslength="{{plan.metrics.length}}">
+      </span>
+    </div>
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8"></div>
+    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 text-right">
+      <button class="btn btn-primary" ng-click="mvc.onAddMetricClick()" translate="ResourceProvider_Metric_Add_XBUT_TXT"></button>
+    </div>
+  </div>
+  <table class="table custom-table">
+    <thead>
+      <tr>
+        <th class="col-md-4" translate="ResourceProvider_Metric_Column_Name_HDR"></th>
+        <th class="col-md-4" translate="ResourceProvider_Metric_Column_Unit_HDR"></th>
+        <th class="col-md-3" translate="ResourceProvider_Metric_Column_Type_HDR"></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="metric in plan.metrics | orderBy:sortType:sortReverse" ui-sref="metric({plan_id:plan.plan_id,metric_name:metric.name,instance_id:instance_id,binding_id:binding_id})">
+        <td>{{metric.name}}</td>
+        <td>{{metric.unit}}</td>
+        <td>{{metric.type}}</td>
+        <td class="text-right">
+          <a ui-sref="metric({plan_id:plan.plan_id,metric_name:metric.name,instance_id:instance_id,binding_id:binding_id})">
+            <i class="fa fa-angle-right fa-2x" aria-hidden="true"/>
+            </a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

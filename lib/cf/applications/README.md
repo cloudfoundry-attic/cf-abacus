@@ -173,7 +173,7 @@ Note: The timeout between CF API calls and Abacus usage retries is increased exp
 
 ## Statistics
 
-The applications bridge exposes the `/v1/cf/applications/` endpoint that provides performance metrics and call statistics. A snippet of the values returned:
+The applications bridge exposes the `/v1/stats/` endpoint that provides performance metrics and call statistics. A snippet of the values returned:
 ```json
     "cache": {
       "lastRecordedGUID": "35c4ff2fa",

@@ -1,0 +1,32 @@
+<div>
+  <div class="row sub-header">
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 metric-text">
+      <span class="header-font" translate="ResourceProvider_MetricView_HDR_XTIT" translate-value-metricname='{{metric.name}}'></span>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-right">
+      <button class="btn btn-primary" ng-show="isReadOnly" ng-click="metricsCtrl.onEditMetricClick()" translate="ResourceProvider_Metric_Edit_XBUT_TXT"></button>
+      <button class="btn btn-primary" ng-show="isReadOnly" ng-click="metricsCtrl.onDeleteMetricClick()" translate="ResourceProvider_Metric_Delete_XBUT_TXT"></button>
+      <button class="btn btn-primary" ng-show="!isReadOnly" ng-click="metricsCtrl.onSaveMetricClick()" ng-disabled="metricsCtrl.metricform.$invalid || metricsCtrl.metricform.$pristine"
+        translate="ResourceProvider_Metric_Save_XBUT_TXT"></button>
+      <button class="btn btn-primary" ng-show="!isReadOnly" ng-click="metricsCtrl.onCancelMetricClick()" translate="ResourceProvider_Metric_Canacel_XBUT_TXT"></button>
+    </div>
+  </div>
+  <div class="fluid-container">
+    <div>
+      <tabs pane-changed="paneChanged(selectedPane)">
+        <pane title="{{'ResourceProvider_Metric_Details_Tab_XTIT' | translate}}">
+          <div ng-include src="'/components/metrics/templates/metric-detail-tmpl.html'"></div>
+        </pane>
+        <pane title="{{'ResourceProvider_Metric_MeterFn_Tab_XTIT' | translate}}">
+        </pane>
+        <pane title="{{'ResourceProvider_Metric_AccumFn_Tab_XTIT' | translate}}">
+        </pane>
+        <pane title="{{'ResourceProvider_Metric_AggrFn_Tab_XTIT' | translate}}">
+        </pane>
+        <pane title="{{'ResourceProvider_Metric_SummarizeFn_Tab_XTIT' | translate}}">
+        </pane>
+        <div ng-include ng-show="showAceEditor" src="'/components/metrics/templates/ace-editor-view.html'"></div>
+      </tabs>
+    </div>
+  </div>
+</div>
