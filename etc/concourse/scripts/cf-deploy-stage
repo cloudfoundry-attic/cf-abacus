@@ -49,5 +49,6 @@ if [ "$BIND_DB_SERVICE" == "true" ]; then
   bindService ${ABACUS_PREFIX}abacus-service-dashboard $DB_DASHBOARD
 fi
 
-bindService ${ABACUS_PREFIX}abacus-usage-collector $RABBIT_SERVICE_NAME
-bindService ${ABACUS_PREFIX}abacus-usage-meter $RABBIT_SERVICE_NAME
+cf bind-service ${ABACUS_PREFIX}abacus-usage-collector $RABBIT_SERVICE_NAME
+cf bind-service ${ABACUS_PREFIX}abacus-usage-meter $RABBIT_SERVICE_NAME
+
