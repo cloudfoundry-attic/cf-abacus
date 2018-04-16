@@ -58,7 +58,7 @@ describe('services-bridge UPDATED event tests', () => {
             token: fixture.oauth.abacusCollectorToken,
             usage: expectedUsageDocs[requestNumber]
           });
-  
+
       expect(fixture.externalSystemsMocks().abacusCollector.collectUsageService.requests().length)
         .to.equal(numRequests);
       _(numRequests).times((requestNumber) => verifyCollectUsageServiceCall(requestNumber));
@@ -70,7 +70,7 @@ describe('services-bridge UPDATED event tests', () => {
       const verifyServiceUsageEventsAfterGuid = (requestNumber, afterGuid) => 
         expect(fixture.externalSystemsMocks().cloudController.usageEvents.request(requestNumber).afterGuid)
           .to.equal(afterGuid);
-  
+      
       _(numRequests).times((i) => verifyServiceUsageEventsAfterGuid(i, expectedGuids[i]));
     });
   };
@@ -87,7 +87,6 @@ describe('services-bridge UPDATED event tests', () => {
   const carryOverTest = (numEntries, expected) => {
     it(`Writes ${numEntries}${numEntries ? ' correct' : ''} entr${numEntries === 1 ? 'y' : 'ies'} in carry over`, 
       yieldable.functioncb(function*() {
-        // docs returned latest first
         const docs = yield carryOverDb.readCurrentMonthDocs();
         expect(docs.length).to.be.equal(numEntries);
         

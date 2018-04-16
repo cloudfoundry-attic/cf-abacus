@@ -22,7 +22,8 @@ const oauth = {
 
 const planNames = {
   default: 'default-plan',
-  custom: 'custom-plan'
+  custom: 'custom-plan',
+  standard: 'standard-plan'
 };
 
 const defaultUsageEvent = {
@@ -41,7 +42,13 @@ const bridge = createBridge({
   port: 9502,
   customEnv: {
     SERVICES: `{
-      "${defaultUsageEvent.serviceLabel}":{"plans":["${planNames.default}", "${planNames.custom}"]}
+      "${defaultUsageEvent.serviceLabel}":{
+        "plans":[
+          "${planNames.default}", 
+          "${planNames.custom}", 
+          "${planNames.standard}"
+        ]
+      }
     }`,
     ORGS_TO_REPORT: `["${defaultUsageEvent.orgGuid}"]`
   }
