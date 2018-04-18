@@ -17,7 +17,7 @@ function getApps {
 function restartApps {
   getApps '\?'
   echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
-  getApps '.*\s+0/\d+.*'
+  getApps '.*\s+0/.*'
   echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
 }
 

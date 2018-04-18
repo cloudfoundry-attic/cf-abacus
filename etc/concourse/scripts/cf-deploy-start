@@ -25,7 +25,6 @@ echo ${APPS[@]} | xargs -n1 -P 50 cf start
 echo "Applications:"
 cf apps
 
-echo "Restarting failed apps ..."
 restartAppsWithRetry
 
 echo "Applications:"
