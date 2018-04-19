@@ -43,6 +43,7 @@
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-metering-config": "file:../../config/metering",
     "abacus-oauth": "file:../../utils/oauth",
+    "abacus-partition": "file:../../utils/partition",
     "abacus-pricing-config": "file:../../config/pricing",
     "abacus-rabbitmq": "file:../../utils/rabbitmq",
     "abacus-rating-config": "file:../../config/rating",
