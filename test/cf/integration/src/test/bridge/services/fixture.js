@@ -23,7 +23,7 @@ const oauth = {
 const planNames = {
   default: 'default-plan',
   custom: 'custom-plan',
-  standard: 'standard-plan'
+  consecutive: 'consecutive-plan'
 };
 
 const defaultUsageEvent = {
@@ -46,7 +46,7 @@ const bridge = createBridge({
         "plans":[
           "${planNames.default}", 
           "${planNames.custom}", 
-          "${planNames.standard}"
+          "${planNames.consecutive}"
         ]
       }
     }`,

@@ -13,11 +13,11 @@ let arrange;
 
 const run = (test) => {
   context('when reading UPDATE event from Cloud Controller', () => {
-    const createUsageEvent = arrange.fixture.usageEvent()
+    const createEvent = arrange.fixture.usageEvent()
       .overwriteEventGuid('create-event-guid')
       .get();
   
-    const updateUsageEvent = arrange.fixture.usageEvent()
+    const updateEvent = arrange.fixture.usageEvent()
       .overwriteEventGuid('update-event-guid')
       .overwriteState(arrange.fixture.usageEventStates.updated)
       .overwriteServicePlanName(arrange.fixture.planNames.custom)
@@ -25,12 +25,12 @@ const run = (test) => {
     const getExpectedCarryOverEntries = () => {
       const carryOverEntries = [];
       carryOverEntries.push({
-        guid: updateUsageEvent.metadata.guid,
+        guid: updateEvent.metadata.guid,
         state: arrange.fixture.usageEventStates.default,
         planName: arrange.fixture.planNames.custom
       });
       carryOverEntries.push({
-        guid: updateUsageEvent.metadata.guid,
+        guid: updateEvent.metadata.guid,
         state: arrange.fixture.usageEventStates.deleted,
         planName: arrange.fixture.planNames.default
       });  
@@ -52,13 +52,13 @@ const run = (test) => {
       };
 
       const setCloudControllerResponse = () => {
-        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.firstTime([updateUsageEvent]);
+        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.firstTime([updateEvent]);
       };
 
       const getExpectedGuids = () => {
         const expectedGuids = [];
         expectedGuids.push(undefined);
-        expectedGuids.push(updateUsageEvent.metadata.guid);
+        expectedGuids.push(updateEvent.metadata.guid);
         return expectedGuids;
       };
 
@@ -90,15 +90,15 @@ const run = (test) => {
         const expectedUsageDocs = [];
         expectedUsageDocs.push(arrange.fixture.collectorUsage()
           .overwriteMeasuredUsage(arrange.fixture.usageEventStates.default)
-          .overwriteUsageTime(createUsageEvent.metadata.created_at)
+          .overwriteUsageTime(createEvent.metadata.created_at)
           .get());
         expectedUsageDocs.push(arrange.fixture.collectorUsage()
           .overwriteMeasuredUsage(arrange.fixture.usageEventStates.deleted)
-          .overwriteUsageTime(updateUsageEvent.metadata.created_at)
+          .overwriteUsageTime(updateEvent.metadata.created_at)
           .get());
         expectedUsageDocs.push(arrange.fixture.collectorUsage()
           .overwriteMeasuredUsage(arrange.fixture.usageEventStates.default)
-          .overwriteUsageTime(updateUsageEvent.metadata.created_at + 1)
+          .overwriteUsageTime(updateEvent.metadata.created_at + 1)
           .overwritePlanName(arrange.fixture.planNames.custom)
           .get());
         return expectedUsageDocs;
@@ -116,8 +116,8 @@ const run = (test) => {
       };
 
       const setCloudControllerResponse = () => {
-        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.firstTime([createUsageEvent]);
-        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.secondTime([updateUsageEvent]);
+        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.firstTime([createEvent]);
+        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.secondTime([updateEvent]);
       };
 
       const setAbacusCollectorResponse = () => {
@@ -130,8 +130,8 @@ const run = (test) => {
       const getExpectedGuids = () => {
         const expectedGuids = [];
         expectedGuids.push(undefined);
-        expectedGuids.push(createUsageEvent.metadata.guid);
-        expectedGuids.push(updateUsageEvent.metadata.guid);
+        expectedGuids.push(createEvent.metadata.guid);
+        expectedGuids.push(updateEvent.metadata.guid);
         return expectedGuids;
       };
 
@@ -158,22 +158,21 @@ const run = (test) => {
       const expectedNumBerOfCarryOverEntries = 3;
       const expectedCallsToUsageEventsService = 4;
       const expectedCallsToCollectUsageService = 5;
-      const nextUpdateUsageEvent = arrange.fixture.usageEvent()
+      const consecutiveUpdateEvent = arrange.fixture.usageEvent()
         .overwriteEventGuid('next-update-event-guid')
         .overwriteState(arrange.fixture.usageEventStates.updated)
-        .overwriteServicePlanName(arrange.fixture.planNames.standard)
+        .overwriteServicePlanName(arrange.fixture.planNames.consecutive)
         .get();
 
       const setCloudControllerResponse = () => {
-        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.firstTime([createUsageEvent]);
-        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.secondTime([updateUsageEvent]);
-        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.thirdTime([nextUpdateUsageEvent]);
+        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.firstTime([createEvent]);
+        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.secondTime([updateEvent]);
+        arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.thirdTime([consecutiveUpdateEvent]);
       };
 
       const setAbacusCollectorResponse = () => {
         const responses = [];
         _(expectedCallsToCollectUsageService).times(() => responses.push(httpStatus.CREATED));
-
         arrange.fixture.externalSystemsMocks().abacusCollector.collectUsageService.return.series(responses);
       };
 
@@ -181,27 +180,27 @@ const run = (test) => {
         const expectedUsageDocs = [];
         expectedUsageDocs.push(arrange.fixture.collectorUsage()
           .overwriteMeasuredUsage(arrange.fixture.usageEventStates.default)
-          .overwriteUsageTime(createUsageEvent.metadata.created_at)
+          .overwriteUsageTime(createEvent.metadata.created_at)
           .get());
         expectedUsageDocs.push(arrange.fixture.collectorUsage()
           .overwriteMeasuredUsage(arrange.fixture.usageEventStates.deleted)
-          .overwriteUsageTime(updateUsageEvent.metadata.created_at)
+          .overwriteUsageTime(updateEvent.metadata.created_at)
           .get());
         expectedUsageDocs.push(arrange.fixture.collectorUsage()
           .overwriteMeasuredUsage(arrange.fixture.usageEventStates.default)
-          .overwriteUsageTime(updateUsageEvent.metadata.created_at + 1)
+          .overwriteUsageTime(updateEvent.metadata.created_at + 1)
           .overwritePlanName(arrange.fixture.planNames.custom)
           .get());
-        // Increase explicitelly created_t time due to carry over adjustment of usages with same timestamps
+        // Increase explicitelly created_at time due to carry over adjustment of usages with same timestamps
         expectedUsageDocs.push(arrange.fixture.collectorUsage()
           .overwriteMeasuredUsage(arrange.fixture.usageEventStates.deleted)
-          .overwriteUsageTime(nextUpdateUsageEvent.metadata.created_at + 1)
+          .overwriteUsageTime(consecutiveUpdateEvent.metadata.created_at + 1)
           .overwritePlanName(arrange.fixture.planNames.custom)
           .get());
         expectedUsageDocs.push(arrange.fixture.collectorUsage()
           .overwriteMeasuredUsage(arrange.fixture.usageEventStates.default)
-          .overwriteUsageTime(nextUpdateUsageEvent.metadata.created_at + 1)
-          .overwritePlanName(arrange.fixture.planNames.standard)
+          .overwriteUsageTime(consecutiveUpdateEvent.metadata.created_at + 1)
+          .overwritePlanName(arrange.fixture.planNames.consecutive)
           .get());
         return expectedUsageDocs;
       };
@@ -209,25 +208,25 @@ const run = (test) => {
       const getExpectedGuids = () => {
         const expectedGuids = [];
         expectedGuids.push(undefined);
-        expectedGuids.push(createUsageEvent.metadata.guid);
-        expectedGuids.push(updateUsageEvent.metadata.guid);
-        expectedGuids.push(nextUpdateUsageEvent.metadata.guid);
+        expectedGuids.push(createEvent.metadata.guid);
+        expectedGuids.push(updateEvent.metadata.guid);
+        expectedGuids.push(consecutiveUpdateEvent.metadata.guid);
         return expectedGuids;
       };
 
       const getExpectedCarryOverEntries = () => {
         const carryOverEntries = [];
         carryOverEntries.push({
-          guid: nextUpdateUsageEvent.metadata.guid,
-          state: arrange.fixture.usageEventStates.deleted
-        });
-        carryOverEntries.push({
-          guid: updateUsageEvent.metadata.guid,
-          state: arrange.fixture.usageEventStates.deleted
-        });
-        carryOverEntries.push({
-          guid: nextUpdateUsageEvent.metadata.guid,
+          guid: consecutiveUpdateEvent.metadata.guid,
           state: arrange.fixture.usageEventStates.default
+        });
+        carryOverEntries.push({
+          guid: consecutiveUpdateEvent.metadata.guid,
+          state: arrange.fixture.usageEventStates.deleted
+        });
+        carryOverEntries.push({
+          guid: updateEvent.metadata.guid,
+          state: arrange.fixture.usageEventStates.deleted
         });
         return carryOverEntries;
       };
