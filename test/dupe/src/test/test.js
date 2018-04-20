@@ -308,9 +308,9 @@ describe('abacus-dupe', function() {
             collector + '/v1/metering/collected/usage',
             extend({ body: u }, authHeader(objectStorageToken)),
             (err, val) => {
-              // Expect 201 and error from collector
+              // Expect 422 and error from collector
               expect(err).to.equal(undefined);
-              expect(val.statusCode).to.equal(201);
+              expect(val.statusCode).to.equal(422);
               expect(val.body.error).to.equal('eorgnotfound');
               posts++;
               done();
