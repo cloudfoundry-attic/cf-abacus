@@ -1,24 +1,14 @@
 'use strict';
-
+const { each } = require('underscore');
 const express = require('express');
 const bodyParser = require('body-parser');
-
-const process = (req, resp, alias) => {
-  const result = getNextResponse(alias);
-  resp.status(result.statusCode).send(result.body);
-  if (cb)
-    cb(req);
-};
-
-const addAlias = (alias, app, cb) => {
-  app.all(alias, (req, resp) => process(req, resp, alias, cb));
-};
+const debug = require('abacus-debug')('abacus-usage-meter-mock-server');
 
 const setCallback = (alias, callback, app) => {
   app.all(alias, (req, resp) => callback(req, resp));
 };
 
-const addResponse = (alias, response, responseMap) => {
+const addResponse = (alias, response, responseMap, position) => {
   let resp = responseMap.get(alias);
   if (!resp)
     resp = {
@@ -26,14 +16,22 @@ const addResponse = (alias, response, responseMap) => {
       responses: [],
       callCount: 0
     };
-  resp.responses.push(response);
+
+  if(position)
+    resp.responses[position] = response;
+  else
+    resp.responses.push(response);
+
   responseMap.set(alias, resp);
 };
 
 module.exports = {
-  app: (cb) => {
+  app: () => {
     const responseMap = new Map();
     const app = express();
+
+    let server;
+
     app.use(bodyParser.json());
 
     const getNextResponse = (alias) => {
@@ -48,37 +46,42 @@ module.exports = {
     };
 
     app.all('/batch', (req, res) => {
+      // console.log(req.body[0]);
       const result = [];
       for (let r of req.body)
         result.push(getNextResponse(r.uri));
       res.status(200).send(result);
-      if (cb)
-        cb(req);
+
     });
 
     return {
-      addAlias: (alias) => addAlias(alias, app, cb),
-      addResponse: (alias, response) => addResponse(alias, response, responseMap),
+      // addAlias: (alias) => addAlias(alias, app, cb),
+      reset: (name) => server.close(() => debug(`Server ${name} stopped`)),
+      returns: {
+        onFirstCall: (alias, response) => addResponse(alias, response, responseMap, 0),
+        onSecondCall: (alias, response) => addResponse(alias, response, responseMap, 1),
+        series: (alias, responses) => each(responses, (response) => addResponse(alias, response, responseMap))
+      },
       setCallback: (alias, callback) => setCallback(alias, callback, app),
-      startApp: (port) => app.listen(port),
+      startApp: (port) => {
+        server = app.listen(port, () => debug('Server started'));
+      },
       getCallCount: (alias) => {
         const resp = responseMap.get(alias);
         if (resp)
           return resp.callCount;
         return 0;
+      },
+      waitUntil: {
+        alias: (alias) => ({
+          isCalled: async(times) => {
+            const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time));
+
+            while(responseMap.get(alias).callCount !== times)
+              await sleep(100);
+          }
+        })
       }
     };
   }
 };
-// addAlias('/test');
-// addResponse('/test', { statusCode: 200, msg: 'Test response' });
-// addResponse('/test', { statusCode: 201, msg: 'Test response2' });
-// addResponse('/test', 'Test response 3');
-// app.listen(2222);
-// module.exports.startApp = startApp;
-// module.exports.addResponse = addResponse;
-// module.exports.addAlias = addAlias;
-
-
-
-

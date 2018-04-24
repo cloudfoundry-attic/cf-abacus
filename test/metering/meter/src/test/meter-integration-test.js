@@ -5,6 +5,7 @@ const rabbitUri = 'amqp://localhost:5672';
 const queueName = 'abacus-collect-queue';
 const mockServer = require('./mock-server');
 const accountStub = mockServer.app();
+const accumStub = mockServer.app();
 const provisioningStub = mockServer.app();
 const { Producer, ConnectionManager } = require('abacus-rabbitmq');
 
@@ -39,7 +40,15 @@ describe('test meter app', () => {
   });
 
   afterEach(() => {
-    sandbox.restore();
+    console.log('========>');
+    accumStub.reset('accum');
+    accountStub.reset('account');
+    provisioningStub.reset('prov');
+
+    if(server)
+      server.close();
+
+    sandbox.reset();
   });
 
   context('when starting', () => {
@@ -47,56 +56,99 @@ describe('test meter app', () => {
       await producer.connect();
       await producer.send(usageDoc);
     });
-    let accumStub;
-    beforeEach((done) => {
+
+    beforeEach(async() => {
       process.env.CLIENT_ID = '';
       process.env.CLIENT_SECRET = '';
       process.env.RABBIT_URI = rabbitUri;
-      const cb = (req) => {
-        if (req.path == '/batch' && req.body[0].uri == '/v1/metering/metered/usage')
-          done();
-      };
-      accumStub = require('./mock-server').app(cb);
-      provisioningStub.addAlias('/v1/provisioning/resources/test-resource/type');
-      provisioningStub.addResponse('/v1/provisioning/resources/test-resource/type',
+
+      provisioningStub.returns.onFirstCall('/v1/provisioning/resources/test-resource/type',
         { statusCode: 200, body: 'resource-type' });
-      provisioningStub.addResponse('/v1/pricing/plans/test-pricing-plan-id',
+      provisioningStub.returns.onFirstCall('/v1/pricing/plans/test-pricing-plan-id',
         { statusCode: 200, body: { name: 'storage', price: 1 } });
 
       provisioningStub.startApp(9880);
-      accountStub.addResponse(`/v1/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/account/${time}`,
+      accountStub.returns.onFirstCall(`/v1/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/account/${time}`,
         { statusCode: 200, body: { account_id: 'test-account-id',
           pricing_country: 'test-pricing' , organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27' } });
-      accountStub.addResponse('/v1/metering/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/resource_types/' +
-        `resource-type/plans/basic/time/${time}/metering_plan/id`,
+      accountStub.returns.onFirstCall('/v1/metering/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/resource_types/'
+        + `resource-type/plans/basic/time/${time}/metering_plan/id`,
       { statusCode: 200, body:  'test-metering-plan' });
-      accountStub.addResponse('/v1/rating/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/resource_types/' +
+      accountStub.returns.onFirstCall('/v1/rating/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/resource_types/' +
         `resource-type/plans/basic/time/${time}/rating_plan/id`,
       { statusCode: 200, body:  'test-rating-plan-id' });
 
       // TODO check countryPrices method in pconfig
-      accountStub.addResponse('/v1/pricing/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/resource_types/' +
+      accountStub.returns.onFirstCall('/v1/pricing/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/resource_types/' +
         `resource-type/plans/basic/time/${time}/pricing_plan/id`,
       { statusCode: 200, body: 'test-pricing-standard' });
       accountStub.startApp(9881);
-      accountStub.addAlias('/v1/metering/metered/usage');
-      accumStub.addResponse('/v1/metering/metered/usage', { statusCode: 201, body: 'CREATED' });
+
+      accumStub.returns.onFirstCall('/v1/metering/metered/usage', { statusCode: 201, body: 'CREATED' });
       accumStub.startApp(9200);
 
+
       const meterApp = require('abacus-usage-meter');
+      server = await meterApp();
 
-      meterApp().then((s) => server = s);
+      await accumStub.waitUntil.alias('/v1/metering/metered/usage').isCalled(1);
     });
 
-    afterEach(() => {
-      if(server)
-        server.close();
-    });
-
-    it('consumes messages', (done) => {
+    it('consumes messages', () => {
       expect(accumStub.getCallCount('/v1/metering/metered/usage')).to.equal(1);
-      setTimeout(done, 1000);
     });
   });
 
+
+  context('when accumulator fails', () => {
+    before(async() => {
+      sandbox = sinon.sandbox.create();
+      await producer.connect();
+      await producer.send(usageDoc);
+    });
+
+    beforeEach(async() => {
+      process.env.CLIENT_ID = '';
+      process.env.CLIENT_SECRET = '';
+      process.env.RABBIT_URI = rabbitUri;
+
+      provisioningStub.returns.onFirstCall('/v1/provisioning/resources/test-resource/type',
+        { statusCode: 200, body: 'resource-type' });
+      provisioningStub.returns.onFirstCall('/v1/pricing/plans/test-pricing-plan-id',
+        { statusCode: 200, body: { name: 'storage', price: 1 } });
+
+      provisioningStub.startApp(9880);
+      accountStub.returns.onFirstCall(`/v1/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/account/${time}`,
+        { statusCode: 200, body: { account_id: 'test-account-id',
+          pricing_country: 'test-pricing' , organization_id: 'a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27' } });
+      accountStub.returns.onFirstCall('/v1/metering/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/resource_types/'
+        + `resource-type/plans/basic/time/${time}/metering_plan/id`,
+      { statusCode: 200, body:  'test-metering-plan' });
+      accountStub.returns.onFirstCall('/v1/rating/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/resource_types/' +
+        `resource-type/plans/basic/time/${time}/rating_plan/id`,
+      { statusCode: 200, body:  'test-rating-plan-id' });
+
+      // TODO check countryPrices method in pconfig
+      accountStub.returns.onFirstCall('/v1/pricing/organizations/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/resource_types/' +
+        `resource-type/plans/basic/time/${time}/pricing_plan/id`,
+      { statusCode: 200, body: 'test-pricing-standard' });
+      accountStub.startApp(9881);
+
+      accumStub.returns.onFirstCall('/v1/metering/metered/usage', { statusCode: 500, body: {} });
+      accumStub.returns.onSecondCall('/v1/metering/metered/usage', { statusCode: 201, body: 'CREATED' });
+      accumStub.startApp(9200);
+
+
+      const meterApp = require('abacus-usage-meter');
+      server = await meterApp();
+
+      await accumStub.waitUntil.alias('/v1/metering/metered/usage').isCalled(2);
+    });
+
+
+
+    it('should retry the message', () => {
+      expect(accumStub.getCallCount('/v1/metering/metered/usage')).to.equal(2);
+    });
+  });
 });
