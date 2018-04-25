@@ -10,6 +10,7 @@ const setCallback = (alias, callback, app) => {
 
 const addResponse = (alias, response, responseMap, position) => {
   let resp = responseMap.get(alias);
+
   if (!resp)
     resp = {
       index: 0,
@@ -17,7 +18,12 @@ const addResponse = (alias, response, responseMap, position) => {
       callCount: 0
     };
 
-  if(position)
+  if(alias === '/v1/metering/metered/usage')
+    console.log('===addResponse=== on %s response: %o with current state %o on position %s', alias, response,
+      resp, position);
+
+  // TODO ??? rewrite the condition ???
+  if(typeof position === 'number')
     resp.responses[position] = response;
   else
     resp.responses.push(response);
@@ -36,27 +42,36 @@ module.exports = {
 
     const getNextResponse = (alias) => {
       const resp = responseMap.get(alias);
+      console.log(alias, resp);
       if (resp) {
         if (resp.index === resp.responses.length)
           resp.index = 0;
         resp.callCount++;
-        return resp.responses[resp.index++];
+        return { statusCode: 200, body: resp.responses[resp.index++] };
       }
-      return 'Not found';
+      return { statusCode: 404 };
     };
 
     app.all('/batch', (req, res) => {
       // console.log(req.body[0]);
       const result = [];
-      for (let r of req.body)
-        result.push(getNextResponse(r.uri));
-      res.status(200).send(result);
+      let statusCode = 200;
+      for (let r of req.body) {
+        const response = getNextResponse(r.uri);
+        if(response.statusCode !== 200)
+          statusCode = response.statusCode;
+        result.push(response.body);
+      }
+      res.status(statusCode).send(result);
 
     });
 
     return {
       // addAlias: (alias) => addAlias(alias, app, cb),
-      reset: (name) => server.close(() => debug(`Server ${name} stopped`)),
+      reset: (name) => {
+        responseMap.clear();
+        server.close(() => debug(`Server ${name} stopped`));
+      },
       returns: {
         onFirstCall: (alias, response) => addResponse(alias, response, responseMap, 0),
         onSecondCall: (alias, response) => addResponse(alias, response, responseMap, 1),
@@ -64,7 +79,9 @@ module.exports = {
       },
       setCallback: (alias, callback) => setCallback(alias, callback, app),
       startApp: (port) => {
-        server = app.listen(port, () => debug('Server started'));
+        // TODO listen without port
+        // console.log('App starting');
+        server = app.listen(port, () => console.log('Server started'));
       },
       getCallCount: (alias) => {
         const resp = responseMap.get(alias);
