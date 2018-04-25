@@ -1,0 +1,33 @@
+applications:
+- name: $PROVISIONING_PLUGIN_NAME
+  host: $PROVISIONING_PLUGIN_NAME
+  path: .
+  domain: $CF_SYS_DOMAIN
+  instances: 1
+  memory: 512M
+  disk_quota: 512M
+  zdm: true
+  env:
+    CONF: default
+    DEBUG: e-abacus-*
+    CLUSTER: false
+    DBCLIENT: abacus-mongoclient
+    DBALIAS: $DB_PLUGINS
+    API: $AUTH_SERVER
+    AUTH_SERVER: $AUTH_SERVER
+    EUREKA: $ABACUS_PREFIX$EUREKA_PLUGIN_NAME
+    EUREKA_USER: $HYSTRIX_CLIENT_ID
+    EUREKA_PASSWORD: $HYSTRIX_CLIENT_SECRET
+    NODE_MODULES_CACHE: false
+    SECURED: true
+    SKIP_SSL_VALIDATION: $SKIP_SSL_VALIDATION
+    THROTTLE: 100
+    BATCH_SIZE: 10
+    MAX_INFLIGHT: 2000
+    OPTIMIZE_MEMORY: true
+    PRIMARY_DOMAIN: $CF_SYS_DOMAIN
+    VALIDATE_FUNCTIONS: true
+    JWTALGO: $JWTALGO
+    JWTKEY: |+
+      $JWTKEY
+    DEBUG_STRIPLF: true

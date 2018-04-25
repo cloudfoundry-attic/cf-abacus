@@ -19,6 +19,10 @@ medium:
 
 large:
   APPS: 1
-  INSTANCES: 1
+  INSTANCES: 2
   DB_PARTITIONS: 1
 
+xlarge:
+  APPS: 1
+  INSTANCES: 3
+  DB_PARTITIONS: 1

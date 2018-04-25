@@ -1,0 +1,44 @@
+applications:
+- name: abacus-usage-accumulator
+  host: abacus-usage-accumulator
+  path: .
+  domain: $CF_SYS_DOMAIN
+  instances: 1
+  memory: 2048M
+  disk_quota: 512M
+  env:
+    CONF: default
+    CLUSTER: false
+    DEBUG: e-abacus-*
+    DBCLIENT: abacus-mongoclient
+    DBALIAS: $DB_ACCUMULATOR
+    API: $AUTH_SERVER
+    AUTH_SERVER: $AUTH_SERVER
+    AGGREGATOR: $ABACUS_PREFIXabacus-usage-aggregator
+    PROVISIONING: $ABACUS_PREFIX$PROVISIONING_PLUGIN_NAME
+    ACCOUNT: $ABACUS_PREFIX$ACCOUNT_PLUGIN_NAME
+    EUREKA: $ABACUS_PREFIX$EUREKA_PLUGIN_NAME
+    EUREKA_USER: $HYSTRIX_CLIENT_ID
+    EUREKA_PASSWORD: $HYSTRIX_CLIENT_SECRET
+    NODE_MODULES_CACHE: false
+    PRIMARY_DOMAIN: $CF_SYS_DOMAIN
+    SLACK: 3D
+    TIME_WINDOWS_SIZES: '{ "D" : 6 }'
+    REPLAY: 1800000
+    SECURED: true
+    SKIP_SSL_VALIDATION: $SKIP_SSL_VALIDATION
+    SAMPLING: 1h
+    THROTTLE: 100
+    BATCH_SIZE: 10
+    MAX_INFLIGHT: 200
+    NODE_OPTS: --inspect
+    OPTIMIZE_MEMORY: true
+    IGNORE_ORGANIZATION: true
+    EVAL_VMTYPE: vm2
+    EVAL_TIMEOUT: $EVAL_TIMEOUT
+    CLIENT_ID: $SYSTEM_CLIENT_ID
+    CLIENT_SECRET: $SYSTEM_CLIENT_SECRET
+    JWTALGO: $JWTALGO
+    JWTKEY: |+
+      $JWTKEY
+    DEBUG_STRIPLF: true

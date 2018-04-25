@@ -17,6 +17,8 @@ medium:
 
 large:
 
+xlarge:
+
 cf:
   apps:
     - lib/utils/pouchserver
