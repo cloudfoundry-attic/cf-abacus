@@ -50,6 +50,7 @@ describe('test meter app', () => {
     accountStub = mockServer.app();
     accumStub = mockServer.app();
     provisioningStub = mockServer.app();
+
     delete process.env.ABACUS_COLLECT_QUEUE;
     queueName = queueNamePrefix + moment.now();
     process.env.ABACUS_COLLECT_QUEUE = queueName;
@@ -59,9 +60,13 @@ describe('test meter app', () => {
   });
 
   afterEach(async() => {
-    accumStub.reset('accum');
-    accountStub.reset('account');
-    provisioningStub.reset('prov');
+    accumStub.reset();
+    accountStub.reset();
+    provisioningStub.reset();
+
+    await accumStub.close();
+    await accountStub.close();
+    await provisioningStub.close();
 
     if(server)
       server.close();
@@ -155,6 +160,7 @@ describe('test meter app', () => {
     it('should retry the message', () => {
       expect(accumStub.getCallCount(accumUrl)).to.equal(2);
     });
+
   });
 
 });

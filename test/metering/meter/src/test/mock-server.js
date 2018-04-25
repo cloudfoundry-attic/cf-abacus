@@ -52,7 +52,7 @@ module.exports = {
       return { statusCode: 404 };
     };
 
-    app.all('/batch', (req, res) => {
+    app.post('/batch', (req, res) => {
       // console.log(req.body[0]);
       const result = [];
       let statusCode = 200;
@@ -63,15 +63,12 @@ module.exports = {
         result.push(response.body);
       }
       res.status(statusCode).send(result);
-
     });
 
     return {
       // addAlias: (alias) => addAlias(alias, app, cb),
-      reset: (name) => {
-        responseMap.clear();
-        server.close(() => debug(`Server ${name} stopped`));
-      },
+      reset: () => responseMap.clear(),
+      close: () => new Promise((resolve) => server.unref().close(resolve)),
       returns: {
         onFirstCall: (alias, response) => addResponse(alias, response, responseMap, 0),
         onSecondCall: (alias, response) => addResponse(alias, response, responseMap, 1),
@@ -79,9 +76,12 @@ module.exports = {
       },
       setCallback: (alias, callback) => setCallback(alias, callback, app),
       startApp: (port) => {
-        // TODO listen without port
-        // console.log('App starting');
-        server = app.listen(port, () => console.log('Server started'));
+        server = app.listen(port, () => debug('Server started'));
+
+        // destroy test server sockets immediatelly to speed-up server close
+        server.on('request', (request, response) => {
+          response.on('finish', () => request.socket.destroy());
+        });
       },
       getCallCount: (alias) => {
         const resp = responseMap.get(alias);
