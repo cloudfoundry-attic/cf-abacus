@@ -1,0 +1,36 @@
+applications:
+- name: abacus-services-bridge
+  host: abacus-services-bridge
+  path: .
+  domain: $CF_SYS_DOMAIN
+  instances: 1
+  memory: 512M
+  disk_quota: 512M
+  env:
+    CONF: default
+    CLUSTER: false
+    DEBUG: e-abacus-*
+    COLLECTOR: $ABACUS_PREFIX$COLLECTOR_NAME
+    EUREKA: $ABACUS_PREFIX$EUREKA_PLUGIN_NAME
+    EUREKA_USER: $HYSTRIX_CLIENT_ID
+    EUREKA_PASSWORD: $HYSTRIX_CLIENT_SECRET
+    API: $AUTH_SERVER
+    AUTH_SERVER: $AUTH_SERVER
+    DBCLIENT: abacus-mongoclient
+    DBALIAS: $DB_BRIDGE
+    CF_CLIENT_ID: $BRIDGE_CLIENT_ID
+    CF_CLIENT_SECRET: $BRIDGE_CLIENT_SECRET
+    NODE_MODULES_CACHE: false
+    PRIMARY_DOMAIN: $CF_SYS_DOMAIN
+    SECURED: true
+    SKIP_SSL_VALIDATION: $SKIP_SSL_VALIDATION
+    THROTTLE: 100
+    BATCH_SIZE: 50
+    NODE_OPTS: "--max_old_space_size=256"
+    CLIENT_ID: $SERVICE_BRIDGE_CLIENT_ID
+    CLIENT_SECRET: $SERVICE_BRIDGE_CLIENT_SECRET
+    SERVICES: $METERING_SERVICES
+    JWTALGO: $JWTALGO
+    JWTKEY: |+
+      $JWTKEY
+    DEBUG_STRIPLF: true

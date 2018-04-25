@@ -16,16 +16,21 @@ default:
 
 small:
   APPS: 1
-  INSTANCES: 2
+  INSTANCES: 1
   DB_PARTITIONS: 2
 
 medium:
-  APPS: 1
-  INSTANCES: 4
+  APPS: 2
+  INSTANCES: 1
   DB_PARTITIONS: 4
 
 large:
-  APPS: 1
-  INSTANCES: 6
+  APPS: 3
+  INSTANCES: 1
+  DB_PARTITIONS: 6
+
+xlarge:
+  APPS: 5
+  INSTANCES: 1
   DB_PARTITIONS: 6
 

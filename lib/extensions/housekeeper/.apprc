@@ -9,18 +9,4 @@ default:
   JWTKEY:
   JWTALGO:
 
-small:
-  APPS: 1
-  INSTANCES: 1
-  DB_PARTITIONS: 1
-
-medium:
-  APPS: 1
-  INSTANCES: 1
-  DB_PARTITIONS: 1
-
-large:
-  APPS: 1
-  INSTANCES: 1
-  DB_PARTITIONS: 1
 

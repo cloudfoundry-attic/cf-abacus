@@ -23,3 +23,8 @@ large:
   APPS: 1
   INSTANCES: 1
   DB_PARTITIONS: 6
+
+xlarge:
+   APPS: 1
+   INSTANCES: 1
+   DB_PARTITIONS: 6
