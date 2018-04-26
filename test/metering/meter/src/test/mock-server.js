@@ -8,7 +8,7 @@ const setCallback = (alias, callback, app) => {
   app.all(alias, (req, resp) => callback(req, resp));
 };
 
-const addResponse = (alias, response, responseMap, position) => {
+const addResponse = (alias, response, responseMap) => {
   let resp = responseMap.get(alias);
 
   if (!resp)
@@ -18,15 +18,7 @@ const addResponse = (alias, response, responseMap, position) => {
       callCount: 0
     };
 
-  if(alias === '/v1/metering/metered/usage')
-    console.log('===addResponse=== on %s response: %o with current state %o on position %s', alias, response,
-      resp, position);
-
-  // TODO ??? rewrite the condition ???
-  if(typeof position === 'number')
-    resp.responses[position] = response;
-  else
-    resp.responses.push(response);
+  resp.responses.push(response);
 
   responseMap.set(alias, resp);
 };
@@ -42,7 +34,6 @@ module.exports = {
 
     const getNextResponse = (alias) => {
       const resp = responseMap.get(alias);
-      console.log(alias, resp);
       if (resp) {
         if (resp.index === resp.responses.length)
           resp.index = 0;
@@ -53,7 +44,6 @@ module.exports = {
     };
 
     app.post('/batch', (req, res) => {
-      // console.log(req.body[0]);
       const result = [];
       let statusCode = 200;
       for (let r of req.body) {
@@ -66,19 +56,14 @@ module.exports = {
     });
 
     return {
-      // addAlias: (alias) => addAlias(alias, app, cb),
       reset: () => responseMap.clear(),
       close: () => new Promise((resolve) => server.unref().close(resolve)),
-      returns: {
-        onFirstCall: (alias, response) => addResponse(alias, response, responseMap, 0),
-        onSecondCall: (alias, response) => addResponse(alias, response, responseMap, 1),
-        series: (alias, responses) => each(responses, (response) => addResponse(alias, response, responseMap))
-      },
+      returns: (alias, responses) => each(responses, (response) => addResponse(alias, response, responseMap)),
       setCallback: (alias, callback) => setCallback(alias, callback, app),
       startApp: (port) => {
         server = app.listen(port, () => debug('Server started'));
 
-        // destroy test server sockets immediatelly to speed-up server close
+        // destroy test server sockets immediately to speed-up server close
         server.on('request', (request, response) => {
           response.on('finish', () => request.socket.destroy());
         });
