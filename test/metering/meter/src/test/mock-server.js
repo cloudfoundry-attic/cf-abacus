@@ -48,6 +48,7 @@ module.exports = {
       let statusCode = 200;
       for (let r of req.body) {
         const response = getNextResponse(r.uri);
+        console.log(r.uri);
         if(response.statusCode !== 200)
           statusCode = response.statusCode;
         result.push(response.body);
@@ -69,6 +70,7 @@ module.exports = {
         });
       },
       getCallCount: (alias) => {
+        console.log(alias);
         const resp = responseMap.get(alias);
         if (resp)
           return resp.callCount;

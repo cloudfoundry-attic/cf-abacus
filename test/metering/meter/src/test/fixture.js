@@ -37,7 +37,7 @@ const createUsageDoc = (time, org = orgId, resource = resourceId, plan = planId)
 
 const provPluginResTypeUrl = (resourceId) => `/v1/provisioning/resources/${resourceId}/type`;
 // TODO: !!! CHECK THIS CALL !!!
-const provPluginPricingPlanUrl = '/v1/pricing/plans/test-pricing-plan-id';
+const provPluginPricingPlanUrl = `/v1/pricing/plans/${defaultPricingPlanId}`;
 const accountPluginGetAccountUrl = (orgId, time) => `/v1/organizations/${orgId}/account/${time}`;
 const accountPluginGetPlanUrl = (type, orgId, planId, time) => `/v1/${type}/organizations/${orgId}/resource_types/` +
   `resource-type/plans/${planId}/time/${time}/${type}_plan/id`;
@@ -77,31 +77,19 @@ const provisioningSuccessfulResponses = () => [
 const accountSuccessfulResponses = (timestamp) => [
   {
     url: accountPluginGetAccountUrl(orgId, timestamp),
-    responses: [{
-      statusCode: 200,
-      body: createAccount(accountId, pricingCountry, orgId)
-    }]
+    responses: [ buildResponse(200, createAccount(accountId, pricingCountry, orgId)) ]
   },
   {
     url: accountPluginGetPlanUrl('metering', orgId, planId, timestamp),
-    responses: [{
-      statusCode: 200,
-      body: 'test-metering-plan'
-    }]
+    responses: [ buildResponse(200, defaultMeteringPlanId) ]
   },
   {
     url: accountPluginGetPlanUrl('rating', orgId, planId, timestamp),
-    responses: [{
-      statusCode: 200,
-      body: 'test-rating-plan-id'
-    }]
+    responses: [ buildResponse(200, defaultRatingPlanId) ]
   },
   {
     url: accountPluginGetPlanUrl('pricing', orgId, planId, timestamp),
-    responses: [{
-      statusCode: 200,
-      body: 'test-pricing-standard'
-    }]
+    responses: [ buildResponse(200, defaultPricingPlanId) ]
   }
 ];
 
@@ -154,9 +142,8 @@ const accumulator = {
 module.exports = {
   provisioning,
   account,
-  accumulator,
-
-  usageDoc: (time, orgId, resourceId, planId) => createUsageDoc(time, orgId, resourceId, planId)
+  accumulator
 };
+module.exports.usageDoc = (time, orgId, resourceId, planId) => createUsageDoc(time, orgId, resourceId, planId);
 module.exports.buildResponse = buildResponse;
 module.exports.buildStubs = buildStubs;
