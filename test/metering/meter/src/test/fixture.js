@@ -1,5 +1,6 @@
 'use strict';
 
+const moment = require('abacus-moment');
 const mockServer = require('./mock-server');
 
 const orgId = 'org-id';
@@ -8,24 +9,24 @@ const planId = 'plan-id';
 const resourceType = 'resource-type';
 const accountId = 'id';
 const pricingCountry = 'country';
-const defaultPricingPlan = { name: 'storage', price: 1 };
 const defaultMeteringPlanId = 'test-metering-plan';
 const defaultRatingPlanId = 'test-rating-plan-id';
-const defaultPricingPlanId = 'test-pricing-standard';
+const defaultPricingPlanId = 'test-pricing-plan-id';
+const defaultPricingPlan = { name: 'storage', price: 1 };
 const createAccount = (accountId, pricingCountry, orgId) => ({
   account_id: accountId,
   pricing_country: pricingCountry,
   organization_id: orgId
 });
 
-const createUsageDoc = (time, org = orgId, resource = resourceId, plan = planId) => ({
-  start: time,
-  end: time,
-  organization_id: org,
+const createUsageDoc = (config) => ({
+  start: config.time,
+  end: config.time,
+  organization_id: config.org ? config.org : orgId,
   space_id: 'space-id',
   consumer_id: 'consumer-id',
-  resource_id: resource,
-  plan_id: plan,
+  resource_id: config.resource ? config.resource : resourceId + config.time,
+  plan_id: config.plan ? config.plan : planId,
   resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
   measured_usage: [
     {
@@ -35,15 +36,22 @@ const createUsageDoc = (time, org = orgId, resource = resourceId, plan = planId)
   ]
 });
 
-const provPluginResTypeUrl = (resourceId) => `/v1/provisioning/resources/${resourceId}/type`;
+const provPluginResTypeUrl = (resourceId, timestamp) => `/v1/provisioning/resources/${resourceId}${timestamp}/type`;
+
 // TODO: !!! CHECK THIS CALL !!!
-const provPluginPricingPlanUrl = `/v1/pricing/plans/${defaultPricingPlanId}`;
+const provPluginPricingPlanUrl = (timestamp) => `/v1/pricing/plans/${defaultPricingPlanId}${timestamp}`;
 const accountPluginGetAccountUrl = (orgId, time) => `/v1/organizations/${orgId}/account/${time}`;
-const accountPluginGetPlanUrl = (type, orgId, planId, time) => `/v1/${type}/organizations/${orgId}/resource_types/` +
-  `resource-type/plans/${planId}/time/${time}/${type}_plan/id`;
+const accountPluginGetPlanUrl = (type, orgId, planId, time) => `/v1/${type}/organizations/${orgId}` +
+`/resource_types/resource-type${time}/plans/${planId}/time/${time}/${type}_plan/id`;
 const accumulatorUrl = '/v1/metering/metered/usage';
 
 const buildResponse = (statusCode, body = {}) => ({ statusCode: statusCode, body: body });
+
+const buildResourceId = (config) => {
+  const resource = config.resource ? config.resource : resourceId;
+  const timestamp = config.time ? config.time : moment.now();
+  return resource + timestamp;
+};
 
 const buildStub = (endpoints) => {
   const stub = mockServer.app();
@@ -63,16 +71,19 @@ const buildStubs = (config) => {
   return stubs;
 };
 
-const provisioningSuccessfulResponses = () => [
-  {
-    url: provPluginResTypeUrl(resourceId),
-    responses: [ buildResponse(200, resourceType) ]
-  },
-  {
-    url: provPluginPricingPlanUrl,
-    responses: [ buildResponse(200, defaultPricingPlan) ]
-  }
-];
+const provisioningSuccessfulResponses = (timestamp) => {
+
+  return [
+    {
+      url: provPluginResTypeUrl(resourceId, timestamp),
+      responses: [ buildResponse(200, resourceType + timestamp) ]
+    },
+    {
+      url: provPluginPricingPlanUrl(timestamp),
+      responses: [ buildResponse(200, defaultPricingPlan) ]
+    }
+  ];
+};
 
 const accountSuccessfulResponses = (timestamp) => [
   {
@@ -89,19 +100,19 @@ const accountSuccessfulResponses = (timestamp) => [
   },
   {
     url: accountPluginGetPlanUrl('pricing', orgId, planId, timestamp),
-    responses: [ buildResponse(200, defaultPricingPlanId) ]
+    responses: [ buildResponse(200, defaultPricingPlanId + timestamp) ]
   }
 ];
 
 const provisioning = {
   resourceTypeUrl: {
-    withDefaultParam: provPluginResTypeUrl(resourceId),
-    withParam: (resourceId) => provPluginResTypeUrl(resourceId)
+    withDefaultParam: (timestamp) => provPluginResTypeUrl(resourceId, timestamp),
+    withParam: (resourceId, timestamp) => provPluginResTypeUrl(resourceId, timestamp)
   },
-  pricingPlanUrl: provPluginPricingPlanUrl,
+  pricingPlanUrl: (timestamp) => provPluginPricingPlanUrl(timestamp),
   successfulResponses: provisioningSuccessfulResponses,
   responses: {
-    successfulResourceType: buildResponse(200, resourceType),
+    successfulResourceType: (timestamp) => buildResponse(200, resourceType + timestamp),
     successfulPricingPlan: buildResponse(200, defaultPricingPlan),
     resourceType: (statusCode, body) => buildResponse(statusCode, body),
     pricingPlan: (statusCode, body) => buildResponse(statusCode, body)
@@ -144,6 +155,7 @@ module.exports = {
   account,
   accumulator
 };
-module.exports.usageDoc = (time, orgId, resourceId, planId) => createUsageDoc(time, orgId, resourceId, planId);
+module.exports.usageDoc = (config) => createUsageDoc(config);
+module.exports.resourceId = buildResourceId;
 module.exports.buildResponse = buildResponse;
 module.exports.buildStubs = buildStubs;

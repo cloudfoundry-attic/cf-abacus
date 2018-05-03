@@ -57,11 +57,11 @@ describe('test meter app', () => {
     beforeEach(async() => {
       const timestamp = moment.now();
       const config = {
-        provisioning: fixture.provisioning.successfulResponses(),
+        provisioning: fixture.provisioning.successfulResponses(timestamp),
         account: fixture.account.successfulResponses(timestamp),
         accumulator: fixture.accumulator.successfulResponses()
       };
-      const usage = fixture.usageDoc(timestamp);
+      const usage = fixture.usageDoc({ time: timestamp });
 
       stubs = fixture.buildStubs(config);
       startApps(stubs);
@@ -78,7 +78,7 @@ describe('test meter app', () => {
     beforeEach(async() => {
       const timestamp = moment.now();
       const config = {
-        provisioning: fixture.provisioning.successfulResponses(),
+        provisioning: fixture.provisioning.successfulResponses(timestamp),
         account: fixture.account.successfulResponses(timestamp),
         accumulator: [{
           url: fixture.accumulator.url,
@@ -88,7 +88,7 @@ describe('test meter app', () => {
           ]
         }]
       };
-      const usage = fixture.usageDoc(timestamp);
+      const usage = fixture.usageDoc({ time: timestamp });
 
       stubs = fixture.buildStubs(config);
       startApps(stubs);
@@ -102,40 +102,140 @@ describe('test meter app', () => {
     });
   });
 
-  context.only('when provisioning fails', () => {
-    beforeEach(async() => {
-      const timestamp = moment.now();
-      const config = {
-        provisioning: [{
-          url: fixture.provisioning.pricingPlanUrl,
-          responses: [
-            fixture.buildResponse(500),
-            fixture.provisioning.responses.successfulPricingPlan
-          ]
-        },
-        {
-          url: fixture.provisioning.resourceTypeUrl.withDefaultParam,
-          responses: [
-            fixture.buildResponse(500),
-            fixture.provisioning.responses.successfulResourceType
-          ]
-        }],
-        account: fixture.account.successfulResponses(timestamp),
-        accumulator: fixture.accumulator.successfulResponses()
-      };
-      const usage = fixture.usageDoc(timestamp);
+  context('when provisioning fails', () => {
+    let timestamp;
 
-      stubs = fixture.buildStubs(config);
-      startApps(stubs);
+    context('when getting resource type fails', () => {
+      beforeEach(async() => {
+        timestamp = moment.now();
+        const config = {
+          provisioning: [{
+            url: fixture.provisioning.resourceTypeUrl.withDefaultParam(timestamp),
+            responses: [
+              fixture.buildResponse(500),
+              fixture.provisioning.responses.successfulResourceType(timestamp)
+            ]
+          },
+          {
+            url: fixture.provisioning.pricingPlanUrl(timestamp),
+            responses: [
+              fixture.provisioning.responses.successfulPricingPlan
+            ]
+          }
+          ],
+          account: fixture.account.successfulResponses(timestamp),
+          accumulator: fixture.accumulator.successfulResponses()
+        };
+        const usage = fixture.usageDoc({ time: timestamp });
 
-      await postUsage(usage);
-      await stubs.accumulator.waitUntil.alias(fixture.accumulator.url).isCalled(1);
+        stubs = fixture.buildStubs(config);
+        startApps(stubs);
+
+        await postUsage(usage);
+        await stubs.accumulator.waitUntil.alias(fixture.accumulator.url).isCalled(1);
+      });
+
+      it('retries the calls', () => {
+        expect(stubs.provisioning.getCallCount(fixture.provisioning.resourceTypeUrl
+          .withDefaultParam(timestamp))).to.equal(2);
+        expect(stubs.provisioning.getCallCount(fixture.provisioning.pricingPlanUrl(timestamp))).to.equal(1);
+      });
+
     });
 
-    it('retries the calls', (done) => {
-      expect(stubs.provisioning.getCallCount(fixture.provisioning.resourceTypeUrl.withDefaultParam)).to.equal(2);
-      expect(stubs.provisioning.getCallCount(fixture.provisioning.pricingPlanUrl)).to.equal(2);
+    context('when getting pricing plan fails', () => {
+      beforeEach(async() => {
+        timestamp = moment.now();
+        const config = {
+          provisioning: [{
+            url: fixture.provisioning.resourceTypeUrl.withDefaultParam(timestamp),
+            responses: [
+              fixture.provisioning.responses.successfulResourceType(timestamp)
+            ]
+          },
+          {
+            url: fixture.provisioning.pricingPlanUrl(timestamp),
+            responses: [
+              fixture.buildResponse(500),
+              fixture.provisioning.responses.successfulPricingPlan
+            ]
+          }
+          ],
+          account: fixture.account.successfulResponses(timestamp),
+          accumulator: fixture.accumulator.successfulResponses()
+        };
+        const usage = fixture.usageDoc({ time: timestamp });
+
+        stubs = fixture.buildStubs(config);
+        startApps(stubs);
+
+        await postUsage(usage);
+        await stubs.accumulator.waitUntil.alias(fixture.accumulator.url).isCalled(1);
+      });
+
+      it('retries the calls', () => {
+        expect(stubs.provisioning.getCallCount(fixture.provisioning.pricingPlanUrl(timestamp))).to.equal(2);
+      });
+
     });
+  });
+
+  context.only('when account fails', () => {
+    let timestamp;
+    // TODO FIX URLS and RESPONSES
+    context('when getting account fails', () => {
+      beforeEach(async() => {
+        timestamp = moment.now();
+        const config = {
+          provisioning: fixture.provisioning.successfulResponses(timestamp),
+          account: [
+            {
+              url: fixture.account.url.withDefaultParams(timestamp),
+              responses: [
+                fixture.buildResponse(500),
+                fixture.account.responses.successfulGetAccount
+              ]
+            },
+            {
+              url: fixture.account.url.withDefaultParams(timestamp),
+              responses: [
+                fixture.buildResponse(500),
+                fixture.account.responses.successfulGetAccount
+              ]
+            },
+            {
+              url: fixture.account.url.withDefaultParams(timestamp),
+              responses: [
+                fixture.buildResponse(500),
+                fixture.account.responses.successfulGetAccount
+              ]
+            },
+            {
+              url: fixture.account.url.withDefaultParams(timestamp),
+              responses: [
+                fixture.buildResponse(500),
+                fixture.account.responses.successfulGetAccount
+              ]
+            }
+
+          ],
+          accumulator: fixture.accumulator.successfulResponses()
+        };
+        const usage = fixture.usageDoc({ time: timestamp });
+
+        stubs = fixture.buildStubs(config);
+        startApps(stubs);
+
+        await postUsage(usage);
+        await stubs.accumulator.waitUntil.alias(fixture.accumulator.url).isCalled(1);
+      });
+
+      it('retries the calls', () => {
+        expect(stubs.provisioning.getCallCount(fixture.account.url.withDefaultParams(timestamp))).to.equal(2);
+      });
+
+    });
+
   });
 
 });
