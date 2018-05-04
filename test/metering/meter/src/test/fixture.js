@@ -22,7 +22,7 @@ const createAccount = (accountId, pricingCountry, orgId) => ({
 const createUsageDoc = (config) => ({
   start: config.time,
   end: config.time,
-  organization_id: config.org ? config.org : orgId,
+  organization_id: config.org ? config.org + config.time : orgId + config.time,
   space_id: 'space-id',
   consumer_id: 'consumer-id',
   resource_id: config.resource ? config.resource : resourceId + config.time,
@@ -40,8 +40,8 @@ const provPluginResTypeUrl = (resourceId, timestamp) => `/v1/provisioning/resour
 
 // TODO: !!! CHECK THIS CALL !!!
 const provPluginPricingPlanUrl = (timestamp) => `/v1/pricing/plans/${defaultPricingPlanId}${timestamp}`;
-const accountPluginGetAccountUrl = (orgId, time) => `/v1/organizations/${orgId}/account/${time}`;
-const accountPluginGetPlanUrl = (type, orgId, planId, time) => `/v1/${type}/organizations/${orgId}` +
+const accountPluginGetAccountUrl = (orgId, time) => `/v1/organizations/${orgId}${time}/account/${time}`;
+const accountPluginGetPlanUrl = (type, orgId, planId, time) => `/v1/${type}/organizations/${orgId}${time}` +
 `/resource_types/resource-type${time}/plans/${planId}/time/${time}/${type}_plan/id`;
 const accumulatorUrl = '/v1/metering/metered/usage';
 
@@ -137,7 +137,7 @@ const account = {
     ),
     successfulGetMeteringPlanIdResponse: buildResponse(200, defaultMeteringPlanId),
     successfulGetRatingPlanIdResponse: buildResponse(200, defaultRatingPlanId),
-    successfulGetPricingPlanIdResponse: buildResponse(200, defaultPricingPlanId),
+    successfulGetPricingPlanIdResponse: (time) => buildResponse(200, defaultPricingPlanId + time),
     getPlanId: (statusCode, planId) => buildResponse(statusCode, planId)
   }
 };

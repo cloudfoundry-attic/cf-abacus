@@ -10,7 +10,6 @@ const setCallback = (alias, callback, app) => {
 
 const addResponse = (alias, response, responseMap) => {
   let resp = responseMap.get(alias);
-  // console.log('Adding %j response to alias %s', response, alias);
   if (!resp)
     resp = {
       index: 0,
@@ -47,7 +46,6 @@ module.exports = {
       const result = [];
       let statusCode = 200;
       for (let r of req.body) {
-        console.log('--%--> alias ', r.uri);
         const response = getNextResponse(r.uri);
 
         if(response.statusCode !== 200)
@@ -71,7 +69,6 @@ module.exports = {
         });
       },
       getCallCount: (alias) => {
-        // console.log(alias);
         const resp = responseMap.get(alias);
         if (resp)
           return resp.callCount;

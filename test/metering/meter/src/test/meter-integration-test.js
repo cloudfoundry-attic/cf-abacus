@@ -180,7 +180,7 @@ describe('test meter app', () => {
     });
   });
 
-  context.only('when account fails', () => {
+  context('when account fails', () => {
     let timestamp;
     // TODO FIX URLS and RESPONSES
     context('when getting account fails', () => {
@@ -197,24 +197,21 @@ describe('test meter app', () => {
               ]
             },
             {
-              url: fixture.account.url.withDefaultParams(timestamp),
+              url: fixture.account.accountPluginGetPlanIdUrl.withDefaultParams(timestamp, 'metering'),
               responses: [
-                fixture.buildResponse(500),
-                fixture.account.responses.successfulGetAccount
+                fixture.account.responses.successfulGetMeteringPlanIdResponse
               ]
             },
             {
-              url: fixture.account.url.withDefaultParams(timestamp),
+              url: fixture.account.accountPluginGetPlanIdUrl.withDefaultParams(timestamp, 'rating'),
               responses: [
-                fixture.buildResponse(500),
-                fixture.account.responses.successfulGetAccount
+                fixture.account.responses.successfulGetRatingPlanIdResponse
               ]
             },
             {
-              url: fixture.account.url.withDefaultParams(timestamp),
+              url: fixture.account.accountPluginGetPlanIdUrl.withDefaultParams(timestamp, 'pricing'),
               responses: [
-                fixture.buildResponse(500),
-                fixture.account.responses.successfulGetAccount
+                fixture.account.responses.successfulGetPricingPlanIdResponse(timestamp)
               ]
             }
 
@@ -231,7 +228,7 @@ describe('test meter app', () => {
       });
 
       it('retries the calls', () => {
-        expect(stubs.provisioning.getCallCount(fixture.account.url.withDefaultParams(timestamp))).to.equal(2);
+        expect(stubs.account.getCallCount(fixture.account.url.withDefaultParams(timestamp))).to.equal(2);
       });
 
     });
