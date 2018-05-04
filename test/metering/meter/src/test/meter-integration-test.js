@@ -182,7 +182,6 @@ describe('test meter app', () => {
 
   context('when account fails', () => {
     let timestamp;
-    // TODO FIX URLS and RESPONSES
     context('when getting account fails', () => {
       beforeEach(async() => {
         timestamp = moment.now();
@@ -233,6 +232,160 @@ describe('test meter app', () => {
 
     });
 
+    context('when getting metering plan id fails', () => {
+      beforeEach(async() => {
+        timestamp = moment.now();
+        const config = {
+          provisioning: fixture.provisioning.successfulResponses(timestamp),
+          account: [
+            {
+              url: fixture.account.url.withDefaultParams(timestamp),
+              responses: [
+                fixture.account.responses.successfulGetAccount
+              ]
+            },
+            {
+              url: fixture.account.accountPluginGetPlanIdUrl.withDefaultParams(timestamp, 'metering'),
+              responses: [
+                fixture.buildResponse(500),
+                fixture.account.responses.successfulGetMeteringPlanIdResponse
+              ]
+            },
+            {
+              url: fixture.account.accountPluginGetPlanIdUrl.withDefaultParams(timestamp, 'rating'),
+              responses: [
+                fixture.account.responses.successfulGetRatingPlanIdResponse
+              ]
+            },
+            {
+              url: fixture.account.accountPluginGetPlanIdUrl.withDefaultParams(timestamp, 'pricing'),
+              responses: [
+                fixture.account.responses.successfulGetPricingPlanIdResponse(timestamp)
+              ]
+            }
+
+          ],
+          accumulator: fixture.accumulator.successfulResponses()
+        };
+        const usage = fixture.usageDoc({ time: timestamp });
+
+        stubs = fixture.buildStubs(config);
+        startApps(stubs);
+
+        await postUsage(usage);
+        await stubs.accumulator.waitUntil.alias(fixture.accumulator.url).isCalled(1);
+      });
+
+      it('retries the calls', () => {
+        expect(stubs.account.getCallCount(fixture.account.accountPluginGetPlanIdUrl
+          .withDefaultParams(timestamp, 'metering'))).to.equal(2);
+      });
+
+    });
+
+    context('when getting rating plan id fails', () => {
+      beforeEach(async() => {
+        timestamp = moment.now();
+        const config = {
+          provisioning: fixture.provisioning.successfulResponses(timestamp),
+          account: [
+            {
+              url: fixture.account.url.withDefaultParams(timestamp),
+              responses: [
+                fixture.account.responses.successfulGetAccount
+              ]
+            },
+            {
+              url: fixture.account.accountPluginGetPlanIdUrl.withDefaultParams(timestamp, 'metering'),
+              responses: [
+                fixture.account.responses.successfulGetMeteringPlanIdResponse
+              ]
+            },
+            {
+              url: fixture.account.accountPluginGetPlanIdUrl.withDefaultParams(timestamp, 'rating'),
+              responses: [
+                fixture.buildResponse(500),
+                fixture.account.responses.successfulGetRatingPlanIdResponse
+              ]
+            },
+            {
+              url: fixture.account.accountPluginGetPlanIdUrl.withDefaultParams(timestamp, 'pricing'),
+              responses: [
+                fixture.account.responses.successfulGetPricingPlanIdResponse(timestamp)
+              ]
+            }
+
+          ],
+          accumulator: fixture.accumulator.successfulResponses()
+        };
+        const usage = fixture.usageDoc({ time: timestamp });
+
+        stubs = fixture.buildStubs(config);
+        startApps(stubs);
+
+        await postUsage(usage);
+        await stubs.accumulator.waitUntil.alias(fixture.accumulator.url).isCalled(1);
+      });
+
+      it('retries the calls', () => {
+        expect(stubs.account.getCallCount(fixture.account.accountPluginGetPlanIdUrl
+          .withDefaultParams(timestamp, 'rating'))).to.equal(2);
+      });
+
+    });
+
+    context('when getting pricing plan id fails', () => {
+      beforeEach(async() => {
+        timestamp = moment.now();
+        const config = {
+          provisioning: fixture.provisioning.successfulResponses(timestamp),
+          account: [
+            {
+              url: fixture.account.url.withDefaultParams(timestamp),
+              responses: [
+                fixture.account.responses.successfulGetAccount
+              ]
+            },
+            {
+              url: fixture.account.accountPluginGetPlanIdUrl.withDefaultParams(timestamp, 'metering'),
+              responses: [
+                fixture.account.responses.successfulGetMeteringPlanIdResponse
+              ]
+            },
+            {
+              url: fixture.account.accountPluginGetPlanIdUrl.withDefaultParams(timestamp, 'rating'),
+              responses: [
+                fixture.account.responses.successfulGetRatingPlanIdResponse
+              ]
+            },
+            {
+              url: fixture.account.accountPluginGetPlanIdUrl.withDefaultParams(timestamp, 'pricing'),
+              responses: [
+                fixture.buildResponse(500),
+                fixture.account.responses.successfulGetPricingPlanIdResponse(timestamp)
+              ]
+            }
+
+          ],
+          accumulator: fixture.accumulator.successfulResponses()
+        };
+        const usage = fixture.usageDoc({ time: timestamp });
+
+        stubs = fixture.buildStubs(config);
+        startApps(stubs);
+
+        await postUsage(usage);
+        await stubs.accumulator.waitUntil.alias(fixture.accumulator.url).isCalled(1);
+      });
+
+      it('retries the calls', () => {
+        expect(stubs.account.getCallCount(fixture.account.accountPluginGetPlanIdUrl
+          .withDefaultParams(timestamp, 'pricing'))).to.equal(2);
+      });
+
+    });
+
   });
+
 
 });
