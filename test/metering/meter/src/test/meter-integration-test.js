@@ -263,7 +263,6 @@ describe('test meter app', () => {
                 fixture.account.responses.successfulGetPricingPlanIdResponse(timestamp)
               ]
             }
-
           ],
           accumulator: fixture.accumulator.successfulResponses()
         };
@@ -314,7 +313,6 @@ describe('test meter app', () => {
                 fixture.account.responses.successfulGetPricingPlanIdResponse(timestamp)
               ]
             }
-
           ],
           accumulator: fixture.accumulator.successfulResponses()
         };
@@ -365,7 +363,6 @@ describe('test meter app', () => {
                 fixture.account.responses.successfulGetPricingPlanIdResponse(timestamp)
               ]
             }
-
           ],
           accumulator: fixture.accumulator.successfulResponses()
         };
