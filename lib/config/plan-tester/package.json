@@ -33,10 +33,12 @@
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish",
-    "nyc": "^11.4.1",
+    "abacus-request": "file:../../lib/utils/request",
     "abacus-metering-config": "../metering",
     "abacus-pricing-config": "../pricing",
     "abacus-rating-config": "../rating",
+    "abacus-urienv": "file:../../lib/utils/urienv",
+    "nyc": "^11.4.1",
     "bignumber.js": "^5.0.0"
   },
   "nyc": {
