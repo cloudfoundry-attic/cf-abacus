@@ -577,8 +577,8 @@ describe('abacus-usage-aggregator-itest', () => {
             expect(err).to.equal(undefined);
             expect(val.statusCode).to.equal(200);
 
-            expect(omit(val.body, 'id', 'processed', 'processed_id', 'accumulated_usage_id')).to.deep.equal(
-              omit(accumulatedTemplate(o, ri, u), 'id', 'processed', 'processed_id')
+            expect(omit(val.body, 'id', 'processed', 'processed_id', 'accumulated_usage_id', 'spaces')).to.deep.equal(
+              omit(accumulatedTemplate(o, ri, u), 'id', 'processed', 'processed_id', 'spaces')
             );
 
             debug('Verified accumulated usage for org%d instance%d usage%d', o + 1, ri + 1, u + 1);
@@ -634,11 +634,12 @@ describe('abacus-usage-aggregator-itest', () => {
                   '_id',
                   '_rev',
                   'accumulated_usage_id',
-                  'start'
+                  'start',
+                  'spaces'
                 ]),
                 pruneWindows
               )
-            ).to.deep.equal(omit(expected, ['start']));
+            ).to.deep.equal(omit(expected, ['start', 'spaces']));
             done();
           } catch (e) {
             // If the test cannot verify the actual data with the expected
@@ -656,11 +657,12 @@ describe('abacus-usage-aggregator-itest', () => {
                     '_id',
                     '_rev',
                     'accumulated_usage_id',
-                    'start'
+                    'start',
+                    'spaces'
                   ]),
                   pruneWindows
                 )
-              ).to.deep.equal(omit(expected, ['start']));
+              ).to.deep.equal(omit(expected, ['start', 'spaces']));
             } else
               // Try the expected test again
               setTimeout(function() {
