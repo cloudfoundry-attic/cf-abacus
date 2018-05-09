@@ -44,7 +44,8 @@
   },
   "devDependencies": {
     "abacus-eslint": "file:../eslint",
-    "abacus-publish": "file:../publish"
+    "abacus-publish": "file:../publish",
+    "chai-as-promised": "^7.1.1"
   },
   "nyc": {
     "cache": true,

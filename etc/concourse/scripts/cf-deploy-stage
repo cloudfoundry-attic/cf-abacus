@@ -38,7 +38,7 @@ popd
 if [ "$BIND_DB_SERVICE" == "true" ]; then
   echo "Binding services ..."
   getApps
-  bindService ${ABACUS_PREFIX}abacus-usage-collector $DB_COLLECTOR
+#  bindService ${ABACUS_PREFIX}abacus-usage-collector $DB_COLLECTOR
   bindService ${ABACUS_PREFIX}abacus-usage-meter $DB_METER
   bindService ${ABACUS_PREFIX}abacus-usage-accumulator $DB_ACCUMULATOR
   bindService ${ABACUS_PREFIX}abacus-usage-aggregator $DB_AGGREGATOR
@@ -48,3 +48,7 @@ if [ "$BIND_DB_SERVICE" == "true" ]; then
   bindService ${ABACUS_PREFIX}abacus-housekeeper $DB_COLLECTOR,$DB_METER,$DB_ACCUMULATOR,$DB_AGGREGATOR,$DB_BRIDGE,$DB_PLUGINS
   bindService ${ABACUS_PREFIX}abacus-service-dashboard $DB_DASHBOARD
 fi
+
+cf bind-service ${ABACUS_PREFIX}abacus-usage-collector $RABBIT_SERVICE_NAME
+cf bind-service ${ABACUS_PREFIX}abacus-usage-meter $RABBIT_SERVICE_NAME
+

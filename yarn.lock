@@ -35,6 +35,17 @@
     ajv "^6.0.0"
     underscore "^1.8.3"
 
+"abacus-accountclient@file:lib/utils/accountclient":
+  version "1.0.0"
+  dependencies:
+    abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
+    abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
+    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
+    abacus-request "file:../../Library/Caches/Yarn/utils/request"
+    abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
+    abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
+    underscore "^1.8.3"
+
 "abacus-audit@file:lib/utils/audit":
   version "1.1.0"
 
@@ -1047,6 +1058,7 @@
 "abacus-usage-collector@file:lib/metering/collector":
   version "1.1.0"
   dependencies:
+    abacus-accountclient "file:../../Library/Caches/Yarn/utils/accountclient"
     abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
     abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
     abacus-cluster "file:../../Library/Caches/Yarn/utils/cluster"
@@ -1057,6 +1069,7 @@
     abacus-metering-config "file:../../Library/Caches/Yarn/config/metering"
     abacus-oauth "file:../../Library/Caches/Yarn/utils/oauth"
     abacus-pricing-config "file:../../Library/Caches/Yarn/config/pricing"
+    abacus-rabbitmq "file:../../Library/Caches/Yarn/utils/rabbitmq"
     abacus-rating-config "file:../../Library/Caches/Yarn/config/rating"
     abacus-request "file:../../Library/Caches/Yarn/utils/request"
     abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
@@ -1065,6 +1078,7 @@
     abacus-transform "file:../../Library/Caches/Yarn/utils/transform"
     abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
     abacus-usage-schemas "file:../../Library/Caches/Yarn/config/schemas"
+    abacus-vcapenv "file:../../Library/Caches/Yarn/utils/vcapenv"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
     abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
     ajv "^6.0.0"
@@ -1073,6 +1087,7 @@
 "abacus-usage-meter-itest@file:test/metering/meter":
   version "1.1.0"
   dependencies:
+    abacus-account-plugin "file:../../Library/Caches/lib/plugins/account"
     abacus-batch "file:../../Library/Caches/lib/utils/batch"
     abacus-debug "file:../../Library/Caches/lib/utils/debug"
     abacus-express "file:../../Library/Caches/lib/utils/express"
@@ -1080,9 +1095,11 @@
     abacus-mocha "file:../../Library/Caches/tools/mocha"
     abacus-moment "file:../../Library/Caches/lib/utils/moment"
     abacus-pouchserver "file:../../Library/Caches/lib/utils/pouchserver"
+    abacus-provisioning-plugin "file:../../Library/Caches/lib/plugins/provisioning"
     abacus-request "file:../../Library/Caches/lib/utils/request"
     abacus-router "file:../../Library/Caches/lib/utils/router"
     abacus-throttle "file:../../Library/Caches/lib/utils/throttle"
+    abacus-usage-collector "file:../../Library/Caches/lib/metering/collector"
     abacus-usage-meter "file:../../Library/Caches/lib/metering/meter"
     commander "2.8.1"
     nyc "^11.4.1"
@@ -1091,24 +1108,35 @@
 "abacus-usage-meter@file:lib/metering/meter":
   version "1.1.0"
   dependencies:
+    abacus-accountclient "file:../../Library/Caches/Yarn/utils/accountclient"
     abacus-batch "file:../../Library/Caches/Yarn/utils/batch"
     abacus-breaker "file:../../Library/Caches/Yarn/utils/breaker"
     abacus-cluster "file:../../Library/Caches/Yarn/utils/cluster"
-    abacus-dataflow "file:../../Library/Caches/Yarn/utils/dataflow"
     abacus-dbclient "file:../../Library/Caches/Yarn/utils/dbclient"
     abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
+    abacus-express "file:../../Library/Caches/Yarn/utils/express"
     abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
     abacus-metering-config "file:../../Library/Caches/Yarn/config/metering"
     abacus-oauth "file:../../Library/Caches/Yarn/utils/oauth"
+    abacus-partition "file:../../Library/Caches/Yarn/utils/partition"
+    abacus-pricing-config "file:../../Library/Caches/Yarn/config/pricing"
+    abacus-rabbitmq "file:../../Library/Caches/Yarn/utils/rabbitmq"
+    abacus-rating-config "file:../../Library/Caches/Yarn/config/rating"
     abacus-request "file:../../Library/Caches/Yarn/utils/request"
     abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
     abacus-router "file:../../Library/Caches/Yarn/utils/router"
+    abacus-schema "file:../../Library/Caches/Yarn/utils/schema"
     abacus-seqid "file:../../Library/Caches/Yarn/utils/seqid"
     abacus-throttle "file:../../Library/Caches/Yarn/utils/throttle"
     abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
+    abacus-usage-schemas "file:../../Library/Caches/Yarn/config/schemas"
+    abacus-vcapenv "file:../../Library/Caches/Yarn/utils/vcapenv"
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
-    abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
     ajv "^6.0.0"
+    body-parser "^1.18.2"
+    express "^4.16.2"
+    is-my-json-valid "^2.12.0"
+    request-debug "^0.2.0"
     underscore "^1.8.3"
 
 "abacus-usage-reporting-itest@file:test/aggregation/reporting":
@@ -1360,6 +1388,10 @@ amqplib@^0.5.2:
     buffer-more-ints "0.0.2"
     readable-stream "1.x >=1.1.9"
     safe-buffer "^5.0.1"
+
+angular@1.5.10:
+  version "1.5.10"
+  resolved "https://registry.yarnpkg.com/angular/-/angular-1.5.10.tgz#e87fd35b2ed2fea3723de958e9ccf0a4b9125ef0"
 
 ansi-escapes@^3.0.0:
   version "3.1.0"
@@ -1786,7 +1818,7 @@ body-parser@1.17.1:
     raw-body "~2.2.0"
     type-is "~1.6.14"
 
-body-parser@1.18.2, body-parser@^1.16.1, body-parser@^1.4.3:
+body-parser@1.18.2, body-parser@^1.16.1, body-parser@^1.18.2, body-parser@^1.4.3:
   version "1.18.2"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.18.2.tgz#87678a19d84b47d859b83199bd59bce222b10454"
   dependencies:
@@ -3285,7 +3317,7 @@ express@4.15.2:
     utils-merge "1.0.0"
     vary "~1.1.0"
 
-express@^4.10.4, express@^4.14.1:
+express@^4.10.4, express@^4.14.1, express@^4.16.2:
   version "4.16.3"
   resolved "https://registry.yarnpkg.com/express/-/express-4.16.3.tgz#6af8a502350db3246ecc4becf6b5a34d22f7ed53"
   dependencies:
