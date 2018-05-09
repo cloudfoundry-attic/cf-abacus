@@ -5,7 +5,9 @@ set -e
 SCRIPT_DIR="${BASH_SOURCE%/*}"
 source $SCRIPT_DIR/common-functions
 
-# Download CF CLI
+abacus_profile=medium
+
+echo "Download CF CLI"
 mkdir -p bin/.cf
 (cd bin/.cf && curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx)
 export PATH=$PATH:$(pwd)/bin/.cf
@@ -35,12 +37,10 @@ pushd $project_dir
   getApps
   echo ${APPS[@]} | xargs -n1 | xargs -P 20 -i cf delete -f -r {}
 
-
   cf login -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE
 
   echo "Deploying Abacus ..."
-  yarn run cfstage medium
-
+  yarn run cfstage "$abacus_profile"
 
   set +e
   echo "Start all apps in $CF_ORG/$CF_SPACE ..."
@@ -49,6 +49,13 @@ pushd $project_dir
 
   echo "Restarting failed apps ..."
   restartAppsWithRetry
+
+  echo "Mapping reporting route ..."
+  collectorApps=$(node_modules/abacus-etc/apprc lib/metering/collector/.apprc $abacus_profile APPS)
+  reportingApps=$(node_modules/abacus-etc/apprc lib/aggregation/reporting/.apprc $abacus_profile APPS)
+
+  mapRoutes ${ABACUS_PREFIX}abacus-usage-collector $collectorApps $CF_DOMAIN
+  mapRoutes ${ABACUS_PREFIX}abacus-usage-reporting $reportingApps $CF_DOMAIN
 
   echo "Storing default plans and mappings in provisioning..."
   ./etc/concourse/scripts/run-cf-task "abacus-provisioning-plugin" "yarn run store-defaults"
