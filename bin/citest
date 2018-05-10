@@ -12,7 +12,6 @@ case "$CI_TEST" in
     ;;
 
   extended)
-
     # Run smoke test
     yarn start
     sleep 3s
