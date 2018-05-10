@@ -106,6 +106,7 @@ const prune = (v, k) => {
     const sumWindowValue = (w1, w2, k) => {
       if (typeof w1[k] !== 'undefined') nwin[k] = w2 ? w1[k] + w2[k] : w1[k];
     };
+    console.log('====>',v);
     sumWindowValue(v[4][0], v[4][1], 'charge');
     sumWindowValue(v[4][0], v[4][1], 'summary');
     sumWindowValue(v[4][0], v[4][1], 'cost');
@@ -413,6 +414,9 @@ describe('abacus-demo-client', function() {
 
     // Get a usage report for the test organization
     const get = (done) => {
+
+      console.log('reporting -> ', reporting);
+
       request.get(
         [
           reporting,
@@ -425,11 +429,10 @@ describe('abacus-demo-client', function() {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(200);
 
-          // Compare the usage report we got with the expected report
           console.log('Processed %d usage docs', processed(val));
-          const actual = clone(omit(val.body, 'id', 'processed', 'processed_id', 'start', 'end'), prune);
-
+          let actual;
           try {
+            actual = clone(omit(val.body, 'id', 'processed', 'processed_id', 'start', 'end'), prune);
             actual.spaces[0].consumers[0].resources[0].plans[0].resource_instances[0] = omit(
               actual.spaces[0].consumers[0].resources[0].plans[0].resource_instances[0],
               't',
@@ -463,7 +466,7 @@ describe('abacus-demo-client', function() {
     // been processed
     const wait = (done) => {
       console.log('\nRetrieving usage report');
-      get(done);
+      setImmediate(() => get(done));
     };
 
     // Wait for usage reporter to start
