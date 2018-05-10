@@ -31,7 +31,6 @@
   "dependencies": {
     "abacus-batch": "file:../../lib/utils/batch",
     "abacus-breaker": "file:../../lib/utils/breaker",
-    "abacus-dbclient": "file:../../lib/utils/dbclient",
     "abacus-debug": "file:../../lib/utils/debug",
     "abacus-mocha": "file:../../tools/mocha",
     "abacus-moment": "file:../../lib/utils/moment",
