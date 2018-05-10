@@ -29,8 +29,6 @@ matrix:
       - RABBIT_URI=amqp://localhost:5672
       - JOBS=1
       node_js: 8.9.4
-      services:
-        - rabbitmq
       script:
         - yarn run build && yarn run generate-coverage && yarn run report-coverage
 
@@ -42,7 +40,6 @@ matrix:
       - JOBS=1
       node_js: 8.9.4
       services:
-        - rabbitmq
         - couchdb
       script:
         - yarn run build && yarn run generate-coverage && yarn run report-coverage
@@ -55,7 +52,6 @@ matrix:
       - JOBS=1
       node_js: 8.9.4
       services:
-        - rabbitmq
         - mongodb
       script:
         - yarn run build && yarn run generate-coverage && yarn run report-coverage
