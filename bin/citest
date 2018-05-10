@@ -12,11 +12,6 @@ case "$CI_TEST" in
     ;;
 
   extended)
-    # Run dupe test without security
-    yarn start
-    sleep 3s
-    yarn run dupe --synthetic
-    yarn stop
 
     # Run smoke test
     yarn start
