@@ -23,5 +23,5 @@ To execute a functional correctness test do:
 # Output the organization post status
 export DEBUG=abacus-perf-test
 # Run the test
-yarn perf --collector <collector url> --reporting <reporting url> --auth-server <cf api url> --orgs 20000 --no-timestamps --limit 20
+yarn perf --collector <collector url> --reporting <reporting url> --auth-server <cf api url> --orgs 20000 --no-timestamp --limit 20 --num-executions 1
 ```
