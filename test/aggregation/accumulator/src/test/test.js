@@ -15,6 +15,7 @@ const express = require('abacus-express');
 const clone = require('abacus-clone');
 const timewindow = require('abacus-timewindow');
 const moment = require('abacus-moment');
+const cp = require('child_process');
 
 const BigNumber = require('bignumber.js');
 BigNumber.config({ ERRORS: false });
@@ -104,7 +105,7 @@ const buildQuantityWindows = (e, u, m, f, price) => {
 
 describe('abacus-usage-accumulator-itest', () => {
   before(() => {
-    const modules = [lifecycleManager.modules.accountPlugin, lifecycleManager.modules.accumulator];
+    const modules = [lifecycleManager.modules.accumulator, lifecycleManager.modules.accountPlugin];
 
     if (!process.env.DB) {
       modules.push(lifecycleManager.modules.pouchserver);
@@ -116,7 +117,11 @@ describe('abacus-usage-accumulator-itest', () => {
   });
 
   after(() => {
-    lifecycleManager.stopAllStarted();
+    // Use cp.execSync due to undiscovered problems with lifecycle manager.
+    // It seems that accumulator app can not be stopped. This require
+    // child process kill.
+    // lifecycleManager.stopAllStarted();
+    cp.execSync('pkill -f node');
   });
 
   it('accumulate metered usage submissions', function(done) {

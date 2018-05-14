@@ -413,9 +413,6 @@ describe('abacus-demo-client', function() {
 
     // Get a usage report for the test organization
     const get = (done) => {
-
-      console.log('reporting -> ', reporting);
-
       request.get(
         [
           reporting,

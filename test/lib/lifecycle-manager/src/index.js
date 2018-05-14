@@ -67,7 +67,7 @@ const start = (module, env) => {
 
 const stop = (module, env) => {
   const moduleDir = getModuleDir(module);
-  console.log('Executing "stop" operation on module "%s" in directory %s', module, moduleDir);
+  debug('Executing "stop" operation on module "%s" in directory %s', module, moduleDir);
 
   const stopOperation = 'yarn run stop';
   return cp.execSync(stopOperation, {
@@ -95,9 +95,7 @@ module.exports = () => {
 
     startedModules.forEach((module) => {
       debug('Stopping %s ...', module);
-      console.log('lifecycle manager stops %s', module);
-      const res = stop(module, env);
-      console.log('Module %s stopped with result %s', module, res);
+      stop(module, env);
       startedModules.delete(module);
     });
   };
