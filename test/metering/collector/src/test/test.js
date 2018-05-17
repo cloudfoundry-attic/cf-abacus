@@ -5,14 +5,10 @@ const execute = require('abacus-cmdline').execute;
 const throttle = require('abacus-throttle');
 const request = require('abacus-request');
 const dbclient = require('abacus-dbclient');
-const lifecycleManager = require('abacus-lifecycle-manager')();
+const createLifecycleManager = require('abacus-lifecycle-manager');
 const { Consumer, ConnectionManager } = require('abacus-rabbitmq');
 
-const _ = require('underscore');
-const map = _.map;
-const range = _.range;
-const clone = _.clone;
-const omit = _.omit;
+const { map, range, clone, omit, extend } = require('underscore');
 
 // Setup the debug log
 const debug = require('abacus-debug')('abacus-usage-collector-itest');
@@ -42,9 +38,10 @@ const totalTimeout = commander.totalTimeout || 60000;
 
 const isPouchDB = !process.env.DB;
 
-const queueName = 'test-collect-queue';
-process.env.ABACUS_COLLECT_QUEUE = queueName;
 const rabbitUri = process.env.RABBIT_URI;
+const queueName = 'test-collect-queue';
+const customEnv = extend({}, process.env, { ABACUS_COLLECT_QUEUE:  queueName });
+const lifecycleManager = createLifecycleManager().useEnv(customEnv);
 
 describe('abacus-usage-collector-itest', () => {
   let server;
