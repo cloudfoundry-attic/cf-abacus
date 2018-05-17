@@ -24,31 +24,31 @@ pushd built-project
 
   echo "Mapping routes ..."
   mapRoutes ${ABACUS_PREFIX}abacus-usage-collector $collectorApps $CF_DOMAIN
+  mapRoutes ${ABACUS_PREFIX}abacus-usage-meter $meterApps $CF_DOMAIN
   mapRoutes ${ABACUS_PREFIX}abacus-usage-reporting $reportingApps $CF_DOMAIN
 
   echo "Deleting obsolete apps ..."
-  deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-collector $collectorApps
-  deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-meter $meterApps
+  # deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-collector $collectorApps
+  # deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-meter $meterApps
   deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-accumulator $accumulatorApps
   deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-aggregator $aggregatorApps
-  deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-reporting $reportingApps
-  deleteObsoleteApps ${ABACUS_PREFIX}abacus-cf-bridge 5
+  # deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-reporting $reportingApps
+  # deleteObsoleteApps ${ABACUS_PREFIX}abacus-cf-bridge 5
 popd
 
 if [ "$BIND_DB_SERVICE" == "true" ]; then
   echo "Binding services ..."
   getApps
-#  bindService ${ABACUS_PREFIX}abacus-usage-collector $DB_COLLECTOR
   bindService ${ABACUS_PREFIX}abacus-usage-meter $DB_METER
   bindService ${ABACUS_PREFIX}abacus-usage-accumulator $DB_ACCUMULATOR
   bindService ${ABACUS_PREFIX}abacus-usage-aggregator $DB_AGGREGATOR
   bindService ${ABACUS_PREFIX}abacus-usage-reporting $DB_AGGREGATOR,$DB_ACCUMULATOR
   bindService ${ABACUS_PREFIX}abacus-applications-bridge,${ABACUS_PREFIX}abacus-services-bridge,${ABACUS_PREFIX}abacus-cf-renewer $DB_BRIDGE
   bindService ${ABACUS_PREFIX}abacus-provisioning-plugin,${ABACUS_PREFIX}abacus-account-plugin,${ABACUS_PREFIX}abacus-eureka-plugin $DB_PLUGINS
-  bindService ${ABACUS_PREFIX}abacus-housekeeper $DB_COLLECTOR,$DB_METER,$DB_ACCUMULATOR,$DB_AGGREGATOR,$DB_BRIDGE,$DB_PLUGINS
+  bindService ${ABACUS_PREFIX}abacus-housekeeper $DB_METER,$DB_ACCUMULATOR,$DB_AGGREGATOR,$DB_BRIDGE,$DB_PLUGINS
   bindService ${ABACUS_PREFIX}abacus-service-dashboard $DB_DASHBOARD
 fi
 
-cf bind-service ${ABACUS_PREFIX}abacus-usage-collector $RABBIT_SERVICE_NAME
-cf bind-service ${ABACUS_PREFIX}abacus-usage-meter $RABBIT_SERVICE_NAME
+cf bind-service ${ABACUS_PREFIX}abacus-usage-collector $RABBIT_INSTANCE_NAME
+cf bind-service ${ABACUS_PREFIX}abacus-usage-meter $RABBIT_INSTANCE_NAME
 
