@@ -47,7 +47,7 @@ function restartAppsWithRetry {
 }
 
 function waitForServices {
-  echo "Waiting for DB creation or update ..."
+  echo "Waiting for service creation or update ..."
   services=("$@")
   for service in "${services[@]}"
   do

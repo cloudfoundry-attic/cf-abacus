@@ -21,6 +21,7 @@ cf create-org "$CF_ORG" -q "$CF_ORG"
 cf create-space "$CF_SPACE" -o "$CF_ORG"
 if [ "$ENABLE_SERVICE_ACCESS" == "true" ]; then
   cf enable-service-access "$DB_SERVICE_NAME" -p "$DB_PLAN_NAME" -o "$CF_ORG"
+  cf enable-service-access "$RABBIT_SERVICE_NAME" -p "$RABBIT_INSTANCE_PLAN_NAME" -o "$CF_ORG"
 fi
 
 echo "Recreating user ..."
@@ -53,8 +54,8 @@ fi
 
 # create RabbitMQ instance
 echo "Creating or updating Rabbit service instances ..."
-shouldWaitFor=($RABBIT_SERVICE_NAME)
-createOrUpdateRabbitService $RABBIT_SERVICE_NAME $RABBIT_SERVICE_PLAN_NAME
+shouldWaitFor=($RABBIT_INSTANCE_NAME)
+createOrUpdateRabbitService $RABBIT_INSTANCE_NAME $RABBIT_INSTANCE_PLAN_NAME
 waitForServices $shouldWaitFor
 
 if [ -e "landscape/abacus-config/deploy/bin/post-infra" ]; then
