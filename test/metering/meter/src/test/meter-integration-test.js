@@ -1,28 +1,41 @@
 'use strict';
 
+const dbclient = require('abacus-dbclient');
 const moment = require('abacus-moment');
-process.env.CLUSTER = false;
-// const rabbitUri = 'amqp://localhost:5672';
-const queueNamePrefix = 'abacus-collect-queue';
-const fixture = require('./fixture');
+const lifecycleManager = require('abacus-lifecycle-manager')();
 
-// const { Producer, ConnectionManager } = require('abacus-rabbitmq');
+
+const fixture = require('./fixture');
 const rabbitClient = require('./rabbit-client');
 
+const { extend } = require('underscore');
+
+const queueName = 'abacus-meter-itest-queue';
+
 describe('test meter app', () => {
-  let queueName;
-
-  let sandbox;
-
   let stubs;
-  let meter;
 
-  beforeEach(async() => {
-    delete process.env.ABACUS_COLLECT_QUEUE;
-    queueName = queueNamePrefix + moment.now();
-    process.env.ABACUS_COLLECT_QUEUE = queueName;
-    sandbox = sinon.sandbox.create();
+  before(async() => {
+    const modules = [lifecycleManager.modules.meter];
+    const customEnv = extend({}, process.env, {
+      CLUSTER: false,
+      ABACUS_COLLECT_QUEUE: queueName
+    });
+
+    if (!process.env.DB) {
+      modules.push(lifecycleManager.modules.pouchserver);
+      lifecycleManager.useEnv(customEnv).startModules(modules);
+    } else
+      // drop all abacus collections except plans and plan-mappings
+      dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, () => {
+        lifecycleManager.useEnv(customEnv).startModules(modules);
+      });
+
     await rabbitClient.deleteQueue(queueName);
+  });
+
+  after(() => {
+    lifecycleManager.stopAllStarted();
   });
 
   afterEach(async() => {
@@ -33,11 +46,6 @@ describe('test meter app', () => {
     await stubs.accumulator.close();
     await stubs.account.close();
     await stubs.provisioning.close();
-
-    if(meter)
-      meter.close();
-
-    sandbox.reset();
   });
 
   const startApps = (stubs) => {
@@ -47,9 +55,6 @@ describe('test meter app', () => {
   };
 
   const postUsage = async(usage) => {
-    const meterApp = require('abacus-usage-meter');
-    meter = await meterApp();
-
     await rabbitClient.sendToQueue(queueName, usage);
   };
 

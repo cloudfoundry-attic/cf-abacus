@@ -39,12 +39,11 @@ const totalTimeout = commander.totalTimeout || 60000;
 const isPouchDB = !process.env.DB;
 
 const rabbitUri = process.env.RABBIT_URI;
-const queueName = 'test-collect-queue';
+const queueName = 'abacus-collector-itest-queue';
 const customEnv = extend({}, process.env, { ABACUS_COLLECT_QUEUE:  queueName });
 const lifecycleManager = createLifecycleManager().useEnv(customEnv);
 
 describe('abacus-usage-collector-itest', () => {
-  let server;
   before(() => {
     const modules = [
       lifecycleManager.modules.eurekaPlugin,
@@ -64,8 +63,6 @@ describe('abacus-usage-collector-itest', () => {
   });
 
   after(() => {
-    if(server)
-      server.close();
     lifecycleManager.stopAllStarted();
   });
 
