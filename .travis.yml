@@ -26,7 +26,6 @@ matrix:
   include:
     - env:
       - DESCRIPTION=unit-tests-pouchdb
-      - RABBIT_URI=amqp://localhost:5672
       - JOBS=1
       node_js: 8.9.4
       script:
@@ -34,7 +33,6 @@ matrix:
 
     - env:
       - DESCRIPTION=unit-tests-couchdb
-      - RABBIT_URI=amqp://localhost:5672
       - DBCLIENT=abacus-couchclient
       - DB=http://localhost:5984
       - JOBS=1
@@ -46,7 +44,6 @@ matrix:
 
     - env:
       - DESCRIPTION=unit-tests-mongodb
-      - RABBIT_URI=amqp://localhost:5672
       - DBCLIENT=abacus-mongoclient
       - DB=mongodb://localhost:27017
       - JOBS=1

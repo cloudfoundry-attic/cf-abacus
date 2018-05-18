@@ -1,6 +1,6 @@
 default:
   PORT: 9080
-  APPS: 0
+  APPS: 1
   INSTANCES: 1
   DB_PARTITIONS: 1
   METER: 9100
@@ -19,17 +19,17 @@ smalldb:
   OUTPUT_DB: false
 
 small:
-  APPS: 0
+  APPS: 1
   INSTANCES: 1
 
 medium:
-  APPS: 0
+  APPS: 1
   INSTANCES: 2
 
 large:
-  APPS: 0
+  APPS: 1
   INSTANCES: 3
 
 xlarge:
-  APPS: 0
+  APPS: 1
   INSTANCES: 10
