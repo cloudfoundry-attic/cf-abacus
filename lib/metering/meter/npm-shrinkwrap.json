@@ -242,6 +242,11 @@
       "from": "../../utils/urienv",
       "resolved": "file:../../utils/urienv"
     },
+    "abacus-usage-schemas": {
+      "version": "1.1.0",
+      "from": "../../config/schemas",
+      "resolved": "file:../../config/schemas"
+    },    
     "abacus-vcapenv": {
       "version": "1.1.0",
       "from": "../../utils/vcapenv",
