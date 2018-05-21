@@ -25,6 +25,7 @@ const unique = (id, timestamp) => id + timestamp;
 const createUsageDoc = (config) => ({
   start: config.time,
   end: config.time,
+  processed_id: `${config.time}-0-0-0`,
   organization_id: unique(config.org ? config.org : orgId, config.time),
   space_id: 'space-id',
   consumer_id: 'consumer-id',
