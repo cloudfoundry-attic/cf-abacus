@@ -2,7 +2,7 @@
   "name": "abacus-test-utils",
   "description": "Abacus Broker Test Utils",
   "license": "Apache-2.0",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/test-utils",
   "bugs": {
