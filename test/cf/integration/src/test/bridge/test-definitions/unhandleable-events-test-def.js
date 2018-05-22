@@ -62,6 +62,7 @@ const build = () => {
         success: {
           all: unhandleableEvents.length,
           conflicts: 0,
+          notsupported: 0,
           skips: unhandleableEvents.length
         },
         failures: 0

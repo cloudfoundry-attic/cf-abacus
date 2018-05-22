@@ -10,10 +10,12 @@ const createWait = require('abacus-wait');
 
 const waitUntil = yieldable(createWait().until);
 
-let fixture;
+const applicationFixture = require('./fixture');
 
-const build = () => {
-  context('when bridge sends conflicting usage documents', () => {
+describe('applications-bridge not supported events tests', () => {
+  const fixture = applicationFixture;
+
+  context('when bridge sends usage documents for orgs part of not supported account licenses', () => {
     let externalSystemsMocks;
 
     before(
@@ -32,7 +34,7 @@ const build = () => {
         const serviceUsageEvent = fixture.usageEvent().get();
         externalSystemsMocks.cloudController.usageEvents.return.firstTime([serviceUsageEvent]);
 
-        externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CONFLICT);
+        externalSystemsMocks.abacusCollector.collectUsageService.return.always(451); // Unavailable For Legal Reasons
 
         yield carryOverDb.setup();
         fixture.bridge.start(externalSystemsMocks);
@@ -47,7 +49,7 @@ const build = () => {
       externalSystemsMocks.stopAll(done);
     });
 
-    it('Abacus collector received the conflicting usage', () => {
+    it('Abacus collector received usage for not supported account', () => {
       expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(1);
     });
 
@@ -67,8 +69,8 @@ const build = () => {
         expect(response.body.statistics.usage).to.deep.equal({
           success: {
             all: 1,
-            conflicts: 1,
-            notsupported: 0,
+            conflicts: 0,
+            notsupported: 1,
             skips: 0
           },
           failures: 0
@@ -76,14 +78,4 @@ const build = () => {
       })
     );
   });
-};
-
-const testDef = {
-  fixture: (value) => {
-    fixture = value;
-    return testDef;
-  },
-  build
-};
-
-module.exports = testDef;
+});
