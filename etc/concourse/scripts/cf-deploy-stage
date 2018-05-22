@@ -23,17 +23,12 @@ pushd built-project
   reportingApps=$(node_modules/abacus-etc/apprc lib/aggregation/reporting/.apprc $ABACUS_PROFILE APPS)
 
   echo "Mapping routes ..."
-  mapRoutes ${ABACUS_PREFIX}abacus-usage-collector $collectorApps $CF_DOMAIN
-  mapRoutes ${ABACUS_PREFIX}abacus-usage-meter $meterApps $CF_DOMAIN
   mapRoutes ${ABACUS_PREFIX}abacus-usage-reporting $reportingApps $CF_DOMAIN
 
-  echo "Deleting obsolete apps ..."
-  # deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-collector $collectorApps
-  # deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-meter $meterApps
-  deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-accumulator $accumulatorApps
-  deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-aggregator $aggregatorApps
-  # deleteObsoleteApps ${ABACUS_PREFIX}abacus-usage-reporting $reportingApps
-  # deleteObsoleteApps ${ABACUS_PREFIX}abacus-cf-bridge 5
+  echo "Map location header url to meter app..."
+  meter_app_name=${ABACUS_PREFIX}abacus-usage-meter
+  cf map-route "$meter_app_name" "$CF_SYS_DOMAIN" --hostname "$meter_app_name" --path 'v1/metering/collected/usage/t'
+
 popd
 
 if [ "$BIND_DB_SERVICE" == "true" ]; then
