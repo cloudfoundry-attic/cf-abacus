@@ -107,6 +107,34 @@ describe('test meter app', () => {
     });
   });
 
+  context('when accumulator fails with non-retryable error', () => {
+    beforeEach(async() => {
+      const timestamp = moment.now();
+      const config = {
+        provisioning: fixture.provisioning.successfulResponses(timestamp),
+        account: fixture.account.successfulResponses(timestamp),
+        accumulator: [{
+          url: fixture.accumulator.url,
+          responses: [
+            fixture.buildResponse(422),
+            fixture.buildResponse(201, 'CREATED')
+          ]
+        }]
+      };
+      const usage = fixture.usageDoc({ time: timestamp });
+
+      stubs = fixture.buildStubs(config);
+      startApps(stubs);
+
+      await postUsage(usage);
+    });
+
+    it('does not retry', async() => {
+      await stubs.accumulator.waitUntil.alias(fixture.accumulator.url).isCalled(1);
+      expect(stubs.accumulator.getCallCount(fixture.accumulator.url)).to.equal(1);
+    });
+  });
+
   context('when provisioning fails', () => {
     let timestamp;
 
@@ -145,7 +173,6 @@ describe('test meter app', () => {
           .withDefaultParam(timestamp))).to.equal(2);
         expect(stubs.provisioning.getCallCount(fixture.provisioning.pricingPlanUrl(timestamp))).to.equal(1);
       });
-
     });
 
     context('when getting pricing plan fails', () => {
