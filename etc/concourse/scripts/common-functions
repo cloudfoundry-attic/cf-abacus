@@ -123,23 +123,6 @@ function mapRoutes {
   fi
 }
 
-function deleteObsoleteApps {
-  local APP_NAME=$1
-
-  if [ $2 = 1 ]; then
-    local MIN_INDEX=0
-  else
-    local MIN_INDEX=$2
-  fi
-
-  for i in `seq $MIN_INDEX 5`; do
-    cf delete $APP_NAME-$i -f
-  done
-  if (( $2 > 1 )); then
-    cf delete $APP_NAME -f
-  fi
-}
-
 function purge {
   echo "Purging usage events ..."
 
