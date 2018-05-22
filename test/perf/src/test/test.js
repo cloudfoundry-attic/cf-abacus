@@ -22,7 +22,6 @@ const batch = require('abacus-batch');
 const breaker = require('abacus-breaker');
 const request = require('abacus-request');
 const retry = require('abacus-retry');
-const dbclient = require('abacus-dbclient');
 const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');
 
@@ -135,10 +134,7 @@ describe('abacus-perf-test', () => {
         if (err) console.log('Could not fetch system token due to, %o', err);
       });
 
-    if(/.*localhost.*/.test(collector))
-      // drop all abacus collections except plans and plan-mappings
-      dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, done);
-    else done();
+    done();
   });
 
   it('measures performance of concurrent usage submissions', function(done) {

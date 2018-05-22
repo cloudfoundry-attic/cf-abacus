@@ -2,7 +2,7 @@
   "name": "abacus-plan-tester",
   "description": "Plan tester",
   "license": "Apache-2.0",
-  "version": "1.1.0",
+  "version": "1.1.3",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tools/plan-tester",
   "bugs": {
@@ -32,14 +32,14 @@
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "abacus-oauth": "file:../../lib/utils/oauth",
+    "abacus-oauth": "file:../../../lib/utils/oauth",
     "abacus-publish": "file:../../../tools/publish",
-    "abacus-request": "file:../../lib/utils/request",
-    "abacus-retry": "file:../../lib/utils/retry",
+    "abacus-request": "file:../../../lib/utils/request",
+    "abacus-retry": "file:../../../lib/utils/retry",
     "abacus-metering-config": "../metering",
     "abacus-pricing-config": "../pricing",
     "abacus-rating-config": "../rating",
-    "abacus-urienv": "file:../../lib/utils/urienv",
+    "abacus-urienv": "file:../../../lib/utils/urienv",
     "nyc": "^11.4.1",
     "bignumber.js": "^5.0.0"
   },
