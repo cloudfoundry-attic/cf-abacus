@@ -5,8 +5,8 @@
       "licenseType": "PARTNER",
       "cfOrg": "2e073ab8-8f83-41b8-b5f6-e39c8642cbd2",
       "description": "E2E-dc5bdcf2-1130-4ec0-9baa-168114b2da81",
-      "metadataUrl": "https://E2E-dc5bdcf2-1130-4ec0-9baa-168114b2da81-SD.authentication.sap.hana.ondemand.com/saml/metadata",
-      "identityZoneUrl": "https://E2E-dc5bdcf2-1130-4ec0-9baa-168114b2da81-SD.authentication.sap.hana.ondemand.com",
+      "metadataUrl": "https://E2E-dc5bdcf2-1130-4ec0-9baa-168114b2da81-SD.authentication.domain.com/path",
+      "identityZoneUrl": "https://E2E-dc5bdcf2-1130-4ec0-9baa-168114b2da81-SD.authentication.domain.com",
       "sapIdServiceTenantAdminUserId": "P22232323245"
   },
   {
@@ -15,8 +15,8 @@
       "licenseType": "TRIAL",
       "cfOrg": "9130fcd6-0040-4563-b835-350696aeb3ff",
       "description": "trial",
-      "metadataUrl": "https://i827954trial.authentication.sap.hana.ondemand.com/saml/metadata",
-      "identityZoneUrl": "https://i827954trial.authentication.sap.hana.ondemand.com",
+      "metadataUrl": "https://i827954trial.authentication.domain.com/path",
+      "identityZoneUrl": "https://i827954trial.authentication.domain.com",
       "sapIdServiceTenantAdminUserId": "I012345"
   },
   {
@@ -25,8 +25,8 @@
       "licenseType": "TRIAL",
       "cfOrg": "0be44bbf-dd71-4358-b3aa-bf94a307e9a8",
       "description": "trial",
-      "metadataUrl": "https://i12345trial.authentication.sap.hana.ondemand.com/saml/metadata",
-      "identityZoneUrl": "https://i12345trial.authentication.sap.hana.ondemand.com",
+      "metadataUrl": "https://i12345trial.authentication.domain.com/path",
+      "identityZoneUrl": "https://i12345trial.authentication.domain.com",
       "sapIdServiceTenantAdminUserId": "D012345"
   },
   {
@@ -35,8 +35,8 @@
       "licenseType": "SAPDEV",
       "cfOrg": "0e0c3ef1-7315-4bfe-b0bd-079231ab1efd",
       "description": "kube-mgmt",
-      "metadataUrl": "https://kube-mgmt.authentication.sap.hana.ondemand.com/saml/metadata",
-      "identityZoneUrl": "https://kube-mgmt.authentication.sap.hana.ondemand.com",
+      "metadataUrl": "https://kube-mgmt.authentication.domain.com/path",
+      "identityZoneUrl": "https://kube-mgmt.authentication.domain.com",
       "sapIdServiceTenantAdminUserId": "I2323232"
   }
 ]
