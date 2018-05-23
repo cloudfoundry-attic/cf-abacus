@@ -1,7 +1,0 @@
-#!/bin/bash
-
-set -e
-
-# Run the duplicate usage detection tests
-(cd node_modules/abacus-dupe-test && yarn run dupe $@)
-
