@@ -1,6 +1,7 @@
 'use strict';
 
 const httpStatus = require('http-status-codes');
+
 const yieldable = require('abacus-yieldable');
 
 const carryOverDb = require('../../utils/carry-over-db');
@@ -9,13 +10,13 @@ const createWait = require('abacus-wait');
 
 const waitUntil = yieldable(createWait().until);
 
-let fixture;
-let createUnhandleableEvents;
+const applicationFixture = require('./fixture');
 
-const build = () => {
-  context('when reading unhandleable events from Cloud Controller', () => {
+describe('applications-bridge not supported events tests', () => {
+  const fixture = applicationFixture;
+
+  context('when bridge sends usage documents for orgs part of not supported account licenses', () => {
     let externalSystemsMocks;
-    let unhandleableEvents;
 
     before(yieldable.functioncb(function*() {
       externalSystemsMocks = fixture.externalSystemsMocks();
@@ -29,10 +30,10 @@ const build = () => {
         .whenScopesAre(fixture.oauth.cfAdminScopes)
         .return(fixture.oauth.cfAdminToken);
 
-      unhandleableEvents = createUnhandleableEvents(fixture);
-      externalSystemsMocks.cloudController.usageEvents.return.firstTime(unhandleableEvents);
+      const serviceUsageEvent = fixture.usageEvent().get();
+      externalSystemsMocks.cloudController.usageEvents.return.firstTime([serviceUsageEvent]);
 
-      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
+      externalSystemsMocks.abacusCollector.collectUsageService.return.always(451); // Unavailable For Legal Reasons
 
       yield carryOverDb.setup();
       fixture.bridge.start(externalSystemsMocks);
@@ -46,11 +47,11 @@ const build = () => {
       externalSystemsMocks.stopAll(done);
     });
 
-    it('Abacus collector does not receive any usage', () => {
-      expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(0);
+    it('Abacus collector received usage for not supported account', () => {
+      expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(1);
     });
 
-    it('Does not write an entry in carry over', yieldable.functioncb(function*() {
+    it('Does not write entry in carry-over', yieldable.functioncb(function*() {
       const docs = yield carryOverDb.readCurrentMonthDocs();
       expect(docs).to.deep.equal([]);
     }));
@@ -60,27 +61,13 @@ const build = () => {
       expect(response.statusCode).to.equal(httpStatus.OK);
       expect(response.body.statistics.usage).to.deep.equal({
         success: {
-          all: unhandleableEvents.length,
+          all: 1,
           conflicts: 0,
-          notsupported: 0,
-          skips: unhandleableEvents.length
+          notsupported: 1,
+          skips: 0
         },
         failures: 0
       });
     }));
   });
-};
-
-const testDef = {
-  fixture: (value) => {
-    fixture = value;
-    return testDef;
-  },
-  unhandleableEvents: (value) => {
-    createUnhandleableEvents = value;
-    return testDef;
-  },
-  build
-};
-
-module.exports = testDef;
+});

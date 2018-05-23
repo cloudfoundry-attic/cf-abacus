@@ -68,6 +68,7 @@ const build = () => {
           success: {
             all: 1,
             conflicts: 1,
+            notsupported: 0,
             skips: 0
           },
           failures: 0

@@ -79,33 +79,6 @@ yarn run acceptance --help
 ```
 
 
-Duplicate usage detection test
----
-
-You can run the `dupe` test locally with:
-```sh
-cd cf-abacus
-
-yarn start
-yarn run smoke
-yarn stop
-```
-
-With Abacus on Cloud Foundry configure the test with the command line options listed here:
-```sh
-yarn run dupe --help
-```
-
-Set these variables to run the test against secured Abacus on Cloud Foundry:
-```sh
-export SECURED=true
-export CLIENT_ID=<object-storage client id>
-export CLIENT_SECRET=<object-storage client secret>
-```
-
-Check the security concept in [security.md](security.md) for details.
-
-
 Performance test
 ---
 
