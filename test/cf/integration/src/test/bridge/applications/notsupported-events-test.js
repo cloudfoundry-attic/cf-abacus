@@ -18,30 +18,28 @@ describe('applications-bridge not supported events tests', () => {
   context('when bridge sends usage documents for orgs part of not supported account licenses', () => {
     let externalSystemsMocks;
 
-    before(
-      yieldable.functioncb(function*() {
-        externalSystemsMocks = fixture.externalSystemsMocks();
-        externalSystemsMocks.startAll();
+    before(yieldable.functioncb(function*() {
+      externalSystemsMocks = fixture.externalSystemsMocks();
+      externalSystemsMocks.startAll();
 
-        externalSystemsMocks.uaaServer.tokenService
-          .whenScopesAre(fixture.oauth.abacusCollectorScopes)
-          .return(fixture.oauth.abacusCollectorToken);
+      externalSystemsMocks.uaaServer.tokenService
+        .whenScopesAre(fixture.oauth.abacusCollectorScopes)
+        .return(fixture.oauth.abacusCollectorToken);
 
-        externalSystemsMocks.uaaServer.tokenService
-          .whenScopesAre(fixture.oauth.cfAdminScopes)
-          .return(fixture.oauth.cfAdminToken);
+      externalSystemsMocks.uaaServer.tokenService
+        .whenScopesAre(fixture.oauth.cfAdminScopes)
+        .return(fixture.oauth.cfAdminToken);
 
-        const serviceUsageEvent = fixture.usageEvent().get();
-        externalSystemsMocks.cloudController.usageEvents.return.firstTime([serviceUsageEvent]);
+      const serviceUsageEvent = fixture.usageEvent().get();
+      externalSystemsMocks.cloudController.usageEvents.return.firstTime([serviceUsageEvent]);
 
-        externalSystemsMocks.abacusCollector.collectUsageService.return.always(451); // Unavailable For Legal Reasons
+      externalSystemsMocks.abacusCollector.collectUsageService.return.always(451); // Unavailable For Legal Reasons
 
-        yield carryOverDb.setup();
-        fixture.bridge.start(externalSystemsMocks);
+      yield carryOverDb.setup();
+      fixture.bridge.start(externalSystemsMocks);
 
-        yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(2));
-      })
-    );
+      yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(2));
+    }));
 
     after((done) => {
       fixture.bridge.stop();
@@ -53,29 +51,23 @@ describe('applications-bridge not supported events tests', () => {
       expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(1);
     });
 
-    it(
-      'Does not write entry in carry-over',
-      yieldable.functioncb(function*() {
-        const docs = yield carryOverDb.readCurrentMonthDocs();
-        expect(docs).to.deep.equal([]);
-      })
-    );
+    it('Does not write entry in carry-over', yieldable.functioncb(function*() {
+      const docs = yield carryOverDb.readCurrentMonthDocs();
+      expect(docs).to.deep.equal([]);
+    }));
 
-    it(
-      'Exposes correct statistics',
-      yieldable.functioncb(function*() {
-        const response = yield fixture.bridge.readStats.withValidToken();
-        expect(response.statusCode).to.equal(httpStatus.OK);
-        expect(response.body.statistics.usage).to.deep.equal({
-          success: {
-            all: 1,
-            conflicts: 0,
-            notsupported: 1,
-            skips: 0
-          },
-          failures: 0
-        });
-      })
-    );
+    it('Exposes correct statistics', yieldable.functioncb(function*() {
+      const response = yield fixture.bridge.readStats.withValidToken();
+      expect(response.statusCode).to.equal(httpStatus.OK);
+      expect(response.body.statistics.usage).to.deep.equal({
+        success: {
+          all: 1,
+          conflicts: 0,
+          notsupported: 1,
+          skips: 0
+        },
+        failures: 0
+      });
+    }));
   });
 });
