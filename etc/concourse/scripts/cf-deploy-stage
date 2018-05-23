@@ -26,8 +26,7 @@ pushd built-project
   mapRoutes ${ABACUS_PREFIX}abacus-usage-reporting $reportingApps $CF_DOMAIN
 
   echo "Map location header url to meter app..."
-  meter_app_name=${ABACUS_PREFIX}abacus-usage-meter
-  cf map-route "$meter_app_name" "$CF_SYS_DOMAIN" --hostname "$meter_app_name" --path 'v1/metering/collected/usage/t'
+  cf map-route "${ABACUS_PREFIX}abacus-usage-meter" "$CF_SYS_DOMAIN" --hostname "${ABACUS_PREFIX}abacus-usage-collector" --path 'v1/metering/collected/usage/t'
 
 popd
 
