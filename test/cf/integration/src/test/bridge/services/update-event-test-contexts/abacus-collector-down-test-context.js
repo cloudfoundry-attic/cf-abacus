@@ -17,7 +17,7 @@ const run = (test) => {
     const createServiceUsageEvent = arrange.fixture.usageEvent()
       .overwriteEventGuid('create-event-guid')
       .get();
-        
+
     const updateServiceUsageEvent = arrange.fixture.usageEvent()
       .overwriteEventGuid('update-event-guid')
       .overwriteState(arrange.fixture.usageEventStates.updated)
@@ -41,14 +41,14 @@ const run = (test) => {
         guid: updateServiceUsageEvent.metadata.guid,
         state: arrange.fixture.usageEventStates.deleted,
         planName: arrange.fixture.planNames.default
-      });  
+      });
       return carryOverEntries;
     };
 
-    context('in the beggining of UPDATE event', () => { 
+    context('in the beggining of UPDATE event', () => {
       const expectedNumBerOfCarryOverEntries = 2;
       const expectedCallsToCollectUsageService = 7;
-      
+
       const getExpectedUsageDocs = () => {
         const usageDocs = [];
         usageDocs.push(arrange.fixture.collectorUsage()
@@ -56,7 +56,7 @@ const run = (test) => {
           .overwriteUsageTime(createServiceUsageEvent.metadata.created_at)
           .overwritePlanName(arrange.fixture.planNames.default)
           .get());
-        _(failRequestsCount).times(() => 
+        _(failRequestsCount).times(() =>
           usageDocs.push(arrange.fixture.collectorUsage()
             .overwriteMeasuredUsage(arrange.fixture.usageEventStates.deleted)
             .overwriteUsageTime(updateServiceUsageEvent.metadata.created_at)
@@ -87,6 +87,7 @@ const run = (test) => {
           success: {
             all: 2,
             conflicts: 0,
+            notsupported: 0,
             skips: 0
           },
           failures: 1
@@ -103,14 +104,14 @@ const run = (test) => {
         const responses = [];
         responses.push(httpStatus.CREATED);
         _(failRequestsCount).times(() => responses.push(httpStatus.BAD_GATEWAY));
-        responses.push(httpStatus.CREATED); 
-        responses.push(httpStatus.CREATED); 
+        responses.push(httpStatus.CREATED);
+        responses.push(httpStatus.CREATED);
 
         arrange.fixture.externalSystemsMocks().abacusCollector.collectUsageService.return.series(responses);
       };
-  
-      before(yieldable.functioncb(function*() { 
-        arrange.init(); 
+
+      before(yieldable.functioncb(function*() {
+        arrange.init();
         setCloudControllerResponse();
         setAbacusCollectorResponse();
         yield arrange.finalizeSetup();
@@ -119,7 +120,7 @@ const run = (test) => {
         yield waitUntil(serviceMock(arrange.fixture.externalSystemsMocks().abacusCollector.collectUsageService)
           .received(expectedCallsToCollectUsageService));
       }));
-  
+
       after((done) => {
         arrange.cleanUp(done);
       });
@@ -130,7 +131,7 @@ const run = (test) => {
       test.statistics(getExpectedStatistics());
     });
 
-    context('in the middle of UPDATE event', () => {   
+    context('in the middle of UPDATE event', () => {
       const expectedNumBerOfCarryOverEntries = 2;
       const expectedCallsToCollectUsageService = 8;
 
@@ -144,7 +145,7 @@ const run = (test) => {
           .overwriteUsageTime(updateServiceUsageEvent.metadata.created_at)
           .overwriteMeasuredUsage(arrange.fixture.usageEventStates.deleted)
           .get());
-        _(failRequestsCount).times(() => 
+        _(failRequestsCount).times(() =>
           usageDocs.push(arrange.fixture.collectorUsage()
             .overwriteMeasuredUsage(arrange.fixture.usageEventStates.default)
             .overwriteUsageTime(updateServiceUsageEvent.metadata.created_at + 1)
@@ -153,7 +154,7 @@ const run = (test) => {
         usageDocs.push(arrange.fixture.collectorUsage()
           .overwriteUsageTime(updateServiceUsageEvent.metadata.created_at)
           .overwriteMeasuredUsage(arrange.fixture.usageEventStates.deleted)
-          .get()); 
+          .get());
         usageDocs.push(arrange.fixture.collectorUsage()
           .overwriteUsageTime(updateServiceUsageEvent.metadata.created_at + 1)
           .overwriteMeasuredUsage(arrange.fixture.usageEventStates.default)
@@ -176,8 +177,9 @@ const run = (test) => {
           success: {
             all: 2,
             conflicts: 1,
+            notsupported: 0,
             skips: 0
-          }, 
+          },
           failures: 1
         };
       };
@@ -198,9 +200,9 @@ const run = (test) => {
 
         arrange.fixture.externalSystemsMocks().abacusCollector.collectUsageService.return.series(responses);
       };
-  
-      before(yieldable.functioncb(function*() { 
-        arrange.init();  
+
+      before(yieldable.functioncb(function*() {
+        arrange.init();
         setCloudControllerResponse();
         setAbacusCollectorResponse();
         yield arrange.finalizeSetup();
@@ -209,7 +211,7 @@ const run = (test) => {
         yield waitUntil(serviceMock(arrange.fixture.externalSystemsMocks().abacusCollector.collectUsageService)
           .received(expectedCallsToCollectUsageService));
       }));
-  
+
       after((done) => {
         arrange.cleanUp(done);
       });

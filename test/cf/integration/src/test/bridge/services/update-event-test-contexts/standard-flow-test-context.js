@@ -16,7 +16,7 @@ const run = (test) => {
     const createEvent = arrange.fixture.usageEvent()
       .overwriteEventGuid('create-event-guid')
       .get();
-  
+
     const updateEvent = arrange.fixture.usageEvent()
       .overwriteEventGuid('update-event-guid')
       .overwriteState(arrange.fixture.usageEventStates.updated)
@@ -33,19 +33,20 @@ const run = (test) => {
         guid: updateEvent.metadata.guid,
         state: arrange.fixture.usageEventStates.deleted,
         planName: arrange.fixture.planNames.default
-      });  
+      });
       return carryOverEntries;
     };
     context('when preceding event is not found', () => {
       const expectedNumBerOfCarryOverEntries = 0;
       const expectedCallsToCollectUsageService = 0;
       const expectedCallsToUsageEventsService = 2;
-      
+
       const getExpectedStatistics = () => {
         return {
           success: {
             all: 1,
             conflicts: 0,
+            notsupported: 0,
             skips: 1
           }, failures: 0
         };
@@ -64,13 +65,13 @@ const run = (test) => {
 
       before(yieldable.functioncb(function*() {
         arrange.init();
-        setCloudControllerResponse(); 
+        setCloudControllerResponse();
         yield arrange.finalizeSetup();
         yield waitUntil(
           serviceMock(arrange.fixture.externalSystemsMocks().cloudController.usageEvents)
             .received(expectedCallsToUsageEventsService));
       }));
-  
+
       after((done) => {
         arrange.cleanUp(done);
       });
@@ -81,7 +82,7 @@ const run = (test) => {
       test.statistics(getExpectedStatistics());
     });
 
-    context('when preceding event is found', () => {  
+    context('when preceding event is found', () => {
       const expectedNumBerOfCarryOverEntries = 2;
       const expectedCallsToCollectUsageService = 3;
       const expectedCallsToUsageEventsService = 3;
@@ -109,8 +110,9 @@ const run = (test) => {
           success: {
             all: 2,
             conflicts: 0,
+            notsupported: 0,
             skips: 0
-          }, 
+          },
           failures: 0
         };
       };
@@ -143,11 +145,11 @@ const run = (test) => {
         yield waitUntil(serviceMock(arrange.fixture.externalSystemsMocks().cloudController.usageEvents)
           .received(expectedCallsToUsageEventsService));
       }));
-  
+
       after((done) => {
         arrange.cleanUp(done);
       });
-      
+
       test.usageEventsService(expectedCallsToUsageEventsService, getExpectedGuids());
       test.collectUsageService(expectedCallsToCollectUsageService, getExpectedUsageDocs());
       test.statistics(getExpectedStatistics());
@@ -235,11 +237,12 @@ const run = (test) => {
         success: {
           all: 3,
           conflicts: 0,
+          notsupported: 0,
           skips: 0
-        }, 
+        },
         failures: 0
       });
-    
+
       before(yieldable.functioncb(function*() {
         arrange.init();
         setCloudControllerResponse();
