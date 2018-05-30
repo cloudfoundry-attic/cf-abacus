@@ -110,7 +110,9 @@ describe('Abacus Broker Smoke test', function() {
     const postResponse = yield yieldable(testAppClient.postUsage)(usageBody);
     expect(postResponse.statusCode).to.equal(201, 'usage was not submitted successfully');
 
-    yield yieldable(abacusClient.waitUntilUsageIsProcessed)(usageToken, postResponse.headers.location);
+    const locationHeader = postResponse.headers.location;
+    expect(locationHeader).to.not.equal(undefined);
+    yield yieldable(abacusClient.waitUntilUsageIsProcessed)(usageToken, locationHeader);
 
     const getResponse = yield yieldable(abacusClient.getOrganizationUsage)(usageToken, app.orgGuid);
     expect(getResponse.statusCode).to.equal(200, 'usage was not retrieved successfully');
