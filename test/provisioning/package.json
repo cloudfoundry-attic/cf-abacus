@@ -25,6 +25,7 @@
   "scripts": {
     "broker-itest": "abacus-eslint && abacus-mocha",
     "test": "abacus-eslint",
+    "itest": "abacus-eslint",
     "generate-coverage": "true",
     "lint": "abacus-eslint",
     "pub": "publish"
