@@ -1,9 +1,11 @@
 'use-strict';
 
-const request = require('abacus-request');
 const moment = require('abacus-moment');
-const _ = require('underscore');
-const extend = _.extend;
+const request = require('abacus-request');
+const createWait = require('abacus-wait');
+
+const httpStatus = require('http-status-codes');
+const { extend } = require('underscore');
 
 let provisioningUrl;
 let collectorUrl;
@@ -119,6 +121,21 @@ const getTimeBasedKeyProperty = (body, filter) => {
   })[0].resource_instances[0].t;
 };
 
+const waitUntilUsageIsProcessed = (token, documentUrlLocation, callback) => {
+
+  const checkLocation = (cb) => {
+    request.get(documentUrlLocation, {
+      headers: getHeaders(token)
+    }, (err, res) => {
+      if (res.statusCode && res.statusCode === httpStatus.OK) return cb(undefined, true);
+      return cb(undefined, false);
+    });
+  };
+  return createWait().until(checkLocation, callback);
+
+};
+
+
 module.exports = (provisioningAppUrl, collectorAppUrl, reportingAppUrl) => {
   provisioningUrl = provisioningAppUrl;
   collectorUrl = collectorAppUrl;
@@ -133,6 +150,7 @@ module.exports = (provisioningAppUrl, collectorAppUrl, reportingAppUrl) => {
     getPlan: getPlan,
     createMapping: createMapping,
     getMapping: getMapping,
-    getTimeBasedKeyProperty: getTimeBasedKeyProperty
+    getTimeBasedKeyProperty: getTimeBasedKeyProperty,
+    waitUntilUsageIsProcessed: waitUntilUsageIsProcessed
   };
 };;

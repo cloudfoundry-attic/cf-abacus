@@ -8,4 +8,7 @@
 
 export DBCLIENT=abacus-mongoclient
 export DB=mongodb://localhost:27017
+
+export RABBIT_URI=amqp://localhost:5672
+
 export JOBS=1

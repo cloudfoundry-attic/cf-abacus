@@ -56,7 +56,7 @@
     "demo": "bin/demo",
     "perf": "bin/perf",
     "itest": "export JOBS=1 && foreach itest node_modules/:name yarn run itest --",
-    "broker-itest": "export JOBS=1 && foreach broker-itest node_modules/:name yarn run broker-itest --",
+    "broker-itest": "export JOBS=1 && foreach provisioning-itest node_modules/:name yarn run broker-itest --",
     "smoke": "export JOBS=1 && foreach smoke node_modules/:name yarn run smoke --",
     "extensions-itest": "export JOBS=1 && foreach extensions-itest node_modules/:name yarn run extensions-itest --",
     "acceptance": "export JOBS=1 && foreach acceptance node_modules/:name yarn run acceptance --",
@@ -69,6 +69,7 @@
   },
   "dependencies": {
     "abacus-account-plugin": "file:lib/plugins/account",
+    "abacus-accountclient": "file:lib/utils/accountclient",
     "abacus-audit": "file:lib/utils/audit",
     "abacus-authserver-plugin": "file:lib/plugins/authserver",
     "abacus-basic": "file:lib/utils/basic",
@@ -159,6 +160,7 @@
     "abacus-mddoc": "file:tools/mddoc",
     "abacus-mocha": "file:tools/mocha",
     "abacus-perf-test": "file:test/perf",
+    "abacus-provisioning-int-test": "file:test/provisioning",
     "abacus-publish": "file:tools/publish",
     "abacus-replace-template": "file:tools/replace-template",
     "abacus-secured-itest": "file:test/secured",
@@ -167,9 +169,13 @@
     "abacus-usage-collector-itest": "file:test/metering/collector",
     "abacus-usage-meter-itest": "file:test/metering/meter",
     "abacus-usage-reporting-itest": "file:test/aggregation/reporting",
+    "angular": "1.5.10",
+    "chai-as-promised": "^7.1.1",
     "chai-http": "3.0.0",
     "check-node-version": "^3.2.0",
     "codecov": "^3.0.0",
+    "eslint-plugin-mocha": "^4.8.0",
+    "eslint-plugin-nodate": "file:tools/eslint-plugin-nodate",
     "jasmine-core": "^2.8.0",
     "jshint": "^2.8.0",
     "jsinspect": "^0.6.1",
@@ -182,7 +188,8 @@
     "lcov-result-merger": "^1.2.0",
     "nock": "9.0.2",
     "nyc": "^11.4.1",
-    "proxyquire": "1.5.0"
+    "proxyquire": "1.5.0",
+    "supertest": "^3.0.0"
   },
   "engines": {
     "node": ">=8.9.4 <9.0.0",

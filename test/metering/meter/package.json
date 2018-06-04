@@ -24,29 +24,33 @@
   "scripts": {
     "itest": "abacus-eslint && abacus-mocha --command",
     "test": "abacus-eslint",
+    "start-rabbit": "rabbitmq-server start",
     "generate-coverage": "true",
     "lint": "abacus-eslint",
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-mocha": "file:../../../tools/mocha",
-    "nyc": "^11.4.1",
+    "abacus-account-plugin": "file:../../../lib/plugins/account",
     "abacus-batch": "file:../../../lib/utils/batch",
-    "abacus-throttle": "file:../../../lib/utils/throttle",
+    "abacus-dbclient": "file:../../../lib/utils/dbclient",
+    "abacus-debug": "file:../../../lib/utils/debug",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-express": "file:../../../lib/utils/express",
+    "abacus-lifecycle-manager": "file:../../lib/lifecycle-manager",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-moment": "file:../../../lib/utils/moment",
+    "abacus-pouchserver": "file:../../../lib/utils/pouchserver",
+    "abacus-provisioning-plugin": "file:../../../lib/plugins/provisioning",
+    "abacus-publish": "file:../../../tools/publish",
     "abacus-request": "file:../../../lib/utils/request",
     "abacus-router": "file:../../../lib/utils/router",
-    "abacus-express": "file:../../../lib/utils/express",
-    "abacus-pouchserver": "file:../../../lib/utils/pouchserver",
+    "abacus-throttle": "file:../../../lib/utils/throttle",
+    "abacus-usage-collector": "file:../../../lib/metering/collector",
     "abacus-usage-meter": "file:../../../lib/metering/meter",
-    "abacus-debug": "file:../../../lib/utils/debug",
-    "abacus-moment": "file:../../../lib/utils/moment",
-    "abacus-lifecycle-manager": "file:../../lib/lifecycle-manager",
-    "underscore": "^1.8.3",
-    "commander": "2.8.1"
-  },
-  "devDependencies": {
-    "abacus-eslint": "file:../../../tools/eslint",
-    "abacus-publish": "file:../../../tools/publish"
+    "amqplib": "^0.5.2",
+    "commander": "2.8.1",
+    "nyc": "^11.4.1",
+    "underscore": "^1.8.3"
   },
   "nyc": {
     "cache": true,

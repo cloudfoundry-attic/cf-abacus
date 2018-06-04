@@ -1,24 +1,14 @@
 'use strict';
 
 const commander = require('commander');
-const batch = require('abacus-batch');
 const execute = require('abacus-cmdline').execute;
 const throttle = require('abacus-throttle');
 const request = require('abacus-request');
-const router = require('abacus-router');
-const express = require('abacus-express');
 const dbclient = require('abacus-dbclient');
-const moment = require('abacus-moment');
-const lifecycleManager = require('abacus-lifecycle-manager')();
+const createLifecycleManager = require('abacus-lifecycle-manager');
+const { Consumer, ConnectionManager } = require('abacus-rabbitmq');
 
-const _ = require('underscore');
-const map = _.map;
-const range = _.range;
-const clone = _.clone;
-const omit = _.omit;
-
-// Batch the requests
-const brequest = batch(request);
+const { map, range, clone, omit, extend } = require('underscore');
 
 // Setup the debug log
 const debug = require('abacus-debug')('abacus-usage-collector-itest');
@@ -36,30 +26,27 @@ commander
   .allowUnknownOption(true)
   .parse(argv);
 
-// Number of organizations
 const orgs = commander.orgs || 1;
-
-// Number of resource instances
 const resourceInstances = commander.instances || 1;
-
-// Number of usage docs
 const usage = commander.usagedocs || 1;
 
-// Usage time shift by number of days in milli-seconds
+// Usage time shift by number of days in milliseconds
 const tshift = commander.day * 24 * 60 * 60 * 1000 || 0;
 
-// External Abacus processes start timeout
 const startTimeout = commander.startTimeout || 30000;
-
-// This test timeout
 const totalTimeout = commander.totalTimeout || 60000;
 
-// Is pouchDB used
 const isPouchDB = !process.env.DB;
+
+const rabbitUri = process.env.RABBIT_URI;
+const queueName = 'abacus-collector-itest-queue';
+const customEnv = extend({}, process.env, { ABACUS_COLLECT_QUEUE:  queueName });
+const lifecycleManager = createLifecycleManager().useEnv(customEnv);
 
 describe('abacus-usage-collector-itest', () => {
   before(() => {
     const modules = [
+      lifecycleManager.modules.eurekaPlugin,
       lifecycleManager.modules.provisioningPlugin,
       lifecycleManager.modules.accountPlugin,
       lifecycleManager.modules.collector
@@ -69,7 +56,7 @@ describe('abacus-usage-collector-itest', () => {
       modules.push(lifecycleManager.modules.pouchserver);
       lifecycleManager.startModules(modules);
     } else
-    // drop all abacus collections except plans and plan-mappings
+      // drop all abacus collections except plans and plan-mappings
       dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, () => {
         lifecycleManager.startModules(modules);
       });
@@ -79,154 +66,105 @@ describe('abacus-usage-collector-itest', () => {
     lifecycleManager.stopAllStarted();
   });
 
+  // Initialize usage doc properties with unique values
+  const start = 1435629365220 + tshift;
+  const end = 1435629465220 + tshift;
+
+  const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27', o + 1].join('-');
+  const sid = (o, ri) => ['aaeae239-f3f8-483c-9dd0-de5d41c38b6a', o + 1].join('-');
+  const cid = (o, ri) => ['bbeae239-f3f8-483c-9dd0-de6781c38bab', o + 1].join('-');
+  const pid = (ri, u) => 'basic';
+
+  const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87', o + 1, ri + 1].join('-');
+
+  // Measured usage for a given org, resource instance and usage #s
+  const measuredTemplate = (o, ri, u) => ({
+    start: start + u,
+    end: end + u,
+    organization_id: oid(o),
+    space_id: sid(o, ri),
+    resource_id: 'test-resource',
+    plan_id: pid(ri, u),
+    resource_instance_id: riid(o, ri),
+    consumer_id: cid(o, ri),
+    measured_usage: [
+      { measure: 'storage', quantity: 1073741824 },
+      { measure: 'light_api_calls', quantity: 1000 },
+      { measure: 'heavy_api_calls', quantity: 100 }
+    ]
+  });
+
+  const storeDefaults = () => {
+    const storeDefaultsOperation = 'store-default-plans && store-default-mappings';
+    execute(storeDefaultsOperation);
+  };
+
+  // Post a measured usage doc, throttled to default concurrent requests
+  let usageDocs = new Map();
+  const post = throttle((o, ri, u, cb) => {
+    const usageDoc = measuredTemplate(o, ri, u);
+    usageDocs.set(`${usageDoc.resource_instance_id}${usageDoc.end}`, usageDoc);
+    debug('Submit measured usage %o for org %d instance %d usage %d', usageDoc, o + 1, ri + 1, u + 1);
+    request.post('http://localhost::p/v1/metering/collected/usage', { p: 9080, body: usageDoc }, (err, val) => {
+      expect(err).to.equal(undefined);
+      expect(val.statusCode).to.equal(201);
+      expect(val.headers.location).to.not.equal(undefined);
+      debug('POSTed measured usage for org %d instance %d' + ' usage %d', o + 1, ri + 1, u + 1);
+      cb();
+    });
+  });
+
+  const submit = (cb) =>
+    map(range(usage), (u) => map(range(resourceInstances), (ri) => map(range(orgs), (o) => post(o, ri, u, cb))));
+
+  const submitUsage = (cb) => {
+    request.waitFor('http://localhost::p/batch', { p: 9080 }, startTimeout, (err, value) => {
+      if (err) throw err;
+      submit(cb);
+    });
+  };
+
+  const verify = (expectedMessages, cb) => {
+    let messageCount = 0;
+    const countMessages = () => {
+      if (++messageCount === expectedMessages)
+        cb();
+    };
+
+    const handle = (msg) => {
+      const doc = JSON.parse(msg.content.toString());
+      debug('Read doc %o from message queue', doc);
+      expect(usageDocs.get(doc.resource_instance_id + doc.end)).to.deep.equal(
+        omit(doc, 'id', 'processed', 'processed_id', 'collected_usage_id'));
+      usageDocs.delete(`${doc.resource_instance_id}${doc.end}`);
+      countMessages();
+    };
+
+    debug('Creating consumer ...');
+    const prefetchLimit = 100;
+    const connectionManager = new ConnectionManager([rabbitUri]);
+    const consumer = new Consumer(connectionManager, queueName, prefetchLimit);
+    consumer.process({ handle: handle });
+  };
+
   it('collect measured usage submissions', function(done) {
-    // Configure the test timeout based on the number of usage docs or
-    // predefined timeout
+    // Configure the test timeout based on the number of usage docs or predefined timeout
     const timeout = Math.max(totalTimeout, 100 * orgs * resourceInstances * usage);
     this.timeout(timeout + 2000);
-    const processingDeadline = moment.now() + timeout;
 
-    // Setup meter spy
-    const meter = spy((req, res, next) => {
-      res.status(201).send();
-    });
-
-    // Start usage meter stub with the meter spy
-    const app = express();
-    const routes = router();
-    routes.post('/v1/metering/normalized/usage', meter);
-    app.use(routes);
-    app.use(router.batch(routes));
-    app.listen(9100);
-
-    // Initialize usage doc properties with unique values
-    const start = 1435629365220 + tshift;
-    const end = 1435629465220 + tshift;
-
-    const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27', o + 1].join('-');
-    const sid = (o, ri) => ['aaeae239-f3f8-483c-9dd0-de5d41c38b6a', o + 1].join('-');
-    const cid = (o, ri) => ['bbeae239-f3f8-483c-9dd0-de6781c38bab', o + 1].join('-');
-    const pid = (ri, u) => 'basic';
-
-    const riid = (o, ri) => ['0b39fa70-a65f-4183-bae8-385633ca5c87', o + 1, ri + 1].join('-');
-
-    // Measured usage for a given org, resource instance and usage #s
-    const measuredTemplate = (o, ri, u) => ({
-      start: start + u,
-      end: end + u,
-      organization_id: oid(o),
-      space_id: sid(o, ri),
-      resource_id: 'test-resource',
-      plan_id: pid(ri, u),
-      resource_instance_id: riid(o, ri),
-      consumer_id: cid(o, ri),
-      measured_usage: [
-        { measure: 'storage', quantity: 1073741824 },
-        { measure: 'light_api_calls', quantity: 1000 },
-        { measure: 'heavy_api_calls', quantity: 100 }
-      ]
-    });
-
-    // Post a measured usage doc, throttled to default concurrent requests
-    const post = throttle((o, ri, u, cb) => {
-      debug('Submit measured usage for org%d instance%d usage%d', o + 1, ri + 1, u + 1);
-
-      const usage = measuredTemplate(o, ri, u);
-
-      request.post('http://localhost::p/v1/metering/collected/usage', { p: 9080, body: usage }, (err, val) => {
-        expect(err).to.equal(undefined);
-        expect(val.statusCode).to.equal(201);
-        expect(val.headers.location).to.not.equal(undefined);
-
-        debug('Collected measured usage for org %d instance %d' + ' usage %d, verifying it...', o + 1, ri + 1, u + 1);
-
-        let gets = 0;
-        const gcb = () => {
-          if (++gets === 1) cb();
-        };
-
-        // Verify submitted usage docs
-        map([val.headers.location], (l, i) => {
-          brequest.get(l, undefined, (err, val) => {
-            debug(
-              'Verify usage #%d for org %d instance %d usage %d ' + 'from location %s',
-              i + 1,
-              o + 1,
-              ri + 1,
-              u + 1,
-              l
-            );
-
-            expect(err).to.equal(undefined);
-            expect(val.statusCode).to.equal(200);
-
-            expect(omit(val.body, 'id', 'processed', 'processed_id', 'collected_usage_id')).to.deep.equal(usage);
-
-            debug('Verified usage #%d for org %d instance %d usage %d', i + 1, o + 1, ri + 1, u + 1);
-
-            gcb();
-          });
-        });
-      });
-    });
-
-    // Post the requested number of measured usage docs
-    const submit = (done) => {
-      let posts = 0;
-      const cb = () => {
-        if (++posts === orgs * resourceInstances * usage) done();
-      };
-
-      // Submit measured usage for all orgs and resource instances
-      map(range(usage), (u) => map(range(resourceInstances), (ri) => map(range(orgs), (o) => post(o, ri, u, cb))));
-    };
-
-    const verifyMetering = (done) => {
-      try {
-        debug('Verifying metering calls %d to equal to %d', meter.callCount, orgs * resourceInstances * usage);
-
-        // TODO check the values of the normalized usage
-        expect(meter.callCount).to.equal(orgs * resourceInstances * usage);
-        done();
-      } catch (e) {
-        // If the comparison fails we'll be called again to retry
-        // after 250 msec, but give up after deadline
-        if (moment.now() >= processingDeadline) throw e;
-
-        debug('Gave up after %d ms', processingDeadline);
-      }
-    };
-
-    const submitUsageAndVerify = () => {
-    // Wait for usage collector to start
-      request.waitFor('http://localhost::p/batch', { p: 9080 }, startTimeout, (err, value) => {
-        // Failed to ping usage collector before timing out
-        if (err) throw err;
-
-        // Submit measured usage and verify
-        submit(() => {
-          const i = setInterval(() => verifyMetering(() => done(clearInterval(i))), 250);
-        });
-      });
-    };
-
-    const storeDefaults = () => {
-      const storeDefaultsOperation = 'store-default-plans && store-default-mappings';
-      execute(storeDefaultsOperation);
-    };
-
-    const performCollectorItest = () => {
+    const test = () => {
       storeDefaults();
-      submitUsageAndVerify();
+      submitUsage(() => {});
+      setInterval(() => verify(orgs * resourceInstances * usage, done), 5000);
     };
 
     // in case of pouch, wait pouch to start then store defaults and perform test
     if (isPouchDB)
       request.waitFor('http://localhost::p/batch', { p: 5984 }, startTimeout, (err, value) => {
         if (err) throw err;
-        performCollectorItest();
+        test();
       });
-    else performCollectorItest();
-
+    else test();
   });
+
 });

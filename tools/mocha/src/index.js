@@ -81,8 +81,8 @@ const runCLI = () => {
       const child = childProcess.fork(`${__dirname}/mocha.js`, args);
 
       // Listen for exit events from the child process
-      child.on('exit', (code) => {
-        if (code !== 0) callback(new Error('Child process exited with code ' + code));
+      child.on('exit', (code, signal) => {
+        if (code !== 0) callback(new Error(`Child process exited with code ${code} and signal ${signal}`));
         else callback();
       });
 

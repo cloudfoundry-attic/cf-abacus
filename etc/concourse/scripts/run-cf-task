@@ -16,7 +16,7 @@ app_name=$1
 task_command=$2
 task_name="$(date +%s)-db-setup-task"
 
-echo "Starting the provisioning plugin..."
+echo "Starting the $app_name..."
 cf start "${ABACUS_PREFIX}${app_name}"
 
 echo "Executing $task_name task on ${ABACUS_PREFIX}$app_name..."

@@ -8,3 +8,5 @@
 unset DBCLIENT
 unset DB
 unset JOBS
+
+export RABBIT_URI=amqp://localhost:5672

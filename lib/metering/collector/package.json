@@ -33,6 +33,8 @@
     "cfpush": "cfpush"
   },
   "dependencies": {
+    "abacus-rabbitmq": "file:../../utils/rabbitmq",
+    "abacus-accountclient": "file:../../utils/accountclient",
     "abacus-batch": "file:../../utils/batch",
     "abacus-breaker": "file:../../utils/breaker",
     "abacus-cluster": "file:../../utils/cluster",
@@ -53,6 +55,7 @@
     "abacus-usage-schemas": "file:../../config/schemas",
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-yieldable": "file:../../utils/yieldable",
+    "abacus-vcapenv": "file:../../utils/vcapenv",
     "underscore": "^1.8.3",
     "ajv": "^6.0.0"
   },

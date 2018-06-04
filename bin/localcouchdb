@@ -8,4 +8,7 @@
 
 export DBCLIENT=abacus-couchclient
 export DB=http://localhost:5984
+
+export RABBIT_URI=amqp://localhost:5672
+
 export JOBS=1

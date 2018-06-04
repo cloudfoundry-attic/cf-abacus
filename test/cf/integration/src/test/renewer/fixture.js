@@ -78,12 +78,12 @@ const modifyUsage = (usage) => {
     },
 
     build: () => {
-      if (timestamp != undefined) {
+      if (timestamp !== undefined) {
         usage.start = timestamp;
         usage.end = timestamp;
       }
 
-      if (previousInstances != undefined) usage.measured_usage[1].quantity = previousInstances;
+      if (previousInstances !== undefined) usage.measured_usage[1].quantity = previousInstances;
 
       return usage;
     }
