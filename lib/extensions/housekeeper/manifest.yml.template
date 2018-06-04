@@ -9,7 +9,6 @@ applications:
   env:
     CONF: default
     DEBUG: abacus-housekeeper,abacus-mongoclient,e-abacus-*
-    DBCLIENT: abacus-mongoclient
     DBALIAS_COLLECTOR: $DB_COLLECTOR
     DBALIAS_METER: $DB_METER
     DBALIAS_ACCUMULATOR: $DB_ACCUMULATOR

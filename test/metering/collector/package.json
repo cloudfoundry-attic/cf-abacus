@@ -38,7 +38,6 @@
     "abacus-lifecycle-manager": "file:../../lib/lifecycle-manager",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-moment": "file:../../../lib/utils/moment",
-    "abacus-pouchserver": "file:../../../lib/utils/pouchserver",
     "abacus-provisioning-plugin": "file:../../../lib/plugins/provisioning",
     "abacus-publish": "file:../../../tools/publish",
     "abacus-request": "file:../../../lib/utils/request",

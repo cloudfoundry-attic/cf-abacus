@@ -17,7 +17,6 @@ applications:
     PROVISIONING: abacus-provisioning-plugin
     DEBUG: e-abacus*
     DBALIAS: db-session
-    DBCLIENT: abacus-mongoclient
     AUTO_REMOVE_INTERVAL: 10
     PRE_PROVIDED_DEFAULT_THEME_NAME: Default
     ENABLE_UPLOAD_THEME_FEATURE: false

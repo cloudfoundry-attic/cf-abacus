@@ -47,10 +47,7 @@ describe('eureka', function() {
       request.waitFor('http://localhost::p', { p: 9990 }, startTimeout, done);
     };
 
-    if (!process.env.DB) {
-      modules.push(lifecycleManager.modules.pouchserver);
-      startModules();
-    } else dbclient.drop(process.env.DB, /^abacus-/, startModules);
+    dbclient.drop(process.env.DB, /^abacus-/, startModules);
   });
 
   after(() => {

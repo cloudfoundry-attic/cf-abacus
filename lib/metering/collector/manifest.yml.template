@@ -11,7 +11,6 @@ applications:
     CONF: default
     CLUSTER: false
     DEBUG: e-abacus-*
-    DBCLIENT: abacus-mongoclient
     DBALIAS: $DB_COLLECTOR
     API: $AUTH_SERVER
     AUTH_SERVER: $AUTH_SERVER

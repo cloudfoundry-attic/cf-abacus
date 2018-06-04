@@ -46,7 +46,6 @@
     "nyc": "^11.4.1",
     "abacus-moment": "file:../../../lib/utils/moment",
     "abacus-lifecycle-manager": "file:../../lib/lifecycle-manager",
-    "abacus-pouchserver": "file:../../../lib/utils/pouchserver",
     "abacus-request": "file:../../../lib/utils/request",
     "abacus-router": "file:../../../lib/utils/router",
     "abacus-wait": "file:../../lib/wait"

@@ -5,11 +5,11 @@
 Provides functionality for starting and stopping abacus modules
 
 Usage:
-// Start and stop operations will inherit current process' enviornment
+// Start and stop operations will inherit current process' environment
 const lifecycleManager = require('abacus-lifecycle-manager')();
 lifecycleManager.startModules([lifecycleManager.modules.renewer]);
 
-// Provide custom enviornment for start and stop operations
+// Provide custom environment for start and stop operations
 const lifecycleManager = require('abacus-lifecycle-manager')().use({
   SOME_VAR: 1
 });
@@ -43,8 +43,7 @@ const modules = {
   reporting: 'abacus-usage-reporting',
   applications: 'abacus-cf-applications',
   services: 'abacus-cf-services',
-  renewer: 'abacus-cf-renewer',
-  pouchserver: 'abacus-pouchserver'
+  renewer: 'abacus-cf-renewer'
 };
 
 const getModuleDir = (module) => {
