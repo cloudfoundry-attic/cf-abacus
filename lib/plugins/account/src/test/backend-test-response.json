@@ -1,0 +1,42 @@
+[
+  {
+      "id": "002b56f3-238b-4641-b7d3-c53ede64e8b6",
+      "type": "PAAS",
+      "licenseType": "PARTNER",
+      "cfOrg": "2e073ab8-8f83-41b8-b5f6-e39c8642cbd2",
+      "description": "E2E-dc5bdcf2-1130-4ec0-9baa-168114b2da81",
+      "metadataUrl": "https://E2E-dc5bdcf2-1130-4ec0-9baa-168114b2da81-SD.authentication.domain.com/path",
+      "identityZoneUrl": "https://E2E-dc5bdcf2-1130-4ec0-9baa-168114b2da81-SD.authentication.domain.com",
+      "sapIdServiceTenantAdminUserId": "P22232323245"
+  },
+  {
+      "id": "002fed27-ba39-4d5c-99a0-172622b4ec66",
+      "type": "PAAS",
+      "licenseType": "TRIAL",
+      "cfOrg": "9130fcd6-0040-4563-b835-350696aeb3ff",
+      "description": "trial",
+      "metadataUrl": "https://i827954trial.authentication.domain.com/path",
+      "identityZoneUrl": "https://i827954trial.authentication.domain.com",
+      "sapIdServiceTenantAdminUserId": "I012345"
+  },
+  {
+      "id": "0050f2d7-3b91-4a3f-8f1a-4ef4ab4b9a31",
+      "type": "PAAS",
+      "licenseType": "TRIAL",
+      "cfOrg": "0be44bbf-dd71-4358-b3aa-bf94a307e9a8",
+      "description": "trial",
+      "metadataUrl": "https://i12345trial.authentication.domain.com/path",
+      "identityZoneUrl": "https://i12345trial.authentication.domain.com",
+      "sapIdServiceTenantAdminUserId": "D012345"
+  },
+  {
+      "id": "005191c2-c731-42ff-99b3-fe6b57ab0520",
+      "type": "PAAS",
+      "licenseType": "SAPDEV",
+      "cfOrg": "0e0c3ef1-7315-4bfe-b0bd-079231ab1efd",
+      "description": "kube-mgmt",
+      "metadataUrl": "https://kube-mgmt.authentication.domain.com/path",
+      "identityZoneUrl": "https://kube-mgmt.authentication.domain.com",
+      "sapIdServiceTenantAdminUserId": "I2323232"
+  }
+]

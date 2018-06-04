@@ -91,6 +91,7 @@ const build = () => {
         success: {
           all: 2,
           conflicts: 0,
+          notsupported: 0,
           skips: 0
         },
         failures: 0

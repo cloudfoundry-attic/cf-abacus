@@ -6,7 +6,7 @@ The Abacus usage metering and aggregation service.
 [![Build Status](https://travis-ci.org/cloudfoundry-incubator/cf-abacus.svg)](https://travis-ci.org/cloudfoundry-incubator/cf-abacus)
 [![codecov](https://codecov.io/gh/cloudfoundry-incubator/cf-abacus/branch/master/graph/badge.svg)](https://codecov.io/gh/cloudfoundry-incubator/cf-abacus)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/544255c3788840aaa2402aa7f5cc4eb9)](https://www.codacy.com/app/cf-abacus/cf-abacus?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cloudfoundry-incubator/cf-abacus&amp;utm_campaign=Badge_Grade)
-[![Slack Team](https://abacusdev-slack.mybluemix.net/badge.svg)](https://abacusdev-slack.mybluemix.net/)
+[![slack.cloudfoundry.org](https://slack.cloudfoundry.org/badge.svg)](https://slack.cloudfoundry.org)
 
 Overview
 ---
