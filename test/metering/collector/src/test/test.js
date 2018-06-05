@@ -101,7 +101,7 @@ describe('abacus-usage-collector-itest', () => {
     debug('Submit measured usage %o for org %d instance %d usage %d', usageDoc, o + 1, ri + 1, u + 1);
     request.post('http://localhost::p/v1/metering/collected/usage', { p: 9080, body: usageDoc }, (err, val) => {
       expect(err).to.equal(undefined);
-      expect(val.statusCode).to.equal(201);
+      expect(val.statusCode).to.equal(202);
       expect(val.headers.location).to.not.equal(undefined);
       debug('POSTed measured usage for org %d instance %d' + ' usage %d', o + 1, ri + 1, u + 1);
       cb();

@@ -168,7 +168,7 @@ describe('abacus-perf-test', () => {
 
           const responseErrorMessage = util.format('Unexpected response code with headers: %j, body: %j',
             response.headers, response.body);
-          expect(response.statusCode, responseErrorMessage).to.equal(201);
+          expect(response.statusCode, responseErrorMessage).to.equal(202);
 
           debug('Submitted org:%s instance:%s usage:%s',
             usageDoc.organization_id, usageDoc.resource_instance_id, docNumber + 1);

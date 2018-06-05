@@ -39,7 +39,7 @@ module.exports = () => {
 
       const responseCode = collectUsageServiceData.nextResponse();
 
-      if (responseCode === httpStatus.CREATED) res.header('Location', resourceLocation);
+      if (responseCode === httpStatus.ACCEPTED) res.header('Location', resourceLocation);
 
       let responseBody;
       if (responseCode === httpStatus.CONFLICT) responseBody = { error: 'Conflict' };

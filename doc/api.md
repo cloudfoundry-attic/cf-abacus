@@ -41,7 +41,12 @@ POST /v1/metering/collected/usage with a resource usage document
 
 _Description_: Records the _resource usage_ document and processes the Cloud resource usage data it contains.
 
-_HTTP response_: 201 to indicate success with the URL of the _resource usage_ document in a Location header, 400 to report an invalid request, 500 to report a server error.
+_HTTP response_: 
+* 202 to indicate usage was accepted with the URL of the _resource usage_ document in a Location header
+* 400 to report an invalid request
+* 429 to signal that rate-limit was reached
+* 500 to report a server error
+* 503 to report collector is overloaded
 
 ### Method: get
 _HTTP request_:
@@ -668,7 +673,7 @@ POST /v1/pricing/plans
 
 _Description_: Creates pricing plan based on the request body.
 
-_HTTP response_: 201 to indicate success with the creation of the plan,409 to indicate the plan has a conflict, 500 to report a server error.
+_HTTP response_: 201 to indicate success with the creation of the plan, 409 to indicate the plan has a conflict, 500 to report a server error.
 
 ### JSON representation:
 ```json

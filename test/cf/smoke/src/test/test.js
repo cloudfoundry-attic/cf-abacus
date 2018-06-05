@@ -100,10 +100,10 @@ const initWindows = (win, dimension) => {
     _(windowsSizes[dimension] - 1).times(() => windows.push(null));
 
   else {
-    const timeWindows = timewindow.timeWindowsSizes(slack(), windowsSizes);  
+    const timeWindows = timewindow.timeWindowsSizes(slack(), windowsSizes);
     _(timeWindows.getWindows(dimension).length - 1).times(() => windows.push(null));
   }
-  
+
   return windows;
 };
 
@@ -179,7 +179,7 @@ describe('abacus-smoke-test', function() {
     if (systemToken) systemToken.start();
   });
 
-  it('submits usage for a sample resource and retrieves an aggregated ' + 'usage report', function(done) {
+  it('submits usage for a sample resource and retrieves an aggregated usage report', function(done) {
     // Configure the test timeout
     const timeout = Math.max(totalTimeout, 40000);
     const processingDeadline = moment.now() + timeout;
@@ -389,9 +389,9 @@ describe('abacus-smoke-test', function() {
         (err, val) => {
           expect(err).to.equal(undefined, util.format('Error: %o', err));
 
-          // Expect a 201 with the location of the accumulated usage
+          // Expect a 202 with the location of the accumulated usage
           expect(val.statusCode).to.equal(
-            201,
+            202,
             util.format('Response code: %d; headers: %j; body: %j', val.statusCode, val.headers, val.body)
           );
           expect(val.headers.location).to.not.equal(undefined);

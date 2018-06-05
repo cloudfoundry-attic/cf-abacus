@@ -102,10 +102,10 @@ const run = (test) => {
 
       const setAbacusCollectorResponse = () => {
         const responses = [];
-        responses.push(httpStatus.CREATED);
+        responses.push(httpStatus.ACCEPTED);
         _(failRequestsCount).times(() => responses.push(httpStatus.BAD_GATEWAY));
-        responses.push(httpStatus.CREATED);
-        responses.push(httpStatus.CREATED);
+        responses.push(httpStatus.ACCEPTED);
+        responses.push(httpStatus.ACCEPTED);
 
         arrange.fixture.externalSystemsMocks().abacusCollector.collectUsageService.return.series(responses);
       };
@@ -192,11 +192,11 @@ const run = (test) => {
 
       const setAbacusCollectorResponse = () => {
         const responses = [];
-        responses.push(httpStatus.CREATED);
-        responses.push(httpStatus.CREATED);
+        responses.push(httpStatus.ACCEPTED);
+        responses.push(httpStatus.ACCEPTED);
         _(failRequestsCount).times(() => responses.push(httpStatus.BAD_GATEWAY));
         responses.push(httpStatus.CONFLICT);
-        responses.push(httpStatus.CREATED);
+        responses.push(httpStatus.ACCEPTED);
 
         arrange.fixture.externalSystemsMocks().abacusCollector.collectUsageService.return.series(responses);
       };

@@ -32,7 +32,7 @@ const build = () => {
       unhandleableEvents = createUnhandleableEvents(fixture);
       externalSystemsMocks.cloudController.usageEvents.return.firstTime(unhandleableEvents);
 
-      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
+      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.ACCEPTED);
 
       yield carryOverDb.setup();
       fixture.bridge.start(externalSystemsMocks);

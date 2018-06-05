@@ -114,12 +114,12 @@ The names of the measures can't be changed.
 
 When you click in the UI on the tile **"Create and send usage document to Abacus"**, then a usage document will be created that contains the measures with according quantities as defined in the table. As source of consumption the IDs shown in the table "App Details from CF Runtime" will be used. For submitting the usage document the collector URL, user, and password provided by the metering service bonded to the application are used.
 
-The text area in the lower section of the UI shows the result of sending the usage document to Abacus. After a successful request, a return code of `201` should be shown, as well as the sent usage document.
+The text area in the lower section of the UI shows the result of sending the usage document to Abacus. After a successful request, a return code of `202` should be shown, as well as the sent usage document.
 
 An example for the whole output in the text areа would look like this:
 
 ```
-Abacus return code: 201
+Abacus return code: 202
 
 Usage document sent to Abacus:
 {

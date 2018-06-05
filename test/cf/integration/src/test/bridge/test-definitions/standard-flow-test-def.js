@@ -49,7 +49,7 @@ const build = () => {
         secondUsageEventTimestamp = secondServiceUsageEvent.metadata.created_at;
         externalSystemsMocks.cloudController.usageEvents.return.secondTime([secondServiceUsageEvent]);
 
-        externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
+        externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.ACCEPTED);
 
         yield carryOverDb.setup();
         fixture.bridge.start(externalSystemsMocks);

@@ -115,7 +115,7 @@ describe('renewer standard flow', () => {
         }
       ]);
 
-      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
+      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.ACCEPTED);
 
       externalSystemsMocks.startAll();
 

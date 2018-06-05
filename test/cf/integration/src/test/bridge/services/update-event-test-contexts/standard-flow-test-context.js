@@ -124,7 +124,7 @@ const run = (test) => {
 
       const setAbacusCollectorResponse = () => {
         const responses = [];
-        _(expectedCallsToCollectUsageService).times(() => responses.push(httpStatus.CREATED));
+        _(expectedCallsToCollectUsageService).times(() => responses.push(httpStatus.ACCEPTED));
 
         arrange.fixture.externalSystemsMocks().abacusCollector.collectUsageService.return.series(responses);
       };
@@ -174,7 +174,7 @@ const run = (test) => {
 
       const setAbacusCollectorResponse = () => {
         const responses = [];
-        _(expectedCallsToCollectUsageService).times(() => responses.push(httpStatus.CREATED));
+        _(expectedCallsToCollectUsageService).times(() => responses.push(httpStatus.ACCEPTED));
         arrange.fixture.externalSystemsMocks().abacusCollector.collectUsageService.return.series(responses);
       };
 
