@@ -10,7 +10,7 @@ applications:
     DEBUG: e-abacus-*
     METER: abacus-usage-meter
     PROVISIONING: abacus-provisioning-plugin
-    DB: abacus-pouchserver
+    DB: mongodb://localhost:27017
     ACCOUNT: abacus-account-plugin
     EUREKA: abacus-eureka-plugin
     SECURED: false

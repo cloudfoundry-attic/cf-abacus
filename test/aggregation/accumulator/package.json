@@ -33,7 +33,6 @@
     "abacus-clone": "file:../../../lib/utils/clone",
     "abacus-dataflow": "file:../../../lib/utils/dataflow",
     "abacus-dbclient": "file:../../../lib/utils/dbclient",
-    "abacus-pouchserver": "file:../../../lib/utils/pouchserver",
     "abacus-debug": "file:../../../lib/utils/debug",
     "abacus-express": "file:../../../lib/utils/express",
     "abacus-mocha": "file:../../../tools/mocha",

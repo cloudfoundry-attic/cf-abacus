@@ -176,7 +176,7 @@ To add monitoring capabilities to your Abacus installation follow these steps:
    env:
      CONF: default
      DEBUG: e-abacus-*
-     DB: abacus-pouchserver
+     DB: mongodb://<host>:27017
      SECURED: false
      JBP_CONFIG_TOMCAT: "{tomcat: { context_path: eureka }}"
      # JWTKEY:

@@ -4,7 +4,7 @@ default:
   INSTANCES: 1
   DB_PARTITIONS: 1
   EUREKA: 9990
-  DB: 5984
+  DB: 27017
   UAA:
   API:
 

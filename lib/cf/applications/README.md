@@ -95,7 +95,7 @@ applications:
     CONF: default
     DEBUG: e-abacus*,abacus-cf*
     COLLECTOR: abacus-usage-collector
-    DB: abacus-pouchserver
+    DB: mongodb://localhost:27017
     EUREKA: abacus-eureka-plugin
     API: https://api.bosh-lite.com:443
     AUTH_SERVER: https://api.bosh-lite.com:443
@@ -115,11 +115,6 @@ In case you are running a secured Abacus installation, add the following entries
     JWTALGO: RS256
 ```
 
-Add the DB client implementation you would like to use with the applications bridge:
-```yml
-    DBCLIENT: abacus-couchclient
-```
-
 Build, pack and push the applications bridge to Cloud Foundry:
 ```bash
 yarn install && yarn run lint && yarn test &&
@@ -135,7 +130,6 @@ cf bind-service abacus-cf-applications db
 In case you want to use external DB you can do this by adding `DB` to the deployment manifest:
 ```yml
     DB: mongodb://user:password@mymongohost.com:27017/databaseName?ssl=true
-    DBCLIENT: abacus-mongoclient
 ```
 
 Start the applications bridge:

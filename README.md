@@ -31,10 +31,13 @@ The Abacus FAQ can be found in [doc/faq.md](doc/faq.md).
 Building
 ---
 
-Abacus requires Node.js >= 8.9.4 and Yarn > 1.3.2
+Abacus requires Node.js >= 8.9.4, Yarn > 1.3.2 and MongoDB 3.x
 
 ```sh
 cd cf-abacus
+
+# Use local MongoDB
+. ./bin/localdb
 
 # Bootstrap the build environment
 # install the Node.js module dependencies and run the tests
@@ -48,6 +51,9 @@ The Abacus apps can also run on your local host in a shell environment outside o
 
 ```sh
 cd cf-abacus
+
+# Use local MongoDB
+. ./bin/localdb
 
 # Start the Abacus apps
 yarn start
@@ -104,6 +110,9 @@ Testing
 
 ```sh
 cd cf-abacus
+
+# Use local MongoDB
+. ./bin/localdb
 
 # Run eslint on the Abacus modules
 yarn run lint
@@ -254,4 +263,4 @@ People
 License
 ---
 
-  [Apache License 2.0](LICENSE)
+[Apache License 2.0](LICENSE)

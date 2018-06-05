@@ -47,17 +47,14 @@ CF-Abacus [Concourse](http://concourse.ci/) Pipelines
     │       │   │   └── manifest.yml.template
     │       │   └── meter
     │       │       └── manifest.yml.template
-    │       ├── plugins
-    │       │   ├── account
-    │       │   │   └── manifest.yml.template
-    │       │   ├── authserver
-    │       │   │   └── manifest.yml.template
-    │       │   ├── eureka
-    │       │   │   └── manifest.yml.template
-    │       │   └── provisioning
-    │       │       └── manifest.yml.template
-    │       └── utils
-    │           └── pouchserver
+    │       └── plugins
+    │           ├── account
+    │           │   └── manifest.yml.template
+    │           ├── authserver
+    │           │   └── manifest.yml.template
+    │           ├── eureka
+    │           │   └── manifest.yml.template
+    │           └── provisioning
     │               └── manifest.yml.template
     ├── deploy
     │   ├── etc
@@ -80,17 +77,14 @@ CF-Abacus [Concourse](http://concourse.ci/) Pipelines
     │       │   │   └── manifest.yml.template
     │       │   └── meter
     │       │       └── manifest.yml.template
-    │       ├── plugins
-    │       │   ├── account
-    │       │   │   └── manifest.yml.template
-    │       │   ├── authserver
-    │       │   │   └── manifest.yml.template
-    │       │   ├── eureka
-    │       │   │   └── manifest.yml.template
-    │       │   └── provisioning
-    │       │       └── manifest.yml.template
-    │       └── utils
-    │           └── pouchserver
+    │       └── plugins
+    │           ├── account
+    │           │   └── manifest.yml.template
+    │           ├── authserver
+    │           │   └── manifest.yml.template
+    │           ├── eureka
+    │           │   └── manifest.yml.template
+    │           └── provisioning
     │               └── manifest.yml.template
     └── test
         └── lib
@@ -106,17 +100,14 @@ CF-Abacus [Concourse](http://concourse.ci/) Pipelines
             │   │   └── manifest.yml.template
             │   └── meter
             │       └── manifest.yml.template
-            ├── plugins
-            │   ├── account
-            │   │   └── manifest.yml.template
-            │   ├── authserver
-            │   │   └── manifest.yml.template
-            │   ├── eureka
-            │   │   └── manifest.yml.template
-            │   └── provisioning
-            │       └── manifest.yml.template
-            └── utils
-                └── pouchserver
+            └── plugins
+                ├── account
+                │   └── manifest.yml.template
+                ├── authserver
+                │   └── manifest.yml.template
+                ├── eureka
+                │   └── manifest.yml.template
+                └── provisioning
                     └── manifest.yml.template
     ```
 
@@ -173,7 +164,6 @@ applications:
   env:
     CONF: default
     DEBUG: e-abacus-*
-    DBCLIENT: abacus-mongoclient
     AGGREGATOR: abacus-usage-aggregator
     PROVISIONING: abacus-provisioning-plugin
     ACCOUNT: abacus-account-plugin

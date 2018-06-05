@@ -36,8 +36,6 @@ const tshift = commander.day * 24 * 60 * 60 * 1000 || 0;
 const startTimeout = commander.startTimeout || 30000;
 const totalTimeout = commander.totalTimeout || 60000;
 
-const isPouchDB = !process.env.DB;
-
 const rabbitUri = process.env.RABBIT_URI;
 const queueName = 'abacus-collector-itest-queue';
 const customEnv = extend({}, process.env, { ABACUS_COLLECT_QUEUE:  queueName });
@@ -52,14 +50,10 @@ describe('abacus-usage-collector-itest', () => {
       lifecycleManager.modules.collector
     ];
 
-    if (isPouchDB) {
-      modules.push(lifecycleManager.modules.pouchserver);
+    // drop all abacus collections except plans and plan-mappings
+    dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, () => {
       lifecycleManager.startModules(modules);
-    } else
-      // drop all abacus collections except plans and plan-mappings
-      dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, () => {
-        lifecycleManager.startModules(modules);
-      });
+    });
   });
 
   after(() => {
@@ -152,19 +146,9 @@ describe('abacus-usage-collector-itest', () => {
     const timeout = Math.max(totalTimeout, 100 * orgs * resourceInstances * usage);
     this.timeout(timeout + 2000);
 
-    const test = () => {
-      storeDefaults();
-      submitUsage(() => {});
-      setInterval(() => verify(orgs * resourceInstances * usage, done), 5000);
-    };
-
-    // in case of pouch, wait pouch to start then store defaults and perform test
-    if (isPouchDB)
-      request.waitFor('http://localhost::p/batch', { p: 5984 }, startTimeout, (err, value) => {
-        if (err) throw err;
-        test();
-      });
-    else test();
+    storeDefaults();
+    submitUsage(() => {});
+    setInterval(() => verify(orgs * resourceInstances * usage, done), 5000);
   });
 
 });

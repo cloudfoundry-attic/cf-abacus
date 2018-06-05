@@ -9,7 +9,6 @@ applications:
   env:
     CONF: default
     DEBUG: e-abacus-*
-    DBCLIENT: abacus-mongoclient
     API: $AUTH_SERVER
     AUTH_SERVER: $AUTH_SERVER
     EUREKA: $ABACUS_PREFIX$EUREKA_PLUGIN_NAME

@@ -22,14 +22,10 @@ describe('test meter app', () => {
       ABACUS_COLLECT_QUEUE: queueName
     });
 
-    if (!process.env.DB) {
-      modules.push(lifecycleManager.modules.pouchserver);
+    // drop all abacus collections except plans and plan-mappings
+    dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, () => {
       lifecycleManager.useEnv(customEnv).startModules(modules);
-    } else
-      // drop all abacus collections except plans and plan-mappings
-      dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, () => {
-        lifecycleManager.useEnv(customEnv).startModules(modules);
-      });
+    });
 
     await rabbitClient.deleteQueue(queueName);
   });

@@ -10,7 +10,7 @@ applications:
     DEBUG: e-abacus-*
     ACCUMULATOR: abacus-usage-accumulator
     PROVISIONING: abacus-provisioning-plugin
-    DB: abacus-pouchserver
+    DB: mongodb://localhost:27017
     EUREKA: abacus-eureka-plugin
     SECURED: false
     # AUTH_SERVER:

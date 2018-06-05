@@ -10,8 +10,7 @@ applications:
     DEBUG: e-abacus-*
     COLLECTOR: abacus-usage-collector
     EUREKA: abacus-eureka-plugin
-    DB: abacus-pouchserver
-    DBCLIENT: abacus-couchclient
+    DB: mongodb://localhost:27017
     SECURED: false
     AUTH_SERVER: api
     ABACUS_CLIENT_ID: abacus

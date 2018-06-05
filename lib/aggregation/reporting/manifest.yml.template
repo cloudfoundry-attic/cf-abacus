@@ -10,7 +10,6 @@ applications:
   env:
     CONF: default
     DEBUG: e-abacus-*
-    DBCLIENT: abacus-mongoclient
     API: $AUTH_SERVER
     AUTH_SERVER: $AUTH_SERVER
     DBALIAS_AGGREGATOR: $DB_AGGREGATOR

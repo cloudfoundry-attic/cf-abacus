@@ -7,8 +7,6 @@ These port numbers are used when running Abacus in a local dev environment.
 
 | port |      component             |
 |:-----|:---------------------------|
-| 5984 | abacus-pouchserver         |
-|      |                            |
 | 9080 | abacus-usage-collector     |
 | 9088 | abacus-usage-reporting     |
 |      |                            |
@@ -60,26 +58,19 @@ curl http://<host><:port>/debug?config=abacus-breaker,abacus-retry
 
 ## Database
 
-Abacus supports [CouchDB](http://couchdb.apache.org/) and [MongoDB](https://www.mongodb.com/). You can also use the in-memory [PouchDB](https://pouchdb.com/) for development and testing.
-
-Abacus has two database clients:
-* [couchclient](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/couchclient) - supports CouchDB and the development/testing PouchDB
-* [mongoclient](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/mongoclient) - supports MongoDB
-
-The DB is configured using these environment variables:
-* `DB` - URL of the database. By default Abacus uses local PouchDB (`localhost:5984`) if this variable is missing
-* `DBCLIENT` - DB client to use. The default one is the `couchclient`.
-* `DB_OPTS` - DB-specific connections configuration. Accepts JSON with either [Mongo](http://mongodb.github.io/node-mongodb-native/2.2/reference/connecting/connection-settings/) or [Couch/Pouch](https://pouchdb.com/api.html#create_database) connection settings.
+Abacus supports [MongoDB](https://www.mongodb.com/). The DB is configured using these environment variables:
+* `DB` - URL of the MongoDB (default: `localhost:27017`)
+* `DB_OPTS` - DB-specific connections configuration. Accepts JSON with [Mongo](http://mongodb.github.io/node-mongodb-native/2.2/reference/connecting/connection-settings/) connection settings.
 
 ### Local configuration
 
 To select the DB:
-* start Couch or Mongo on your machine
+* start MongoDB on your machine
 * use the `bin/local*` scripts to set the proper environment
 * start Abacus
 
 ```bash
-. ./bin/localcouchdb
+. ./bin/localdb
 yarn run build
 yarn start
 yarn run demo
@@ -92,7 +83,6 @@ Modify all of the application manifests (`manifest.yml`) to include the DB envir
 ```yml
   env:
     DB: mongodb://mydbhost.com:27017
-    DBCLIENT: abacus-mongoclient
 ```
 
 You can use Cloud Foundry service instance, instead of hard-coded DB URL. To do so omit the `DB` environment variable above, create a DB service instance (we'll call it `db`) and execute:

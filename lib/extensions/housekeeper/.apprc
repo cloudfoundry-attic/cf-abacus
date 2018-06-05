@@ -3,7 +3,7 @@ default:
   APPS: 1
   INSTANCES: 1
   DB_PARTITIONS: 1
-  DB: 5984
+  DB: 27017
   EUREKA: 9990
   SECURED: false
   JWTKEY:

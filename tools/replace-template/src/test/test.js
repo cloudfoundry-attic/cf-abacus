@@ -20,7 +20,6 @@ const manifest = {
       env: {
         CONF: 'default',
         DEBUG: 'e-abacus-*',
-        DBCLIENT: 'abacus-mongoclient',
         AGGREGATOR: 'abacus-usage-aggregator',
         PROVISIONING: 'abacus-provisioning-plugin',
         ACCOUNT: 'abacus-account-plugin',
