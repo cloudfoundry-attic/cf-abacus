@@ -83,8 +83,6 @@ jobs:
           params:
             # Enable tests on CF (used in cftest script)
             CF_TEST: true
-            # Uncomment to save file handlers and offload CF stagers
-            # JOBS: 2
             BUILDPACK: https://github.com/cloudfoundry/nodejs-buildpack.git#v1.6.15
             # Cloud Foundry infrastructure
             CF_SYS_DOMAIN: {{cf-sys-domain}}
@@ -95,6 +93,16 @@ jobs:
             CF_ORG: {{cf-org}}
             CF_SPACE: {{cf-space}}
             CF_DOMAIN: {{cf-domain}}
+            CREATE_DB_SERVICE: {{create-db-service}}
+            DB_SERVICE_NAME: {{db-service-name}}
+            DB_SERVICE_INSTANCES: {{db-service-instances}}
+            DB_COLLECTOR: {{db-collector}}
+            DB_METER: {{db-meter}}
+            DB_ACCUMULATOR: {{db-accumulator}}
+            DB_AGGREGATOR: {{db-aggregator}}
+            DB_BRIDGE: {{db-bridge}}
+            DB_PLUGINS: {{db-plugins}}
+            ENABLE_SERVICE_ACCESS: {{enable-service-access}}
             DEBUG: {{debug}}
             ABACUS_PREFIX: {{abacus-prefix}}
             SKIP_SSL_VALIDATION: {{skip-ssl-validation}}

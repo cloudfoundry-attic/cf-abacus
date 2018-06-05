@@ -22,40 +22,7 @@ CF-Abacus [Concourse](http://concourse.ci/) Pipelines
     ```
     .
     ├── deploy-pipeline-vars.yml
-    ├── acceptance-test-pipeline-vars.yml
     ├── README.md
-    ├── acceptance
-    │   ├── etc
-    │   │   └── apps.rc
-    │   └── lib
-    │       ├── aggregation
-    │       │   ├── accumulator
-    │       │   │   └── manifest.yml.template
-    │       │   ├── aggregator
-    │       │   │   └── manifest.yml.template
-    │       │   └── reporting
-    │       │       └── manifest.yml.template
-    │       ├── cf
-    │       │   ├── applications
-    │       │   │   └── manifest.yml.template
-    │       │   ├── services
-    │       │   │   └── manifest.yml.template
-    │       │   └── renewer
-    │       │       └── manifest.yml.template
-    │       ├── metering
-    │       │   ├── collector
-    │       │   │   └── manifest.yml.template
-    │       │   └── meter
-    │       │       └── manifest.yml.template
-    │       └── plugins
-    │           ├── account
-    │           │   └── manifest.yml.template
-    │           ├── authserver
-    │           │   └── manifest.yml.template
-    │           ├── eureka
-    │           │   └── manifest.yml.template
-    │           └── provisioning
-    │               └── manifest.yml.template
     ├── deploy
     │   ├── etc
     │   │   └── apps.rc
@@ -133,17 +100,6 @@ CF-Abacus [Concourse](http://concourse.ci/) Pipelines
    ```bash
    echo "y" | fly --target=lite set-pipeline --pipeline=abacus-deploy --config=deploy-pipeline.yml --load-vars-from=deploy-pipeline-vars.yml ---non-interactive
    fly --target=lite unpause-pipeline --pipeline=abacus-deploy
-   ```
-1. Check the pipeline at http://192.168.100.4:8080/
-
-### Acceptance test pipeline
-
-1. Customize the `acceptance-test-pipeline-vars.yml` file with the location of the landscape repository
-
-1. Upload the pipeline:
-   ```bash
-   echo "y" | fly --target=lite set-pipeline --pipeline=abacus-acceptance --config=acceptance-test-pipeline.yml --load-vars-from=acceptance-test-pipeline-vars.yml ---non-interactive
-   fly --target=lite unpause-pipeline --pipeline=abacus-acceptance
    ```
 1. Check the pipeline at http://192.168.100.4:8080/
 
