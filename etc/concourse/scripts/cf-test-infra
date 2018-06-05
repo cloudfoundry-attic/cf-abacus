@@ -3,6 +3,7 @@
 set -e
 
 SCRIPT_DIR="${BASH_SOURCE%/*}"
+source ${SCRIPT_DIR}/common-functions
 
 echo "Logging to $CF_SYS_DOMAIN ..."
 if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
@@ -23,6 +24,10 @@ cf create-quota $CF_ORG -m 40g -i 4g -r 40 -s 1 --allow-paid-service-plans
 cf create-org $CF_ORG -q $CF_ORG
 cf create-space $CF_SPACE -o $CF_ORG
 
+if [ "$ENABLE_SERVICE_ACCESS" == "true" ]; then
+  cf enable-service-access "$DB_SERVICE_NAME" -p "$DB_PLAN_NAME" -o "$CF_ORG"
+fi
+
 if [ "$SKIP_CREATE_USER" == "true" ]; then
   echo "Using existing user $CF_USER ..."
 else
@@ -37,6 +42,23 @@ cf set-space-role $CF_USER $CF_ORG $CF_SPACE SpaceDeveloper
 
 $SCRIPT_DIR/bind-security-group
 $SCRIPT_DIR/create-uaa-clients
+
+echo "Logging to $CF_SYS_DOMAIN as abacus user ..."
+cf login $skip -a "https://api.$CF_SYS_DOMAIN" -u "$CF_USER" -p "$CF_PASSWORD" -o "$CF_ORG" -s "$CF_SPACE"
+
+if [ "$CREATE_DB_SERVICE" == "true" ]; then
+  echo "Creating or updating DB service instances ..."
+  instances=($DB_SERVICE_INSTANCES)
+  shouldWaitFor=()
+  for instance in "${instances[@]}"; do
+    args=(${instance//:/ })
+    createOrUpdateService ${args[0]} ${args[1]}
+    shouldWaitFor+=(${args[0]})
+  done;
+  waitForServices "${shouldWaitFor[@]}"
+else
+  echo "Using DB URL provided in abacus-config !"
+fi
 
 echo ""
 echo "Finished setting up infrastructure."
