@@ -131,7 +131,7 @@ Check our [wiki](https://github.com/cloudfoundry-incubator/cf-abacus/wiki) on ho
 Concourse pipelines
 ---
 
-You can use Concourse [pipelines](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/etc/concourse) to test, deploy and monitor Abacus.
+You can use Concourse [pipelines](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/etc/concourse) deploy and monitor Abacus.
 
 
 Layout
