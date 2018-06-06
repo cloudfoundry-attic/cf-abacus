@@ -60,5 +60,11 @@ else
   echo "Using DB URL provided in abacus-config !"
 fi
 
+echo "Runnining custom configuration ..."
+config_dir=$CONFIG_DIR
+project_dir=$PROJECT_DIR
+./$project_dir/etc/concourse/scripts/configure $config_dir
+cp -R $config_dir/* $project_dir
+
 echo ""
 echo "Finished setting up infrastructure."
