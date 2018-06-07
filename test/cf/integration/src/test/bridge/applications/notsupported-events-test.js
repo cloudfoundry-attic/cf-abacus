@@ -47,16 +47,16 @@ describe('applications-bridge not supported events tests', () => {
       externalSystemsMocks.stopAll(done);
     });
 
-    it('Abacus collector received usage for not supported account', () => {
+    it('collector received usage', () => {
       expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(1);
     });
 
-    it('Does not write entry in carry-over', yieldable.functioncb(function*() {
+    it('does not write entry in carry-over', yieldable.functioncb(function*() {
       const docs = yield carryOverDb.readCurrentMonthDocs();
       expect(docs).to.deep.equal([]);
     }));
 
-    it('Exposes correct statistics', yieldable.functioncb(function*() {
+    it('exposes correct statistics', yieldable.functioncb(function*() {
       const response = yield fixture.bridge.readStats.withValidToken();
       expect(response.statusCode).to.equal(httpStatus.OK);
       expect(response.body.statistics.usage).to.deep.equal({
