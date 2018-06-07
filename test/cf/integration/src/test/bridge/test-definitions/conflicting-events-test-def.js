@@ -51,30 +51,24 @@ const build = () => {
       expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(1);
     });
 
-    it(
-      'Does not write entry in carry-over',
-      yieldable.functioncb(function*() {
-        const docs = yield carryOverDb.readCurrentMonthDocs();
-        expect(docs).to.deep.equal([]);
-      })
-    );
+    it('Does not write entry in carry-over', yieldable.functioncb(function*() {
+      const docs = yield carryOverDb.readCurrentMonthDocs();
+      expect(docs).to.deep.equal([]);
+    }));
 
-    it(
-      'Exposes correct statistics',
-      yieldable.functioncb(function*() {
-        const response = yield fixture.bridge.readStats.withValidToken();
-        expect(response.statusCode).to.equal(httpStatus.OK);
-        expect(response.body.statistics.usage).to.deep.equal({
-          success: {
-            all: 1,
-            conflicts: 1,
-            notsupported: 0,
-            skips: 0
-          },
-          failures: 0
-        });
-      })
-    );
+    it('Exposes correct statistics', yieldable.functioncb(function*() {
+      const response = yield fixture.bridge.readStats.withValidToken();
+      expect(response.statusCode).to.equal(httpStatus.OK);
+      expect(response.body.statistics.usage).to.deep.equal({
+        success: {
+          all: 1,
+          conflicts: 1,
+          notsupported: 0,
+          skips: 0
+        },
+        failures: 0
+      });
+    }));
   });
 };
 
