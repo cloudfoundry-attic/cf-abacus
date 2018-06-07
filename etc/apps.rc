@@ -1,6 +1,5 @@
 default:
   apps:
-    - lib/utils/pouchserver
     - lib/plugins/eureka
     - lib/plugins/authserver
     - lib/plugins/provisioning
@@ -21,7 +20,6 @@ xlarge:
 
 cf:
   apps:
-    - lib/utils/pouchserver
     - lib/plugins/eureka
     - lib/plugins/authserver
     - lib/plugins/provisioning

@@ -8,7 +8,7 @@ applications:
   env:
     CONF: default
     DEBUG: e-abacus-*
-    DB: abacus-pouchserver
+    DB: mongodb://localhost:27017
     EUREKA: abacus-eureka-plugin
     NODE_MODULES_CACHE: false
     SECURED: false

@@ -16,21 +16,25 @@ The batch function allows us to delegate the processing of a given function afte
 
 ```js
 const batch = require('abacus-batch');
+
+const sumArray = (array) =>
+  array.reduce((accumulator, currentValue) =>
+    currentValue instanceof Array
+      ? accumulator + sumArray(currentValue)
+      : accumulator + currentValue
+    , 0);
+
 const batchedSum = batch((calls, cb) => {
   // calls will equal to
   // [
-  //   [1, 2],
-  //   [4, 6],
-  //   [9, 31]
+  //   [ 1, 2 ],
+  //   [ 4, 6 ],
+  //   [ 9, 31 ]
   // ]
-  cb(undefined, [
-      // we need to place the results of each individual call here.
-  ]);
+  cb(sumArray(calls));
 });
 
-batchedSum(1, 2);
-batchedSum(4, 6);
-batchedSum(9, 31);
+batchedSum(1, 2, console.log); batchedSum(4, 6, console.log); batchedSum(9, 31, console.log);
 ```
 
 We can control the amount of time that calls are accumulated before our batched function is called via an additional argument to batch.
@@ -66,10 +70,17 @@ For example:
 ```js
 const batch = require('abacus-batch');
 const groupBy = require('abacus-batch').groupBy;
-const batchedSum = batch(groupBy((calls, cb) => {
+
+const sumArray = (array) =>
+  array.reduce((accumulator, currentValue) =>
+    currentValue instanceof Array
+      ? accumulator + sumArray(currentValue)
+      : accumulator + currentValue
+    , 0);
+
+const batchedGroupingSum = batch(groupBy((calls, cb) => {
   // this function will be called twice.
   // the first time, calls will equal to
-  // calls will equal to
   // [
   //   [1, 2],
   //   [9, 31]
@@ -78,19 +89,15 @@ const batchedSum = batch(groupBy((calls, cb) => {
   // [
   //   [4, 6]
   // ]
-  cb(undefined, [
-      // we need to place the results of each individual call here.
-  ]);
-}, (args) => {
+  cb(sumArray(calls));
+}, (args, cb) => {
   // we will group by whether the first argument is odd or even
   // all we need to do is return an id for each group. in our case, we
-  // use the remainder of the devision as the bucket id.
-  return args[0] % 2
+  // use the remainder of the division as the bucket id.
+  cb(undefined, args[0] % 2);
 }));
 
-batchedSum(1, 2);
-batchedSum(4, 6);
-batchedSum(9, 31);
+batchedGroupingSum(1, 2); batchedGroupingSum(4, 6); batchedGroupingSum(9, 31);
 ```
 
 ## require('abacus-batch').unbatchify

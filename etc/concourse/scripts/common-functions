@@ -47,7 +47,7 @@ function restartAppsWithRetry {
 }
 
 function waitForServices {
-  echo "Waiting for DB creation or update ..."
+  echo "Waiting for service creation or update ..."
   services=("$@")
   for service in "${services[@]}"
   do
@@ -70,6 +70,16 @@ function createOrUpdateService {
   else
     echo "Creating new DB service instance $1 with plan $2 ..."
     cf create-service "$DB_SERVICE_NAME" $2 $1
+  fi
+}
+
+function createOrUpdateRabbitService {
+  if cf service $1; then
+    echo "Updating Rabbit service instance $1 with plan $2 ..."
+    cf update-service $1 -p $2
+  else
+    echo "Creating new Rabbit service instance $1 with plan $2 ..."
+    cf create-service "$RABBIT_SERVICE_NAME" $2 $1
   fi
 }
 
@@ -113,30 +123,13 @@ function mapRoutes {
   fi
 }
 
-function deleteObsoleteApps {
-  local APP_NAME=$1
-
-  if [ $2 = 1 ]; then
-    local MIN_INDEX=0
-  else
-    local MIN_INDEX=$2
-  fi
-
-  for i in `seq $MIN_INDEX 5`; do
-    cf delete $APP_NAME-$i -f
-  done
-  if (( $2 > 1 )); then
-    cf delete $APP_NAME -f
-  fi
-}
-
 function purge {
   echo "Purging usage events ..."
-  
+
   if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
     insecure='--insecure'
   fi
-  
+
   url_path=$1
   response_code=$(curl $insecure -s -o /dev/null -w "%{http_code}" -X POST -H "Authorization: bearer $token" -i "https://api.$CF_SYS_DOMAIN/$url_path")
   if [ "$response_code" == "204" ]; then

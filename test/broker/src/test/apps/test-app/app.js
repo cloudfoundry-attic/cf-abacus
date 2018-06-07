@@ -62,6 +62,7 @@ app.post('/usage', (req, res) => {
       res.status(500).send(error);
       return;
     }
+    res.location(response.headers.location);
     res.status(response.statusCode).send(response.message);
   });
 });

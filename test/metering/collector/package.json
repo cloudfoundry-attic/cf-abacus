@@ -34,11 +34,12 @@
     "abacus-cmdline": "file:../../../tools/cmdline",
     "abacus-debug": "file:../../../lib/utils/debug",
     "abacus-express": "file:../../../lib/utils/express",
+    "abacus-eslint": "file:../../../tools/eslint",
     "abacus-lifecycle-manager": "file:../../lib/lifecycle-manager",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-moment": "file:../../../lib/utils/moment",
-    "abacus-pouchserver": "file:../../../lib/utils/pouchserver",
     "abacus-provisioning-plugin": "file:../../../lib/plugins/provisioning",
+    "abacus-publish": "file:../../../tools/publish",
     "abacus-request": "file:../../../lib/utils/request",
     "abacus-router": "file:../../../lib/utils/router",
     "abacus-throttle": "file:../../../lib/utils/throttle",
@@ -46,10 +47,6 @@
     "commander": "2.8.1",
     "nyc": "^11.4.1",
     "underscore": "^1.8.3"
-  },
-  "devDependencies": {
-    "abacus-eslint": "file:../../../tools/eslint",
-    "abacus-publish": "file:../../../tools/publish"
   },
   "nyc": {
     "cache": true,

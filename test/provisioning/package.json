@@ -1,5 +1,5 @@
 {
-  "name": "abacus-provisioning-itest",
+  "name": "abacus-provisioning-int-test",
   "description": "Provisioning integration test",
   "license": "Apache-2.0",
   "version": "1.1.3",

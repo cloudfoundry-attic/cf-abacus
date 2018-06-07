@@ -275,7 +275,9 @@ describe('Create and update plans acceptance test', () => {
         expect(err).to.equal(undefined);
         debug('\n       POST %s', val.request.uri.href);
         expect(val.statusCode).to.be.oneOf([201, 409]);
-        done();
+        const locationHeader = val.headers.location;
+        expect(locationHeader).to.not.equal(undefined);
+        abacusClient.waitUntilUsageIsProcessed(usageToken, locationHeader, done);
       });
     });
 

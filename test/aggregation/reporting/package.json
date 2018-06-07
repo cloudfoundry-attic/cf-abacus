@@ -34,7 +34,6 @@
     "nyc": "^11.4.1",
     "abacus-batch": "file:../../../lib/utils/batch",
     "abacus-dbclient": "file:../../../lib/utils/dbclient",
-    "abacus-pouchserver": "file:../../../lib/utils/pouchserver",
     "abacus-debug": "file:../../../lib/utils/debug",
     "abacus-express": "file:../../../lib/utils/express",
     "abacus-request": "file:../../../lib/utils/request",

@@ -104,15 +104,11 @@ const buildQuantityWindows = (e, u, m, f, price) => {
 
 describe('abacus-usage-accumulator-itest', () => {
   before(() => {
-    const modules = [lifecycleManager.modules.accountPlugin, lifecycleManager.modules.accumulator];
+    const modules = [lifecycleManager.modules.accumulator, lifecycleManager.modules.accountPlugin];
 
-    if (!process.env.DB) {
-      modules.push(lifecycleManager.modules.pouchserver);
+    dbclient.drop(process.env.DB, /^abacus-/, () => {
       lifecycleManager.startModules(modules);
-    } else
-      dbclient.drop(process.env.DB, /^abacus-/, () => {
-        lifecycleManager.startModules(modules);
-      });
+    });
   });
 
   after(() => {

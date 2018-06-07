@@ -49,7 +49,7 @@ create-db-service: true
 # Note: If you want to connect to already provisioned DB you should use "false" here
 bind-db-service: true
 
-# DB service (Couch or Mongo) to use for storing Abacus data
+# MongoDB service to use for storing Abacus data
 # Note: Not used if create-db-service is false, but still required
 db-service-name: service-name
 
@@ -83,7 +83,7 @@ db-bridge: db-bridge
 # Note: Not used if bind-db-service is false, but still required
 db-plugins: db-plugins
 
-# Enable the service plan. Change this to "true" if the plan is paid for instance
+# Enable the service plan. Change this to "true" if you need to enable the access (the plan is paid for instance)
 # Note: Not used if create-db-service is false, but still required
 enable-service-access: false
 

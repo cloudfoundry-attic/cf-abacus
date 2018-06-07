@@ -70,11 +70,7 @@ const isDbAvailable = function*() {
 };
 
 const setup = function*() {
-  if (!process.env.DB) 
-    lifecycleManager.startModules([lifecycleManager.modules.pouchserver]);
-  else 
-    yield drop(process.env.DB, /^abacus-/);
-
+  yield drop(process.env.DB, /^abacus-/);
   yield waitUntil(isDbAvailable);
 };
 

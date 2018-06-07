@@ -25,24 +25,7 @@ matrix:
 
   include:
     - env:
-      - DESCRIPTION=unit-tests-pouchdb
-      - JOBS=1
-      node_js: 8.9.4
-      script:
-        - yarn run build && yarn run generate-coverage && yarn run report-coverage
-    - env:
-      - DESCRIPTION=unit-tests-couchdb
-      - DBCLIENT=abacus-couchclient
-      - DB=http://localhost:5984
-      - JOBS=1
-      node_js: 8.9.4
-      services:
-        - couchdb
-      script:
-        - yarn run build && yarn run generate-coverage && yarn run report-coverage
-    - env:
       - DESCRIPTION=unit-tests-mongodb
-      - DBCLIENT=abacus-mongoclient
       - DB=mongodb://localhost:27017
       - JOBS=1
       node_js: 8.9.4
@@ -50,102 +33,43 @@ matrix:
         - mongodb
       script:
         - yarn run build && yarn run generate-coverage && yarn run report-coverage
-
-    - env:
-      - DESCRIPTION=itests-pouchdb
-      - CI_TEST=itest
-      - JOBS=1
-      node_js: 8.9.4
-      script:
-        - yarn run provision
-        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
-    - env:
-      - DESCRIPTION=itests-couchdb
-      - DBCLIENT=abacus-couchclient
-      - DB=http://localhost:5984
-      - JOBS=1
-      - CI_TEST=itest
-      node_js: 8.9.4
-      services:
-        - couchdb
-      script:
-        - yarn run provision
-        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
     - env:
       - DESCRIPTION=itests-mongodb
-      - DBCLIENT=abacus-mongoclient
+      - RABBIT_URI=amqp://localhost:5672
       - DB=mongodb://localhost:27017
       - JOBS=1
       - CI_TEST=itest
+      - DEBUG=abacus-usage-accumulator-itest
       node_js: 8.9.4
       services:
         - mongodb
-      script:
-        - yarn run provision
-        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
-
-    - env:
-      - DESCRIPTION=extended-tests-pouchdb
-      - CI_TEST=extended
-      - JOBS=1
-      node_js: 8.9.4
-      script:
-        - yarn run provision
-        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
-    - env:
-      - DESCRIPTION=extended-tests-couchdb
-      - DBCLIENT=abacus-couchclient
-      - DB=http://localhost:5984
-      - JOBS=1
-      - CI_TEST=extended
-      node_js: 8.9.4
-      services:
-        - couchdb
+        - rabbitmq
       script:
         - yarn run provision
         - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
     - env:
       - DESCRIPTION=extended-tests-mongodb
-      - DBCLIENT=abacus-mongoclient
+      - RABBIT_URI=amqp://localhost:5672
       - DB=mongodb://localhost:27017
       - JOBS=1
       - CI_TEST=extended
       node_js: 8.9.4
       services:
         - mongodb
-      script:
-        - yarn run provision
-        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
-
-    - env:
-      - DESCRIPTION=perf-tests-pouchdb
-      - CI_TEST=perf
-      - JOBS=1
-      node_js: 8.9.4
-      script:
-        - yarn run provision
-        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
-    - env:
-      - DESCRIPTION=perf-tests-couchdb
-      - DBCLIENT=abacus-couchclient
-      - DB=http://localhost:5984
-      - JOBS=1
-      - CI_TEST=perf
-      node_js: 8.9.4
-      services:
-        - couchdb
+        - rabbitmq
       script:
         - yarn run provision
         - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
     - env:
       - DESCRIPTION=perf-tests-mongodb
-      - DBCLIENT=abacus-mongoclient
+      - RABBIT_URI=amqp://localhost:5672
       - DB=mongodb://localhost:27017
       - JOBS=1
       - CI_TEST=perf
       node_js: 8.9.4
       services:
         - mongodb
+        - rabbitmq
       script:
         - yarn run provision
         - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT

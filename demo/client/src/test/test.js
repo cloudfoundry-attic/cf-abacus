@@ -425,11 +425,10 @@ describe('abacus-demo-client', function() {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(200);
 
-          // Compare the usage report we got with the expected report
           console.log('Processed %d usage docs', processed(val));
-          const actual = clone(omit(val.body, 'id', 'processed', 'processed_id', 'start', 'end'), prune);
-
+          let actual;
           try {
+            actual = clone(omit(val.body, 'id', 'processed', 'processed_id', 'start', 'end'), prune);
             actual.spaces[0].consumers[0].resources[0].plans[0].resource_instances[0] = omit(
               actual.spaces[0].consumers[0].resources[0].plans[0].resource_instances[0],
               't',
@@ -463,7 +462,7 @@ describe('abacus-demo-client', function() {
     // been processed
     const wait = (done) => {
       console.log('\nRetrieving usage report');
-      get(done);
+      setImmediate(() => get(done));
     };
 
     // Wait for usage reporter to start
