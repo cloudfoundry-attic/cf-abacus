@@ -44,7 +44,9 @@ if [ "$CREATE_DB_SERVICE" == "true" ]; then
   for instance in "${instances[@]}"; do
     args=(${instance//:/ })
     createOrUpdateService ${args[0]} ${args[1]}
-    shouldWaitFor+=(${args[0]})
+    if [[ $SHOULD_WAIT == 1 ]]; then
+      shouldWaitFor+=(${args[0]})
+    fi
   done;
   waitForServices "${shouldWaitFor[@]}"
 else
