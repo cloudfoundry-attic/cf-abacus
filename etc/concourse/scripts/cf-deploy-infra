@@ -19,7 +19,6 @@ cf create-quota "$CF_ORG" -m "$ABACUS_ORG_MEMORY_QUOTA" -i 4g -r "$ABACUS_ORG_RO
 cf update-quota "$CF_ORG" -m "$ABACUS_ORG_MEMORY_QUOTA" -i 4g -r "$ABACUS_ORG_ROUTES_QUOTA" -s "$ABACUS_ORG_SERVICES_QUOTA" --allow-paid-service-plans
 cf create-org "$CF_ORG" -q "$CF_ORG"
 cf create-space "$CF_SPACE" -o "$CF_ORG"
-
 if [ "$ENABLE_SERVICE_ACCESS" == "true" ]; then
   if cf marketplace -s "$DB_SERVICE_NAME" | grep -e "$DB_PLAN_NAME"; then
     echo "$DB_SERVICE_NAME already enabled";
@@ -55,7 +54,9 @@ if [ "$CREATE_DB_SERVICE" == "true" ]; then
   for instance in "${instances[@]}"; do
     args=(${instance//:/ })
     createOrUpdateService ${args[0]} ${args[1]}
-    shouldWaitFor+=(${args[0]})
+    if [[ $SHOULD_WAIT == 1 ]]; then
+      shouldWaitFor+=(${args[0]})
+    fi
   done;
   waitForServices "${shouldWaitFor[@]}"
 else
