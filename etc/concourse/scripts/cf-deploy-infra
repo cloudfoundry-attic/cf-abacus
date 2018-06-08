@@ -19,9 +19,19 @@ cf create-quota "$CF_ORG" -m "$ABACUS_ORG_MEMORY_QUOTA" -i 4g -r "$ABACUS_ORG_RO
 cf update-quota "$CF_ORG" -m "$ABACUS_ORG_MEMORY_QUOTA" -i 4g -r "$ABACUS_ORG_ROUTES_QUOTA" -s "$ABACUS_ORG_SERVICES_QUOTA" --allow-paid-service-plans
 cf create-org "$CF_ORG" -q "$CF_ORG"
 cf create-space "$CF_SPACE" -o "$CF_ORG"
+
 if [ "$ENABLE_SERVICE_ACCESS" == "true" ]; then
-  cf enable-service-access "$DB_SERVICE_NAME" -p "$DB_PLAN_NAME" -o "$CF_ORG"
-  cf enable-service-access "$RABBIT_SERVICE_NAME" -p "$RABBIT_INSTANCE_PLAN_NAME" -o "$CF_ORG"
+  if cf marketplace -s "$DB_SERVICE_NAME" | grep -e "$DB_PLAN_NAME"; then
+    echo "$DB_SERVICE_NAME already enabled";
+  else
+    cf enable-service-access "$DB_SERVICE_NAME" -p "$DB_PLAN_NAME" -o "$CF_ORG"
+  fi
+
+  if cf marketplace -s "$RABBIT_SERVICE_NAME" | grep -e "$RABBIT_INSTANCE_PLAN_NAME"; then
+    echo "$RABBIT_SERVICE_NAME already enabled";
+  else
+    cf enable-service-access "$RABBIT_SERVICE_NAME" -p "$RABBIT_INSTANCE_PLAN_NAME" -o "$CF_ORG"
+  fi
 fi
 
 echo "Recreating user ..."
