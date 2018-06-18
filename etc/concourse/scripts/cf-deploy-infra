@@ -19,10 +19,6 @@ cf create-quota "$CF_ORG" -m "$ABACUS_ORG_MEMORY_QUOTA" -i 4g -r "$ABACUS_ORG_RO
 cf update-quota "$CF_ORG" -m "$ABACUS_ORG_MEMORY_QUOTA" -i 4g -r "$ABACUS_ORG_ROUTES_QUOTA" -s "$ABACUS_ORG_SERVICES_QUOTA" --allow-paid-service-plans
 cf create-org "$CF_ORG" -q "$CF_ORG"
 cf create-space "$CF_SPACE" -o "$CF_ORG"
-if [ "$ENABLE_SERVICE_ACCESS" == "true" ]; then
-  cf enable-service-access "$DB_SERVICE_NAME" -p "$DB_PLAN_NAME" -o "$CF_ORG"
-  cf enable-service-access "$RABBIT_SERVICE_NAME" -p "$RABBIT_INSTANCE_PLAN_NAME" -o "$CF_ORG"
-fi
 
 echo "Recreating user ..."
 cf delete-user -f "$CF_USER"
@@ -35,17 +31,31 @@ if [ "$BIND_SECURITY_GROUP" == "true" ]; then
   $SCRIPT_DIR/bind-security-group
 fi
 
+if [ "$ENABLE_SERVICE_ACCESS" == "true" ]; then
+  set +e
+  cf enable-service-access "$DB_SERVICE_NAME" -p "$DB_PLAN_NAME" -o "$CF_ORG"
+  cf enable-service-access "$RABBIT_SERVICE_NAME" -p "$RABBIT_INSTANCE_PLAN_NAME" -o "$CF_ORG"
+  set -e
+fi
+
 echo "Logging to $CF_SYS_DOMAIN as abacus user ..."
 cf login $skip -a "https://api.$CF_SYS_DOMAIN" -u "$CF_USER" -p "$CF_PASSWORD" -o "$CF_ORG" -s "$CF_SPACE"
 
 if [ "$CREATE_DB_SERVICE" == "true" ]; then
-  echo "Creating or updating DB service instances ..."
+  if cf marketplace -s "$DB_SERVICE_NAME" | grep -e "$DB_PLAN_NAME"; then
+    echo "Creating or updating DB service instances ..."
+  else
+    echo "No access to $DB_SERVICE_NAME DB_PLAN_NAME"
+    exit 1
+  fi
   instances=($DB_SERVICE_INSTANCES)
   shouldWaitFor=()
   for instance in "${instances[@]}"; do
     args=(${instance//:/ })
     createOrUpdateService ${args[0]} ${args[1]}
-    shouldWaitFor+=(${args[0]})
+    if [[ $SHOULD_WAIT == 1 ]]; then
+      shouldWaitFor+=(${args[0]})
+    fi
   done;
   waitForServices "${shouldWaitFor[@]}"
 else
@@ -53,7 +63,12 @@ else
 fi
 
 # create RabbitMQ instance
-echo "Creating or updating Rabbit service instances ..."
+if cf marketplace -s "$RABBIT_SERVICE_NAME" | grep -e "$RABBIT_INSTANCE_PLAN_NAME"; then
+  echo "Creating or updating Rabbit service instances ..."
+else
+  echo "No access to $RABBIT_SERVICE_NAME RABBIT_INSTANCE_PLAN_NAME"
+  exit 1
+fi
 shouldWaitFor=($RABBIT_INSTANCE_NAME)
 createOrUpdateRabbitService $RABBIT_INSTANCE_NAME $RABBIT_INSTANCE_PLAN_NAME
 waitForServices $shouldWaitFor

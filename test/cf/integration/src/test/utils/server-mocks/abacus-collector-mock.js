@@ -39,10 +39,19 @@ module.exports = () => {
 
       const responseCode = collectUsageServiceData.nextResponse();
 
-      if (responseCode === httpStatus.CREATED) res.header('Location', resourceLocation);
-
       let responseBody;
-      if (responseCode === httpStatus.CONFLICT) responseBody = { error: 'Conflict' };
+
+      switch (responseCode) {
+        case httpStatus.CREATED:
+          res.header('Location', resourceLocation);
+          break;
+        case httpStatus.CONFLICT:
+          responseBody = { error: 'Conflict' };
+          break;
+        case 451:
+          responseBody = { error: 'license' };
+          break;
+      }
 
       debug('[/v1/metering/collected/usage] response code: %d', responseCode);
       res.status(responseCode).send(responseBody);
