@@ -75,7 +75,24 @@
     "abacus-express": {
       "version": "1.1.3",
       "from": "../../utils/express",
-      "resolved": "file:../../utils/express"
+      "resolved": "file:../../utils/express",
+      "dependencies": {
+        "body-parser": {
+          "version": "1.18.3",
+          "from": "body-parser@>=1.18.3 <2.0.0",
+          "resolved": "https://registry.npmjs.org/body-parser/-/body-parser-1.18.3.tgz"
+        },
+        "iconv-lite": {
+          "version": "0.4.23",
+          "from": "iconv-lite@0.4.23",
+          "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.23.tgz"
+        },
+        "raw-body": {
+          "version": "2.3.3",
+          "from": "raw-body@2.3.3",
+          "resolved": "https://registry.npmjs.org/raw-body/-/raw-body-2.3.3.tgz"
+        }
+      }
     },
     "abacus-hystrix": {
       "version": "1.1.3",
@@ -203,9 +220,9 @@
       "resolved": "https://registry.npmjs.org/accepts/-/accepts-1.3.5.tgz"
     },
     "acorn": {
-      "version": "5.6.2",
+      "version": "5.7.1",
       "from": "acorn@>=5.5.0 <6.0.0",
-      "resolved": "https://registry.npmjs.org/acorn/-/acorn-5.6.2.tgz"
+      "resolved": "https://registry.npmjs.org/acorn/-/acorn-5.7.1.tgz"
     },
     "acorn-jsx": {
       "version": "3.0.1",
@@ -498,7 +515,7 @@
     },
     "compression": {
       "version": "1.7.2",
-      "from": "compression@>=1.0.8 <2.0.0",
+      "from": "compression@>=1.7.2 <2.0.0",
       "resolved": "https://registry.npmjs.org/compression/-/compression-1.7.2.tgz",
       "dependencies": {
         "safe-buffer": {
@@ -1105,7 +1122,7 @@
     },
     "method-override": {
       "version": "2.3.10",
-      "from": "method-override@>=2.0.2 <3.0.0",
+      "from": "method-override@>=2.3.10 <3.0.0",
       "resolved": "https://registry.npmjs.org/method-override/-/method-override-2.3.10.tgz"
     },
     "methods": {
@@ -1398,7 +1415,7 @@
     },
     "response-time": {
       "version": "2.3.2",
-      "from": "response-time@>=2.0.0 <3.0.0",
+      "from": "response-time@>=2.3.2 <3.0.0",
       "resolved": "https://registry.npmjs.org/response-time/-/response-time-2.3.2.tgz"
     },
     "restore-cursor": {
