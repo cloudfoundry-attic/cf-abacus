@@ -47,7 +47,7 @@
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-moment": "file:../../utils/moment",
-    "jsonwebtoken": "^5.0.5",
+    "jsonwebtoken": "^8.3.0",
     "underscore": "^1.8.3",
     "ajv": "^6.0.0"
   },

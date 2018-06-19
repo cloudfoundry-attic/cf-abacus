@@ -9,7 +9,7 @@ set -e
 
 yarn bootstrap
 yarn run provision
-sed -i '' -e 's/http:\/\//https:\/\//g' yarn.lock
+sed -i'' -e 's/http:\/\//https:\/\//g' yarn.lock
 
 for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
   echo "Updating ${MODULE} locks ... "
@@ -19,6 +19,6 @@ for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $C
     set -e
     npm install --production
     npm shrinkwrap --production
-    sed -i '' -e 's/http:\/\//https:\/\//g' npm-shrinkwrap.json
+    sed -i'' -e 's/http:\/\//https:\/\//g' npm-shrinkwrap.json
   popd
 done
