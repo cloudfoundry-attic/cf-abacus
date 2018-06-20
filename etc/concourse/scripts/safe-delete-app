@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -e
+
+SCRIPT_DIR="${BASH_SOURCE%/*}"
+source $SCRIPT_DIR/common-functions
+
+app_name=$1
+
+safeDelete $app_name
