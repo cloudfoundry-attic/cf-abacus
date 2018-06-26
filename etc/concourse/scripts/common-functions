@@ -16,9 +16,9 @@ function getApps {
 
 function restartApps {
   getApps '\?'
-  echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+  echo ${APPS[@]} | xargs -n1 | grep -v -- "-old" | xargs -n1 -P 5 -r cf restart
   getApps '.*\s+0/.*'
-  echo ${APPS[@]} | xargs -n1 -P 5 -r cf restart
+  echo ${APPS[@]} | xargs -n1 | grep -v -- "-old" | xargs -n1 -P 5 -r cf restart
 }
 
 function restartAppsWithRetry {
@@ -64,12 +64,23 @@ function waitForServices {
 }
 
 function createOrUpdateService {
+  SHOULD_WAIT=false
   if cf service $1; then
+    local PLAN=$(cf service "$1" | grep "plan:" | awk '{print $2}')
+    if [[ $PLAN == $2 ]]; then
+      echo "DB service instance $1 has the same plan $2 - skipping update..."
+      SHOULD_WAIT=0
+      return 0;
+    fi  
     echo "Updating DB service instance $1 with plan $2 ..."
     cf update-service $1 -p $2
+    SHOULD_WAIT=1
+    return 0;
   else
     echo "Creating new DB service instance $1 with plan $2 ..."
     cf create-service "$DB_SERVICE_NAME" $2 $1
+    SHOULD_WAIT=1
+    return 0;
   fi
 }
 

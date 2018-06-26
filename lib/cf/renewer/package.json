@@ -56,7 +56,7 @@
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-yieldable": "file:../../utils/yieldable",
     "async": "^2.6.0",
-    "jsonwebtoken": "^5.0.5",
+    "jsonwebtoken": "^8.3.0",
     "underscore": "^1.8.3",
     "ajv": "^6.0.0"
   },

@@ -9,13 +9,23 @@ applications:
   zdm: true
   env:
     APPLICATION_GROUPS: $APPLICATION_GROUPS
+    INTERNAL_APPLICATIONS: >
+      '[
+        "$ABACUS_PREFIXabacus-usage-meter",
+        "$ABACUS_PREFIXabacus-usage-accumulator",
+        "$ABACUS_PREFIXabacus-usage-aggregator",
+        "$ABACUS_PREFIXabacus-cf-renewer",
+        "$ABACUS_PREFIXabacus-housekeeper",
+        "$ABACUS_PREFIXabacus-eureka-plugin",
+        "$ABACUS_PREFIXabacus-services-bridge",
+        "$ABACUS_PREFIXabacus-applications-bridge"
+      ]'
     DEBUG: e-abacus-*
     CF_API: $AUTH_SERVER
     AUTH_SERVER: $AUTH_SERVER
     BREAKER_TIMEOUT: 90000
     SECURED: true
     SKIP_SSL_VALIDATION: $SKIP_SSL_VALIDATION
-    THROTTLE: 60
     CLIENT_ID: $HYSTRIX_CLIENT_ID
     CLIENT_SECRET: $HYSTRIX_CLIENT_SECRET
     CLIENT_SCOPES: abacus.system.read
@@ -23,6 +33,8 @@ applications:
     EUREKA_USER: $HYSTRIX_CLIENT_ID
     EUREKA_PASSWORD: $HYSTRIX_CLIENT_SECRET
     BATCH_SIZE: 50
+    THROTTLE: 60
+    CLUSTER: false
     NODE_OPTS: "--max_old_space_size=256"
     NODE_MODULES_CACHE: false
     PRIMARY_DOMAIN: $CF_SYS_DOMAIN

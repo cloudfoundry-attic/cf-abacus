@@ -56,7 +56,7 @@
     "demo": "bin/demo",
     "perf": "bin/perf",
     "itest": "export JOBS=1 && foreach itest node_modules/:name yarn run itest --",
-    "broker-itest": "export JOBS=1 && foreach provisioning-itest node_modules/:name yarn run broker-itest --",
+    "broker-itest": "export JOBS=1 && foreach provisioning-int-test node_modules/:name yarn run broker-itest --",
     "smoke": "export JOBS=1 && foreach smoke node_modules/:name yarn run smoke --",
     "extensions-itest": "export JOBS=1 && foreach extensions-itest node_modules/:name yarn run extensions-itest --",
     "acceptance": "export JOBS=1 && foreach acceptance node_modules/:name yarn run acceptance --",

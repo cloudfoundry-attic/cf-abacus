@@ -22,108 +22,38 @@ CF-Abacus [Concourse](http://concourse.ci/) Pipelines
     ```
     .
     ├── deploy-pipeline-vars.yml
-    ├── acceptance-test-pipeline-vars.yml
     ├── README.md
-    ├── acceptance
-    │   ├── etc
-    │   │   └── apps.rc
-    │   └── lib
-    │       ├── aggregation
-    │       │   ├── accumulator
-    │       │   │   └── manifest.yml.template
-    │       │   ├── aggregator
-    │       │   │   └── manifest.yml.template
-    │       │   └── reporting
-    │       │       └── manifest.yml.template
-    │       ├── cf
-    │       │   ├── applications
-    │       │   │   └── manifest.yml.template
-    │       │   ├── services
-    │       │   │   └── manifest.yml.template
-    │       │   └── renewer
-    │       │       └── manifest.yml.template
-    │       ├── metering
-    │       │   ├── collector
-    │       │   │   └── manifest.yml.template
-    │       │   └── meter
-    │       │       └── manifest.yml.template
-    │       └── plugins
-    │           ├── account
-    │           │   └── manifest.yml.template
-    │           ├── authserver
-    │           │   └── manifest.yml.template
-    │           ├── eureka
-    │           │   └── manifest.yml.template
-    │           └── provisioning
-    │               └── manifest.yml.template
-    ├── deploy
-    │   ├── etc
-    │   │   └── apps.rc
-    │   └── lib
-    │       ├── aggregation
-    │       │   ├── accumulator
-    │       │   │   └── manifest.yml.template
-    │       │   ├── aggregator
-    │       │   │   └── manifest.yml.template
-    │       │   └── reporting
-    │       │       └── manifest.yml.template
-    │       ├── cf
-    │       │   ├── bridge
-    │       │   │   └── manifest.yml.template
-    │       │   └── renewer
-    │       │       └── manifest.yml.template
-    │       ├── metering
-    │       │   ├── collector
-    │       │   │   └── manifest.yml.template
-    │       │   └── meter
-    │       │       └── manifest.yml.template
-    │       └── plugins
-    │           ├── account
-    │           │   └── manifest.yml.template
-    │           ├── authserver
-    │           │   └── manifest.yml.template
-    │           ├── eureka
-    │           │   └── manifest.yml.template
-    │           └── provisioning
-    │               └── manifest.yml.template
-    └── test
-        └── lib
-            ├── aggregation
-            │   ├── accumulator
-            │   │   └── manifest.yml.template
-            │   ├── aggregator
-            │   │   └── manifest.yml.template
-            │   └── reporting
-            │       └── manifest.yml.template
-            ├── metering
-            │   ├── collector
-            │   │   └── manifest.yml.template
-            │   └── meter
-            │       └── manifest.yml.template
-            └── plugins
-                ├── account
-                │   └── manifest.yml.template
-                ├── authserver
-                │   └── manifest.yml.template
-                ├── eureka
-                │   └── manifest.yml.template
-                └── provisioning
-                    └── manifest.yml.template
+    └── deploy
+        ├── etc
+        │   └── apps.rc
+        └── lib
+            ├── aggregation
+            │   ├── accumulator
+            │   │   └── manifest.yml.template
+            │   ├── aggregator
+            │   │   └── manifest.yml.template
+            │   └── reporting
+            │       └── manifest.yml.template
+            ├── cf
+            │   ├── bridge
+            │   │   └── manifest.yml.template
+            │   └── renewer
+            │       └── manifest.yml.template
+            ├── metering
+            │   ├── collector
+            │   │   └── manifest.yml.template
+            │   └── meter
+            │       └── manifest.yml.template
+            └── plugins
+                ├── account
+                │   └── manifest.yml.template
+                ├── authserver
+                │   └── manifest.yml.template
+                ├── eureka
+                │   └── manifest.yml.template
+                └── provisioning
+                    └── manifest.yml.template
     ```
-
-## Test pipeline
-
-1. Change the entries in the `test-pipeline-vars.yml` file to reflect the actual users, passwords and domains of your Cloud Foundry landscape.
-
-1. Upload the pipeline
-   ```bash
-   fly --target=lite login --concourse-url=http://192.168.100.4:8080
-   echo "y" | fly --target=lite set-pipeline --pipeline=abacus-test --config=test-pipeline.yml --load-vars-from=test-pipeline-vars.yml ---non-interactive
-   fly --target=lite unpause-pipeline --pipeline=abacus-test
-   ```
-
-1. Check the pipeline at http://192.168.100.4:8080/
-
 
 ### Deploy pipeline
 
@@ -133,17 +63,6 @@ CF-Abacus [Concourse](http://concourse.ci/) Pipelines
    ```bash
    echo "y" | fly --target=lite set-pipeline --pipeline=abacus-deploy --config=deploy-pipeline.yml --load-vars-from=deploy-pipeline-vars.yml ---non-interactive
    fly --target=lite unpause-pipeline --pipeline=abacus-deploy
-   ```
-1. Check the pipeline at http://192.168.100.4:8080/
-
-### Acceptance test pipeline
-
-1. Customize the `acceptance-test-pipeline-vars.yml` file with the location of the landscape repository
-
-1. Upload the pipeline:
-   ```bash
-   echo "y" | fly --target=lite set-pipeline --pipeline=abacus-acceptance --config=acceptance-test-pipeline.yml --load-vars-from=acceptance-test-pipeline-vars.yml ---non-interactive
-   fly --target=lite unpause-pipeline --pipeline=abacus-acceptance
    ```
 1. Check the pipeline at http://192.168.100.4:8080/
 
@@ -194,7 +113,7 @@ jwtalgo: algo
 You can run the monitoring pipeline separately, or you can configure it to send status reports to grafana.
 For setting up grafana you can refer to the [official documentation](http://docs.grafana.org/installation/).
 
-You should have running Concourse and fly-cli installed. If not refer to `Running the testing pipeline`
+You should have running Concourse and fly-cli installed.
 
 1. Adjust the [`monitoring-pipeline-vars.yml`](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/etc/concourse/monitor-pipeline-vars.yml) to match your configuration.
 1. Upload the pipeline:
