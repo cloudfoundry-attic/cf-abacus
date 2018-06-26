@@ -38,11 +38,11 @@ const build = () => {
 
       // Event reporter (abacus-client) will retry 'fixture.env.retryCount'
       // times to report usage to abacus. After that the whole process is
-      // retried (i.e. start reading again the events).  Stub Abacus Collector
+      // retried (i.e. start reading again the events). Stub Abacus Collector
       // so that it will force the bridge to retry the whole proces.
       const failRequetsCount = fixture.env.retryCount + 1;
       const responses = _(failRequetsCount).times(() => httpStatus.BAD_GATEWAY);
-      responses.push(httpStatus.CREATED);
+      responses.push(httpStatus.ACCEPTED);
 
       externalSystemsMocks.abacusCollector.collectUsageService.return.series(responses);
 

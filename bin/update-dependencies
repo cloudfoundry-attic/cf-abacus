@@ -7,9 +7,19 @@ rm -rf node_modules/ yarn.lock package-lock.json npm-shrinkwrap.json
 
 set -e
 
+if [ "$(uname)" == "Darwin" ]; then
+  replace_params="-i '' -e 's/http:\/\//https:\/\//g'"
+else
+  replace_params="-i'' -e 's/http:\/\//https:\/\//g'"
+fi
+
 yarn bootstrap
 yarn run provision
-sed -i'' -e 's/http:\/\//https:\/\//g' yarn.lock
+if [ "$(uname)" == "Darwin" ]; then
+  sed -i '' -e 's/http:\/\//https:\/\//g' yarn.lock
+else
+  sed -i'' -e 's/http:\/\//https:\/\//g' yarn.lock
+fi
 
 for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
   echo "Updating ${MODULE} locks ... "
@@ -19,6 +29,10 @@ for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $C
     set -e
     npm install --production
     npm shrinkwrap --production
-    sed -i'' -e 's/http:\/\//https:\/\//g' npm-shrinkwrap.json
+    if [ "$(uname)" == "Darwin" ]; then
+      sed -i '' -e 's/http:\/\//https:\/\//g' npm-shrinkwrap.json
+    else
+      sed -i'' -e 's/http:\/\//https:\/\//g' npm-shrinkwrap.json
+    fi
   popd
 done

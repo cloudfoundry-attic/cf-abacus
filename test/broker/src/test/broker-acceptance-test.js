@@ -178,7 +178,7 @@ describe('Abacus Broker Acceptance test', function() {
       };
 
       const postResponse = yield yieldable(testAppClient.postUsage)(usageBody);
-      expect(postResponse.statusCode).to.be.oneOf([201, 409]);
+      expect(postResponse.statusCode).to.be.oneOf([202, 409]);
 
       const locationHeader = postResponse.headers.location;
       expect(locationHeader).to.not.equal(undefined);

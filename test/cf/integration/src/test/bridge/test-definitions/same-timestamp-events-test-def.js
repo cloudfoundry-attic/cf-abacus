@@ -46,7 +46,7 @@ const build = () => {
 
       externalSystemsMocks.cloudController.usageEvents.return.firstTime([firstUsageEvent, secondUsageEvent]);
 
-      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.CREATED);
+      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.ACCEPTED);
 
       yield carryOverDb.setup();
       fixture.bridge.start(externalSystemsMocks);

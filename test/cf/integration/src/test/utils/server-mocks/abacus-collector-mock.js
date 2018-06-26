@@ -39,6 +39,8 @@ module.exports = () => {
 
       const responseCode = collectUsageServiceData.nextResponse();
 
+      if (responseCode === httpStatus.ACCEPTED) res.header('Location', resourceLocation);
+
       let responseBody;
 
       switch (responseCode) {

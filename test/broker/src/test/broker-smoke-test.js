@@ -108,7 +108,7 @@ describe('Abacus Broker Smoke test', function() {
 
 
     const postResponse = yield yieldable(testAppClient.postUsage)(usageBody);
-    expect(postResponse.statusCode).to.equal(201, 'usage was not submitted successfully');
+    expect(postResponse.statusCode).to.equal(202, 'usage was not submitted successfully');
 
     const locationHeader = postResponse.headers.location;
     expect(locationHeader).to.not.equal(undefined);

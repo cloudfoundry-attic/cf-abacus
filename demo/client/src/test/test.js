@@ -391,8 +391,8 @@ describe('abacus-demo-client', function() {
         (err, val) => {
           expect(err).to.equal(undefined);
 
-          // Expect a 201 with the location of the accumulated usage
-          expect(val.statusCode).to.equal(201);
+          // Expect a 202 with the location of the accumulated usage
+          expect(val.statusCode).to.equal(202);
           expect(val.headers.location).to.not.equal(undefined);
           cb();
         }
