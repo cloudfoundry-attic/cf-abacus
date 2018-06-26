@@ -69,7 +69,7 @@
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish",
-    "jsonwebtoken": "^5.0.5",
+    "jsonwebtoken": "^8.3.0",
     "nyc": "^11.4.1"
   },
   "nyc": {

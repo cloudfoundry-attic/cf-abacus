@@ -40,6 +40,6 @@ for i in "${COMMANDS[@]}"; do
   CMD_STRING+=$(printf '%q ' "$i")
 done
 
- pushd "$CURRENT_DIR"
-   echo $CMD_STRING | xargs -n 1 -P $MAX_PROCESSES /bin/bash -c
- popd
+pushd "$CURRENT_DIR"
+  echo $CMD_STRING | xargs -n 1 -P $MAX_PROCESSES /bin/bash -c
+popd

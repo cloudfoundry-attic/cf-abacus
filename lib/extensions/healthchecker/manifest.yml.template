@@ -9,6 +9,17 @@ applications:
   zdm: true
   env:
     APPLICATION_GROUPS: $APPLICATION_GROUPS
+    INTERNAL_APPLICATIONS: >
+      '[
+        "$ABACUS_PREFIXabacus-usage-meter",
+        "$ABACUS_PREFIXabacus-usage-accumulator",
+        "$ABACUS_PREFIXabacus-usage-aggregator",
+        "$ABACUS_PREFIXabacus-cf-renewer",
+        "$ABACUS_PREFIXabacus-housekeeper",
+        "$ABACUS_PREFIXabacus-eureka-plugin",
+        "$ABACUS_PREFIXabacus-services-bridge",
+        "$ABACUS_PREFIXabacus-applications-bridge"
+      ]'
     DEBUG: e-abacus-*
     CF_API: $AUTH_SERVER
     AUTH_SERVER: $AUTH_SERVER
