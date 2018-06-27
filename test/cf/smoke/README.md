@@ -14,4 +14,10 @@ export SECURED=true
 
 # optional, if set in accumulator environment
 export TIME_WINDOWS_SIZES='{ "D" : 6 }'
+
+# optional, if using non-default slack window
+export SLACK=4D
+
+# optional, if self-signed cert is in use
+export SKIP_SSL_VALIDATION=true
 ```
