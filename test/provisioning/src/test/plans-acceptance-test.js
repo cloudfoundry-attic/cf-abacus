@@ -270,11 +270,11 @@ describe('Create and update plans acceptance test', () => {
       };
     });
 
-    it('should be created or already exists', (done) => {
+    it('should be accepted and processed', (done) => {
       abacusClient.postUsage(usageToken, usageBody, (err, val) => {
         expect(err).to.equal(undefined);
         debug('\n       POST %s', val.request.uri.href);
-        expect(val.statusCode).to.be.oneOf([201, 409]);
+        expect(val.statusCode).to.equal(202);
         const locationHeader = val.headers.location;
         expect(locationHeader).to.not.equal(undefined);
         abacusClient.waitUntilUsageIsProcessed(usageToken, locationHeader, done);
