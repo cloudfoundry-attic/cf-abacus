@@ -127,7 +127,12 @@ const waitUntilUsageIsProcessed = (token, documentUrlLocation, callback) => {
     request.get(documentUrlLocation, {
       headers: getHeaders(token)
     }, (err, res) => {
-      if (res.statusCode && res.statusCode === httpStatus.OK) return cb(undefined, true);
+      if (err)
+        return cb(err);
+
+      if (res.statusCode && res.statusCode === httpStatus.OK)
+        return cb(undefined, true);
+
       return cb(undefined, false);
     });
   };
