@@ -1,4 +1,4 @@
-'use-strict';
+'use strict';
 
 const moment = require('abacus-moment');
 const request = require('abacus-request');
@@ -6,6 +6,8 @@ const createWait = require('abacus-wait');
 
 const httpStatus = require('http-status-codes');
 const { extend } = require('underscore');
+
+const fiveMinutesInMs = 5 * 60 * 1000;
 
 let provisioningUrl;
 let collectorUrl;
@@ -115,8 +117,7 @@ const getTimeBasedKeyProperty = (body, filter) => {
   })[0].resources.filter((resource) => {
     return resource.resource_id === filter.resource_id;
   })[0].plans.filter((plan) => {
-    const key = filter.plan_id + '/' + filter.metering_plan_id + '/'
-      + filter.rating_plan_id + '/' + filter.pricing_plan_id;
+    const key = `${filter.plan_id}/${filter.metering_plan_id}/${filter.rating_plan_id}/${filter.pricing_plan_id}`;
     return plan.plan_id === key;
   })[0].resource_instances[0].t;
 };
@@ -136,8 +137,8 @@ const waitUntilUsageIsProcessed = (token, documentUrlLocation, callback) => {
       return cb(undefined, false);
     });
   };
-  return createWait().until(checkLocation, callback);
 
+  return createWait(fiveMinutesInMs).until(checkLocation, callback);
 };
 
 
@@ -158,4 +159,4 @@ module.exports = (provisioningAppUrl, collectorAppUrl, reportingAppUrl) => {
     getTimeBasedKeyProperty: getTimeBasedKeyProperty,
     waitUntilUsageIsProcessed: waitUntilUsageIsProcessed
   };
-};;
+};
