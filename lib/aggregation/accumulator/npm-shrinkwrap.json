@@ -1032,9 +1032,9 @@
       "resolved": "https://registry.npmjs.org/verror/-/verror-1.10.0.tgz"
     },
     "vm2": {
-      "version": "3.6.0",
+      "version": "3.6.1",
       "from": "vm2@>=3.4.6 <4.0.0",
-      "resolved": "https://registry.npmjs.org/vm2/-/vm2-3.6.0.tgz"
+      "resolved": "https://registry.npmjs.org/vm2/-/vm2-3.6.1.tgz"
     }
   }
 }
