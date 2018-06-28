@@ -837,9 +837,9 @@
       "resolved": "https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.1.tgz"
     },
     "uuid": {
-      "version": "3.2.1",
+      "version": "3.3.2",
       "from": "uuid@>=3.1.0 <4.0.0",
-      "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.2.1.tgz"
+      "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.3.2.tgz"
     },
     "vary": {
       "version": "1.1.2",
