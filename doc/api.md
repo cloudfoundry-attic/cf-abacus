@@ -41,9 +41,11 @@ POST /v1/metering/collected/usage with a resource usage document
 
 _Description_: Records the _resource usage_ document and processes the Cloud resource usage data it contains.
 
-_HTTP response_: 
+_HTTP response_:
 * 202 to indicate usage was accepted with the URL of the _resource usage_ document in a Location header
 * 400 to report an invalid request
+* 401 to report an unauthorized request
+* 403 to report an insufficient scope error, encountered when the resource_id value is invalid
 * 429 to signal that rate-limit was reached
 * 500 to report a server error
 * 503 to report collector is overloaded
@@ -852,7 +854,14 @@ _Description_: Retrieves a usage report document containing a summary of the agg
 
 If Abacus is [secured](https://github.com/cloudfoundry-incubator/cf-abacus/wiki/Security) the response depends on the scopes of the oAuth token used to call the API. When system token is used the complete report with aggregated usage for the requested organization will be returned. When resource token is used than the report will contain only the resources specified by the resource token scopes.
 
-_HTTP response_: 200 to indicate success with a _usage summary report_ JSON document, 403 when the resource_id value is invalid, 404 if the usage is not found, 500 to report a server error.
+_HTTP response_:
+* 200 to indicate a success with a _usage summary report_ JSON document
+* 206 to alert that _usage summary report_ JSON document contains partial content. For example missing consumer or space data for particular time of report
+* 401 to report an unauthorized request
+* 403 to report an insufficient scope error, encountered when the resource_id value is invalid
+* 404 to report that usage is not found
+* 500 to report a server error
+* 503 to report that reporting is overloaded
 
 ### JSON representation:
 ```json
@@ -2223,7 +2232,14 @@ GET /v1/metering/organizations/:organization_id/spaces/:space_id/resource_id/:re
 
 _Description_: Retrieves a usage report document containing a summary of the aggregated Cloud resource usage incurred by the specified resource instance within an organization and the specific set of plans at the specified time.
 
-_HTTP response_: 200 to indicate success with a _usage summary report_ JSON document, 404 if the usage is not found, 500 to report a server error.
+_HTTP response_:
+* 200 to indicate a success with a _usage summary report_ JSON document
+* 206 to alert that _usage summary report_ JSON document contains partial content. For example missing consumer or space data for particular time of report
+* 401 to report an unauthorized request
+* 403 to report an insufficient scope error, encountered when the resource_id value is invalid
+* 404 to report that usage is not found
+* 500 to report a server error
+* 503 to report that reporting is overloaded
 
 ### JSON representation:
 ```json
@@ -2512,7 +2528,14 @@ GET /v1/metering/aggregated/usage/graph/:query
 
 _Description_: Retrieves a usage report document containing a summary of the Cloud resource usage matching the specified GraphQL query.
 
-_HTTP response_: 200 to indicate success with a _usage summary report_ JSON document, 404 if the usage is not found, 500 to report a server error.
+_HTTP response_:
+* 200 to indicate a success with a _usage summary report_ JSON document
+* 206 to alert that _usage summary report_ JSON document contains partial content. For example missing consumer or space data for particular time of report
+* 401 to report an unauthorized request
+* 403 to report an insufficient scope error, encountered when the resource_id value is invalid
+* 404 to report that usage is not found
+* 500 to report a server error
+* 503 to report that reporting is overloaded
 
 ### Example GraphQL queries:
 
