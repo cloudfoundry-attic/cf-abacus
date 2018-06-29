@@ -25,7 +25,7 @@ matrix:
 
   include:
     - env:
-      - DESCRIPTION=unit-tests-mongodb
+      - DESCRIPTION=unit-tests
       - DB=mongodb://localhost:27017
       - JOBS=1
       node_js: 8.9.4
@@ -34,7 +34,7 @@ matrix:
       script:
         - yarn run build && yarn run generate-coverage && yarn run report-coverage
     - env:
-      - DESCRIPTION=itests-mongodb
+      - DESCRIPTION=itests
       - RABBIT_URI=amqp://localhost:5672
       - DB=mongodb://localhost:27017
       - JOBS=1
@@ -48,7 +48,7 @@ matrix:
         - yarn run provision
         - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
     - env:
-      - DESCRIPTION=extended-tests-mongodb
+      - DESCRIPTION=extended-tests
       - RABBIT_URI=amqp://localhost:5672
       - DB=mongodb://localhost:27017
       - JOBS=1
@@ -61,7 +61,7 @@ matrix:
         - yarn run provision
         - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
     - env:
-      - DESCRIPTION=perf-tests-mongodb
+      - DESCRIPTION=perf-tests
       - RABBIT_URI=amqp://localhost:5672
       - DB=mongodb://localhost:27017
       - JOBS=1
