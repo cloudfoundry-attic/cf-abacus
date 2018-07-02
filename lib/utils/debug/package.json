@@ -30,6 +30,7 @@
   "dependencies": {
     "abacus-events": "file:../events",
     "abacus-moment": "file:../moment",
+    "longjohn": "^0.2.12",
     "debug": "^2.4.5",
     "underscore": "^1.8.3"
   },

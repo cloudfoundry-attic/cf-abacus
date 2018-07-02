@@ -354,6 +354,7 @@
     abacus-events "file:../../Library/Caches/Yarn/v1/events"
     abacus-moment "file:../../Library/Caches/Yarn/v1/moment"
     debug "^2.4.5"
+    longjohn "^0.2.12"
     underscore "^1.8.3"
 
 "abacus-dedupe@file:lib/utils/dedupe":
@@ -1265,8 +1266,8 @@ ajv@^5.1.0, ajv@^5.3.0:
     json-schema-traverse "^0.3.0"
 
 ajv@^6.0.0, ajv@^6.0.1:
-  version "6.5.1"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.5.1.tgz#88ebc1263c7133937d108b80c5572e64e1d9322d"
+  version "6.5.2"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.5.2.tgz#678495f9b82f7cca6be248dd92f59bff5e1f4360"
   dependencies:
     fast-deep-equal "^2.0.1"
     fast-json-stable-stringify "^2.0.0"
@@ -1602,8 +1603,8 @@ basic-auth@~2.0.0:
     safe-buffer "5.1.1"
 
 bcrypt-pbkdf@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.1.tgz#63bc5dcb61331b92bc05fd528953c33462a06f8d"
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.2.tgz#a4301d389b6a43f9b67ff3ca11a3f6637e360e9e"
   dependencies:
     tweetnacl "^0.14.3"
 
@@ -2085,8 +2086,8 @@ combined-stream@1.0.6, combined-stream@^1.0.5, combined-stream@~1.0.5:
     delayed-stream "~1.0.0"
 
 commander@*, commander@^2.8.1:
-  version "2.15.1"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-2.15.1.tgz#df46e867d0fc2aec66a34662b406a9ccafff5b0f"
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.16.0.tgz#f16390593996ceb4f3eeb020b31d78528f7f8a50"
 
 commander@2.8.1, commander@2.8.x:
   version "2.8.1"
@@ -4633,7 +4634,7 @@ longest@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/longest/-/longest-1.0.1.tgz#30a0b2da38f73770e8294a0d22e6625ed77d0097"
 
-longjohn@^0.2.9:
+longjohn@^0.2.12, longjohn@^0.2.9:
   version "0.2.12"
   resolved "https://registry.yarnpkg.com/longjohn/-/longjohn-0.2.12.tgz#7ca7446b083655c377e7512213dc754d52a64a7e"
   dependencies:
@@ -6962,8 +6963,8 @@ uuid@3.1.0:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.1.0.tgz#3dd3d3e790abc24d7b0d3a034ffababe28ebbc04"
 
 uuid@^3.0.0, uuid@^3.1.0, uuid@^3.2.1:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.0.tgz#b237147804881d7b86f40a7ff8f590f15c37de32"
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
 
 vali-date@^1.0.0:
   version "1.0.0"
