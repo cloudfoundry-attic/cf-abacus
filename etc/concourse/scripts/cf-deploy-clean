@@ -18,7 +18,7 @@ if [ ${#APPS[@]} -eq 0 ]; then
   echo "Found no old applications"
 else
   echo "Deleting old applications: ${APPS[@]}"
-  echo ${APPS[@]} | xargs -n1 -P 50 cf delete -f
+  echo ${APPS[@]} | xargs -n1 -P 50 "$SCRIPT_DIR/safe-delete-app"
 fi
 
 echo "Clean-up finished"
