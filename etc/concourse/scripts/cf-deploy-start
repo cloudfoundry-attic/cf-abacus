@@ -16,9 +16,11 @@ if [ "$SKIP_SSL_VALIDATION" == "true" ]; then
 fi
 
 cf login -a https://api.$CF_SYS_DOMAIN -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE $skip
+getApps
 
 set +e
-startApps
+echo "Starting applications ..."
+echo ${APPS[@]} | xargs -n1 -P 50 cf start
 
 echo "Applications:"
 cf apps
