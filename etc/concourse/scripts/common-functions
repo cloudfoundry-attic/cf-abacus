@@ -65,26 +65,7 @@ function restartAppsWithRetry {
   done
 }
 
-function createOrUpdateService {
-  service_instance_name=$1
-  service_instance_plan_name=$2
-  service_name=$3
-
-  if cf service $service_instance_name; then
-    local PLAN=$(cf service "$service_instance_name" | grep "plan:" | awk '{print $2}')
-    if [[ $PLAN == $service_instance_plan_name ]]; then
-      echo "$service_name service instance $service_instance_name has the same plan $service_instance_plan_name - skipping update..."
-      return 0;
-    fi  
-    echo "Updating $service_name service instance $service_instance_name with plan $service_instance_plan_name ..."
-    cf update-service $service_instance_name -p $service_instance_plan_name
-  else
-    echo "Creating new $service_name service instance $service_instance_name with plan $service_instance_plan_name ..."
-    cf create-service "$service_name" $service_instance_plan_name $service_instance_name
-  fi
-}
-
-remove_quotes() {
+removeQuotes() {
     result="${1%\"}"
     result="${result#\"}"
     echo "$result"
@@ -94,10 +75,10 @@ get() {
     body="$1"
     query="$2"
     result=$(echo "$body" | jq "$query")
-    echo "$(remove_quotes "$result")"
+    echo "$(removeQuotes "$result")"
 }
 
-get_service_status() {
+getServiceStatus() {
     service_guid=$1
     serivce_instance_body=$(cf curl "/v2/service_instances/$service_guid")
     service_instance_last_operation_type=$(get "$serivce_instance_body" '.entity.last_operation.type')
@@ -112,26 +93,14 @@ function waitForStatusAvailable {
 
   echo "Waiting for $service_name to be in available state..."
 
-  while [[ $(get_service_status "$service_guid" | grep "in progress") ]]; do
+  while [[ $(getServiceStatus "$service_guid" | grep "in progress") ]]; do
       sleep 3s
   done
 
-  read operation status < <(get_service_status "$service_guid")
-
-  if [[ "$status" =~ "failed" ]]; then
-      echo "Operation: $operation of service: $service_name failed!!!"
-      exit 1
-  fi
-
-  if [[ "$status" =~ "succeeded" ]]; then
-      echo "Operation: $operation of service: $service_name finished with status: $status"
-  else
-      echo "Operation: $operation of service: $service_name finished with UNKNOWN status: $status"
-      exit 1
-  fi
+  echo "$service_name finished its last operation (is no longer in progress)"
 }
 
-get_statuses_for_all_services() {
+get_statuses_for_bound_services() {
     i="0"
     while [ $i -lt "$(($total_results))" ]
     do
@@ -158,21 +127,31 @@ function safeDelete {
   app_service_bindings_body=$(cf curl "/v2/apps/$app_guid/service_bindings")
   total_results=$(echo "$app_service_bindings_body" | jq '.total_results')
 
-  while [[ $(get_statuses_for_all_services | grep "in progress") ]]; do
+  while [[ $(get_statuses_for_bound_services | grep "in progress") ]]; do
       sleep 3s
   done
 
-  read status instance operation  < <(get_statuses_for_all_services)
+  echo "All services bound to $app_name finished their last operation (are no longer in progress)"
+  cf delete "$app_name" -f
+}
 
-  if [[ "$status" =~ "succeeded" ]]; then
-      echo "All services bound to $app_name finished thier last operation with status: $status"
-      cf delete "$app_name" -f
-  elif [[ "$status" =~ "failed" ]]; then
-      echo "Operation: $operation of service: $instance failed!!!"
-      exit 1
+function createOrUpdateService {
+  service_instance_name=$1
+  service_instance_plan_name=$2
+  service_name=$3
+
+  if cf service $service_instance_name; then
+    local PLAN=$(cf service "$service_instance_name" | grep "plan:" | awk '{print $2}')
+    if [[ $PLAN == $service_instance_plan_name ]]; then
+      echo "$service_name service instance $service_instance_name has the same plan $service_instance_plan_name - skipping update..."
+      return 0;
+    fi
+    echo "Updating $service_name service instance $service_instance_name with plan $service_instance_plan_name ..."
+    waitForStatusAvailable $service_instance_name
+    cf update-service $service_instance_name -p $service_instance_plan_name
   else
-      echo "One or more services bound to $app_name have operations finished with UNKNOWN status: $status"
-      exit 1
+    echo "Creating new $service_name service instance $service_instance_name with plan $service_instance_plan_name ..."
+    cf create-service "$service_name" $service_instance_plan_name $service_instance_name
   fi
 }
 
@@ -243,4 +222,29 @@ function purge {
     echo "$2 events purging failed with reposnse code: $response_code"
     exit 1
   fi
+}
+
+function checkServiceStatus {
+  service_name="$1"
+  service_guid=$(cf service "$service_name" --guid)
+
+  read operation status < <(getServiceStatus "$service_guid")
+
+  if [[ "$status" =~ "failed" ]]; then
+      cf service "$service_name"
+      echo "Operation: $operation of service: $service_name failed!!! Deploy will not start."
+      exit 1
+  fi
+
+  echo "Operation: $operation of service: $service_name has status: $status. Continuing..."
+}
+
+function checkAllServices {
+  instances=($DB_SERVICE_INSTANCES)
+  for instance in "${instances[@]}"; do
+    args=(${instance//:/ })
+    checkServiceStatus ${args[0]}
+  done;
+
+  checkServiceStatus $RABBIT_INSTANCE_NAME
 }
