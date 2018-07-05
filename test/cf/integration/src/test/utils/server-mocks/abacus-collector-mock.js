@@ -72,6 +72,7 @@ module.exports = () => {
       res.status(response.statusCode).send(response.body);
     });
 
+    app.use(routes);
     app.use(router.batch(routes));
     server = app.listen(randomPort);
     debug('Abacus Collector started on port: %d', server.address().port);
