@@ -14,6 +14,25 @@ function getApps {
   fi
 }
 
+function getNewApps {
+  local LINE=$(cf apps | awk '{if (NR == 4) {print}}')
+
+  if [ "$LINE" == "No apps found" ]; then
+    echo "No apps found"
+    APPS=()
+  else
+    APPS=($(cf apps | tail -n +5 | grep -v "old" | grep -E "$1" | awk '{print $1}'))
+    echo "Found ${#APPS[@]} applications ..."
+  fi
+}
+
+function startApps {
+  getNewApps
+
+  echo "Starting applications ..."
+  echo ${APPS[@]} | xargs -n1 -P 50 cf start
+}
+
 function restartApps {
   getApps '\?'
   echo ${APPS[@]} | xargs -n1 | grep -v -- "-old" | xargs -n1 -P 5 -r cf restart
@@ -46,66 +65,120 @@ function restartAppsWithRetry {
   done
 }
 
-function waitForServices {
-  echo "Waiting for service creation or update ..."
-  services=("$@")
-  for service in "${services[@]}"
-  do
-    while [[ -z $(cf service $service | grep '\(create\|update\) succeeded\|\(create\|update\) failed') ]]; do
+removeQuotes() {
+    result="${1%\"}"
+    result="${result#\"}"
+    echo "$result"
+}
+
+get() {
+    body="$1"
+    query="$2"
+    result=$(echo "$body" | jq "$query")
+    echo "$(removeQuotes "$result")"
+}
+
+getServiceStatus() {
+    service_guid=$1
+    serivce_instance_body=$(cf curl "/v2/service_instances/$service_guid")
+    service_instance_last_operation_type=$(get "$serivce_instance_body" '.entity.last_operation.type')
+    service_instance_last_operation_state=$(get "$serivce_instance_body" '.entity.last_operation.state')
+
+    echo "$service_instance_last_operation_type" "$service_instance_last_operation_state"
+}
+
+function waitForStatusAvailable {
+  service_name="$1"
+  service_guid=$(cf service "$service_name" --guid)
+
+  echo "Waiting for $service_name to be in available state..."
+
+  while [[ $(getServiceStatus "$service_guid" | grep "in progress") ]]; do
       sleep 3s
-    done
-    if [[ -n $(cf service $service | grep '\(create\|update\) succeeded') ]]; then
-      echo "Creation or update of $service finished successfully."
-    else
-      echo "Creation or update of $service failed!"
-      exit 1
-    fi
   done
+
+  echo "$service_name finished its last operation (is no longer in progress)"
+}
+
+get_statuses_for_bound_services() {
+    i="0"
+    while [ $i -lt "$(($total_results))" ]
+    do
+        service_instance_guid=$(get "$app_service_bindings_body" '.resources['"$i"'].entity.service_instance_guid')
+
+        serivce_app_service_bindings_body=$(cf curl "/v2/service_instances/$service_instance_guid")
+        service_instance_last_operation_type=$(get "$serivce_app_service_bindings_body" '.entity.last_operation.type')
+        service_instance_last_operation_state=$(get "$serivce_app_service_bindings_body" '.entity.last_operation.state')
+        service_name=$(get "$serivce_app_service_bindings_body" '.entity.name')
+
+        if [[ "$service_instance_last_operation_state" =~ "in progress" ]] || [[ "$service_instance_last_operation_state" =~ "failed" ]]; then
+            echo "$service_instance_last_operation_state" "$service_name" "$service_instance_last_operation_type"
+            break
+        fi
+    i="$(($i + 1))"
+    done
+    echo "succeeded"
+}
+
+# wait for all services bound to app, before delete
+function safeDelete {
+  app_name="$1"
+  app_guid=$(cf app "$app_name" --guid)
+  app_service_bindings_body=$(cf curl "/v2/apps/$app_guid/service_bindings")
+  total_results=$(echo "$app_service_bindings_body" | jq '.total_results')
+
+  while [[ $(get_statuses_for_bound_services | grep "in progress") ]]; do
+      sleep 3s
+  done
+
+  echo "All services bound to $app_name finished their last operation (are no longer in progress)"
+  cf delete "$app_name" -f
 }
 
 function createOrUpdateService {
-  SHOULD_WAIT=false
-  if cf service $1; then
-    local PLAN=$(cf service "$1" | grep "plan:" | awk '{print $2}')
-    if [[ $PLAN == $2 ]]; then
-      echo "DB service instance $1 has the same plan $2 - skipping update..."
-      SHOULD_WAIT=0
+  service_instance_name=$1
+  service_instance_plan_name=$2
+  service_name=$3
+
+  if cf service $service_instance_name; then
+    local PLAN=$(cf service "$service_instance_name" | grep "plan:" | awk '{print $2}')
+    if [[ $PLAN == $service_instance_plan_name ]]; then
+      echo "$service_name service instance $service_instance_name has the same plan $service_instance_plan_name - skipping update..."
       return 0;
-    fi  
-    echo "Updating DB service instance $1 with plan $2 ..."
-    cf update-service $1 -p $2
-    SHOULD_WAIT=1
-    return 0;
+    fi
+    echo "Updating $service_name service instance $service_instance_name with plan $service_instance_plan_name ..."
+    waitForStatusAvailable $service_instance_name
+    cf update-service $service_instance_name -p $service_instance_plan_name
   else
-    echo "Creating new DB service instance $1 with plan $2 ..."
-    cf create-service "$DB_SERVICE_NAME" $2 $1
-    SHOULD_WAIT=1
-    return 0;
+    echo "Creating new $service_name service instance $service_instance_name with plan $service_instance_plan_name ..."
+    cf create-service "$service_name" $service_instance_plan_name $service_instance_name
   fi
 }
 
-function createOrUpdateRabbitService {
-  if cf service $1; then
-    echo "Updating Rabbit service instance $1 with plan $2 ..."
-    cf update-service $1 -p $2
-  else
-    echo "Creating new Rabbit service instance $1 with plan $2 ..."
-    cf create-service "$RABBIT_SERVICE_NAME" $2 $1
-  fi
+function bindAppToService {
+  app=$1
+  instance_name=$2
+
+  echo "Binding app $app to service $instance_name"
+  waitForStatusAvailable $instance_name
+  cf bind-service $app $instance_name
 }
 
-function bindService {
+function bindGroupToService {
+  group=$1
+  service=$2
+ 
+  echo "Binding group $group to service $service"
+
+  getNewApps "$group"
+
   instances=($DB_SERVICE_INSTANCES)
-  for dbalias in $(echo $2 | sed "s/,/ /g" | xargs -n1 | sort -u | xargs); do
-    for app_prefix in $(echo $1 | sed "s/,/ /g" | xargs -n1 | sort -u | xargs); do
-      for instance in "${instances[@]}"; do
-        instance_name=${instance%:*}
-        for app in "${APPS[@]}"; do
-          if [[ $instance_name == $dbalias* && $app == $app_prefix* ]]; then
-            cf bind-service $app $instance_name
-          fi
-        done
-      done
+  for instance in "${instances[@]}"; do
+    instance_name=${instance%:*}
+    for app in "${APPS[@]}"; do
+      if [[ $instance_name =~ $service* ]]; then
+        bindAppToService $app $instance_name
+      fi
     done
   done
 }
@@ -149,4 +222,29 @@ function purge {
     echo "$2 events purging failed with reposnse code: $response_code"
     exit 1
   fi
+}
+
+function checkServiceStatus {
+  service_name="$1"
+  service_guid=$(cf service "$service_name" --guid)
+
+  read operation status < <(getServiceStatus "$service_guid")
+
+  if [[ "$status" =~ "failed" ]]; then
+      cf service "$service_name"
+      echo "Operation: $operation of service: $service_name failed!!! Deploy will not start."
+      exit 1
+  fi
+
+  echo "Operation: $operation of service: $service_name has status: $status. Continuing..."
+}
+
+function checkAllServices {
+  instances=($DB_SERVICE_INSTANCES)
+  for instance in "${instances[@]}"; do
+    args=(${instance//:/ })
+    checkServiceStatus ${args[0]}
+  done;
+
+  checkServiceStatus $RABBIT_INSTANCE_NAME
 }
