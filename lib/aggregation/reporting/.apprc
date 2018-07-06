@@ -20,17 +20,17 @@ small:
   DB_PARTITIONS: 2
 
 medium:
-  APPS: 2
-  INSTANCES: 1
+  APPS: 1
+  INSTANCES: 3
   DB_PARTITIONS: 4
 
 large:
-  APPS: 3
-  INSTANCES: 1
+  APPS: 1
+  INSTANCES: 5
   DB_PARTITIONS: 6
 
 xlarge:
-  APPS: 5
-  INSTANCES: 1
+  APPS: 1
+  INSTANCES: 10
   DB_PARTITIONS: 6
 
