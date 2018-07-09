@@ -90,7 +90,10 @@ describe('renewer sends usage, but abacus is down', () => {
       const usageStats = response.body.statistics.usage;
       expect(usageStats.report).to.deep.equal({
         success: 0,
-        conflicts: 0,
+        skipped: {
+          conflicts: 0,
+          legal_reasons: 0
+        },
         failures: 1
       });
       expect(omit(usageStats.get, 'missingToken')).to.deep.equal({
