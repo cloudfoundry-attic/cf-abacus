@@ -207,7 +207,10 @@ describe('renewer standard flow', () => {
       const usageStats = response.body.statistics.usage;
       expect(usageStats.report).to.deep.equal({
         success: 3,
-        conflicts: 0,
+        skipped: {
+          conflicts: 0,
+          legal_reasons: 0
+        },
         failures: 0
       });
       expect(omit(usageStats.get, 'missingToken')).to.deep.equal({
