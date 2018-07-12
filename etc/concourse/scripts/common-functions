@@ -219,24 +219,32 @@ function purge {
   if [ "$response_code" == "204" ]; then
     echo "$2 events purged successfully"
   else
-    echo "$2 events purging failed with reposnse code: $response_code"
+    echo "$2 events purging failed with response code: $response_code"
     exit 1
   fi
 }
 
 function checkServiceStatus {
   service_name="$1"
+
+  set +e
   service_guid=$(cf service "$service_name" --guid)
+  dbExists=$?
+  set -e
 
-  read operation status < <(getServiceStatus "$service_guid")
+  if [[ "dbExists" == "0" ]]; then
+    read operation status < <(getServiceStatus "$service_guid")
 
-  if [[ "$status" =~ "failed" ]]; then
+    if [[ "$status" =~ "failed" ]]; then
       cf service "$service_name"
-      echo "Operation: $operation of service: $service_name failed!!! Deploy will not start."
+      echo "Deploy will not start: $operation of service $service_name failed !"
       exit 1
-  fi
+    fi
 
-  echo "Operation: $operation of service: $service_name has status: $status. Continuing..."
+    echo "$operation of service $service_name has status: $status. Continuing..."
+  else
+    echo "Service $service_name not found"
+  fi
 }
 
 function checkAllServices {
