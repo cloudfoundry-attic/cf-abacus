@@ -30,13 +30,15 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-moment": "file:../moment"
+    "abacus-moment": "file:../moment",
+    "abacus-router": "file:../router"
   },
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish",
     "abacus-express": "file:../express",
+    "abacus-request": "file:../request",
     "nyc": "^11.4.1"
   },
   "nyc": {
