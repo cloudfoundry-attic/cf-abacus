@@ -352,16 +352,6 @@
         }
       }
     },
-    "bitbuffer": {
-      "version": "0.1.3",
-      "from": "bitbuffer@>=0.1.0 <0.2.0",
-      "resolved": "https://registry.npmjs.org/bitbuffer/-/bitbuffer-0.1.3.tgz"
-    },
-    "bloem": {
-      "version": "0.2.4",
-      "from": "bloem@>=0.2.4 <0.3.0",
-      "resolved": "https://registry.npmjs.org/bloem/-/bloem-0.2.4.tgz"
-    },
     "body-parser": {
       "version": "1.18.2",
       "from": "body-parser@1.18.2",
@@ -488,27 +478,20 @@
     },
     "compressible": {
       "version": "2.0.14",
-      "from": "compressible@>=2.0.13 <2.1.0",
+      "from": "compressible@>=2.0.14 <2.1.0",
       "resolved": "https://registry.npmjs.org/compressible/-/compressible-2.0.14.tgz",
       "dependencies": {
         "mime-db": {
-          "version": "1.34.0",
+          "version": "1.35.0",
           "from": "mime-db@>=1.34.0 <2.0.0",
-          "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.34.0.tgz"
+          "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.35.0.tgz"
         }
       }
     },
     "compression": {
-      "version": "1.7.2",
+      "version": "1.7.3",
       "from": "compression@>=1.7.2 <2.0.0",
-      "resolved": "https://registry.npmjs.org/compression/-/compression-1.7.2.tgz",
-      "dependencies": {
-        "safe-buffer": {
-          "version": "5.1.1",
-          "from": "safe-buffer@5.1.1",
-          "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.1.tgz"
-        }
-      }
+      "resolved": "https://registry.npmjs.org/compression/-/compression-1.7.3.tgz"
     },
     "concat-map": {
       "version": "0.0.1",
@@ -675,9 +658,9 @@
       }
     },
     "eslint-scope": {
-      "version": "3.7.1",
+      "version": "3.7.3",
       "from": "eslint-scope@>=3.7.1 <4.0.0",
-      "resolved": "https://registry.npmjs.org/eslint-scope/-/eslint-scope-3.7.1.tgz"
+      "resolved": "https://registry.npmjs.org/eslint-scope/-/eslint-scope-3.7.3.tgz"
     },
     "espree": {
       "version": "3.5.4",
@@ -685,9 +668,9 @@
       "resolved": "https://registry.npmjs.org/espree/-/espree-3.5.4.tgz"
     },
     "esprima": {
-      "version": "4.0.0",
+      "version": "4.0.1",
       "from": "esprima@>=4.0.0 <5.0.0",
-      "resolved": "https://registry.npmjs.org/esprima/-/esprima-4.0.0.tgz"
+      "resolved": "https://registry.npmjs.org/esprima/-/esprima-4.0.1.tgz"
     },
     "esquery": {
       "version": "1.0.1",
@@ -785,11 +768,6 @@
       "version": "1.3.0",
       "from": "flat-cache@>=1.2.1 <2.0.0",
       "resolved": "https://registry.npmjs.org/flat-cache/-/flat-cache-1.3.0.tgz"
-    },
-    "fnv": {
-      "version": "0.1.3",
-      "from": "fnv@>=0.1.0 <0.2.0",
-      "resolved": "https://registry.npmjs.org/fnv/-/fnv-0.1.3.tgz"
     },
     "forever-agent": {
       "version": "0.6.1",
