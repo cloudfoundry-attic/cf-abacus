@@ -34,6 +34,7 @@
     "abacus-partition": "file:../partition",
     "abacus-perf": "file:../perf",
     "abacus-request": "file:../request",
+    "abacus-seqid": "file:../seqid",
     "abacus-transform": "file:../transform",
     "mongodb": "^2.1",
     "underscore": "^1.8.3"
