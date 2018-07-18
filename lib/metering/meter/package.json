@@ -37,6 +37,7 @@
     "abacus-batch": "file:../../utils/batch",
     "abacus-breaker": "file:../../utils/breaker",
     "abacus-cluster": "file:../../utils/cluster",
+    "abacus-dbcommons": "file:../../utils/dbcommons",
     "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-debug": "file:../../utils/debug",
     "abacus-express": "file:../../utils/express",
