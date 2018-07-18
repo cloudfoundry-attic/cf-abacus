@@ -488,27 +488,13 @@
     },
     "compressible": {
       "version": "2.0.14",
-      "from": "compressible@>=2.0.13 <2.1.0",
-      "resolved": "https://registry.npmjs.org/compressible/-/compressible-2.0.14.tgz",
-      "dependencies": {
-        "mime-db": {
-          "version": "1.34.0",
-          "from": "mime-db@>=1.34.0 <2.0.0",
-          "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.34.0.tgz"
-        }
-      }
+      "from": "compressible@>=2.0.14 <2.1.0",
+      "resolved": "https://registry.npmjs.org/compressible/-/compressible-2.0.14.tgz"
     },
     "compression": {
-      "version": "1.7.2",
+      "version": "1.7.3",
       "from": "compression@>=1.7.2 <2.0.0",
-      "resolved": "https://registry.npmjs.org/compression/-/compression-1.7.2.tgz",
-      "dependencies": {
-        "safe-buffer": {
-          "version": "5.1.1",
-          "from": "safe-buffer@5.1.1",
-          "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.1.tgz"
-        }
-      }
+      "resolved": "https://registry.npmjs.org/compression/-/compression-1.7.3.tgz"
     },
     "concat-map": {
       "version": "0.0.1",
@@ -675,9 +661,9 @@
       }
     },
     "eslint-scope": {
-      "version": "3.7.1",
+      "version": "3.7.3",
       "from": "eslint-scope@>=3.7.1 <4.0.0",
-      "resolved": "https://registry.npmjs.org/eslint-scope/-/eslint-scope-3.7.1.tgz"
+      "resolved": "https://registry.npmjs.org/eslint-scope/-/eslint-scope-3.7.3.tgz"
     },
     "espree": {
       "version": "3.5.4",
@@ -685,9 +671,9 @@
       "resolved": "https://registry.npmjs.org/espree/-/espree-3.5.4.tgz"
     },
     "esprima": {
-      "version": "4.0.0",
+      "version": "4.0.1",
       "from": "esprima@>=4.0.0 <5.0.0",
-      "resolved": "https://registry.npmjs.org/esprima/-/esprima-4.0.0.tgz"
+      "resolved": "https://registry.npmjs.org/esprima/-/esprima-4.0.1.tgz"
     },
     "esquery": {
       "version": "1.0.1",
@@ -1161,14 +1147,14 @@
       "resolved": "https://registry.npmjs.org/mime/-/mime-1.4.1.tgz"
     },
     "mime-db": {
-      "version": "1.33.0",
-      "from": "mime-db@>=1.33.0 <1.34.0",
-      "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.33.0.tgz"
+      "version": "1.35.0",
+      "from": "mime-db@>=1.35.0 <1.36.0",
+      "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.35.0.tgz"
     },
     "mime-types": {
-      "version": "2.1.18",
+      "version": "2.1.19",
       "from": "mime-types@>=2.1.17 <2.2.0",
-      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.18.tgz"
+      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.19.tgz"
     },
     "mimic-fn": {
       "version": "1.2.0",
