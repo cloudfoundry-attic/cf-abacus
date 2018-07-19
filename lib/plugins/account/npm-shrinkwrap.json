@@ -139,6 +139,11 @@
       "from": "../../utils/schema",
       "resolved": "file:../../utils/schema"
     },
+    "abacus-seqid": {
+      "version": "1.1.3",
+      "from": "../../utils/seqid",
+      "resolved": "file:../../utils/seqid"
+    },
     "abacus-throttle": {
       "version": "1.1.3",
       "from": "../../utils/throttle",
