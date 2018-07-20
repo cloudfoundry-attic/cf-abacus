@@ -31,14 +31,14 @@
     "abacus-debug": "file:../debug",
     "abacus-transform": "file:../transform",
     "abacus-yieldable": "file:../yieldable",
-    "express": "^4.14.1",
+    "express": "4.16.3",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
     "abacus-batch": "file:../batch",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "nyc": "^11.4.1",
+    "nyc": "^12.0.2",
     "abacus-publish": "file:../../../tools/publish",
     "abacus-request": "file:../request",
     "abacus-express": "file:../express"
