@@ -30,14 +30,14 @@
   },
   "dependencies": {
     "abacus-debug": "file:../debug",
-    "eslint": "~4.13.0",
-    "graphql": "^0.4.14",
+    "eslint": "~5.1.0",
+    "graphql": "^0.13.2",
     "is-my-json-valid": "^2.12.0"
   },
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "nyc": "^11.4.1",
+    "nyc": "^12.0.2",
     "abacus-publish": "file:../../../tools/publish"
   },
   "nyc": {
