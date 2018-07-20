@@ -64,6 +64,11 @@
       "src/test/**"
     ]
   },
+  "greenkeeper": {
+    "ignore": [
+      "bignumber.js"
+    ]
+  },
   "engines": {
     "node": ">=8.9.4 <9.0.0",
     "npm": "<5.0.0",
