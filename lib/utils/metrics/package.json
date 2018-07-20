@@ -41,7 +41,7 @@
     "abacus-publish": "file:../../../tools/publish",
     "abacus-express": "file:../express",
     "abacus-request": "file:../request",
-    "nyc": "^11.4.1"
+    "nyc": "^12.0.2"
   },
   "nyc": {
     "cache": true,
