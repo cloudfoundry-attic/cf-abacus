@@ -24,11 +24,11 @@
     "test": "abacus-mocha src/test --recursive"
   },
   "dependencies": {
-    "requireindex": "~1.1.0"
+    "requireindex": "~1.2.0"
   },
   "devDependencies": {
-    "eslint": "~4.13.0",
-    "mocha": "^3.2.0"
+    "eslint": "~5.1.0",
+    "mocha": "^5.2.0"
   },
   "peerDependencies": {
     "eslint": "~4.13.0"
