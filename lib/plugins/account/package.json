@@ -60,7 +60,7 @@
     "abacus-cluster": "file:../../utils/cluster",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "nyc": "^11.4.1",
+    "nyc": "^12.0.2",
     "abacus-publish": "file:../../../tools/publish"
   },
   "nyc": {
