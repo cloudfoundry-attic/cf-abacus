@@ -6,7 +6,7 @@ const throttle = require('abacus-throttle');
 const request = require('abacus-request');
 const dbclient = require('abacus-dbclient');
 const createLifecycleManager = require('abacus-lifecycle-manager');
-const { Consumer, ConnectionManager } = require('abacus-rabbitmq');
+const { ConnectionManager, Consumer, amqpMessageParser } = require('abacus-rabbitmq');
 
 const { map, range, clone, omit, extend } = require('underscore');
 
@@ -37,8 +37,34 @@ const startTimeout = commander.startTimeout || 30000;
 const totalTimeout = commander.totalTimeout || 60000;
 
 const rabbitUri = process.env.RABBIT_URI;
-const queueName = 'abacus-collector-itest-queue';
-const customEnv = extend({}, process.env, { ABACUS_COLLECT_QUEUE:  queueName });
+const consumerConfig = {
+  mainQueue: {
+    name: 'collector-itest-queue',
+    exchange: 'collector-itest-main-exchange',
+    routingKey: '#',
+    prefetchLimit: 100
+  },
+  deadLetterQueues: [
+    {
+      name: 'collector-itest-first-dl',
+      exchange: 'collector-itest-first-dl-exchange',
+      mainExchange: 'collector-itest-main-exchange',
+      routingKey: '#',
+      ttl: 180000,
+      retryAttempts: 100
+    },
+    {
+      name: 'collector-itest-second-dl',
+      exchange: 'collector-itest-second-dl-exchange',
+      mainExchange: 'collector-itest-main-exchange',
+      routingKey: '#',
+      ttl: 1620000,
+      retryAttempts: 100
+    }
+  ]
+};
+
+const customEnv = extend({}, process.env, { ABACUS_COLLECT_QUEUE:  consumerConfig.mainQueue.name });
 const lifecycleManager = createLifecycleManager().useEnv(customEnv);
 
 describe('abacus-usage-collector-itest', () => {
@@ -125,19 +151,20 @@ describe('abacus-usage-collector-itest', () => {
         cb();
     };
 
-    const handle = (msg) => {
-      const doc = JSON.parse(msg.content.toString());
-      debug('Read doc %o from message queue', doc);
-      expect(usageDocs.get(doc.resource_instance_id + doc.end)).to.deep.equal(
-        omit(doc, 'id', 'processed', 'processed_id', 'collected_usage_id'));
-      usageDocs.delete(`${doc.resource_instance_id}${doc.end}`);
+    const handle = (usage) => {
+      debug('Read doc %o from message queue', usage);
+      const msg = usage.usageDoc;
+      expect(usageDocs.get(msg.resource_instance_id + msg.end)).to.deep.equal(
+        omit(msg, 'id', 'processed', 'processed_id', 'collected_usage_id'));
+      usageDocs.delete(`${msg.resource_instance_id}${msg.end}`);
       countMessages();
     };
 
-    debug('Creating consumer ...');
-    const prefetchLimit = 100;
     const connectionManager = new ConnectionManager([rabbitUri]);
-    const consumer = new Consumer(connectionManager, queueName, prefetchLimit);
+
+
+    debug('Creating consumer ...');
+    const consumer = new Consumer(connectionManager, amqpMessageParser, consumerConfig);
     consumer.process({ handle: handle });
   };
 
