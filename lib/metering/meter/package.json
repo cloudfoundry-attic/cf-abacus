@@ -58,8 +58,8 @@
     "abacus-usage-schemas": "file:../../config/schemas",
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-vcapenv": "file:../../utils/vcapenv",
-    "body-parser": "^1.18.2",
-    "express": "^4.16.2",
+    "body-parser": "1.18.3",
+    "express": "4.16.3",
     "is-my-json-valid": "^2.12.0",
     "request-debug": "^0.2.0",
     "underscore": "^1.8.3",
@@ -71,7 +71,7 @@
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish",
     "jsonwebtoken": "^8.3.0",
-    "nyc": "^11.4.1"
+    "nyc": "^12.0.2"
   },
   "nyc": {
     "cache": true,

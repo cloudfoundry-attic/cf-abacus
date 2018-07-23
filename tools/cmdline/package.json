@@ -33,8 +33,8 @@
   "devDependencies": {
     "abacus-eslint": "file:../eslint",
     "abacus-mocha": "file:../mocha",
-    "nyc": "^11.4.1",
-    "tmp": "0.0.31"
+    "nyc": "^12.0.2",
+    "tmp": "0.0.33"
   },
   "nyc": {
     "cache": true,
