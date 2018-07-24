@@ -18,13 +18,9 @@
   ],
   "files": [
     ".npmrc",
-    "express",
     "src/"
   ],
   "main": "src/index.js",
-  "bin": {
-    "express": "./express"
-  },
   "scripts": {
     "test": "abacus-eslint && nyc abacus-mocha",
     "generate-coverage": "nyc report --reporter=lcovonly",
@@ -36,11 +32,9 @@
     "abacus-events": "file:../events",
     "abacus-moment": "file:../moment",
     "abacus-oauth": "file:../oauth",
-    "abacus-rc": "file:../rc",
     "abacus-urienv": "file:../urienv",
     "abacus-vcapenv": "file:../vcapenv",
     "body-parser": "^1.18.3",
-    "commander": "^2.8.1",
     "compression": "^1.7.2",
     "express": "^4.16.3",
     "express-rate-limit": "^2.11.0",
