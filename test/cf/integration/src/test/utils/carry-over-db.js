@@ -53,11 +53,10 @@ const readCurrentMonthDocs = function*(cb) {
 };
 
 const put = function*(doc) {
-  yield putDoc(
-    extend({}, doc, {
-      _id: dbClient.tkuri(doc.event_guid, doc.timestamp)
-    })
-  );
+  if (!doc._id)
+    doc._id = dbClient.tkuri(doc.event_guid, doc.timestamp);
+
+  yield putDoc(doc);
 };
 
 const isDbAvailable = function*() {
@@ -65,6 +64,7 @@ const isDbAvailable = function*() {
     yield readCurrentMonthDocs();
     return true;
   } catch (error) {
+    console.log(error);
     return false;
   }
 };
