@@ -23,21 +23,26 @@ const createAccount = (accountId, pricingCountry, orgId) => ({
 const unique = (id, timestamp) => id + timestamp;
 
 const createUsageDoc = (config) => ({
-  start: config.time,
-  end: config.time,
-  processed_id: `${config.time}-0-0-0`,
-  organization_id: unique(config.org ? config.org : orgId, config.time),
-  space_id: 'space-id',
-  consumer_id: 'consumer-id',
-  resource_id: config.resource ? config.resource : resourceId + config.time,
-  plan_id: config.plan ? config.plan : planId,
-  resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
-  measured_usage: [
-    {
-      measure: 'light_api_calls',
-      quantity: 12
-    }
-  ]
+  metadata: {
+    retryCount: 0
+  },
+  usageDoc: {
+    start: config.time,
+    end: config.time,
+    processed_id: `${config.time}-0-0-0`,
+    organization_id: unique(config.org ? config.org : orgId, config.time),
+    space_id: 'space-id',
+    consumer_id: 'consumer-id',
+    resource_id: config.resource ? config.resource : resourceId + config.time,
+    plan_id: config.plan ? config.plan : planId,
+    resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
+    measured_usage: [
+      {
+        measure: 'light_api_calls',
+        quantity: 12
+      }
+    ]
+  }
 });
 
 const provPluginResTypeUrl = (resourceId) => `/v1/provisioning/resources/${resourceId}/type`;
