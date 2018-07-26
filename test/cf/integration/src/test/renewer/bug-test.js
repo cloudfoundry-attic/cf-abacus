@@ -6,7 +6,7 @@ const httpStatus = require('http-status-codes');
 const { omit } = require('underscore');
 
 const moment = require('abacus-moment');
-const yieldable = require('abacus-yieldable');
+const {yieldable, functioncb} = require('abacus-yieldable');
 
 const fixture = require('./fixture');
 
@@ -23,12 +23,6 @@ const startOfCurrentMonth = moment
   .startOf('month')
   .valueOf();
 
-const oneHourAfterStartOfCurrentMonth = moment
-  .utc(now)
-  .startOf('month')
-  .add(1, 'hour')
-  .valueOf();
-
 const startOfLastMonth = moment
   .utc(now)
   .subtract(1, 'month')
@@ -41,41 +35,33 @@ const endOfLastMonth = moment
   .endOf('month')
   .valueOf();
 
-const carryOverDocId = (timestamp) => 
-  `t/000${timestamp}/k/org-id-1/space-id/consumer-id/resource-id/plan-id/resource-instance-id`;
+const carryOverDocId = (timestamp, resourceInstanceId) => 
+  `t/000${timestamp}/k/org-id-1/space-id/consumer-id/resource-id/plan-id/${resourceInstanceId}`;
 
-const startOfLastMonthCarryOverDoc = {
-  _id: carryOverDocId(startOfLastMonth),
+const createServiceCarryOverDoc = {
+  _id: carryOverDocId(startOfLastMonth, 'some-resource-instance'),
   collector_id: 1,
   event_guid: 'event-guid-1',
   state: 'CREATED',
   timestamp: startOfLastMonth
 };
 
-const endOfLastMonthCarryOverDoc = {
-  _id: carryOverDocId(endOfLastMonth),
+const deleteServiceCarryOverDoc = {
+  _id: carryOverDocId(startOfCurrentMonth, 'some-resource-instance'),
+  collector_id: 3,
+  event_guid: 'event-guid-3',
+  state: 'DELETED',
+  timestamp: startOfCurrentMonth
+};
+
+
+const renewableCarryOverDoc = {
+  _id: carryOverDocId(endOfLastMonth, 'another-resource-instance'),
   collector_id: 2,
   event_guid: 'event-guid-2',
   state: 'CREATED',
   timestamp: endOfLastMonth
 };
-
-const currentMonthDeleteCarryOverDoc = {
-  _id: carryOverDocId(startOfCurrentMonth),
-  collector_id: 3,
-  event_guid: 'event-guid-3',
-  state: 'DELETED',
-  timestamp: oneHourAfterStartOfCurrentMonth
-};
-
-
-const startOfLastMonthAbacusUsage = fixture.usage
-  .create()
-  .withTimestamp(startOfLastMonth)
-  .withOrganizationId('org-id-1')
-  .withCurrentInstances(1)
-  .withPreviousInstances(0)
-  .build();
 
 const endOfLastMonthAbacusUsage = fixture.usage
   .create()
@@ -88,39 +74,30 @@ const endOfLastMonthAbacusUsage = fixture.usage
 describe('bug test ....', () => {
   let externalSystemsMocks;
 
-  before(
-    yieldable.functioncb(function*() {
+  before(functioncb(function*() {
       externalSystemsMocks = fixture.externalSystemsMocks();
 
       externalSystemsMocks.uaaServer.tokenService
         .whenScopesAre(fixture.abacusCollectorScopes)
         .return(fixture.abacusCollectorToken);
 
-      externalSystemsMocks.abacusCollector.getUsageService.return.series([{
-        statusCode: 200,
-        body: startOfLastMonthAbacusUsage
-      }, {
+      externalSystemsMocks.abacusCollector.getUsageService.return.firstTime({
         statusCode: 200,
         body: endOfLastMonthAbacusUsage
-      }]);
+      });
 
       externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.ACCEPTED);
 
       externalSystemsMocks.startAll();
-      
 
       yield carryOverDb.setup();
-      
-      yield carryOverDb.put(startOfLastMonthCarryOverDoc);
-      yield carryOverDb.put(endOfLastMonthCarryOverDoc);
-      yield carryOverDb.put(currentMonthDeleteCarryOverDoc);
+      yield carryOverDb.put(createServiceCarryOverDoc);
+      yield carryOverDb.put(renewableCarryOverDoc);
+      yield carryOverDb.put(deleteServiceCarryOverDoc);
       
       fixture.renewer.start(externalSystemsMocks);
 
-      console.log('111111');
-      // FIXME:
-      yield waitUntil(serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(2));
-      console.log('222222');
+      yield waitUntil(serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(1));
     })
   );
 
@@ -130,18 +107,9 @@ describe('bug test ....', () => {
     externalSystemsMocks.stopAll(done);
   });
 
-  it('records entries in carry-over', yieldable.functioncb(function*() {
-      const docs = yield carryOverDb.readCurrentMonthDocs();
-
-      console.log(docs);
-      const expectedNewDocuments = [{
-          collector_id: 'http://location.com',
-          event_guid: 'event-guid-1',
-          state: 'CREATED',
-          timestamp: startOfCurrentMonth
-        }, omit(currentMonthDeleteCarryOverDoc, '_id', '_rev')
-      ];
-      expect(docs).to.deep.equal(expectedNewDocuments);
+  it('create event with matching delete event is not renewed in current month', functioncb(function*() {
+      const currentMonthDocs = yield carryOverDb.readCurrentMonthDocs();
+      expect(currentMonthDocs).to.contains(omit(deleteServiceCarryOverDoc, '_id', '_rev'));
     })
   );
   
