@@ -42,6 +42,8 @@
     "abacus-debug": "file:../../utils/debug",
     "abacus-express": "file:../../utils/express",
     "abacus-launcher": "file:../../utils/launcher",
+    "abacus-metrics": "file:../../utils/metrics",
+    "abacus-moment": "file:../../utils/moment",
     "abacus-metering-config": "file:../../config/metering",
     "abacus-oauth": "file:../../utils/oauth",
     "abacus-partition": "file:../../utils/partition",
