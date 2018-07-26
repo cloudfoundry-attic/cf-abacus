@@ -54,7 +54,6 @@ const deleteServiceCarryOverDoc = {
   timestamp: startOfCurrentMonth
 };
 
-
 const renewableCarryOverDoc = {
   _id: carryOverDocId(endOfLastMonth, 'another-resource-instance'),
   collector_id: 2,
@@ -71,7 +70,7 @@ const endOfLastMonthAbacusUsage = fixture.usage
   .withPreviousInstances(0)
   .build();
 
-describe('bug test ....', () => {
+describe('An existing document in carry over for current month', () => {
   let externalSystemsMocks;
 
   before(functioncb(function*() {
@@ -107,11 +106,10 @@ describe('bug test ....', () => {
     externalSystemsMocks.stopAll(done);
   });
 
-  it('create event with matching delete event is not renewed in current month', functioncb(function*() {
-      const currentMonthDocs = yield carryOverDb.readCurrentMonthDocs();
-      expect(currentMonthDocs).to.contains(omit(deleteServiceCarryOverDoc, '_id', '_rev'));
-    })
-  );
+  it('is not overwritten by renewer', functioncb(function*() {
+    const currentMonthDocs = yield carryOverDb.readCurrentMonthDocs();
+    expect(currentMonthDocs).to.contains(omit(deleteServiceCarryOverDoc, '_id', '_rev'));
+  }));
   
 
 });
