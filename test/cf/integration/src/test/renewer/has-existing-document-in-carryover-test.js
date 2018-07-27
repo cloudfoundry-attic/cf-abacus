@@ -29,17 +29,12 @@ const startOfLastMonth = moment
   .startOf('month')
   .valueOf();
 
-const endOfLastMonth = moment
-  .utc(now)
-  .subtract(1, 'month')
-  .endOf('month')
-  .valueOf();
-
-const carryOverDocId = (timestamp, resourceInstanceId) => 
-  `t/000${timestamp}/k/org-id-1/space-id/consumer-id/resource-id/plan-id/${resourceInstanceId}`;
+const orgId = 'org-id-1';
+const carryOverDocId = (timestamp) => 
+  `t/000${timestamp}/k/${orgId}/space-id/consumer-id/resource-id/plan-id/resource-instance-id`;
 
 const createServiceCarryOverDoc = {
-  _id: carryOverDocId(startOfLastMonth, 'some-resource-instance'),
+  _id: carryOverDocId(startOfLastMonth),
   collector_id: 1,
   event_guid: 'event-guid-1',
   state: 'CREATED',
@@ -47,25 +42,17 @@ const createServiceCarryOverDoc = {
 };
 
 const deleteServiceCarryOverDoc = {
-  _id: carryOverDocId(startOfCurrentMonth, 'some-resource-instance'),
-  collector_id: 3,
-  event_guid: 'event-guid-3',
+  _id: carryOverDocId(startOfCurrentMonth),
+  collector_id: 2,
+  event_guid: 'event-guid-2',
   state: 'DELETED',
   timestamp: startOfCurrentMonth
 };
 
-const renewableCarryOverDoc = {
-  _id: carryOverDocId(endOfLastMonth, 'another-resource-instance'),
-  collector_id: 2,
-  event_guid: 'event-guid-2',
-  state: 'CREATED',
-  timestamp: endOfLastMonth
-};
-
-const endOfLastMonthAbacusUsage = fixture.usage
+const abacusUsageDoc = fixture.usage
   .create()
-  .withTimestamp(endOfLastMonth)
-  .withOrganizationId('org-id-2')
+  .withTimestamp(startOfLastMonth)
+  .withOrganizationId(orgId)
   .withCurrentInstances(1)
   .withPreviousInstances(0)
   .build();
@@ -82,16 +69,15 @@ describe('An existing document in carry over for current month', () => {
 
       externalSystemsMocks.abacusCollector.getUsageService.return.firstTime({
         statusCode: 200,
-        body: endOfLastMonthAbacusUsage
+        body: abacusUsageDoc
       });
 
-      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.ACCEPTED);
+      externalSystemsMocks.abacusCollector.collectUsageService.return.firstTime(httpStatus.ACCEPTED);
 
       externalSystemsMocks.startAll();
 
       yield carryOverDb.setup();
       yield carryOverDb.put(createServiceCarryOverDoc);
-      yield carryOverDb.put(renewableCarryOverDoc);
       yield carryOverDb.put(deleteServiceCarryOverDoc);
       
       fixture.renewer.start(externalSystemsMocks);
@@ -108,8 +94,7 @@ describe('An existing document in carry over for current month', () => {
 
   it('is not overwritten by renewer', functioncb(function*() {
     const currentMonthDocs = yield carryOverDb.readCurrentMonthDocs();
+    expect(currentMonthDocs.length).to.equals(1);
     expect(currentMonthDocs).to.contains(omit(deleteServiceCarryOverDoc, '_id', '_rev'));
   }));
-  
-
 });
