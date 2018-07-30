@@ -30,8 +30,17 @@ const startOfLastMonth = moment
   .valueOf();
 
 const orgId = 'org-id-1';
+const abacusUsageDoc = fixture.usage
+  .create()
+  .withTimestamp(startOfLastMonth)
+  .withOrganizationId(orgId)
+  .withCurrentInstances(1)
+  .withPreviousInstances(0)
+  .build();
+
 const carryOverDocId = (timestamp) => 
-  `t/000${timestamp}/k/${orgId}/space-id/consumer-id/resource-id/plan-id/resource-instance-id`;
+  `t/000${timestamp}/k/${orgId}/${abacusUsageDoc.space_id}/${abacusUsageDoc.consumer_id}/`
+    + `${abacusUsageDoc.resource_id}/${abacusUsageDoc.plan_id}/${abacusUsageDoc.resource_instance_id}`;
 
 const createServiceCarryOverDoc = {
   _id: carryOverDocId(startOfLastMonth),
@@ -49,42 +58,34 @@ const deleteServiceCarryOverDoc = {
   timestamp: startOfCurrentMonth
 };
 
-const abacusUsageDoc = fixture.usage
-  .create()
-  .withTimestamp(startOfLastMonth)
-  .withOrganizationId(orgId)
-  .withCurrentInstances(1)
-  .withPreviousInstances(0)
-  .build();
+describe('when carryover contains a document for current month and renewer starts', () => {
 
-describe('An existing document in carry over for current month', () => {
   let externalSystemsMocks;
 
   before(functioncb(function*() {
-      externalSystemsMocks = fixture.externalSystemsMocks();
+    externalSystemsMocks = fixture.externalSystemsMocks();
 
-      externalSystemsMocks.uaaServer.tokenService
-        .whenScopesAre(fixture.abacusCollectorScopes)
-        .return(fixture.abacusCollectorToken);
+    externalSystemsMocks.uaaServer.tokenService
+      .whenScopesAre(fixture.abacusCollectorScopes)
+      .return(fixture.abacusCollectorToken);
 
-      externalSystemsMocks.abacusCollector.getUsageService.return.firstTime({
-        statusCode: 200,
-        body: abacusUsageDoc
-      });
+    externalSystemsMocks.abacusCollector.getUsageService.return.firstTime({
+      statusCode: 200,
+      body: abacusUsageDoc
+    });
 
-      externalSystemsMocks.abacusCollector.collectUsageService.return.firstTime(httpStatus.ACCEPTED);
+    externalSystemsMocks.abacusCollector.collectUsageService.return.firstTime(httpStatus.ACCEPTED);
 
-      externalSystemsMocks.startAll();
+    externalSystemsMocks.startAll();
 
-      yield carryOverDb.setup();
-      yield carryOverDb.put(createServiceCarryOverDoc);
-      yield carryOverDb.put(deleteServiceCarryOverDoc);
-      
-      fixture.renewer.start(externalSystemsMocks);
+    yield carryOverDb.setup();
+    yield carryOverDb.put(createServiceCarryOverDoc);
+    yield carryOverDb.put(deleteServiceCarryOverDoc);
+    
+    fixture.renewer.start(externalSystemsMocks);
 
-      yield waitUntil(serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(1));
-    })
-  );
+    yield waitUntil(serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(1));
+  }));
 
   after((done) => {
     fixture.renewer.stop();
@@ -92,7 +93,7 @@ describe('An existing document in carry over for current month', () => {
     externalSystemsMocks.stopAll(done);
   });
 
-  it('is not overwritten by renewer', functioncb(function*() {
+  it('the document is not overwritten', functioncb(function*() {
     const currentMonthDocs = yield carryOverDb.readCurrentMonthDocs();
     expect(currentMonthDocs.length).to.equals(1);
     expect(currentMonthDocs).to.contains(omit(deleteServiceCarryOverDoc, '_id', '_rev'));

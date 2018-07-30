@@ -1,8 +1,6 @@
 'use strict';
 
 const omit = require('underscore').omit;
-const extend = require('underscore').extend;
-
 const dbClient = require('abacus-dbclient');
 const moment = require('abacus-moment');
 const lifecycleManager = require('abacus-lifecycle-manager')();
@@ -64,7 +62,6 @@ const isDbAvailable = function*() {
     yield readCurrentMonthDocs();
     return true;
   } catch (error) {
-    console.log(error);
     return false;
   }
 };
