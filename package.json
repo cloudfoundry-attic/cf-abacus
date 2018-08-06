@@ -105,6 +105,7 @@
     "abacus-lock": "file:lib/utils/lock",
     "abacus-lrucache": "file:lib/utils/lrucache",
     "abacus-metering-config": "file:lib/config/metering",
+    "abacus-metrics": "file:lib/utils/metrics",
     "abacus-moment": "file:lib/utils/moment",
     "abacus-oauth": "file:lib/utils/oauth",
     "abacus-paging": "file:lib/utils/paging",

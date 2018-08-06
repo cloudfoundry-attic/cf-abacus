@@ -1,6 +1,0 @@
-#!/usr/bin/env node
-'use strict';
-
-// Run our Express shell
-require('./src/index.js').runCLI();
-

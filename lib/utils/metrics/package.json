@@ -1,0 +1,61 @@
+{
+  "name": "abacus-metrics",
+  "description": "Library for tracking metrics",
+  "license": "Apache-2.0",
+  "version": "1.1.3",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/metrics",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "abacus",
+    "metrics",
+    "monitoring",
+    "cf"
+  ],
+  "files": [
+    ".npmrc",
+    "src/"
+  ],
+  "main": "src/index.js",
+  "scripts": {
+    "test": "abacus-eslint && nyc abacus-mocha",
+    "generate-coverage": "nyc report --reporter=lcovonly",
+    "lint": "abacus-eslint",
+    "pub": "publish"
+  },
+  "dependencies": {
+    "abacus-moment": "file:../moment",
+    "abacus-router": "file:../router",
+    "http-status-codes": "^1.3.0",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-publish": "file:../../../tools/publish",
+    "abacus-express": "file:../express",
+    "abacus-request": "file:../request",
+    "nyc": "^11.4.1"
+  },
+  "nyc": {
+    "cache": true,
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "src/test/**"
+    ]
+  },
+  "engines": {
+    "node": ">=8.9.4 <9.0.0",
+    "npm": "<5.0.0",
+    "yarn": ">=1.2.1"
+  }
+}

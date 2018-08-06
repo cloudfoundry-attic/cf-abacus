@@ -10,7 +10,12 @@ const rabbitClient = require('./rabbit-client');
 
 const { extend } = require('underscore');
 
-const queueName = 'abacus-meter-itest-queue';
+const queueName = 'meter-itest-queue';
+const mainExchange = 'meter-itest-main-exchange';
+const firstDlName = 'meter-itest-first-dl';
+const firstDlExchange = 'meter-itest-first-exchange';
+const secondDlName = 'meter-itest-second-dl';
+const secondDlExchange = 'meter-itest-second-exchange';
 
 describe('test meter app', () => {
   let stubs;
@@ -19,7 +24,12 @@ describe('test meter app', () => {
     const modules = [lifecycleManager.modules.meter];
     const customEnv = extend({}, process.env, {
       CLUSTER: false,
-      ABACUS_COLLECT_QUEUE: queueName
+      ABACUS_COLLECT_QUEUE: queueName,
+      MAIN_EXCHANGE: mainExchange,
+      FIRST_DL_NAME: firstDlName,
+      FIRST_DL_EXCHANGE: firstDlExchange,
+      SECOND_DL_NAME: secondDlName,
+      SECOND_DL_EXCHANGE: secondDlExchange
     });
 
     // drop all abacus collections except plans and plan-mappings

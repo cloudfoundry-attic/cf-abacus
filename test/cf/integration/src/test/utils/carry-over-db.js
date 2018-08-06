@@ -1,8 +1,6 @@
 'use strict';
 
 const omit = require('underscore').omit;
-const extend = require('underscore').extend;
-
 const dbClient = require('abacus-dbclient');
 const moment = require('abacus-moment');
 const lifecycleManager = require('abacus-lifecycle-manager')();
@@ -53,11 +51,10 @@ const readCurrentMonthDocs = function*(cb) {
 };
 
 const put = function*(doc) {
-  yield putDoc(
-    extend({}, doc, {
-      _id: dbClient.tkuri(doc.event_guid, doc.timestamp)
-    })
-  );
+  if (!doc._id)
+    doc._id = dbClient.tkuri(doc.event_guid, doc.timestamp);
+
+  yield putDoc(doc);
 };
 
 const isDbAvailable = function*() {
