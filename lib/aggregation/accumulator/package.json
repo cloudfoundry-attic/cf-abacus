@@ -39,6 +39,7 @@
     "abacus-debug": "file:../../utils/debug",
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-metering-config": "file:../../config/metering",
+    "abacus-moment": "file:../../utils/moment",
     "abacus-rating-config": "file:../../config/rating",
     "abacus-router": "file:../../utils/router",
     "abacus-request": "file:../../utils/request",

@@ -117,4 +117,4 @@ The Abacus Broker supports the following flows:
 1. Delete UAA client
 1. Mark plans as deleted
 
-   The plans are not deleted, since Abacus can recieve usage several days after the month ended (depends on `SLACK` setting). The plans are simply marked to be deleted. We can delete the marked-for-deletion plans together with the data after a certain period (usually after 3 to 6 months).
+   The plans are not deleted, since Abacus can receive usage several days after the month ended (depends on `SLACK` value). The plans are simply marked to be deleted. We can delete the marked-for-deletion plans together with the data after a certain period (usually after 3 to 6 months).
