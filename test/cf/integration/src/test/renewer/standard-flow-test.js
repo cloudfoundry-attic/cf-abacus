@@ -145,7 +145,6 @@ describe('renewer standard flow', () => {
         .withTimestamp(startOfCurrentMonth)
         .withPreviousInstances(0)
         .build()
-        .usageDoc
     );
     expect(abacusCollectorMock.collectUsageService.request(1).usage).to.deep.equal(
       fixture.usage
@@ -153,7 +152,6 @@ describe('renewer standard flow', () => {
         .withTimestamp(startOfCurrentMonth)
         .withPreviousInstances(0)
         .build()
-        .usageDoc
     );
     expect(abacusCollectorMock.collectUsageService.request(2).usage).to.deep.equal(
       fixture.usage
@@ -161,7 +159,6 @@ describe('renewer standard flow', () => {
         .withTimestamp(startOfCurrentMonth)
         .withPreviousInstances(0)
         .build()
-        .usageDoc
     );
   });
 
