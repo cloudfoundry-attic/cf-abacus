@@ -38,26 +38,24 @@ const createUsage = () => {
       return builder;
     },
     build: () => ({
-      usageDoc: {
-        start: timestamp,
-        end: timestamp,
-        organization_id: organizationId,
-        space_id: 'space-id',
-        consumer_id: 'consumer-id',
-        resource_id: 'resource-id',
-        plan_id: 'plan-id',
-        resource_instance_id: 'resource-instance-id',
-        measured_usage: [
-          {
-            measure: 'current_instances',
-            quantity: currentInstances
-          },
-          {
-            measure: 'previous_instances',
-            quantity: previousInstances
-          }
-        ]
-      }
+      start: timestamp,
+      end: timestamp,
+      organization_id: organizationId,
+      space_id: 'space-id',
+      consumer_id: 'consumer-id',
+      resource_id: 'resource-id',
+      plan_id: 'plan-id',
+      resource_instance_id: 'resource-instance-id',
+      measured_usage: [
+        {
+          measure: 'current_instances',
+          quantity: currentInstances
+        },
+        {
+          measure: 'previous_instances',
+          quantity: previousInstances
+        }
+      ]
     })
   };
 
@@ -81,11 +79,11 @@ const modifyUsage = (usage) => {
 
     build: () => {
       if (timestamp !== undefined) {
-        usage.usageDoc.start = timestamp;
-        usage.usageDoc.end = timestamp;
+        usage.start = timestamp;
+        usage.end = timestamp;
       }
 
-      if (previousInstances !== undefined) usage.usageDoc.measured_usage[1].quantity = previousInstances;
+      if (previousInstances !== undefined) usage.measured_usage[1].quantity = previousInstances;
 
       return usage;
     }

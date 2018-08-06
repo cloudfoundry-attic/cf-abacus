@@ -32,39 +32,40 @@ const carryOverDoc = {
 describe('renewer sends usage, but abacus is down', () => {
   let externalSystemsMocks;
 
-  before(yieldable.functioncb(function*() {
-    externalSystemsMocks = fixture.externalSystemsMocks();
+  before(
+    yieldable.functioncb(function*() {
+      externalSystemsMocks = fixture.externalSystemsMocks();
 
-    externalSystemsMocks.uaaServer.tokenService
-      .whenScopesAre(fixture.abacusCollectorScopes)
-      .return(fixture.abacusCollectorToken);
+      externalSystemsMocks.uaaServer.tokenService
+        .whenScopesAre(fixture.abacusCollectorScopes)
+        .return(fixture.abacusCollectorToken);
 
-    externalSystemsMocks.abacusCollector.getUsageService.return.always({
-      statusCode: 200,
-      body: fixture.usage
-        .create()
-        .withTimestamp(endOfLasMonth)
-        .withCurrentInstances(2)
-        .withPreviousInstances(1)
-        .build()
-    });
+      externalSystemsMocks.abacusCollector.getUsageService.return.always({
+        statusCode: 200,
+        body: fixture.usage
+          .create()
+          .withTimestamp(endOfLasMonth)
+          .withCurrentInstances(2)
+          .withPreviousInstances(1)
+          .build()
+      });
 
-    externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.BAD_GATEWAY);
+      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.BAD_GATEWAY);
 
-    externalSystemsMocks.startAll();
+      externalSystemsMocks.startAll();
 
-    yield carryOverDb.setup();
-    yield carryOverDb.put(carryOverDoc);
-    fixture.renewer.start(externalSystemsMocks);
+      yield carryOverDb.setup();
+      yield carryOverDb.put(carryOverDoc);
+      fixture.renewer.start(externalSystemsMocks);
 
-    // Event reporter (abacus-client) will retry 'fixture.env.retryCount' + 1
-    // times to report usage to abacus. After that it will give up.
-    yield waitUntil(
-      serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(
-        fixture.renewer.env.retryCount + 1
-      )
-    );
-  })
+      // Event reporter (abacus-client) will retry 'fixture.env.retryCount' + 1
+      // times to report usage to abacus. After that it will give up.
+      yield waitUntil(
+        serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(
+          fixture.renewer.env.retryCount + 1
+        )
+      );
+    })
   );
 
   after((done) => {
