@@ -1,6 +1,4 @@
 'use strict';
-const util = require('util');
-const { pad16 } = require('abacus-dbcommons')();
 
 const mockServer = require('./mock-server');
 
@@ -46,19 +44,6 @@ const createUsageDoc = (config) => ({
     ]
   }
 });
-
-const getLocationsUrl = (config) => {
-  const key = util.format(
-    '%s/%s/%s/%s/%s/%s',
-    unique(config.org ? config.org : orgId, config.time),
-    'space-id',
-    'consumer-id',
-    config.resource ? config.resource : resourceId + config.time,
-    config.plan ? config.plan : planId,
-    '0b39fa70-a65f-4183-bae8-385633ca5c87'
-  );
-  return `/v1/metering/collected/usage/t/${pad16(config.time)}/k/${key}`;
-};
 
 const provPluginResTypeUrl = (resourceId) => `/v1/provisioning/resources/${resourceId}/type`;
 
@@ -171,6 +156,5 @@ module.exports = {
   accumulator
 };
 module.exports.usageDoc = (config) => createUsageDoc(config);
-module.exports.getLocationsUrl = (config) => getLocationsUrl(config);
 module.exports.buildResponse = buildResponse;
 module.exports.buildStubs = buildStubs;
