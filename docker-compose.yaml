@@ -1,0 +1,19 @@
+---
+version: "2.3"
+services:
+  mongo:
+    container_name: abacus-mongo
+    image: "mongo:3.4-jessie"
+    cpu_count: 4
+    restart: "always"
+    hostname: mongodb
+    ports:
+      - "27017:27017"
+  rabbitmq:
+    container_name: abacus-rabbitmq
+    image: "rabbitmq:3.7"
+    cpu_count: 4
+    restart: "always"
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
