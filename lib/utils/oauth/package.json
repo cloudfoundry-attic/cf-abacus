@@ -34,7 +34,7 @@
     "abacus-moment": "file:../moment",
     "abacus-request": "file:../request",
     "abacus-retry": "file:../retry",
-    "underscore": "^1.8.3",
+    "underscore": "^1.9.1",
     "jsonwebtoken": "^8.3.0"
   },
   "devDependencies": {

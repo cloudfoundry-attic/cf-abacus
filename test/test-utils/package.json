@@ -35,7 +35,7 @@
     "abacus-cmdline": "file:../../tools/cmdline",
     "abacus-moment": "file:../../lib/utils/moment",
     "abacus-wait": "file:../lib/wait",
-    "underscore": "^1.8.3"
+    "underscore": "^1.9.1"
   },
   "engines": {
     "node": ">=8.9.4 <9.0.0",

@@ -47,7 +47,7 @@
     "abacus-lifecycle-manager": "file:../../lib/lifecycle-manager",
     "abacus-yieldable": "file:../../../lib/utils/yieldable",
     "bignumber.js": "^2.1.0",
-    "underscore": "^1.8.3",
+    "underscore": "^1.9.1",
     "commander": "2.8.1"
   },
   "devDependencies": {

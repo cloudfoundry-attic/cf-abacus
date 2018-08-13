@@ -6,7 +6,7 @@ describe('cmdline-exec-utility', () => {
   let sandbox;
 
   beforeEach(function() {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     sandbox.spy(console, 'log');
   });
 
