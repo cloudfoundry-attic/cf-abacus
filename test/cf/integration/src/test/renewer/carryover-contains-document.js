@@ -6,7 +6,7 @@ const httpStatus = require('http-status-codes');
 const { omit } = require('underscore');
 
 const moment = require('abacus-moment');
-const { yieldable, functioncb } = require('abacus-yieldable');
+const {yieldable, functioncb} = require('abacus-yieldable');
 
 const fixture = require('./fixture');
 
@@ -38,7 +38,7 @@ const abacusUsageDoc = fixture.usage
   .withPreviousInstances(0)
   .build();
 
-const carryOverDocId = (timestamp) =>
+const carryOverDocId = (timestamp) => 
   `t/000${timestamp}/k/${orgId}/${abacusUsageDoc.space_id}/${abacusUsageDoc.consumer_id}/`
     + `${abacusUsageDoc.resource_id}/${abacusUsageDoc.plan_id}/${abacusUsageDoc.resource_instance_id}`;
 
@@ -81,7 +81,7 @@ describe('when carryover contains a document for current month and renewer start
     yield carryOverDb.setup();
     yield carryOverDb.put(createServiceCarryOverDoc);
     yield carryOverDb.put(deleteServiceCarryOverDoc);
-
+    
     fixture.renewer.start(externalSystemsMocks);
 
     yield waitUntil(serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(1));

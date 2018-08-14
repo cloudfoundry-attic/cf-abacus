@@ -43,7 +43,7 @@
     "abacus-perf": "file:../../utils/perf",
     "abacus-plan-mappings": "file:../../config/mappings",
     "abacus-retry": "file:../../utils/retry",
-    "underscore": "^1.8.3",
+    "underscore": "^1.9.1",
     "ajv": "^6.0.0"
   },
   "devDependencies": {

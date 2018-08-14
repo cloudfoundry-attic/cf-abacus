@@ -7,5 +7,5 @@ fi
 
 yarn cache clean &
 npm cache clean &
-find $SCRIPT_DIR/.. -name node_modules -type d -exec rm -rf {} \;
+find $SCRIPT_DIR/.. -name node_modules -type d | xargs -P 20 rm -rf
 wait

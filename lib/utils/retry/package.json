@@ -31,7 +31,7 @@
     "abacus-debug": "file:../debug",
     "abacus-yieldable": "file:../yieldable",
     "retry": "^0.10.1",
-    "underscore": "^1.8.3"
+    "underscore": "^1.9.1"
   },
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",

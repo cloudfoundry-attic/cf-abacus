@@ -37,7 +37,7 @@
     "abacus-mocha": "file:../../../tools/mocha",
     "nyc": "^11.4.1",
     "abacus-publish": "file:../../../tools/publish",
-    "underscore": "^1.8.3"
+    "underscore": "^1.9.1"
   },
   "nyc": {
     "cache": true,

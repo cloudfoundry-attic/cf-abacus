@@ -37,7 +37,7 @@
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-router": "file:../../utils/router",
     "abacus-webapp": "file:../../utils/webapp",
-    "underscore": "^1.8.3",
+    "underscore": "^1.9.1",
     "jsonwebtoken": "^8.3.0",
     "ajv": "^6.0.0"
   },
