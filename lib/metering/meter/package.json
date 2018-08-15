@@ -33,6 +33,7 @@
     "cfpush": "cfpush"
   },
   "dependencies": {
+    "abacus-config": "file:../../utils/config",
     "abacus-accountclient": "file:../../utils/accountclient",
     "abacus-batch": "file:../../utils/batch",
     "abacus-breaker": "file:../../utils/breaker",
