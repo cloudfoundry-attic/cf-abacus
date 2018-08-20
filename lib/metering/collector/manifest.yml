@@ -8,7 +8,6 @@ applications:
   env:
     CONF: default
     DEBUG: e-abacus-*
-    METER: abacus-usage-meter
     PROVISIONING: abacus-provisioning-plugin
     DB: mongodb://localhost:27017
     ACCOUNT: abacus-account-plugin
