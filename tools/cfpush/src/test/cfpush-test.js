@@ -52,8 +52,11 @@ const stubTmp = (tmpDir) => {
   stub(tmp, 'dirSync').returns(tmpDir);
 };
 
+const returnCodes = [0, 1, 0, 0];
+let retIdx = 0;
+
 const onCloseHandlers = {
-  alwaysSuccessfulPush: (eventId, cb) => cb(),
+  alwaysSuccessfulPush: (eventId, cb) => cb(returnCodes[retIdx++]),
   alwaysFailingPush: (eventId, cb) => cb(new Error()),
   successfullPushOn: (successfulAttempt) => {
     let currentAttempt = 0;
@@ -156,7 +159,7 @@ describe('Test command line args', () => {
 });
 
 describe('Test abacus cfpush', () => {
-  const adjustedManifestRelativePath = 
+  const adjustedManifestRelativePath =
     `${originalManifestRelativePath}/.cfpush/${adjustedName}-${originalManifestFilename}`;
   const cfHomeDirectory = 'path';
 
@@ -190,13 +193,13 @@ describe('Test abacus cfpush', () => {
       const appName = `${prefix}${adjustedName}`;
       const orderedCommands = {
         cfApp: `cf app ${appName}`,
-        cfDelete: `cf delete -f ${appName}-old`,
+        cfAppOld: `cf app ${appName}-old`,
         cfRename: `cf rename ${appName} ${appName}-old`
       };
       const envMock = sinon.match.has('env', { CF_HOME: tmpDir.name });
 
       assert.calledWithExactly(cp.exec, orderedCommands.cfApp, envMock);
-      assert.calledWithExactly(cp.exec, orderedCommands.cfDelete, envMock);
+      assert.calledWithExactly(cp.exec, orderedCommands.cfAppOld, envMock);
       assert.calledWithExactly(cp.exec, orderedCommands.cfRename, envMock);
 
       // verify order of execution
