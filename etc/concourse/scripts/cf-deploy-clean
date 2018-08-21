@@ -13,7 +13,6 @@ fi
 cf login -a https://api.$CF_SYS_DOMAIN -u $CF_USER -p $CF_PASSWORD -o $CF_ORG -s $CF_SPACE $skip
 getApps '\-old'
 
-set +e
 if [ ${#APPS[@]} -eq 0 ]; then
   echo "Found no old applications"
 else
