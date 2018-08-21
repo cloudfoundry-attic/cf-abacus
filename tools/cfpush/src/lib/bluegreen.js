@@ -50,24 +50,24 @@ const rename = (props, cb) => {
   return executeCommand(command, cb);
 };
 
-const deleteOld = (props, cb) => {
-  const appName = `${props.prefix}${props.name}`;
-  const command = `cf delete -f ${appName}-old`;
-  executeCommand(command, cb);
+const appExists = (appName, cb) => {
+  const command = `cf app ${appName}`;
+  executeCommand(command, (code) => {
+    cb(code === 0);
+  });
 };
 
 const prepareZdm = (props, cb) => {
-  if (props.prepareZdm) {
-    const appName = `${props.prefix}${props.name}`;
-    const command = `cf app ${appName}`;
-    executeCommand(command, (code) => {
-      if (code > 0) return cb();
-      return deleteOld(props, (error) => {
-        if (error) return cb(error);
-        return rename(props, cb);
-      });
+  if (props.prepareZdm)
+    appExists(`${props.prefix}${props.name}`, (exists) => {
+      if (exists)
+        appExists(`${props.prefix}${props.name}-old`, (exists) => {
+          if (exists) cb();
+          else rename(props, cb);
+        });
+      else cb();
     });
-  } else cb();
+  else cb();
 };
 
 const push = (props, cb) => {
