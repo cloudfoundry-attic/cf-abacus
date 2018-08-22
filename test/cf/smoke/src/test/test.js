@@ -63,7 +63,7 @@ const totalTimeout = commander.totalTimeout || 60000;
 const now = moment.utc().toDate();
 
 // Use secure routes or not
-const secured = () => process.env.SECURED === 'true' ? true : false;
+const secured = () => process.env.SECURED === 'true';
 
 // Token fetchers
 const objectStorageToken = secured()
@@ -107,18 +107,16 @@ const initWindows = (win, dimension) => {
   return windows;
 };
 
-const buildExpectedWindows = (charge, summary, quantity, cost) => {
+const buildExpectedWindows = (summary, quantity) => {
 
   const addProperty = (key, value, obj) => {
-    if (value != undefined)
+    if (value !== undefined)
       obj[key] = value;
   };
 
   const win = {};
-  addProperty('charge', charge, win);
   addProperty('summary', summary, win);
   addProperty('quantity', quantity, win);
-  addProperty('cost', cost, win);
 
   return [
     [null],
@@ -130,8 +128,8 @@ const buildExpectedWindows = (charge, summary, quantity, cost) => {
 };
 
 // Compares the previous and expected window values based upon the
-// charge summary, quantity, cost, and window delta
-const deltaCompare = (currentWindow, previousWindow, ch, s, q, c) => {
+// summary, quantity and window delta
+const deltaCompare = (currentWindow, previousWindow, s, q) => {
   expect(currentWindow).to.not.equal(undefined, 'Missing current window');
   expect(previousWindow).to.not.equal(undefined, 'Missing previous window');
 
@@ -158,10 +156,8 @@ const deltaCompare = (currentWindow, previousWindow, ch, s, q, c) => {
       expect(Math.abs(diff)).to.be.below(0.01, message);
     }
   };
-  checkIfNear('charge', ch, currentWindow, previousWindow);
   checkIfNear('summary', s, currentWindow, previousWindow);
   checkIfNear('quantity', q, currentWindow, previousWindow);
-  checkIfNear('cost', c, currentWindow, previousWindow);
 };
 
 const authHeader = (token) =>
@@ -224,11 +220,9 @@ describe('abacus-smoke-test', function() {
     const initialExpectedReport = {
       organization_id: 'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
       account_id: '1234',
-      windows: buildExpectedWindows(46.09),
       resources: [
         {
           resource_id: 'object-storage',
-          windows: buildExpectedWindows(46.09),
           aggregated_usage: [
             {
               metric: 'storage',
@@ -249,19 +243,18 @@ describe('abacus-smoke-test', function() {
               metering_plan_id: 'basic-object-storage',
               rating_plan_id: 'object-rating-plan',
               pricing_plan_id: 'object-pricing-basic',
-              windows: buildExpectedWindows(46.09),
               aggregated_usage: [
                 {
                   metric: 'storage',
-                  windows: buildExpectedWindows(1, 1, 1, 1)
+                  windows: buildExpectedWindows(1, 1)
                 },
                 {
                   metric: 'thousand_light_api_calls',
-                  windows: buildExpectedWindows(0.09, 3, 3, 0.09)
+                  windows: buildExpectedWindows(3, 3)
                 },
                 {
                   metric: 'heavy_api_calls',
-                  windows: buildExpectedWindows(45, 300, 300, 45)
+                  windows: buildExpectedWindows(300, 300)
                 }
               ]
             }
@@ -271,11 +264,9 @@ describe('abacus-smoke-test', function() {
       spaces: [
         {
           space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-          windows: buildExpectedWindows(46.09),
           resources: [
             {
               resource_id: 'object-storage',
-              windows: buildExpectedWindows(46.09),
               aggregated_usage: [
                 {
                   metric: 'storage',
@@ -296,19 +287,18 @@ describe('abacus-smoke-test', function() {
                   metering_plan_id: 'basic-object-storage',
                   rating_plan_id: 'object-rating-plan',
                   pricing_plan_id: 'object-pricing-basic',
-                  windows: buildExpectedWindows(46.09),
                   aggregated_usage: [
                     {
                       metric: 'storage',
-                      windows: buildExpectedWindows(1, 1, 1, 1)
+                      windows: buildExpectedWindows(1, 1)
                     },
                     {
                       metric: 'thousand_light_api_calls',
-                      windows: buildExpectedWindows(0.09, 3, 3, 0.09)
+                      windows: buildExpectedWindows(3, 3)
                     },
                     {
                       metric: 'heavy_api_calls',
-                      windows: buildExpectedWindows(45, 300, 300, 45)
+                      windows: buildExpectedWindows(300, 300)
                     }
                   ]
                 }
@@ -318,11 +308,9 @@ describe('abacus-smoke-test', function() {
           consumers: [
             {
               consumer_id: 'app:bbeae239-f3f8-483c-9dd0-de6781c38bab',
-              windows: buildExpectedWindows(46.09),
               resources: [
                 {
                   resource_id: 'object-storage',
-                  windows: buildExpectedWindows(46.09),
                   aggregated_usage: [
                     {
                       metric: 'storage',
@@ -343,7 +331,6 @@ describe('abacus-smoke-test', function() {
                       metering_plan_id: 'basic-object-storage',
                       rating_plan_id: 'object-rating-plan',
                       pricing_plan_id: 'object-pricing-basic',
-                      windows: buildExpectedWindows(46.09),
                       resource_instances: [
                         {
                           id: '0b39fa70-a65f-4183-bae8-385633ca5c87'
@@ -352,15 +339,15 @@ describe('abacus-smoke-test', function() {
                       aggregated_usage: [
                         {
                           metric: 'storage',
-                          windows: buildExpectedWindows(1, 1, 1, 1)
+                          windows: buildExpectedWindows(1, 1)
                         },
                         {
                           metric: 'thousand_light_api_calls',
-                          windows: buildExpectedWindows(0.09, 3, 3, 0.09)
+                          windows: buildExpectedWindows(3, 3)
                         },
                         {
                           metric: 'heavy_api_calls',
-                          windows: buildExpectedWindows(45, 300, 300, 45)
+                          windows: buildExpectedWindows(300, 300)
                         }
                       ]
                     }
@@ -384,7 +371,7 @@ describe('abacus-smoke-test', function() {
       };
 
       request.post(
-        collector + '/v1/metering/collected/usage',
+        `${collector}/v1/metering/collected/usage`,
         extend({ body: u.usage }, authHeader(objectStorageToken)),
         (err, val) => {
           expect(err).to.equal(undefined, util.format('Error: %o', err));
@@ -413,113 +400,43 @@ describe('abacus-smoke-test', function() {
     };
 
     const deltaCompareReports = (updatedReport, previousReport) => {
-      deltaCompare(updatedReport.windows, previousReport.windows, 45.09);
-
-      deltaCompare(updatedReport.resources[0].windows, previousReport.resources[0].windows, 45.09);
-
-      deltaCompare(
-        updatedReport.resources[0].aggregated_usage[1].windows,
-        previousReport.resources[0].aggregated_usage[1].windows,
-        0.09
-      );
-      deltaCompare(
-        updatedReport.resources[0].aggregated_usage[2].windows,
-        previousReport.resources[0].aggregated_usage[2].windows,
-        45
-      );
-
-      deltaCompare(updatedReport.resources[0].plans[0].windows, previousReport.resources[0].plans[0].windows, 45.09);
       deltaCompare(
         updatedReport.resources[0].plans[0].aggregated_usage[1].windows,
         previousReport.resources[0].plans[0].aggregated_usage[1].windows,
-        0.09,
         3,
-        3,
-        0.09
+        3
       );
       deltaCompare(
         updatedReport.resources[0].plans[0].aggregated_usage[2].windows,
         previousReport.resources[0].plans[0].aggregated_usage[2].windows,
-        45,
         300,
-        300,
-        45
+        300
       );
 
-      deltaCompare(updatedReport.spaces[0].windows, previousReport.spaces[0].windows, 45.09);
-
-      deltaCompare(updatedReport.spaces[0].resources[0].windows, previousReport.spaces[0].resources[0].windows, 45.09);
-      deltaCompare(
-        updatedReport.spaces[0].resources[0].aggregated_usage[1].windows,
-        previousReport.spaces[0].resources[0].aggregated_usage[1].windows,
-        0.09
-      );
-      deltaCompare(
-        updatedReport.spaces[0].resources[0].aggregated_usage[2].windows,
-        previousReport.spaces[0].resources[0].aggregated_usage[2].windows,
-        45
-      );
-
-      deltaCompare(
-        updatedReport.spaces[0].resources[0].plans[0].windows,
-        previousReport.spaces[0].resources[0].plans[0].windows,
-        45.09
-      );
       deltaCompare(
         updatedReport.spaces[0].resources[0].plans[0].aggregated_usage[1].windows,
         previousReport.spaces[0].resources[0].plans[0].aggregated_usage[1].windows,
-        0.09,
         3,
-        3,
-        0.09
+        3
       );
       deltaCompare(
         updatedReport.spaces[0].resources[0].plans[0].aggregated_usage[2].windows,
         previousReport.spaces[0].resources[0].plans[0].aggregated_usage[2].windows,
-        45,
         300,
-        300,
-        45
+        300
       );
 
-      deltaCompare(updatedReport.spaces[0].consumers[0].windows, previousReport.spaces[0].consumers[0].windows, 45.09);
-
-      deltaCompare(
-        updatedReport.spaces[0].consumers[0].resources[0].windows,
-        previousReport.spaces[0].consumers[0].resources[0].windows,
-        45.09
-      );
-      deltaCompare(
-        updatedReport.spaces[0].consumers[0].resources[0].aggregated_usage[1].windows,
-        previousReport.spaces[0].consumers[0].resources[0].aggregated_usage[1].windows,
-        0.09
-      );
-      deltaCompare(
-        updatedReport.spaces[0].consumers[0].resources[0].aggregated_usage[2].windows,
-        previousReport.spaces[0].consumers[0].resources[0].aggregated_usage[2].windows,
-        45
-      );
-
-      deltaCompare(
-        updatedReport.spaces[0].consumers[0].resources[0].plans[0].windows,
-        previousReport.spaces[0].consumers[0].resources[0].plans[0].windows,
-        45.09
-      );
       deltaCompare(
         updatedReport.spaces[0].consumers[0].resources[0].plans[0].aggregated_usage[1].windows,
         previousReport.spaces[0].consumers[0].resources[0].plans[0].aggregated_usage[1].windows,
-        0.09,
         3,
-        3,
-        0.09
+        3
       );
       deltaCompare(
         updatedReport.spaces[0].consumers[0].resources[0].plans[0].aggregated_usage[2].windows,
         previousReport.spaces[0].consumers[0].resources[0].plans[0].aggregated_usage[2].windows,
-        45,
         300,
-        300,
-        45
+        300
       );
     };
 
