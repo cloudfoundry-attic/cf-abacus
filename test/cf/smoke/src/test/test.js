@@ -226,15 +226,15 @@ describe('abacus-smoke-test', function() {
           aggregated_usage: [
             {
               metric: 'storage',
-              windows: buildExpectedWindows(1)
+              windows: buildExpectedWindows(1, 1)
             },
             {
               metric: 'thousand_light_api_calls',
-              windows: buildExpectedWindows(0.09)
+              windows: buildExpectedWindows(3, 3)
             },
             {
               metric: 'heavy_api_calls',
-              windows: buildExpectedWindows(45)
+              windows: buildExpectedWindows(300, 300)
             }
           ],
           plans: [
@@ -270,15 +270,15 @@ describe('abacus-smoke-test', function() {
               aggregated_usage: [
                 {
                   metric: 'storage',
-                  windows: buildExpectedWindows(1)
+                  windows: buildExpectedWindows(1, 1)
                 },
                 {
                   metric: 'thousand_light_api_calls',
-                  windows: buildExpectedWindows(0.09)
+                  windows: buildExpectedWindows(3, 3)
                 },
                 {
                   metric: 'heavy_api_calls',
-                  windows: buildExpectedWindows(45)
+                  windows: buildExpectedWindows(300, 300)
                 }
               ],
               plans: [
@@ -314,15 +314,15 @@ describe('abacus-smoke-test', function() {
                   aggregated_usage: [
                     {
                       metric: 'storage',
-                      windows: buildExpectedWindows(1)
+                      windows: buildExpectedWindows(1, 1)
                     },
                     {
                       metric: 'thousand_light_api_calls',
-                      windows: buildExpectedWindows(0.09)
+                      windows: buildExpectedWindows(3, 3)
                     },
                     {
                       metric: 'heavy_api_calls',
-                      windows: buildExpectedWindows(45)
+                      windows: buildExpectedWindows(300, 300)
                     }
                   ],
                   plans: [
