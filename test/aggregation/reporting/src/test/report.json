@@ -1,0 +1,699 @@
+{
+  "id": "k/a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf28/t/0001435629465220",
+  "organization_id": "a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf28",
+  "account_id": "1234",
+  "start": 1435629465220,
+  "end": 1435629465220,
+  "processed": 1435629465220,
+  "resources": [
+    {
+      "resource_id": "test-resource",
+      "plans": [
+        {
+          "plan_id": "basic/test-metering-plan/test-rating-plan/test-pricing-basic",
+          "metering_plan_id": "test-metering-plan",
+          "rating_plan_id": "test-rating-plan",
+          "pricing_plan_id": "test-pricing-basic",
+          "aggregated_usage": [
+            {
+              "metric": "storage",
+              "windows": [
+                [
+                  {
+                    "quantity": 10,
+                    "summary": 10
+                  }
+                ],
+                [
+                  {
+                    "quantity": 10,
+                    "summary": 10
+                  }
+                ],
+                [
+                  {
+                    "quantity": 10,
+                    "summary": 10
+                  }
+                ],
+                [
+                  {
+                    "quantity": 10,
+                    "summary": 10
+                  }
+                ],
+                [
+                  {
+                    "quantity": 10,
+                    "summary": 10
+                  }
+                ]
+              ]
+            },
+            {
+              "metric": "thousand_light_api_calls",
+              "windows": [
+                [
+                  {
+                    "quantity": 1000,
+                    "summary": 1000
+                  }
+                ],
+                [
+                  {
+                    "quantity": 1000,
+                    "summary": 1000
+                  }
+                ],
+                [
+                  {
+                    "quantity": 1000,
+                    "summary": 1000
+                  }
+                ],
+                [
+                  {
+                    "quantity": 1000,
+                    "summary": 1000
+                  }
+                ],
+                [
+                  {
+                    "quantity": 1000,
+                    "summary": 1000
+                  }
+                ]
+              ]
+            },
+            {
+              "metric": "heavy_api_calls",
+              "windows": [
+                [
+                  {
+                    "quantity": 100,
+                    "summary": 100
+                  }
+                ],
+                [
+                  {
+                    "quantity": 100,
+                    "summary": 100
+                  }
+                ],
+                [
+                  {
+                    "quantity": 100,
+                    "summary": 100
+                  }
+                ],
+                [
+                  {
+                    "quantity": 100,
+                    "summary": 100
+                  }
+                ],
+                [
+                  {
+                    "quantity": 100,
+                    "summary": 100
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "aggregated_usage": [
+        {
+          "metric": "storage",
+          "windows": [
+            [
+              {
+                "quantity": 10,
+                "summary": 10
+              }
+            ],
+            [
+              {
+                "quantity": 10,
+                "summary": 10
+              }
+            ],
+            [
+              {
+                "quantity": 10,
+                "summary": 10
+              }
+            ],
+            [
+              {
+                "quantity": 10,
+                "summary": 10
+              }
+            ],
+            [
+              {
+                "quantity": 10,
+                "summary": 10
+              }
+            ]
+          ]
+        },
+        {
+          "metric": "thousand_light_api_calls",
+          "windows": [
+            [
+              {
+                "quantity": 1000,
+                "summary": 1000
+              }
+            ],
+            [
+              {
+                "quantity": 1000,
+                "summary": 1000
+              }
+            ],
+            [
+              {
+                "quantity": 1000,
+                "summary": 1000
+              }
+            ],
+            [
+              {
+                "quantity": 1000,
+                "summary": 1000
+              }
+            ],
+            [
+              {
+                "quantity": 1000,
+                "summary": 1000
+              }
+            ]
+          ]
+        },
+        {
+          "metric": "heavy_api_calls",
+          "windows": [
+            [
+              {
+                "quantity": 100,
+                "summary": 100
+              }
+            ],
+            [
+              {
+                "quantity": 100,
+                "summary": 100
+              }
+            ],
+            [
+              {
+                "quantity": 100,
+                "summary": 100
+              }
+            ],
+            [
+              {
+                "quantity": 100,
+                "summary": 100
+              }
+            ],
+            [
+              {
+                "quantity": 100,
+                "summary": 100
+              }
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "spaces": [
+    {
+      "space_id": "aaeae239-f3f8-483c-9dd0-de5d41c38b6b",
+      "resources": [
+        {
+          "resource_id": "test-resource",
+          "plans": [
+            {
+              "plan_id": "basic/test-metering-plan/test-rating-plan/test-pricing-basic",
+              "metering_plan_id": "test-metering-plan",
+              "rating_plan_id": "test-rating-plan",
+              "pricing_plan_id": "test-pricing-basic",
+              "aggregated_usage": [
+                {
+                  "metric": "storage",
+                  "windows": [
+                    [
+                      {
+                        "quantity": 10,
+                        "summary": 10
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 10,
+                        "summary": 10
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 10,
+                        "summary": 10
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 10,
+                        "summary": 10
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 10,
+                        "summary": 10
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "metric": "thousand_light_api_calls",
+                  "windows": [
+                    [
+                      {
+                        "quantity": 1000,
+                        "summary": 1000
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 1000,
+                        "summary": 1000
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 1000,
+                        "summary": 1000
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 1000,
+                        "summary": 1000
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 1000,
+                        "summary": 1000
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "metric": "heavy_api_calls",
+                  "windows": [
+                    [
+                      {
+                        "quantity": 100,
+                        "summary": 100
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 100,
+                        "summary": 100
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 100,
+                        "summary": 100
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 100,
+                        "summary": 100
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 100,
+                        "summary": 100
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ],
+          "aggregated_usage": [
+            {
+              "metric": "storage",
+              "windows": [
+                [
+                  {
+                    "quantity": 10,
+                    "summary": 10
+                  }
+                ],
+                [
+                  {
+                    "quantity": 10,
+                    "summary": 10
+                  }
+                ],
+                [
+                  {
+                    "quantity": 10,
+                    "summary": 10
+                  }
+                ],
+                [
+                  {
+                    "quantity": 10,
+                    "summary": 10
+                  }
+                ],
+                [
+                  {
+                    "quantity": 10,
+                    "summary": 10
+                  }
+                ]
+              ]
+            },
+            {
+              "metric": "thousand_light_api_calls",
+              "windows": [
+                [
+                  {
+                    "quantity": 1000,
+                    "summary": 1000
+                  }
+                ],
+                [
+                  {
+                    "quantity": 1000,
+                    "summary": 1000
+                  }
+                ],
+                [
+                  {
+                    "quantity": 1000,
+                    "summary": 1000
+                  }
+                ],
+                [
+                  {
+                    "quantity": 1000,
+                    "summary": 1000
+                  }
+                ],
+                [
+                  {
+                    "quantity": 1000,
+                    "summary": 1000
+                  }
+                ]
+              ]
+            },
+            {
+              "metric": "heavy_api_calls",
+              "windows": [
+                [
+                  {
+                    "quantity": 100,
+                    "summary": 100
+                  }
+                ],
+                [
+                  {
+                    "quantity": 100,
+                    "summary": 100
+                  }
+                ],
+                [
+                  {
+                    "quantity": 100,
+                    "summary": 100
+                  }
+                ],
+                [
+                  {
+                    "quantity": 100,
+                    "summary": 100
+                  }
+                ],
+                [
+                  {
+                    "quantity": 100,
+                    "summary": 100
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "consumers": [
+        {
+          "consumer_id": "bbeae239-f3f8-483c-9dd0-de6781c38bac",
+          "resources": [
+            {
+              "resource_id": "test-resource",
+              "plans": [
+                {
+                  "plan_id": "basic/test-metering-plan/test-rating-plan/test-pricing-basic",
+                  "metering_plan_id": "test-metering-plan",
+                  "rating_plan_id": "test-rating-plan",
+                  "pricing_plan_id": "test-pricing-basic",
+                  "aggregated_usage": [
+                    {
+                      "metric": "storage",
+                      "windows": [
+                        [
+                          {
+                            "quantity": 10,
+                            "summary": 10
+                          }
+                        ],
+                        [
+                          {
+                            "quantity": 10,
+                            "summary": 10
+                          }
+                        ],
+                        [
+                          {
+                            "quantity": 10,
+                            "summary": 10
+                          }
+                        ],
+                        [
+                          {
+                            "quantity": 10,
+                            "summary": 10
+                          }
+                        ],
+                        [
+                          {
+                            "quantity": 10,
+                            "summary": 10
+                          }
+                        ]
+                      ]
+                    },
+                    {
+                      "metric": "thousand_light_api_calls",
+                      "windows": [
+                        [
+                          {
+                            "quantity": 1000,
+                            "summary": 1000
+                          }
+                        ],
+                        [
+                          {
+                            "quantity": 1000,
+                            "summary": 1000
+                          }
+                        ],
+                        [
+                          {
+                            "quantity": 1000,
+                            "summary": 1000
+                          }
+                        ],
+                        [
+                          {
+                            "quantity": 1000,
+                            "summary": 1000
+                          }
+                        ],
+                        [
+                          {
+                            "quantity": 1000,
+                            "summary": 1000
+                          }
+                        ]
+                      ]
+                    },
+                    {
+                      "metric": "heavy_api_calls",
+                      "windows": [
+                        [
+                          {
+                            "quantity": 100,
+                            "summary": 100
+                          }
+                        ],
+                        [
+                          {
+                            "quantity": 100,
+                            "summary": 100
+                          }
+                        ],
+                        [
+                          {
+                            "quantity": 100,
+                            "summary": 100
+                          }
+                        ],
+                        [
+                          {
+                            "quantity": 100,
+                            "summary": 100
+                          }
+                        ],
+                        [
+                          {
+                            "quantity": 100,
+                            "summary": 100
+                          }
+                        ]
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "aggregated_usage": [
+                {
+                  "metric": "storage",
+                  "windows": [
+                    [
+                      {
+                        "quantity": 10,
+                        "summary": 10
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 10,
+                        "summary": 10
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 10,
+                        "summary": 10
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 10,
+                        "summary": 10
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 10,
+                        "summary": 10
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "metric": "thousand_light_api_calls",
+                  "windows": [
+                    [
+                      {
+                        "quantity": 1000,
+                        "summary": 1000
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 1000,
+                        "summary": 1000
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 1000,
+                        "summary": 1000
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 1000,
+                        "summary": 1000
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 1000,
+                        "summary": 1000
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "metric": "heavy_api_calls",
+                  "windows": [
+                    [
+                      {
+                        "quantity": 100,
+                        "summary": 100
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 100,
+                        "summary": 100
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 100,
+                        "summary": 100
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 100,
+                        "summary": 100
+                      }
+                    ],
+                    [
+                      {
+                        "quantity": 100,
+                        "summary": 100
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

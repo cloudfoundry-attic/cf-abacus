@@ -21,7 +21,6 @@
     ".npmrc",
     "src/"
   ],
-  "main": "src/index.js",
   "scripts": {
     "broker-itest": "abacus-eslint && abacus-mocha",
     "test": "abacus-eslint",
