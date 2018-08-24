@@ -10,49 +10,21 @@ const moment = require('abacus-moment');
 const BigNumber = require('bignumber.js');
 BigNumber.config({ ERRORS: false });
 
-// Compute the test costs
-const storageCost = (planType, numberOfResourceInstances) =>
-  new BigNumber(planType === 'basic' ? 1.0 : 0.5)
-    .mul(numberOfResourceInstances)
-    .toNumber();
-const lightCost = (planType, numberOfResourceInstances, n, numberOfExecutions) =>
-  new BigNumber(planType === 'basic' ? 0.03 : 0.04)
-    .mul(numberOfResourceInstances)
-    .mul(n)
-    .mul(numberOfExecutions)
-    .toNumber();
-const heavyCost = (planType, numberOfResourceInstances, n, numberOfExecutions) =>
-  new BigNumber(planType === 'basic' ? 0.15 : 0.18)
-    .mul(100)
-    .mul(numberOfResourceInstances)
-    .mul(n)
-    .mul(numberOfExecutions)
-    .toNumber();
-
 const windows = (obj) => {
-  const timewindows = [];
-  for (let i = 0; i < 5; i++) timewindows.push([obj]);
-  return timewindows;
+  const timeWindows = [];
+  for (let i = 0; i < 5; i++) timeWindows.push([obj]);
+  return timeWindows;
 };
-const resourceWindow = (planType, numberOfResourceInstances, numberOfUsageDocs, s, m, numberOfExecutions, fn) => {
-  return windows({
-    charge: fn(planType, numberOfResourceInstances, numberOfUsageDocs, numberOfExecutions)
-  });
-};
-const planWindow = (planType, numberOfResourceInstances, numberOfUsageDocs, s, m, numberOfExecutions, fn) => {
+const resourceWindow = (s, m, numberOfExecutions) => {
   return windows({
     quantity: new BigNumber(m).mul(s).mul(numberOfExecutions).toNumber(),
-    summary: new BigNumber(m).mul(s).mul(numberOfExecutions).toNumber(),
-    cost: fn(planType, numberOfResourceInstances, numberOfUsageDocs, numberOfExecutions),
-    charge: fn(planType, numberOfResourceInstances, numberOfUsageDocs, numberOfExecutions)
+    summary: new BigNumber(m).mul(s).mul(numberOfExecutions).toNumber()
   });
 };
-const chargeWindow = (planType, numberOfResourceInstances, numberOfUsageDocs, numberOfExecutions) => {
+const planWindow = (s, m, numberOfExecutions) => {
   return windows({
-    charge: new BigNumber(storageCost(planType, numberOfResourceInstances))
-      .add(lightCost(planType, numberOfResourceInstances, numberOfUsageDocs, numberOfExecutions))
-      .add(heavyCost(planType, numberOfResourceInstances, numberOfUsageDocs, numberOfExecutions))
-      .toNumber()
+    quantity: new BigNumber(m).mul(s).mul(numberOfExecutions).toNumber(),
+    summary: new BigNumber(m).mul(s).mul(numberOfExecutions).toNumber()
   });
 };
 
@@ -95,47 +67,29 @@ const planUsage = (planType, numberOfResourceInstances, numberOfUsageDocs, numbe
   metering_plan_id: `${planType}-object-storage`,
   rating_plan_id: 'object-rating-plan',
   pricing_plan_id: `object-pricing-${planType}`,
-  windows: chargeWindow(
-    planType,
-    numberOfResourceInstances,
-    numberOfUsageDocs,
-    numberOfExecutions
-  ),
   aggregated_usage: [
     {
       metric: 'storage',
       windows: planWindow(
-        planType,
-        numberOfResourceInstances,
-        numberOfUsageDocs,
         numberOfResourceInstances,
         1,
-        1,
-        storageCost
+        1
       )
     },
     {
       metric: 'thousand_light_api_calls',
       windows: planWindow(
-        planType,
-        numberOfResourceInstances,
-        numberOfUsageDocs,
         numberOfResourceInstances * numberOfUsageDocs,
         1,
-        numberOfExecutions,
-        lightCost
+        numberOfExecutions
       )
     },
     {
       metric: 'heavy_api_calls',
       windows: planWindow(
-        planType,
-        numberOfResourceInstances,
-        numberOfUsageDocs,
         numberOfResourceInstances * numberOfUsageDocs,
         100,
-        numberOfExecutions,
-        heavyCost
+        numberOfExecutions
       )
     }
   ]
@@ -143,68 +97,50 @@ const planUsage = (planType, numberOfResourceInstances, numberOfUsageDocs, numbe
 
 // Return the expected usage report for the test organization
 const report = (orgId, planType, numberOfResourceInstances, numberOfUsageDocs, numberOfExecutions) => {
-  const chargeWindows = chargeWindow(
-    planType,
+  const storageWindow = resourceWindow(
     numberOfResourceInstances,
-    numberOfUsageDocs,
+    1,
     numberOfExecutions
   );
-  const storageWindow = resourceWindow(
-    planType,
-    numberOfResourceInstances,
-    numberOfUsageDocs,
-    numberOfResourceInstances,
-    1,
-    numberOfExecutions,
-    storageCost
-  );
   const lightAPIWindow = resourceWindow(
-    planType,
-    numberOfResourceInstances,
-    numberOfUsageDocs,
     numberOfResourceInstances * numberOfUsageDocs,
     1,
-    numberOfExecutions,
-    lightCost
+    numberOfExecutions
   );
   const heavyAPIWindow = resourceWindow(
-    planType,
-    numberOfResourceInstances,
-    numberOfUsageDocs,
     numberOfResourceInstances * numberOfUsageDocs,
     100,
-    numberOfExecutions,
-    heavyCost
+    numberOfExecutions
   );
+
   const planUsageData = planUsage(
     planType,
     numberOfResourceInstances,
     numberOfUsageDocs,
     numberOfExecutions
   );
+  const aggregatedUsage = [
+    {
+      metric: 'storage',
+      windows: storageWindow
+    },
+    {
+      metric: 'thousand_light_api_calls',
+      windows: lightAPIWindow
+    },
+    {
+      metric: 'heavy_api_calls',
+      windows: heavyAPIWindow
+    }
+  ];
 
   return {
     organization_id: orgId,
     account_id: '1234',
-    windows: chargeWindows,
     resources: [
       {
         resource_id: 'object-storage',
-        windows: chargeWindows,
-        aggregated_usage: [
-          {
-            metric: 'storage',
-            windows: storageWindow
-          },
-          {
-            metric: 'thousand_light_api_calls',
-            windows: lightAPIWindow
-          },
-          {
-            metric: 'heavy_api_calls',
-            windows: heavyAPIWindow
-          }
-        ],
+        aggregated_usage: aggregatedUsage,
         plans: [
           planUsageData
         ]
@@ -213,25 +149,10 @@ const report = (orgId, planType, numberOfResourceInstances, numberOfUsageDocs, n
     spaces: [
       {
         space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-        windows: chargeWindows,
         resources: [
           {
             resource_id: 'object-storage',
-            windows: chargeWindows,
-            aggregated_usage: [
-              {
-                metric: 'storage',
-                windows: storageWindow
-              },
-              {
-                metric: 'thousand_light_api_calls',
-                windows: lightAPIWindow
-              },
-              {
-                metric: 'heavy_api_calls',
-                windows: heavyAPIWindow
-              }
-            ],
+            aggregated_usage: aggregatedUsage,
             plans: [
               planUsageData
             ]
@@ -240,25 +161,10 @@ const report = (orgId, planType, numberOfResourceInstances, numberOfUsageDocs, n
         consumers: [
           {
             consumer_id: 'UNKNOWN',
-            windows: chargeWindows,
             resources: [
               {
                 resource_id: 'object-storage',
-                windows: chargeWindows,
-                aggregated_usage: [
-                  {
-                    metric: 'storage',
-                    windows: storageWindow
-                  },
-                  {
-                    metric: 'thousand_light_api_calls',
-                    windows: lightAPIWindow
-                  },
-                  {
-                    metric: 'heavy_api_calls',
-                    windows: heavyAPIWindow
-                  }
-                ],
+                aggregated_usage: aggregatedUsage,
                 plans: [
                   planUsageData
                 ]
