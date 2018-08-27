@@ -20,7 +20,6 @@
     ".npmrc",
     "src/"
   ],
-  "main": "src/index.js",
   "scripts": {
     "acceptance": "abacus-mocha --command",
     "test": "abacus-eslint",

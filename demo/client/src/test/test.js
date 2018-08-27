@@ -3,14 +3,12 @@
 // Simulate a test service provider that submits usage for a resource and
 // verifies the submission by retrieving a usage report.
 
-const _ = require('underscore');
-const map = _.map;
-const omit = _.omit;
-const extend = _.extend;
+const { extend, map, omit } = require('underscore');
+
+const commander = require('commander');
+const util = require('util');
 
 const request = require('abacus-request');
-const util = require('util');
-const commander = require('commander');
 const clone = require('abacus-clone');
 const oauth = require('abacus-oauth');
 const moment = require('abacus-moment');
@@ -85,30 +83,25 @@ const objectStorageReadToken = secured()
   )
   : undefined;
 
-// Builds the expected window value based upon the
-// charge summary, quantity, cost, and window
-const buildWindow = (ch, s, q, c) => {
+// Builds the expected window value based upon the summary & quantity
+const buildWindow = (summary, quantity) => {
   const addProperty = (k, v, o, z) => {
     if (typeof v !== 'undefined') o[k] = z ? 0 : v;
   };
   const win = {};
-  addProperty('charge', ch, win);
-  addProperty('summary', s, win);
-  addProperty('quantity', q, win);
-  addProperty('cost', c, win);
+  addProperty('summary', summary, win);
+  addProperty('quantity', quantity, win);
   return win;
 };
 
-// Prunes all the windows of everything but the monthly charge
+// Prunes all the windows of everything but the monthly summary & quantity
 const prune = (v, k) => {
   if (k === 'windows') {
     const nwin = {};
     const sumWindowValue = (w1, w2, k) => {
       if (typeof w1[k] !== 'undefined') nwin[k] = w2 ? w1[k] + w2[k] : w1[k];
     };
-    sumWindowValue(v[4][0], v[4][1], 'charge');
     sumWindowValue(v[4][0], v[4][1], 'summary');
-    sumWindowValue(v[4][0], v[4][1], 'cost');
     sumWindowValue(v[4][0], v[4][1], 'quantity');
     return nwin;
   }
@@ -226,23 +219,21 @@ describe('abacus-demo-client', function() {
     const report = {
       organization_id: 'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
       account_id: '1234',
-      windows: buildWindow(46.09),
       resources: [
         {
           resource_id: 'object-storage',
-          windows: buildWindow(46.09),
           aggregated_usage: [
             {
               metric: 'storage',
-              windows: buildWindow(1)
+              windows: buildWindow(1, 1)
             },
             {
               metric: 'thousand_light_api_calls',
-              windows: buildWindow(0.09)
+              windows: buildWindow(3, 3)
             },
             {
               metric: 'heavy_api_calls',
-              windows: buildWindow(45)
+              windows: buildWindow(300, 300)
             }
           ],
           plans: [
@@ -251,19 +242,18 @@ describe('abacus-demo-client', function() {
               metering_plan_id: 'basic-object-storage',
               rating_plan_id: 'object-rating-plan',
               pricing_plan_id: 'object-pricing-basic',
-              windows: buildWindow(46.09),
               aggregated_usage: [
                 {
                   metric: 'storage',
-                  windows: buildWindow(1, 1, 1, 1)
+                  windows: buildWindow(1, 1)
                 },
                 {
                   metric: 'thousand_light_api_calls',
-                  windows: buildWindow(0.09, 3, 3, 0.09)
+                  windows: buildWindow(3, 3)
                 },
                 {
                   metric: 'heavy_api_calls',
-                  windows: buildWindow(45, 300, 300, 45)
+                  windows: buildWindow(300, 300)
                 }
               ]
             }
@@ -273,23 +263,21 @@ describe('abacus-demo-client', function() {
       spaces: [
         {
           space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-          windows: buildWindow(46.09),
           resources: [
             {
               resource_id: 'object-storage',
-              windows: buildWindow(46.09),
               aggregated_usage: [
                 {
                   metric: 'storage',
-                  windows: buildWindow(1)
+                  windows: buildWindow(1, 1)
                 },
                 {
                   metric: 'thousand_light_api_calls',
-                  windows: buildWindow(0.09)
+                  windows: buildWindow(3, 3)
                 },
                 {
                   metric: 'heavy_api_calls',
-                  windows: buildWindow(45)
+                  windows: buildWindow(300, 300)
                 }
               ],
               plans: [
@@ -298,19 +286,18 @@ describe('abacus-demo-client', function() {
                   metering_plan_id: 'basic-object-storage',
                   rating_plan_id: 'object-rating-plan',
                   pricing_plan_id: 'object-pricing-basic',
-                  windows: buildWindow(46.09),
                   aggregated_usage: [
                     {
                       metric: 'storage',
-                      windows: buildWindow(1, 1, 1, 1)
+                      windows: buildWindow(1, 1)
                     },
                     {
                       metric: 'thousand_light_api_calls',
-                      windows: buildWindow(0.09, 3, 3, 0.09)
+                      windows: buildWindow(3, 3)
                     },
                     {
                       metric: 'heavy_api_calls',
-                      windows: buildWindow(45, 300, 300, 45)
+                      windows: buildWindow(300, 300)
                     }
                   ]
                 }
@@ -320,23 +307,21 @@ describe('abacus-demo-client', function() {
           consumers: [
             {
               consumer_id: 'app:bbeae239-f3f8-483c-9dd0-de6781c38bab',
-              windows: buildWindow(46.09),
               resources: [
                 {
                   resource_id: 'object-storage',
-                  windows: buildWindow(46.09),
                   aggregated_usage: [
                     {
                       metric: 'storage',
-                      windows: buildWindow(1)
+                      windows: buildWindow(1, 1)
                     },
                     {
                       metric: 'thousand_light_api_calls',
-                      windows: buildWindow(0.09)
+                      windows: buildWindow(3, 3)
                     },
                     {
                       metric: 'heavy_api_calls',
-                      windows: buildWindow(45)
+                      windows: buildWindow(300, 300)
                     }
                   ],
                   plans: [
@@ -345,7 +330,6 @@ describe('abacus-demo-client', function() {
                       metering_plan_id: 'basic-object-storage',
                       rating_plan_id: 'object-rating-plan',
                       pricing_plan_id: 'object-pricing-basic',
-                      windows: buildWindow(46.09),
                       resource_instances: [
                         {
                           id: '0b39fa70-a65f-4183-bae8-385633ca5c87'
@@ -354,15 +338,15 @@ describe('abacus-demo-client', function() {
                       aggregated_usage: [
                         {
                           metric: 'storage',
-                          windows: buildWindow(1, 1, 1, 1)
+                          windows: buildWindow(1, 1)
                         },
                         {
                           metric: 'thousand_light_api_calls',
-                          windows: buildWindow(0.09, 3, 3, 0.09)
+                          windows: buildWindow(3, 3)
                         },
                         {
                           metric: 'heavy_api_calls',
-                          windows: buildWindow(45, 300, 300, 45)
+                          windows: buildWindow(300, 300)
                         }
                       ]
                     }
@@ -414,12 +398,7 @@ describe('abacus-demo-client', function() {
     // Get a usage report for the test organization
     const get = (done) => {
       request.get(
-        [
-          reporting,
-          'v1/metering/organizations',
-          'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-          'aggregated/usage'
-        ].join('/'),
+        `${reporting}/v1/metering/organizations/us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/aggregated/usage`,
         extend({}, authHeader(objectStorageReadToken)),
         (err, val) => {
           expect(err).to.equal(undefined);
@@ -466,7 +445,7 @@ describe('abacus-demo-client', function() {
     };
 
     // Wait for usage reporter to start
-    request.waitFor(reporting + '/batch', {}, startTimeout, (err, value) => {
+    request.waitFor(`${reporting}/batch`, {}, startTimeout, (err, value) => {
       // Failed to ping usage reporter before timing out
       if (err) throw err;
 

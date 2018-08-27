@@ -21,7 +21,6 @@
     ".npmrc",
     "src/"
   ],
-  "main": "src/index.js",
   "scripts": {
     "smoke": "abacus-mocha -f broker-smoke-test.js",
     "acceptance": "abacus-mocha -f broker-acceptance-test.js",
