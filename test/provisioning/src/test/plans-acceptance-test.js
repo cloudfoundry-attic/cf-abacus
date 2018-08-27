@@ -292,12 +292,6 @@ describe('Create and update plans acceptance test', () => {
       expect(lastMonthQuantity).to.equal(1024);
     };
 
-    const validateCost = (body) => {
-      const windows = body.accumulated_usage[0].windows;
-      const lastMonthQuantity = windows[windows.length - 1][0].cost;
-      expect(lastMonthQuantity).to.equal(0.3072);
-    };
-
     it('should exist', (done) => {
       abacusClient.getOrganizationUsage(systemToken, orgId, (err, response) => {
         const filter = {
@@ -324,7 +318,6 @@ describe('Create and update plans acceptance test', () => {
 
           validateMetric(response.body);
           validateQuantity(response.body);
-          validateCost(response.body);
 
           done();
         });
