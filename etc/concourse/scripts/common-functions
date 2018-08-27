@@ -146,11 +146,9 @@ function createOrUpdateService {
       echo "$service_name service instance $service_instance_name has the same plan $service_instance_plan_name - skipping update..."
       return 0;
     fi
-    # echo "Updating $service_name service instance $service_instance_name with plan $service_instance_plan_name ..."
-    # waitForStatusAvailable $service_instance_name
-    # cf update-service $service_instance_name -p $service_instance_plan_name
-    echo "Service instance plan change is detected!"
-    echo "Skipping update for $service_name service instance $service_instance_name with plan $service_instance_plan_name"
+    echo "Updating $service_name service instance $service_instance_name with plan $service_instance_plan_name ..."
+    waitForStatusAvailable $service_instance_name
+    cf update-service $service_instance_name -p $service_instance_plan_name
   else
     echo "Creating new $service_name service instance $service_instance_name with plan $service_instance_plan_name ..."
     cf create-service "$service_name" $service_instance_plan_name $service_instance_name
@@ -169,7 +167,7 @@ function bindAppToService {
 function bindGroupToService {
   group=$1
   service=$2
- 
+
   echo "Binding group $group to service $service"
 
   getNewApps "$group"
