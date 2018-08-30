@@ -75,11 +75,11 @@ const calculateQuantityByWindow = (e, u, w, m, f) => {
 };
 
 // Builds the quantity array in the accumulated usage
-const buildQuantityWindows = (e, u, m, f, price) => {
+const buildQuantityWindows = (e, u, m, f) => {
   // Scaling factor for a time window
   // [Second, Minute, Hour, Day, Month]
   const dimensions = ['s', 'm', 'h', 'D', 'M'];
-  const windows = map(dimensions, (d) => {
+  return map(dimensions, (d) => {
     // If this is the first usage, only return current
     if (u === 0) return [{ quantity: { current: f(m, u + 1) } }];
     // Return a properly accumulated current & previous
@@ -92,14 +92,6 @@ const buildQuantityWindows = (e, u, m, f, price) => {
       }
     ];
   });
-
-  return map(windows, (w) =>
-    map(w, (q) =>
-      extend(q, {
-        cost: new BigNumber(q.quantity.current).mul(price).toNumber()
-      })
-    )
-  );
 };
 
 describe('abacus-usage-accumulator-itest', () => {
@@ -203,15 +195,15 @@ describe('abacus-usage-accumulator-itest', () => {
         accumulated_usage: [
           {
             metric: 'storage',
-            windows: buildQuantityWindows(end, u, 1, (m, u) => m, pid() === 'basic' ? 1 : 0.5)
+            windows: buildQuantityWindows(end, u, 1, (m, u) => m)
           },
           {
             metric: 'thousand_light_api_calls',
-            windows: buildQuantityWindows(end, u, 1, (m, u) => m * u, pid() === 'basic' ? 0.03 : 0.04)
+            windows: buildQuantityWindows(end, u, 1, (m, u) => m * u)
           },
           {
             metric: 'heavy_api_calls',
-            windows: buildQuantityWindows(end, u, 100, (m, u) => m * u, pid() === 'basic' ? 0.15 : 0.18)
+            windows: buildQuantityWindows(end, u, 100, (m, u) => m * u)
           }
         ]
       });

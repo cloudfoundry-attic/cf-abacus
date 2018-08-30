@@ -65,7 +65,7 @@ const startTimeout = commander.startTimeout || 30000;
 // This test timeout
 const totalTimeout = commander.totalTimeout || 60000;
 
-// Prunes all the windows of everything but the monthly quantity and cost
+// Prunes all the windows of everything but the monthly quantity
 const pruneWindows = (v, k) => {
   if (k === 'windows') {
     const nwin = {};
@@ -73,7 +73,6 @@ const pruneWindows = (v, k) => {
       if (typeof w1[k] !== 'undefined') nwin[k] = w2 ? w1[k] + w2[k] : w1[k];
     };
     sumWindowValue(v[4][0], v[4][1], 'quantity');
-    sumWindowValue(v[4][0], v[4][1], 'cost');
     return nwin;
   }
   if (k === 'consumers') return map(v, (c) => omit(c, 't'));
@@ -95,46 +94,28 @@ const calculateQuantityByWindow = (e, u, w, m, f) => {
 const dimensions = ['s', 'm', 'h', 'D', 'M'];
 
 // Builds the quantity array in the accumulated usage
-const buildAccumulatedWindows = (e, u, m, f, price) => {
-  const windows = map(dimensions, (d) => {
-    // If this is the first usage, only return current
-    if (u === 0) return [{ quantity: { current: f(m, u + 1) } }];
-    // Return a properly accumulated current & previous
-    return [
-      {
-        quantity: {
-          previous: calculateQuantityByWindow(e, u, d, m, f),
-          current: calculateQuantityByWindow(e, u + 1, d, m, f)
-        }
+const buildAccumulatedWindows = (e, u, m, f) => map(dimensions, (d) => {
+  // If this is the first usage, only return current
+  if (u === 0) return [{ quantity: { current: f(m, u + 1) } }];
+  // Return a properly accumulated current & previous
+  return [
+    {
+      quantity: {
+        previous: calculateQuantityByWindow(e, u, d, m, f),
+        current: calculateQuantityByWindow(e, u + 1, d, m, f)
       }
-    ];
-  });
-  return map(windows, (w) =>
-    map(w, (q) =>
-      extend(q, {
-        cost: new BigNumber(q.quantity.current).mul(price).toNumber()
-      })
-    )
-  );
-};
+    }
+  ];
+});
 
 // Builds the quantity array in the aggregated usage
-const buildAggregatedWindows = (p, u, ri, tri, count, end, f, price) => {
-  return map(dimensions, (d) => {
-    const time = moment.utc(end + u).toDate();
-    const windowTime = timewindow.zeroLowerTimeDimensions(time, d);
+const buildAggregatedWindows = (p, u, ri, tri, count, end, f) => map(dimensions, (d) => {
+  const time = moment.utc(end + u).toDate();
+  const windowTime = timewindow.zeroLowerTimeDimensions(time, d);
 
-    const q = f(p, Math.min(time.getTime() - windowTime.getTime(), u), ri, tri, count);
-    return price === undefined
-      ? [{ quantity: q }]
-      : [
-        {
-          quantity: q,
-          cost: new BigNumber(q).mul(price).toNumber()
-        }
-      ];
-  });
-};
+  const q = f(p, Math.min(time.getTime() - windowTime.getTime(), u), ri, tri, count);
+  return [{ quantity: q }];
+});
 
 describe('abacus-usage-aggregator-itest', () => {
   before(() => {
@@ -252,15 +233,15 @@ describe('abacus-usage-aggregator-itest', () => {
       accumulated_usage: [
         {
           metric: 'storage',
-          windows: buildAccumulatedWindows(end, u, 1, (m, u) => m, pid(ri) === 'basic' ? 1 : 0.5)
+          windows: buildAccumulatedWindows(end, u, 1, (m, u) => m)
         },
         {
           metric: 'thousand_light_api_calls',
-          windows: buildAccumulatedWindows(end, u, 1, (m, u) => m * u, pid(ri) === 'basic' ? 0.03 : 0.04)
+          windows: buildAccumulatedWindows(end, u, 1, (m, u) => m * u)
         },
         {
           metric: 'heavy_api_calls',
-          windows: buildAccumulatedWindows(end, u, 100, (m, u) => m * u, pid(ri) === 'basic' ? 0.15 : 0.18)
+          windows: buildAccumulatedWindows(end, u, 100, (m, u) => m * u)
         }
       ]
     });
@@ -291,8 +272,7 @@ describe('abacus-usage-aggregator-itest', () => {
           tri,
           count,
           end,
-          (p, u, ri, tri, count) => u === 0 ? count(ri, p) : count(tri, p),
-          addCost ? p === 0 ? 1 : 0.5 : undefined
+          (p, u, ri, tri, count) => u === 0 ? count(ri, p) : count(tri, p)
         )
       },
       {
@@ -304,8 +284,7 @@ describe('abacus-usage-aggregator-itest', () => {
           tri,
           count,
           end,
-          (p, u, ri, tri, count) => count(ri, p) + u * count(tri, p),
-          addCost ? p === 0 ? 0.03 : 0.04 : undefined
+          (p, u, ri, tri, count) => count(ri, p) + u * count(tri, p)
         )
       },
       {
@@ -317,8 +296,7 @@ describe('abacus-usage-aggregator-itest', () => {
           tri,
           count,
           end,
-          (p, u, ri, tri, count) => 100 * (count(ri, p) + u * count(tri, p)),
-          addCost ? p === 0 ? 0.15 : 0.18 : undefined
+          (p, u, ri, tri, count) => 100 * (count(ri, p) + u * count(tri, p))
         )
       }
     ];

@@ -51,6 +51,7 @@ commander
   .option('-l, --limit <n>', 'max number of parallel submissions', parseInt)
   .option('--plan-type <type>', '"basic" or "standard"', 'basic')
   .option('-t, --start-timeout <n>', 'external processes start timeout in milliseconds', parseInt)
+  .option('-p, --processing-timeout <n>', 'pipeline processing timeout in milliseconds', parseInt)
   .option('-x, --total-timeout <n>', 'test timeout in milliseconds', parseInt)
   .option(
     '-c, --collector <uri>',
@@ -90,6 +91,8 @@ const startTimeout = commander.startTimeout || 10000;
 
 // This test timeout
 const totalTimeout = commander.totalTimeout || 60000;
+
+const processingTimeout = commander.processingTimeout || 5000;
 
 const numExecutions = commander.numExecutions;
 
@@ -146,7 +149,8 @@ describe('abacus-perf-test', () => {
     this.timeout(timeout + 2000);
     const processingDeadline = moment.now() + timeout;
 
-    console.log('Timeout %d, num executions %d', timeout, numExecutions);
+    console.log('Test timeout %d ms, processing timeout %d ms, num executions %d',
+      timeout, processingTimeout, numExecutions);
 
     const authHeader = (token) =>
       token
@@ -264,6 +268,11 @@ describe('abacus-perf-test', () => {
         async.parallelLimit(functions, limit, finishCb);
     };
 
+    const waitForProcessing = (timeout, cb) => {
+      console.log(`\nWaiting ${timeout} ms for processing to finish ...`);
+      setTimeout(cb, timeout);
+    };
+
     // Wait for the expected usage report for all organizations, get an organization usage report until
     // we get the expected values indicating that all submitted usage has been processed
     const getReports = (functions, done) => {
@@ -281,7 +290,7 @@ describe('abacus-perf-test', () => {
 
       // Run the above steps
       const functions = buildFunctions();
-      submit(functions.post, () => getReports(functions.report, done));
+      submit(functions.post, () => waitForProcessing(processingTimeout, () => getReports(functions.report, done)));
     });
   });
 });

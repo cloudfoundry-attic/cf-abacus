@@ -15,16 +15,16 @@ const windows = (obj) => {
   for (let i = 0; i < 5; i++) timeWindows.push([obj]);
   return timeWindows;
 };
-const resourceWindow = (s, m, numberOfExecutions) => {
+const resourceWindow = (s, metric, numberOfExecutions) => {
   return windows({
-    quantity: new BigNumber(m).mul(s).mul(numberOfExecutions).toNumber(),
-    summary: new BigNumber(m).mul(s).mul(numberOfExecutions).toNumber()
+    quantity: new BigNumber(metric).mul(s).mul(numberOfExecutions).toNumber(),
+    summary: new BigNumber(metric).mul(s).mul(numberOfExecutions).toNumber()
   });
 };
-const planWindow = (s, m, numberOfExecutions) => {
+const planWindow = (s, measure, numberOfExecutions) => {
   return windows({
-    quantity: new BigNumber(m).mul(s).mul(numberOfExecutions).toNumber(),
-    summary: new BigNumber(m).mul(s).mul(numberOfExecutions).toNumber()
+    quantity: new BigNumber(measure).mul(s).mul(numberOfExecutions).toNumber(),
+    summary: new BigNumber(measure).mul(s).mul(numberOfExecutions).toNumber()
   });
 };
 
@@ -100,7 +100,7 @@ const report = (orgId, planType, numberOfResourceInstances, numberOfUsageDocs, n
   const storageWindow = resourceWindow(
     numberOfResourceInstances,
     1,
-    numberOfExecutions
+    1
   );
   const lightAPIWindow = resourceWindow(
     numberOfResourceInstances * numberOfUsageDocs,
