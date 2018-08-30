@@ -11,7 +11,7 @@
       "name": "store",
       "unit": "GIGABYTE",
       "type": "discrete",
-      "meter": "(m) => new BigNumber(m.store).div(1073741824).toNumber()",
+      "meter": "(m) => new BigNumber(m.store || 0).div(1073741824).toNumber()",
       "accumulate": "(a, current) => a ? { sum: a.sum + current, count: a.count + 1 } : { sum: current, count: 1 }",
       "aggregate": "(a, previous, current) => current",
       "summarize": "(t, qty) => qty ? new BigNumber(qty.sum).div(qty.count).toNumber() : 0"
