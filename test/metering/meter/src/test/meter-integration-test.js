@@ -177,45 +177,9 @@ describe('test meter app', () => {
       it('retries the calls', () => {
         expect(stubs.provisioning.getCallCount(fixture.provisioning.resourceTypeUrl
           .withDefaultParam(timestamp))).to.equal(2);
-        expect(stubs.provisioning.getCallCount(fixture.provisioning.pricingPlanUrl(timestamp))).to.equal(1);
       });
     });
 
-    context('when getting pricing plan fails', () => {
-      beforeEach(async() => {
-        timestamp = moment.now();
-        const config = {
-          provisioning: [{
-            url: fixture.provisioning.resourceTypeUrl.withDefaultParam(timestamp),
-            responses: [
-              fixture.provisioning.responses.successfulResourceType(timestamp)
-            ]
-          },
-          {
-            url: fixture.provisioning.pricingPlanUrl(timestamp),
-            responses: [
-              fixture.buildResponse(500),
-              fixture.provisioning.responses.successfulPricingPlan
-            ]
-          }
-          ],
-          account: fixture.account.successfulResponses(timestamp),
-          accumulator: fixture.accumulator.successfulResponses()
-        };
-        const usage = fixture.usageDoc({ time: timestamp });
-
-        stubs = fixture.buildStubs(config);
-        startApps(stubs);
-
-        await postUsage(usage);
-        await stubs.accumulator.waitUntil.alias(fixture.accumulator.url).isCalled(1);
-      });
-
-      it('retries the calls', () => {
-        expect(stubs.provisioning.getCallCount(fixture.provisioning.pricingPlanUrl(timestamp))).to.equal(2);
-      });
-
-    });
   });
 
   context('when account fails', () => {
