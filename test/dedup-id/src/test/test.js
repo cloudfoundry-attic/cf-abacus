@@ -122,11 +122,10 @@ describe('dedup acceptance test', () => {
         await verifyReport(orgId, testQuantity);
       });
 
-      it('and second doc with dedup id result in proper report',
-        async () => {
-          await sendUsage(docWithDedupId);
-          await verifyReport(orgId, testQuantity * 2);
-        });
+      it('and second doc with dedup id result in proper report', async () => {
+        await sendUsage(docWithDedupId);
+        await verifyReport(orgId, testQuantity * 2);
+      });
     });
 
     context('first doc with dedup id', () => {
@@ -151,9 +150,15 @@ describe('dedup acceptance test', () => {
   context('location header', () => {
 
     const verifyLocationHeader = async (locationHeader) => {
+      const heavyApiCallsIndex = 0;
+
       await eventually(async() => {
         const response = await doGet(locationHeader);
-        expect (response.body.measured_usage[0].quantity).to.equal(testQuantity);
+
+        const measuredUsage = response.body.measured_usage;
+
+        expect(measuredUsage.length).to.equal(1);
+        expect(measuredUsage[heavyApiCallsIndex].quantity).to.equal(testQuantity);
       });
     };
 
