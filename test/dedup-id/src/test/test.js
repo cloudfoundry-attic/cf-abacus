@@ -2,8 +2,9 @@
 
 const moment = require('abacus-moment');
 const request = require('abacus-request');
-const util = require('util');
 const { extend } = require('underscore');
+const util = require('util');
+const uuid = require('uuid');
 
 const debug = require('abacus-debug')('abacus-dedup-id-test');
 
@@ -12,38 +13,49 @@ const doPost = util.promisify(request.post);
 
 const collectorURL = process.env.COLLECTOR_URL || 'http://localhost:9080';
 const reportingURL = process.env.REPORTING_URL || 'http://localhost:9088';
+const localMeterURL = 'http://localhost:9100';
+const pollInterval = process.env.POLL_INTERVAL || 300;
 
 
 describe('dedup acceptance test', () => {
+  const timestamp = moment.now();
   const testQuantity = 1;
   const dedupId = 'test-dedup-id';
+  const differentDedupId = 'different-dedup-id';
 
-  let timestamp;
-  let orgId;
   let docWithoutDedupId;
   let docWithDedupId;
+  let orgId;
 
-  const buildUsageDoc = (time, dedupId) => {
+  const buildUsageDoc = (orgID, dedupId) => {
     const usageDoc = {
-      start: time,
-      end: time,
-      organization_id: orgId,
-      space_id: 'test-space-id',
-      consumer_id: 'app:bbeae239-f3f8-483c-9dd0-de6781c38bab',
+      start: timestamp,
+      end: timestamp,
+      organization_id: orgID,
+      space_id: 'test-dedup-id-space-id',
+      consumer_id: 'test-dedup-id-consumer-id',
       resource_id: 'object-storage',
       plan_id: 'basic',
-      resource_instance_id: '0b39fa70-a65f-4183-bae8-385633ca5c87',
+      resource_instance_id: 'test-dedup-id-resource-instance-id',
       measured_usage: [{
         measure: 'heavy_api_calls',
         quantity: testQuantity
       }]
     };
+
     if (dedupId)
       extend(usageDoc, {
         dedup_id: dedupId
       });
 
     return usageDoc;
+  };
+
+  // On local environment GET by location header is not routed to meter
+  const buildCorrectLocationHeaderUrl = (url) => {
+    if(url.indexOf('localhost') > -1)
+      return localMeterURL + url.substring(url.indexOf('v1/') - 1, url.length);
+    return url;
   };
 
   const sleep = (duration) => {
@@ -57,7 +69,7 @@ describe('dedup acceptance test', () => {
       } catch (e) {
         debug('not ready yet: %o', e.message);
       }
-      await sleep(1000);
+      await sleep(pollInterval);
     }
   };
 
@@ -67,60 +79,91 @@ describe('dedup acceptance test', () => {
     });
 
     expect(resp.statusCode).to.equal(202);
-  };
 
-  const verifyReport = async (expectedQuantiy) => {
-    await eventually(async () => {
-      const report = await doGet(':url/v1/metering/organizations/:organization_id/aggregated/usage', {
-        url: reportingURL,
-        organization_id: orgId
-      });
-      expect(report.body.resources[0].aggregated_usage[2].windows[4][0].summary).to.equal(expectedQuantiy);
-    });
+    return buildCorrectLocationHeaderUrl(resp.headers.location);
   };
 
   beforeEach(() => {
-    timestamp = moment.now();
-    orgId = `dedup-acceptance-${timestamp}`;
-    docWithDedupId = buildUsageDoc(timestamp, dedupId);
+    orgId = `dedup-acceptance-${uuid.v4()}`;
+    docWithoutDedupId = buildUsageDoc(orgId);
+    docWithDedupId = buildUsageDoc(orgId, dedupId);
   });
 
   context('two consequtive documets with same timestamp', () => {
 
-    beforeEach(async () => {
-      docWithoutDedupId = buildUsageDoc(timestamp);
-      await sendUsage(docWithoutDedupId);
+    const verifyReport = async (orgID, expectedQuantiy) => {
+      const heavyApiCallsIndex = 2;
+      const objectStorageIndex = 0;
+      const currentMonth = 0;
+      const monthsReport = 4;
+
+      await eventually(async () => {
+        const report = await doGet(':url/v1/metering/organizations/:organization_id/aggregated/usage', {
+          url: reportingURL,
+          organization_id: orgID
+        });
+
+        const resources = report.body.resources;
+        expect(resources.length).to.equal(1);
+        const aggregatedUsage = resources[objectStorageIndex].aggregated_usage;
+        expect(aggregatedUsage.length).to.equal(3);
+        const currentMonthReport = aggregatedUsage[heavyApiCallsIndex].windows[monthsReport][currentMonth];
+        expect(currentMonthReport.summary).to.equal(expectedQuantiy);
+      });
+    };
+
+    context('first doc without dedup id', () => {
+      beforeEach(async () => {
+        await sendUsage(docWithoutDedupId);
+      });
+
+      it('and second doc without dedup id result in proper report', async () => {
+        await sendUsage(docWithoutDedupId);
+        await verifyReport(orgId, testQuantity);
+      });
+
+      it('and second doc with dedup id result in proper report',
+        async () => {
+          await sendUsage(docWithDedupId);
+          await verifyReport(orgId, testQuantity * 2);
+        });
     });
 
-    it('without dedup id result in proper report', async () => {
-      await sendUsage(docWithoutDedupId);
-      await verifyReport(testQuantity);
-    });
-
-    it('with and without dedup id result in proper report',
-      async () => {
+    context('first doc with dedup id', () => {
+      beforeEach(async () => {
         await sendUsage(docWithDedupId);
-        await verifyReport(testQuantity * 2);
       });
+
+      it('and second doc with the same dedup id result in proper report', async () => {
+        await sendUsage(docWithDedupId);
+        await verifyReport(orgId, testQuantity);
+      });
+
+      it('and second doc with different dedup id result in proper report',
+        async () => {
+          const docWithDifferentDedupId = buildUsageDoc(orgId, differentDedupId);
+          await sendUsage(docWithDifferentDedupId);
+          await verifyReport(orgId, testQuantity * 2);
+        });
+    });
   });
 
-  context('two consequtive documets with same timestamp', () => {
+  context('location header', () => {
 
-    beforeEach(async () => {
-      await sendUsage(docWithDedupId);
-    });
-
-    it('with equal dedup id result in proper report', async () => {
-      await sendUsage(docWithDedupId);
-      await verifyReport(testQuantity);
-    });
-
-    it('with different dedup id result in proper report',
-      async () => {
-        const docWithDifferentDedupId = buildUsageDoc(timestamp, 'different-dedup-id');
-        await sendUsage(docWithDifferentDedupId);
-        await verifyReport(testQuantity * 2);
+    const verifyLocationHeader = async (locationHeader) => {
+      await eventually(async() => {
+        const response = await doGet(locationHeader);
+        expect (response.body.measured_usage[0].quantity).to.equal(testQuantity);
       });
+    };
+
+    it('doc with dedup id result in existing location header', async () => {
+      await verifyLocationHeader(await sendUsage(docWithDedupId));
+    });
+
+    it('doc without dedup id result in existing location header', async () => {
+      await verifyLocationHeader(await sendUsage(docWithoutDedupId));
+    });
   });
 
 });
