@@ -1,6 +1,7 @@
 'use strict';
 
 const moment = require('abacus-moment');
+const oauth = require('abacus-oauth');
 const request = require('abacus-request');
 const { extend } = require('underscore');
 const util = require('util');
@@ -11,11 +12,15 @@ const debug = require('abacus-debug')('abacus-dedup-id-test');
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
 
+const authServerURL = process.env.AUTH_SERVER_URL || 'http://localhost:9882';
 const collectorURL = process.env.COLLECTOR_URL || 'http://localhost:9080';
 const reportingURL = process.env.REPORTING_URL || 'http://localhost:9088';
+const systemClientId = process.env.CLIENT_ID;
+const systemClientSecret = process.env.CLIENT_SECRET;
+const objectStorageClientId = process.env.OBJECT_STORAGE_CLIENT_ID;
+const objectStorageClientSecret = process.env.OBJECT_STORAGE_CLIENT_SECRET;
 const localMeterURL = 'http://localhost:9100';
 const pollInterval = process.env.POLL_INTERVAL || 300;
-
 
 describe('dedup acceptance test', () => {
   const timestamp = moment.now();
@@ -26,6 +31,19 @@ describe('dedup acceptance test', () => {
   let docWithoutDedupId;
   let docWithDedupId;
   let orgId;
+
+  let systemToken;
+  let objectStorageToken;
+
+  const secured = () => process.env.SECURED === 'true';
+
+  const authHeader = (token) => {
+    return {
+      headers: {
+        authorization: token()
+      }
+    };
+  };
 
   const buildUsageDoc = (orgID, dedupId) => {
     const usageDoc = {
@@ -74,14 +92,33 @@ describe('dedup acceptance test', () => {
   };
 
   const sendUsage = async (usage) => {
-    const resp = await doPost(collectorURL + '/v1/metering/collected/usage', {
-      body: usage
-    });
+    const resp = await doPost(collectorURL + '/v1/metering/collected/usage',
+      extend({ body: usage }, authHeader(objectStorageToken)));
 
     expect(resp.statusCode).to.equal(202);
-
     return buildCorrectLocationHeaderUrl(resp.headers.location);
   };
+
+  before((done) => {
+    if (secured()) {
+      systemToken = oauth.cache(authServerURL, systemClientId, systemClientSecret,
+        'abacus.usage.read abacus.usage.write'
+      );
+
+      objectStorageToken = oauth.cache(
+        authServerURL, objectStorageClientId, objectStorageClientSecret,
+        'abacus.usage.object-storage.read abacus.usage.object-storage.write'
+      );
+
+      systemToken.start((err) => {
+        if (err) debug('Unable to obtain system oAuth token due to %o', err);
+        objectStorageToken.start((err) => {
+          if (err) debug('Unable to obtain object storage oAuth token due to %o', err);
+          done();
+        });
+      });
+    }
+  });
 
   beforeEach(() => {
     orgId = `dedup-acceptance-${uuid.v4()}`;
@@ -98,10 +135,10 @@ describe('dedup acceptance test', () => {
       const monthsReport = 4;
 
       await eventually(async () => {
-        const report = await doGet(':url/v1/metering/organizations/:organization_id/aggregated/usage', {
+        const report = await doGet(':url/v1/metering/organizations/:organization_id/aggregated/usage', extend ({
           url: reportingURL,
           organization_id: orgID
-        });
+        }, authHeader(systemToken)));
 
         const resources = report.body.resources;
         expect(resources.length).to.equal(1);
@@ -153,7 +190,9 @@ describe('dedup acceptance test', () => {
       const heavyApiCallsIndex = 0;
 
       await eventually(async() => {
-        const response = await doGet(locationHeader);
+        const response = await doGet(locationHeader, authHeader(objectStorageToken));
+
+        expect(response.statusCode).to.equal(200);
 
         const measuredUsage = response.body.measured_usage;
 
@@ -162,11 +201,11 @@ describe('dedup acceptance test', () => {
       });
     };
 
-    it('doc with dedup id result in existing location header', async () => {
+    it('for doc with dedup id result in existing location header', async () => {
       await verifyLocationHeader(await sendUsage(docWithDedupId));
     });
 
-    it('doc without dedup id result in existing location header', async () => {
+    it('for doc without dedup id result in existing location header', async () => {
       await verifyLocationHeader(await sendUsage(docWithoutDedupId));
     });
   });
