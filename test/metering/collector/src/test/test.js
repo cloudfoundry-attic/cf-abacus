@@ -68,7 +68,7 @@ const customEnv = extend({}, process.env, { ABACUS_COLLECT_QUEUE:  consumerConfi
 const lifecycleManager = createLifecycleManager().useEnv(customEnv);
 
 describe('abacus-usage-collector-itest', () => {
-  before(() => {
+  before((done) => {
     const modules = [
       lifecycleManager.modules.eurekaPlugin,
       lifecycleManager.modules.provisioningPlugin,
@@ -77,8 +77,10 @@ describe('abacus-usage-collector-itest', () => {
     ];
 
     // drop all abacus collections except plans and plan-mappings
-    dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, () => {
+    dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, (err) => {
+      if (err) return done(err);
       lifecycleManager.startModules(modules);
+      return done();
     });
   });
 
@@ -161,7 +163,6 @@ describe('abacus-usage-collector-itest', () => {
     };
 
     const connectionManager = new ConnectionManager([rabbitUri]);
-
 
     debug('Creating consumer ...');
     const consumer = new Consumer(connectionManager, amqpMessageParser, consumerConfig);
