@@ -32,6 +32,11 @@
       "from": "../../utils/dataflow",
       "resolved": "file:../../utils/dataflow"
     },
+    "abacus-dataflow-reducer-config-factory": {
+      "version": "1.1.3",
+      "from": "../dataflow-reducer-config-factory",
+      "resolved": "file:../dataflow-reducer-config-factory"
+    },
     "abacus-dbclient": {
       "version": "1.1.3",
       "from": "../../utils/dbclient",
@@ -733,7 +738,7 @@
     },
     "moment": {
       "version": "2.22.2",
-      "from": "moment@>=2.17.1 <3.0.0",
+      "from": "moment@^2.17.1",
       "resolved": "https://registry.npmjs.org/moment/-/moment-2.22.2.tgz"
     },
     "mongodb": {
@@ -872,7 +877,7 @@
     },
     "request": {
       "version": "2.88.0",
-      "from": "request@>=2.79.0 <3.0.0",
+      "from": "request@^2.79.0",
       "resolved": "https://registry.npmjs.org/request/-/request-2.88.0.tgz"
     },
     "require_optional": {
