@@ -52,7 +52,7 @@
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-webapp": "file:../../utils/webapp",
     "abacus-yieldable": "file:../../utils/yieldable",
-    "abacus-reducer-config-factory": "file:../dataflow-reducer-config-factory",
+    "abacus-dataflow-reducer-config-factory": "file:../dataflow-reducer-config-factory",
     "underscore": "^1.9.1",
     "ajv": "^6.0.0"
   },
