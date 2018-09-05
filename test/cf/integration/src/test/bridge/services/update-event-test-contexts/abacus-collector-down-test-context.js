@@ -30,20 +30,18 @@ const run = (test) => {
     // so that it will force the bridge to retry the whole proces.
     const failRequestsCount = arrange.fixture.env.retryCount + 1;
 
-    const getExpectedCarryOverEntries = () => {
-      const carryOverEntries = [];
-      carryOverEntries.push({
+    const getExpectedCarryOverEntries = () => [
+      {
         guid: updateServiceUsageEvent.metadata.guid,
         state: arrange.fixture.usageEventStates.default,
         planName: arrange.fixture.planNames.custom
-      });
-      carryOverEntries.push({
+      },
+      {
         guid: updateServiceUsageEvent.metadata.guid,
         state: arrange.fixture.usageEventStates.deleted,
         planName: arrange.fixture.planNames.default
-      });
-      return carryOverEntries;
-    };
+      }
+    ];
 
     context('in the beggining of UPDATE event', () => {
       const expectedNumBerOfCarryOverEntries = 2;
@@ -73,26 +71,22 @@ const run = (test) => {
         return usageDocs;
       };
 
-      const getExpectedGuids = () => {
-        const expectedGuids = [];
-        expectedGuids.push(undefined);
-        expectedGuids.push(createServiceUsageEvent.metadata.guid);
-        expectedGuids.push(createServiceUsageEvent.metadata.guid);
-        expectedGuids.push(updateServiceUsageEvent.metadata.guid);
-        return expectedGuids;
-      };
+      const getExpectedGuids = () => [
+        undefined,
+        createServiceUsageEvent.metadata.guid,
+        createServiceUsageEvent.metadata.guid,
+        updateServiceUsageEvent.metadata.guid
+      ];
 
-      const getExpectedStatistics = () => {
-        return {
-          success: {
-            all: 2,
-            conflicts: 0,
-            notsupported: 0,
-            skips: 0
-          },
-          failures: 1
-        };
-      };
+      const getExpectedStatistics = () => ({
+        success: {
+          all: 2,
+          conflicts: 0,
+          notsupported: 0,
+          skips: 0
+        },
+        failures: 1
+      });
 
       const setCloudControllerResponse = () => {
         arrange.fixture.externalSystemsMocks().cloudController.usageEvents.return.firstTime([createServiceUsageEvent]);
