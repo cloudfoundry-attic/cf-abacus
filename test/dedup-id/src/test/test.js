@@ -14,8 +14,6 @@ const doPost = util.promisify(request.post);
 
 const systemClientId = process.env.CLIENT_ID;
 const systemClientSecret = process.env.CLIENT_SECRET;
-const objectStorageClientId = process.env.OBJECT_STORAGE_CLIENT_ID;
-const objectStorageClientSecret = process.env.OBJECT_STORAGE_CLIENT_SECRET;
 const authServerURL = process.env.AUTH_SERVER_URL || 'http://localhost:9882';
 const collectorURL = process.env.COLLECTOR_URL || 'http://localhost:9080';
 const reportingURL = process.env.REPORTING_URL || 'http://localhost:9088';
@@ -34,7 +32,6 @@ describe('dedup acceptance test', () => {
   let orgId;
 
   let systemToken;
-  let objectStorageToken;
 
   const secured = () => process.env.SECURED === 'true';
 
@@ -96,7 +93,7 @@ describe('dedup acceptance test', () => {
 
   const sendUsage = async (usage) => {
     const resp = await doPost(collectorURL + '/v1/metering/collected/usage',
-      extend({ body: usage }, authHeader(objectStorageToken)));
+      extend({ body: usage }, authHeader(systemToken)));
 
     expect(resp.statusCode).to.equal(202);
     return buildCorrectLocationHeaderUrl(resp.headers.location);
@@ -110,17 +107,9 @@ describe('dedup acceptance test', () => {
         'abacus.usage.read abacus.usage.write'
       );
 
-      objectStorageToken = oauth.cache(
-        authServerURL, objectStorageClientId, objectStorageClientSecret,
-        'abacus.usage.object-storage.read abacus.usage.object-storage.write'
-      );
-
       systemToken.start((err) => {
         if (err) debug('Unable to obtain system oAuth token due to %o', err);
-        objectStorageToken.start((err) => {
-          if (err) debug('Unable to obtain object storage oAuth token due to %o', err);
-          done();
-        });
+        done();
       });
     }
   });
@@ -195,7 +184,7 @@ describe('dedup acceptance test', () => {
       const heavyApiCallsIndex = 0;
 
       await eventually(async() => {
-        const response = await doGet(locationHeader, authHeader(objectStorageToken));
+        const response = await doGet(locationHeader, authHeader(systemToken));
 
         expect(response.statusCode).to.equal(200);
 
