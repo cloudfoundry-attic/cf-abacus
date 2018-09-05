@@ -152,7 +152,7 @@
     "abacus-cf-integration-itest": "file:test/cf/integration",
     "abacus-cf-smoke": "file:test/cf/smoke",
     "abacus-cfpush": "file:tools/cfpush",
-    "abacus-dedup-id-acceptance-tests": "file:test/dedup-id",
+    "abacus-dedup-id-acceptance-test": "file:test/dedup-id",
     "abacus-eslint": "file:tools/eslint",
     "abacus-extensions-itest": "file:test/extensions",
     "abacus-mddoc": "file:tools/mddoc",
