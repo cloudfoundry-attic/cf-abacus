@@ -1,10 +1,10 @@
 {
-  "name": "abacus-usage-accumulator",
-  "description": "Usage accumulator service",
+  "name": "abacus-dataflow-reducer-config-factory",
+  "description": "Dataflow reducer config factory",
   "license": "Apache-2.0",
   "version": "1.1.3",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/aggregation/accumulator",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/aggregation/dataflow-reducer-config-factory",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -24,43 +24,24 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "start": "launch webapp start",
-    "stop": "webapp stop",
     "test": "abacus-eslint && nyc abacus-mocha",
     "generate-coverage": "nyc report --reporter=lcovonly",
-    "lint": "abacus-eslint",
-    "pub": "publish",
-    "cfpush": "cfpush"
+    "lint": "abacus-eslint"
   },
   "dependencies": {
-    "abacus-oauth": "file:../../utils/oauth",
-    "abacus-cluster": "file:../../utils/cluster",
-    "abacus-dataflow": "file:../../utils/dataflow",
     "abacus-debug": "file:../../utils/debug",
-    "abacus-launcher": "file:../../utils/launcher",
-    "abacus-metering-config": "file:../../config/metering",
     "abacus-moment": "file:../../utils/moment",
-    "abacus-rating-config": "file:../../config/rating",
-    "abacus-router": "file:../../utils/router",
-    "abacus-request": "file:../../utils/request",
     "abacus-seqid": "file:../../utils/seqid",
     "abacus-timewindow": "file:../../utils/timewindow",
     "abacus-transform": "file:../../utils/transform",
     "abacus-urienv": "file:../../utils/urienv",
-    "abacus-webapp": "file:../../utils/webapp",
-    "abacus-yieldable": "file:../../utils/yieldable",
-    "abacus-reducer-config-factory": "file:../dataflow-reducer-config-factory",
     "underscore": "^1.9.1",
     "ajv": "^6.0.0"
   },
   "devDependencies": {
-    "abacus-batch": "file:../../utils/batch",
-    "abacus-cfpush": "file:../../../tools/cfpush",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "nyc": "^11.4.1",
-    "abacus-publish": "file:../../../tools/publish",
-    "abacus-request": "file:../../utils/request"
+    "nyc": "^11.4.1"
   },
   "nyc": {
     "cache": true,

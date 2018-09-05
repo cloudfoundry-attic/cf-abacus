@@ -12,15 +12,16 @@ const debug = require('abacus-debug')('abacus-dedup-id-test');
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
 
-const authServerURL = process.env.AUTH_SERVER_URL || 'http://localhost:9882';
-const collectorURL = process.env.COLLECTOR_URL || 'http://localhost:9080';
-const reportingURL = process.env.REPORTING_URL || 'http://localhost:9088';
 const systemClientId = process.env.CLIENT_ID;
 const systemClientSecret = process.env.CLIENT_SECRET;
 const objectStorageClientId = process.env.OBJECT_STORAGE_CLIENT_ID;
 const objectStorageClientSecret = process.env.OBJECT_STORAGE_CLIENT_SECRET;
-const localMeterURL = 'http://localhost:9100';
+const authServerURL = process.env.AUTH_SERVER_URL || 'http://localhost:9882';
+const collectorURL = process.env.COLLECTOR_URL || 'http://localhost:9080';
+const reportingURL = process.env.REPORTING_URL || 'http://localhost:9088';
 const pollInterval = process.env.POLL_INTERVAL || 300;
+
+const localMeterURL = 'http://localhost:9100';
 
 describe('dedup acceptance test', () => {
   const timestamp = moment.now();
@@ -38,11 +39,13 @@ describe('dedup acceptance test', () => {
   const secured = () => process.env.SECURED === 'true';
 
   const authHeader = (token) => {
-    return {
-      headers: {
-        authorization: token()
-      }
-    };
+    return token ?
+      {
+        headers: {
+          authorization: token()
+        }
+      } :
+      {};
   };
 
   const buildUsageDoc = (orgID, dedupId) => {
@@ -100,7 +103,9 @@ describe('dedup acceptance test', () => {
   };
 
   before((done) => {
-    if (secured()) {
+    if(!secured())
+      done();
+    else {
       systemToken = oauth.cache(authServerURL, systemClientId, systemClientSecret,
         'abacus.usage.read abacus.usage.write'
       );
@@ -126,9 +131,9 @@ describe('dedup acceptance test', () => {
     docWithDedupId = buildUsageDoc(orgId, dedupId);
   });
 
-  context('two consequtive documets with same timestamp', () => {
+  context('two consecutive documets with same timestamp', () => {
 
-    const verifyReport = async (orgID, expectedQuantiy) => {
+    const verifyReport = async (orgID, expectedQuantity) => {
       const heavyApiCallsIndex = 2;
       const objectStorageIndex = 0;
       const currentMonth = 0;
@@ -145,7 +150,7 @@ describe('dedup acceptance test', () => {
         const aggregatedUsage = resources[objectStorageIndex].aggregated_usage;
         expect(aggregatedUsage.length).to.equal(3);
         const currentMonthReport = aggregatedUsage[heavyApiCallsIndex].windows[monthsReport][currentMonth];
-        expect(currentMonthReport.summary).to.equal(expectedQuantiy);
+        expect(currentMonthReport.summary).to.equal(expectedQuantity);
       });
     };
 
