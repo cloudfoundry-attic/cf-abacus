@@ -86,7 +86,6 @@
     "abacus-cluster": "file:lib/utils/cluster",
     "abacus-counter": "file:lib/utils/counter",
     "abacus-dataflow": "file:lib/utils/dataflow",
-    "abacus-dataflow-reducer-config": "file:lib/aggregation/dataflow-reducer-config",
     "abacus-dbclient": "file:lib/utils/dbclient",
     "abacus-dbcommons": "file:lib/utils/dbcommons",
     "abacus-debug": "file:lib/utils/debug",

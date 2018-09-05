@@ -324,18 +324,6 @@
 "abacus-counter@file:lib/utils/counter":
   version "1.1.3"
 
-"abacus-dataflow-reducer-config@file:lib/aggregation/dataflow-reducer-config":
-  version "1.1.3"
-  dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
-    abacus-moment "file:../../Library/Caches/Yarn/utils/moment"
-    abacus-seqid "file:../../Library/Caches/Yarn/utils/seqid"
-    abacus-timewindow "file:../../Library/Caches/Yarn/utils/timewindow"
-    abacus-transform "file:../../Library/Caches/Yarn/utils/transform"
-    abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
-    ajv "^6.0.0"
-    underscore "^1.9.1"
-
 "abacus-dataflow@file:lib/utils/dataflow":
   version "1.1.3"
   dependencies:
@@ -951,7 +939,6 @@
   dependencies:
     abacus-cluster "file:../../Library/Caches/Yarn/utils/cluster"
     abacus-dataflow "file:../../Library/Caches/Yarn/utils/dataflow"
-    abacus-dataflow-reducer-config "file:../../Library/Caches/Yarn/v2/dataflow-reducer-config"
     abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
     abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
     abacus-metering-config "file:../../Library/Caches/Yarn/config/metering"
@@ -998,7 +985,6 @@
   dependencies:
     abacus-cluster "file:../../Library/Caches/Yarn/utils/cluster"
     abacus-dataflow "file:../../Library/Caches/Yarn/utils/dataflow"
-    abacus-dataflow-reducer-config "file:../../Library/Caches/Yarn/v2/dataflow-reducer-config"
     abacus-dbclient "file:../../Library/Caches/Yarn/utils/dbclient"
     abacus-debug "file:../../Library/Caches/Yarn/utils/debug"
     abacus-launcher "file:../../Library/Caches/Yarn/utils/launcher"
