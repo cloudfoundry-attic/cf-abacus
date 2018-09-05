@@ -132,7 +132,7 @@
     "abacus-usage-accumulator": "file:lib/aggregation/accumulator",
     "abacus-usage-aggregator": "file:lib/aggregation/aggregator",
     "abacus-usage-collector": "file:lib/metering/collector",
-    "abacus-dataflow-reducer-config-factory": "file:lib/aggregation/dataflow-reducer-config-factory",
+    "abacus-reducer-config-factory": "file:lib/aggregation/dataflow-reducer-config-factory",
     "abacus-usage-meter": "file:lib/metering/meter",
     "abacus-usage-reporting": "file:lib/aggregation/reporting",
     "abacus-usage-schemas": "file:lib/config/schemas",
