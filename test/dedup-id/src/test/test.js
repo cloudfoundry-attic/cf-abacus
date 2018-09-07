@@ -33,7 +33,7 @@ describe('dedup acceptance test', () => {
 
   let systemToken;
 
-  const secured = () => process.env.SECURED === 'true';
+  const secured = process.env.SECURED === 'true';
 
   const authHeader = (token) => {
     return token ?
@@ -100,7 +100,7 @@ describe('dedup acceptance test', () => {
   };
 
   before((done) => {
-    if(!secured())
+    if(!secured)
       done();
     else {
       systemToken = oauth.cache(authServerURL, systemClientId, systemClientSecret,
