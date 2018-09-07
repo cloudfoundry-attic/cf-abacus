@@ -30,7 +30,8 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-moment": "file:../../utils/moment"
+    "abacus-moment": "file:../../utils/moment",
+    "underscore": "^1.9.1"
   },
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
@@ -38,7 +39,6 @@
     "abacus-publish": "file:../../../tools/publish",
     "mongodb": "^2.1",
     "nyc": "^11.4.1",
-    "underscore": "^1.9.1",
     "uuid": "^3.2.1"
   },
   "nyc": {
