@@ -25,32 +25,3 @@ pushd built-project
   cf map-route "${ABACUS_PREFIX}abacus-usage-meter" "$CF_SYS_DOMAIN" --hostname "${ABACUS_PREFIX}abacus-usage-collector" --path 'v1/metering/collected/usage/t'
 
 popd
-
-
-# if [ "$BIND_DB_SERVICE" == "true" ]; then
-#   echo "Binding services ..."
-
-#   bindGroupToService ${ABACUS_PREFIX}abacus-usage-collector $DB_COLLECTOR
-#   bindGroupToService ${ABACUS_PREFIX}abacus-usage-meter $DB_METER
-#   bindGroupToService ${ABACUS_PREFIX}abacus-usage-accumulator $DB_ACCUMULATOR
-#   bindGroupToService ${ABACUS_PREFIX}abacus-usage-aggregator $DB_AGGREGATOR
-#   bindGroupToService ${ABACUS_PREFIX}abacus-usage-reporting $DB_ACCUMULATOR
-#   bindGroupToService ${ABACUS_PREFIX}abacus-usage-reporting $DB_AGGREGATOR
-#   bindGroupToService ${ABACUS_PREFIX}abacus-cf-renewer $DB_BRIDGE
-#   bindGroupToService ${ABACUS_PREFIX}abacus-services-bridge $DB_BRIDGE
-#   bindGroupToService ${ABACUS_PREFIX}abacus-applications-bridge $DB_BRIDGE
-#   bindGroupToService ${ABACUS_PREFIX}abacus-account-plugin $DB_PLUGINS
-#   bindGroupToService ${ABACUS_PREFIX}abacus-provisioning-plugin $DB_PLUGINS
-#   bindGroupToService ${ABACUS_PREFIX}abacus-eureka-plugin $DB_PLUGINS
-#   bindGroupToService ${ABACUS_PREFIX}abacus-housekeeper $DB_METER
-#   bindGroupToService ${ABACUS_PREFIX}abacus-housekeeper $DB_ACCUMULATOR
-#   bindGroupToService ${ABACUS_PREFIX}abacus-housekeeper $DB_AGGREGATOR
-#   bindGroupToService ${ABACUS_PREFIX}abacus-housekeeper $DB_BRIDGE
-#   bindGroupToService ${ABACUS_PREFIX}abacus-housekeeper $DB_PLUGINS
-#   bindGroupToService ${ABACUS_PREFIX}abacus-service-dashboard $DB_DASHBOARD
-
-# fi
-
-# bindAppToService ${ABACUS_PREFIX}abacus-usage-collector $RABBIT_INSTANCE_NAME
-# bindAppToService ${ABACUS_PREFIX}abacus-usage-meter $RABBIT_INSTANCE_NAME
-
