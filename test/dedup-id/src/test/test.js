@@ -108,8 +108,8 @@ describe('dedup acceptance test', () => {
       );
 
       systemToken.start((err) => {
-        if (err) debug('Unable to obtain system oAuth token due to %o', err);
-        done();
+        if (err) done(new Error(`Unable to obtain system oAuth token due to ${err}`));
+        else done();
       });
     }
   });
