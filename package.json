@@ -122,6 +122,7 @@
     "abacus-retry": "file:lib/utils/retry",
     "abacus-rewire": "file:lib/utils/rewire",
     "abacus-router": "file:lib/utils/router",
+    "abacus-sampler-storage": "file:lib/sampler/storage",
     "abacus-schema": "file:lib/utils/schema",
     "abacus-seqid": "file:lib/utils/seqid",
     "abacus-service-dashboard": "file:lib/cf/dashboard",
