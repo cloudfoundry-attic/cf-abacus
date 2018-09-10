@@ -1,5 +1,0 @@
-abacus-counter
-===
-
-Metrics counter
-
