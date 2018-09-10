@@ -12,6 +12,7 @@ const debug = require('abacus-debug')('abacus-dedup-id-test');
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
 
+const secured = process.env.SECURED === 'true';
 const systemClientId = process.env.CLIENT_ID;
 const systemClientSecret = process.env.CLIENT_SECRET;
 const authServerURL = process.env.AUTH_SERVER_URL || 'http://localhost:9882';
@@ -32,8 +33,6 @@ describe('dedup acceptance test', () => {
   let orgId;
 
   let systemToken;
-
-  const secured = process.env.SECURED === 'true';
 
   const authHeader = (token) => {
     return token ?
