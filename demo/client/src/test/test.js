@@ -119,7 +119,7 @@ describe('abacus-demo-client', function() {
     if (objectStorageReadToken) objectStorageReadToken.start();
 
     // drop all abacus collections except plans and plan-mappings
-    dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, done);
+    dbclient.drop(process.env.DB_URI, /^abacus-((?!plan).)*$/, done);
   });
 
   it('submits usage for a sample resource and retrieves an aggregated ' + 'usage report', function(done) {

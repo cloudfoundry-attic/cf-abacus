@@ -3,6 +3,6 @@
 # Configure the Abacus env to use a local test MongoDB server (which you must have set up and started separately)
 # Run this script with . ./localdb to configure your shell env before running Abacus
 
-export DB=mongodb://localhost:27017
+export DB_URI=mongodb://localhost:27017
 export RABBIT_URI=amqp://localhost:5672
 export JOBS=1
