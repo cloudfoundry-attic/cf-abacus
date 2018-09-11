@@ -14,8 +14,8 @@ const doPost = util.promisify(request.post);
 
 const env = {
   secured: process.env.SECURED === 'true',
-  systemClientId: process.env.CLIENT_ID,
-  systemClientSecret: process.env.CLIENT_SECRET,
+  systemClientId: process.env.SYSTEM_CLIENT_ID,
+  systemClientSecret: process.env.SYSTEM_CLIENT_SECRET,
   authServerURL: process.env.AUTH_SERVER || 'http://localhost:9882',
   collectorURL: process.env.COLLECTOR_URL || 'http://localhost:9080',
   reportingURL: process.env.REPORTING_URL || 'http://localhost:9088',

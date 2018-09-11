@@ -147,12 +147,12 @@
     "underscore": "^1.9.1"
   },
   "devDependencies": {
-    "abacus-cf-acceptance-test": "file:test/cf/acceptance/cloud-controller-test",
     "abacus-cf-broker-tests": "file:test/broker",
+    "abacus-cf-dependency-test": "file:test/dependency",
     "abacus-cf-integration-itest": "file:test/cf/integration",
     "abacus-cf-smoke": "file:test/cf/smoke",
     "abacus-cfpush": "file:tools/cfpush",
-    "abacus-dedup-id-acceptance-test": "file:test/cf/acceptance/dedup-id-test",
+    "abacus-dedup-id-scenario-test": "file:test/scenario/dedup-id-test",
     "abacus-eslint": "file:tools/eslint",
     "abacus-extensions-itest": "file:test/extensions",
     "abacus-mddoc": "file:tools/mddoc",
