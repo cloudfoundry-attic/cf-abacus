@@ -21,23 +21,23 @@
     "src/"
   ],
   "scripts": {
-    "acceptance": "abacus-mocha --command",
+    "dependency": "abacus-mocha --command",
     "test": "abacus-eslint",
     "generate-coverage": "true",
     "lint": "abacus-eslint",
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-cmdline": "file:../../../../tools/cmdline",
-    "abacus-oauth": "file:../../../../lib/utils/oauth",
-    "abacus-mocha": "file:../../../../tools/mocha",
+    "abacus-cmdline": "file:../../tools/cmdline",
+    "abacus-oauth": "file:../../lib/utils/oauth",
+    "abacus-mocha": "file:../../tools/mocha",
     "nyc": "^11.4.1",
-    "abacus-paging": "file:../../../../lib/utils/paging",
-    "abacus-wait": "file:../../../lib/wait"
+    "abacus-paging": "file:../../lib/utils/paging",
+    "abacus-wait": "file:../lib/wait"
   },
   "devDependencies": {
-    "abacus-eslint": "file:../../../../tools/eslint",
-    "abacus-publish": "file:../../../../tools/publish"
+    "abacus-eslint": "file:../../tools/eslint",
+    "abacus-publish": "file:../../tools/publish"
   },
   "nyc": {
     "cache": true,

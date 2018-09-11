@@ -12,13 +12,15 @@ const debug = require('abacus-debug')('abacus-dedup-id-test');
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
 
-const secured = process.env.SECURED === 'true';
-const systemClientId = process.env.CLIENT_ID;
-const systemClientSecret = process.env.CLIENT_SECRET;
-const authServerURL = process.env.AUTH_SERVER_URL || 'http://localhost:9882';
-const collectorURL = process.env.COLLECTOR_URL || 'http://localhost:9080';
-const reportingURL = process.env.REPORTING_URL || 'http://localhost:9088';
-const pollInterval = process.env.POLL_INTERVAL || 300;
+const env = {
+  secured: process.env.SECURED === 'true',
+  systemClientId: process.env.CLIENT_ID,
+  systemClientSecret: process.env.CLIENT_SECRET,
+  authServerURL: process.env.AUTH_SERVER_URL || 'http://localhost:9882',
+  collectorURL: process.env.COLLECTOR_URL || 'http://localhost:9080',
+  reportingURL: process.env.REPORTING_URL || 'http://localhost:9088',
+  pollInterval: process.env.POLL_INTERVAL || 300
+};
 
 const localMeterURL = 'http://localhost:9100';
 
@@ -86,12 +88,12 @@ describe('dedup acceptance test', () => {
       } catch (e) {
         debug('not ready yet: %o', e.message);
       }
-      await sleep(pollInterval);
+      await sleep(env.pollInterval);
     }
   };
 
   const sendUsage = async (usage) => {
-    const resp = await doPost(collectorURL + '/v1/metering/collected/usage',
+    const resp = await doPost(env.collectorURL + '/v1/metering/collected/usage',
       extend({ body: usage }, authHeader(systemToken)));
 
     expect(resp.statusCode).to.equal(202);
@@ -99,10 +101,10 @@ describe('dedup acceptance test', () => {
   };
 
   before((done) => {
-    if(!secured)
+    if(!env.secured)
       done();
     else {
-      systemToken = oauth.cache(authServerURL, systemClientId, systemClientSecret,
+      systemToken = oauth.cache(env.authServerURL, env.systemClientId, env.systemClientSecret,
         'abacus.usage.read abacus.usage.write'
       );
 
@@ -129,7 +131,7 @@ describe('dedup acceptance test', () => {
 
       await eventually(async () => {
         const report = await doGet(':url/v1/metering/organizations/:organization_id/aggregated/usage', extend ({
-          url: reportingURL,
+          url: env.reportingURL,
           organization_id: orgID
         }, authHeader(systemToken)));
 
