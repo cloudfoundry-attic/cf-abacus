@@ -16,7 +16,7 @@ const env = {
   secured: process.env.SECURED === 'true',
   systemClientId: process.env.CLIENT_ID,
   systemClientSecret: process.env.CLIENT_SECRET,
-  authServerURL: process.env.AUTH_SERVER_URL || 'http://localhost:9882',
+  authServerURL: process.env.AUTH_SERVER || 'http://localhost:9882',
   collectorURL: process.env.COLLECTOR_URL || 'http://localhost:9080',
   reportingURL: process.env.REPORTING_URL || 'http://localhost:9088',
   pollInterval: process.env.POLL_INTERVAL || 300
