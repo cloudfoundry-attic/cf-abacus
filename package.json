@@ -166,6 +166,7 @@
     "abacus-usage-collector-itest": "file:test/metering/collector",
     "abacus-usage-meter-itest": "file:test/metering/meter",
     "abacus-usage-reporting-itest": "file:test/aggregation/reporting",
+    "abacus-services-hours-scenario-test": "file:test/scenario/metering-plans/standard-services-hours",
     "angular": "1.5.10",
     "chai-as-promised": "^7.1.1",
     "chai-http": "3.0.0",
