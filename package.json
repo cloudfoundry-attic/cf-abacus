@@ -60,6 +60,8 @@
     "smoke": "export JOBS=1 && foreach smoke node_modules/:name yarn run smoke --",
     "extensions-itest": "export JOBS=1 && foreach extensions-itest node_modules/:name yarn run extensions-itest --",
     "acceptance": "export JOBS=1 && foreach acceptance node_modules/:name yarn run acceptance --",
+    "dependency": "export JOBS=1 && foreach dependency node_modules/:name yarn run dependency --",
+    "scenario": "export JOBS=1 && foreach scenario node_modules/:name yarn run scenario --",
     "pub": "export JOBS=1 && foreach abacus :path yarn run pub && publish",
     "cfpush": "bin/cfpush",
     "cfstage": "bin/cfstage",
