@@ -32,9 +32,11 @@
     "cfpush": "cfpush"
   },
   "dependencies": {
+    "abacus-debug": "file:../../utils/debug",
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-moment": "file:../../utils/moment",
-    "abacus-webapp": "file:../../utils/webapp"
+    "abacus-webapp": "file:../../utils/webapp",
+    "underscore": "^1.9.1"
   },
   "devDependencies": {
     "abacus-cfpush": "file:../../../tools/cfpush",
