@@ -10,6 +10,7 @@ const debug = require('abacus-debug')('abacus-service-hours-scenario-test');
 
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
+
 const env = {
   secured: process.env.SECURED === 'true',
   systemClientId: process.env.CLIENT_ID,
@@ -23,7 +24,7 @@ const env = {
 
 describe('standard services hours scenario test', () => {
   const timestamp = moment.now();
-  const hoursInMillis = 1 * 60 * 60000;
+  const hourInMillis = 1 * 60 * 60000;
   const resourceId = 'sampler-test-resource-id';
   const meteringPlanId = 'standard-services-hours';
   const planName = 'standard';
@@ -47,7 +48,7 @@ describe('standard services hours scenario test', () => {
       resource_instance_id: 'sampler-resource-instance-id',
       measured_usage: [{
         measure: 'duration',
-        quantity: hoursInMillis * hours
+        quantity: hourInMillis * hours
       }]
     };
 
