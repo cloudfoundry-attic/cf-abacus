@@ -7,7 +7,12 @@ applications:
   disk_quota: 512M
   env:
     CONF: default
-    DB: mongodb://localhost:27017
+    DB_COLLECTOR_URI: mongodb://localhost:27017
+    DB_METER_URI: mongodb://localhost:27017
+    DB_ACCUMULATOR_URI: mongodb://localhost:27017
+    DB_AGGREGATOR_URI: mongodb://localhost:27017
+    DB_BRIDGE_URI: mongodb://localhost:27017
+    DB_PLUGINS_URI: mongodb://localhost:27017
     API: https://api
     AUTH_SERVER: https://uaa
     DEBUG: e-abacus-*

@@ -9,7 +9,7 @@ applications:
     CONF: default
     DEBUG: e-abacus-*
     PROVISIONING: abacus-provisioning-plugin
-    DB: mongodb://localhost:27017
+    DB_URI: mongodb://localhost:27017
     ACCOUNT: abacus-account-plugin
     EUREKA: abacus-eureka-plugin
     SECURED: false
