@@ -26,6 +26,8 @@ matrix:
     - env:
       - DESCRIPTION=unit-tests
       - DB_URI=mongodb://localhost:27017
+      - DB_ACCUMULATOR_URI=mongodb://localhost:27017
+      - DB_AGGREGATOR_URI=mongodb://localhost:27017
       - JOBS=1
       node_js: 8.11.3
       services:
@@ -36,6 +38,8 @@ matrix:
       - DESCRIPTION=itests
       - RABBIT_URI=amqp://localhost:5672
       - DB_URI=mongodb://localhost:27017
+      - DB_ACCUMULATOR_URI=mongodb://localhost:27017
+      - DB_AGGREGATOR_URI=mongodb://localhost:27017
       - JOBS=1
       - CI_TEST=itest
       - DEBUG=abacus-usage-accumulator-itest
@@ -50,6 +54,8 @@ matrix:
       - DESCRIPTION=extended-tests
       - RABBIT_URI=amqp://localhost:5672
       - DB_URI=mongodb://localhost:27017
+      - DB_ACCUMULATOR_URI=mongodb://localhost:27017
+      - DB_AGGREGATOR_URI=mongodb://localhost:27017
       - JOBS=1
       - CI_TEST=extended
       node_js: 8.11.3
@@ -63,6 +69,8 @@ matrix:
       - DESCRIPTION=perf-tests
       - RABBIT_URI=amqp://localhost:5672
       - DB_URI=mongodb://localhost:27017
+      - DB_ACCUMULATOR_URI=mongodb://localhost:27017
+      - DB_AGGREGATOR_URI=mongodb://localhost:27017
       - JOBS=1
       - CI_TEST=perf
       node_js: 8.11.3

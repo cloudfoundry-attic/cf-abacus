@@ -4,5 +4,8 @@
 # Run this script with . ./localdb to configure your shell env before running Abacus
 
 export DB_URI=mongodb://localhost:27017
+export DB_ACCUMULATOR_URI=$DB_URI
+export DB_AGGREGATOR_URI=$DB_URI
+
 export RABBIT_URI=amqp://localhost:5672
 export JOBS=1

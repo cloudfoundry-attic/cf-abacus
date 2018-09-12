@@ -105,11 +105,7 @@ describe('abacus-usage-reporting-itest', () => {
     const modules = [lifecycleManager.modules.accountPlugin, lifecycleManager.modules.reporting];
 
     dbclient.drop(process.env.DB_URI, /^abacus-/, () => {
-      const appsEnv = extend({}, process.env, {
-        DB_ACCUMULATOR_URI: process.env.DB_URI,
-        DB_AGGREGATOR_URI: process.env.DB_URI
-      });
-      lifecycleManager.useEnv(appsEnv).startModules(modules);
+      lifecycleManager.startModules(modules);
     });
   });
 
