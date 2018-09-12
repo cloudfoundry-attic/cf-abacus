@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "abacus-launcher": "file:../../utils/launcher",
+    "abacus-moment": "file:../../utils/moment",
     "abacus-webapp": "file:../../utils/webapp"
   },
   "devDependencies": {
