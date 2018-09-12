@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "version": "1.1.3",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/acceptance/standard-services-hours-test/",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/scenario/metering-plans",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -29,13 +29,13 @@
     "pub": "publish"
   },
   "devDependencies": {
-    "abacus-oauth": "file:../../../../lib/utils/oauth",
-    "abacus-debug": "file:../../../../lib/utils/debug",
-    "abacus-eslint": "file:../../../../tools/eslint",
-    "abacus-mocha": "file:../../../../tools/mocha",
-    "abacus-moment": "file:../../../../lib/utils/moment",
-    "abacus-publish": "file:../../../../tools/publish",
-    "abacus-request": "file:../../../../lib/utils/request",
+    "abacus-oauth": "file:../../../lib/utils/oauth",
+    "abacus-debug": "file:../../../lib/utils/debug",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-moment": "file:../../../lib/utils/moment",
+    "abacus-publish": "file:../../../tools/publish",
+    "abacus-request": "file:../../../lib/utils/request",
     "nyc": "^11.4.1",
     "uuid": "^3.2.1"
   },

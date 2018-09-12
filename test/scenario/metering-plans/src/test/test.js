@@ -24,7 +24,7 @@ const env = {
 
 describe('standard services hours scenario test', () => {
   const timestamp = moment.now();
-  const hourInMillis = 1 * 60 * 60000;
+  const hourInMillis = 60 * 60 * 1000;
   const resourceId = 'sampler-test-resource-id';
   const meteringPlanId = 'standard-services-hours';
   const planName = 'standard';
