@@ -21,34 +21,34 @@
     "src/"
   ],
   "scripts": {
-    "itest": "abacus-eslint && abacus-mocha --command",
+    "integration": "abacus-eslint && abacus-mocha --command",
     "test": "abacus-eslint",
     "generate-coverage": "true",
     "lint": "abacus-eslint",
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-account-plugin": "file:../../../lib/plugins/account",
-    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-account-plugin": "file:../../../../lib/plugins/account",
+    "abacus-mocha": "file:../../../../tools/mocha",
     "nyc": "^11.4.1",
-    "abacus-batch": "file:../../../lib/utils/batch",
-    "abacus-dbclient": "file:../../../lib/utils/dbclient",
-    "abacus-debug": "file:../../../lib/utils/debug",
-    "abacus-express": "file:../../../lib/utils/express",
-    "abacus-request": "file:../../../lib/utils/request",
-    "abacus-router": "file:../../../lib/utils/router",
-    "abacus-throttle": "file:../../../lib/utils/throttle",
-    "abacus-urienv": "file:../../../lib/utils/urienv",
-    "abacus-usage-reporting": "file:../../../lib/aggregation/reporting",
-    "abacus-lifecycle-manager": "file:../../lib/lifecycle-manager",
-    "abacus-yieldable": "file:../../../lib/utils/yieldable",
+    "abacus-batch": "file:../../../../lib/utils/batch",
+    "abacus-dbclient": "file:../../../../lib/utils/dbclient",
+    "abacus-debug": "file:../../../../lib/utils/debug",
+    "abacus-express": "file:../../../../lib/utils/express",
+    "abacus-request": "file:../../../../lib/utils/request",
+    "abacus-router": "file:../../../../lib/utils/router",
+    "abacus-throttle": "file:../../../../lib/utils/throttle",
+    "abacus-urienv": "file:../../../../lib/utils/urienv",
+    "abacus-usage-reporting": "file:../../../../lib/aggregation/reporting",
+    "abacus-lifecycle-manager": "file:../../../lib/lifecycle-manager",
+    "abacus-yieldable": "file:../../../../lib/utils/yieldable",
     "bignumber.js": "^2.1.0",
     "underscore": "^1.9.1",
     "commander": "2.8.1"
   },
   "devDependencies": {
-    "abacus-eslint": "file:../../../tools/eslint",
-    "abacus-publish": "file:../../../tools/publish"
+    "abacus-eslint": "file:../../../../tools/eslint",
+    "abacus-publish": "file:../../../../tools/publish"
   },
   "nyc": {
     "cache": true,

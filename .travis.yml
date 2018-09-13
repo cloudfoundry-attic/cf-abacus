@@ -33,11 +33,11 @@ matrix:
       script:
         - yarn run build && yarn run generate-coverage && yarn run report-coverage
     - env:
-      - DESCRIPTION=itests
+      - DESCRIPTION=integration-tests
       - RABBIT_URI=amqp://localhost:5672
       - DB=mongodb://localhost:27017
       - JOBS=1
-      - CI_TEST=itest
+      - CI_TEST=integration
       - DEBUG=abacus-usage-accumulator-itest
       node_js: 8.11.3
       services:

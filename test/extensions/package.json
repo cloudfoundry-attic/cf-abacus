@@ -23,7 +23,6 @@
   "scripts": {
     "extensions-itest": "abacus-eslint && abacus-mocha --command",
     "test": "abacus-eslint",
-    "itest": "true",
     "generate-coverage": "true",
     "lint": "abacus-eslint",
     "pub": "publish"

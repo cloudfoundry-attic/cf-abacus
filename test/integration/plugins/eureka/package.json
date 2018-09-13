@@ -1,6 +1,6 @@
 {
-  "name": "abacus-secured-itest",
-  "description": "Secured Abacus tests",
+  "name": "abacus-eureka-integration-test",
+  "description": "Abacus Eureka Integration tests",
   "license": "Apache-2.0",
   "version": "1.1.3",
   "private": true,
@@ -21,22 +21,22 @@
     "src/"
   ],
   "scripts": {
-    "itest": "abacus-eslint && abacus-mocha --command",
+    "integration": "abacus-eslint && abacus-mocha --command",
     "test": "abacus-eslint",
     "generate-coverage": "true",
     "lint": "abacus-eslint",
     "pub": "publish"
   },
   "devDependencies": {
-    "abacus-debug": "file:../../lib/utils/debug",
-    "abacus-eureka": "file:../../lib/utils/eureka",
-    "abacus-eureka-plugin": "file:../../lib/plugins/eureka",
-    "abacus-authserver-plugin": "file:../../lib/plugins/authserver",
-    "abacus-eslint": "file:../../tools/eslint",
-    "abacus-mocha": "file:../../tools/mocha",
+    "abacus-debug": "file:../../../lib/utils/debug",
+    "abacus-eureka": "file:../../../lib/utils/eureka",
+    "abacus-eureka-plugin": "file:../../../lib/plugins/eureka",
+    "abacus-authserver-plugin": "file:../../../lib/plugins/authserver",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
     "nyc": "^11.4.1",
-    "abacus-lifecycle-manager": "file:../lib/lifecycle-manager",
-    "abacus-publish": "file:../../tools/publish",
+    "abacus-lifecycle-manager": "file:../../lib/lifecycle-manager",
+    "abacus-publish": "file:../../../tools/publish",
     "underscore": "^1.9.1",
     "commander": "2.8.1"
   },
