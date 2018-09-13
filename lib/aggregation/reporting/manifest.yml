@@ -1,59 +1,20 @@
 applications:
-- name: bash-reporting
-  buildpack: https://github.com/cloudfoundry/nodejs-buildpack.git#v1.6.23
+- name: abacus-usage-reporting
+  host: abacus-usage-reporting
+  path: .
+  instances: 1
+  memory: 512M
   disk_quota: 512M
   env:
-    ACCOUNT: abacus-account-plugin
-    API: https://api.cf.sap.hana.ondemand.com:443
-    AUTH_SERVER: https://api.cf.sap.hana.ondemand.com:443
-    BATCH_SIZE: "10"
-    BREAKER_TIMEOUT: "120000"
-    CLIENT_ID: abacus
-    CLIENT_SECRET: s3cr3tpass?system!
-    CLUSTER: "false"
-    CONF: xlarge
-    CONNECTION_TIMEOUT: "360000"
-    CUSTOM_METRICS: "true"
-    DBALIAS_ACCUMULATOR: db-common
-    DBALIAS_AGGREGATOR: db-aggregator
-    DBCLIENT: abacus-mongoclient
-    DEBUG: e-abacus*
-    DEBUG_STRIPLF: "true"
-    EUREKA: abacus-eureka-plugin
-    EUREKA_PASSWORD: s3cr3tpass?hystrix!
-    EUREKA_USER: abacus-hystrix
-    EVAL_TIMEOUT: "2000"
-    EVAL_VMTYPE: vm
-    IGNORE_ORGANIZATION: "true"
-    JWTALGO: RS256
-    JWTKEY: |
-      -----BEGIN PUBLIC KEY-----
-      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy1Jr7/BFnTUbVOOgDVyg
-      yQlm1oStUkDXhXHOA2EJxvwQT4NGNB4zD0Nyr1K5mEQVSq7/kL0ha7CbGkBy1y0I
-      gZjEktsK1qoxOnlAQstFz1DR453KqwL4sqQKIphFcyOv7qTUfcbjc8kIS/fKbzKU
-      UWD8rz0ULJyhj2/My1uwwRK1qwtI10FLBVV/IO1ADSK+7Z+6NAya+7eqvJ9vTKoT
-      O3ZUzrEeGZSOYmdV01d0jtpDtYmaspoP/xbnNSFR7yyCZprlsvNSlHiYgKu8WTXQ
-      uRVnLASulhcDb+4ud89yHKFAlLQbw4U2caWSzAAPUGhICYljFtzlIG8qwuRGHbpM
-      swIDAQAB
-      -----END PUBLIC KEY-----
-    NODE_MODULES_CACHE: "false"
-    OPTIMIZE_MEMORY: "true"
-    PRIMARY_DOMAIN: cf.sap.hana.ondemand.com
+    CONF: default
+    DEBUG: e-abacus-*
     PROVISIONING: abacus-provisioning-plugin
-    REPLAY: "1800000"
-    SECURED: "true"
-    SKIP_SSL_VALIDATION: "false"
-    THROTTLE: "100"
-  instances: 1
-  memory: 8G
-  routes:
-  - route: bash-reporting.cf.sap.hana.ondemand.com
-  services:
-  - db-common
-  - db-common-1
-  - db-common-2
-  - db-common-3
-  - db-aggregator-0
-  - db-aggregator-1
-  - db-aggregator-2
-  stack: cflinuxfs2
+    ACCOUNT: abacus-account-plugin
+    DB: mongodb://localhost:27017
+    EUREKA: abacus-eureka-plugin
+    SECURED: false
+    # AUTH_SERVER:
+    # CLIENT_ID:
+    # CLIENT_SECRET:
+    # JWTKEY:
+    # JWTALGO:
