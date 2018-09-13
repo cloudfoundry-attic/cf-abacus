@@ -164,7 +164,7 @@
     "abacus-publish": "file:tools/publish",
     "abacus-replace-template": "file:tools/replace-template",
     "abacus-secured-itest": "file:test/secured",
-    "abacus-services-hours-scenario-test": "file:test/scenario/metering-plans/standard-services-hours",
+    "abacus-services-hours-scenario-test": "file:test/scenario/metering-plans",
     "abacus-usage-accumulator-itest": "file:test/aggregation/accumulator",
     "abacus-usage-aggregator-itest": "file:test/aggregation/aggregator",
     "abacus-usage-collector-itest": "file:test/metering/collector",

@@ -878,7 +878,7 @@
     uuid "3.1.0"
     winston "2.3.1"
 
-"abacus-services-hours-scenario-test@file:test/scenario/metering-plans/standard-services-hours":
+"abacus-services-hours-scenario-test@file:test/scenario/metering-plans":
   version "1.1.3"
 
 "abacus-test-utils@file:test/test-utils":

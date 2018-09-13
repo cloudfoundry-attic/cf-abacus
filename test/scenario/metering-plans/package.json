@@ -30,7 +30,6 @@
   },
   "devDependencies": {
     "abacus-oauth": "file:../../../lib/utils/oauth",
-    "abacus-debug": "file:../../../lib/utils/debug",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-moment": "file:../../../lib/utils/moment",

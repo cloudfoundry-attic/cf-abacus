@@ -28,15 +28,12 @@
     "pub": "publish"
   },
   "devDependencies": {
-    "abacus-batch": "file:../../../lib/utils/batch",
-    "abacus-debug": "file:../../../lib/utils/debug",
+    "abacus-oauth": "file:../../../lib/utils/oauth",
     "abacus-eslint": "file:../../../tools/eslint",
-    "abacus-express": "file:../../../lib/utils/express",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-moment": "file:../../../lib/utils/moment",
     "abacus-publish": "file:../../../tools/publish",
     "abacus-request": "file:../../../lib/utils/request",
-    "commander": "2.8.1",
     "nyc": "^11.4.1",
     "underscore": "^1.9.1",
     "uuid": "^3.2.1"

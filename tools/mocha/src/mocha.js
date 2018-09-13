@@ -4,6 +4,7 @@ const Mocha = require('mocha');
 const commander = require('commander');
 const async = require('async');
 const chai = require('chai');
+const { setEventuallyPollingInterval, eventually } = require('./lib/eventually');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 
@@ -35,6 +36,8 @@ const runCLI = () => {
   global.stub = global.sinon.stub;
   global.assert = global.sinon.assert;
   global.stubModule = require('./lib/stubber');
+  global.setEventuallyPollingInterval = setEventuallyPollingInterval;
+  global.eventually = eventually;
 
   // Save the original process send method as it may be mocked by the tests
   const processSend = process.send.bind(process);

@@ -7,8 +7,6 @@ const { extend } = require('underscore');
 const util = require('util');
 const uuid = require('uuid');
 
-const debug = require('abacus-debug')('abacus-dedup-id-test');
-
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
 
@@ -77,21 +75,6 @@ describe('dedup acceptance test', () => {
     return url;
   };
 
-  const sleep = (duration) => {
-    return new Promise((cb) => setTimeout(cb, duration));
-  };
-
-  const eventually = async (func) => {
-    while (true) {
-      try {
-        return await func();
-      } catch (e) {
-        debug('not ready yet: %o', e.message);
-      }
-      await sleep(env.pollInterval);
-    }
-  };
-
   const sendUsage = async (usage) => {
     const resp = await doPost(env.collectorURL + '/v1/metering/collected/usage',
       extend({ body: usage }, authHeader(systemToken)));
@@ -100,19 +83,16 @@ describe('dedup acceptance test', () => {
     return buildCorrectLocationHeaderUrl(resp.headers.location);
   };
 
-  before((done) => {
-    if(!env.secured)
-      done();
-    else {
+  before(async() => {
+    if(env.secured) {
       systemToken = oauth.cache(env.authServerURL, env.systemClientId, env.systemClientSecret,
         'abacus.usage.read abacus.usage.write'
       );
 
-      systemToken.start((err) => {
-        if (err) done(new Error(`Unable to obtain system oAuth token due to ${err}`));
-        else done();
-      });
+      const promisifiedTokenStart = util.promisify(systemToken.start);
+      await promisifiedTokenStart();
     }
+    setEventuallyPollingInterval(env.pollInterval);
   });
 
   beforeEach(() => {

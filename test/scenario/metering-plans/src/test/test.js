@@ -6,16 +6,14 @@ const request = require('abacus-request');
 const util = require('util');
 const uuid = require('uuid');
 
-const debug = require('abacus-debug')('abacus-service-hours-scenario-test');
-
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
 
 const env = {
   secured: process.env.SECURED === 'true',
-  systemClientId: process.env.CLIENT_ID,
-  systemClientSecret: process.env.CLIENT_SECRET,
-  authServerURL: process.env.AUTH_SERVER_URL || 'http://localhost:9882',
+  systemClientId: process.env.SYSTEM_CLIENT_ID,
+  systemClientSecret: process.env.SYSTEM_CLIENT_SECRET,
+  authServerURL: process.env.AUTH_SERVER || 'http://localhost:9882',
   collectorURL: process.env.COLLECTOR_URL || 'http://localhost:9080',
   reportingURL: process.env.REPORTING_URL || 'http://localhost:9088',
   provisioningURL: process.env.PROVISIONING_URL || 'http://localhost:9880',
@@ -53,21 +51,6 @@ describe('standard services hours scenario test', () => {
     };
 
     return usageDoc;
-  };
-
-  const sleep = (duration) => {
-    return new Promise((cb) => setTimeout(cb, duration));
-  };
-
-  const eventually = async (func) => {
-    while (true) {
-      try {
-        return await func();
-      } catch (e) {
-        debug('not ready yet: %o', e.message);
-      }
-      await sleep(env.pollInterval);
-    }
   };
 
   const sendUsage = async (usage) => {
@@ -117,13 +100,15 @@ describe('standard services hours scenario test', () => {
       const promisifiedTokenStart = util.promisify(systemToken.start);
       await promisifiedTokenStart();
     }
+
+    setEventuallyPollingInterval(env.pollInterval);
+
     await Promise.all([
       createMeteringMapping(resourceId, planName, meteringPlanId, systemToken),
       createRatingMapping(resourceId, planName, meteringPlanId, systemToken),
       createPricingMapping(resourceId, planName, meteringPlanId, systemToken)
     ]);
   });
-
 
   context('submit usages', () => {
     beforeEach(() => {
