@@ -170,6 +170,7 @@
     "abacus-usage-collector-integration-test": "file:test/integration/metering/collector",
     "abacus-usage-meter-integration-test": "file:test/integration/metering/meter",
     "abacus-usage-reporting-integration-test": "file:test/integration/aggregation/reporting",
+    "abacus-rabbitmq-integration-test": "file:test/integration/utils/rabbitmq",
     "angular": "1.5.10",
     "chai-as-promised": "^7.1.1",
     "chai-http": "3.0.0",
