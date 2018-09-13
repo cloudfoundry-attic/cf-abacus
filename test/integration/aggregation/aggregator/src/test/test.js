@@ -93,6 +93,10 @@ const calculateQuantityByWindow = (e, u, w, m, f) => {
 // [Second, Minute, Hour, Day, Month]
 const dimensions = ['s', 'm', 'h', 'D', 'M'];
 
+const getId = (id) => {
+  return id === 0 ? 0 : 2;
+};
+
 // Builds the quantity array in the accumulated usage
 const buildAccumulatedWindows = (e, u, m, f) => map(dimensions, (d) => {
   // If this is the first usage, only return current
@@ -310,7 +314,7 @@ describe('abacus-usage-aggregator-itest', () => {
               id: riid(o, i),
               t: dbclient.t(uid(o, ri, u)),
               conid: cid(o, i),
-              planid: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2), rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join(
+              planid: [pid(getId(i)), mpid(getId(i)), rpid(getId(i)), ppid(getId(i))].join(
                 '/'
               )
             };
@@ -341,19 +345,23 @@ describe('abacus-usage-aggregator-itest', () => {
 
       // Create plan aggregations
       return create(plans, (i) => ({
-        plan_id: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2), rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
-        metering_plan_id: mpid(i === 0 ? 0 : 2),
-        rating_plan_id: rpid(i === 0 ? 0 : 2),
-        pricing_plan_id: ppid(i === 0 ? 0 : 2),
+        plan_id: [pid(getId(i)), mpid(getId(i)), rpid(getId(i)), ppid(getId(i))].join('/'),
+        metering_plan_id: mpid(getId(i)),
+        rating_plan_id: rpid(getId(i)),
+        pricing_plan_id: ppid(getId(i)),
         aggregated_usage: a(ri, u, i, count, true),
         resource_instances: riagg(
           o,
           ri,
           u,
           conid,
-          [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2), rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/')
+          [pid(getId(i)), mpid(getId(i)), rpid(getId(i)), ppid(getId(i))].join('/')
         )
       }));
+    };
+
+    const getConsumerId = (i, s) => {
+      return i === 0 ? s : s === 0 ? 4 : 5;
     };
 
     // Consumer-level Resource Aggregation
@@ -363,7 +371,7 @@ describe('abacus-usage-aggregator-itest', () => {
 
       // Create resource aggregations
       return create(consumers, (i) => ({
-        consumer_id: cid(o, i === 0 ? s : s === 0 ? 4 : 5),
+        consumer_id: cid(o, getConsumerId(i, s)),
         resource_id: 'test-resource',
         plan_id: pid(ri),
         pricing_country: 'USA',
@@ -390,7 +398,7 @@ describe('abacus-usage-aggregator-itest', () => {
         resources: [
           {
             resource_id: 'test-resource',
-            plans: scpagg(o, ri, u, s, i, cid(o, i === 0 ? s : s === 0 ? 4 : 5))
+            plans: scpagg(o, ri, u, s, i, cid(o, getConsumerId(i, s)))
           }
         ]
       }));
@@ -403,7 +411,7 @@ describe('abacus-usage-aggregator-itest', () => {
 
       // Create resource aggregations
       return create(consumers, (i) => ({
-        id: cid(o, i === 0 ? s : s === 0 ? 4 : 5)
+        id: cid(o, getConsumerId(i, s))
       }));
     };
 
@@ -421,10 +429,10 @@ describe('abacus-usage-aggregator-itest', () => {
 
       // Create plan level aggregations
       return create(plans, (i) => ({
-        plan_id: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2), rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
-        metering_plan_id: mpid(i === 0 ? 0 : 2),
-        rating_plan_id: rpid(i === 0 ? 0 : 2),
-        pricing_plan_id: ppid(i === 0 ? 0 : 2),
+        plan_id: [pid(getId(i)), mpid(getId(i)), rpid(getId(i)), ppid(getId(i))].join('/'),
+        metering_plan_id: mpid(getId(i)),
+        rating_plan_id: rpid(getId(i)),
+        pricing_plan_id: ppid(getId(i)),
         aggregated_usage: a(ri, u, i, count, true)
       }));
     };
@@ -465,10 +473,10 @@ describe('abacus-usage-aggregator-itest', () => {
 
       // Create plan aggregations
       return create(plans, (i) => ({
-        plan_id: [pid(i === 0 ? 0 : 2), mpid(i === 0 ? 0 : 2), rpid(i === 0 ? 0 : 2), ppid(i === 0 ? 0 : 2)].join('/'),
-        metering_plan_id: mpid(i === 0 ? 0 : 2),
-        rating_plan_id: rpid(i === 0 ? 0 : 2),
-        pricing_plan_id: ppid(i === 0 ? 0 : 2),
+        plan_id: [pid(getId(i)), mpid(getId(i)), rpid(getId(i)), ppid(getId(i))].join('/'),
+        metering_plan_id: mpid(getId(i)),
+        rating_plan_id: rpid(getId(i)),
+        pricing_plan_id: ppid(getId(i)),
         aggregated_usage: a(ri, u, i, count, true)
       }));
     };
