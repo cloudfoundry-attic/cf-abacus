@@ -36,7 +36,8 @@
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-moment": "file:../../utils/moment",
     "abacus-webapp": "file:../../utils/webapp",
-    "underscore": "^1.9.1"
+    "underscore": "^1.9.1",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
     "abacus-cfpush": "file:../../../tools/cfpush",
