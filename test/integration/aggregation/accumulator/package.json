@@ -1,10 +1,10 @@
 {
   "name": "abacus-usage-accumulator-integration-test",
-  "description": "Usage accumulator integration and performance tests",
+  "description": "Accumulator integration tests",
   "license": "Apache-2.0",
   "version": "1.1.3",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/aggregation/accumulator",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/integration/aggregation/accumulator",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
