@@ -14,7 +14,8 @@
   },
   "keywords": [
     "cf",
-    "abacus"
+    "abacus",
+    "eval"
   ],
   "files": [
     ".npmrc",
@@ -29,7 +30,7 @@
   },
   "dependencies": {
     "abacus-debug": "file:../debug",
-    "vm2": "^3.4.6",
+    "vm2": "^3.6.3",
     "underscore": "^1.9.1"
   },
   "devDependencies": {
