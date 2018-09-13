@@ -121,7 +121,7 @@ describe('abacus-usage-aggregator-itest', () => {
   before(() => {
     const modules = [lifecycleManager.modules.accountPlugin, lifecycleManager.modules.aggregator];
 
-    dbclient.drop(process.env.DB, /^abacus-/, () => {
+    dbclient.drop(process.env.DB_URI, /^abacus-/, () => {
       lifecycleManager.startModules(modules);
     });
   });
