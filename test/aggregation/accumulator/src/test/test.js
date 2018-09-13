@@ -98,7 +98,7 @@ describe('abacus-usage-accumulator-itest', () => {
   before(() => {
     const modules = [lifecycleManager.modules.accumulator, lifecycleManager.modules.accountPlugin];
 
-    dbclient.drop(process.env.DB, /^abacus-/, () => {
+    dbclient.drop(process.env.DB_URI, /^abacus-/, () => {
       lifecycleManager.startModules(modules);
     });
   });

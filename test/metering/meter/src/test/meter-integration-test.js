@@ -33,7 +33,7 @@ describe('test meter app', () => {
     });
 
     // drop all abacus collections except plans and plan-mappings
-    dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, () => {
+    dbclient.drop(process.env.DB_URI, /^abacus-((?!plan).)*$/, () => {
       lifecycleManager.useEnv(customEnv).startModules(modules);
     });
 

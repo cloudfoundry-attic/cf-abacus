@@ -11,7 +11,7 @@ applications:
     AGGREGATOR: abacus-usage-aggregator
     PROVISIONING: abacus-provisioning-plugin
     ACCOUNT: abacus-account-plugin
-    DB: mongodb://localhost:27017
+    DB_URI: mongodb://localhost:27017
     EUREKA: abacus-eureka-plugin
     SECURED: false
     # AUTH_SERVER:

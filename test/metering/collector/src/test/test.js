@@ -77,7 +77,7 @@ describe('abacus-usage-collector-itest', () => {
     ];
 
     // drop all abacus collections except plans and plan-mappings
-    dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, (err) => {
+    dbclient.drop(process.env.DB_URI, /^abacus-((?!plan).)*$/, () => {
       if (err) return done(err);
       lifecycleManager.startModules(modules);
       return done();
