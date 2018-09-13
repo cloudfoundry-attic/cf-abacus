@@ -274,9 +274,9 @@
       "resolved": "https://registry.npmjs.org/ajv-keywords/-/ajv-keywords-3.2.0.tgz"
     },
     "amqp-connection-manager": {
-      "version": "2.1.1",
+      "version": "2.1.2",
       "from": "amqp-connection-manager@^2.0.0",
-      "resolved": "https://registry.npmjs.org/amqp-connection-manager/-/amqp-connection-manager-2.1.1.tgz"
+      "resolved": "https://registry.npmjs.org/amqp-connection-manager/-/amqp-connection-manager-2.1.2.tgz"
     },
     "amqplib": {
       "version": "0.5.2",
@@ -1134,9 +1134,9 @@
       "resolved": "https://registry.npmjs.org/lock/-/lock-0.1.4.tgz"
     },
     "lodash": {
-      "version": "4.17.10",
+      "version": "4.17.11",
       "from": "lodash@^4.17.4",
-      "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.10.tgz"
+      "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.11.tgz"
     },
     "lodash.includes": {
       "version": "4.3.0",
@@ -1737,7 +1737,7 @@
     },
     "vm2": {
       "version": "3.6.3",
-      "from": "vm2@>=3.4.6 <4.0.0",
+      "from": "vm2@>=3.6.3 <4.0.0",
       "resolved": "https://registry.npmjs.org/vm2/-/vm2-3.6.3.tgz"
     },
     "which": {

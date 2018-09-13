@@ -30,7 +30,7 @@ describe('healthcheck', function() {
       request.waitFor('http://localhost::p', { p: 9882 }, startTimeout, (err, value) => done(err));
     };
 
-    dbclient.drop(process.env.DB, /^abacus-/, startModules);
+    dbclient.drop(process.env.DB_URI, /^abacus-/, startModules);
   });
 
   after(() => {

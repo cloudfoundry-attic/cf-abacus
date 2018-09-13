@@ -19,12 +19,11 @@ const checkKeyPart = partition.partitioner(
   true
 );
 
-const dbalias = process.env.DBALIAS || 'db';
 const uris = urienv({
-  [dbalias]: 5984
+  db_uri: 5984
 });
 
-const db = dbClient(checkKeyPart, dbClient.dburi(uris[dbalias], 'abacus-carry-over'));
+const db = dbClient(checkKeyPart, dbClient.dburi(uris.db_uri, 'abacus-carry-over'));
 const getAllDocs = yieldable(db.allDocs);
 const putDoc = yieldable(db.put);
 const drop = yieldable(dbClient.drop);
@@ -46,7 +45,7 @@ const readCurrentMonthDocs = function*(cb) {
     include_docs: true
   });
 
-  const docs = result.rows.map((row) => omit(row.doc, '_rev', '_id'));  
+  const docs = result.rows.map((row) => omit(row.doc, '_rev', '_id'));
   return docs;
 };
 
@@ -67,12 +66,13 @@ const isDbAvailable = function*() {
 };
 
 const setup = function*() {
-  yield drop(process.env.DB, /^abacus-/);
+  yield drop(process.env.DB_URI, /^abacus-/);
   yield waitUntil(isDbAvailable);
 };
 
 const teardown = () => {
-  if (!process.env.DB) lifecycleManager.stopAllStarted();
+  if (!process.env.DB_URI)
+    lifecycleManager.stopAllStarted();
 };
 
 module.exports.readCurrentMonthDocs = readCurrentMonthDocs;

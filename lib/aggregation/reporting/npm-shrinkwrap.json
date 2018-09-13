@@ -27,11 +27,6 @@
       "from": "../../utils/cluster",
       "resolved": "file:../../utils/cluster"
     },
-    "abacus-counter": {
-      "version": "1.1.3",
-      "from": "../../utils/counter",
-      "resolved": "file:../../utils/counter"
-    },
     "abacus-dataflow": {
       "version": "1.1.3",
       "from": "../../utils/dataflow",
@@ -312,6 +307,11 @@
       "version": "1.0.0",
       "from": "assert-plus@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/assert-plus/-/assert-plus-1.0.0.tgz"
+    },
+    "async": {
+      "version": "2.6.1",
+      "from": "async@>=2.6.0 <3.0.0",
+      "resolved": "https://registry.npmjs.org/async/-/async-2.6.1.tgz"
     },
     "asynckit": {
       "version": "0.4.0",
@@ -1082,9 +1082,15 @@
       "resolved": "https://registry.npmjs.org/lock/-/lock-0.1.4.tgz"
     },
     "lodash": {
+<<<<<<< HEAD
       "version": "4.17.10",
       "from": "lodash@^4.17.4",
       "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.10.tgz"
+=======
+      "version": "4.17.11",
+      "from": "lodash@^4.17.4",
+      "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.11.tgz"
+>>>>>>> ee2eb705181f92983a3658e758a079cd2b4ddf8d
     },
     "lodash.includes": {
       "version": "4.3.0",
@@ -1680,7 +1686,7 @@
     },
     "vm2": {
       "version": "3.6.3",
-      "from": "vm2@>=3.4.6 <4.0.0",
+      "from": "vm2@>=3.6.3 <4.0.0",
       "resolved": "https://registry.npmjs.org/vm2/-/vm2-3.6.3.tgz"
     },
     "which": {
