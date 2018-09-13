@@ -649,6 +649,12 @@
       "from": "media-typer@0.3.0",
       "resolved": "https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz"
     },
+    "memory-pager": {
+      "version": "1.1.0",
+      "from": "memory-pager@>=1.0.2 <2.0.0",
+      "resolved": "https://registry.npmjs.org/memory-pager/-/memory-pager-1.1.0.tgz",
+      "optional": true
+    },
     "merge-descriptors": {
       "version": "1.0.1",
       "from": "merge-descriptors@1.0.1",
@@ -869,9 +875,9 @@
       "resolved": "https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz"
     },
     "saslprep": {
-      "version": "1.0.1",
-      "from": "saslprep@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/saslprep/-/saslprep-1.0.1.tgz",
+      "version": "1.0.2",
+      "from": "saslprep@^1.0.0",
+      "resolved": "https://registry.npmjs.org/saslprep/-/saslprep-1.0.2.tgz",
       "optional": true
     },
     "semver": {
@@ -903,6 +909,12 @@
       "version": "0.5.9",
       "from": "source-map-support@>=0.3.2 <=1.0.0",
       "resolved": "https://registry.npmjs.org/source-map-support/-/source-map-support-0.5.9.tgz"
+    },
+    "sparse-bitfield": {
+      "version": "3.0.3",
+      "from": "sparse-bitfield@>=3.0.3 <4.0.0",
+      "resolved": "https://registry.npmjs.org/sparse-bitfield/-/sparse-bitfield-3.0.3.tgz",
+      "optional": true
     },
     "sprintf-js": {
       "version": "1.0.3",
