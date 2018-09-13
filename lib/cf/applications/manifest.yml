@@ -11,7 +11,7 @@ applications:
     COLLECTOR: abacus-usage-collector
     EUREKA: abacus-eureka-plugin
     API: api
-    DB: mongodb://localhost:27017
+    DB_URI: mongodb://localhost:27017
     CF_CLIENT_ID: abacus-cf-applications
     CF_CLIENT_SECRET: secret
     SECURED: false
