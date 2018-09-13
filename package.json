@@ -86,7 +86,6 @@
     "abacus-client": "file:lib/utils/client",
     "abacus-clone": "file:lib/utils/clone",
     "abacus-cluster": "file:lib/utils/cluster",
-    "abacus-counter": "file:lib/utils/counter",
     "abacus-dataflow": "file:lib/utils/dataflow",
     "abacus-dbclient": "file:lib/utils/dbclient",
     "abacus-dbcommons": "file:lib/utils/dbcommons",
