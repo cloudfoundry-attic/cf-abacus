@@ -3,12 +3,12 @@
 set -e
 
 case "$CI_TEST" in
-  itest)
+  integration)
     # Based on default limits in throttle and batch processing and
     # integration test matrix, we would need 2197 (= 13 * 13 * 13)
     # usage submissions to get above 90 percent regression coverage
 
-    yarn run itest -o 4 -i 4 -u 4 $@
+    yarn run integration -o 4 -i 4 -u 4 $@
     ;;
 
   extended)
