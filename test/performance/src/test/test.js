@@ -125,7 +125,7 @@ const systemToken = secured()
   ? oauth.cache(authServer, process.env.SYSTEM_CLIENT_ID, process.env.SYSTEM_CLIENT_SECRET, 'abacus.usage.read')
   : undefined;
 
-describe('abacus-perf-test', () => {
+describe('abacus-performance-test', () => {
   before((done) => {
     if (objectStorageToken)
       objectStorageToken.start((err) => {

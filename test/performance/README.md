@@ -1,4 +1,4 @@
-abacus-perf
+abacus-performance-test
 ===
 
 End to end performance tests.

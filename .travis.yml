@@ -38,7 +38,6 @@ matrix:
       - DB=mongodb://localhost:27017
       - JOBS=1
       - CI_TEST=integration
-      - DEBUG=abacus-usage-accumulator-itest
       node_js: 8.11.3
       services:
         - mongodb
@@ -60,11 +59,11 @@ matrix:
         - yarn run provision
         - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
     - env:
-      - DESCRIPTION=perf-tests
+      - DESCRIPTION=performance-tests
       - RABBIT_URI=amqp://localhost:5672
       - DB=mongodb://localhost:27017
       - JOBS=1
-      - CI_TEST=perf
+      - CI_TEST=performance
       node_js: 8.11.3
       services:
         - mongodb
