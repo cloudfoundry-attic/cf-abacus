@@ -29,13 +29,13 @@
   },
   "dependencies": {
     "abacus-debug": "file:../debug",
-    "lru-cache": "^2.6.5",
+    "lru-cache": "^4.1.3",
     "underscore": "^1.9.1"
   },
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "nyc": "^11.4.1",
+    "nyc": "^13.0.1",
     "abacus-publish": "file:../../../tools/publish"
   },
   "nyc": {
