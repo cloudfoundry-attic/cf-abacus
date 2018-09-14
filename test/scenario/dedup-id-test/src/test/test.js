@@ -10,14 +10,15 @@ const uuid = require('uuid');
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
 
-const env = {
+const cfg = {
   secured: process.env.SECURED === 'true',
   systemClientId: process.env.SYSTEM_CLIENT_ID,
   systemClientSecret: process.env.SYSTEM_CLIENT_SECRET,
   authServerURL: process.env.AUTH_SERVER || 'http://localhost:9882',
   collectorURL: process.env.COLLECTOR_URL || 'http://localhost:9080',
   reportingURL: process.env.REPORTING_URL || 'http://localhost:9088',
-  pollInterval: process.env.POLL_INTERVAL || 300
+  pollInterval: process.env.POLL_INTERVAL || 300,
+  eventuallyTimeout: process.env.EVENTUALLY_TIMEOUT || 10000
 };
 
 const localMeterURL = 'http://localhost:9100';
@@ -34,15 +35,7 @@ describe('dedup acceptance test', () => {
 
   let systemToken;
 
-  const authHeader = (token) => {
-    return token ?
-      {
-        headers: {
-          authorization: token()
-        }
-      } :
-      {};
-  };
+  const authHeader = (token) => token ? { authorization: token()} : {};
 
   const buildUsageDoc = (orgID, dedupId) => {
     const usageDoc = {
@@ -70,29 +63,32 @@ describe('dedup acceptance test', () => {
 
   // On local environment GET by location header is not routed to meter
   const buildCorrectLocationHeaderUrl = (url) => {
-    if(url.indexOf('localhost') > -1)
+    if (url.indexOf('localhost') > -1)
       return localMeterURL + url.substring(url.indexOf('v1/') - 1, url.length);
     return url;
   };
 
   const sendUsage = async (usage) => {
-    const resp = await doPost(env.collectorURL + '/v1/metering/collected/usage',
-      extend({ body: usage }, authHeader(systemToken)));
+    const resp = await doPost(cfg.collectorURL + '/v1/metering/collected/usage', {
+      headers: authHeader(systemToken),
+      body: usage
+    });
 
     expect(resp.statusCode).to.equal(202);
     return buildCorrectLocationHeaderUrl(resp.headers.location);
   };
 
-  before(async() => {
-    if(env.secured) {
-      systemToken = oauth.cache(env.authServerURL, env.systemClientId, env.systemClientSecret,
+  before(async () => {
+    if (cfg.secured) {
+      systemToken = oauth.cache(cfg.authServerURL, cfg.systemClientId, cfg.systemClientSecret,
         'abacus.usage.read abacus.usage.write'
       );
 
       const promisifiedTokenStart = util.promisify(systemToken.start);
       await promisifiedTokenStart();
     }
-    setEventuallyPollingInterval(env.pollInterval);
+    setEventuallyPollingInterval(cfg.pollInterval);
+    setEventuallyTimeout(cfg.eventuallyTimeout);
   });
 
   beforeEach(() => {
@@ -101,7 +97,7 @@ describe('dedup acceptance test', () => {
     docWithDedupId = buildUsageDoc(orgId, dedupId);
   });
 
-  context('two consecutive documets with same timestamp', () => {
+  context('two consecutive documents with same timestamp', () => {
 
     const verifyReport = async (orgID, expectedQuantity) => {
       const heavyApiCallsIndex = 2;
@@ -110,10 +106,11 @@ describe('dedup acceptance test', () => {
       const monthsReport = 4;
 
       await eventually(async () => {
-        const report = await doGet(':url/v1/metering/organizations/:organization_id/aggregated/usage', extend ({
-          url: env.reportingURL,
+        const report = await doGet(':url/v1/metering/organizations/:organization_id/aggregated/usage', {
+          url: cfg.reportingURL,
+          headers: authHeader(systemToken),
           organization_id: orgID
-        }, authHeader(systemToken)));
+        });
 
         const resources = report.body.resources;
         expect(resources.length).to.equal(1);
@@ -164,8 +161,10 @@ describe('dedup acceptance test', () => {
     const verifyLocationHeader = async (locationHeader) => {
       const heavyApiCallsIndex = 0;
 
-      await eventually(async() => {
-        const response = await doGet(locationHeader, authHeader(systemToken));
+      await eventually(async () => {
+        const response = await doGet(locationHeader, {
+          headers: authHeader(systemToken)
+        });
 
         expect(response.statusCode).to.equal(200);
 

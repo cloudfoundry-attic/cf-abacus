@@ -28,7 +28,6 @@ const eventually = async (func, options) => {
   });
 
   while (moment.now() - start < eventuallyConfig.timeout) {
-    console.log(eventuallyConfig);
     try {
       return await func();
     } catch (e) {
