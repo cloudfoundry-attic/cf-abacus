@@ -42,6 +42,7 @@ matrix:
       - DB_AGGREGATOR_URI=mongodb://localhost:27017
       - JOBS=1
       - CI_TEST=itest
+      - DEBUG=abacus-usage-accumulator-itest
       node_js: 8.11.3
       services:
         - mongodb
