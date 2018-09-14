@@ -28,14 +28,14 @@
     "pub": "publish"
   },
   "dependencies": {
-    "co": "^3.0.6",
+    "co": "^4.6.0",
     "thunkify": "^2.1.2",
     "underscore": "^1.9.1"
   },
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "nyc": "^11.4.1",
+    "nyc": "^13.0.1",
     "abacus-publish": "file:../../../tools/publish"
   },
   "nyc": {
