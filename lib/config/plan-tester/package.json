@@ -40,8 +40,8 @@
     "abacus-pricing-config": "../pricing",
     "abacus-rating-config": "../rating",
     "abacus-urienv": "file:../../../lib/utils/urienv",
-    "nyc": "^11.4.1",
-    "bignumber.js": "^5.0.0"
+    "nyc": "^13.0.1",
+    "bignumber.js": "^7.2.1"
   },
   "nyc": {
     "cache": true,
