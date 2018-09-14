@@ -38,14 +38,14 @@
     "abacus-moment": "file:../moment",
     "abacus-transform": "file:../transform",
     "commander": "^2.8.1",
-    "request": "^2.79.0",
+    "request": "2.88.0",
     "underscore": "^1.9.1"
   },
   "devDependencies": {
     "abacus-batch": "file:../batch",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "nyc": "^11.4.1",
+    "nyc": "^13.0.1",
     "express": "^4.14.1",
     "abacus-publish": "file:../../../tools/publish"
   },
