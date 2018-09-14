@@ -1037,15 +1037,9 @@
       "resolved": "https://registry.npmjs.org/lock/-/lock-0.1.4.tgz"
     },
     "lodash": {
-<<<<<<< HEAD
-      "version": "4.17.10",
-      "from": "lodash@^4.17.4",
-      "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.10.tgz"
-=======
       "version": "4.17.11",
       "from": "lodash@^4.17.4",
       "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.11.tgz"
->>>>>>> ee2eb705181f92983a3658e758a079cd2b4ddf8d
     },
     "lodash.includes": {
       "version": "4.3.0",
