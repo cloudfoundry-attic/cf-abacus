@@ -7,7 +7,7 @@ const { extend } = require('underscore');
 const util = require('util');
 const uuid = require('uuid');
 
-const debug = require('abacus-debug')('abacus-dedup-id-test');
+const debug = require('abacus-debug')('abacus-dedup-id-scenario-test');
 
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
