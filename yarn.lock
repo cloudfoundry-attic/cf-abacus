@@ -270,19 +270,6 @@
     ajv "^6.0.0"
     underscore "^1.9.1"
 
-"abacus-cf-smoke@file:test/cf/smoke":
-  version "1.1.3"
-  dependencies:
-    abacus-clone "file:../../Library/Caches/lib/utils/clone"
-    abacus-dbclient "file:../../Library/Caches/lib/utils/dbclient"
-    abacus-mocha "file:../../Library/Caches/tools/mocha"
-    abacus-moment "file:../../Library/Caches/lib/utils/moment"
-    abacus-oauth "file:../../Library/Caches/lib/utils/oauth"
-    abacus-request "file:../../Library/Caches/lib/utils/request"
-    commander "^2.8.1"
-    nyc "^11.4.1"
-    underscore "^1.9.1"
-
 "abacus-cfpush@file:tools/cfpush":
   version "1.1.3"
   dependencies:
@@ -719,6 +706,19 @@
     abacus-request "file:../../Library/Caches/Yarn/utils/request"
     abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
     abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
+    underscore "^1.9.1"
+
+"abacus-process-usage-smoke-test@file:test/smoke/process-usage":
+  version "1.1.3"
+  dependencies:
+    abacus-clone "file:../../Library/Caches/lib/utils/clone"
+    abacus-dbclient "file:../../Library/Caches/lib/utils/dbclient"
+    abacus-mocha "file:../../Library/Caches/tools/mocha"
+    abacus-moment "file:../../Library/Caches/lib/utils/moment"
+    abacus-oauth "file:../../Library/Caches/lib/utils/oauth"
+    abacus-request "file:../../Library/Caches/lib/utils/request"
+    commander "^2.8.1"
+    nyc "^11.4.1"
     underscore "^1.9.1"
 
 "abacus-provisioning-plugin@file:lib/plugins/provisioning":

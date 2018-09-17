@@ -152,7 +152,7 @@
     "abacus-bridges-renewer-integration-test": "file:test/integration/cf/bridges-renewer",
     "abacus-cf-broker-tests": "file:test/broker",
     "abacus-cf-dependency-test": "file:test/dependency/cloud-controller",
-    "abacus-cf-smoke": "file:test/cf/smoke",
+    "abacus-process-usage-smoke-test": "file:test/smoke/process-usage",
     "abacus-cfpush": "file:tools/cfpush",
     "abacus-dedup-id-scenario-test": "file:test/scenario/dedup-id",
     "abacus-eslint": "file:tools/eslint",

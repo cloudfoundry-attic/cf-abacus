@@ -1,7 +1,7 @@
-abacus-cf-smoke
+abacus-process-usage-smoke-test
 ===
 
-`abacus` recurrent smoke test.
+`abacus` recurrent smoke test (process usage)
 
 In order to run the test locally, you need the following environment variables set:
 

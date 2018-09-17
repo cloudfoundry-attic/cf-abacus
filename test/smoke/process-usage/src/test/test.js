@@ -169,7 +169,7 @@ const authHeader = (token) =>
     }
     : {};
 
-describe('abacus-smoke-test', function() {
+describe('abacus-process-usage-smoke-test', function() {
   before(() => {
     if (objectStorageToken) objectStorageToken.start();
     if (systemToken) systemToken.start();
