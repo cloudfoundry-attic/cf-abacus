@@ -15,7 +15,7 @@ const testUtils = require('abacus-test-utils');
 
 const env = {
   api: process.env.CF_API_URI,
-  authServer: process.env.AUTH_SERVER,
+  authServer: process.env.AUTH_SERVER_URL,
   adminUser: process.env.CF_ADMIN_USER,
   adminUserPassword: process.env.CF_ADMIN_PASSWORD,
   uaaAdminSecret: process.env.UAA_SECRET,
