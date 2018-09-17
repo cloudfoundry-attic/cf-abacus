@@ -154,7 +154,7 @@
     "abacus-cf-dependency-test": "file:test/dependency/cloud-controller",
     "abacus-cf-smoke": "file:test/cf/smoke",
     "abacus-cfpush": "file:tools/cfpush",
-    "abacus-dedup-id-scenario-test": "file:test/scenario/dedup-id-test",
+    "abacus-dedup-id-scenario-test": "file:test/scenario/dedup-id",
     "abacus-eslint": "file:tools/eslint",
     "abacus-eureka-integration-test": "file:test/integration/plugins/eureka",
     "abacus-extensions-itest": "file:test/extensions",
