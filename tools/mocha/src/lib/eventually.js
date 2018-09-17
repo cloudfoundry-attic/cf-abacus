@@ -8,14 +8,16 @@ const edebug = require('abacus-debug')('e-abacus-mocha-eventually');
 const _defaultPollingIntervalInMillis = 100;
 const _defaultTimeoutInMillis = 60000;
 
-let _currentEventuallyConfig = {
-  pollingInterval: _defaultPollingIntervalInMillis,
-  timeout: _defaultTimeoutInMillis
-};
-
 const _sleep = (duration) => {
   return new Promise((cb) => setTimeout(cb, duration));
 };
+
+const _buildDefaultConfig = () => ({
+  pollingInterval: _defaultPollingIntervalInMillis,
+  timeout: _defaultTimeoutInMillis
+});
+
+let _currentEventuallyConfig = _buildDefaultConfig();
 
 const setEventuallyPollingInterval = (pollingInterval) => {
   _currentEventuallyConfig.pollingInterval = pollingInterval;
@@ -26,10 +28,7 @@ const setEventuallyTimeout = (timeout) => {
 };
 
 const resetEventuallyConfig = () => {
-  _currentEventuallyConfig = {
-    pollingInterval: _defaultPollingIntervalInMillis,
-    timeout: _defaultTimeoutInMillis
-  };
+  _currentEventuallyConfig = _buildDefaultConfig();
 };
 
 const eventually = async (func, options) => {
