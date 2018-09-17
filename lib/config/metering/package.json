@@ -37,7 +37,7 @@
     "abacus-request": "file:../../utils/request",
     "abacus-retry": "file:../../utils/retry",
     "abacus-urienv": "file:../../utils/urienv",
-    "bignumber.js": "^7.2.1",
+    "bignumber.js": "^2.1.0",
     "underscore": "^1.9.1"
   },
   "devDependencies": {
@@ -54,6 +54,11 @@
     ],
     "exclude": [
       "src/test/**"
+    ]
+  },
+  "greenkeeper": {
+    "ignore": [
+      "bignumber.js"
     ]
   },
   "engines": {

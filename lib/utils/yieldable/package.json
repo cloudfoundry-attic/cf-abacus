@@ -28,7 +28,7 @@
     "pub": "publish"
   },
   "dependencies": {
-    "co": "^4.6.0",
+    "co": "^3.0.6",
     "thunkify": "^2.1.2",
     "underscore": "^1.9.1"
   },
@@ -46,6 +46,11 @@
     ],
     "exclude": [
       "src/test/**"
+    ]
+  },
+  "greenkeeper": {
+    "ignore": [
+      "co"
     ]
   },
   "engines": {
