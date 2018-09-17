@@ -21,7 +21,7 @@ function getNewApps {
     echo "No apps found"
     APPS=()
   else
-    APPS=($(cf apps | tail -n +5 | grep -v "old" | awk '{print $1}' | grep -E "$1")
+    APPS=($(cf apps | tail -n +5 | grep -v "old" | awk '{print $1}' | grep -E "$1"))
     echo "Found ${#APPS[@]} applications ..."
   fi
 }
