@@ -14,7 +14,7 @@ const createUaaUtils = require('./utils/uaa-utils.js');
 const testUtils = require('abacus-test-utils');
 
 const env = {
-  api: process.env.API,
+  api: process.env.CF_API_URI,
   authServer: process.env.AUTH_SERVER,
   adminUser: process.env.CF_ADMIN_USER,
   adminUserPassword: process.env.CF_ADMIN_PASSWORD,
@@ -55,8 +55,6 @@ describe('Create and update plans acceptance test', () => {
   };
 
   before((done) => {
-    console.log(')))))))');
-    console.log(!correctEnvironment());
     if (!correctEnvironment()) throw new Error('This test cannot run without correct set up. ' +
       'Please check if all environment variables are set');
 
