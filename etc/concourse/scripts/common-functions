@@ -21,10 +21,11 @@ function getNewApps {
     echo "No apps found"
     APPS=()
   else
-    APPS=($(cf apps | tail -n +5 | grep -v "old" | grep -E "$1" | awk '{print $1}'))
+    APPS=($(cf apps | tail -n +5 | grep -v "old" | awk '{print $1}' | grep -E "$1")
     echo "Found ${#APPS[@]} applications ..."
   fi
 }
+
 
 function startApps {
   getNewApps
@@ -155,20 +156,19 @@ function createOrUpdateService {
   fi
 }
 
-function bindAppToService {
+function unbindAppFromService {
   app=$1
   instance_name=$2
 
-  echo "Binding app $app to service $instance_name"
-  waitForStatusAvailable $instance_name
-  cf bind-service $app $instance_name
+  echo "Unbinding app $app from service $instance_name"
+  cf unbind-service $app $instance_name
 }
 
-function bindGroupToService {
+function unbindGroupFromService {
   group=$1
   service=$2
 
-  echo "Binding group $group to service $service"
+  echo "Unbinding group $group from service $service"
 
   getNewApps "$group"
 
@@ -177,7 +177,7 @@ function bindGroupToService {
     instance_name=${instance%:*}
     for app in "${APPS[@]}"; do
       if [[ $instance_name =~ $service* ]]; then
-        bindAppToService $app $instance_name
+        unbindAppFromService $app $instance_name
       fi
     done
   done
