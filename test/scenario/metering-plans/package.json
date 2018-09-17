@@ -34,6 +34,7 @@
     "abacus-moment": "file:../../../lib/utils/moment",
     "abacus-publish": "file:../../../tools/publish",
     "abacus-request": "file:../../../lib/utils/request",
+    "http-status-codes": "^1.3.0",
     "uuid": "^3.2.1"
   },
   "engines": {

@@ -4,7 +4,8 @@ const Mocha = require('mocha');
 const commander = require('commander');
 const async = require('async');
 const chai = require('chai');
-const { setEventuallyPollingInterval, setEventuallyTimeout, eventually } = require('./lib/eventually');
+const { setEventuallyPollingInterval, setEventuallyTimeout, resetEventuallyConfig,
+  eventually } = require('./lib/eventually');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 
@@ -38,6 +39,7 @@ const runCLI = () => {
   global.stubModule = require('./lib/stubber');
   global.setEventuallyPollingInterval = setEventuallyPollingInterval;
   global.setEventuallyTimeout = setEventuallyTimeout;
+  global.resetEventuallyConfig = resetEventuallyConfig;
   global.eventually = eventually;
 
   // Save the original process send method as it may be mocked by the tests

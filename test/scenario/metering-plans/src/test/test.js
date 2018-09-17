@@ -5,6 +5,7 @@ const oauth = require('abacus-oauth');
 const request = require('abacus-request');
 const util = require('util');
 const uuid = require('uuid');
+const httpStatus = require('http-status-codes');
 
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
@@ -57,7 +58,7 @@ describe('standard services hours scenario test', () => {
       body: usage
     });
 
-    expect(resp.statusCode).to.equal(202);
+    expect(resp.statusCode).to.equal(httpStatus.ACCEPTED);
     return resp.headers.location;
   };
 

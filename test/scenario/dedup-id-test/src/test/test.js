@@ -6,6 +6,7 @@ const request = require('abacus-request');
 const { extend } = require('underscore');
 const util = require('util');
 const uuid = require('uuid');
+const httpStatus = require('http-status-codes');
 
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
@@ -69,12 +70,13 @@ describe('dedup acceptance test', () => {
   };
 
   const sendUsage = async (usage) => {
-    const resp = await doPost(cfg.collectorURL + '/v1/metering/collected/usage', {
+    const resp = await doPost(':url/v1/metering/collected/usage', {
+      url: cfg.collectorURL,
       headers: authHeader(systemToken),
       body: usage
     });
 
-    expect(resp.statusCode).to.equal(202);
+    expect(resp.statusCode).to.equal(httpStatus.ACCEPTED);
     return buildCorrectLocationHeaderUrl(resp.headers.location);
   };
 
@@ -166,7 +168,7 @@ describe('dedup acceptance test', () => {
           headers: authHeader(systemToken)
         });
 
-        expect(response.statusCode).to.equal(200);
+        expect(response.statusCode).to.equal(httpStatus.OK);
 
         const measuredUsage = response.body.measured_usage;
 
