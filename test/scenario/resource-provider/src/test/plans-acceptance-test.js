@@ -5,31 +5,31 @@ const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');
 const _ = require('underscore');
 const extend = _.extend;
+const values = _.values;
+const every = _.every;
 
-const debug = require('abacus-debug')('abacus-provisioning-itest');
+const debug = require('abacus-debug')('abacus-resource-provder-scenario-test');
 
 const createUaaUtils = require('./utils/uaa-utils.js');
 const testUtils = require('abacus-test-utils');
 
-const api = process.env.API;
-const authServer = process.env.AUTH_SERVER;
-const adminUser = process.env.CF_ADMIN_USER;
-const adminUserPassword = process.env.CF_ADMIN_PASSWORD;
-const uaaAdminSecret = process.env.UAA_SECRET;
-const abacusSysUser = process.env.SYSTEM_CLIENT_ID;
-const abacusSysPassword = process.env.SYSTEM_CLIENT_SECRET;
-const orgName = process.env.CF_ORG;
-const spaceName = process.env.CF_SPACE;
-const provisioningUrl = process.env.PROVISIONING_URL;
-const collectorUrl = process.env.COLLECTOR_URL;
-const reportingUrl = process.env.REPORTING_URL;
-const clientSecret = process.env.CLIENT_SECRET;
+const env = {
+  api: process.env.API,
+  authServer: process.env.AUTH_SERVER,
+  adminUser: process.env.CF_ADMIN_USER,
+  adminUserPassword: process.env.CF_ADMIN_PASSWORD,
+  uaaAdminSecret: process.env.UAA_SECRET,
+  abacusSysUser: process.env.SYSTEM_CLIENT_ID,
+  abacusSysPassword: process.env.SYSTEM_CLIENT_SECRET,
+  orgName: process.env.CF_ORG,
+  spaceName: process.env.CF_SPACE,
+  provisioningUrl: process.env.PROVISIONING_URL,
+  collectorUrl: process.env.COLLECTOR_URL,
+  reportingUrl: process.env.REPORTING_URL,
+  clientSecret: process.env.CLIENT_SECRET || 'test-secret'
+};
 
 describe('Create and update plans acceptance test', () => {
-
-  const cfUtils = cmdline.cfutils(api, adminUser, adminUserPassword);
-  const uaaUtils = createUaaUtils(authServer, uaaAdminSecret);
-  const abacusClient = testUtils.abacusClient(provisioningUrl, collectorUrl, reportingUrl);
 
   const prefix = moment.utc().valueOf();
   const resourceId = `${prefix}-test-resource-id`;
@@ -41,13 +41,35 @@ describe('Create and update plans acceptance test', () => {
   const resourceInstanceId = `${prefix}-123-456-789-101112131415d`;
   const consumerId = `app:${resourceInstanceId}`;
 
-  const usageToken = oauth.cache(api, resourceId, clientSecret,
-    `abacus.usage.${resourceId}.write,abacus.usage.${resourceId}.read`);
-  const systemToken = oauth.cache(api, abacusSysUser, abacusSysPassword,
-    'abacus.usage.write,abacus.usage.read');
+  let cfUtils;
+  let uaaUtils;
+  let abacusClient;
+
+  let usageToken;
+  let systemToken;
+
+  const correctEnvironment = () => {
+    return every(values(env), (value) => {
+      return typeof value !== 'undefined';
+    });
+  };
 
   before((done) => {
-    uaaUtils.createUaaClient(resourceId, clientSecret);
+    console.log(')))))))');
+    console.log(!correctEnvironment());
+    if (!correctEnvironment()) throw new Error('This test cannot run without correct set up. ' +
+      'Please check if all environment variables are set');
+
+    cfUtils = cmdline.cfutils(env.api, env.adminUser, env.adminUserPassword);
+    uaaUtils = createUaaUtils(env.authServer, env.uaaAdminSecret);
+    abacusClient = testUtils.abacusClient(env.provisioningUrl, env.collectorUrl, env.reportingUrl);
+
+    usageToken = oauth.cache(env.api, resourceId, env.clientSecret,
+      `abacus.usage.${resourceId}.write,abacus.usage.${resourceId}.read`);
+    systemToken = oauth.cache(env.api, env.abacusSysUser, env.abacusSysPassword,
+      'abacus.usage.write,abacus.usage.read');
+
+    uaaUtils.createUaaClient(resourceId, env.clientSecret);
     systemToken.start(() => {
       usageToken.start(done);
     });
@@ -246,9 +268,9 @@ describe('Create and update plans acceptance test', () => {
     let usageBody;
 
     before(() => {
-      const org = cfUtils.org.get(orgName);
+      const org = cfUtils.org.get(env.orgName);
       orgId = org.metadata.guid;
-      const space = cfUtils.space.get(orgId, spaceName);
+      const space = cfUtils.space.get(orgId, env.spaceName);
       spaceId = space.metadata.guid;
 
       const now = moment.utc().valueOf();

@@ -1,10 +1,10 @@
 {
-  "name": "abacus-provisioning-int-test",
-  "description": "Provisioning integration test",
+  "name": "abacus-resource-provider-scenario-test",
+  "description": "Resource provider scenario test",
   "license": "Apache-2.0",
   "version": "1.1.3",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tools/cmdline",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/test/sceanrio/resource-provider",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -22,19 +22,19 @@
     "src/"
   ],
   "scripts": {
-    "broker-itest": "abacus-eslint && abacus-mocha",
+    "scenario": "abacus-eslint && abacus-mocha",
     "test": "abacus-eslint",
     "generate-coverage": "true",
     "lint": "abacus-eslint",
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-cmdline": "file:../../tools/cmdline",
-    "abacus-test-utils": "file:../test-utils",
-    "abacus-moment": "file:../../lib/utils/moment",
-    "abacus-oauth": "file:../../lib/utils/oauth",
-    "abacus-request": "file:../../lib/utils/request",
-    "eslint-plugin-nodate": "file:../../tools/eslint-plugin-nodate",
+    "abacus-cmdline": "file:../../../tools/cmdline",
+    "abacus-test-utils": "file:../../test-utils",
+    "abacus-moment": "file:../../../lib/utils/moment",
+    "abacus-oauth": "file:../../../lib/utils/oauth",
+    "abacus-request": "file:../../../lib/utils/request",
+    "eslint-plugin-nodate": "file:../../../tools/eslint-plugin-nodate",
     "eslint-plugin-mocha": "^4.8.0",
     "request-debug": "^0.2.0",
     "underscore": "^1.9.1"
