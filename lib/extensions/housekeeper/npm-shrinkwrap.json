@@ -307,7 +307,7 @@
     },
     "co": {
       "version": "3.1.0",
-      "from": "co@>=3.0.6 <4.0.0",
+      "from": "co@>=3.1.0 <4.0.0",
       "resolved": "https://registry.npmjs.org/co/-/co-3.1.0.tgz"
     },
     "combined-stream": {
@@ -321,9 +321,9 @@
       "resolved": "https://registry.npmjs.org/commander/-/commander-2.18.0.tgz"
     },
     "compressible": {
-      "version": "2.0.14",
-      "from": "compressible@>=2.0.14 <2.1.0",
-      "resolved": "https://registry.npmjs.org/compressible/-/compressible-2.0.14.tgz"
+      "version": "2.0.15",
+      "from": "compressible@~2.0.14",
+      "resolved": "https://registry.npmjs.org/compressible/-/compressible-2.0.15.tgz"
     },
     "compression": {
       "version": "1.7.3",
@@ -470,9 +470,9 @@
       }
     },
     "express-rate-limit": {
-      "version": "3.1.1",
+      "version": "3.2.0",
       "from": "express-rate-limit@^3.1.1",
-      "resolved": "https://registry.npmjs.org/express-rate-limit/-/express-rate-limit-3.1.1.tgz"
+      "resolved": "https://registry.npmjs.org/express-rate-limit/-/express-rate-limit-3.2.0.tgz"
     },
     "extend": {
       "version": "3.0.2",
@@ -757,7 +757,7 @@
     },
     "mongodb": {
       "version": "2.2.36",
-      "from": "mongodb@^2.1",
+      "from": "mongodb@^2.2.36",
       "resolved": "https://registry.npmjs.org/mongodb/-/mongodb-2.2.36.tgz"
     },
     "mongodb-core": {
