@@ -1,10 +1,10 @@
 {
-  "name": "abacus-dedup-id-scenario-test",
-  "description": "Dedup id scenario tests",
+  "name": "abacus-services-hours-scenario-test",
+  "description": "Services hours scenario tests",
   "license": "Apache-2.0",
   "version": "1.1.3",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/test/scenario/dedup-id-test/",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/test/scenario/metering-plans",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -21,6 +21,7 @@
     "src/"
   ],
   "scripts": {
+    "acceptance": "yarn run scenario",
     "scenario": "abacus-eslint && abacus-mocha --command",
     "generate-coverage": "true",
     "test": "abacus-eslint",
@@ -35,8 +36,6 @@
     "abacus-publish": "file:../../../tools/publish",
     "abacus-request": "file:../../../lib/utils/request",
     "http-status-codes": "^1.3.0",
-    "nyc": "^11.4.1",
-    "underscore": "^1.9.1",
     "uuid": "^3.2.1"
   },
   "engines": {
