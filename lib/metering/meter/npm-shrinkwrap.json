@@ -359,9 +359,9 @@
       }
     },
     "bignumber.js": {
-      "version": "2.4.0",
-      "from": "bignumber.js@>=2.1.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/bignumber.js/-/bignumber.js-2.4.0.tgz"
+      "version": "2.1.0",
+      "from": "bignumber.js@2.1.0",
+      "resolved": "https://registry.npmjs.org/bignumber.js/-/bignumber.js-2.1.0.tgz"
     },
     "bitsyntax": {
       "version": "0.0.4",
@@ -472,7 +472,7 @@
     },
     "co": {
       "version": "3.1.0",
-      "from": "co@>=3.0.6 <4.0.0",
+      "from": "co@>=3.1.0 <4.0.0",
       "resolved": "https://registry.npmjs.org/co/-/co-3.1.0.tgz"
     },
     "color-convert": {
@@ -643,9 +643,9 @@
       "resolved": "https://registry.npmjs.org/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz"
     },
     "eslint": {
-      "version": "5.5.0",
-      "from": "eslint@~5.5.0",
-      "resolved": "https://registry.npmjs.org/eslint/-/eslint-5.5.0.tgz",
+      "version": "5.6.0",
+      "from": "eslint@~5.6.0",
+      "resolved": "https://registry.npmjs.org/eslint/-/eslint-5.6.0.tgz",
       "dependencies": {
         "debug": {
           "version": "3.2.5",
@@ -914,7 +914,7 @@
     },
     "graphql": {
       "version": "0.4.18",
-      "from": "graphql@>=0.4.14 <0.5.0",
+      "from": "graphql@>=0.4.18 <0.5.0",
       "resolved": "https://registry.npmjs.org/graphql/-/graphql-0.4.18.tgz"
     },
     "har-schema": {
@@ -1260,7 +1260,7 @@
     },
     "mongodb": {
       "version": "2.2.36",
-      "from": "mongodb@^2.1",
+      "from": "mongodb@^2.2.36",
       "resolved": "https://registry.npmjs.org/mongodb/-/mongodb-2.2.36.tgz"
     },
     "mongodb-core": {

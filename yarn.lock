@@ -499,11 +499,11 @@
     abacus-dbcommons "file:../../Library/Caches/Yarn/v1/dbcommons"
     abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
     abacus-moment "file:../../Library/Caches/Yarn/utils/moment"
-    abacus-partition "file:../../Library/Caches/Yarn/v1/partition"
-    abacus-perf "file:../../Library/Caches/Yarn/v1/perf"
-    abacus-request "file:../../Library/Caches/Yarn/v1/request"
-    abacus-transform "file:../../Library/Caches/Yarn/v1/transform"
-    mongodb "^2.1"
+    abacus-partition "file:../../Library/Caches/Yarn/v2/partition"
+    abacus-perf "file:../../Library/Caches/Yarn/v2/perf"
+    abacus-request "file:../../Library/Caches/Yarn/v2/request"
+    abacus-transform "file:../../Library/Caches/Yarn/v2/transform"
+    mongodb "^2.2.36"
     underscore "^1.9.1"
 
 "abacus-dbcommons@file:lib/utils/dbcommons":
@@ -552,7 +552,7 @@
   version "1.1.3"
   dependencies:
     commander "^2.8.1"
-    eslint "~5.5.0"
+    eslint "~5.6.0"
     eslint-plugin-mocha "^5.2.0"
     eslint-plugin-nodate "file:../../Library/Caches/Yarn/v1/eslint-plugin-nodate"
     optionator "^0.8.2"
@@ -620,7 +620,7 @@
     express-rate-limit "^3.1.1"
     http-status-codes "^1.3.0"
     method-override "^3.0.0"
-    mongodb "^2.1"
+    mongodb "^2.2.36"
     morgan "^1.1.1"
     response-time "^2.3.2"
     serve-static "^1.13.2"
@@ -719,9 +719,9 @@
 "abacus-mddoc@file:tools/mddoc":
   version "1.1.3"
   dependencies:
-    bootstrap "^4.1.3"
+    bootstrap "4.1.3"
     commander "^2.8.1"
-    event-stream "^3.3.1"
+    event-stream "^4.0.0"
     highlight.js "^9.12.0"
     hogan.js "^3.0.2"
     html-inline "^1.1.1"
@@ -742,7 +742,7 @@
     abacus-request "file:../../Library/Caches/Yarn/utils/request"
     abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
     abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
-    bignumber.js "^2.1.0"
+    bignumber.js "2.1.0"
     underscore "^1.9.1"
 
 "abacus-metrics@file:lib/utils/metrics":
@@ -814,7 +814,7 @@
     abacus-moment "file:../../Library/Caches/Yarn/lib/utils/moment"
     abacus-retry "file:../../Library/Caches/Yarn/lib/utils/retry"
     async "^2.6.0"
-    bignumber.js "^2.1.0"
+    bignumber.js "2.1.0"
     commander "^2.17.1"
     jsonwebtoken "^8.3.0"
     nyc "^11.4.1"
@@ -912,7 +912,7 @@
     abacus-request "file:../../Library/Caches/Yarn/utils/request"
     abacus-retry "file:../../Library/Caches/Yarn/utils/retry"
     abacus-urienv "file:../../Library/Caches/Yarn/utils/urienv"
-    bignumber.js "^2.1.0"
+    bignumber.js "2.1.0"
     underscore "^1.9.1"
 
 "abacus-rc@file:lib/utils/rc":
@@ -975,9 +975,9 @@
 "abacus-schema@file:lib/utils/schema":
   version "1.1.3"
   dependencies:
-    abacus-debug "file:../../Library/Caches/Yarn/v1/debug"
-    eslint "~5.5.0"
-    graphql "^0.4.14"
+    abacus-debug "file:../../Library/Caches/Yarn/v2/debug"
+    eslint "~5.6.0"
+    graphql "^0.4.18"
     is-my-json-valid "^2.12.0"
 
 "abacus-secured-itest@file:test/secured":
@@ -1081,7 +1081,7 @@
     abacus-timewindow "file:../../Library/Caches/lib/utils/timewindow"
     abacus-usage-accumulator "file:../../Library/Caches/lib/aggregation/accumulator"
     abacus-yieldable "file:../../Library/Caches/lib/utils/yieldable"
-    bignumber.js "^2.1.0"
+    bignumber.js "2.1.0"
     commander "2.8.1"
     nyc "^11.4.1"
     underscore "^1.9.1"
@@ -1127,7 +1127,7 @@
     abacus-timewindow "file:../../Library/Caches/lib/utils/timewindow"
     abacus-usage-aggregator "file:../../Library/Caches/lib/aggregation/aggregator"
     abacus-yieldable "file:../../Library/Caches/lib/utils/yieldable"
-    bignumber.js "^2.1.0"
+    bignumber.js "2.1.0"
     commander "2.8.1"
     nyc "^11.4.1"
     underscore "^1.9.1"
@@ -1321,7 +1321,7 @@
     abacus-yieldable "file:../../Library/Caches/Yarn/utils/yieldable"
     ajv "^6.0.0"
     async "^2.6.0"
-    bignumber.js "^2.1.0"
+    bignumber.js "2.1.0"
     underscore "^1.9.1"
 
 "abacus-usage-schemas@file:lib/config/schemas":
@@ -1367,7 +1367,7 @@
 "abacus-yieldable@file:lib/utils/yieldable":
   version "1.1.3"
   dependencies:
-    co "^3.0.6"
+    co "^3.1.0"
     thunkify "^2.1.2"
     underscore "^1.9.1"
 
@@ -1793,6 +1793,10 @@ better-assert@~1.0.0:
   dependencies:
     callsite "1.0.0"
 
+bignumber.js@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-2.1.0.tgz#4f2f516b1494093a25dcf9af568de01f550a4c61"
+
 bignumber.js@^2.1.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-2.4.0.tgz#838a992da9f9d737e0f4b2db0be62bb09dd0c5e8"
@@ -1845,7 +1849,7 @@ body-parser@1.18.3, body-parser@^1.16.1:
     raw-body "2.3.3"
     type-is "~1.6.16"
 
-bootstrap@^4.1.3:
+bootstrap@4.1.3:
   version "4.1.3"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.1.3.tgz#0eb371af2c8448e8c210411d0cb824a6409a12be"
 
@@ -2211,7 +2215,7 @@ cloudant-follow@~0.17.0:
     debug "^3.0.0"
     request "^2.83.0"
 
-co@^3.0.6:
+co@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/co/-/co-3.1.0.tgz#4ea54ea5a08938153185e15210c68d9092bc1b78"
 
@@ -2880,9 +2884,9 @@ eslint-visitor-keys@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#3f3180fb2e291017716acb4c9d6d5b5c34a6a81d"
 
-eslint@~5.5.0:
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.5.0.tgz#8557fcceab5141a8197da9ffd9904f89f64425c6"
+eslint@~5.6.0:
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.6.0.tgz#b6f7806041af01f71b3f1895cbb20971ea4b6223"
   dependencies:
     "@babel/code-frame" "^7.0.0"
     ajv "^6.5.3"
@@ -2966,12 +2970,11 @@ etag@~1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
 
-event-stream@^3.3.1:
-  version "3.3.6"
-  resolved "https://registry.yarnpkg.com/event-stream/-/event-stream-3.3.6.tgz#cac1230890e07e73ec9cacd038f60a5b66173eef"
+event-stream@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/event-stream/-/event-stream-4.0.0.tgz#2477e13a4ea5bf62fbb292a3f96d78bd4906f7c1"
   dependencies:
     duplexer "^0.1.1"
-    flatmap-stream "^0.1.0"
     from "^0.1.7"
     map-stream "0.0.7"
     pause-stream "^0.0.11"
@@ -3299,10 +3302,6 @@ flat-cache@^1.2.1:
     graceful-fs "^4.1.2"
     write "^0.2.1"
 
-flatmap-stream@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/flatmap-stream/-/flatmap-stream-0.1.0.tgz#ed54e01422cd29281800914fcb968d58b685d5f1"
-
 flush-write-stream@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/flush-write-stream/-/flush-write-stream-1.0.3.tgz#c5d586ef38af6097650b49bc41b55fabb19f35bd"
@@ -3568,7 +3567,7 @@ graceful-fs@^4.0.0, graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6,
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
-graphql@^0.4.14:
+graphql@^0.4.18:
   version "0.4.18"
   resolved "https://registry.npmjs.org/graphql/-/graphql-0.4.18.tgz#80b923f2d801e5373df99316b9c5829f206c482c"
   dependencies:
@@ -5023,7 +5022,7 @@ mongodb-core@2.1.20:
     bson "~1.0.4"
     require_optional "~1.0.0"
 
-mongodb@^2.0.36, mongodb@^2.1:
+mongodb@^2.0.36, mongodb@^2.2.36:
   version "2.2.36"
   resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-2.2.36.tgz#1c573680b2849fb0f47acbba3dc5fa228de975f5"
   dependencies:

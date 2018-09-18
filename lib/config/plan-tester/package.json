@@ -40,7 +40,7 @@
     "abacus-pricing-config": "../pricing",
     "abacus-rating-config": "../rating",
     "abacus-urienv": "file:../../../lib/utils/urienv",
-    "bignumber.js": "^2.1.0",
+    "bignumber.js": "2.1.0",
     "nyc": "^13.0.1"
   },
   "nyc": {
@@ -51,11 +51,6 @@
     ],
     "exclude": [
       "src/test/**"
-    ]
-  },
-  "greenkeeper": {
-    "ignore": [
-      "bignumber.js"
     ]
   },
   "engines": {

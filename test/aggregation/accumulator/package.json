@@ -46,7 +46,7 @@
     "abacus-yieldable": "file:../../../lib/utils/yieldable",
     "abacus-moment": "file:../../../lib/utils/moment",
     "abacus-lifecycle-manager": "file:../../lib/lifecycle-manager",
-    "bignumber.js": "^2.1.0",
+    "bignumber.js": "2.1.0",
     "commander": "2.8.1",
     "underscore": "^1.9.1"
   },

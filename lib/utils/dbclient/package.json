@@ -35,7 +35,7 @@
     "abacus-perf": "file:../perf",
     "abacus-request": "file:../request",
     "abacus-transform": "file:../transform",
-    "mongodb": "^2.1",
+    "mongodb": "^2.2.36",
     "underscore": "^1.9.1"
   },
   "devDependencies": {
@@ -53,11 +53,6 @@
     ],
     "exclude": [
       "src/test/**"
-    ]
-  },
-  "greenkeeper": {
-    "ignore": [
-      "mongodb"
     ]
   },
   "engines": {

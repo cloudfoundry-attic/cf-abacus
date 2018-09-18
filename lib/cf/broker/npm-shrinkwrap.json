@@ -293,7 +293,7 @@
     },
     "co": {
       "version": "3.1.0",
-      "from": "co@>=3.0.6 <4.0.0",
+      "from": "co@>=3.1.0 <4.0.0",
       "resolved": "https://registry.npmjs.org/co/-/co-3.1.0.tgz"
     },
     "combined-stream": {
@@ -765,7 +765,7 @@
     },
     "mongodb": {
       "version": "2.2.36",
-      "from": "mongodb@^2.1",
+      "from": "mongodb@^2.2.36",
       "resolved": "https://registry.npmjs.org/mongodb/-/mongodb-2.2.36.tgz"
     },
     "mongodb-core": {
