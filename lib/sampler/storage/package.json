@@ -37,7 +37,7 @@
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish",
-    "mongodb": "^2.1",
+    "mongodb": "^3.1.6",
     "nyc": "^13.0.1",
     "uuid": "^3.2.1"
   },
