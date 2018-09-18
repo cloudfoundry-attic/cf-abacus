@@ -3,10 +3,7 @@
 const cmdline = require('abacus-cmdline');
 const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');
-const _ = require('underscore');
-const extend = _.extend;
-const values = _.values;
-const every = _.every;
+const { extend, values, every } = require('underscore');
 
 const debug = require('abacus-debug')('abacus-resource-provder-scenario-test');
 
@@ -14,7 +11,7 @@ const createUaaUtils = require('./utils/uaa-utils.js');
 const testUtils = require('abacus-test-utils');
 
 const env = {
-  api: process.env.CF_API_URI,
+  api: process.env.CF_API,
   authServer: process.env.AUTH_SERVER_URL,
   adminUser: process.env.CF_ADMIN_USER,
   adminUserPassword: process.env.CF_ADMIN_PASSWORD,
