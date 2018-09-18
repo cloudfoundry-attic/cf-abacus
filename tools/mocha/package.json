@@ -32,6 +32,8 @@
     "pub": "publish"
   },
   "dependencies": {
+    "abacus-debug": "file:../../lib/utils/debug",
+    "abacus-moment": "file:../../lib/utils/moment",
     "async": "^2.6.0",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
