@@ -28,7 +28,7 @@
     "pub": "publish"
   },
   "dependencies": {
-    "co": "^3.0.6",
+    "co": "^4.6.0",
     "thunkify": "^2.1.2",
     "underscore": "^1.9.1"
   },
