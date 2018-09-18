@@ -2,79 +2,75 @@
 # yarn lockfile v1
 
 
-ace-builds@1.2.6:
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/ace-builds/-/ace-builds-1.2.6.tgz#a9233c27c37b8494f20af84917ee1619489af429"
+"@uirouter/core@5.0.21":
+  version "5.0.21"
+  resolved "https://registry.yarnpkg.com/@uirouter/core/-/core-5.0.21.tgz#b6c4c311e9416a1e8ce76b072e042a60224d1b3a"
 
-angular-animate@1.5.10:
-  version "1.5.10"
-  resolved "http://registry.npmjs.org/angular-animate/-/angular-animate-1.5.10.tgz#7bfd4fb035ace40f9c5a22dbbd3e174ee5fa0032"
+ace-builds@1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/ace-builds/-/ace-builds-1.4.1.tgz#a66e33bcd519918ee99bc54cac5d7399a83c8ff2"
+
+angular-animate@1.7.4:
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/angular-animate/-/angular-animate-1.7.4.tgz#14cee98e6aebab27642391c94c872009f2e3cd62"
 
 angular-breadcrumb@0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/angular-breadcrumb/-/angular-breadcrumb-0.5.0.tgz#058abe6984f1b82ff6ac37888ef9afccbc8f63b2"
 
-angular-mocks@1.4.8:
-  version "1.4.8"
-  resolved "http://registry.npmjs.org/angular-mocks/-/angular-mocks-1.4.8.tgz#1497426d480862ca8b1f637e9c2fc1a1df664208"
+angular-mocks@1.7.4:
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/angular-mocks/-/angular-mocks-1.7.4.tgz#106d9c96eae0117ad9962ee688da5e514edae645"
 
-angular-sanitize@1.4.8:
-  version "1.4.8"
-  resolved "http://registry.npmjs.org/angular-sanitize/-/angular-sanitize-1.4.8.tgz#43a6d79b65ec8c9d5f6651b945493e585f83d713"
+angular-sanitize@1.7.4:
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/angular-sanitize/-/angular-sanitize-1.7.4.tgz#c7d80176ed31507fd0e08bbb3a6c25bf09db2a61"
 
-angular-translate-loader-partial@2.9.1:
-  version "2.9.1"
-  resolved "https://registry.yarnpkg.com/angular-translate-loader-partial/-/angular-translate-loader-partial-2.9.1.tgz#8cdfda7d7255dd976e2ab1630db8b4f22e5ac608"
+angular-translate-loader-partial@2.18.1:
+  version "2.18.1"
+  resolved "https://registry.yarnpkg.com/angular-translate-loader-partial/-/angular-translate-loader-partial-2.18.1.tgz#1f4ec31c32c3d7b4371e39682444f6a6b84f1f88"
   dependencies:
-    angular-translate "~2.9.1"
+    angular-translate "~2.18.1"
 
-angular-translate@2.15.0:
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/angular-translate/-/angular-translate-2.15.0.tgz#db97f2c491491c04e835be9e327c589cda67d473"
+angular-translate@2.18.1, angular-translate@~2.18.1:
+  version "2.18.1"
+  resolved "https://registry.yarnpkg.com/angular-translate/-/angular-translate-2.18.1.tgz#b29ed0d2f9bac44075e7aad3284166c59e150791"
   dependencies:
-    angular ">=1.2.26 <=1.6"
-
-angular-translate@~2.9.1:
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/angular-translate/-/angular-translate-2.9.2.tgz#38cdfd491744cf27a7d9ef754ed2526100773ddd"
-  dependencies:
-    angular ">=1.2.26 <=1.6"
+    angular ">=1.2.26 <=1.7"
 
 angular-ui-ace@0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/angular-ui-ace/-/angular-ui-ace-0.2.3.tgz#3cb903428100621a367fc7f641440e97a42a26d0"
 
-angular-ui-bootstrap@2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/angular-ui-bootstrap/-/angular-ui-bootstrap-2.5.0.tgz#2facefb915386655dc5f44150258032517236d01"
+angular-ui-bootstrap@2.5.6:
+  version "2.5.6"
+  resolved "https://registry.yarnpkg.com/angular-ui-bootstrap/-/angular-ui-bootstrap-2.5.6.tgz#23937322ec641a6fbee16498cc32452aa199e7c5"
 
-angular-ui-router@0.2.13:
-  version "0.2.13"
-  resolved "https://registry.yarnpkg.com/angular-ui-router/-/angular-ui-router-0.2.13.tgz#ab40c2f9fef9b8626ffdb29a793426c1fedd2f29"
+angular-ui-router@1.0.20:
+  version "1.0.20"
+  resolved "https://registry.yarnpkg.com/angular-ui-router/-/angular-ui-router-1.0.20.tgz#86dbaaa3368df0c319f3328f4ace616a246cf394"
+  dependencies:
+    "@uirouter/core" "5.0.21"
 
 angular@1.5.10:
   version "1.5.10"
   resolved "http://registry.npmjs.org/angular/-/angular-1.5.10.tgz#e87fd35b2ed2fea3723de958e9ccf0a4b9125ef0"
 
-angular@>=1.2.0:
+"angular@>=1.2.26 <=1.7":
   version "1.7.4"
   resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.4.tgz#c1bf4884c2d470c06907737a1bf0835a9f646f31"
 
-"angular@>=1.2.26 <=1.6":
-  version "1.6.10"
-  resolved "https://registry.yarnpkg.com/angular/-/angular-1.6.10.tgz#eed3080a34d29d0f681ff119b18ce294e3f74826"
+bootstrap@4.1.3:
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.1.3.tgz#0eb371af2c8448e8c210411d0cb824a6409a12be"
 
-bootstrap@3.3.7:
-  version "3.3.7"
-  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.3.7.tgz#5a389394549f23330875a3b150656574f8a9eb71"
-
-clipboard@~1.5.5:
-  version "1.5.16"
-  resolved "https://registry.yarnpkg.com/clipboard/-/clipboard-1.5.16.tgz#916d5e739b0064be61b0b48a535731ecaef3d367"
+clipboard@^2.0.0:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/clipboard/-/clipboard-2.0.1.tgz#a12481e1c13d8a50f5f036b0560fe5d16d74e46a"
   dependencies:
-    good-listener "^1.2.0"
-    select "^1.0.6"
-    tiny-emitter "^1.0.0"
+    good-listener "^1.2.2"
+    select "^1.1.2"
+    tiny-emitter "^2.0.0"
 
 delegate@^3.1.2:
   version "3.1.3"
@@ -84,39 +80,38 @@ font-awesome@4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
 
-good-listener@^1.2.0:
+good-listener@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/good-listener/-/good-listener-1.2.2.tgz#d53b30cdf9313dffb7dc9a0d477096aa6d145c50"
   dependencies:
     delegate "^3.1.2"
 
-jquery@3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
+jquery@3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
 
 karma-read-json@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/karma-read-json/-/karma-read-json-1.1.0.tgz#e0ce345c5ae638a36a5a05dc1a6a042dccdab1e4"
 
-lodash@4.16.4:
-  version "4.16.4"
-  resolved "http://registry.npmjs.org/lodash/-/lodash-4.16.4.tgz#01ce306b9bad1319f2a5528674f88297aeb70127"
+lodash@4.17.11:
+  version "4.17.11"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
 
 ng-file-upload@12.2.13:
   version "12.2.13"
   resolved "https://registry.yarnpkg.com/ng-file-upload/-/ng-file-upload-12.2.13.tgz#01800f3872e526f95310f8477e99e4f12d0d8d14"
 
-ngclipboard@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/ngclipboard/-/ngclipboard-1.1.1.tgz#5b2c59553db62c726ccb4d41f804cfdb06d6bba0"
+ngclipboard@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ngclipboard/-/ngclipboard-2.0.0.tgz#406f6c34d21d78c13faafa7f7df2ae4acd50e75a"
   dependencies:
-    angular ">=1.2.0"
-    clipboard "~1.5.5"
+    clipboard "^2.0.0"
 
-select@^1.0.6:
+select@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/select/-/select-1.1.2.tgz#0e7350acdec80b1108528786ec1d4418d11b396d"
 
-tiny-emitter@^1.0.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-1.2.0.tgz#6dc845052cb08ebefc1874723b58f24a648c3b6f"
+tiny-emitter@^2.0.0:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-2.0.2.tgz#82d27468aca5ade8e5fd1e6d22b57dd43ebdfb7c"
