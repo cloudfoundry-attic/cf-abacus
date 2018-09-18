@@ -20,7 +20,6 @@ const commander = require('commander');
 // The env of the build commands
 const buildenv = _.extend(process.env, {
   TERM: 'color',
-  DEBUG_COLORS: 'true',
   COVERAGE_COLORS: 'true',
   FORCE_COLOR: 'true',
   MOCHA_COLORS: 'true'
