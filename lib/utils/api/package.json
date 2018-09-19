@@ -30,6 +30,7 @@
     "pub": "publish"
   },
   "dependencies": {
+    "abacus-moment": "file:../moment",
     "http-status-codes": "^1.3.0",
     "request": "^2.79.0",
     "underscore": "^1.9.1"
