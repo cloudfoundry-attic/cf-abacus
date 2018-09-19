@@ -163,6 +163,7 @@
     abacus-test-abacus-util "file:../../Library/Caches/Yarn/test-utils/abacus-util"
     abacus-test-app-util "file:../../Library/Caches/Yarn/test-utils/apps/util"
     abacus-test-cf-util "file:../../Library/Caches/Yarn/test-utils/cf-util"
+    abacus-test-helper "file:../../Library/Caches/Yarn/test-utils/helper"
     underscore "^1.9.1"
 
 "abacus-broker-smoke-test@file:test/smoke/broker":
@@ -926,6 +927,14 @@
     underscore "^1.9.1"
 
 "abacus-test-cf-util@file:test/test-utils/cf-util":
+  version "1.1.3"
+  dependencies:
+    abacus-cmdline "file:../../Library/Caches/tools/cmdline"
+    abacus-moment "file:../../Library/Caches/lib/utils/moment"
+    abacus-wait "file:../../Library/Caches/Yarn/lib/wait"
+    underscore "^1.9.1"
+
+"abacus-test-helper@file:test/test-utils/helper":
   version "1.1.3"
   dependencies:
     abacus-cmdline "file:../../Library/Caches/tools/cmdline"

@@ -3,12 +3,13 @@
 const cmdline = require('abacus-cmdline');
 const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');
-const { extend, values, every } = require('underscore');
+const { extend } = require('underscore');
 
 const debug = require('abacus-debug')('abacus-resource-provder-scenario-test');
 
 const createUaaUtils = require('./utils/uaa-utils.js');
-const testUtils = require('abacus-test-utils');
+const abacusUtil = require('abacus-test-abacus-util');
+const { checkCorrectSetup } = require('abacus-test-helper');
 
 const env = {
   api: process.env.CF_API,
@@ -45,19 +46,12 @@ describe('Create and update plans acceptance test', () => {
   let usageToken;
   let systemToken;
 
-  const correctEnvironment = () => {
-    return every(values(env), (value) => {
-      return typeof value !== 'undefined';
-    });
-  };
-
   before((done) => {
-    if (!correctEnvironment()) throw new Error('This test cannot run without correct set up. ' +
-      'Please check if all environment variables are set');
+    checkCorrectSetup(env);
 
     cfUtils = cmdline.cfutils(env.api, env.adminUser, env.adminUserPassword);
     uaaUtils = createUaaUtils(env.authServer, env.uaaAdminSecret);
-    abacusClient = testUtils.abacusClient(env.provisioningUrl, env.collectorUrl, env.reportingUrl);
+    abacusClient = abacusUtil(env.provisioningUrl, env.collectorUrl, env.reportingUrl);
 
     usageToken = oauth.cache(env.api, resourceId, env.clientSecret,
       `abacus.usage.${resourceId}.write,abacus.usage.${resourceId}.read`);

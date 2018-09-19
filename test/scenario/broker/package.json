@@ -37,6 +37,7 @@
     "abacus-test-abacus-util": "file:../../test-utils/abacus-util",
     "abacus-test-app-util": "file:../../test-utils/apps/util",
     "abacus-test-cf-util": "file:../../test-utils/cf-util",
+    "abacus-test-helper": "file:../../test-utils/helper",
     "underscore": "^1.9.1"
   },
   "devDependencies": {

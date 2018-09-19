@@ -7,8 +7,9 @@ const { yieldable, functioncb } = require('abacus-yieldable');
 const cfUtil = require('abacus-test-cf-util');
 const abacusUtil = require('abacus-test-abacus-util');
 const testAppUtil = require('abacus-test-app-util');
+const { checkCorrectSetup } = require('abacus-test-helper');
 
-const { findWhere, first, last, every, values } = require('underscore');
+const { findWhere, first, last } = require('underscore');
 
 const testEnv = {
   api: process.env.CF_API,
@@ -26,12 +27,6 @@ const testEnv = {
 
 let abacusClient;
 
-const correctEnvironment = () => {
-  return every(values(testEnv), (value) => {
-    return typeof value !== 'undefined';
-  });
-};
-
 describe('Abacus Broker Smoke test', function() {
   this.timeout(testEnv.totalTimeout);
   let app;
@@ -39,8 +34,7 @@ describe('Abacus Broker Smoke test', function() {
   let testAppClient;
 
   before(() => {
-    if (!correctEnvironment()) throw new Error('This test cannot run without correct set up. ' +
-      'Please check if all environment variables are set.');
+    checkCorrectSetup(testEnv);
 
     abacusClient = abacusUtil(
       undefined,
