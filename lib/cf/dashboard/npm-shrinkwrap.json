@@ -411,7 +411,7 @@
     "cloudant-follow": {
       "version": "0.17.0",
       "from": "cloudant-follow@~0.17.0",
-      "resolved": "http://registry.npmjs.org/cloudant-follow/-/cloudant-follow-0.17.0.tgz",
+      "resolved": "https://registry.npmjs.org/cloudant-follow/-/cloudant-follow-0.17.0.tgz",
       "dependencies": {
         "debug": {
           "version": "3.2.5",
@@ -663,7 +663,7 @@
     "express": {
       "version": "4.16.3",
       "from": "express@4.16.3",
-      "resolved": "http://registry.npmjs.org/express/-/express-4.16.3.tgz",
+      "resolved": "https://registry.npmjs.org/express/-/express-4.16.3.tgz",
       "dependencies": {
         "body-parser": {
           "version": "1.18.2",
@@ -806,7 +806,7 @@
         "combined-stream": {
           "version": "1.0.6",
           "from": "combined-stream@1.0.6",
-          "resolved": "http://registry.npmjs.org/combined-stream/-/combined-stream-1.0.6.tgz"
+          "resolved": "https://registry.npmjs.org/combined-stream/-/combined-stream-1.0.6.tgz"
         }
       }
     },
@@ -900,7 +900,7 @@
     "http-errors": {
       "version": "1.6.3",
       "from": "http-errors@~1.6.3",
-      "resolved": "http://registry.npmjs.org/http-errors/-/http-errors-1.6.3.tgz"
+      "resolved": "https://registry.npmjs.org/http-errors/-/http-errors-1.6.3.tgz"
     },
     "http-signature": {
       "version": "1.2.0",

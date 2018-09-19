@@ -2,6 +2,8 @@
 
 export CONF=${1:-cf}
 
+echo "Using profile $CONF"
+
 echo "Updating root level locks ..."
 rm -rf node_modules/ yarn.lock package-lock.json npm-shrinkwrap.json
 
