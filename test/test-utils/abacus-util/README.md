@@ -1,4 +1,4 @@
-abacus-test-utils
+abacus-test-util
 ===
 
 Test helpers

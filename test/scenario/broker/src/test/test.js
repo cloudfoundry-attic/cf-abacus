@@ -2,18 +2,17 @@
 
 /* eslint-disable no-unused-expressions */
 
-const _ = require('underscore');
-const findWhere = _.findWhere;
-
-const util = require('util');
-
 const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');
 const request = require('abacus-request');
 const { yieldable, functioncb } = require('abacus-yieldable');
 
-const testUtils = require('abacus-test-utils');
-const createTestAppClient = require('./test-app-client');
+const cfUtil = require('abacus-test-cf-util');
+const abacusUtil = require('abacus-test-abacus-util');
+const testAppUtil = require('abacus-test-app-util');
+
+const { findWhere, values, every } = require('underscore');
+const util = require('util');
 
 const testEnv = {
   api: process.env.CF_API,
@@ -25,22 +24,9 @@ const testEnv = {
   reportingUrl: process.env.REPORTING_URL,
   provisioningUrl: process.env.PROVISIONING_URL,
   serviceName: process.env.SERVICE_NAME,
-  servicePlan: process.env.SERVICE_PLAN
+  servicePlan: process.env.SERVICE_PLAN,
+  totalTimeout: process.env.TOTAL_TIMEOUT || 300000
 };
-
-const { App, Service } = testUtils.cf({
-  api: testEnv.api,
-  user: testEnv.user,
-  password: testEnv.password
-});
-
-const abacusClient = testUtils.abacusClient(
-  testEnv.provisioningUrl,
-  testEnv.collectorUrl,
-  testEnv.reportingUrl
-);
-
-const totalTimeout = process.env.TOTAL_TIMEOUT || 300000;
 
 const testPlan = {
   measures: [
@@ -111,15 +97,44 @@ const complexMeteringPlan = {
   ]
 };
 
-describe('Abacus Broker Acceptance test', function() {
-  this.timeout(totalTimeout);
+const correctEnvironment = () => {
+  return every(values(testEnv), (value) => {
+    return typeof value !== 'undefined';
+  });
+};
+
+describe('Abacus Broker Scenario test', function() {
+  this.timeout(testEnv.totalTimeout);
 
   let app;
   let orgId;
   let spaceId;
   let testAppClient;
 
+  let App;
+  let Service;
+  let abacusClient;
+
   before(() => {
+    if (!correctEnvironment()) throw new Error('This test cannot run without correct set up. ' +
+      'Please check if all environment variables are set.');
+
+    const testUtils = cfUtil({
+      api: testEnv.api,
+      user: testEnv.user,
+      password: testEnv.password
+    });
+
+    App = testUtils.App;
+    Service = testUtils.Service;
+
+    abacusClient = abacusUtil(
+      testEnv.provisioningUrl,
+      testEnv.collectorUrl,
+      testEnv.reportingUrl
+    );
+
+
     app = App.deploy({
       target:{
         orgName: testEnv.org,
@@ -127,13 +142,13 @@ describe('Abacus Broker Acceptance test', function() {
       },
       app: {
         name: `${moment.utc().valueOf()}-test-app`,
-        manifest: `${__dirname}/apps/test-app/manifest.yml`
+        manifest: `${__dirname}/../../../../test-utils/apps/test-app/manifest.yml`
       }
     });
 
     orgId = app.orgGuid;
     spaceId = app.spaceGuid;
-    testAppClient = createTestAppClient(app.getUrl());
+    testAppClient = testAppUtil(app.getUrl());
   });
 
   after(() => {
@@ -272,7 +287,6 @@ describe('Abacus Broker Acceptance test', function() {
   context('when "Resource provider" is provided', () => {
     const testServiceName = 'test-service';
     const testServicePlanName = 'test-service-plan-name';
-    const mappingAppName = 'service-mapping-test-app';
 
     let serviceInstance;
     let mappingApp;
@@ -284,8 +298,8 @@ describe('Abacus Broker Acceptance test', function() {
           spaceName: testEnv.space
         },
         app: {
-          name: mappingAppName,
-          manifest: `${__dirname}/apps/test-mapping-app/manifest.yml`
+          name: `${moment.utc().valueOf()}-service-mapping-test-app`,
+          manifest: `${__dirname}/../../../../test-utils/apps/test-mapping-app/manifest.yml`
         }
       });
       mappingApp.start();

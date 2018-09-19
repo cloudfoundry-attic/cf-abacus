@@ -1,14 +1,15 @@
 'use strict';
 
-const { findWhere, first, last } = require('underscore');
-
 const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');
 const { yieldable, functioncb } = require('abacus-yieldable');
 
-const createTestAppClient = require('./test-app-client');
+const cfUtil = require('abacus-test-cf-util');
+const abacusUtil = require('abacus-test-abacus-util');
+const testAppUtil = require('abacus-test-app-util');
 
-const testHelper = require('abacus-test-utils');
+const { findWhere, first, last, every, values } = require('underscore');
+
 const testEnv = {
   api: process.env.CF_API,
   user: process.env.CF_ADMIN_USER,
@@ -19,24 +20,34 @@ const testEnv = {
   collectorUrl: process.env.COLLECTOR_URL,
   reportingUrl: process.env.REPORTING_URL,
   serviceName: process.env.SERVICE_NAME,
-  servicePlan: process.env.SERVICE_PLAN
+  servicePlan: process.env.SERVICE_PLAN,
+  totalTimeout: process.env.TOTAL_TIMEOUT || 300000
 };
 
-const abacusClient = testHelper.abacusClient(
-  undefined,
-  testEnv.collectorUrl,
-  testEnv.reportingUrl);
+let abacusClient;
 
-const testTimeout = 300000;
+const correctEnvironment = () => {
+  return every(values(testEnv), (value) => {
+    return typeof value !== 'undefined';
+  });
+};
 
 describe('Abacus Broker Smoke test', function() {
-  this.timeout(testTimeout);
+  this.timeout(testEnv.totalTimeout);
   let app;
   let serviceInstance;
   let testAppClient;
 
   before(() => {
-    const cf = testHelper.cf({
+    if (!correctEnvironment()) throw new Error('This test cannot run without correct set up. ' +
+      'Please check if all environment variables are set.');
+
+    abacusClient = abacusUtil(
+      undefined,
+      testEnv.collectorUrl,
+      testEnv.reportingUrl);
+
+    const cf = cfUtil({
       api: testEnv.api,
       user: testEnv.user,
       password: testEnv.password
@@ -49,7 +60,7 @@ describe('Abacus Broker Smoke test', function() {
       },
       app: {
         name:  `${moment.utc().valueOf()}-test-app`,
-        manifest: `${__dirname}/apps/test-app/manifest.yml`
+        manifest: `${__dirname}/../../../../test-utils/apps/test-app/manifest.yml`
       }
     });
     serviceInstance = cf.Service.createInstance({
@@ -60,7 +71,7 @@ describe('Abacus Broker Smoke test', function() {
         plan: testEnv.servicePlan
       }
     });
-    testAppClient = createTestAppClient(app.getUrl());
+    testAppClient = testAppUtil(app.getUrl());
   });
 
   after(() => {
