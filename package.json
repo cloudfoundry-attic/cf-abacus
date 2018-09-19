@@ -72,6 +72,7 @@
   "dependencies": {
     "abacus-account-plugin": "file:lib/plugins/account",
     "abacus-accountclient": "file:lib/utils/accountclient",
+    "abacus-api": "file:lib/utils/api",
     "abacus-audit": "file:lib/utils/audit",
     "abacus-authserver-plugin": "file:lib/plugins/authserver",
     "abacus-basic": "file:lib/utils/basic",
