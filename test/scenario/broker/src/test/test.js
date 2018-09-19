@@ -298,7 +298,7 @@ describe('Abacus Broker Scenario test', function() {
           spaceName: testEnv.space
         },
         app: {
-          name: `${moment.utc().valueOf()}-service-mapping-test-app`,
+          name: 'service-mapping-test-app',
           manifest: `${__dirname}/../../../../test-utils/apps/test-mapping-app/manifest.yml`
         }
       });
