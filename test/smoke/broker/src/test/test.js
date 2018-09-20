@@ -7,7 +7,7 @@ const { yieldable, functioncb } = require('abacus-yieldable');
 const cfUtil = require('abacus-test-cf-util');
 const abacusUtil = require('abacus-test-abacus-util');
 const testAppUtil = require('abacus-test-app-util');
-const { checkCorrectSetup } = require('abacus-test-helper');
+const { checkCorrectSetup, getAbacusDirPath } = require('abacus-test-helper');
 
 const { findWhere, first, last } = require('underscore');
 
@@ -15,8 +15,8 @@ const testEnv = {
   api: process.env.CF_API_URI,
   user: process.env.CF_ADMIN_USER,
   password: process.env.CF_ADMIN_PASSWORD,
-  org: process.env.BROKER_TEST_ORG,
-  space: process.env.CF_SPACE,
+  org: process.env.CF_BROKER_SMOKE_ORG,
+  space: process.env.CF_BROKER_SMOKE_SPACE,
   appsDomain: process.env.APPS_DOMAIN,
   collectorUrl: process.env.COLLECTOR_URL,
   reportingUrl: process.env.REPORTING_URL,
@@ -54,7 +54,7 @@ describe('Abacus Broker Smoke test', function() {
       },
       app: {
         name:  `${moment.utc().valueOf()}-test-app`,
-        manifest: `${__dirname}/../../../../test-utils/apps/test-app/manifest.yml`
+        manifest: `${getAbacusDirPath()}/test/test-utils/apps/test-app/manifest.yml`
       }
     });
     serviceInstance = cf.Service.createInstance({

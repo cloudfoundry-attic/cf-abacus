@@ -10,7 +10,7 @@ const { yieldable, functioncb } = require('abacus-yieldable');
 const cfUtil = require('abacus-test-cf-util');
 const abacusUtil = require('abacus-test-abacus-util');
 const testAppUtil = require('abacus-test-app-util');
-const { checkCorrectSetup } = require('abacus-test-helper');
+const { checkCorrectSetup, getAbacusDirPath } = require('abacus-test-helper');
 
 const { findWhere } = require('underscore');
 const util = require('util');
@@ -122,11 +122,7 @@ describe('Abacus Broker Scenario test', function() {
     App = testUtils.App;
     Service = testUtils.Service;
 
-    abacusClient = abacusUtil(
-      testEnv.provisioningUrl,
-      testEnv.collectorUrl,
-      testEnv.reportingUrl
-    );
+    abacusClient = abacusUtil(testEnv.provisioningUrl, testEnv.collectorUrl, testEnv.reportingUrl);
 
     app = App.deploy({
       target:{
@@ -135,7 +131,7 @@ describe('Abacus Broker Scenario test', function() {
       },
       app: {
         name: `${moment.utc().valueOf()}-test-app`,
-        manifest: `${__dirname}/../../../../test-utils/apps/test-app/manifest.yml`
+        manifest: `${getAbacusDirPath()}/test/test-utils/apps/test-app/manifest.yml`
       }
     });
 
@@ -292,7 +288,7 @@ describe('Abacus Broker Scenario test', function() {
         },
         app: {
           name: 'service-mapping-test-app',
-          manifest: `${__dirname}/../../../../test-utils/apps/test-mapping-app/manifest.yml`
+          manifest: `${getAbacusDirPath()}/test/test-utils/apps/test-mapping-app/manifest.yml`
         }
       });
       mappingApp.start();

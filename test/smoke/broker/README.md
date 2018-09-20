@@ -4,8 +4,8 @@ To run the broker smoke test export the following:
 export CF_API_URI=https://api.<domain>
 export CF_ADMIN_USER=admin
 export CF_ADMIN_PASSWORD=admin
-export BROKER_TEST_ORG=<org>
-export CF_SPACE=<space>
+export CF_BROKER_SMOKE_ORG=<org>
+export CF_BROKER_SMOKE_SPACE=<space>
 export APPS_DOMAIN=<apps domain>
 export COLLECTOR_URL=https://abacus-usage-collector.<domain>
 export REPORTING_URL=https://abacus-usage-reporting.<domain>

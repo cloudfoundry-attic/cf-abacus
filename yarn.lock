@@ -177,6 +177,7 @@
     abacus-test-abacus-util "file:../../Library/Caches/Yarn/test-utils/abacus-util"
     abacus-test-app-util "file:../../Library/Caches/Yarn/test-utils/apps/util"
     abacus-test-cf-util "file:../../Library/Caches/Yarn/test-utils/cf-util"
+    abacus-test-helper "file:../../Library/Caches/Yarn/test-utils/helper"
     underscore "^1.9.1"
 
 "abacus-carryover@file:lib/utils/carryover":
@@ -830,7 +831,7 @@
     abacus-moment "file:../../Library/Caches/lib/utils/moment"
     abacus-oauth "file:../../Library/Caches/lib/utils/oauth"
     abacus-request "file:../../Library/Caches/lib/utils/request"
-    abacus-test-utils "file:../../Library/Caches/Yarn/test-utils"
+    abacus-test-helper "file:../../Library/Caches/Yarn/test-utils/helper"
     eslint-plugin-mocha "^4.8.0"
     eslint-plugin-nodate "file:../../Library/Caches/tools/eslint-plugin-nodate"
     request-debug "^0.2.0"
@@ -941,9 +942,6 @@
     abacus-moment "file:../../Library/Caches/lib/utils/moment"
     abacus-wait "file:../../Library/Caches/Yarn/lib/wait"
     underscore "^1.9.1"
-
-"abacus-test-utils@file:test/test-utils":
-  version "0.0.0"
 
 "abacus-throttle@file:lib/utils/throttle":
   version "1.1.3"
