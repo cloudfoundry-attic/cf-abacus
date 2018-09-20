@@ -181,6 +181,7 @@ describe('abacus-smoke-test', function() {
         if (systemToken)
           systemToken.start((err) => {
             done(err);
+            return;
           });
       });
 
