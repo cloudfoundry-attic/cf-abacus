@@ -12,7 +12,7 @@ const abacusUtil = require('abacus-test-abacus-util');
 const { checkCorrectSetup } = require('abacus-test-helper');
 
 const env = {
-  api: process.env.CF_API,
+  api: process.env.CF_API_URI,
   authServer: process.env.AUTH_SERVER_URL,
   adminUser: process.env.CF_ADMIN_USER,
   adminUserPassword: process.env.CF_ADMIN_PASSWORD,

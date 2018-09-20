@@ -12,7 +12,7 @@ const { checkCorrectSetup } = require('abacus-test-helper');
 const { findWhere, first, last } = require('underscore');
 
 const testEnv = {
-  api: process.env.CF_API,
+  api: process.env.CF_API_URI,
   user: process.env.CF_ADMIN_USER,
   password: process.env.CF_ADMIN_PASSWORD,
   org: process.env.BROKER_TEST_ORG,

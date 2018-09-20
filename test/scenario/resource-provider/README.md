@@ -6,7 +6,7 @@ abacus-resource-provider-scenario-test
 To run this test against an already set-up and functioning abacus instance, set the following environment variables:
 
 ```bash
-export CF_API=https://api.<system domain>
+export CF_API_URI=https://api.<system domain>
 export AUTH_SERVER_URL=https://uaa.<system domain>
 export CF_ADMIN_USER=admin
 export CF_ADMIN_PASSWORD=password

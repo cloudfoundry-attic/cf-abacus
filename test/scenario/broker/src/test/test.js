@@ -16,11 +16,11 @@ const { findWhere } = require('underscore');
 const util = require('util');
 
 const testEnv = {
-  api: process.env.CF_API,
-  user: process.env.CF_ADMIN_USER,
-  password: process.env.CF_ADMIN_PASSWORD,
-  org: process.env.BROKER_TEST_ORG,
-  space: process.env.CF_SPACE,
+  api: process.env.CF_API_URI,
+  user: process.env.CF_USER,
+  password: process.env.CF_PASSWORD,
+  org: process.env.CF_ORG,
+  space: process.env.CF_BROKER_SCENARIO_SPACE,
   collectorUrl: process.env.COLLECTOR_URL,
   reportingUrl: process.env.REPORTING_URL,
   provisioningUrl: process.env.PROVISIONING_URL,

@@ -1,7 +1,7 @@
 To run the broker smoke test export the following:
 
 ```bash
-export CF_API=https://api.<domain>
+export CF_API_URI=https://api.<domain>
 export CF_ADMIN_USER=admin
 export CF_ADMIN_PASSWORD=admin
 export BROKER_TEST_ORG=<org>
