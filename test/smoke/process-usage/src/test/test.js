@@ -6,7 +6,6 @@
 const _ = require('underscore');
 const { extend, map, omit } = require('underscore');
 
-const commander = require('commander');
 const clone = require('abacus-clone');
 const oauth = require('abacus-oauth');
 const moment = require('abacus-moment');
@@ -14,77 +13,41 @@ const request = require('abacus-request');
 const timewindow = require('abacus-timewindow');
 const util = require('util');
 
-// Parse command line options
-const argv = clone(process.argv);
-argv.splice(1, 1, 'smoke');
-commander
-  .option(
-    '-c, --collector <uri>',
-    'usage collector URL or domain name [http://localhost:9080]',
-    'http://localhost:9080'
-  )
-  .option(
-    '-r, --reporting <uri>',
-    'usage reporting URL or domain name [http://localhost:9088]',
-    'http://localhost:9088'
-  )
-  .option(
-    '-a, --auth-server <uri>',
-    'authentication server URL or domain name [http://localhost:9882]',
-    'http://localhost:9882'
-  )
-  .option('-t, --start-timeout <n>', 'external processes start timeout in milliseconds', parseInt)
-  .option('-x, --total-timeout <n>', 'test timeout in milliseconds', parseInt)
-  .allowUnknownOption(true)
-  .parse(argv);
 
-// Collector service URL
-const collector = /:/.test(commander.collector)
-  ? commander.collector
-  : 'https://abacus-usage-collector.' + commander.collector;
-
-// Reporting service URL
-const reporting = /:/.test(commander.reporting)
-  ? commander.reporting
-  : 'https://abacus-usage-reporting.' + commander.reporting;
-
-// Auth server URL
-const authServer = /:/.test(commander.authServer)
-  ? commander.authServer
-  : 'https://abacus-authserver-plugin.' + commander.authServer;
-
-// External Abacus processes start timeout
-const startTimeout = commander.startTimeout || 10000;
-
-// This test timeout
-const totalTimeout = commander.totalTimeout || 60000;
+const env = {
+  collectorUrl: process.env.COLLECTOR_URL || 'http://localhost:9080',
+  reportingUrl: process.env.REPORTING_URL || 'http://localhost:9088',
+  authServer: process.env.AUTH_SERVER || 'http://localhost:9882',
+  startTimeout: process.env.CI_START_TIMEOUT || 10000,
+  totalTimeout: process.env.CI_PIPELINE_TIMEOUT || 60000,
+  systemClientId: process.env.SYSTEM_CLIENT_ID,
+  systemClientSecret: process.env.SYSTEM_CLIENT_SECRET,
+  secured: process.env.SECURED === 'true',
+  objectStorageClientId: process.env.OBJECT_STORAGE_CLIENT_ID,
+  objectStorageClientSecret: process.env.OBJECT_STORAGE_CLIENT_SECRET,
+  slack: process.env.SLACK,
+  windowsSizes: process.env.TIME_WINDOWS_SIZES ? JSON.parse(process.env.TIME_WINDOWS_SIZES) : undefined
+};
 
 // The current time
 const now = moment.utc().toDate();
 
-// Use secure routes or not
-const secured = () => process.env.SECURED === 'true';
-
 // Token fetchers
-const objectStorageToken = secured()
-  ? oauth.cache(
-    authServer,
-    process.env.OBJECT_STORAGE_CLIENT_ID,
-    process.env.OBJECT_STORAGE_CLIENT_SECRET,
-    'abacus.usage.object-storage.write'
-  )
+const objectStorageToken = env.secured ?
+  oauth.cache(env.authServer, env.objectStorageClientId, env.objectStorageClientSecret,
+    'abacus.usage.object-storage.write')
   : undefined;
-const systemToken = secured()
-  ? oauth.cache(authServer, process.env.SYSTEM_CLIENT_ID, process.env.SYSTEM_CLIENT_SECRET, 'abacus.usage.read')
+const systemToken = env.secured
+  ? oauth.cache(env.authServer, env.systemClientId, env.systemClientSecret, 'abacus.usage.read')
   : undefined;
 
 // The scaling factor of each time window for creating the date string
 // [Second, Minute, Hour, Day, Month]
 const slack = () =>
-  /^[0-9]+[MDhms]$/.test(process.env.SLACK)
+  /^[0-9]+[MDhms]$/.test(env.slack)
     ? {
-      scale: process.env.SLACK.charAt(process.env.SLACK.length - 1),
-      width: process.env.SLACK.match(/[0-9]+/)[0]
+      scale: env.slack.charAt(env.slack.length - 1),
+      width: env.slack.match(/[0-9]+/)[0]
     }
     : {
       scale: timewindow.dimension.min,
@@ -94,13 +57,11 @@ const slack = () =>
 const initWindows = (win, dimension) => {
   const windows = [win];
 
-  const windowsSizes = process.env.TIME_WINDOWS_SIZES ? JSON.parse(process.env.TIME_WINDOWS_SIZES) : undefined;
-
-  if(windowsSizes && windowsSizes[dimension])
-    _(windowsSizes[dimension] - 1).times(() => windows.push(null));
+  if(env.windowsSizes && env.windowsSizes[dimension])
+    _(env.windowsSizes[dimension] - 1).times(() => windows.push(null));
 
   else {
-    const timeWindows = timewindow.timeWindowsSizes(slack(), windowsSizes);
+    const timeWindows = timewindow.timeWindowsSizes(slack(), env.windowsSizes);
     _(timeWindows.getWindows(dimension).length - 1).times(() => windows.push(null));
   }
 
@@ -177,7 +138,7 @@ describe('abacus-process-usage-smoke-test', function() {
 
   it('submits usage for a sample resource and retrieves an aggregated usage report', function(done) {
     // Configure the test timeout
-    const timeout = Math.max(totalTimeout, 40000);
+    const timeout = Math.max(env.totalTimeout, 40000);
     const processingDeadline = moment.now() + timeout;
     this.timeout(timeout + 2000);
     console.log('Test will run until %s', moment.utc(processingDeadline).toDate());
@@ -371,7 +332,7 @@ describe('abacus-process-usage-smoke-test', function() {
       };
 
       request.post(
-        `${collector}/v1/metering/collected/usage`,
+        `${env.collectorUrl}/v1/metering/collected/usage`,
         extend({ body: u.usage }, authHeader(objectStorageToken)),
         (err, val) => {
           expect(err).to.equal(undefined, util.format('Error: %o', err));
@@ -444,7 +405,7 @@ describe('abacus-process-usage-smoke-test', function() {
     const getReport = (cb) => {
       request.get(
         [
-          reporting,
+          env.reportingUrl,
           'v1/metering/organizations',
           'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
           'aggregated/usage'
@@ -507,7 +468,7 @@ describe('abacus-process-usage-smoke-test', function() {
     };
 
     // Wait for usage reporter to start
-    request.waitFor(reporting + '/batch', {}, startTimeout, (err) => {
+    request.waitFor(env.reportingUrl + '/batch', {}, env.startTimeout, (err) => {
       // Failed to ping usage reporter before timing out
       if (err) throw err;
 
