@@ -500,18 +500,18 @@
     serve-static "^1.13.2"
     underscore "^1.9.1"
 
-"abacus-extensions-itest@file:test/extensions":
+"abacus-healthchecker-integration-test@file:test/integration/extensions/healthchecker":
+  version "1.1.3"
+
+"abacus-healthchecker-smoke-test@file:test/smoke/healthchecker":
   version "1.1.3"
   dependencies:
-    abacus-dbclient "file:../../Library/Caches/Yarn/lib/utils/dbclient"
-    abacus-debug "file:../../Library/Caches/Yarn/lib/utils/debug"
-    abacus-mocha "file:../../Library/Caches/Yarn/tools/mocha"
+    abacus-dbclient "file:../../Library/Caches/lib/utils/dbclient"
+    abacus-debug "file:../../Library/Caches/lib/utils/debug"
+    abacus-mocha "file:../../Library/Caches/tools/mocha"
     commander "2.8.1"
     nyc "^11.4.1"
     underscore "^1.9.1"
-
-"abacus-healthchecker-integration-test@file:test/integration/extensions/healthchecker":
-  version "1.1.3"
 
 "abacus-healthchecker@file:lib/extensions/healthchecker":
   version "1.1.3"
@@ -1704,10 +1704,10 @@ base@^0.11.1:
     pascalcase "^0.1.1"
 
 basic-auth@~2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/basic-auth/-/basic-auth-2.0.0.tgz#015db3f353e02e56377755f962742e8981e7bbba"
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/basic-auth/-/basic-auth-2.0.1.tgz#b998279bf47ce38344b4f3cf916d4679bbf51e3a"
   dependencies:
-    safe-buffer "5.1.1"
+    safe-buffer "5.1.2"
 
 bcrypt-pbkdf@^1.0.0:
   version "1.0.2"
@@ -4044,7 +4044,7 @@ is-buffer@^1.1.5:
 
 is-builtin-module@^1.0.0:
   version "1.0.0"
-  resolved "https://registry.yarnpkg.com/is-builtin-module/-/is-builtin-module-1.0.0.tgz#540572d34f7ac3119f8f76c30cbc1b1e037affbe"
+  resolved "https://registry.npmjs.org/is-builtin-module/-/is-builtin-module-1.0.0.tgz#540572d34f7ac3119f8f76c30cbc1b1e037affbe"
   dependencies:
     builtin-modules "^1.0.0"
 
