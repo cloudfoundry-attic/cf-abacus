@@ -45,7 +45,7 @@
     "abacus-account-plugin": "file:../../../../lib/plugins/account",
     "abacus-yieldable": "file:../../../../lib/utils/yieldable",
     "abacus-moment": "file:../../../../lib/utils/moment",
-    "abacus-lifecycle-manager": "file:../../../lib/lifecycle-manager",
+    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager",
     "bignumber.js": "^2.1.0",
     "commander": "2.8.1",
     "underscore": "^1.9.1"

@@ -40,7 +40,7 @@
     "abacus-throttle": "file:../../../../lib/utils/throttle",
     "abacus-urienv": "file:../../../../lib/utils/urienv",
     "abacus-usage-reporting": "file:../../../../lib/aggregation/reporting",
-    "abacus-lifecycle-manager": "file:../../../lib/lifecycle-manager",
+    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager",
     "abacus-yieldable": "file:../../../../lib/utils/yieldable",
     "bignumber.js": "^2.1.0",
     "underscore": "^1.9.1",

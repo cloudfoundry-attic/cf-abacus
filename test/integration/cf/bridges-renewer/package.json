@@ -44,10 +44,10 @@
     "abacus-mocha": "file:../../../../tools/mocha",
     "nyc": "^11.4.1",
     "abacus-moment": "file:../../../../lib/utils/moment",
-    "abacus-lifecycle-manager": "file:../../../lib/lifecycle-manager",
+    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager",
     "abacus-request": "file:../../../../lib/utils/request",
     "abacus-router": "file:../../../../lib/utils/router",
-    "abacus-wait": "file:../../../lib/wait"
+    "abacus-wait": "file:../../../test-utils/wait"
   },
   "nyc": {
     "cache": true,

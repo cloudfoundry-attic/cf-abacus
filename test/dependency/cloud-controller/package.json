@@ -33,7 +33,7 @@
     "abacus-mocha": "file:../../../tools/mocha",
     "nyc": "^11.4.1",
     "abacus-paging": "file:../../../lib/utils/paging",
-    "abacus-wait": "file:../../lib/wait"
+    "abacus-wait": "file:../../test-utils/wait"
   },
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
