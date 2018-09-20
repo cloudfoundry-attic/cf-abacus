@@ -170,9 +170,21 @@ const authHeader = (token) =>
     : {};
 
 describe('abacus-smoke-test', function() {
-  before(() => {
-    if (objectStorageToken) objectStorageToken.start();
-    if (systemToken) systemToken.start();
+  before((done) => {
+    if (objectStorageToken)
+      objectStorageToken.start((err) => {
+        if (err) {
+          done(err);
+          return;
+        }
+
+        if (systemToken)
+          systemToken.start((err) => {
+            done(err);
+          });
+      });
+
+    done();
   });
 
   it('submits usage for a sample resource and retrieves an aggregated usage report', function(done) {
