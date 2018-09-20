@@ -20,14 +20,14 @@
                   null
                 ],
                 [
+                  null,
+                  null,
+                  null,
+                  null,
                   {
                     "quantity": 1,
                     "summary": 1
                   },
-                  null,
-                  null,
-                  null,
-                  null,
                   null
                 ],
                 [
@@ -52,14 +52,14 @@
                   null
                 ],
                 [
+                  null,
+                  null,
+                  null,
+                  null,
                   {
                     "quantity": 1,
                     "summary": 1
                   },
-                  null,
-                  null,
-                  null,
-                  null,
                   null
                 ],
                 [
@@ -84,14 +84,14 @@
                   null
                 ],
                 [
+                  null,
+                  null,
+                  null,
+                  null,
                   {
                     "quantity": 100,
                     "summary": 100
                   },
-                  null,
-                  null,
-                  null,
-                  null,
                   null
                 ],
                 [
@@ -123,14 +123,14 @@
               null
             ],
             [
+              null,
+              null,
+              null,
+              null,
               {
                 "quantity": 1,
                 "summary": 1
               },
-              null,
-              null,
-              null,
-              null,
               null
             ],
             [
@@ -155,14 +155,14 @@
               null
             ],
             [
+              null,
+              null,
+              null,
+              null,
               {
                 "quantity": 1,
                 "summary": 1
               },
-              null,
-              null,
-              null,
-              null,
               null
             ],
             [
@@ -187,14 +187,14 @@
               null
             ],
             [
+              null,
+              null,
+              null,
+              null,
               {
                 "quantity": 100,
                 "summary": 100
               },
-              null,
-              null,
-              null,
-              null,
               null
             ],
             [
@@ -211,9 +211,9 @@
   ],
   "spaces": [],
   "account_id": "1234",
-  "start": 1537451283506,
-  "end": 1537451283506,
-  "processed": 1537451283506,
-  "id": "k/us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/t/0001537451283506",
+  "start": 1537451601692,
+  "end": 1537451601692,
+  "processed": 1537451601692,
+  "id": "k/us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/t/0001537451601692",
   "processed_id": "0001537450362786-0-0-1-0"
 }
