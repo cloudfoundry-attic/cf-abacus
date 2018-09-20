@@ -32,8 +32,10 @@
     "cfpush": "cfpush"
   },
   "dependencies": {
+    "abacus-api": "file:../../utils/api",
     "abacus-launcher": "file:../../utils/launcher",
-    "abacus-webapp": "file:../../utils/webapp"
+    "abacus-webapp": "file:../../utils/webapp",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
     "abacus-cfpush": "file:../../../tools/cfpush",
