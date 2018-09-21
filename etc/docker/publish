@@ -29,7 +29,13 @@ do
     pushd $dir
       echo "Using tag $tag"
       docker build -t "$tag" -t "$image:latest" .
+
+      echo ""
+      echo ">>> docker push \"$tag\""
       docker push "$tag"
+
+      echo ""
+      echo ">>> docker push \"$image:latest\""
       docker push "$image:latest"
     popd
 done
