@@ -1,7 +1,9 @@
 'use strict';
 
+const oauth = require('abacus-oauth');
 const { functioncb, yieldable } = require('abacus-yieldable');
 const createEventReader = require('./helpers/event-reader');
+const { checkCorrectSetup } = require('abacus-test-helper');
 
 const env = {
   api: process.env.CF_API_URI,
@@ -11,13 +13,10 @@ const env = {
   cloudControllerClientSecret: process.env.CLOUD_CONTROLLER_CLIENT_SECRET
 };
 
-const oauth = require('abacus-oauth');
-const cmdline = require('abacus-cmdline').cfutils(env.api, env.user, env.password);
-
-const oneMinuteInMillis = 60 * 1000;
-const fiveMinutesInMillis = 5 * oneMinuteInMillis;
-
 describe('usage events tests', () => {
+  const oneMinuteInMillis = 60 * 1000;
+  const fiveMinutesInMillis = 5 * oneMinuteInMillis;
+
   const testOrg = 'abacus-cc-acceptance-test';
   const testSpace = 'test';
   const testApp = 'staticapp';
@@ -26,7 +25,11 @@ describe('usage events tests', () => {
   let orgGuid;
   let spaceGuid;
 
+  let cmdline;
+
   before(functioncb(function*() {
+    checkCorrectSetup(env);
+    cmdline = require('abacus-cmdline').cfutils(env.api, env.user, env.password);
     const createdOrg = cmdline.org.create(testOrg);
     orgGuid = createdOrg.metadata.guid;
     const createdSpace = cmdline.space.create(orgGuid, testSpace);
