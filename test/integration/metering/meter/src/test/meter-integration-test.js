@@ -16,11 +16,17 @@ const firstDlName = 'meter-itest-first-dl';
 const firstDlExchange = 'meter-itest-first-exchange';
 const secondDlName = 'meter-itest-second-dl';
 const secondDlExchange = 'meter-itest-second-exchange';
+const { checkCorrectSetup } = require('abacus-test-helper');
 
-describe('test meter app', () => {
+const env = {
+  db: process.env.DB
+};
+
+describe('meter integration test', () => {
   let stubs;
 
   before(async() => {
+    checkCorrectSetup(env);
     const modules = [lifecycleManager.modules.meter];
     const customEnv = extend({}, process.env, {
       CLUSTER: false,
@@ -33,7 +39,7 @@ describe('test meter app', () => {
     });
 
     // drop all abacus collections except plans and plan-mappings
-    dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, () => {
+    dbclient.drop(env.db, /^abacus-((?!plan).)*$/, () => {
       lifecycleManager.useEnv(customEnv).startModules(modules);
     });
 

@@ -1,27 +1,16 @@
 'use strict';
 
-const commander = require('commander');
-
-const _ = require('underscore');
-const clone = _.clone;
-
 const dbclient = require('abacus-dbclient');
 const createLifecycleManager = require('abacus-lifecycle-manager');
 const request = require('abacus-request');
 
-const argv = clone(process.argv);
-argv.splice(1, 1, 'secured-itest');
-commander
-  .option('-t, --start-timeout <n>', 'external processes start timeout in milliseconds', parseInt)
-  .allowUnknownOption(true)
-  .parse(argv);
-
-// External Abacus processes start timeout
-const startTimeout = commander.startTimeout || 5000;
+const env = {
+  startTimeout: process.env.START_TIMEOUT || 5000
+};
 
 describe('eureka', function() {
   let lifecycleManager;
-  this.timeout(startTimeout);
+  this.timeout(env.startTimeout);
 
   let eureka;
 
@@ -44,7 +33,7 @@ describe('eureka', function() {
 
     const startModules = () => {
       lifecycleManager.startModules(modules);
-      request.waitFor('http://localhost::p', { p: 9990 }, startTimeout, done);
+      request.waitFor('http://localhost::p', { p: 9990 }, env.startTimeout, done);
     };
 
     dbclient.drop(process.env.DB, /^abacus-/, startModules);

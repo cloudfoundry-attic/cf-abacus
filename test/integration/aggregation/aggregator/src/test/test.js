@@ -2,8 +2,6 @@
 
 const _ = require('underscore');
 
-const commander = require('commander');
-
 const batch = require('abacus-batch');
 const throttle = require('abacus-throttle');
 const yieldable = require('abacus-yieldable');
@@ -25,47 +23,24 @@ const omit = _.omit;
 const filter = _.filter;
 const pick = _.pick;
 
-// Batch the requests
 const brequest = batch(request);
 
-// Setup the debug log
-const debug = require('abacus-debug')('abacus-usage-aggregator-itest');
+const debug = require('abacus-debug')('abacus-usage-aggregator-integration-test');
 
 const db = require('abacus-dataflow').db('abacus-aggregator-aggregated-usage');
 db.allDocs = yieldable.functioncb(db.allDocs);
 
-// Parse command line options
-const argv = clone(process.argv);
-argv.splice(1, 1, 'usage-aggregator-itest');
-commander
-  .option('-o, --orgs <n>', 'number of organizations', parseInt)
-  .option('-i, --instances <n>', 'number of resource instances', parseInt)
-  .option('-u, --usagedocs <n>', 'number of usage docs', parseInt)
-  .option('-d, --day <d>', 'usage time shift using number of days', parseInt)
-  .option('-t, --start-timeout <n>', 'external processes start timeout in milliseconds', parseInt)
-  .option('-x, --total-timeout <n>', 'test timeout in milliseconds', parseInt)
-  .allowUnknownOption(true)
-  .parse(argv);
+const env = {
+  db: process.env.DB,
+  orgs: process.env.ORGS || 1,
+  resourceInstances: process.env.INSTANCES || 1,
+  usage: process.env.USAGE_DOCS || 1,
+  tshift: process.env.DAY * 24 * 60 * 60 * 1000 || 0,
+  startTimeout: process.env.START_TIMEOUT || 30000,
+  totalTimeout: process.env.TOTAL_TIMEOUT || 60000
+};
 
-// Number of organizations
-const orgs = commander.orgs || 1;
-
-// Number of resource instances
-const resourceInstances = commander.instances || 1;
-
-// Number of usage docs
-const usage = commander.usagedocs || 1;
-
-// Usage time shift by number of days in milli-seconds
-const tshift = commander.day * 24 * 60 * 60 * 1000 || 0;
-
-// External Abacus processes start timeout
-const startTimeout = commander.startTimeout || 30000;
-
-// This test timeout
-const totalTimeout = commander.totalTimeout || 60000;
-
-// Prunes all the windows of everything but the monthly quantity
+  // Prunes all the windows of everything but the monthly quantity
 const pruneWindows = (v, k) => {
   if (k === 'windows') {
     const nwin = {};
@@ -121,11 +96,11 @@ const buildAggregatedWindows = (p, u, ri, tri, count, end, f) => map(dimensions,
   return [{ quantity: q }];
 });
 
-describe('abacus-usage-aggregator-itest', () => {
+describe('aggregator integration test', () => {
   before(() => {
     const modules = [lifecycleManager.modules.accountPlugin, lifecycleManager.modules.aggregator];
 
-    dbclient.drop(process.env.DB, /^abacus-/, () => {
+    dbclient.drop(env.db, /^abacus-/, () => {
       lifecycleManager.startModules(modules);
     });
   });
@@ -137,13 +112,13 @@ describe('abacus-usage-aggregator-itest', () => {
   it('aggregator accumulated usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs or
     // predefined timeout
-    const timeout = Math.max(totalTimeout, 100 * orgs * resourceInstances * usage);
+    const timeout = Math.max(env.totalTimeout, 100 * env.orgs * env.resourceInstances * env.usage);
     this.timeout(timeout + 2000);
     const processingDeadline = moment.now() + timeout;
 
     // Initialize usage doc properties with unique values
-    const start = moment.now() + tshift;
-    const end = moment.now() + tshift;
+    const start = moment.now() + env.tshift;
+    const end = moment.now() + env.tshift;
 
     // Produce usage for two spaces in an organization, two consumers
     // in a space and create resource instances using two resource plans
@@ -255,7 +230,7 @@ describe('abacus-usage-aggregator-itest', () => {
     // accumulated usage.
 
     // Total resource instances index
-    const tri = resourceInstances - 1;
+    const tri = env.resourceInstances - 1;
 
     // Create an array of objects based on a range and a creator function
     const create = (number, creator) => map(range(number()), (i) => creator(i));
@@ -536,8 +511,9 @@ describe('abacus-usage-aggregator-itest', () => {
       })[0];
     };
 
-    const expected = clone(aggregatedTemplate(orgs - 1, resourceInstances - 1, usage - 1), pruneWindows);
-    const expectedConsumer = clone(consumerTemplate(orgs - 1, resourceInstances - 1, usage - 1), pruneWindows);
+    const expected = clone(aggregatedTemplate(env.orgs - 1, env.resourceInstances - 1, env.usage - 1), pruneWindows);
+    const expectedConsumer =
+      clone(consumerTemplate(env.orgs - 1, env.resourceInstances - 1, env.usage - 1), pruneWindows);
 
     // Post an accumulated usage doc, throttled to default concurrent requests
     const post = throttle((o, ri, u, cb) => {
@@ -575,11 +551,12 @@ describe('abacus-usage-aggregator-itest', () => {
     const submit = (done) => {
       let posts = 0;
       const cb = () => {
-        if (++posts === orgs * resourceInstances * usage) done();
+        if (++posts === env.orgs * env.resourceInstances * env.usage) done();
       };
 
-      // Submit usage for all orgs and resource instances
-      map(range(usage), (u) => map(range(resourceInstances), (ri) => map(range(orgs), (o) => post(o, ri, u, cb))));
+      // Submit usage for all env.orgs and resource instances
+      map(range(env.usage), (u) => map(range(env.resourceInstances), (ri) =>
+        map(range(env.orgs), (o) => post(o, ri, u, cb))));
     };
 
     const verifyRating = (done) => {
@@ -743,7 +720,7 @@ describe('abacus-usage-aggregator-itest', () => {
     };
 
     // Wait for usage aggregator to start
-    request.waitFor('http://localhost::p/batch', { p: 9300 }, startTimeout, (err, value) => {
+    request.waitFor('http://localhost::p/batch', { p: 9300 }, env.startTimeout, (err, value) => {
       // Failed to ping usage aggregator before timing out
       if (err) throw err;
 

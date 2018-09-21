@@ -27,6 +27,9 @@
     "lint": "abacus-eslint",
     "pub": "publish"
   },
+  "dependencies": {
+    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager"
+  },
   "devDependencies": {
     "abacus-debug": "file:../../../lib/utils/debug",
     "abacus-eureka": "file:../../../lib/utils/eureka",
@@ -35,7 +38,6 @@
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "nyc": "^11.4.1",
-    "abacus-lifecycle-manager": "file:../../test-utils/lifecycle-manager",
     "abacus-publish": "file:../../../tools/publish",
     "underscore": "^1.9.1",
     "commander": "2.8.1"

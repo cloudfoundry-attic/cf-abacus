@@ -1,42 +1,27 @@
 'use strict';
 
-const commander = require('commander');
 const execute = require('abacus-cmdline').execute;
 const throttle = require('abacus-throttle');
 const request = require('abacus-request');
 const dbclient = require('abacus-dbclient');
 const createLifecycleManager = require('abacus-lifecycle-manager');
 const { ConnectionManager, Consumer, amqpMessageParser } = require('abacus-rabbitmq');
+const { checkCorrectSetup } = require('abacus-test-helper');
 
-const { map, range, clone, omit, extend } = require('underscore');
+const { map, range, omit, extend } = require('underscore');
 
-// Setup the debug log
-const debug = require('abacus-debug')('abacus-usage-collector-itest');
+const debug = require('abacus-debug')('abacus-usage-collector-integration-test');
 
-// Parse command line options
-const argv = clone(process.argv);
-argv.splice(1, 1, 'usage-collector-itest');
-commander
-  .option('-o, --orgs <n>', 'number of organizations', parseInt)
-  .option('-i, --instances <n>', 'number of resource instances', parseInt)
-  .option('-u, --usagedocs <n>', 'number of usage docs', parseInt)
-  .option('-d, --day <d>', 'usage time shift using number of days', parseInt)
-  .option('-t, --start-timeout <n>', 'external processes start timeout in milliseconds', parseInt)
-  .option('-x, --total-timeout <n>', 'test timeout in milliseconds', parseInt)
-  .allowUnknownOption(true)
-  .parse(argv);
+const env = {
+  orgs: process.env.ORGS || 1,
+  resourceInstances: process.env.INSTANCES || 1,
+  usage: process.env.USAGE_DOCS || 1,
+  tshift: process.env.DAY * 24 * 60 * 60 * 1000 || 0,
+  startTimeout: process.env.COLLECTOR_INTEGRATION_START_TIMEOUT || 30000,
+  totalTimeout: process.env.COLLECTOR_INTEGRATION_TOTAL_TIMEOUT || 60000,
+  rabbitUri: process.env.RABBIT_URI
+};
 
-const orgs = commander.orgs || 1;
-const resourceInstances = commander.instances || 1;
-const usage = commander.usagedocs || 1;
-
-// Usage time shift by number of days in milliseconds
-const tshift = commander.day * 24 * 60 * 60 * 1000 || 0;
-
-const startTimeout = commander.startTimeout || 30000;
-const totalTimeout = commander.totalTimeout || 60000;
-
-const rabbitUri = process.env.RABBIT_URI;
 const consumerConfig = {
   mainQueue: {
     name: 'collector-itest-queue',
@@ -67,8 +52,9 @@ const consumerConfig = {
 const customEnv = extend({}, process.env, { ABACUS_COLLECT_QUEUE:  consumerConfig.mainQueue.name });
 const lifecycleManager = createLifecycleManager().useEnv(customEnv);
 
-describe('abacus-usage-collector-itest', () => {
+describe('collector integration test', () => {
   before(() => {
+    checkCorrectSetup(env);
     const modules = [
       lifecycleManager.modules.eurekaPlugin,
       lifecycleManager.modules.provisioningPlugin,
@@ -87,8 +73,8 @@ describe('abacus-usage-collector-itest', () => {
   });
 
   // Initialize usage doc properties with unique values
-  const start = 1435629365220 + tshift;
-  const end = 1435629465220 + tshift;
+  const start = 1435629365220 + env.tshift;
+  const end = 1435629465220 + env.tshift;
 
   const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27', o + 1].join('-');
   const sid = (o, ri) => ['aaeae239-f3f8-483c-9dd0-de5d41c38b6a', o + 1].join('-');
@@ -135,10 +121,11 @@ describe('abacus-usage-collector-itest', () => {
   });
 
   const submit = (cb) =>
-    map(range(usage), (u) => map(range(resourceInstances), (ri) => map(range(orgs), (o) => post(o, ri, u, cb))));
+    map(range(env.usage), (u) => map(range(env.resourceInstances), (ri) =>
+      map(range(env.orgs), (o) => post(o, ri, u, cb))));
 
   const submitUsage = (cb) => {
-    request.waitFor('http://localhost::p/batch', { p: 9080 }, startTimeout, (err, value) => {
+    request.waitFor('http://localhost::p/batch', { p: 9080 }, env.startTimeout, (err, value) => {
       if (err) throw err;
       submit(cb);
     });
@@ -160,8 +147,7 @@ describe('abacus-usage-collector-itest', () => {
       countMessages();
     };
 
-    const connectionManager = new ConnectionManager([rabbitUri]);
-
+    const connectionManager = new ConnectionManager([env.rabbitUri]);
 
     debug('Creating consumer ...');
     const consumer = new Consumer(connectionManager, amqpMessageParser, consumerConfig);
@@ -170,12 +156,12 @@ describe('abacus-usage-collector-itest', () => {
 
   it('collect measured usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs or predefined timeout
-    const timeout = Math.max(totalTimeout, 100 * orgs * resourceInstances * usage);
+    const timeout = Math.max(env.totalTimeout, 100 * env.orgs * env.resourceInstances * env.usage);
     this.timeout(timeout + 2000);
 
     storeDefaults();
     submitUsage(() => {});
-    setInterval(() => verify(orgs * resourceInstances * usage, done), 5000);
+    setInterval(() => verify(env.orgs * env.resourceInstances * env.usage, done), 5000);
   });
 
 });

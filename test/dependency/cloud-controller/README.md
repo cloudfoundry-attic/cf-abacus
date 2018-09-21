@@ -1,8 +1,6 @@
 abacus-cloud-controller-dependency-test
 ===
 
-Cloud Controller Dependency test
-
 :information_source: In order to run the cloud controller dependency test, export the following:
 
 ```bash

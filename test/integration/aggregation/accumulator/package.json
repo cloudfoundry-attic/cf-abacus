@@ -28,31 +28,32 @@
     "pub": "publish"
   },
   "dependencies": {
+    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager"
+  },
+  "devDependencies": {
+    "abacus-account-plugin": "file:../../../../lib/plugins/account",
     "abacus-batch": "file:../../../../lib/utils/batch",
     "abacus-clone": "file:../../../../lib/utils/clone",
     "abacus-dataflow": "file:../../../../lib/utils/dataflow",
     "abacus-dbclient": "file:../../../../lib/utils/dbclient",
     "abacus-debug": "file:../../../../lib/utils/debug",
+    "abacus-eslint": "file:../../../../tools/eslint",
     "abacus-express": "file:../../../../lib/utils/express",
     "abacus-mocha": "file:../../../../tools/mocha",
-    "nyc": "^11.4.1",
+    "abacus-moment": "file:../../../../lib/utils/moment",
+    "abacus-publish": "file:../../../../tools/publish",
     "abacus-request": "file:../../../../lib/utils/request",
     "abacus-router": "file:../../../../lib/utils/router",
     "abacus-seqid": "file:../../../../lib/utils/seqid",
+    "abacus-test-helper": "file:../../../test-utils/helper",
     "abacus-timewindow": "file:../../../../lib/utils/timewindow",
     "abacus-throttle": "file:../../../../lib/utils/throttle",
     "abacus-usage-accumulator": "file:../../../../lib/aggregation/accumulator",
-    "abacus-account-plugin": "file:../../../../lib/plugins/account",
     "abacus-yieldable": "file:../../../../lib/utils/yieldable",
-    "abacus-moment": "file:../../../../lib/utils/moment",
-    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager",
     "bignumber.js": "^2.1.0",
     "commander": "2.8.1",
+    "nyc": "^11.4.1",
     "underscore": "^1.9.1"
-  },
-  "devDependencies": {
-    "abacus-eslint": "file:../../../../tools/eslint",
-    "abacus-publish": "file:../../../../tools/publish"
   },
   "nyc": {
     "cache": true,

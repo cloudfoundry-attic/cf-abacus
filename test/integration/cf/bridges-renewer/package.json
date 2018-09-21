@@ -27,13 +27,10 @@
     "lint": "abacus-eslint",
     "pub": "publish"
   },
-
   "dependencies": {
-    "async": "^2.6.0",
-    "http-status-codes": "^1.3.0",
-    "jsonwebtoken": "^8.3.0",
-    "request": "^2.79.0",
-    "underscore": "^1.9.1",
+    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager"
+  },
+  "devDependencies": {
     "abacus-cf-applications": "file:../../../../lib/cf/applications",
     "abacus-cf-services": "file:../../../../lib/cf/services",
     "abacus-cf-renewer": "file:../../../../lib/cf/renewer",
@@ -42,12 +39,16 @@
     "abacus-eslint": "file:../../../../tools/eslint",
     "abacus-express": "file:../../../../lib/utils/express",
     "abacus-mocha": "file:../../../../tools/mocha",
-    "nyc": "^11.4.1",
     "abacus-moment": "file:../../../../lib/utils/moment",
-    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager",
     "abacus-request": "file:../../../../lib/utils/request",
     "abacus-router": "file:../../../../lib/utils/router",
-    "abacus-wait": "file:../../../test-utils/wait"
+    "abacus-wait": "file:../../../test-utils/wait",
+    "async": "^2.6.0",
+    "http-status-codes": "^1.3.0",
+    "jsonwebtoken": "^8.3.0",
+    "request": "^2.79.0",
+    "nyc": "^11.4.1",
+    "underscore": "^1.9.1"
   },
   "nyc": {
     "cache": true,

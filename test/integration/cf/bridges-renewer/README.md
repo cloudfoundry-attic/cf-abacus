@@ -1,4 +1,4 @@
-abacus-eureka-integration-test
+abacus-bridges-renewer-integration-test
 ===
 
 :information_source: In order to run the test locally, make sure you run the following commands:
@@ -8,6 +8,6 @@ cd cf-abacus
 docker-compose up -d
 source bin/localdb
 yarn provision
-cd test/integration/plugins/eureka
+cd test/integration/cf/bridges-renewer
 yarn run integration
 ```

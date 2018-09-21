@@ -1,5 +1,5 @@
 {
-  "name": "abacus-usage-aggregator-itest",
+  "name": "abacus-usage-aggregator-integration-test",
   "description": "Aggregator integration tests",
   "license": "Apache-2.0",
   "version": "1.1.3",
@@ -28,30 +28,31 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-mocha": "file:../../../../tools/mocha",
-    "nyc": "^11.4.1",
+    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager"
+  },
+  "devDependencies": {
+    "abacus-account-plugin": "file:../../../../lib/plugins/account",
     "abacus-batch": "file:../../../../lib/utils/batch",
     "abacus-clone": "file:../../../../lib/utils/clone",
-    "abacus-throttle": "file:../../../../lib/utils/throttle",
-    "abacus-request": "file:../../../../lib/utils/request",
-    "abacus-router": "file:../../../../lib/utils/router",
-    "abacus-express": "file:../../../../lib/utils/express",
     "abacus-dataflow": "file:../../../../lib/utils/dataflow",
     "abacus-dbclient": "file:../../../../lib/utils/dbclient",
+    "abacus-debug": "file:../../../../lib/utils/debug",
+    "abacus-eslint": "file:../../../../tools/eslint",
+    "abacus-express": "file:../../../../lib/utils/express",
+    "abacus-mocha": "file:../../../../tools/mocha",
+    "abacus-request": "file:../../../../lib/utils/request",
+    "abacus-router": "file:../../../../lib/utils/router",
     "abacus-seqid": "file:../../../../lib/utils/seqid",
     "abacus-timewindow": "file:../../../../lib/utils/timewindow",
+    "abacus-test-helper": "file:../../../test-utils/helper",
+    "abacus-throttle": "file:../../../../lib/utils/throttle",
+    "abacus-publish": "file:../../../../tools/publish",
     "abacus-usage-aggregator": "file:../../../../lib/aggregation/aggregator",
-    "abacus-account-plugin": "file:../../../../lib/plugins/account",
-    "abacus-debug": "file:../../../../lib/utils/debug",
-    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager",
     "abacus-yieldable": "file:../../../../lib/utils/yieldable",
     "bignumber.js": "^2.1.0",
     "underscore": "^1.9.1",
-    "commander": "2.8.1"
-  },
-  "devDependencies": {
-    "abacus-eslint": "file:../../../../tools/eslint",
-    "abacus-publish": "file:../../../../tools/publish"
+    "commander": "2.8.1",
+    "nyc": "^11.4.1"
   },
   "nyc": {
     "cache": true,

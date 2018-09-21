@@ -1,8 +1,6 @@
 'use strict';
 
-const { clone, extend } = require('underscore');
-
-const commander = require('commander');
+const { extend } = require('underscore');
 
 const request = require('abacus-request');
 const dbclient = require('abacus-dbclient');
@@ -10,24 +8,15 @@ const dataflow = require('abacus-dataflow');
 const lifecycleManager = require('abacus-lifecycle-manager')();
 const moment = require('abacus-moment');
 const yieldable = require('abacus-yieldable');
+const { checkCorrectSetup } = require('abacus-test-helper');
 
-// Setup the debug log
-const debug = require('abacus-debug')('abacus-usage-reporting-itest');
+const debug = require('abacus-debug')('abacus-usage-reporting-integration-test');
 
-// Parse command line options
-const argv = clone(process.argv);
-argv.splice(1, 1, 'usage-reporting-itest');
-commander
-  .option('-t, --start-timeout <n>', 'external processes start timeout in milliseconds', parseInt)
-  .option('-x, --total-timeout <n>', 'test timeout in milliseconds', parseInt)
-  .allowUnknownOption(true)
-  .parse(argv);
-
-// External Abacus processes start timeout
-const startTimeout = commander.startTimeout || 30000;
-
-// This test timeout
-const totalTimeout = commander.totalTimeout || 60000;
+const env = {
+  db: process.env.DB,
+  startTimeout: process.env.START_TIMEOUT || 30000,
+  totalTimeout: process.env.TOTAL_TIMEOUT || 60000
+};
 
 const aggregatordb = dataflow.db('abacus-aggregator-aggregated-usage');
 const dbBulk = yieldable.functioncb(aggregatordb.bulkDocs);
@@ -100,11 +89,12 @@ const verifyReports = (cb) => {
   });
 };
 
-describe('abacus-usage-reporting-itest', () => {
+describe('reporting integration test', () => {
   before(() => {
+    checkCorrectSetup(env);
     const modules = [lifecycleManager.modules.accountPlugin, lifecycleManager.modules.reporting];
 
-    dbclient.drop(process.env.DB, /^abacus-/, () => {
+    dbclient.drop(env.db, /^abacus-/, () => {
       lifecycleManager.startModules(modules);
     });
   });
@@ -114,10 +104,10 @@ describe('abacus-usage-reporting-itest', () => {
   });
 
   it('report rated usage submissions', function(done) {
-    this.timeout(totalTimeout + 2000);
+    this.timeout(env.totalTimeout + 2000);
 
     // Wait for usage reporting service to start
-    request.waitFor('http://localhost::p/batch', { p: 9088 }, startTimeout, (err) => {
+    request.waitFor('http://localhost::p/batch', { p: 9088 }, env.startTimeout, (err) => {
       // Failed to ping usage reporting service before timing out
       if (err) throw err;
 

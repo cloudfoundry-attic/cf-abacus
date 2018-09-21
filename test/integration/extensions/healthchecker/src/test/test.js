@@ -1,33 +1,22 @@
 'use strict';
 
-const commander = require('commander');
-
-const _ = require('underscore');
-const clone = _.clone;
-
 const dbclient = require('abacus-dbclient');
 const lifecycleManager = require('abacus-lifecycle-manager')();
 const request = require('abacus-request');
 
-const argv = clone(process.argv);
-argv.splice(1, 1, 'secured-itest');
-commander
-  .option('-t, --start-timeout <n>', 'external processes start timeout in milliseconds', parseInt)
-  .allowUnknownOption(true)
-  .parse(argv);
+const env = {
+  startTimeout: process.env.START_TIMEOUT || 5000
+};
 
-// External Abacus processes start timeout
-const startTimeout = commander.startTimeout || 5000;
-
-describe('healthcheck', function() {
-  this.timeout(startTimeout);
+describe('healthchecker integration test', function() {
+  this.timeout(env.startTimeout);
 
   before((done) => {
     const modules = [lifecycleManager.modules.authServerPlugin, lifecycleManager.modules.eurekaPlugin];
 
     const startModules = () => {
       lifecycleManager.startModules(modules);
-      request.waitFor('http://localhost::p', { p: 9882 }, startTimeout, (err, value) => done(err));
+      request.waitFor('http://localhost::p', { p: 9882 }, env.startTimeout, (err, value) => done(err));
     };
 
     dbclient.drop(process.env.DB, /^abacus-/, startModules);
