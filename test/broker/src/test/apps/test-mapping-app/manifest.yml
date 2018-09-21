@@ -1,7 +1,7 @@
 ---
 applications:
 - name: service-mapping-test-app
-  buildpack: https://github.com/cloudfoundry/nodejs-buildpack.git#v1.6.16
+  buildpack: https://github.com/cloudfoundry/nodejs-buildpack.git#v1.6.32
   command: node app.js
   memory: 128M
   instances: 1
