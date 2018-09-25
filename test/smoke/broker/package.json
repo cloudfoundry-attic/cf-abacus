@@ -29,24 +29,24 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-cf-broker": "file:../../../lib/cf/broker",
-    "abacus-cmdline": "file:../../../tools/cmdline",
-    "abacus-moment": "file:../../../lib/utils/moment",
-    "abacus-oauth": "file:../../../lib/utils/oauth",
-    "abacus-request": "file:../../../lib/utils/request",
     "abacus-test-abacus-util": "file:../../test-utils/abacus-util",
     "abacus-test-app-util": "file:../../test-utils/apps/util",
     "abacus-test-cf-util": "file:../../test-utils/cf-util",
-    "abacus-test-helper": "file:../../test-utils/helper",
-    "underscore": "^1.9.1"
+    "abacus-test-helper": "file:../../test-utils/helper"
   },
   "devDependencies": {
+    "abacus-cf-broker": "file:../../../lib/cf/broker",
+    "abacus-cmdline": "file:../../../tools/cmdline",
     "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-moment": "file:../../../lib/utils/moment",
+    "abacus-oauth": "file:../../../lib/utils/oauth",
+    "abacus-request": "file:../../../lib/utils/request",
     "abacus-mocha": "file:../../../tools/mocha",
-    "nyc": "^11.4.1",
-    "eslint-plugin-nodate": "file:../../../tools/eslint-plugin-nodate",
     "abacus-yieldable": "file:../../../lib/utils/yieldable",
-    "eslint-plugin-mocha": "^4.8.0"
+    "eslint-plugin-mocha": "^4.8.0",
+    "eslint-plugin-nodate": "file:../../../tools/eslint-plugin-nodate",
+    "nyc": "^11.4.1",
+    "underscore": "^1.9.1"
   },
   "nyc": {
     "cache": true,

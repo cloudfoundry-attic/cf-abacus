@@ -4,7 +4,6 @@ const dbclient = require('abacus-dbclient');
 const moment = require('abacus-moment');
 const lifecycleManager = require('abacus-lifecycle-manager')();
 
-
 const fixture = require('./fixture');
 const rabbitClient = require('./rabbit-client');
 

@@ -28,7 +28,8 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager"
+    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager",
+    "abacus-test-helper": "file:../../../test-utils/helper"
   },
   "devDependencies": {
     "abacus-account-plugin": "file:../../../../lib/plugins/account",
@@ -44,7 +45,6 @@
     "abacus-router": "file:../../../../lib/utils/router",
     "abacus-seqid": "file:../../../../lib/utils/seqid",
     "abacus-timewindow": "file:../../../../lib/utils/timewindow",
-    "abacus-test-helper": "file:../../../test-utils/helper",
     "abacus-throttle": "file:../../../../lib/utils/throttle",
     "abacus-publish": "file:../../../../tools/publish",
     "abacus-usage-aggregator": "file:../../../../lib/aggregation/aggregator",

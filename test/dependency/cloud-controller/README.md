@@ -1,7 +1,7 @@
 abacus-cloud-controller-dependency-test
 ===
 
-:information_source: In order to run the cloud controller dependency test, export the following:
+:information_source: In order to run the cloud controller dependency test, export the following environment variables:
 
 ```bash
 export CF_API_URI=https://api.<domain>

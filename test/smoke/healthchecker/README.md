@@ -1,18 +1,16 @@
 abacus-healthchecker-smoke-test
 ===
 
-Healthchecker smoke tests
-
-To run the healthchecker smoke test export the following:
+To run the healthchecker smoke test export the following environment variables:
 
 ```bash
 export HEALTHCHECKER_URL=https://<prefix>abacus-healthchecker.<domain>
-export HYSTRIX_CLIENT_ID=abacus-client
+export HYSTRIX_CLIENT_ID=<prefix>abacus-client
 export HYSTRIX_CLIENT_SECRET=abacus-client-secret
 # optional
 export ABACUS_PREFIX=<prefix>
-export HEALTHCHECKER_START_TIMEOUT=<timeout>
-export HEALTHCHECKER_TOTAL_TIMEOUT=<timeout>
+export SMOKE_START_TIMEOUT=<start-timeout>
+export SMOKE_TOTAL_TIMEOUT=<total-timeout>
 export SKIP_SSL_VALIDATION=true
 ```
 

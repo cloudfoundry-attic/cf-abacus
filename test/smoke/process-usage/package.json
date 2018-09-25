@@ -27,20 +27,17 @@
     "lint": "abacus-eslint",
     "pub": "publish"
   },
-  "dependencies": {
+  "devDependencies": {
     "abacus-clone": "file:../../../lib/utils/clone",
     "abacus-dbclient": "file:../../../lib/utils/dbclient",
     "abacus-mocha": "file:../../../tools/mocha",
-    "nyc": "^11.4.1",
     "abacus-moment": "file:../../../lib/utils/moment",
     "abacus-oauth": "file:../../../lib/utils/oauth",
     "abacus-request": "file:../../../lib/utils/request",
-    "commander": "^2.8.1",
-    "underscore": "^1.9.1"
-  },
-  "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
-    "abacus-publish": "file:../../../tools/publish"
+    "abacus-publish": "file:../../../tools/publish",
+    "nyc": "^11.4.1",
+    "underscore": "^1.9.1"
   },
   "nyc": {
     "cache": true,

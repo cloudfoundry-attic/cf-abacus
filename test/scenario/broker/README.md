@@ -1,4 +1,7 @@
-To run the broker scenario test export the following:
+abacus-broker-scenario-test
+===
+
+:information_source: In order to run the broker scenario test, export the following environment variables:
 
 ```bash
 export CF_API_URI=https://api.<domain>
@@ -16,12 +19,11 @@ export TOTAL_TIMEOUT=<timeout>
 export SKIP_SSL_VALIDATION=true
 ```
 
-Then:
+Then run the following commands:
 
 ```bash
 cd cf-abacus
 yarn provision
 cd test/scenario/broker
-yarn install
 yarn run scenario
 ```

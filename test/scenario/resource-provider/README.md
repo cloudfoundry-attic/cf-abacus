@@ -3,7 +3,7 @@ abacus-resource-provider-scenario-test
 
 ### Resource provider scenario test (provisioning plugin)
 
-To run this test against an already set-up and functioning abacus instance, set the following environment variables:
+:information_source: In order to run the resource provider scenario test, export the following environment variables:
 
 ```bash
 export CF_API_URI=https://api.<system domain>
@@ -22,4 +22,13 @@ export UAA_SECRET=<UAA admin secret>
 
 # optional; set if self-signed certificate is used
 export SKIP_SSL_VALIDATION=true
+```
+
+Then run the following commands:
+
+```bash
+cd cf-abacus
+yarn provision
+cd test/scenario/resource-provider
+yarn run scenario
 ```

@@ -16,13 +16,13 @@ const testEnv = {
   user: process.env.CF_ADMIN_USER,
   password: process.env.CF_ADMIN_PASSWORD,
   org: process.env.CF_BROKER_SMOKE_ORG,
-  space: process.env.CF_BROKER_SMOKE_SPACE,
+  space: process.env.CF_BROKER_SMOKE_SPACE || 'smoke-test',
   appsDomain: process.env.APPS_DOMAIN,
   collectorUrl: process.env.COLLECTOR_URL,
   reportingUrl: process.env.REPORTING_URL,
   serviceName: process.env.SERVICE_NAME,
   servicePlan: process.env.SERVICE_PLAN,
-  totalTimeout: process.env.TOTAL_TIMEOUT || 300000
+  totalTimeout: process.env.SMOKE_TOTAL_TIMEOUT || 300000
 };
 
 let abacusClient;

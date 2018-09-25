@@ -132,53 +132,24 @@
 "abacus-bridges-renewer-integration-test@file:test/integration/cf/bridges-renewer":
   version "1.1.3"
   dependencies:
-    abacus-cf-applications "file:../../Library/lib/cf/applications"
-    abacus-cf-renewer "file:../../Library/lib/cf/renewer"
-    abacus-cf-services "file:../../Library/lib/cf/services"
-    abacus-dbclient "file:../../Library/lib/utils/dbclient"
-    abacus-debug "file:../../Library/lib/utils/debug"
-    abacus-eslint "file:../../Library/tools/eslint"
-    abacus-express "file:../../Library/lib/utils/express"
     abacus-lifecycle-manager "file:../../Library/Caches/test-utils/lifecycle-manager"
-    abacus-mocha "file:../../Library/tools/mocha"
-    abacus-moment "file:../../Library/lib/utils/moment"
-    abacus-request "file:../../Library/lib/utils/request"
-    abacus-router "file:../../Library/lib/utils/router"
     abacus-wait "file:../../Library/Caches/test-utils/wait"
-    async "^2.6.0"
-    http-status-codes "^1.3.0"
-    jsonwebtoken "^8.3.0"
-    nyc "^11.4.1"
-    request "^2.79.0"
-    underscore "^1.9.1"
 
 "abacus-broker-scenario-test@file:test/scenario/broker":
   version "1.1.3"
   dependencies:
-    abacus-cf-broker "file:../../Library/Caches/lib/cf/broker"
-    abacus-cmdline "file:../../Library/Caches/tools/cmdline"
-    abacus-moment "file:../../Library/Caches/lib/utils/moment"
-    abacus-oauth "file:../../Library/Caches/lib/utils/oauth"
-    abacus-request "file:../../Library/Caches/lib/utils/request"
     abacus-test-abacus-util "file:../../Library/Caches/Yarn/test-utils/abacus-util"
     abacus-test-app-util "file:../../Library/Caches/Yarn/test-utils/apps/util"
     abacus-test-cf-util "file:../../Library/Caches/Yarn/test-utils/cf-util"
     abacus-test-helper "file:../../Library/Caches/Yarn/test-utils/helper"
-    underscore "^1.9.1"
 
 "abacus-broker-smoke-test@file:test/smoke/broker":
   version "1.1.3"
   dependencies:
-    abacus-cf-broker "file:../../Library/Caches/lib/cf/broker"
-    abacus-cmdline "file:../../Library/Caches/tools/cmdline"
-    abacus-moment "file:../../Library/Caches/lib/utils/moment"
-    abacus-oauth "file:../../Library/Caches/lib/utils/oauth"
-    abacus-request "file:../../Library/Caches/lib/utils/request"
     abacus-test-abacus-util "file:../../Library/Caches/Yarn/test-utils/abacus-util"
     abacus-test-app-util "file:../../Library/Caches/Yarn/test-utils/apps/util"
     abacus-test-cf-util "file:../../Library/Caches/Yarn/test-utils/cf-util"
     abacus-test-helper "file:../../Library/Caches/Yarn/test-utils/helper"
-    underscore "^1.9.1"
 
 "abacus-carryover@file:lib/utils/carryover":
   version "1.1.3"
@@ -235,6 +206,9 @@
 
 "abacus-cf-dependency-test@file:test/dependency/cloud-controller":
   version "1.1.3"
+  dependencies:
+    abacus-test-helper "file:../../Library/Caches/Yarn/test-utils/helper"
+    abacus-wait "file:../../Library/Caches/Yarn/test-utils/wait"
 
 "abacus-cf-renewer@file:lib/cf/renewer":
   version "1.1.3"
@@ -431,6 +405,8 @@
 
 "abacus-eureka-integration-test@file:test/integration/plugins/eureka":
   version "1.1.3"
+  dependencies:
+    abacus-lifecycle-manager "file:../../Library/Caches/test-utils/lifecycle-manager"
 
 "abacus-eureka-plugin@file:lib/plugins/eureka":
   version "1.1.3"
@@ -495,16 +471,11 @@
 
 "abacus-healthchecker-integration-test@file:test/integration/extensions/healthchecker":
   version "1.1.3"
+  dependencies:
+    abacus-lifecycle-manager "file:../../Library/Caches/test-utils/lifecycle-manager"
 
 "abacus-healthchecker-smoke-test@file:test/smoke/healthchecker":
   version "1.1.3"
-  dependencies:
-    abacus-dbclient "file:../../Library/Caches/lib/utils/dbclient"
-    abacus-debug "file:../../Library/Caches/lib/utils/debug"
-    abacus-mocha "file:../../Library/Caches/tools/mocha"
-    commander "2.8.1"
-    nyc "^11.4.1"
-    underscore "^1.9.1"
 
 "abacus-healthchecker@file:lib/extensions/healthchecker":
   version "1.1.3"
@@ -720,16 +691,6 @@
 
 "abacus-process-usage-smoke-test@file:test/smoke/process-usage":
   version "1.1.3"
-  dependencies:
-    abacus-clone "file:../../Library/Caches/lib/utils/clone"
-    abacus-dbclient "file:../../Library/Caches/lib/utils/dbclient"
-    abacus-mocha "file:../../Library/Caches/tools/mocha"
-    abacus-moment "file:../../Library/Caches/lib/utils/moment"
-    abacus-oauth "file:../../Library/Caches/lib/utils/oauth"
-    abacus-request "file:../../Library/Caches/lib/utils/request"
-    commander "^2.8.1"
-    nyc "^11.4.1"
-    underscore "^1.9.1"
 
 "abacus-provisioning-plugin@file:lib/plugins/provisioning":
   version "1.1.3"
@@ -820,15 +781,7 @@
 "abacus-resource-provider-scenario-test@file:test/scenario/resource-provider":
   version "1.1.3"
   dependencies:
-    abacus-cmdline "file:../../Library/Caches/tools/cmdline"
-    abacus-moment "file:../../Library/Caches/lib/utils/moment"
-    abacus-oauth "file:../../Library/Caches/lib/utils/oauth"
-    abacus-request "file:../../Library/Caches/lib/utils/request"
     abacus-test-helper "file:../../Library/Caches/Yarn/test-utils/helper"
-    eslint-plugin-mocha "^4.8.0"
-    eslint-plugin-nodate "file:../../Library/Caches/tools/eslint-plugin-nodate"
-    request-debug "^0.2.0"
-    underscore "^1.9.1"
 
 "abacus-retry@file:lib/utils/retry":
   version "1.1.3"
@@ -967,6 +920,9 @@
 
 "abacus-usage-accumulator-integration-test@file:test/integration/aggregation/accumulator":
   version "1.1.3"
+  dependencies:
+    abacus-lifecycle-manager "file:../../Library/Caches/test-utils/lifecycle-manager"
+    abacus-test-helper "file:../../Library/Caches/test-utils/helper"
 
 "abacus-usage-accumulator@file:lib/aggregation/accumulator":
   version "1.1.3"
@@ -992,6 +948,9 @@
 
 "abacus-usage-aggregator-integration-test@file:test/integration/aggregation/aggregator":
   version "1.1.3"
+  dependencies:
+    abacus-lifecycle-manager "file:../../Library/Caches/test-utils/lifecycle-manager"
+    abacus-test-helper "file:../../Library/Caches/test-utils/helper"
 
 "abacus-usage-aggregator@file:lib/aggregation/aggregator":
   version "1.1.3"
@@ -1020,6 +979,9 @@
 
 "abacus-usage-collector-integration-test@file:test/integration/metering/collector":
   version "1.1.3"
+  dependencies:
+    abacus-lifecycle-manager "file:../../Library/Caches/test-utils/lifecycle-manager"
+    abacus-test-helper "file:../../Library/Caches/test-utils/helper"
 
 "abacus-usage-collector@file:lib/metering/collector":
   version "1.1.3"
@@ -1055,6 +1017,9 @@
 
 "abacus-usage-meter-integration-test@file:test/integration/metering/meter":
   version "1.1.3"
+  dependencies:
+    abacus-lifecycle-manager "file:../../Library/Caches/test-utils/lifecycle-manager"
+    abacus-test-helper "file:../../Library/Caches/test-utils/helper"
 
 "abacus-usage-meter@file:lib/metering/meter":
   version "1.1.3"
@@ -1096,6 +1061,9 @@
 
 "abacus-usage-reporting-integration-test@file:test/integration/aggregation/reporting":
   version "1.1.3"
+  dependencies:
+    abacus-lifecycle-manager "file:../../Library/Caches/test-utils/lifecycle-manager"
+    abacus-test-helper "file:../../Library/Caches/test-utils/helper"
 
 "abacus-usage-reporting@file:lib/aggregation/reporting":
   version "1.1.3"

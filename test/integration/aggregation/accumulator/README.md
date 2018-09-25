@@ -9,6 +9,5 @@ docker-compose up -d
 source bin/localdb
 yarn provision
 cd test/integration/aggregation/accumulator
-yarn install
 yarn run integration
 ```

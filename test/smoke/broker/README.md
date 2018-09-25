@@ -1,4 +1,7 @@
-To run the broker smoke test export the following:
+abacus-broker-smoke-test
+===
+
+To run the broker smoke test export the following environment variables:
 
 ```bash
 export CF_API_URI=https://api.<domain>
@@ -7,12 +10,12 @@ export CF_ADMIN_PASSWORD=admin
 export CF_BROKER_SMOKE_ORG=<org>
 export CF_BROKER_SMOKE_SPACE=<space>
 export APPS_DOMAIN=<apps domain>
-export COLLECTOR_URL=https://abacus-usage-collector.<domain>
-export REPORTING_URL=https://abacus-usage-reporting.<domain>
-export SERVICE_NAME=metering
+export COLLECTOR_URL=https://<prefix>abacus-usage-collector.<domain>
+export REPORTING_URL=https://<prefix>abacus-usage-reporting.<domain>
+export SERVICE_NAME=<prefix>metering
 export SERVICE_PLAN=standard
 # optional
-export TOTAL_TIMEOUT=<timeout>
+export SMOKE_TOTAL_TIMEOUT=<total-timeout>
 export SKIP_SSL_VALIDATION=true
 ```
 

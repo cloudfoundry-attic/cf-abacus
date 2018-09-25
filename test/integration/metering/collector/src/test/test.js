@@ -17,8 +17,8 @@ const env = {
   resourceInstances: process.env.INSTANCES || 1,
   usage: process.env.USAGE_DOCS || 1,
   tshift: process.env.DAY * 24 * 60 * 60 * 1000 || 0,
-  startTimeout: process.env.COLLECTOR_INTEGRATION_START_TIMEOUT || 30000,
-  totalTimeout: process.env.COLLECTOR_INTEGRATION_TOTAL_TIMEOUT || 60000,
+  startTimeout: process.env.START_TIMEOUT || 30000,
+  totalTimeout: process.env.TOTAL_TIMEOUT || 60000,
   rabbitUri: process.env.RABBIT_URI
 };
 
