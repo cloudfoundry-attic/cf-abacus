@@ -37,13 +37,13 @@
     "abacus-request": "file:../../utils/request",
     "abacus-retry": "file:../../utils/retry",
     "abacus-urienv": "file:../../utils/urienv",
-    "bignumber.js": "^2.1.0",
+    "bignumber.js": "2.1.0",
     "underscore": "^1.9.1"
   },
   "devDependencies": {
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
-    "nyc": "^11.4.1",
+    "nyc": "^13.0.1",
     "abacus-publish": "file:../../../tools/publish"
   },
   "nyc": {
@@ -57,7 +57,7 @@
     ]
   },
   "engines": {
-    "node": ">=8.9.4 <9.0.0",
+    "node": ">=8.10.0 <9.0.0",
     "npm": "<5.0.0",
     "yarn": ">=1.2.1"
   }

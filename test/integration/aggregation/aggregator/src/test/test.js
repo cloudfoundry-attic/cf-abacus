@@ -31,7 +31,7 @@ const db = require('abacus-dataflow').db('abacus-aggregator-aggregated-usage');
 db.allDocs = yieldable.functioncb(db.allDocs);
 
 const env = {
-  db: process.env.DB,
+  db: process.env.DB_URI,
   orgs: process.env.ORGS || 1,
   resourceInstances: process.env.INSTANCES || 1,
   usage: process.env.USAGE_DOCS || 1,
@@ -40,7 +40,7 @@ const env = {
   totalTimeout: process.env.TOTAL_TIMEOUT || 60000
 };
 
-  // Prunes all the windows of everything but the monthly quantity
+// Prunes all the windows of everything but the monthly quantity
 const pruneWindows = (v, k) => {
   if (k === 'windows') {
     const nwin = {};

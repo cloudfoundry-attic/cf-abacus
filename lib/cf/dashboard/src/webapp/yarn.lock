@@ -8,7 +8,7 @@ ace-builds@1.2.6:
 
 angular-animate@1.5.10:
   version "1.5.10"
-  resolved "https://registry.yarnpkg.com/angular-animate/-/angular-animate-1.5.10.tgz#7bfd4fb035ace40f9c5a22dbbd3e174ee5fa0032"
+  resolved "http://registry.npmjs.org/angular-animate/-/angular-animate-1.5.10.tgz#7bfd4fb035ace40f9c5a22dbbd3e174ee5fa0032"
 
 angular-breadcrumb@0.5.0:
   version "0.5.0"
@@ -16,11 +16,11 @@ angular-breadcrumb@0.5.0:
 
 angular-mocks@1.4.8:
   version "1.4.8"
-  resolved "https://registry.yarnpkg.com/angular-mocks/-/angular-mocks-1.4.8.tgz#1497426d480862ca8b1f637e9c2fc1a1df664208"
+  resolved "http://registry.npmjs.org/angular-mocks/-/angular-mocks-1.4.8.tgz#1497426d480862ca8b1f637e9c2fc1a1df664208"
 
 angular-sanitize@1.4.8:
   version "1.4.8"
-  resolved "https://registry.yarnpkg.com/angular-sanitize/-/angular-sanitize-1.4.8.tgz#43a6d79b65ec8c9d5f6651b945493e585f83d713"
+  resolved "http://registry.npmjs.org/angular-sanitize/-/angular-sanitize-1.4.8.tgz#43a6d79b65ec8c9d5f6651b945493e585f83d713"
 
 angular-translate-loader-partial@2.9.1:
   version "2.9.1"
@@ -54,11 +54,15 @@ angular-ui-router@0.2.13:
 
 angular@1.5.10:
   version "1.5.10"
-  resolved "https://registry.yarnpkg.com/angular/-/angular-1.5.10.tgz#e87fd35b2ed2fea3723de958e9ccf0a4b9125ef0"
+  resolved "http://registry.npmjs.org/angular/-/angular-1.5.10.tgz#e87fd35b2ed2fea3723de958e9ccf0a4b9125ef0"
 
-angular@>=1.2.0, "angular@>=1.2.26 <=1.6":
-  version "1.6.6"
-  resolved "https://registry.yarnpkg.com/angular/-/angular-1.6.6.tgz#fd5a3cfb437ce382d854ee01120797978527cb64"
+angular@>=1.2.0:
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.4.tgz#c1bf4884c2d470c06907737a1bf0835a9f646f31"
+
+"angular@>=1.2.26 <=1.6":
+  version "1.6.10"
+  resolved "https://registry.yarnpkg.com/angular/-/angular-1.6.10.tgz#eed3080a34d29d0f681ff119b18ce294e3f74826"
 
 bootstrap@3.3.7:
   version "3.3.7"
@@ -94,9 +98,9 @@ karma-read-json@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/karma-read-json/-/karma-read-json-1.1.0.tgz#e0ce345c5ae638a36a5a05dc1a6a042dccdab1e4"
 
-lodash@4.16.4:
-  version "4.16.4"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.16.4.tgz#01ce306b9bad1319f2a5528674f88297aeb70127"
+lodash@4.17.11:
+  version "4.17.11"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
 
 ng-file-upload@12.2.13:
   version "12.2.13"

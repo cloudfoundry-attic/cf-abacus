@@ -1,0 +1,219 @@
+{
+  "organization_id": "us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+  "resources": [
+    {
+      "resource_id": "test-resource",
+      "plans": [
+        {
+          "plan_id": "basic/test-metering-plan/test-rating-plan/test-pricing-plan",
+          "aggregated_usage": [
+            {
+              "metric": "storage",
+              "windows": [
+                [
+                  null
+                ],
+                [
+                  null
+                ],
+                [
+                  null
+                ],
+                [
+                  null,
+                  null,
+                  null,
+                  null,
+                  {
+                    "quantity": 1,
+                    "summary": 1
+                  },
+                  null
+                ],
+                [
+                  {
+                    "quantity": 1,
+                    "summary": 1
+                  },
+                  null
+                ]
+              ]
+            },
+            {
+              "metric": "thousand_light_api_calls",
+              "windows": [
+                [
+                  null
+                ],
+                [
+                  null
+                ],
+                [
+                  null
+                ],
+                [
+                  null,
+                  null,
+                  null,
+                  null,
+                  {
+                    "quantity": 1,
+                    "summary": 1
+                  },
+                  null
+                ],
+                [
+                  {
+                    "quantity": 1,
+                    "summary": 1
+                  },
+                  null
+                ]
+              ]
+            },
+            {
+              "metric": "heavy_api_calls",
+              "windows": [
+                [
+                  null
+                ],
+                [
+                  null
+                ],
+                [
+                  null
+                ],
+                [
+                  null,
+                  null,
+                  null,
+                  null,
+                  {
+                    "quantity": 100,
+                    "summary": 100
+                  },
+                  null
+                ],
+                [
+                  {
+                    "quantity": 100,
+                    "summary": 100
+                  },
+                  null
+                ]
+              ]
+            }
+          ],
+          "metering_plan_id": "test-metering-plan",
+          "rating_plan_id": "test-rating-plan",
+          "pricing_plan_id": "test-pricing-plan"
+        }
+      ],
+      "aggregated_usage": [
+        {
+          "metric": "storage",
+          "windows": [
+            [
+              null
+            ],
+            [
+              null
+            ],
+            [
+              null
+            ],
+            [
+              null,
+              null,
+              null,
+              null,
+              {
+                "quantity": 1,
+                "summary": 1
+              },
+              null
+            ],
+            [
+              {
+                "quantity": 1,
+                "summary": 1
+              },
+              null
+            ]
+          ]
+        },
+        {
+          "metric": "thousand_light_api_calls",
+          "windows": [
+            [
+              null
+            ],
+            [
+              null
+            ],
+            [
+              null
+            ],
+            [
+              null,
+              null,
+              null,
+              null,
+              {
+                "quantity": 1,
+                "summary": 1
+              },
+              null
+            ],
+            [
+              {
+                "quantity": 1,
+                "summary": 1
+              },
+              null
+            ]
+          ]
+        },
+        {
+          "metric": "heavy_api_calls",
+          "windows": [
+            [
+              null
+            ],
+            [
+              null
+            ],
+            [
+              null
+            ],
+            [
+              null,
+              null,
+              null,
+              null,
+              {
+                "quantity": 100,
+                "summary": 100
+              },
+              null
+            ],
+            [
+              {
+                "quantity": 100,
+                "summary": 100
+              },
+              null
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "spaces": [],
+  "account_id": "1234",
+  "start": 1537451601692,
+  "end": 1537451601692,
+  "processed": 1537451601692,
+  "id": "k/us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/t/0001537451601692",
+  "processed_id": "0001537450362786-0-0-1-0"
+}

@@ -30,7 +30,6 @@ case "$CI_TEST" in
     sleep 3s
     yarn run demo
     yarn stop
-
     ;;
 
   performance)

@@ -63,7 +63,7 @@ describe('collector integration test', () => {
     ];
 
     // drop all abacus collections except plans and plan-mappings
-    dbclient.drop(process.env.DB, /^abacus-((?!plan).)*$/, () => {
+    dbclient.drop(process.env.DB_URI, /^abacus-((?!plan).)*$/, () => {
       lifecycleManager.startModules(modules);
     });
   });

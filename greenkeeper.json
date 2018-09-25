@@ -1,0 +1,154 @@
+{
+  "groups": {
+    "eval": {
+      "packages": [
+        "lib/aggregation/accumulator/package.json",
+        "lib/aggregation/aggregator/package.json",
+        "lib/aggregation/reporting/package.json",
+        "lib/config/metering/package.json",
+        "lib/config/plan-tester/package.json",
+        "lib/config/rating/package.json",
+        "test/perf/package.json"
+      ],
+      "ignore": [ "bignumber.js" ]
+    },
+    "co": {
+      "packages": [
+        "lib/utils/yieldable/package.json"
+      ],
+      "ignore": [ "co" ]
+    },
+    "web": {
+      "packages": [
+        "lib/cf/dashboard/package.json",
+        "lib/cf/dashboard/src/webapp/package.json",
+        "package.json"
+      ],
+      "ignore": [
+        "ace-builds",
+        "angular",
+        "angular-animate",
+        "angular-breadcrumb",
+        "angular-mocks",
+        "angular-sanitize",
+        "angular-translate",
+        "angular-translate-loader-partial",
+        "angular-ui-router",
+        "angular-ui-bootstrap",
+        "angular-ui-ace",
+        "bootstrap",
+        "grunt",
+        "jasmine-core",
+        "grunt",
+        "grunt-contrib-concat",
+        "grunt-contrib-cssmin",
+        "grunt-contrib-jshint",
+        "grunt-contrib-less",
+        "grunt-contrib-uglify",
+        "grunt-contrib-watch",
+        "grunt-karma",
+        "grunt-ng-annotate",
+        "grunt-npm-install",
+        "grunt-run",
+        "jasmine-core",
+        "jsdom",
+        "jquery",
+        "karma",
+        "karma-cli",
+        "karma-coverage",
+        "karma-jasmine",
+        "karma-read-json",
+        "karma-cli",
+        "karma-coverage",
+        "ngclipboard",
+        "ng-file-upload",
+        "winston"
+      ]
+    },
+    "mongodb": {
+      "packages": [
+        "lib/utils/dbclient/package.json",
+        "lib/utils/express/package.json",
+        "lib/sampler/storage/package.json"
+      ],
+      "ignore": [ "mongodb" ]
+    },
+    "graphql": {
+      "packages": [
+        "lib/utils/schema/package.json"
+      ],
+      "ignore": [ "graphql" ]
+    },
+    "default": {
+      "packages": [
+        "demo/client/package.json",
+        "doc/package.json",
+        "etc/package.json",
+        "lib/cf/applications/package.json",
+        "lib/cf/broker/package.json",
+        "lib/cf/renewer/package.json",
+        "lib/cf/services/package.json",
+        "lib/config/mappings/package.json",
+        "lib/config/pricing/package.json",
+        "lib/extensions/healthchecker/package.json",
+        "lib/extensions/housekeeper/package.json",
+        "lib/metering/collector/package.json",
+        "lib/metering/meter/package.json",
+        "lib/plugins/account/package.json",
+        "lib/plugins/authserver/package.json",
+        "lib/plugins/eureka/package.json",
+        "lib/plugins/provisioning/package.json",
+        "lib/utils/accountclient/package.json",
+        "lib/utils/audit/package.json",
+        "lib/utils/basic/package.json",
+        "lib/utils/batch/package.json",
+        "lib/utils/breaker/package.json",
+        "lib/utils/bridge/package.json",
+        "lib/utils/carryover/package.json",
+        "lib/utils/client/package.json",
+        "lib/utils/clone/package.json",
+        "lib/utils/cluster/package.json",
+        "lib/utils/config/package.json",
+        "lib/utils/dataflow/package.json",
+        "lib/utils/dbcommons/package.json",
+        "lib/utils/debug/package.json",
+        "lib/utils/dedupe/package.json",
+        "lib/utils/eureka/package.json",
+        "lib/utils/eval/package.json",
+        "lib/utils/events/package.json",
+        "lib/utils/hystrix/package.json",
+        "lib/utils/launcher/package.json",
+        "lib/utils/lock/package.json",
+        "lib/utils/lrucache/package.json",
+        "lib/utils/metrics/package.json",
+        "lib/utils/moment/package.json",
+        "lib/utils/notify/package.json",
+        "lib/utils/oauth/package.json",
+        "lib/utils/paging/package.json",
+        "lib/utils/partition/package.json",
+        "lib/utils/perf/package.json",
+        "lib/utils/rabbitmq/package.json",
+        "lib/utils/rc/package.json",
+        "lib/utils/request/package.json",
+        "lib/utils/retry/package.json",
+        "lib/utils/rewire/package.json",
+        "lib/utils/router/package.json",
+        "lib/utils/seqid/package.json",
+        "lib/utils/throttle/package.json",
+        "lib/utils/timewindow/package.json",
+        "lib/utils/transform/package.json",
+        "lib/utils/urienv/package.json",
+        "lib/utils/vcapenv/package.json",
+        "lib/utils/webapp/package.json",
+        "tools/cfpush/package.json",
+        "tools/cmdline/package.json",
+        "tools/eslint-plugin-nodate/package.json",
+        "tools/eslint/package.json",
+        "tools/mddoc/package.json",
+        "tools/mocha/package.json",
+        "tools/publish/package.json",
+        "tools/replace-template/package.json"
+      ]
+    }
+  }
+}

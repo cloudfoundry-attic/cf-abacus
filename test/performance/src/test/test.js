@@ -36,8 +36,6 @@ const usage = require('./usage.js');
 const debug = require('abacus-debug')('abacus-perf-test');
 const xdebug = require('abacus-debug')('x-abacus-perf-test');
 
-process.env.DB = process.env.DB || 'test';
-
 // Parse command line options
 const argv = clone(process.argv);
 argv.splice(1, 1, 'perf');

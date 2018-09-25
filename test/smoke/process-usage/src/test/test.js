@@ -130,10 +130,24 @@ const authHeader = (token) =>
     }
     : {};
 
-describe('abacus-process-usage-smoke-test', function() {
-  before(() => {
-    if (objectStorageToken) objectStorageToken.start();
-    if (systemToken) systemToken.start();
+describe('process usage smoke test', function() {
+  before((done) => {
+    if(!secured()) {
+      done();
+      return;
+    }
+
+    objectStorageToken.start((err) => {
+      if (err) {
+        done(err);
+        return;
+      }
+
+      systemToken.start((err) => {
+        done(err);
+        return;
+      });
+    });
   });
 
   it('submits usage for a sample resource and retrieves an aggregated usage report', function(done) {

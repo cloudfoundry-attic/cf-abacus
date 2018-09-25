@@ -29,7 +29,7 @@ const db = require('abacus-dataflow').db('abacus-accumulator-accumulated-usage')
 db.allDocs = yieldable.functioncb(db.allDocs);
 
 const env = {
-  db: process.env.DB,
+  db: process.env.DB_URI,
   orgs: process.env.ORGS || 1,
   resourceInstances: process.env.INSTANCES || 1,
   usage: process.env.USAGE_DOCS || 1,

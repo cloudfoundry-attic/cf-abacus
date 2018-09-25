@@ -1,4 +1,4 @@
-FROM node:8.9.4
+FROM node:8.12.0
 
 RUN apt-get update -y
 RUN apt-get install -y mongodb zip
