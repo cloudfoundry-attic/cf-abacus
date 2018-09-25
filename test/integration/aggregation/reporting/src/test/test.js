@@ -14,7 +14,7 @@ const debug = require('abacus-debug')('abacus-usage-reporting-itest');
 
 const env = {
   db: process.env.DB_URI,
-  offset: process.env.ABACUS_TIME_OFFSET ? parseInt(process.env.ABACUS_TIME_OFFSET) : 0,
+  offset: () => process.env.ABACUS_TIME_OFFSET ? parseInt(process.env.ABACUS_TIME_OFFSET) : 0,
   startTimeout: process.env.START_TIMEOUT || 30000,
   totalTimeout: process.env.TOTAL_TIMEOUT || 60000
 };
@@ -91,7 +91,7 @@ const uploadRatedUsage = (done) => {
 
 // Get usage report, throttled to default concurrent requests
 const getReport = (orgId, cb) => {
-  const reportTime = now + env.offset + 1;
+  const reportTime = now + env.offset() + 1;
   debug(`Requesting org report for ${orgId} @ ${moment.utc(reportTime)}`);
   request.get(
     'http://localhost::port/v1/metering/organizations/:organization_id/aggregated/usage/:time',
