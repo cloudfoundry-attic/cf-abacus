@@ -43,7 +43,11 @@ const modules = {
   reporting: 'abacus-usage-reporting',
   applications: 'abacus-cf-applications',
   services: 'abacus-cf-services',
-  renewer: 'abacus-cf-renewer'
+  renewer: 'abacus-cf-renewer',
+  sampler: {
+    receiver: 'abacus-sampler-receiver',
+    worker: 'abacus-sampler-worker'
+  }
 };
 
 const getModuleDir = (module) => {

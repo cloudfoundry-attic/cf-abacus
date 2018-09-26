@@ -124,7 +124,7 @@
     "abacus-retry": "file:lib/utils/retry",
     "abacus-rewire": "file:lib/utils/rewire",
     "abacus-router": "file:lib/utils/router",
-    "abacus-sampler-collector": "file:lib/sampler/collector",
+    "abacus-sampler-receiver": "file:lib/sampler/receiver",
     "abacus-sampler-storage": "file:lib/sampler/storage",
     "abacus-sampler-worker": "file:lib/sampler/worker",
     "abacus-schema": "file:lib/utils/schema",
