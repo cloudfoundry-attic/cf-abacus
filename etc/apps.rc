@@ -9,7 +9,7 @@ default:
     - lib/aggregation/accumulator
     - lib/aggregation/aggregator
     - lib/aggregation/reporting
-    - lib/sampler/collector
+    - lib/sampler/receiver
     - lib/sampler/worker
 
 small:
