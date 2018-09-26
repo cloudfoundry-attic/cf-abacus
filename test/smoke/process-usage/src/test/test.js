@@ -132,7 +132,7 @@ const authHeader = (token) =>
 
 describe('process usage smoke test', function() {
   before((done) => {
-    if(!secured()) {
+    if(!env.secured) {
       done();
       return;
     }

@@ -1364,8 +1364,8 @@ amdefine@>=0.0.4:
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
 amqp-connection-manager@^2.0.0:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/amqp-connection-manager/-/amqp-connection-manager-2.1.2.tgz#59bbae22b92ea1439d988e856fec4236d26f3423"
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/amqp-connection-manager/-/amqp-connection-manager-2.2.0.tgz#6871f36fc2d4c4ce95409e7b9633897b6a4f69bf"
   dependencies:
     promise-breaker "^4.1.2"
 
@@ -5780,8 +5780,8 @@ run-parallel@^1.1.4:
   resolved "https://registry.yarnpkg.com/run-parallel/-/run-parallel-1.1.9.tgz#c9dd3a7cf9f4b2c4b6244e173a6ed866e61dd679"
 
 rxjs@^6.1.0:
-  version "6.3.2"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.3.2.tgz#6a688b16c4e6e980e62ea805ec30648e1c60907f"
+  version "6.3.3"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.3.3.tgz#3c6a7fa420e844a81390fb1158a9ec614f4bad55"
   dependencies:
     tslib "^1.9.0"
 

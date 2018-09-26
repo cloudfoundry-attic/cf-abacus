@@ -22,6 +22,7 @@
   ],
   "scripts": {
     "smoke": "abacus-mocha --command",
+    "process-usage-smoke": "abacus-mocha --command",
     "test": "abacus-eslint",
     "generate-coverage": "true",
     "lint": "abacus-eslint",

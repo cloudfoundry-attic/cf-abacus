@@ -12,17 +12,17 @@ case "$CI_TEST" in
     ;;
 
   extended)
-    # Run smoke test
+    # Run yarn process-usage-smoke test
     yarn start
     sleep 3s
-    yarn run smoke
+    yarn run yarn process-usage-smoke
     yarn stop
 
-    # Run demo and smoke tests without security
+    # Run demo and yarn process-usage-smoke tests without security
     yarn start
     sleep 3s
     yarn run demo
-    yarn run smoke
+    yarn run yarn process-usage-smoke
     yarn stop
 
     # Run demo test with the smalldb config
