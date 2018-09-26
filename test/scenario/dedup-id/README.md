@@ -7,7 +7,7 @@ abacus-dedup-id-scenario-test
 export SECURED='true'
 export SYSTEM_CLIENT_ID=test-client-id
 export SYSTEM_CLIENT_SECRET=test-client-secret
-export AUTH_SERVER=https://uaa.<system domain>
+export AUTH_SERVER=https://api.<system domain>
 export COLLECTOR_URL=https://abacus-usage-collector.<domain>
 export REPORTING_URL=https://abacus-usage-reporting.<domain>
 # optional
