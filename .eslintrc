@@ -50,7 +50,7 @@ rules:
   no-lonely-if: 2
   space-in-parens: [2, "never"]
   space-before-function-paren: [2, {
-    "anonymous": "never",
+    "anonymous": "ignore",
     "named": "never",
     "asyncArrow": "ignore"
   }]
