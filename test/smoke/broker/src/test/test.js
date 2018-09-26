@@ -16,7 +16,7 @@ const testEnv = {
   user: process.env.CF_ADMIN_USER,
   password: process.env.CF_ADMIN_PASSWORD,
   org: process.env.CF_BROKER_SMOKE_ORG,
-  space: process.env.CF_BROKER_SMOKE_SPACE || 'smoke-test',
+  space: process.env.CF_BROKER_SMOKE_SPACE,
   appsDomain: process.env.APPS_DOMAIN,
   collectorUrl: process.env.COLLECTOR_URL,
   reportingUrl: process.env.REPORTING_URL,
