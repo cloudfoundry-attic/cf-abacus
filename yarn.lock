@@ -788,20 +788,6 @@
 
 "abacus-performance-test@file:test/performance":
   version "1.1.3"
-  dependencies:
-    abacus-batch "file:../../Library/Caches/Yarn/lib/utils/batch"
-    abacus-breaker "file:../../Library/Caches/Yarn/lib/utils/breaker"
-    abacus-debug "file:../../Library/Caches/Yarn/lib/utils/debug"
-    abacus-mocha "file:../../Library/Caches/Yarn/tools/mocha"
-    abacus-moment "file:../../Library/Caches/Yarn/lib/utils/moment"
-    abacus-retry "file:../../Library/Caches/Yarn/lib/utils/retry"
-    async "^2.6.0"
-    bignumber.js "2.1.0"
-    commander "^2.17.1"
-    jsonwebtoken "^8.3.0"
-    nyc "^13.0.1"
-    underscore "^1.9.1"
-    uuid "^3.2.1"
 
 "abacus-plan-mappings@file:lib/config/mappings":
   version "1.1.3"
@@ -2102,7 +2088,7 @@ commander@2.8.1:
   dependencies:
     graceful-readlink ">= 1.0.0"
 
-commander@^2.11.0, commander@^2.17.1, commander@^2.8.1:
+commander@^2.11.0, commander@^2.8.1:
   version "2.18.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.18.0.tgz#2bf063ddee7c7891176981a2cc798e5754bc6970"
 
@@ -6588,7 +6574,7 @@ utils-merge@1.0.1, utils-merge@1.x.x:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
 
-uuid@3.3.2, uuid@^3.2.1, uuid@^3.3.2:
+uuid@3.3.2, uuid@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
 

@@ -11,12 +11,11 @@
 // TODO add resource and space variations
 // TODO Use Hystrix metrics for internal performance measurements
 
-const { clone, each, extend, omit, range, shuffle } = require('underscore');
+const { each, extend, omit, range, shuffle } = require('underscore');
 
 const util = require('util');
 
 const async = require('async');
-const commander = require('commander');
 
 const batch = require('abacus-batch');
 const breaker = require('abacus-breaker');
@@ -33,94 +32,38 @@ const brequest = retry(breaker(batch(request)), {
 const usage = require('./usage.js');
 
 // Setup the debug log
-const debug = require('abacus-debug')('abacus-perf-test');
-const xdebug = require('abacus-debug')('x-abacus-perf-test');
+const debug = require('abacus-debug')('abacus-performance-test');
+const xdebug = require('abacus-debug')('x-abacus-performance-test');
 
-// Parse command line options
-const argv = clone(process.argv);
-argv.splice(1, 1, 'perf');
-commander
-  .option('-o, --orgs <n>', 'number of organizations', parseInt)
-  .option('-i, --instances <n>', 'number of resource instances', parseInt)
-  .option('-u, --usagedocs <n>', 'number of usage docs', parseInt)
-  .option('-d, --delta <d>', 'usage time window shift in milli-seconds', parseInt)
-  .option('--no-timestamp', 'do not add timestamp to org names', false)
-  .option('--num-executions <n>', 'number of test executions', 1)
-  .option('-l, --limit <n>', 'max number of parallel submissions', parseInt)
-  .option('--plan-type <type>', '"basic" or "standard"', 'basic')
-  .option('-t, --start-timeout <n>', 'external processes start timeout in milliseconds', parseInt)
-  .option('-p, --processing-timeout <n>', 'pipeline processing timeout in milliseconds', parseInt)
-  .option('-x, --total-timeout <n>', 'test timeout in milliseconds', parseInt)
-  .option(
-    '-c, --collector <uri>',
-    'usage collector URL or domain name [http://localhost:9080]',
-    'http://localhost:9080'
-  )
-  .option(
-    '-r, --reporting <uri>',
-    'usage reporting URL or domain name [http://localhost:9088]',
-    'http://localhost:9088'
-  )
-  .option(
-    '-a, --auth-server <uri>',
-    'authentication server URL or domain name [http://localhost:9882]',
-    'http://localhost:9882'
-  )
-  .allowUnknownOption(true)
-  .parse(argv);
+const env = {
+  orgs: process.env.ORGS || 1,
+  resourceInstances: process.env.INSTANCES || 1,
+  usagedocs: process.env.USAGE_DOCS || 1,
+  planType: process.env.PLAN_TYPE || 'basic',
+  delta: process.env.DELTA || 0,
+  startTimeout: process.env.PERFORMANCE_START_TIMEOOUT || 10000,
+  totalTimeout: process.env.PERFORMANCE_TOTAL_TIMEOUT || 60000,
+  processingTimeout: process.env.PROCESSING_TIMEOUT || 5000,
+  numExecutions: process.env.NUMBER_EXECUTIONS || 1,
+  timestamp: process.env.TIMESTAMP || false,
+  limit: process.env.LIMIT,
+  collector: process.env.COLLECTOR_URL || 'http://localhost:9080',
+  reporting: process.env.REPORTING_URL || 'http://localhost:9088',
+  authServer: process.env.AUTH_SERVER || 'http://localhost:9882',
+  secured:process.env.SECURED === 'true'
+};
 
-// Number of organizations
-const orgs = commander.orgs || 1;
-
-// Number of resource instances
-const resourceInstances = commander.instances || 1;
-
-// Number of usage docs
-const usagedocs = commander.usagedocs || 1;
-
-// Plan type
-const planType = commander.planType;
-
-// Usage time window shift in milli-seconds
-const delta = commander.delta || 0;
-
-// External Abacus processes start timeout
-const startTimeout = commander.startTimeout || 10000;
-
-// This test timeout
-const totalTimeout = commander.totalTimeout || 60000;
-
-const processingTimeout = commander.processingTimeout || 5000;
-
-const numExecutions = commander.numExecutions;
-
-const timestamp = commander.timestamp;
-
-const limit = commander.limit;
-
-// Collector service URL
-const collector = commander.collector;
-
-// Reporting service URL
-const reporting = commander.reporting;
-
-// Auth server URL
-const authServer = commander.authServer;
-
-// Use secure routes or not
-const secured = () => process.env.SECURED === 'true';
-
-const objectStorageToken = secured()
+const objectStorageToken = env.secured
   ? oauth.cache(
-    authServer,
+    env.authServer,
     process.env.OBJECT_STORAGE_CLIENT_ID,
     process.env.OBJECT_STORAGE_CLIENT_SECRET,
     'abacus.usage.object-storage.write'
   )
   : undefined;
 
-const systemToken = secured()
-  ? oauth.cache(authServer, process.env.SYSTEM_CLIENT_ID, process.env.SYSTEM_CLIENT_SECRET, 'abacus.usage.read')
+const systemToken = env.secured
+  ? oauth.cache(env.authServer, process.env.SYSTEM_CLIENT_ID, process.env.SYSTEM_CLIENT_SECRET, 'abacus.usage.read')
   : undefined;
 
 describe('abacus-performance-test', () => {
@@ -141,14 +84,14 @@ describe('abacus-performance-test', () => {
   it('measures performance of concurrent usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs or
     // a preset timeout
-    console.log('Testing with %d orgs, %d resource instances, %d usage docs with limit %d and plan type %s',
-      orgs, resourceInstances, usagedocs, limit, planType);
-    const timeout = Math.max(totalTimeout, 100 * orgs * resourceInstances * usagedocs);
+    console.log('Testing with %d env.orgs, %d resource instances, %d usage docs with limit %d and plan type %s',
+      env.orgs, env.resourceInstances, env.usagedocs, env.limit, env.planType);
+    const timeout = Math.max(env.totalTimeout, 100 * env.orgs * env.resourceInstances * env.usagedocs);
     this.timeout(timeout + 2000);
     const processingDeadline = moment.now() + timeout;
 
     console.log('Test timeout %d ms, processing timeout %d ms, num executions %d',
-      timeout, processingTimeout, numExecutions);
+      timeout, env.processingTimeout, env.numExecutions);
 
     const authHeader = (token) =>
       token
@@ -162,7 +105,7 @@ describe('abacus-performance-test', () => {
     const post = (usageDoc, docNumber, cb) => {
       xdebug('Submitting org:%s instance:%s usage:%s ...',
         usageDoc.organization_id, usageDoc.resource_instance_id, docNumber + 1);
-      brequest.post(`${collector}/v1/metering/collected/usage`,
+      brequest.post(`${env.collector}/v1/metering/collected/usage`,
         extend({}, authHeader(objectStorageToken), { body: usageDoc }),
         (err, response) => {
           const errorMessage = util.format('Response error: %j', err);
@@ -182,7 +125,7 @@ describe('abacus-performance-test', () => {
 
     // Get a usage report for the test organization
     const get = (orgId, planType, done) => {
-      brequest.get(`${reporting}/v1/metering/organizations/${orgId}/aggregated/usage`,
+      brequest.get(`${env.reporting}/v1/metering/organizations/${orgId}/aggregated/usage`,
         extend({}, authHeader(systemToken)),
         (err, val) => {
           expect(err).to.equal(undefined);
@@ -198,7 +141,7 @@ describe('abacus-performance-test', () => {
             );
             const stippedResponse = usage.fixup(omit(val.body, 'id', 'processed', 'processed_id', 'start', 'end'));
             const expected = usage.fixup(
-              usage.report(orgId, planType, resourceInstances, usagedocs, numExecutions)
+              usage.report(orgId, planType, env.resourceInstances, env.usagedocs, env.numExecutions)
             );
             expect(stippedResponse).to.deep.equal(expected);
             debug('Report for org:%s verified successfully', orgId);
@@ -228,16 +171,16 @@ describe('abacus-performance-test', () => {
     const buildFunctions = () => {
       const postFunctions = [];
       const reportFunctions = [];
-      each(range(orgs), (org) => {
+      each(range(env.orgs), (org) => {
 
-        const orgId = usage.orgId(org, timestamp);
+        const orgId = usage.orgId(org, env.timestamp);
         reportFunctions.push((cb) => {
-          async.retry({ times: Number.MAX_SAFE_INTEGER, interval: 1000 }, (done) => get(orgId, planType, done), cb);
+          async.retry({ times: Number.MAX_SAFE_INTEGER, interval: 1000 }, (done) => get(orgId, env.planType, done), cb);
         });
 
-        each(range(usagedocs), (docNumber) =>
-          each(range(resourceInstances), (resourceInstance) => {
-            const usageDoc = usage.usageTemplate(orgId, resourceInstance, docNumber, planType, delta);
+        each(range(env.usagedocs), (docNumber) =>
+          each(range(env.resourceInstances), (resourceInstance) => {
+            const usageDoc = usage.usageTemplate(orgId, resourceInstance, docNumber, env.planType, env.delta);
             postFunctions.push((cb) => post(usageDoc, docNumber, cb));
           }));
       });
@@ -259,11 +202,11 @@ describe('abacus-performance-test', () => {
         done(err);
       };
 
-      process.stdout.write(util.format('Submitting %d usage docs ', orgs * resourceInstances * usagedocs));
-      if (isNaN(limit))
+      process.stdout.write(util.format('Submitting %d usage docs ', env.orgs * env.resourceInstances * env.usagedocs));
+      if (isNaN(env.limit))
         async.parallel(functions, finishCb);
       else
-        async.parallelLimit(functions, limit, finishCb);
+        async.parallelLimit(functions, env.limit, finishCb);
     };
 
     const waitForProcessing = (timeout, cb) => {
@@ -275,20 +218,20 @@ describe('abacus-performance-test', () => {
     // we get the expected values indicating that all submitted usage has been processed
     const getReports = (functions, done) => {
       console.log('\nRetrieving usage reports ...');
-      if (isNaN(limit))
+      if (isNaN(env.limit))
         async.parallel(functions, done);
       else
         async.parallelLimit(functions, 180, done);
     };
 
     // Wait for usage reporter to start
-    request.waitFor(reporting + '/batch', extend({}, authHeader(systemToken)), startTimeout, (err) => {
+    request.waitFor(env.reporting + '/batch', extend({}, authHeader(systemToken)), env.startTimeout, (err) => {
       // Failed to ping usage reporter before timing out
       if (err) throw err;
 
       // Run the above steps
       const functions = buildFunctions();
-      submit(functions.post, () => waitForProcessing(processingTimeout, () => getReports(functions.report, done)));
+      submit(functions.post, () => waitForProcessing(env.processingTimeout, () => getReports(functions.report, done)));
     });
   });
 });
