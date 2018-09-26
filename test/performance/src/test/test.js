@@ -41,32 +41,32 @@ const env = {
   usagedocs: process.env.USAGE_DOCS || 1,
   planType: process.env.PLAN_TYPE || 'basic',
   delta: process.env.DELTA || 0,
-  startTimeout: process.env.PERFORMANCE_START_TIMEOOUT || 10000,
+  startTimeout: process.env.PERFORMANCE_START_TIMEOUT || 10000,
   totalTimeout: process.env.PERFORMANCE_TOTAL_TIMEOUT || 60000,
   processingTimeout: process.env.PROCESSING_TIMEOUT || 5000,
   numExecutions: process.env.NUMBER_EXECUTIONS || 1,
-  timestamp: process.env.TIMESTAMP || false,
+  timestamp: !(process.env.NO_TIMESTAMP === 'true'),
   limit: process.env.LIMIT,
   collector: process.env.COLLECTOR_URL || 'http://localhost:9080',
   reporting: process.env.REPORTING_URL || 'http://localhost:9088',
   authServer: process.env.AUTH_SERVER || 'http://localhost:9882',
-  secured:process.env.SECURED === 'true'
+  secured: process.env.SECURED === 'true',
+  objectStorageClientId: process.env.OBJECT_STORAGE_CLIENT_ID,
+  objectStorageClientSecret: process.env.OBJECT_STORAGE_CLIENT_SECRET,
+  systemClientId: process.env.SYSTEM_CLIENT_ID,
+  systemClientSecret: process.env.SYSTEM_CLIENT_SECRET
 };
 
 const objectStorageToken = env.secured
   ? oauth.cache(
-    env.authServer,
-    process.env.OBJECT_STORAGE_CLIENT_ID,
-    process.env.OBJECT_STORAGE_CLIENT_SECRET,
-    'abacus.usage.object-storage.write'
-  )
+    env.authServer, env.objectStorageClientId, env.objectStorageClientSecret, 'abacus.usage.object-storage.write')
   : undefined;
 
 const systemToken = env.secured
-  ? oauth.cache(env.authServer, process.env.SYSTEM_CLIENT_ID, process.env.SYSTEM_CLIENT_SECRET, 'abacus.usage.read')
+  ? oauth.cache(env.authServer, env.systemClientId, env.systemClientSecret, 'abacus.usage.read')
   : undefined;
 
-describe('abacus-performance-test', () => {
+describe('abacus-perf-test', () => {
   before((done) => {
     if (objectStorageToken)
       objectStorageToken.start((err) => {
@@ -84,7 +84,7 @@ describe('abacus-performance-test', () => {
   it('measures performance of concurrent usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs or
     // a preset timeout
-    console.log('Testing with %d env.orgs, %d resource instances, %d usage docs with limit %d and plan type %s',
+    console.log('Testing with %d orgs, %d resource instances, %d usage docs with limit %d and plan type %s',
       env.orgs, env.resourceInstances, env.usagedocs, env.limit, env.planType);
     const timeout = Math.max(env.totalTimeout, 100 * env.orgs * env.resourceInstances * env.usagedocs);
     this.timeout(timeout + 2000);
@@ -172,7 +172,6 @@ describe('abacus-performance-test', () => {
       const postFunctions = [];
       const reportFunctions = [];
       each(range(env.orgs), (org) => {
-
         const orgId = usage.orgId(org, env.timestamp);
         reportFunctions.push((cb) => {
           async.retry({ times: Number.MAX_SAFE_INTEGER, interval: 1000 }, (done) => get(orgId, env.planType, done), cb);

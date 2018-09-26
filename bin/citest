@@ -8,21 +8,21 @@ case "$CI_TEST" in
     # integration test matrix, we would need 2197 (= 13 * 13 * 13)
     # usage submissions to get above 90 percent regression coverage
 
-    yarn run integration -o 4 -i 4 -u 4 $@
+    yarn run integration
     ;;
 
   extended)
     # Run yarn process-usage-smoke test
     yarn start
     sleep 3s
-    yarn run yarn process-usage-smoke
+    yarn run process-usage-smoke
     yarn stop
 
     # Run demo and yarn process-usage-smoke tests without security
     yarn start
     sleep 3s
     yarn run demo
-    yarn run yarn process-usage-smoke
+    yarn run process-usage-smoke
     yarn stop
 
     # Run demo test with the smalldb config
@@ -55,6 +55,7 @@ case "$CI_TEST" in
     yarn stop
 
     # Test for concurrency
+    export SECURED=false
     export ORGS=1
     export INSTANCES=8
     export USAGE_DOCS=8

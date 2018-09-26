@@ -19,8 +19,6 @@ after_script: greenkeeper-lockfile-upload
 env:
   global:
     - CF_TEST=false
-    - START_TIMEOUT=20000
-    - TOTAL_TIMEOUT=120000
 
 matrix:
   fast_finish: true
@@ -43,6 +41,8 @@ matrix:
       - DB_URI=mongodb://localhost:27017
       - DB_ACCUMULATOR_URI=mongodb://localhost:27017
       - DB_AGGREGATOR_URI=mongodb://localhost:27017
+      - START_TIMEOUT=20000
+      - TOTAL_TIMEOUT=120000
       - JOBS=1
       - CI_TEST=integration
       node_js: 8.11.3
@@ -51,7 +51,7 @@ matrix:
         - rabbitmq
       script:
         - yarn run provision
-        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+        - travis_retry yarn run citest
     - env:
       - DESCRIPTION=extended-tests
       - RABBIT_URI=amqp://localhost:5672
@@ -59,6 +59,8 @@ matrix:
       - DB_ACCUMULATOR_URI=mongodb://localhost:27017
       - DB_AGGREGATOR_URI=mongodb://localhost:27017
       - JOBS=1
+      - SMOKE_START_TIMEOUT=20000
+      - SMOKE_TOTAL_TIMEOUT=120000
       - CI_TEST=extended
       node_js: 8.11.3
       services:
@@ -66,13 +68,15 @@ matrix:
         - rabbitmq
       script:
         - yarn run provision
-        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+        - travis_retry yarn run citest
     - env:
       - DESCRIPTION=performance-tests
       - RABBIT_URI=amqp://localhost:5672
       - DB_URI=mongodb://localhost:27017
       - DB_ACCUMULATOR_URI=mongodb://localhost:27017
       - DB_AGGREGATOR_URI=mongodb://localhost:27017
+      - PERFORMANCE_START_TIMEOUT=20000
+      - PERFORMANCE_TOTAL_TIMEOUT=120000
       - JOBS=1
       - CI_TEST=performance
       node_js: 8.11.3
@@ -81,7 +85,7 @@ matrix:
         - rabbitmq
       script:
         - yarn run provision
-        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+        - travis_retry yarn run citest
 
 notifications:
   irc:
