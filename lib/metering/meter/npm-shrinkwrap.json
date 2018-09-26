@@ -223,9 +223,9 @@
       "resolved": "https://registry.npmjs.org/acorn-jsx/-/acorn-jsx-4.1.1.tgz"
     },
     "ajv": {
-      "version": "6.5.3",
-      "from": "ajv@>=6.0.0 <7.0.0",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.5.3.tgz",
+      "version": "6.5.4",
+      "from": "ajv@^6.0.0",
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.5.4.tgz",
       "dependencies": {
         "fast-deep-equal": {
           "version": "2.0.1",
@@ -245,9 +245,9 @@
       "resolved": "https://registry.npmjs.org/ajv-keywords/-/ajv-keywords-3.2.0.tgz"
     },
     "amqp-connection-manager": {
-      "version": "2.1.2",
+      "version": "2.2.0",
       "from": "amqp-connection-manager@^2.0.0",
-      "resolved": "https://registry.npmjs.org/amqp-connection-manager/-/amqp-connection-manager-2.1.2.tgz"
+      "resolved": "https://registry.npmjs.org/amqp-connection-manager/-/amqp-connection-manager-2.2.0.tgz"
     },
     "amqplib": {
       "version": "0.5.2",
@@ -347,16 +347,9 @@
       "resolved": "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.0.tgz"
     },
     "basic-auth": {
-      "version": "2.0.0",
-      "from": "basic-auth@>=2.0.0 <2.1.0",
-      "resolved": "https://registry.npmjs.org/basic-auth/-/basic-auth-2.0.0.tgz",
-      "dependencies": {
-        "safe-buffer": {
-          "version": "5.1.1",
-          "from": "safe-buffer@5.1.1",
-          "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.1.tgz"
-        }
-      }
+      "version": "2.0.1",
+      "from": "basic-auth@~2.0.0",
+      "resolved": "https://registry.npmjs.org/basic-auth/-/basic-auth-2.0.1.tgz"
     },
     "bignumber.js": {
       "version": "2.1.0",
@@ -785,7 +778,7 @@
       "dependencies": {
         "iconv-lite": {
           "version": "0.4.24",
-          "from": "iconv-lite@>=0.4.24 <0.5.0",
+          "from": "iconv-lite@^0.4.24",
           "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.24.tgz"
         }
       }
@@ -1545,9 +1538,9 @@
       "resolved": "https://registry.npmjs.org/run-async/-/run-async-2.3.0.tgz"
     },
     "rxjs": {
-      "version": "6.3.2",
+      "version": "6.3.3",
       "from": "rxjs@^6.1.0",
-      "resolved": "https://registry.npmjs.org/rxjs/-/rxjs-6.3.2.tgz"
+      "resolved": "https://registry.npmjs.org/rxjs/-/rxjs-6.3.3.tgz"
     },
     "safe-buffer": {
       "version": "5.1.2",

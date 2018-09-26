@@ -72,6 +72,7 @@
   "dependencies": {
     "abacus-account-plugin": "file:lib/plugins/account",
     "abacus-accountclient": "file:lib/utils/accountclient",
+    "abacus-api": "file:lib/utils/api",
     "abacus-audit": "file:lib/utils/audit",
     "abacus-authserver-plugin": "file:lib/plugins/authserver",
     "abacus-basic": "file:lib/utils/basic",
@@ -123,7 +124,9 @@
     "abacus-retry": "file:lib/utils/retry",
     "abacus-rewire": "file:lib/utils/rewire",
     "abacus-router": "file:lib/utils/router",
+    "abacus-sampler-receiver": "file:lib/sampler/receiver",
     "abacus-sampler-storage": "file:lib/sampler/storage",
+    "abacus-sampler-worker": "file:lib/sampler/worker",
     "abacus-schema": "file:lib/utils/schema",
     "abacus-seqid": "file:lib/utils/seqid",
     "abacus-service-dashboard": "file:lib/cf/dashboard",
