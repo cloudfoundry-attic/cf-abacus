@@ -1,6 +1,6 @@
 applications:
-- name: ((METERING_BROKER_NAME))
-  route: ((METERING_BROKER_NAME))
+- name: abacus-broker
+  route: abacus-broker
   path: .
   domain: ((CF_SYS_DOMAIN))
   instances: 1

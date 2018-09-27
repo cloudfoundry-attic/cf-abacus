@@ -1,6 +1,6 @@
 applications:
-- name: ((ACCOUNT_PLUGIN_NAME))
-  route: ((ACCOUNT_PLUGIN_NAME))
+- name: abacus-account-plugin
+  route: abacus-account-plugin
   path: .
   domain: ((CF_SYS_DOMAIN))
   instances: 1

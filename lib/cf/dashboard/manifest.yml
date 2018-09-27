@@ -1,6 +1,6 @@
 applications:
-- name: ((METERING_DASHBOARD_NAME))
-  route: ((METERING_DASHBOARD_NAME))
+- name: abacus-service-dashboard
+  route: abacus-service-dashboard
   path: .
   domain: ((CF_SYS_DOMAIN))
   instances: 1

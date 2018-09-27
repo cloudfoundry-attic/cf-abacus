@@ -1,6 +1,6 @@
 applications:
-- name: ((COLLECTOR_NAME))
-  route: ((COLLECTOR_NAME))
+- name: abacus-usage-collector
+  route: abacus-usage-collector
   path: .
   domain: ((CF_SYS_DOMAIN))
   instances: 1

@@ -1,6 +1,6 @@
 applications:
-- name: ((PROVISIONING_PLUGIN_NAME))
-  route: ((PROVISIONING_PLUGIN_NAME))
+- name: abacus-provisioning-plugin
+  route: abacus-provisioning-plugin
   path: .
   domain: ((CF_SYS_DOMAIN))
   instances: 1
