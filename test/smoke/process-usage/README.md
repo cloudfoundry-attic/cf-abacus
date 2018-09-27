@@ -1,7 +1,7 @@
 abacus-process-usage-smoke-test
 ===
 
-To run the process usage smoke test export the following environment variables:
+:information_source: To run the process usage smoke test export the following environment variables:
 
 ```bash
 export OBJECT_STORAGE_CLIENT_ID=<prefix>

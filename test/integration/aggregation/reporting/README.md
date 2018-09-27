@@ -12,7 +12,8 @@ cd test/integration/aggregation/reporting
 yarn run integration
 ```
 
-
+Test data genrated with:
+```bash
 export SLACK=3D
 export TIME_WINDOWS_SIZES='{ "D" : 6 }'
 yarn start && yarn smoke
@@ -30,3 +31,4 @@ export ABACUS_TIME_OFFSET=345600000
 yarn start
 export DATE_IN_MS=$(node -e "console.log(new Date().valueOf() + 345600000)")
 curl -H 'Content-Type: application/json' "http://localhost:9088/v1/metering/organizations/us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/aggregated/usage/$DATE_IN_MS" | jq . > offset_report.json
+```

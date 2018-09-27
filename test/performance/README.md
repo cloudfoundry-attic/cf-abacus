@@ -2,16 +2,7 @@ abacus-performance-test
 ===
 
 
-:information_source: In order to run the performance test, you can:
-
-1. Run
-
-```bash
-yarn start
-```
-**OR**
-
-2. Export the following environment variables:
+:information_source: In order to run the performance test, against an already set up Abacus, export the following environment variables:
 
 ```bash
 export ORGS=<number-of-orgs>
@@ -48,7 +39,7 @@ cd test/performance
 yarn run performance
 ```
 
-To execute a functional correctness test do:
+:information_source: To execute a functional correctness test do:
 ```bash
 # Output the organization post status
 export DEBUG=abacus-performance-test

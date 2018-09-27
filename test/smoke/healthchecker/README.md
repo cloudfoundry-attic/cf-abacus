@@ -1,7 +1,7 @@
 abacus-healthchecker-smoke-test
 ===
 
-To run the healthchecker smoke test export the following environment variables:
+:information_source: To run the healthchecker smoke test export the following environment variables:
 
 ```bash
 export HEALTHCHECKER_URL=https://<prefix>abacus-healthchecker.<domain>

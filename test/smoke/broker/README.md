@@ -1,7 +1,7 @@
 abacus-broker-smoke-test
 ===
 
-To run the broker smoke test export the following environment variables:
+:information_source:  To run the broker smoke test export the following environment variables:
 
 ```bash
 export CF_API_URI=https://api.<domain>

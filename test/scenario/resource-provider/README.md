@@ -1,8 +1,6 @@
 abacus-resource-provider-scenario-test
 ===
 
-### Resource provider scenario test (provisioning plugin)
-
 :information_source: In order to run the resource provider scenario test, export the following environment variables:
 
 ```bash
@@ -13,8 +11,8 @@ export CF_ADMIN_PASSWORD=password
 export CF_ORG=<organization to use>
 export CF_SPACE=<space to use for testing>
 export CLIENT_SECRET=test-secret
-export COLLECTOR_URL=https://<abacus-prefixabacus-usage-collector.<domain>
-export REPORTING_URL=https://<abacus-prefixabacus-usage-reporting.<domain>
+export COLLECTOR_URL=https://<abacus-prefix>abacus-usage-collector.<domain>
+export REPORTING_URL=https://<abacus-prefix>abacus-usage-reporting.<domain>
 export PROVISIONING_URL=https://<abacus-prefix>abacus-provisioning-plugin.<domain>
 export SYSTEM_CLIENT_ID=abacus
 export SYSTEM_CLIENT_SECRET=secret

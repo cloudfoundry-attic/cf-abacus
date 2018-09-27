@@ -7,8 +7,8 @@ abacus-metering-plans-scenario-test
 
 ```bash
 export AUTH_SERVER=https://api.<system domain>
-export COLLECTOR_URL=https://<abacus-prefixabacus-usage-collector.<domain>
-export REPORTING_URL=https://<abacus-prefixabacus-usage-reporting.<domain>
+export COLLECTOR_URL=https://<abacus-prefix>abacus-usage-collector.<domain>
+export REPORTING_URL=https://<abacus-prefix>abacus-usage-reporting.<domain>
 export PROVISIONING_URL=https://<abacus-prefix>abacus-provisioning-plugin.<domain>
 export POLL_INTERVAL=<poll-interval>
 export EVENTUALLY_TIMEOUT=<timeout>
