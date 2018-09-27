@@ -1,22 +1,41 @@
 applications:
-- name: metering-broker
-  host: metering-broker
+- name: ((METERING_BROKER_NAME))
+  route: ((METERING_BROKER_NAME))
   path: .
+  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 512M
   disk_quota: 512M
+  zdm: true
   env:
+    CUSTOM_METRICS: true
     CONF: default
+    CLUSTER: true
     DEBUG: e-abacus-*
-    EUREKA: abacus-eureka-plugin
+    SECURED: true
+    EUREKA: ((ABACUS_PREFIX))((EUREKA_PLUGIN_NAME))
+    EUREKA_USER: ((HYSTRIX_CLIENT_ID))
+    EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
     NODE_MODULES_CACHE: false
-    SERVICE_BROKER_CLIENT_ID: abacus-broker
-    SERVICE_BROKER_CLIENT_SECRET: secret
-    DASHBOARD_REDIRECT_URI: https://dashboard/redirect
-    API: https://api
-    AUTH_SERVER: https://uaa
-    PROVISIONING: https://abacus-provisioning-plugin
-    COLLECTOR: https://abacus-usage-collector
-    BROKER_USER: user
-    BROKER_PASSWORD: pass
-    DASHBOARD_URI: http://localhost/dashboard/
+    API: ((AUTH_SERVER))
+    AUTH_SERVER: ((UAA_URL))
+    PROVISIONING: ((ABACUS_PREFIX))((PROVISIONING_PLUGIN_NAME))
+    COLLECTOR: ((ABACUS_PREFIX))((COLLECTOR_NAME))
+    BROKER_USER: ((METERING_BROKER_USER))
+    BROKER_PASSWORD: ((METERING_BROKER_PASSWORD))
+    SERVICE_BROKER_CLIENT_ID: ((METERING_BROKER_CLIENT_ID))
+    SERVICE_BROKER_CLIENT_SECRET: ((METERING_BROKER_CLIENT_SECRET))
+    SERVICE_BROKER_CLIENT_SCOPES: "reporting.agent.write abacus.usage.write"
+    DASHBOARD_CLIENT_ID: ((ABACUS_PREFIX))((METERING_BROKER_DASHBOARD_CLIENT_ID))
+    DASHBOARD_CLIENT_SECRET: ((METERING_BROKER_DASHBOARD_CLIENT_SECRET))
+    DASHBOARD_REDIRECT_URI: ((DASHBOARD_REDIRECT_URI))
+    ABACUS_PREFIX: ((ABACUS_PREFIX))
+    DASHBOARD_URI: ((DASHBOARD_URI))
+    PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
+    MAPPING_API: ((MAPPING_API))
+    SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
+    JWTALGO: ((JWTALGO))
+    JWTKEY: |+
+      ((JWTKEY))
+    DEBUG_STRIPLF: true
+    OPTIMIZE_MEMORY: true

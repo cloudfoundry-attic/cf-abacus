@@ -1,22 +1,30 @@
 applications:
-- name: metering-dashboard
-  host: metering-dashboard
+- name: ((METERING_DASHBOARD_NAME))
+  route: ((METERING_DASHBOARD_NAME))
   path: .
+  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 512M
   disk_quota: 512M
-  services:
-  - db-session
+  zdm: true
   env:
-    API: https://api
-    AUTH_SERVER: https://uaa
-    CF_CLIENT_ID: abacus_db_client
-    CF_CLIENT_SECRET: secret
-    CF_COOKIE_SECRET: secret
-    NODE_TLS_REJECT_UNAUTHORIZED: 0
-    PROVISIONING: abacus-provisioning-plugin
-    DEBUG: e-abacus*
-    DBALIAS: db-session
-    AUTO_REMOVE_INTERVAL: 10
+    API: ((CF_API_URI))
+    AUTH_SERVER: ((UAA_URL))
+    CF_CLIENT_ID: ((METERING_BROKER_DASHBOARD_CLIENT_ID))
+    CF_CLIENT_SECRET: ((METERING_BROKER_DASHBOARD_CLIENT_SECRET))
+    CF_COOKIE_SECRET: s3cr3t
+    SECURED: true
+    EUREKA: ((ABACUS_PREFIX))((EUREKA_PLUGIN_NAME))
+    EUREKA_USER: ((HYSTRIX_CLIENT_ID))
+    EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
+    PROVISIONING: ((ABACUS_PREFIX))((PROVISIONING_PLUGIN_NAME))
+    PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
     PRE_PROVIDED_DEFAULT_THEME_NAME: Default
     ENABLE_UPLOAD_THEME_FEATURE: false
+    SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
+    JWTALGO: ((JWTALGO))
+    JWTKEY: |+
+      ((JWTKEY))
+    DEBUG_STRIPLF: true
+    DB_URI: ((DASHBOARD_DB_URI))
+    OPTIMIZE_MEMORY: true

@@ -1,27 +1,29 @@
 applications:
 - name: abacus-authserver-plugin
-  host: abacus-authserver-plugin
+  route: abacus-authserver-plugin
   path: .
-  domain: $CF_SYS_DOMAIN
+  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 512M
   disk_quota: 512M
   env:
+    CUSTOM_METRICS: true
     CONF: default
     DEBUG: e-abacus-*
-    API: $AUTH_SERVER
-    AUTH_SERVER: $AUTH_SERVER
-    EUREKA: $ABACUS_PREFIX$EUREKA_PLUGIN_NAME
-    EUREKA_USER: $HYSTRIX_CLIENT_ID
-    EUREKA_PASSWORD: $HYSTRIX_CLIENT_SECRET
+    DBCLIENT: abacus-mongoclient
+    API: ((AUTH_SERVER))
+    AUTH_SERVER: ((AUTH_SERVER))
+    EUREKA: ((ABACUS_PREFIX))((EUREKA_PLUGIN_NAME))
+    EUREKA_USER: ((HYSTRIX_CLIENT_ID))
+    EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
     NODE_MODULES_CACHE: false
-    PRIMARY_DOMAIN: $CF_SYS_DOMAIN
+    PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
     SECURED: true
-    SKIP_SSL_VALIDATION: $SKIP_SSL_VALIDATION
+    SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
     THROTTLE: 60
     BATCH_SIZE: 50
-    NODE_OPTS: "--max_old_space_size=256"
-    JWTALGO: $JWTALGO
+    OPTIMIZE_MEMORY: true
+    JWTALGO: ((JWTALGO))
     JWTKEY: |+
-      $JWTKEY
+      ((JWTKEY))
     DEBUG_STRIPLF: true

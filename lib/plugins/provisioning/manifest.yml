@@ -1,16 +1,33 @@
 applications:
-- name: abacus-provisioning-plugin
-  host: abacus-provisioning-plugin
+- name: ((PROVISIONING_PLUGIN_NAME))
+  route: ((PROVISIONING_PLUGIN_NAME))
   path: .
+  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 512M
   disk_quota: 512M
+  zdm: true
   env:
+    CUSTOM_METRICS: true
     CONF: default
     DEBUG: e-abacus-*
-    DB_URI: mongodb://localhost:27017
-    EUREKA: abacus-eureka-plugin
+    CLUSTER: false
+    API: ((AUTH_SERVER))
+    AUTH_SERVER: ((AUTH_SERVER))
+    EUREKA: ((ABACUS_PREFIX))((EUREKA_PLUGIN_NAME))
+    EUREKA_USER: ((HYSTRIX_CLIENT_ID))
+    EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
     NODE_MODULES_CACHE: false
-    SECURED: false
-    # JWTKEY:
-    # JWTALGO:
+    SECURED: true
+    SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
+    THROTTLE: 100
+    BATCH_SIZE: 10
+    MAX_INFLIGHT: 2000
+    OPTIMIZE_MEMORY: true
+    PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
+    VALIDATE_FUNCTIONS: true
+    JWTALGO: ((JWTALGO))
+    JWTKEY: |+
+      ((JWTKEY))
+    DEBUG_STRIPLF: true
+    DB_URI: ((DB_PLUGINS_URI))
