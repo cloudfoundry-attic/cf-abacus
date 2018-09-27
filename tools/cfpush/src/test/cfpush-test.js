@@ -206,8 +206,8 @@ describe('Test abacus cfpush', () => {
       assert.calledWithExactly(fs.writeFileSync, varsFilePath, '---\n');
 
       assert.calledTwice(fs.appendFileSync);
-      assert.calledWithExactly(fs.appendFileSync.firstCall, varsFilePath, `CF_HOME: ${cfHomeDirectory}\n`);
-      assert.calledWithExactly(fs.appendFileSync.secondCall, varsFilePath, 'MORE_VARIABLES: dummy\n');
+      assert.calledWithExactly(fs.appendFileSync.firstCall, varsFilePath, `CF_HOME: "${cfHomeDirectory}"\n`);
+      assert.calledWithExactly(fs.appendFileSync.secondCall, varsFilePath, 'MORE_VARIABLES: "dummy"\n');
     });
 
     it('prepares ZDM', () => {
