@@ -9,12 +9,12 @@ const commander = require('commander');
 const fs = require('fs-extra');
 const manifest = require('./lib/manifest.js');
 const bluegreen = require('./lib/bluegreen.js');
-const { originalManifestFilename } = require('./lib/constants.js');
+const { cfPushDirname, originalManifestFilename, substitutionVariablesFilename } = require('./lib/constants.js');
 
 const defaultPushRetries = 1;
 
 const createCfPushDir = (appPath, cb) => {
-  fs.mkdir(path.join(process.cwd(), appPath, '.cfpush'), (err) => {
+  fs.mkdir(path.join(process.cwd(), appPath, cfPushDirname), (err) => {
     if (err) noop();
     cb();
   });
@@ -30,10 +30,25 @@ const remanifest = (props, cb) => {
     const adjustedManifest = manifest.adjustManifest(originalManifestContent, props);
 
     const adjustedManifestPath =
-      path.join(process.cwd(), props.path, '.cfpush', [props.name, originalManifestFilename].join('-'));
+      path.join(process.cwd(), props.path, cfPushDirname, [props.name, originalManifestFilename].join('-'));
 
     fs.writeFile(adjustedManifestPath, adjustedManifest, cb);
   });
+};
+
+const createSubstitutionVariables = (props, cb) => {
+  const varsFile = path.join(process.cwd(), props.path, cfPushDirname, substitutionVariablesFilename);
+
+  fs.writeFileSync(varsFile, '---\n');
+  for(let key in process.env)
+    try {
+      fs.appendFileSync(varsFile, `${key}: ${process.env[key]}\n`);
+    } catch (err) {
+      cb(err);
+      return;
+    }
+
+  cb();
 };
 
 const runCLI = () => {
@@ -66,6 +81,7 @@ const runCLI = () => {
   async.series([
     (callback) => createCfPushDir(commander.path, callback),
     (callback) => remanifest(commanderProps, callback),
+    (callback) => createSubstitutionVariables(commanderProps, callback),
     (callback) => bluegreen.prepareZdm(commanderProps, callback),
     (callback) => bluegreen.push(commanderProps, callback)
   ],(error, results) => {

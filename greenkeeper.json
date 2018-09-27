@@ -146,8 +146,7 @@
         "tools/eslint/package.json",
         "tools/mddoc/package.json",
         "tools/mocha/package.json",
-        "tools/publish/package.json",
-        "tools/replace-template/package.json"
+        "tools/publish/package.json"
       ]
     }
   }
