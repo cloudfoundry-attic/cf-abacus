@@ -51,7 +51,6 @@
     "abacus-yieldable": "file:../../../../lib/utils/yieldable",
     "bignumber.js": "^2.1.0",
     "underscore": "^1.9.1",
-    "commander": "2.8.1",
     "nyc": "^11.4.1"
   },
   "nyc": {
@@ -65,7 +64,7 @@
     ]
   },
   "engines": {
-    "node": ">=8.9.4 <9.0.0",
+    "node": ">=8.10.0 <9.0.0",
     "npm": "<5.0.0",
     "yarn": ">=1.2.1"
   }

@@ -27,9 +27,6 @@
     "lint": "abacus-eslint",
     "pub": "publish"
   },
-  "dependencies": {
-    "commander": "2.8.1"
-  },
   "devDependencies": {
     "abacus-eslint": "file:../../../../tools/eslint",
     "abacus-publish": "file:../../../../tools/publish",

@@ -46,7 +46,6 @@
     "abacus-router": "file:../../../../lib/utils/router",
     "abacus-throttle": "file:../../../../lib/utils/throttle",
     "abacus-usage-collector": "file:../../../../lib/metering/collector",
-    "commander": "2.8.1",
     "nyc": "^11.4.1",
     "underscore": "^1.9.1"
   },
@@ -61,7 +60,7 @@
     ]
   },
   "engines": {
-    "node": ">=8.9.4 <9.0.0",
+    "node": ">=8.10.0 <9.0.0",
     "npm": "<5.0.0",
     "yarn": ">=1.2.1"
   }

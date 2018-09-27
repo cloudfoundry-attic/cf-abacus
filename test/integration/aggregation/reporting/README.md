@@ -12,7 +12,7 @@ cd test/integration/aggregation/reporting
 yarn run integration
 ```
 
-Test data genrated with:
+Test data generated with:
 ```bash
 export SLACK=3D
 export TIME_WINDOWS_SIZES='{ "D" : 6 }'
