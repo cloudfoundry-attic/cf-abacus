@@ -37,7 +37,7 @@ const ratedUsage = require('./ratedUsage.json');
 const todaysReport = require('./report.json');
 const futureReport = require('./offset_report.json');
 
-const now = moment.now();
+const now = moment.utc().startOf('month').add(12, 'days').valueOf();
 
 const replaceTimePart = (string) => {
   const parts = string.split('-');
