@@ -11,7 +11,7 @@ case "$CI_TEST" in
     yarn run integration
     ;;
 
-  extended)
+  process-usage-smoke)
     # Run yarn process-usage-smoke test
     yarn start
     sleep 3s

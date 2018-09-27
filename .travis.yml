@@ -53,7 +53,7 @@ matrix:
         - yarn run provision
         - travis_retry yarn run citest
     - env:
-      - DESCRIPTION=extended-tests
+      - DESCRIPTION=process-usage-smoke-tests
       - RABBIT_URI=amqp://localhost:5672
       - DB_URI=mongodb://localhost:27017
       - DB_ACCUMULATOR_URI=mongodb://localhost:27017
@@ -61,7 +61,7 @@ matrix:
       - JOBS=1
       - SMOKE_START_TIMEOUT=20000
       - SMOKE_TOTAL_TIMEOUT=120000
-      - CI_TEST=extended
+      - CI_TEST=process-usage-smoke
       node_js: 8.11.3
       services:
         - mongodb
