@@ -34,7 +34,7 @@
     "abacus-sampler-receiver": "file:../../../../lib/sampler/receiver",
     "abacus-api": "file:../../../../lib/utils/api",
     "abacus-lifecycle-manager": "../../../lib/lifecycle-manager",
-    "abacus-moment": "../../../../lib/utils/abacus-moment",
+    "abacus-moment": "../../../../lib/utils/moment",
     "mongodb": "^2.2.36",
     "underscore": "^1.9.1"
   },
