@@ -1,24 +1,35 @@
 applications:
-- name: abacus-housekeeper
-  host: abacus-housekeeper
+- name: ((HOUSEKEEPER_NAME))
+  route: ((HOUSEKEEPER_NAME))
   path: .
+  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 512M
   disk_quota: 512M
   env:
+    CUSTOM_METRICS: true
     CONF: default
-    DB_URI: mongodb://localhost:27017
-    DB_COLLECTOR_URI: $COLLECTOR_DB_URI
-    DB_METER_URI: $METER_DB_URI
-    DB_ACCUMULATOR_URI: $ACCUMULATOR_DB_URI
-    DB_AGGREGATOR_URI: $AGGREGATOR_DB_URI
-    DB_BRIDGE_URI: $BRIDGE_DB_URI
-    DB_PLUGINS_URI: $PLUGINS_DB_URI
-    API: https://api
-    AUTH_SERVER: https://uaa
     DEBUG: e-abacus-*
-    EUREKA: abacus-eureka-plugin
+    API: ((AUTH_SERVER))
+    AUTH_SERVER: ((AUTH_SERVER))
+    EUREKA: ((ABACUS_PREFIX))((EUREKA_PLUGIN_NAME))
+    EUREKA_USER: ((HYSTRIX_CLIENT_ID))
+    EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
     NODE_MODULES_CACHE: false
-    SECURED: false
-    # JWTKEY:
-    # JWTALGO:
+    RETENTION_PERIOD: 3
+    SECURED: true
+    SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
+    THROTTLE: 60
+    BATCH_SIZE: 50
+    OPTIMIZE_MEMORY: true
+    PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
+    JWTALGO: ((JWTALGO))
+    JWTKEY: |+
+      ((JWTKEY))
+    DEBUG_STRIPLF: true
+    DB_COLLECTOR_URI: ((DB_COLLECTOR_URI))
+    DB_METER_URI: ((DB_METER_URI))
+    DB_ACCUMULATOR_URI: ((DB_ACCUMULATOR_URI))
+    DB_AGGREGATOR_URI: ((DB_AGGREGATOR_URI))
+    DB_BRIDGE_URI: ((DB_BRIDGE_URI))
+    DB_PLUGINS_URI: ((DB_PLUGINS_URI))

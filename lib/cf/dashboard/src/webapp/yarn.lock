@@ -5,72 +5,88 @@
 ace-builds@1.2.6:
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/ace-builds/-/ace-builds-1.2.6.tgz#a9233c27c37b8494f20af84917ee1619489af429"
+  integrity sha1-qSM8J8N7hJTyCvhJF+4WGUia9Ck=
 
 angular-animate@1.5.10:
   version "1.5.10"
   resolved "http://registry.npmjs.org/angular-animate/-/angular-animate-1.5.10.tgz#7bfd4fb035ace40f9c5a22dbbd3e174ee5fa0032"
+  integrity sha1-e/1PsDWs5A+cWiLbvT4XTuX6ADI=
 
 angular-breadcrumb@0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/angular-breadcrumb/-/angular-breadcrumb-0.5.0.tgz#058abe6984f1b82ff6ac37888ef9afccbc8f63b2"
+  integrity sha1-BYq+aYTxuC/2rDeIjvmvzLyPY7I=
 
 angular-mocks@1.4.8:
   version "1.4.8"
   resolved "http://registry.npmjs.org/angular-mocks/-/angular-mocks-1.4.8.tgz#1497426d480862ca8b1f637e9c2fc1a1df664208"
+  integrity sha1-FJdCbUgIYsqLH2N+nC/Bod9mQgg=
 
 angular-sanitize@1.4.8:
   version "1.4.8"
   resolved "http://registry.npmjs.org/angular-sanitize/-/angular-sanitize-1.4.8.tgz#43a6d79b65ec8c9d5f6651b945493e585f83d713"
+  integrity sha1-Q6bXm2XsjJ1fZlG5RUk+WF+D1xM=
 
 angular-translate-loader-partial@2.9.1:
   version "2.9.1"
   resolved "https://registry.yarnpkg.com/angular-translate-loader-partial/-/angular-translate-loader-partial-2.9.1.tgz#8cdfda7d7255dd976e2ab1630db8b4f22e5ac608"
+  integrity sha1-jN/afXJV3ZduKrFjDbi08i5axgg=
   dependencies:
     angular-translate "~2.9.1"
 
 angular-translate@2.15.0:
   version "2.15.0"
   resolved "https://registry.yarnpkg.com/angular-translate/-/angular-translate-2.15.0.tgz#db97f2c491491c04e835be9e327c589cda67d473"
+  integrity sha1-25fyxJFJHAToNb6eMnxYnNpn1HM=
   dependencies:
     angular ">=1.2.26 <=1.6"
 
 angular-translate@~2.9.1:
   version "2.9.2"
   resolved "https://registry.yarnpkg.com/angular-translate/-/angular-translate-2.9.2.tgz#38cdfd491744cf27a7d9ef754ed2526100773ddd"
+  integrity sha1-OM39SRdEzyen2e91TtJSYQB3Pd0=
   dependencies:
     angular ">=1.2.26 <=1.6"
 
 angular-ui-ace@0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/angular-ui-ace/-/angular-ui-ace-0.2.3.tgz#3cb903428100621a367fc7f641440e97a42a26d0"
+  integrity sha1-PLkDQoEAYho2f8f2QUQOl6QqJtA=
 
 angular-ui-bootstrap@2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/angular-ui-bootstrap/-/angular-ui-bootstrap-2.5.0.tgz#2facefb915386655dc5f44150258032517236d01"
+  integrity sha1-L6zvuRU4ZlXcX0QVAlgDJRcjbQE=
 
 angular-ui-router@0.2.13:
   version "0.2.13"
   resolved "https://registry.yarnpkg.com/angular-ui-router/-/angular-ui-router-0.2.13.tgz#ab40c2f9fef9b8626ffdb29a793426c1fedd2f29"
+  integrity sha1-q0DC+f75uGJv/bKaeTQmwf7dLyk=
 
 angular@1.5.10:
   version "1.5.10"
   resolved "http://registry.npmjs.org/angular/-/angular-1.5.10.tgz#e87fd35b2ed2fea3723de958e9ccf0a4b9125ef0"
+  integrity sha1-6H/TWy7S/qNyPelY6czwpLkSXvA=
 
 angular@>=1.2.0:
   version "1.7.4"
   resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.4.tgz#c1bf4884c2d470c06907737a1bf0835a9f646f31"
+  integrity sha512-nYTWc9CpZjTY57l8EA1+DGpQNzI6HewQ34bfRYoGXBYysIoPYjfcgTGWC+Vl3AaeCnhAb3VTkysVESvCBpUIoA==
 
 "angular@>=1.2.26 <=1.6":
   version "1.6.10"
   resolved "https://registry.yarnpkg.com/angular/-/angular-1.6.10.tgz#eed3080a34d29d0f681ff119b18ce294e3f74826"
+  integrity sha512-PCZ5/hVdvPQiYyH0VwsPjrErPHRcITnaXxhksceOXgtJeesKHLA7KDu4X/yvcAi+1zdGgGF+9pDxkJvghXI9Wg==
 
 bootstrap@3.3.7:
   version "3.3.7"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.3.7.tgz#5a389394549f23330875a3b150656574f8a9eb71"
+  integrity sha1-WjiTlFSfIzMIdaOxUGVldPip63E=
 
 clipboard@~1.5.5:
   version "1.5.16"
   resolved "https://registry.yarnpkg.com/clipboard/-/clipboard-1.5.16.tgz#916d5e739b0064be61b0b48a535731ecaef3d367"
+  integrity sha1-kW1ec5sAZL5hsLSKU1cx7K7z02c=
   dependencies:
     good-listener "^1.2.0"
     select "^1.0.6"
@@ -79,36 +95,44 @@ clipboard@~1.5.5:
 delegate@^3.1.2:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/delegate/-/delegate-3.1.3.tgz#9a8251a777d7025faa55737bc3b071742127a9fd"
+  integrity sha1-moJRp3fXAl+qVXN7w7BxdCEnqf0=
 
 font-awesome@4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
+  integrity sha1-j6jPBBGhoxr9B7BtKQK7n8gVoTM=
 
 good-listener@^1.2.0:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/good-listener/-/good-listener-1.2.2.tgz#d53b30cdf9313dffb7dc9a0d477096aa6d145c50"
+  integrity sha1-1TswzfkxPf+33JoNR3CWqm0UXFA=
   dependencies:
     delegate "^3.1.2"
 
 jquery@3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
+  integrity sha1-XE2d5lKvbNCncBVKYxu6ErAVx4c=
 
 karma-read-json@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/karma-read-json/-/karma-read-json-1.1.0.tgz#e0ce345c5ae638a36a5a05dc1a6a042dccdab1e4"
+  integrity sha1-4M40XFrmOKNqWgXcGmoELczaseQ=
 
 lodash@4.17.11:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
+  integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
 
 ng-file-upload@12.2.13:
   version "12.2.13"
   resolved "https://registry.yarnpkg.com/ng-file-upload/-/ng-file-upload-12.2.13.tgz#01800f3872e526f95310f8477e99e4f12d0d8d14"
+  integrity sha1-AYAPOHLlJvlTEPhHfpnk8S0NjRQ=
 
 ngclipboard@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ngclipboard/-/ngclipboard-1.1.1.tgz#5b2c59553db62c726ccb4d41f804cfdb06d6bba0"
+  integrity sha1-WyxZVT22LHJsy01B+ATP2wbWu6A=
   dependencies:
     angular ">=1.2.0"
     clipboard "~1.5.5"
@@ -116,7 +140,9 @@ ngclipboard@1.1.1:
 select@^1.0.6:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/select/-/select-1.1.2.tgz#0e7350acdec80b1108528786ec1d4418d11b396d"
+  integrity sha1-DnNQrN7ICxEIUoeG7B1EGNEbOW0=
 
 tiny-emitter@^1.0.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/tiny-emitter/-/tiny-emitter-1.2.0.tgz#6dc845052cb08ebefc1874723b58f24a648c3b6f"
+  integrity sha1-bchFBSywjr78GHRyO1jySmSMO28=

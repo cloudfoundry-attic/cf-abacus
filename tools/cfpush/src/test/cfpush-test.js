@@ -8,7 +8,7 @@ const commander = require('commander');
 const async = require('async');
 const manifest = require('../lib/manifest.js');
 
-const { originalManifestFilename } = require(`${__dirname}/../lib/constants.js`);
+const { cfPushDirname, originalManifestFilename } = require(`${__dirname}/../lib/constants.js`);
 const preparedManifestContent = 'original manifest content';
 const adjustedManifestContent = 'adjusted manifest content';
 
@@ -21,6 +21,8 @@ const retryAttepmts = 3;
 
 const originalManifestRelativePath = 'path';
 const unexistingManifestPath = 'error';
+
+const substitutionVariablesFile = 'substitutionVariables.yml';
 
 const stubFileSystem = () => {
   stub(fs, 'mkdir').callsFake((dirName, cb) => {
@@ -42,6 +44,9 @@ const stubFileSystem = () => {
   stub(fs, 'writeFile').callsFake((filename, content, cb) => {
     cb();
   });
+
+  stub(fs, 'writeFileSync').callsFake((filename, content) => {});
+  stub(fs, 'appendFileSync').callsFake((filename, content) => {});
 
   stub(fs, 'copySync');
   stub(fs, 'existsSync').returns(true);
@@ -160,16 +165,20 @@ describe('Test command line args', () => {
 
 describe('Test abacus cfpush', () => {
   const adjustedManifestRelativePath =
-    `${originalManifestRelativePath}/.cfpush/${adjustedName}-${originalManifestFilename}`;
+    `${originalManifestRelativePath}/${cfPushDirname}/${adjustedName}-${originalManifestFilename}`;
+  const substitutionVariablesPath = `${originalManifestRelativePath}/${cfPushDirname}/${substitutionVariablesFile}`;
   const cfHomeDirectory = 'path';
+  const testEnvironment = {
+    CF_HOME: cfHomeDirectory,
+    MORE_VARIABLES: 'dummy'
+  };
+  const expectedEnvironment = { CF_HOME: tmpDir.name, MORE_VARIABLES: 'dummy' };
 
   before(() => {
-    process.env = {
-      CF_HOME: cfHomeDirectory
-    };
+    process.env = testEnvironment;
   });
 
-  context('when application is successfully pushed', () => {
+  context('without errors', () => {
     before(() => {
       stubChildProcessWith(onCloseHandlers.alwaysSuccessfulPush);
       cfpush.runCLI();
@@ -179,24 +188,35 @@ describe('Test abacus cfpush', () => {
       clearStubs();
     });
 
-    it('verify CF_HOME content is copied to tmp dir', () => {
+    it('copies CF_HOME content to tmp dir', () => {
       assert.calledWithExactly(fs.copySync, `${cfHomeDirectory}/.cf`, `${tmpDir.name}/.cf`);
     });
 
-    it('verify manifest is adjusted', () => {
+    it('adjusts manifest', () => {
       const manifestPath = `${process.cwd()}/${adjustedManifestRelativePath}`;
       assert.calledOnce(fs.writeFile);
       assert.calledWithExactly(fs.writeFile, manifestPath, adjustedManifestContent, sinon.match.any);
     });
 
-    it('verify prepareZdm', () => {
+    it('uses substitution variables', () => {
+      const varsFilePath = `${process.cwd()}/${substitutionVariablesPath}`;
+
+      assert.calledOnce(fs.writeFileSync);
+      assert.calledWithExactly(fs.writeFileSync, varsFilePath, '---\n');
+
+      assert.calledTwice(fs.appendFileSync);
+      assert.calledWithExactly(fs.appendFileSync.firstCall, varsFilePath, `CF_HOME: ${cfHomeDirectory}\n`);
+      assert.calledWithExactly(fs.appendFileSync.secondCall, varsFilePath, 'MORE_VARIABLES: dummy\n');
+    });
+
+    it('prepares ZDM', () => {
       const appName = `${prefix}${adjustedName}`;
       const orderedCommands = {
         cfApp: `cf app ${appName}`,
         cfAppOld: `cf app ${appName}-old`,
         cfRename: `cf rename ${appName} ${appName}-old`
       };
-      const envMock = sinon.match.has('env', { CF_HOME: tmpDir.name });
+      const envMock = sinon.match.has('env', expectedEnvironment);
 
       assert.calledWithExactly(cp.exec, orderedCommands.cfApp, envMock);
       assert.calledWithExactly(cp.exec, orderedCommands.cfAppOld, envMock);
@@ -208,14 +228,17 @@ describe('Test abacus cfpush', () => {
         assert.match(calls[i].args[0], orderedCommands[Object.keys(orderedCommands)[i]]);
     });
 
-    it('verify cf push executed', () => {
+    it('executes cf push', () => {
       const executeCommandCalls = 4;
 
       assert.callCount(tmpDir.removeCallback, executeCommandCalls);
       assert.calledWithExactly(
         cp.exec,
-        `cf push --no-start -p ${originalManifestRelativePath} -f ${adjustedManifestRelativePath}`,
-        sinon.match.has('env', { CF_HOME: tmpDir.name })
+        'cf push --no-start ' +
+          `-p ${originalManifestRelativePath} ` +
+          `-f ${adjustedManifestRelativePath} ` +
+          `--vars-file ${substitutionVariablesPath}`,
+        sinon.match.has('env', expectedEnvironment)
       );
     });
   });
@@ -229,8 +252,11 @@ describe('Test abacus cfpush', () => {
       assert.callCount(cp.exec, expectedAttempts);
       assert.alwaysCalledWithExactly(
         cp.exec,
-        `cf push --no-start -p ${originalManifestRelativePath} -f ${adjustedManifestRelativePath}`,
-        sinon.match.has('env', { CF_HOME: tmpDir.name })
+        'cf push --no-start ' +
+          `-p ${originalManifestRelativePath} ` +
+          `-f ${adjustedManifestRelativePath} ` +
+          `--vars-file ${substitutionVariablesPath}`,
+        sinon.match.has('env', expectedEnvironment)
       );
       assert.callCount(tmpDir.removeCallback, expectedAttempts);
 
@@ -242,7 +268,7 @@ describe('Test abacus cfpush', () => {
       clearStubs();
     });
 
-    it('verify cf push was retried until retry attempts is reached', () => {
+    it('cf push was retried until retry attempts are reached', () => {
       stubChildProcessWith(onCloseHandlers.alwaysFailingPush);
 
       expect(cfpush.runCLI).to.throw();
@@ -250,7 +276,7 @@ describe('Test abacus cfpush', () => {
       verifyPushRetryAttempts(retryAttepmts);
     });
 
-    it('verify cf push was retried until successful push', () => {
+    it('cf push was retried until successful push', () => {
       const successfulAttempt = 2;
       stubChildProcessWith(onCloseHandlers.successfullPushOn(successfulAttempt));
 

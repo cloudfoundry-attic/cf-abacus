@@ -41,7 +41,7 @@ const adjustManifest = (manifest, properties) => {
   const appName = buildAppName(properties.prefix, properties.name);
 
   app.name = appName;
-  app.host = appName;
+  app.route = appName;
   app.path = '../' + app.path;
 
   adjustOptionalProperties(app, properties);

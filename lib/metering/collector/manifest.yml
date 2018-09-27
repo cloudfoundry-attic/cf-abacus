@@ -1,20 +1,47 @@
 applications:
 - name: abacus-usage-collector
-  host: abacus-usage-collector
+  route: abacus-usage-collector
   path: .
+  domain: ((CF_SYS_DOMAIN))
   instances: 1
-  memory: 512M
+  memory: 2048M
   disk_quota: 512M
+  zdm: true
   env:
+    CUSTOM_METRICS: true
     CONF: default
     DEBUG: e-abacus-*
-    PROVISIONING: abacus-provisioning-plugin
-    DB_URI: mongodb://localhost:27017
-    ACCOUNT: abacus-account-plugin
-    EUREKA: abacus-eureka-plugin
-    SECURED: false
-    # AUTH_SERVER:
-    # CLIENT_ID:
-    # CLIENT_SECRET:
-    # JWTKEY:
-    # JWTALGO:
+    API: ((AUTH_SERVER))
+    AUTH_SERVER: ((AUTH_SERVER))
+    METER: ((ABACUS_PREFIX))abacus-usage-meter
+    PROVISIONING: ((ABACUS_PREFIX))((PROVISIONING_PLUGIN_NAME))
+    ACCOUNT: ((ABACUS_PREFIX))((ACCOUNT_PLUGIN_NAME))
+    EUREKA: ((ABACUS_PREFIX))((EUREKA_PLUGIN_NAME))
+    EUREKA_USER: ((HYSTRIX_CLIENT_ID))
+    EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
+    NODE_MODULES_CACHE: false
+    PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
+    SECURED: true
+    SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
+    CLUSTER: false
+    REPLAY: 1800000
+    THROTTLE: 100
+    BATCH_SIZE: 10
+    MAX_INFLIGHT: 400
+    SYSTEM_INFLIGHT_ENABLED: true
+    MAX_SYSTEM_INFLIGHT: 12
+    OPTIMIZE_MEMORY: true
+    IGNORE_ORGANIZATION: true
+    EVAL_VMTYPE: vm2
+    EVAL_TIMEOUT: ((EVAL_TIMEOUT))
+    VALIDATE_FUNCTIONS: true
+    CLIENT_ID: ((SYSTEM_CLIENT_ID))
+    CLIENT_SECRET: ((SYSTEM_CLIENT_SECRET))
+    JWTALGO: ((JWTALGO))
+    JWTKEY: |+
+      ((JWTKEY))
+    DEBUG_STRIPLF: true
+    RATE_LIMIT: ((COLLECTOR_RATE_LIMIT))
+    UNSUPPORTED_LICENSES: TRIAL
+    RABBIT_URI: ((RABBIT_URI))
+    DB_URI: ((DB_COLLECTOR_URI))

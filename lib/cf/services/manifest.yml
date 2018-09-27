@@ -1,30 +1,37 @@
 applications:
-- name: abacus-cf-services
-  host: abacus-cf-services
+- name: abacus-services-bridge
+  route: abacus-services-bridge
   path: .
+  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 512M
   disk_quota: 512M
   env:
+    CUSTOM_METRICS: true
     CONF: default
+    CLUSTER: false
     DEBUG: e-abacus-*
-    COLLECTOR: abacus-usage-collector
-    EUREKA: abacus-eureka-plugin
-    API: api
-    DB_URI: mongodb://localhost:27017
-    CF_CLIENT_ID: abacus-cf-services
-    CF_CLIENT_SECRET: secret
-    SECURED: false
-    AUTH_SERVER: api
-    CLIENT_ID: abacus-services-bridge
-    CLIENT_SECRET: secret
+    COLLECTOR: ((ABACUS_PREFIX))((COLLECTOR_NAME))
+    EUREKA: ((ABACUS_PREFIX))((EUREKA_PLUGIN_NAME))
+    EUREKA_USER: ((HYSTRIX_CLIENT_ID))
+    EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
+    API: ((AUTH_SERVER))
+    AUTH_SERVER: ((AUTH_SERVER))
+    CF_CLIENT_ID: ((BRIDGE_CLIENT_ID))
+    CF_CLIENT_SECRET: ((BRIDGE_CLIENT_SECRET))
+    NODE_MODULES_CACHE: false
+    PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
+    SECURED: true
+    SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
+    THROTTLE: 100
+    BATCH_SIZE: 50
+    OPTIMIZE_MEMORY: true
+    CLIENT_ID: ((SERVICE_BRIDGE_CLIENT_ID))
+    CLIENT_SECRET: ((SERVICE_BRIDGE_CLIENT_SECRET))
+    SERVICES: ((METERING_SERVICES))
+    JWTALGO: ((JWTALGO))
     JWTKEY: |+
-      -----BEGIN PUBLIC KEY-----
-      ... <UAA public key in PEM format> ...
-      -----END PUBLIC KEY-----
-    JWTALGO: RS256
-    SERVICES: '{
-      "service": {
-        "plans": ["standard"]
-      }
-    }'
+      ((JWTKEY))
+    DEBUG_STRIPLF: true
+    LAST_RECORDED_GUID: ((SERVICES_LAST_RECORDED_GUID))
+    DB_URI: ((DB_BRIDGE_URI))

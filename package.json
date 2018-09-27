@@ -168,7 +168,6 @@
     "abacus-process-usage-smoke-test": "file:test/smoke/process-usage",
     "abacus-publish": "file:tools/publish",
     "abacus-rabbitmq-integration-test": "file:test/integration/utils/rabbitmq",
-    "abacus-replace-template": "file:tools/replace-template",
     "abacus-resource-provider-scenario-test": "file:test/scenario/resource-provider",
     "abacus-services-hours-scenario-test": "file:test/scenario/metering-plans",
     "abacus-usage-accumulator-integration-test": "file:test/integration/aggregation/accumulator",

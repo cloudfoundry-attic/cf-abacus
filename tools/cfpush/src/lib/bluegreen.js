@@ -8,7 +8,7 @@ const path = require('path');
 const tmp = require('tmp');
 tmp.setGracefulCleanup();
 
-const { originalManifestFilename } = require(`${__dirname}/constants.js`);
+const { originalManifestFilename, substitutionVariablesFilename } = require(`${__dirname}/constants.js`);
 
 const prepareTmpDir = () => {
   const tmpDir = tmp.dirSync({
@@ -73,7 +73,8 @@ const prepareZdm = (props, cb) => {
 const push = (props, cb) => {
   const startParam = props.start ? '' : '--no-start';
   const manifestPath = `${props.path}/.cfpush/${props.name}-${originalManifestFilename}`;
-  const command = `cf push ${startParam} -p ${props.path} -f ${manifestPath}`;
+  const varsFile = `${props.path}/.cfpush/${substitutionVariablesFilename}`;
+  const command = `cf push ${startParam} -p ${props.path} -f ${manifestPath} --vars-file ${varsFile}`;
 
   executeCommand(command, cb);
 };
