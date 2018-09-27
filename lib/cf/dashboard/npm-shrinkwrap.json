@@ -23,9 +23,9 @@
       "resolved": "https://registry.npmjs.org/@types/form-data/-/form-data-2.2.1.tgz"
     },
     "@types/node": {
-      "version": "10.10.1",
+      "version": "10.11.0",
       "from": "@types/node@*",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.10.1.tgz"
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.11.0.tgz"
     },
     "@types/request": {
       "version": "2.47.1",
@@ -195,9 +195,9 @@
       "resolved": "https://registry.npmjs.org/agent-base/-/agent-base-4.2.1.tgz"
     },
     "ajv": {
-      "version": "6.5.3",
-      "from": "ajv@>=6.0.0 <7.0.0",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.5.3.tgz",
+      "version": "6.5.4",
+      "from": "ajv@^6.0.0",
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.5.4.tgz",
       "dependencies": {
         "fast-deep-equal": {
           "version": "2.0.1",
@@ -282,16 +282,9 @@
       "resolved": "https://registry.npmjs.org/babylon/-/babylon-6.18.0.tgz"
     },
     "basic-auth": {
-      "version": "2.0.0",
-      "from": "basic-auth@>=2.0.0 <2.1.0",
-      "resolved": "https://registry.npmjs.org/basic-auth/-/basic-auth-2.0.0.tgz",
-      "dependencies": {
-        "safe-buffer": {
-          "version": "5.1.1",
-          "from": "safe-buffer@5.1.1",
-          "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.1.tgz"
-        }
-      }
+      "version": "2.0.1",
+      "from": "basic-auth@~2.0.0",
+      "resolved": "https://registry.npmjs.org/basic-auth/-/basic-auth-2.0.1.tgz"
     },
     "bcrypt-pbkdf": {
       "version": "1.0.2",
