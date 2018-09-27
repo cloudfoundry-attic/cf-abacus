@@ -42,7 +42,9 @@ const createSubstitutionVariables = (props, cb) => {
   fs.writeFileSync(varsFile, '---\n');
   for(let key in process.env)
     try {
-      fs.appendFileSync(varsFile, `${key}: ${process.env[key]}\n`);
+      const value = process.env[key];
+      if (value)
+        fs.appendFileSync(varsFile, `${key}: ${value}\n`);
     } catch (err) {
       cb(err);
       return;

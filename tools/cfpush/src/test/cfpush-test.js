@@ -170,9 +170,10 @@ describe('Test abacus cfpush', () => {
   const cfHomeDirectory = 'path';
   const testEnvironment = {
     CF_HOME: cfHomeDirectory,
-    MORE_VARIABLES: 'dummy'
+    MORE_VARIABLES: 'dummy',
+    EMPTY: undefined
   };
-  const expectedEnvironment = { CF_HOME: tmpDir.name, MORE_VARIABLES: 'dummy' };
+  const expectedEnvironment = { CF_HOME: tmpDir.name, MORE_VARIABLES: 'dummy', EMPTY: undefined };
 
   before(() => {
     process.env = testEnvironment;
