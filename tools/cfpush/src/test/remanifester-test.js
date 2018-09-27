@@ -49,9 +49,9 @@ describe('adjusting manifest', () => {
       const manifest = yaml.load(adjustedManifest);
       expect(manifest.applications.length).to.equal(1);
       const application = manifest.applications[0];
-      expect(Object.keys(application)).to.deep.equal(['name', 'path', 'host']);
+      expect(Object.keys(application)).to.deep.equal(['name', 'path', 'route']);
       expect(application.name).to.equal(expectedAppName);
-      expect(application.host).to.equal(expectedAppName);
+      expect(application.route).to.equal(expectedAppName);
       expect(application.path).to.equal('../test-path');
     };
 
@@ -66,7 +66,7 @@ describe('adjusting manifest', () => {
   });
 
   context('when optional properties are provided', () => {
-    const mandatoryPropertiesNames = ['name', 'path', 'host'];
+    const mandatoryPropertiesNames = ['name', 'path', 'route'];
 
     const properties = (propertyName, propertyValue) => {
       const props = {
