@@ -6,8 +6,13 @@ const yaml = require('js-yaml');
 
 const { originalManifestFilename } = require(`${__dirname}/constants.js`);
 
-const buildAppName = (prefix, name) => {
-  return prefix ? prefix + name : name;
+const buildAppName = (prefix, name) => prefix ? prefix + name : name;
+
+const buildRoute = (originalRoute, oldAppName, newAppName) => {
+  if (!originalRoute)
+    return newAppName;
+
+  return originalRoute.replace(oldAppName, newAppName);
 };
 
 const verifyManifest = (manifest) => {
@@ -39,9 +44,10 @@ const adjustManifest = (manifest, properties) => {
 
   const app = parsedManifest.applications[0];
   const appName = buildAppName(properties.prefix, properties.name);
+  const oldAppName = app.name;
 
   app.name = appName;
-  app.route = appName;
+  app.route = buildRoute(app.route, oldAppName, appName);
   app.path = '../' + app.path;
 
   adjustOptionalProperties(app, properties);
