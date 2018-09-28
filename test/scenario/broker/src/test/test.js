@@ -9,8 +9,8 @@ const { yieldable, functioncb } = require('abacus-yieldable');
 
 const cfUtil = require('abacus-test-cf-util');
 const abacusUtil = require('abacus-test-abacus-util');
-const testAppUtil = require('abacus-test-app-util');
-const { checkCorrectSetup, getAbacusDirPath } = require('abacus-test-helper');
+const staticAppsUtil = require('abacus-static-apps-util');
+const { checkCorrectSetup } = require('abacus-test-helper');
 
 const { findWhere } = require('underscore');
 const util = require('util');
@@ -131,13 +131,13 @@ describe('Abacus Broker Scenario test', function() {
       },
       app: {
         name: `${moment.utc().valueOf()}-test-app`,
-        manifest: `${getAbacusDirPath()}/test/test-utils/apps/test-app/manifest.yml`
+        manifest: staticAppsUtil.testAppManifestLocation()
       }
     });
 
     orgId = app.orgGuid;
     spaceId = app.spaceGuid;
-    testAppClient = testAppUtil(app.getUrl());
+    testAppClient = staticAppsUtil.testAppClient(app.getUrl());
   });
 
   after(() => {
@@ -288,7 +288,7 @@ describe('Abacus Broker Scenario test', function() {
         },
         app: {
           name: 'service-mapping-test-app',
-          manifest: `${getAbacusDirPath()}/test/test-utils/apps/test-mapping-app/manifest.yml`
+          manifest: staticAppsUtil.testMappingAppManifestLocation()
         }
       });
       mappingApp.start();

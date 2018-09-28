@@ -6,8 +6,8 @@ const { yieldable, functioncb } = require('abacus-yieldable');
 
 const cfUtil = require('abacus-test-cf-util');
 const abacusUtil = require('abacus-test-abacus-util');
-const testAppUtil = require('abacus-test-app-util');
-const { checkCorrectSetup, getAbacusDirPath } = require('abacus-test-helper');
+const staticAppsUtil = require('abacus-static-apps-util');
+const { checkCorrectSetup } = require('abacus-test-helper');
 
 const { findWhere, first, last } = require('underscore');
 
@@ -54,7 +54,7 @@ describe('Abacus Broker Smoke test', function() {
       },
       app: {
         name:  `${moment.utc().valueOf()}-test-app`,
-        manifest: `${getAbacusDirPath()}/test/test-utils/apps/test-app/manifest.yml`
+        manifest: staticAppsUtil.testAppManifestLocation()
       }
     });
     serviceInstance = cf.Service.createInstance({
@@ -65,7 +65,7 @@ describe('Abacus Broker Smoke test', function() {
         plan: testEnv.servicePlan
       }
     });
-    testAppClient = testAppUtil(app.getUrl());
+    testAppClient = staticAppsUtil.testAppClient(app.getUrl());
   });
 
   after(() => {

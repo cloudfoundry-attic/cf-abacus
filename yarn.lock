@@ -282,16 +282,16 @@
 "abacus-broker-scenario-test@file:test/scenario/broker":
   version "1.1.3"
   dependencies:
+    abacus-static-apps-util "file:../../Library/Caches/Yarn/test-utils/static-apps"
     abacus-test-abacus-util "file:../../Library/Caches/Yarn/test-utils/abacus-util"
-    abacus-test-app-util "file:../../Library/Caches/Yarn/test-utils/apps/util"
     abacus-test-cf-util "file:../../Library/Caches/Yarn/test-utils/cf-util"
     abacus-test-helper "file:../../Library/Caches/Yarn/test-utils/helper"
 
 "abacus-broker-smoke-test@file:test/smoke/broker":
   version "1.1.3"
   dependencies:
+    abacus-static-apps-util "file:../../Library/Caches/Yarn/test-utils/static-apps"
     abacus-test-abacus-util "file:../../Library/Caches/Yarn/test-utils/abacus-util"
-    abacus-test-app-util "file:../../Library/Caches/Yarn/test-utils/apps/util"
     abacus-test-cf-util "file:../../Library/Caches/Yarn/test-utils/cf-util"
     abacus-test-helper "file:../../Library/Caches/Yarn/test-utils/helper"
 
@@ -999,7 +999,7 @@
 "abacus-services-hours-scenario-test@file:test/scenario/metering-plans":
   version "1.1.3"
 
-"abacus-test-abacus-util@file:test/test-utils/abacus-util":
+"abacus-static-apps-util@file:test/test-utils/static-apps":
   version "1.1.3"
   dependencies:
     abacus-cmdline "file:../../Library/Caches/tools/cmdline"
@@ -1007,12 +1007,12 @@
     abacus-wait "file:../../Library/Caches/Yarn/test-utils/wait"
     underscore "^1.9.1"
 
-"abacus-test-app-util@file:test/test-utils/apps/util":
+"abacus-test-abacus-util@file:test/test-utils/abacus-util":
   version "1.1.3"
   dependencies:
-    abacus-cmdline "file:../../Library/tools/cmdline"
-    abacus-moment "file:../../Library/lib/utils/moment"
-    abacus-wait "file:../../Library/Caches/test-utils/wait"
+    abacus-cmdline "file:../../Library/Caches/tools/cmdline"
+    abacus-moment "file:../../Library/Caches/lib/utils/moment"
+    abacus-wait "file:../../Library/Caches/Yarn/test-utils/wait"
     underscore "^1.9.1"
 
 "abacus-test-cf-util@file:test/test-utils/cf-util":
