@@ -1,8 +1,7 @@
 applications:
 - name: abacus-service-dashboard
-  route: abacus-service-dashboard
+  route: abacus-service-dashboard.((CF_SYS_DOMAIN))
   path: .
-  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 512M
   disk_quota: 512M

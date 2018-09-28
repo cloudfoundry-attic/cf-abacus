@@ -1,8 +1,7 @@
 applications:
 - name: abacus-broker
-  route: abacus-broker
+  route: abacus-broker.((CF_SYS_DOMAIN))
   path: .
-  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 512M
   disk_quota: 512M

@@ -1,8 +1,7 @@
 applications:
 - name: abacus-cf-renewer
-  route: abacus-cf-renewer
+  route: abacus-cf-renewer.((CF_SYS_DOMAIN))
   path: .
-  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 4G
   disk_quota: 512M

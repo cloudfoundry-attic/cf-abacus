@@ -1,8 +1,7 @@
 applications:
 - name: abacus-usage-accumulator
-  route: abacus-usage-accumulator
+  route: abacus-usage-accumulator.((CF_SYS_DOMAIN))
   path: .
-  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 2048M
   disk_quota: 512M

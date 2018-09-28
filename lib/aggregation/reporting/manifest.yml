@@ -1,8 +1,7 @@
 applications:
 - name: abacus-usage-reporting
-  route: abacus-usage-reporting
+  route: abacus-usage-reporting.((CF_SYS_DOMAIN))
   path: .
-  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 4096M
   disk_quota: 512M
