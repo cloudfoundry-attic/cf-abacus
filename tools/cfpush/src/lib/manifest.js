@@ -59,5 +59,8 @@ const blueGreen = (appPath = '.') => {
   }
 };
 
+const substitutionVariables = (environment) => yaml.dump(environment);
+
 module.exports.adjustManifest = adjustManifest;
 module.exports.blueGreen = blueGreen;
+module.exports.substitutionVariables = substitutionVariables;

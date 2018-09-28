@@ -46,7 +46,6 @@ const stubFileSystem = () => {
   });
 
   stub(fs, 'writeFileSync').callsFake((filename, content) => {});
-  stub(fs, 'appendFileSync').callsFake((filename, content) => {});
 
   stub(fs, 'copySync');
   stub(fs, 'existsSync').returns(true);
@@ -170,10 +169,9 @@ describe('Test abacus cfpush', () => {
   const cfHomeDirectory = 'path';
   const testEnvironment = {
     CF_HOME: cfHomeDirectory,
-    MORE_VARIABLES: 'dummy',
-    EMPTY: undefined
+    MORE_VARIABLES: 'dummy'
   };
-  const expectedEnvironment = { CF_HOME: tmpDir.name, MORE_VARIABLES: 'dummy', EMPTY: undefined };
+  const expectedEnvironment = { CF_HOME: tmpDir.name, MORE_VARIABLES: 'dummy' };
 
   before(() => {
     process.env = testEnvironment;
@@ -203,11 +201,7 @@ describe('Test abacus cfpush', () => {
       const varsFilePath = `${process.cwd()}/${substitutionVariablesPath}`;
 
       assert.calledOnce(fs.writeFileSync);
-      assert.calledWithExactly(fs.writeFileSync, varsFilePath, '---\n');
-
-      assert.calledTwice(fs.appendFileSync);
-      assert.calledWithExactly(fs.appendFileSync.firstCall, varsFilePath, `CF_HOME: "${cfHomeDirectory}"\n`);
-      assert.calledWithExactly(fs.appendFileSync.secondCall, varsFilePath, 'MORE_VARIABLES: "dummy"\n');
+      assert.calledWithExactly(fs.writeFileSync, varsFilePath, 'CF_HOME: path\nMORE_VARIABLES: dummy\n');
     });
 
     it('prepares ZDM', () => {
