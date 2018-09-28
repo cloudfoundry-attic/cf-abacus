@@ -15,7 +15,8 @@ const routeWithDomainManifestContent = `
       applications:
         - name: test-application
           path: test-path
-          route: test-application.${testDomain}
+          routes: 
+            - route: test-application.${testDomain}
       `;
 const manifestRelativePath = 'path';
 const unexistingManifestPath = 'error';
@@ -55,10 +56,14 @@ describe('adjusting manifest', () => {
       const manifest = yaml.load(adjustedManifest);
       expect(manifest.applications.length).to.equal(1);
       const application = manifest.applications[0];
-      expect(Object.keys(application)).to.deep.equal(['name', 'path', 'route']);
+      expect(Object.keys(application)).to.deep.equal(['name', 'path', 'routes']);
       expect(application.name).to.equal(expectedAppName);
-      expect(application.route).to.equal(domain ? `${expectedAppName}.${domain}` : expectedAppName);
       expect(application.path).to.equal('../test-path');
+
+      if (domain)
+        expect(application.routes[0].route).to.equal(`${expectedAppName}.${domain}`);
+      else
+        expect(application.routes).to.equal(expectedAppName);
     };
 
     it('when application prefix is provided', () => {
@@ -76,7 +81,7 @@ describe('adjusting manifest', () => {
   });
 
   context('when optional properties are provided', () => {
-    const mandatoryPropertiesNames = ['name', 'path', 'route'];
+    const mandatoryPropertiesNames = ['name', 'path', 'routes'];
 
     const properties = (propertyName, propertyValue) => {
       const props = {

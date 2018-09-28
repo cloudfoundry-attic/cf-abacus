@@ -1,6 +1,7 @@
 applications:
 - name: abacus-eureka-plugin
-  route: abacus-eureka-plugin.((CF_SYS_DOMAIN))
+  routes:
+  - route: abacus-eureka-plugin.((CF_SYS_DOMAIN))
   path: .
   instances: 1
   memory: 512M

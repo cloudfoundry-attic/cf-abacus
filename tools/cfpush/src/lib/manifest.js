@@ -8,11 +8,12 @@ const { originalManifestFilename } = require(`${__dirname}/constants.js`);
 
 const buildAppName = (prefix, name) => prefix ? prefix + name : name;
 
-const buildRoute = (originalRoute, oldAppName, newAppName) => {
+const buildRoute = (routes, oldAppName, newAppName) => {
+  const originalRoute = routes && routes[0].route;
   if (!originalRoute)
     return newAppName;
 
-  return originalRoute.replace(oldAppName, newAppName);
+  return [{ route: originalRoute.replace(oldAppName, newAppName) }];
 };
 
 const verifyManifest = (manifest) => {
@@ -47,8 +48,8 @@ const adjustManifest = (manifest, properties) => {
   const oldAppName = app.name;
 
   app.name = appName;
-  app.route = buildRoute(app.route, oldAppName, appName);
-  app.path = '../' + app.path;
+  app.routes = buildRoute(app.routes, oldAppName, appName);
+  app.path = `../${app.path}`;
 
   adjustOptionalProperties(app, properties);
 

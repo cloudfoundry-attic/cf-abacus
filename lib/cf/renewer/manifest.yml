@@ -1,6 +1,7 @@
 applications:
 - name: abacus-cf-renewer
-  route: abacus-cf-renewer.((CF_SYS_DOMAIN))
+  routes:
+  - route: abacus-cf-renewer.((CF_SYS_DOMAIN))
   path: .
   instances: 1
   memory: 4G

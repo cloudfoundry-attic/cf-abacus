@@ -1,6 +1,7 @@
 applications:
 - name: abacus-authserver-plugin
-  route: abacus-authserver-plugin.((CF_SYS_DOMAIN))
+  routes:
+  - route: abacus-authserver-plugin.((CF_SYS_DOMAIN))
   path: .
   instances: 1
   memory: 512M

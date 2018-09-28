@@ -1,6 +1,7 @@
 applications:
 - name: abacus-usage-meter
-  route: abacus-usage-meter.((CF_SYS_DOMAIN))
+  routes:
+  - route: abacus-usage-meter.((CF_SYS_DOMAIN))
   path: .
   instances: 1
   memory: 2048M
