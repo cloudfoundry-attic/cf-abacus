@@ -1,6 +1,6 @@
 applications:
-- name: ((HOUSEKEEPER_NAME))
-  route: ((HOUSEKEEPER_NAME))
+- name: abacus-housekeeper
+  route: abacus-housekeeper
   path: .
   domain: ((CF_SYS_DOMAIN))
   instances: 1
@@ -12,7 +12,7 @@ applications:
     DEBUG: e-abacus-*
     API: ((AUTH_SERVER))
     AUTH_SERVER: ((AUTH_SERVER))
-    EUREKA: ((ABACUS_PREFIX))((EUREKA_PLUGIN_NAME))
+    EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
     EUREKA_USER: ((HYSTRIX_CLIENT_ID))
     EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
     NODE_MODULES_CACHE: false
