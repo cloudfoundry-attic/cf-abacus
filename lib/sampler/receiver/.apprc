@@ -1,2 +1,22 @@
 default:
   PORT: 7070
+  APPS: 1
+  INSTANCES: 1
+  EUREKA: 9990
+  SECURED: false
+
+small:
+  APPS: 1
+  INSTANCES: 1
+
+medium:
+  APPS: 1
+  INSTANCES: 4
+
+large:
+  APPS: 1
+  INSTANCES: 8
+
+xlarge:
+  APPS: 1
+  INSTANCES: 16
