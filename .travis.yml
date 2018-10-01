@@ -24,7 +24,8 @@ matrix:
   fast_finish: true
 
   include:
-    - env:
+    - name: "Unit Tests"
+      env:
       - DESCRIPTION=unit-tests
       - RABBIT_URI=amqp://localhost:5672
       - DB_URI=mongodb://localhost:27017
@@ -37,7 +38,8 @@ matrix:
         - rabbitmq
       script:
         - yarn run build && yarn run generate-coverage && yarn run report-coverage
-    - env:
+    - name: "Integration Tests"
+      env:
       - DESCRIPTION=integration-tests
       - RABBIT_URI=amqp://localhost:5672
       - DB_URI=mongodb://localhost:27017
@@ -54,7 +56,8 @@ matrix:
       script:
         - yarn run provision
         - travis_retry yarn run citest
-    - env:
+    - name: "Process Usage Smoke Test"
+      env:
       - DESCRIPTION=process-usage-smoke-tests
       - RABBIT_URI=amqp://localhost:5672
       - DB_URI=mongodb://localhost:27017
@@ -71,7 +74,8 @@ matrix:
       script:
         - yarn run provision
         - travis_retry yarn run citest
-    - env:
+    - name: "Performance Tests"
+      env:
       - DESCRIPTION=performance-tests
       - RABBIT_URI=amqp://localhost:5672
       - DB_URI=mongodb://localhost:27017
