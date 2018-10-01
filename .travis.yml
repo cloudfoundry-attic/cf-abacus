@@ -26,6 +26,7 @@ matrix:
   include:
     - env:
       - DESCRIPTION=unit-tests
+      - RABBIT_URI=amqp://localhost:5672
       - DB_URI=mongodb://localhost:27017
       - DB_ACCUMULATOR_URI=mongodb://localhost:27017
       - DB_AGGREGATOR_URI=mongodb://localhost:27017
@@ -33,6 +34,7 @@ matrix:
       node_js: 8.11.3
       services:
         - mongodb
+        - rabbitmq
       script:
         - yarn run build && yarn run generate-coverage && yarn run report-coverage
     - env:
