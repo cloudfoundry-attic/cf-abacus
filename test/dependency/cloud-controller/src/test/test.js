@@ -5,7 +5,7 @@ const { functioncb, yieldable } = require('abacus-yieldable');
 const createEventReader = require('./helpers/event-reader');
 const { checkCorrectSetup } = require('abacus-test-helper');
 
-const env = {
+const testEnv = {
   api: process.env.CF_API_URI,
   user: process.env.CF_ADMIN_USER,
   password: process.env.CF_ADMIN_PASSWORD,
@@ -28,17 +28,17 @@ describe('usage events tests', () => {
   let cmdline;
 
   before(functioncb(function*() {
-    checkCorrectSetup(env);
-    cmdline = require('abacus-cmdline').cfutils(env.api, env.user, env.password);
+    checkCorrectSetup(testEnv);
+    cmdline = require('abacus-cmdline').cfutils(testEnv.api, testEnv.user, testEnv.password);
     const createdOrg = cmdline.org.create(testOrg);
     orgGuid = createdOrg.metadata.guid;
     const createdSpace = cmdline.space.create(orgGuid, testSpace);
     spaceGuid = createdSpace.metadata.guid;
 
     token = oauth.cache(
-      env.api,
-      env.cloudControllerClientId,
-      env.cloudControllerClientSecret
+      testEnv.api,
+      testEnv.cloudControllerClientId,
+      testEnv.cloudControllerClientSecret
     );
 
     try {
@@ -63,7 +63,7 @@ describe('usage events tests', () => {
       // Application start and stop could be slow if landscape is overloaded
       this.timeout(fiveMinutesInMillis);
 
-      const eventReader = createEventReader(env.api, 'app_usage_events', orgGuid, token);
+      const eventReader = createEventReader(testEnv.api, 'app_usage_events', orgGuid, token);
       const lastEvent = yield eventReader.readLastEvent();
       const lastGuid = lastEvent.metadata.guid;
 
@@ -121,7 +121,7 @@ describe('usage events tests', () => {
       // Service create and delete could be slow if landscape is overloaded
       this.timeout(fiveMinutesInMillis);
 
-      const eventReader = createEventReader(env.api, 'service_usage_events', orgGuid, token);
+      const eventReader = createEventReader(testEnv.api, 'service_usage_events', orgGuid, token);
       const lastEvent = yield eventReader.readLastEvent();
       const lastGuid = lastEvent.metadata.guid;
 

@@ -30,7 +30,7 @@ const debug = require('abacus-debug')('abacus-usage-aggregator-integration-test'
 const db = require('abacus-dataflow').db('abacus-aggregator-aggregated-usage');
 db.allDocs = yieldable.functioncb(db.allDocs);
 
-const env = {
+const testEnv = {
   db: process.env.DB_URI,
   orgs: process.env.ORGS || 1,
   resourceInstances: process.env.INSTANCES || 1,
@@ -100,7 +100,7 @@ describe('aggregator integration test', () => {
   before(() => {
     const modules = [lifecycleManager.modules.accountPlugin, lifecycleManager.modules.aggregator];
 
-    dbclient.drop(env.db, /^abacus-/, () => {
+    dbclient.drop(testEnv.db, /^abacus-/, () => {
       lifecycleManager.startModules(modules);
     });
   });
@@ -112,13 +112,13 @@ describe('aggregator integration test', () => {
   it('aggregator accumulated usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs or
     // predefined timeout
-    const timeout = Math.max(env.totalTimeout, 100 * env.orgs * env.resourceInstances * env.usage);
+    const timeout = Math.max(testEnv.totalTimeout, 100 * testEnv.orgs * testEnv.resourceInstances * testEnv.usage);
     this.timeout(timeout + 2000);
     const processingDeadline = moment.now() + timeout;
 
     // Initialize usage doc properties with unique values
-    const start = moment.now() + env.tshift;
-    const end = moment.now() + env.tshift;
+    const start = moment.now() + testEnv.tshift;
+    const end = moment.now() + testEnv.tshift;
 
     // Produce usage for two spaces in an organization, two consumers
     // in a space and create resource instances using two resource plans
@@ -230,7 +230,7 @@ describe('aggregator integration test', () => {
     // accumulated usage.
 
     // Total resource instances index
-    const tri = env.resourceInstances - 1;
+    const tri = testEnv.resourceInstances - 1;
 
     // Create an array of objects based on a range and a creator function
     const create = (number, creator) => map(range(number()), (i) => creator(i));
@@ -511,9 +511,10 @@ describe('aggregator integration test', () => {
       })[0];
     };
 
-    const expected = clone(aggregatedTemplate(env.orgs - 1, env.resourceInstances - 1, env.usage - 1), pruneWindows);
+    const expected =
+      clone(aggregatedTemplate(testEnv.orgs - 1, testEnv.resourceInstances - 1, testEnv.usage - 1), pruneWindows);
     const expectedConsumer =
-      clone(consumerTemplate(env.orgs - 1, env.resourceInstances - 1, env.usage - 1), pruneWindows);
+      clone(consumerTemplate(testEnv.orgs - 1, testEnv.resourceInstances - 1, testEnv.usage - 1), pruneWindows);
 
     // Post an accumulated usage doc, throttled to default concurrent requests
     const post = throttle((o, ri, u, cb) => {
@@ -551,12 +552,12 @@ describe('aggregator integration test', () => {
     const submit = (done) => {
       let posts = 0;
       const cb = () => {
-        if (++posts === env.orgs * env.resourceInstances * env.usage) done();
+        if (++posts === testEnv.orgs * testEnv.resourceInstances * testEnv.usage) done();
       };
 
-      // Submit usage for all env.orgs and resource instances
-      map(range(env.usage), (u) => map(range(env.resourceInstances), (ri) =>
-        map(range(env.orgs), (o) => post(o, ri, u, cb))));
+      // Submit usage for all testEnv.orgs and resource instances
+      map(range(testEnv.usage), (u) => map(range(testEnv.resourceInstances), (ri) =>
+        map(range(testEnv.orgs), (o) => post(o, ri, u, cb))));
     };
 
     const verifyRating = (done) => {
@@ -720,7 +721,7 @@ describe('aggregator integration test', () => {
     };
 
     // Wait for usage aggregator to start
-    request.waitFor('http://localhost::p/batch', { p: 9300 }, env.startTimeout, (err, value) => {
+    request.waitFor('http://localhost::p/batch', { p: 9300 }, testEnv.startTimeout, (err, value) => {
       // Failed to ping usage aggregator before timing out
       if (err) throw err;
 

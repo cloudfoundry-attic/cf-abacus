@@ -35,7 +35,7 @@ const usage = require('./usage.js');
 const debug = require('abacus-debug')('abacus-performance-test');
 const xdebug = require('abacus-debug')('x-abacus-performance-test');
 
-const env = {
+const testEnv = {
   orgs: process.env.ORGS || 1,
   resourceInstances: process.env.INSTANCES || 1,
   usagedocs: process.env.USAGE_DOCS || 1,
@@ -57,13 +57,15 @@ const env = {
   systemClientSecret: process.env.SYSTEM_CLIENT_SECRET
 };
 
-const objectStorageToken = env.secured
+const objectStorageToken = testEnv.secured
   ? oauth.cache(
-    env.authServer, env.objectStorageClientId, env.objectStorageClientSecret, 'abacus.usage.object-storage.write')
+    testEnv.authServer, testEnv.objectStorageClientId, testEnv.objectStorageClientSecret,
+    'abacus.usage.object-storage.write')
   : undefined;
 
-const systemToken = env.secured
-  ? oauth.cache(env.authServer, env.systemClientId, env.systemClientSecret, 'abacus.usage.read')
+const systemToken = testEnv.secured
+  ? oauth.cache(testEnv.authServer, testEnv.systemClientId, testEnv.systemClientSecret,
+    'abacus.usage.read')
   : undefined;
 
 describe('abacus-perf-test', () => {
@@ -85,13 +87,13 @@ describe('abacus-perf-test', () => {
     // Configure the test timeout based on the number of usage docs or
     // a preset timeout
     console.log('Testing with %d orgs, %d resource instances, %d usage docs with limit %d and plan type %s',
-      env.orgs, env.resourceInstances, env.usagedocs, env.limit, env.planType);
-    const timeout = Math.max(env.totalTimeout, 100 * env.orgs * env.resourceInstances * env.usagedocs);
+      testEnv.orgs, testEnv.resourceInstances, testEnv.usagedocs, testEnv.limit, testEnv.planType);
+    const timeout = Math.max(testEnv.totalTimeout, 100 * testEnv.orgs * testEnv.resourceInstances * testEnv.usagedocs);
     this.timeout(timeout + 2000);
     const processingDeadline = moment.now() + timeout;
 
     console.log('Test timeout %d ms, processing timeout %d ms, num executions %d',
-      timeout, env.processingTimeout, env.numExecutions);
+      timeout, testEnv.processingTimeout, testEnv.numExecutions);
 
     const authHeader = (token) =>
       token
@@ -105,7 +107,7 @@ describe('abacus-perf-test', () => {
     const post = (usageDoc, docNumber, cb) => {
       xdebug('Submitting org:%s instance:%s usage:%s ...',
         usageDoc.organization_id, usageDoc.resource_instance_id, docNumber + 1);
-      brequest.post(`${env.collector}/v1/metering/collected/usage`,
+      brequest.post(`${testEnv.collector}/v1/metering/collected/usage`,
         extend({}, authHeader(objectStorageToken), { body: usageDoc }),
         (err, response) => {
           const errorMessage = util.format('Response error: %j', err);
@@ -125,7 +127,7 @@ describe('abacus-perf-test', () => {
 
     // Get a usage report for the test organization
     const get = (orgId, planType, done) => {
-      brequest.get(`${env.reporting}/v1/metering/organizations/${orgId}/aggregated/usage`,
+      brequest.get(`${testEnv.reporting}/v1/metering/organizations/${orgId}/aggregated/usage`,
         extend({}, authHeader(systemToken)),
         (err, val) => {
           expect(err).to.equal(undefined);
@@ -141,7 +143,7 @@ describe('abacus-perf-test', () => {
             );
             const stippedResponse = usage.fixup(omit(val.body, 'id', 'processed', 'processed_id', 'start', 'end'));
             const expected = usage.fixup(
-              usage.report(orgId, planType, env.resourceInstances, env.usagedocs, env.numExecutions)
+              usage.report(orgId, planType, testEnv.resourceInstances, testEnv.usagedocs, testEnv.numExecutions)
             );
             expect(stippedResponse).to.deep.equal(expected);
             debug('Report for org:%s verified successfully', orgId);
@@ -171,15 +173,16 @@ describe('abacus-perf-test', () => {
     const buildFunctions = () => {
       const postFunctions = [];
       const reportFunctions = [];
-      each(range(env.orgs), (org) => {
-        const orgId = usage.orgId(org, env.timestamp);
+      each(range(testEnv.orgs), (org) => {
+        const orgId = usage.orgId(org, testEnv.timestamp);
         reportFunctions.push((cb) => {
-          async.retry({ times: Number.MAX_SAFE_INTEGER, interval: 1000 }, (done) => get(orgId, env.planType, done), cb);
+          async.retry({ times: Number.MAX_SAFE_INTEGER, interval: 1000 },
+            (done) => get(orgId, testEnv.planType, done), cb);
         });
 
-        each(range(env.usagedocs), (docNumber) =>
-          each(range(env.resourceInstances), (resourceInstance) => {
-            const usageDoc = usage.usageTemplate(orgId, resourceInstance, docNumber, env.planType, env.delta);
+        each(range(testEnv.usagedocs), (docNumber) =>
+          each(range(testEnv.resourceInstances), (resourceInstance) => {
+            const usageDoc = usage.usageTemplate(orgId, resourceInstance, docNumber, testEnv.planType, testEnv.delta);
             postFunctions.push((cb) => post(usageDoc, docNumber, cb));
           }));
       });
@@ -201,11 +204,12 @@ describe('abacus-perf-test', () => {
         done(err);
       };
 
-      process.stdout.write(util.format('Submitting %d usage docs ', env.orgs * env.resourceInstances * env.usagedocs));
-      if (isNaN(env.limit))
+      process.stdout.write(util.format('Submitting %d usage docs ',
+        testEnv.orgs * testEnv.resourceInstances * testEnv.usagedocs));
+      if (isNaN(testEnv.limit))
         async.parallel(functions, finishCb);
       else
-        async.parallelLimit(functions, env.limit, finishCb);
+        async.parallelLimit(functions, testEnv.limit, finishCb);
     };
 
     const waitForProcessing = (timeout, cb) => {
@@ -217,20 +221,21 @@ describe('abacus-perf-test', () => {
     // we get the expected values indicating that all submitted usage has been processed
     const getReports = (functions, done) => {
       console.log('\nRetrieving usage reports ...');
-      if (isNaN(env.limit))
+      if (isNaN(testEnv.limit))
         async.parallel(functions, done);
       else
         async.parallelLimit(functions, 180, done);
     };
 
     // Wait for usage reporter to start
-    request.waitFor(env.reporting + '/batch', extend({}, authHeader(systemToken)), env.startTimeout, (err) => {
+    request.waitFor(testEnv.reporting + '/batch', extend({}, authHeader(systemToken)), testEnv.startTimeout, (err) => {
       // Failed to ping usage reporter before timing out
       if (err) throw err;
 
       // Run the above steps
       const functions = buildFunctions();
-      submit(functions.post, () => waitForProcessing(env.processingTimeout, () => getReports(functions.report, done)));
+      submit(functions.post, () => waitForProcessing(testEnv.processingTimeout,
+        () => getReports(functions.report, done)));
     });
   });
 });

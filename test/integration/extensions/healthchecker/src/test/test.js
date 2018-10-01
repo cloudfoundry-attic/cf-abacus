@@ -4,19 +4,19 @@ const dbclient = require('abacus-dbclient');
 const lifecycleManager = require('abacus-lifecycle-manager')();
 const request = require('abacus-request');
 
-const env = {
+const testEnv = {
   startTimeout: process.env.START_TIMEOUT || 5000
 };
 
 describe('healthchecker integration test', function() {
-  this.timeout(env.startTimeout);
+  this.timeout(testEnv.startTimeout);
 
   before((done) => {
     const modules = [lifecycleManager.modules.authServerPlugin, lifecycleManager.modules.eurekaPlugin];
 
     const startModules = () => {
       lifecycleManager.startModules(modules);
-      request.waitFor('http://localhost::p', { p: 9882 }, env.startTimeout, (err, value) => done(err));
+      request.waitFor('http://localhost::p', { p: 9882 }, testEnv.startTimeout, (err, value) => done(err));
     };
 
     dbclient.drop(process.env.DB_URI, /^abacus-/, startModules);

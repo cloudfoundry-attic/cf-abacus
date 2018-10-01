@@ -5,7 +5,7 @@
 const request = require('abacus-request');
 const debug = require('abacus-debug')('abacus-healthchecker-smoke-test');
 
-const env = {
+const testEnv = {
   healthchecker: process.env.HEALTHCHECKER_URL || 'http://localhost:9884',
   startTimeout: process.env.SMOKE_START_TIMEOUT || 10000,
   totalTimeout: process.env.SMOKE_TOTAL_TIMEOUT || 60000,
@@ -16,19 +16,19 @@ const env = {
 
 const authentication = {
   auth: {
-    user: env.clientId,
-    pass: env.clientSecret,
+    user: testEnv.clientId,
+    pass: testEnv.clientSecret,
     sendImmediately: true
   }
 };
 
 describe('abacus-healthchecker-smoke-test', () => {
   before((done) =>
-    request.waitFor(`${env.healthchecker}/v1/healthcheck`, authentication, env.startTimeout, done)
+    request.waitFor(`${testEnv.healthchecker}/v1/healthcheck`, authentication, testEnv.startTimeout, done)
   );
 
   const check = (alias, groups, done) => {
-    request.get(`${env.healthchecker}${alias}`, authentication, (err, response) => {
+    request.get(`${testEnv.healthchecker}${alias}`, authentication, (err, response) => {
       debug('Healthchecker err %o, response %j', err, response);
 
       expect(err).to.be.undefined;
@@ -45,29 +45,29 @@ describe('abacus-healthchecker-smoke-test', () => {
 
 
   it('reports the health of client facing components', function(done) {
-    this.timeout(env.totalTimeout + 2000);
+    this.timeout(testEnv.totalTimeout + 2000);
     const testGroups = [
-      `${env.prefix}abacus-account-plugin`,
-      `${env.prefix}abacus-broker`,
-      `${env.prefix}abacus-provisioning-plugin`,
-      `${env.prefix}abacus-usage-collector`,
-      `${env.prefix}abacus-service-dashboard`,
-      `${env.prefix}abacus-usage-reporting`
+      `${testEnv.prefix}abacus-account-plugin`,
+      `${testEnv.prefix}abacus-broker`,
+      `${testEnv.prefix}abacus-provisioning-plugin`,
+      `${testEnv.prefix}abacus-usage-collector`,
+      `${testEnv.prefix}abacus-service-dashboard`,
+      `${testEnv.prefix}abacus-usage-reporting`
     ];
     check('/v1/healthcheck', testGroups, done);
   });
 
   it('reports the health of internal components', function(done) {
-    this.timeout(env.totalTimeout + 2000);
+    this.timeout(testEnv.totalTimeout + 2000);
     const testGroups = [
-      `${env.prefix}abacus-usage-meter`,
-      `${env.prefix}abacus-cf-renewer`,
-      `${env.prefix}abacus-usage-accumulator`,
-      `${env.prefix}abacus-usage-aggregator`,
-      `${env.prefix}abacus-eureka-plugin`,
-      `${env.prefix}abacus-housekeeper`,
-      `${env.prefix}abacus-applications-bridge`,
-      `${env.prefix}abacus-services-bridge`
+      `${testEnv.prefix}abacus-usage-meter`,
+      `${testEnv.prefix}abacus-cf-renewer`,
+      `${testEnv.prefix}abacus-usage-accumulator`,
+      `${testEnv.prefix}abacus-usage-aggregator`,
+      `${testEnv.prefix}abacus-eureka-plugin`,
+      `${testEnv.prefix}abacus-housekeeper`,
+      `${testEnv.prefix}abacus-applications-bridge`,
+      `${testEnv.prefix}abacus-services-bridge`
     ];
     check('/v1/healthcheck/internal', testGroups, done);
   });

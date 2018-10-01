@@ -4,13 +4,13 @@ const dbclient = require('abacus-dbclient');
 const createLifecycleManager = require('abacus-lifecycle-manager');
 const request = require('abacus-request');
 
-const env = {
+const testEnv = {
   startTimeout: process.env.START_TIMEOUT || 5000
 };
 
 describe('eureka', function() {
   let lifecycleManager;
-  this.timeout(env.startTimeout);
+  this.timeout(testEnv.startTimeout);
 
   let eureka;
 
@@ -33,7 +33,7 @@ describe('eureka', function() {
 
     const startModules = () => {
       lifecycleManager.startModules(modules);
-      request.waitFor('http://localhost::p', { p: 9990 }, env.startTimeout, done);
+      request.waitFor('http://localhost::p', { p: 9990 }, testEnv.startTimeout, done);
     };
 
     dbclient.drop(process.env.DB_URI, /^abacus-/, startModules);

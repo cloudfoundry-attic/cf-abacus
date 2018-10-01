@@ -12,7 +12,7 @@ const yieldable = require('abacus-yieldable');
 // Setup the debug log
 const debug = require('abacus-debug')('abacus-usage-reporting-itest');
 
-const env = {
+const testEnv = {
   db: process.env.DB_URI,
   offset: () => process.env.ABACUS_TIME_OFFSET ? parseInt(process.env.ABACUS_TIME_OFFSET) : 0,
   startTimeout: process.env.START_TIMEOUT || 30000,
@@ -91,7 +91,7 @@ const uploadRatedUsage = (done) => {
 
 // Get usage report, throttled to default concurrent requests
 const getReport = (orgId, cb) => {
-  const reportTime = now + env.offset() + 1;
+  const reportTime = now + testEnv.offset() + 1;
   debug(`Requesting org report for ${orgId} @ ${moment.utc(reportTime)}`);
   request.get(
     'http://localhost::port/v1/metering/organizations/:organization_id/aggregated/usage/:time',
@@ -118,7 +118,7 @@ const verifyReports = (expectedReport, cb) => {
 
 const checkReport = (expectedReport, done) => {
   // Wait for usage reporting service to start
-  request.waitFor('http://localhost::p/batch', { p: 9088 }, env.startTimeout, (err) => {
+  request.waitFor('http://localhost::p/batch', { p: 9088 }, testEnv.startTimeout, (err) => {
     // Failed to ping usage reporting service before timing out
     if (err) throw err;
 
@@ -129,7 +129,7 @@ const checkReport = (expectedReport, done) => {
 
 describe('Reporting integration test', () => {
   beforeEach((done) => {
-    dbclient.drop(env.db, /^abacus-/, done);
+    dbclient.drop(testEnv.db, /^abacus-/, done);
   });
 
   afterEach(() => {
@@ -147,7 +147,7 @@ describe('Reporting integration test', () => {
     });
 
     it('reports rated usage submissions', function(done) {
-      this.timeout(env.totalTimeout + 2000);
+      this.timeout(testEnv.totalTimeout + 2000);
       checkReport(expectedReport, done);
     });
   });
@@ -165,7 +165,7 @@ describe('Reporting integration test', () => {
     });
 
     it('shifts windows', function(done) {
-      this.timeout(env.totalTimeout + 2000);
+      this.timeout(testEnv.totalTimeout + 2000);
       checkReport(expectedReport, done);
     });
   });

@@ -28,7 +28,7 @@ const debug = require('abacus-debug')('abacus-usage-accumulator-integration-test
 const db = require('abacus-dataflow').db('abacus-accumulator-accumulated-usage');
 db.allDocs = yieldable.functioncb(db.allDocs);
 
-const env = {
+const testEnv = {
   db: process.env.DB_URI,
   orgs: process.env.ORGS || 1,
   resourceInstances: process.env.INSTANCES || 1,
@@ -73,10 +73,10 @@ const buildQuantityWindows = (e, u, m, f) => {
 
 describe('accumulator integration test', () => {
   before(() => {
-    checkCorrectSetup(env);
+    checkCorrectSetup(testEnv);
     const modules = [lifecycleManager.modules.accumulator, lifecycleManager.modules.accountPlugin];
 
-    dbclient.drop(env.db, /^abacus-/, () => {
+    dbclient.drop(testEnv.db, /^abacus-/, () => {
       lifecycleManager.startModules(modules);
     });
   });
@@ -88,7 +88,7 @@ describe('accumulator integration test', () => {
   it('accumulate metered usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs or
     // a predefined timeout
-    const timeout = Math.max(env.totalTimeout, 100 * env.orgs * env.resourceInstances * env.usage);
+    const timeout = Math.max(testEnv.totalTimeout, 100 * testEnv.orgs * testEnv.resourceInstances * testEnv.usage);
     this.timeout(timeout + 2000);
 
     // Setup aggregator spy
@@ -105,8 +105,8 @@ describe('accumulator integration test', () => {
     app.listen(9300);
 
     // Initialize usage doc properties with unique values
-    const start = moment.now() + env.tshift;
-    const end = moment.now() + env.tshift;
+    const start = moment.now() + testEnv.tshift;
+    const end = moment.now() + testEnv.tshift;
 
     const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27', o + 1].join('-');
     const sid = (o, ri) => ['aaeae239-f3f8-483c-9dd0-de5d41c38b6a', o + 1].join('-');
@@ -186,7 +186,8 @@ describe('accumulator integration test', () => {
         ]
       });
 
-    const expected = clone(accumulatedTemplate(env.orgs - 1, env.resourceInstances - 1, env.usage - 1), pruneWindows);
+    const expected =
+      clone(accumulatedTemplate(testEnv.orgs - 1, testEnv.resourceInstances - 1, testEnv.usage - 1), pruneWindows);
 
     // Post a metered usage doc, throttled to default concurrent requests
     const post = throttle((o, ri, u, cb) => {
@@ -224,12 +225,12 @@ describe('accumulator integration test', () => {
     const submit = (done) => {
       let posts = 0;
       const cb = () => {
-        if (++posts === env.orgs * env.resourceInstances * env.usage) done();
+        if (++posts === testEnv.orgs * testEnv.resourceInstances * testEnv.usage) done();
       };
 
-      // Submit usage for all env.orgs and resource instances
-      map(range(env.usage), (u) => map(range(env.resourceInstances),
-        (ri) => map(range(env.orgs), (o) => post(o, ri, u, cb))));
+      // Submit usage for all testEnv.orgs and resource instances
+      map(range(testEnv.usage), (u) => map(range(testEnv.resourceInstances),
+        (ri) => map(range(testEnv.orgs), (o) => post(o, ri, u, cb))));
     };
 
     const verifyAggregator = (done) => {
@@ -292,7 +293,7 @@ describe('accumulator integration test', () => {
     };
 
     // Wait for usage accumulator to start
-    request.waitFor('http://localhost::p/batch', { p: 9200 }, env.startTimeout, (err, value) => {
+    request.waitFor('http://localhost::p/batch', { p: 9200 }, testEnv.startTimeout, (err, value) => {
       // Failed to ping usage accumulator before timing out
       if (err) throw err;
 

@@ -14,7 +14,7 @@ const timewindow = require('abacus-timewindow');
 const util = require('util');
 
 
-const env = {
+const testEnv = {
   collectorUrl: process.env.COLLECTOR_URL || 'http://localhost:9080',
   reportingUrl: process.env.REPORTING_URL || 'http://localhost:9088',
   authServer: process.env.AUTH_SERVER || 'http://localhost:9882',
@@ -33,21 +33,21 @@ const env = {
 const now = moment.utc().toDate();
 
 // Token fetchers
-const objectStorageToken = env.secured ?
-  oauth.cache(env.authServer, env.objectStorageClientId, env.objectStorageClientSecret,
+const objectStorageToken = testEnv.secured ?
+  oauth.cache(testEnv.authServer, testEnv.objectStorageClientId, testEnv.objectStorageClientSecret,
     'abacus.usage.object-storage.write')
   : undefined;
-const systemToken = env.secured
-  ? oauth.cache(env.authServer, env.systemClientId, env.systemClientSecret, 'abacus.usage.read')
+const systemToken = testEnv.secured
+  ? oauth.cache(testEnv.authServer, testEnv.systemClientId, testEnv.systemClientSecret, 'abacus.usage.read')
   : undefined;
 
 // The scaling factor of each time window for creating the date string
 // [Second, Minute, Hour, Day, Month]
 const slack = () =>
-  /^[0-9]+[MDhms]$/.test(env.slack)
+  /^[0-9]+[MDhms]$/.test(testEnv.slack)
     ? {
-      scale: env.slack.charAt(env.slack.length - 1),
-      width: env.slack.match(/[0-9]+/)[0]
+      scale: testEnv.slack.charAt(testEnv.slack.length - 1),
+      width: testEnv.slack.match(/[0-9]+/)[0]
     }
     : {
       scale: timewindow.dimension.min,
@@ -57,11 +57,11 @@ const slack = () =>
 const initWindows = (win, dimension) => {
   const windows = [win];
 
-  if(env.windowsSizes && env.windowsSizes[dimension])
-    _(env.windowsSizes[dimension] - 1).times(() => windows.push(null));
+  if(testEnv.windowsSizes && testEnv.windowsSizes[dimension])
+    _(testEnv.windowsSizes[dimension] - 1).times(() => windows.push(null));
 
   else {
-    const timeWindows = timewindow.timeWindowsSizes(slack(), env.windowsSizes);
+    const timeWindows = timewindow.timeWindowsSizes(slack(), testEnv.windowsSizes);
     _(timeWindows.getWindows(dimension).length - 1).times(() => windows.push(null));
   }
 
@@ -132,7 +132,7 @@ const authHeader = (token) =>
 
 describe('process usage smoke test', function() {
   before((done) => {
-    if(!env.secured) {
+    if(!testEnv.secured) {
       done();
       return;
     }
@@ -152,7 +152,7 @@ describe('process usage smoke test', function() {
 
   it('submits usage for a sample resource and retrieves an aggregated usage report', function(done) {
     // Configure the test timeout
-    const timeout = Math.max(env.totalTimeout, 40000);
+    const timeout = Math.max(testEnv.totalTimeout, 40000);
     const processingDeadline = moment.now() + timeout;
     this.timeout(timeout + 2000);
     console.log('Test will run until %s', moment.utc(processingDeadline).toDate());
@@ -346,7 +346,7 @@ describe('process usage smoke test', function() {
       };
 
       request.post(
-        `${env.collectorUrl}/v1/metering/collected/usage`,
+        `${testEnv.collectorUrl}/v1/metering/collected/usage`,
         extend({ body: u.usage }, authHeader(objectStorageToken)),
         (err, val) => {
           expect(err).to.equal(undefined, util.format('Error: %o', err));
@@ -419,7 +419,7 @@ describe('process usage smoke test', function() {
     const getReport = (cb) => {
       request.get(
         [
-          env.reportingUrl,
+          testEnv.reportingUrl,
           'v1/metering/organizations',
           'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
           'aggregated/usage'
@@ -473,7 +473,7 @@ describe('process usage smoke test', function() {
       });
     };
 
-    // Wait for the expected usage report, get a report every 250 msec env until
+    // Wait for the expected usage report, get a report every 250 msec testEnv until
     // we get the expected values indicating that all submitted usage has
     // been processed
     const wait = (previousReport, processedDocs, done) => {
@@ -482,7 +482,7 @@ describe('process usage smoke test', function() {
     };
 
     // Wait for usage reporter to start
-    request.waitFor(env.reportingUrl + '/batch', {}, env.startTimeout, (err) => {
+    request.waitFor(testEnv.reportingUrl + '/batch', {}, testEnv.startTimeout, (err) => {
       // Failed to ping usage reporter before timing out
       if (err) throw err;
 
