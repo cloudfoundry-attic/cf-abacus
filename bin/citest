@@ -7,7 +7,9 @@ case "$CI_TEST" in
     # Based on default limits in throttle and batch processing and
     # integration test matrix, we would need 2197 (= 13 * 13 * 13)
     # usage submissions to get above 90 percent regression coverage
-
+    export ORGS=4
+    export INSTANCES=4
+    export USAGE_DOCS=4
     yarn run integration
     ;;
 
