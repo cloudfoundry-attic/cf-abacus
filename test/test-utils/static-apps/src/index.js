@@ -26,6 +26,8 @@ const testAppClient = (url) => {
   };
 };
 
-module.exports.testAppClient = testAppClient;
-module.exports.testAppManifestLocation = testAppManifestLocation;
-module.exports.testMappingAppManifestLocation = testMappingAppManifestLocation;
+module.exports = {
+  testAppClient: testAppClient,
+  testAppManifestLocation: testAppManifestLocation,
+  testMappingAppManifestLocation: testMappingAppManifestLocation
+};
