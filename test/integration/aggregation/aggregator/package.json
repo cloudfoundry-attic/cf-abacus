@@ -48,18 +48,7 @@
     "abacus-usage-aggregator": "file:../../../../lib/aggregation/aggregator",
     "abacus-yieldable": "file:../../../../lib/utils/yieldable",
     "bignumber.js": "^2.1.0",
-    "underscore": "^1.9.1",
-    "nyc": "^11.4.1"
-  },
-  "nyc": {
-    "cache": true,
-    "reporter": [
-      "text",
-      "html"
-    ],
-    "exclude": [
-      "src/test/**"
-    ]
+    "underscore": "^1.9.1"
   },
   "engines": {
     "node": ">=8.10.0 <9.0.0",

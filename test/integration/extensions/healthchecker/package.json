@@ -35,19 +35,8 @@
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager",
     "abacus-mocha": "file:../../../tools/mocha",
-    "nyc": "^11.4.1",
     "abacus-publish": "file:../../../tools/publish",
     "underscore": "^1.9.1"
-  },
-  "nyc": {
-    "cache": true,
-    "reporter": [
-      "text",
-      "html"
-    ],
-    "exclude": [
-      "src/test/**"
-    ]
   },
   "engines": {
     "node": ">=8.10.0 <9.0.0",
