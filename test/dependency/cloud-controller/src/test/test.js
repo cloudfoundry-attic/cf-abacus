@@ -4,6 +4,7 @@ const oauth = require('abacus-oauth');
 const { functioncb, yieldable } = require('abacus-yieldable');
 const createEventReader = require('./helpers/event-reader');
 const { checkCorrectSetup } = require('abacus-test-helper');
+const cmdlineModule = require('abacus-cmdline');
 
 const testEnv = {
   api: process.env.CF_API_URI,
@@ -29,7 +30,7 @@ describe('usage events tests', () => {
 
   before(functioncb(function*() {
     checkCorrectSetup(testEnv);
-    cmdline = require('abacus-cmdline').cfutils(testEnv.api, testEnv.user, testEnv.password);
+    cmdline = cmdlineModule.cfutils(testEnv.api, testEnv.user, testEnv.password);
     const createdOrg = cmdline.org.create(testOrg);
     orgGuid = createdOrg.metadata.guid;
     const createdSpace = cmdline.space.create(orgGuid, testSpace);
