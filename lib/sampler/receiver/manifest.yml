@@ -14,25 +14,20 @@ applications:
       CONF: default
       CLUSTER: false
       DEBUG: e-abacus-*
-      API: ((AUTH_SERVER))
-      AUTH_SERVER: ((AUTH_SERVER))
       PROVISIONING_URL: ((ABACUS_PREFIX))abacus-provisioning-plugin.((CF_DOMAIN))
       EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
       EUREKA_USER: ((HYSTRIX_CLIENT_ID))
       EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
+      API: ((AUTH_SERVER))
+      AUTH_SERVER: ((AUTH_SERVER))
+      CLIENT_ID: ((SYSTEM_CLIENT_ID))
+      CLIENT_SECRET: ((SYSTEM_CLIENT_SECRET))
       NODE_MODULES_CACHE: false
       PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
       SECURED: true
       SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
-      REPLAY: 1800000
-      THROTTLE: 100
-      BATCH_SIZE: 10
       MAX_INFLIGHT: 400
-      SYSTEM_INFLIGHT_ENABLED: true
-      MAX_SYSTEM_INFLIGHT: 12
       OPTIMIZE_MEMORY: true
-      CLIENT_ID: ((SYSTEM_CLIENT_ID))
-      CLIENT_SECRET: ((SYSTEM_CLIENT_SECRET))
       JWTALGO: ((JWTALGO))
       JWTKEY: |+
         ((JWTKEY))

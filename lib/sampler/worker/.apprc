@@ -1,0 +1,7 @@
+default:
+  PORT: 7080
+  APPS: 1
+  INSTANCES: 1
+  EUREKA: 9990
+  COLLECTOR: 9080
+  SECURED: false
