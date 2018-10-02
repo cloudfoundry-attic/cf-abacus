@@ -1,5 +1,5 @@
 default:
-  PORT: 7080
+  PORT: 7071
   APPS: 1
   INSTANCES: 1
   EUREKA: 9990
