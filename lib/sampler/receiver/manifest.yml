@@ -3,7 +3,7 @@
 # uses the manifest to extract the application name
 applications:
   - name: abacus-sampler-receiver
-    route: abacus-sampler-receiver
+    route: abacus-sampler-receiver.((CF_SYS_DOMAIN))
     path: .
     instances: 1
     memory: 512M
