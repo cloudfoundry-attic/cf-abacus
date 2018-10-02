@@ -2,7 +2,7 @@
 
 const { pairs, every } = require('underscore');
 
-const insufficientSetUp = (env) => {
+const insufficientSetup = (env) => {
   let unsetProperty;
   let allPropertiesAreSet = every(pairs(env), (pair) => {
     unsetProperty = pair[0];
@@ -12,10 +12,11 @@ const insufficientSetUp = (env) => {
 };
 
 const checkCorrectSetup = (env) => {
-  if (insufficientSetUp(env))
+  const insufficientEnvironmentVariable = insufficientSetup(env);
+  if (insufficientEnvironmentVariable)
     throw new Error(
       'This test cannot run without correct set up. Please check if all environment variables are set. ' +
-      `Check ${insufficientSetUp(env)}.`);
+      `Check ${insufficientEnvironmentVariable}.`);
 };
 
 module.exports = {
