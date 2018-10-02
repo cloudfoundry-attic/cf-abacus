@@ -5,6 +5,7 @@ const lifecycleManager = require('abacus-lifecycle-manager')();
 const request = require('abacus-request');
 
 const testEnv = {
+  db: process.env.DB_URI,
   startTimeout: process.env.START_TIMEOUT || 5000
 };
 
@@ -19,7 +20,7 @@ describe('healthchecker integration test', function() {
       request.waitFor('http://localhost::p', { p: 9882 }, testEnv.startTimeout, (err, value) => done(err));
     };
 
-    dbclient.drop(process.env.DB_URI, /^abacus-/, startModules);
+    dbclient.drop(testEnv.db, /^abacus-/, startModules);
   });
 
   after(() => {
