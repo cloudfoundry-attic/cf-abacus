@@ -1,8 +1,8 @@
 applications:
 - name: abacus-applications-bridge
-  route: abacus-applications-bridge
+  routes:
+  - route: abacus-applications-bridge.((CF_SYS_DOMAIN))
   path: .
-  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 512M
   disk_quota: 512M

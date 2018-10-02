@@ -130,12 +130,6 @@ Deploying to Cloud Foundry
 
 Check our [wiki](https://github.com/cloudfoundry-incubator/cf-abacus/wiki) on how to deploy Abacus to Cloud Foundry.
 
-Concourse pipelines
----
-
-You can use Concourse [pipelines](https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/etc/concourse) deploy and monitor Abacus.
-
-
 Layout
 ---
 
@@ -193,8 +187,6 @@ test/ - End to end tests
 tools/ - Build tools
 
 etc/ - Misc build scripts
-
-    concourse/ - Concourse pipelines
 
 ```
 

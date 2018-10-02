@@ -5,10 +5,18 @@ const remanifester = require('../lib/manifest.js');
 const yaml = require('js-yaml');
 
 const testAppName = 'test-app-name';
-const preparedManifestContent = `
+const testDomain = 'domain.com';
+const minimalManifestContent = `
       applications:
         - name: test-application
           path: test-path
+      `;
+const routeWithDomainManifestContent = `
+      applications:
+        - name: test-application
+          path: test-path
+          routes: 
+            - route: test-application.${testDomain}
       `;
 const manifestRelativePath = 'path';
 const unexistingManifestPath = 'error';
@@ -31,42 +39,49 @@ describe('adjusting manifest', () => {
 
   context('should return the same manifest', () => {
     it('when undefined properties are provided', () => {
-      const adjustedManifest = remanifester.adjustManifest(preparedManifestContent, undefined);
-      expect(adjustedManifest).to.equal(preparedManifestContent);
+      const adjustedManifest = remanifester.adjustManifest(minimalManifestContent, undefined);
+      expect(adjustedManifest).to.equal(minimalManifestContent);
     });
 
     it('when empty properties are provided', () => {
-      const adjustedManifest = remanifester.adjustManifest(preparedManifestContent, {});
-      expect(adjustedManifest).to.equal(preparedManifestContent);
+      const adjustedManifest = remanifester.adjustManifest(minimalManifestContent, {});
+      expect(adjustedManifest).to.equal(minimalManifestContent);
     });
   });
 
   context('adjusting mandatory properties', () => {
-    const test = (prefix, expectedAppName) => {
-      const adjustedManifest =
-        remanifester.adjustManifest(preparedManifestContent, { name: testAppName, prefix: prefix });
+    const test = (content, prefix, expectedAppName, domain) => {
+      const adjustedManifest = remanifester.adjustManifest(content, { name: testAppName, prefix: prefix });
 
       const manifest = yaml.load(adjustedManifest);
       expect(manifest.applications.length).to.equal(1);
       const application = manifest.applications[0];
-      expect(Object.keys(application)).to.deep.equal(['name', 'path', 'route']);
+      expect(Object.keys(application)).to.deep.equal(['name', 'path', 'routes']);
       expect(application.name).to.equal(expectedAppName);
-      expect(application.route).to.equal(expectedAppName);
       expect(application.path).to.equal('../test-path');
+
+      if (domain)
+        expect(application.routes[0].route).to.equal(`${expectedAppName}.${domain}`);
+      else
+        expect(application.routes).to.equal(expectedAppName);
     };
 
     it('when application prefix is provided', () => {
       const testAppPrefix = 'test-app-prefix-';
-      test(testAppPrefix, testAppPrefix + testAppName);
+      test(minimalManifestContent, testAppPrefix, testAppPrefix + testAppName);
     });
 
     it('when application prefix is NOT provided', () => {
-      test(undefined, testAppName);
+      test(minimalManifestContent, undefined, testAppName);
+    });
+
+    it('when route contains domain name', () => {
+      test(routeWithDomainManifestContent, undefined, testAppName, testDomain);
     });
   });
 
   context('when optional properties are provided', () => {
-    const mandatoryPropertiesNames = ['name', 'path', 'route'];
+    const mandatoryPropertiesNames = ['name', 'path', 'routes'];
 
     const properties = (propertyName, propertyValue) => {
       const props = {
@@ -79,7 +94,7 @@ describe('adjusting manifest', () => {
     };
 
     const veryfyOptionalProperty = (properties, expectedPropertyName, expectedPropertyValue) => {
-      const adjustedManifest = remanifester.adjustManifest(preparedManifestContent, properties);
+      const adjustedManifest = remanifester.adjustManifest(minimalManifestContent, properties);
 
       const manifest = yaml.load(adjustedManifest);
       expect(manifest.applications.length).to.equal(1);
@@ -108,7 +123,7 @@ describe('blue-green', () => {
     before(() => {
       const readFileSyncStub = stub(fs, 'readFileSync');
       readFileSyncStub.withArgs(`${process.cwd()}/${manifestRelativePath}/${originalManifestFilename}`)
-        .returns(preparedManifestContent);
+        .returns(minimalManifestContent);
       readFileSyncStub.withArgs(`${process.cwd()}/${unexistingManifestPath}/${originalManifestFilename}`)
         .throws(new Error());
     });

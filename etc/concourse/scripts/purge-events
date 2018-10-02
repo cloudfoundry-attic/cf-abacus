@@ -1,8 +1,0 @@
-#!/bin/bash
-
-set -e
-
-SCRIPT_DIR="${BASH_SOURCE%/*}"
-
-$SCRIPT_DIR/purge-app-events
-$SCRIPT_DIR/purge-service-events
