@@ -33,4 +33,4 @@ applications:
         ((JWTKEY))
       DEBUG_STRIPLF: true
       DB_URI: ((DB_SAMPLER_URI))
-      RATE_LIMIT: ((SAMPLER_RECEIVER_RATE_LIMIT))
+      RATE_LIMIT: ((RECEIVER_RATE_LIMIT))
