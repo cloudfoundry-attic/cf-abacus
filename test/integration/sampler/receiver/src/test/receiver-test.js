@@ -10,6 +10,8 @@ const { ReceiverClient } = require('abacus-api');
 const moment = require('abacus-moment');
 const createLifecycleManager = require('abacus-lifecycle-manager');
 
+const createTokenFactoy = require('./token-factory');
+
 const mongoURI = process.env.DB_URI || 'mongodb://localhost:27017';
 const receiverURI = 'http://localhost:7070';
 const collectionName = 'spans';
@@ -58,19 +60,29 @@ const createProvisioningServerMock = () => {
 };
 
 describe('Receiver integartion test', () => {
+  const samplerOAuthScopes = ['abacus.sampler.usage.write'];
+  const jwtSecret = 'secret';
+  let tokenFactory;
   let lifecycleManager;
   let mongoClient;
   let receiverClient;
   let provisioningServerMock;
 
   before(async () => {
-    receiverClient = new ReceiverClient(receiverURI);
+    tokenFactory = createTokenFactoy(jwtSecret);
+    receiverClient = new ReceiverClient(receiverURI, () => {
+      const token = tokenFactory.create(samplerOAuthScopes);
+      return `Bearer ${token}`;
+    });
     mongoClient = await MongoClient.connect(mongoURI);
     provisioningServerMock = createProvisioningServerMock();
     
     await provisioningServerMock.start();
     const env = extend({}, process.env, {
-      PROVISIONING_URL: provisioningServerMock.url()
+      PROVISIONING_URL: provisioningServerMock.url(),
+      SECURED: 'true',
+      JWTKEY: jwtSecret,
+      JWTALGO: 'HS256'
     });
 
     lifecycleManager = createLifecycleManager();

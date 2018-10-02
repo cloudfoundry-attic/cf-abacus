@@ -34,6 +34,7 @@
   "dependencies": {
     "abacus-api": "file:../../utils/api",
     "abacus-launcher": "file:../../utils/launcher",
+    "abacus-oauth": "file:../../utils/oauth",
     "abacus-webapp": "file:../../utils/webapp",
     "http-status-codes": "^1.3.0",
     "uuid": "^3.2.1"
