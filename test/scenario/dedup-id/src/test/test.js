@@ -6,7 +6,6 @@ const request = require('abacus-request');
 const { extend } = require('underscore');
 const util = require('util');
 const uuid = require('uuid');
-
 const httpStatus = require('http-status-codes');
 
 const doGet = util.promisify(request.get);
@@ -37,7 +36,7 @@ describe('dedup acceptance test', () => {
 
   let systemToken;
 
-  const authHeader = (token) => token ? { authorization: token()} : {};
+  const authHeader = (token) => token ? { authorization: token() } : {};
 
   const buildUsageDoc = (orgID, dedupId) => {
     const usageDoc = {
