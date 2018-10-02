@@ -285,11 +285,12 @@ describe('aggregator integration test', () => {
       return map(
         filter(
           create(instances, (i) => {
+            const id = getId(i);
             return {
               id: riid(o, i),
               t: dbclient.t(uid(o, ri, u)),
               conid: cid(o, i),
-              planid: [pid(getId(i)), mpid(getId(i)), rpid(getId(i)), ppid(getId(i))].join(
+              planid: [pid(id), mpid(id), rpid(id), ppid(id)].join(
                 '/'
               )
             };
@@ -319,20 +320,23 @@ describe('aggregator integration test', () => {
       const plans = () => (u === 0 && ri <= (c === 0 ? 1 + s : 5 + s)) || tri <= (c === 0 ? 1 + s : 5 + s) ? 1 : 2;
 
       // Create plan aggregations
-      return create(plans, (i) => ({
-        plan_id: [pid(getId(i)), mpid(getId(i)), rpid(getId(i)), ppid(getId(i))].join('/'),
-        metering_plan_id: mpid(getId(i)),
-        rating_plan_id: rpid(getId(i)),
-        pricing_plan_id: ppid(getId(i)),
-        aggregated_usage: a(ri, u, i, count, true),
-        resource_instances: riagg(
-          o,
-          ri,
-          u,
-          conid,
-          [pid(getId(i)), mpid(getId(i)), rpid(getId(i)), ppid(getId(i))].join('/')
-        )
-      }));
+      return create(plans, (i) => {
+        const id = getId(i);
+        return {
+          plan_id: [pid(id), mpid(id), rpid(id), ppid(id)].join('/'),
+          metering_plan_id: mpid(id),
+          rating_plan_id: rpid(id),
+          pricing_plan_id: ppid(id),
+          aggregated_usage: a(ri, u, i, count, true),
+          resource_instances: riagg(
+            o,
+            ri,
+            u,
+            conid,
+            [pid(id), mpid(id), rpid(id), ppid(id)].join('/')
+          )
+        };
+      });
     };
 
     const getConsumerId = (i, s) => {
@@ -403,13 +407,16 @@ describe('aggregator integration test', () => {
       const plans = () => (u === 0 && ri <= 1 + s) || tri <= 1 + s ? 1 : 2;
 
       // Create plan level aggregations
-      return create(plans, (i) => ({
-        plan_id: [pid(getId(i)), mpid(getId(i)), rpid(getId(i)), ppid(getId(i))].join('/'),
-        metering_plan_id: mpid(getId(i)),
-        rating_plan_id: rpid(getId(i)),
-        pricing_plan_id: ppid(getId(i)),
-        aggregated_usage: a(ri, u, i, count, true)
-      }));
+      return create(plans, (i) => {
+        const id = getId(i);
+        return {
+          plan_id: [pid(id), mpid(id), rpid(id), ppid(id)].join('/'),
+          metering_plan_id: mpid(id),
+          rating_plan_id: rpid(id),
+          pricing_plan_id: ppid(id),
+          aggregated_usage: a(ri, u, i, count, true)
+        };
+      });
     };
 
     // Space level resource aggregations for a given organization
@@ -447,13 +454,16 @@ describe('aggregator integration test', () => {
       const plans = () => (u === 0 && ri <= 1) || tri <= 1 ? 1 : 2;
 
       // Create plan aggregations
-      return create(plans, (i) => ({
-        plan_id: [pid(getId(i)), mpid(getId(i)), rpid(getId(i)), ppid(getId(i))].join('/'),
-        metering_plan_id: mpid(getId(i)),
-        rating_plan_id: rpid(getId(i)),
-        pricing_plan_id: ppid(getId(i)),
-        aggregated_usage: a(ri, u, i, count, true)
-      }));
+      return create(plans, (i) => {
+        const id = getId(i);
+        return {
+          plan_id: [pid(id), mpid(id), rpid(id), ppid(id)].join('/'),
+          metering_plan_id: mpid(id),
+          rating_plan_id: rpid(id),
+          pricing_plan_id: ppid(id),
+          aggregated_usage: a(ri, u, i, count, true)
+        };
+      });
     };
 
     // Aggregated usage for a given org, resource instance, usage indices
