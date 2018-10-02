@@ -135,10 +135,10 @@ const waitUntilUsageIsProcessed = (token, documentUrlLocation, timeout = fiveMin
         return cb(err);
       }
 
+      debug('GET endpoint response status code: ', res.statusCode);
       if (res.statusCode && res.statusCode === httpStatus.OK)
         return cb(undefined, true);
 
-      debug('GET endpoint response code: ', res.statusCode);
       return cb(undefined, false);
     });
   };

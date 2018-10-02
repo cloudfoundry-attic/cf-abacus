@@ -106,7 +106,7 @@ describe('Abacus Broker Smoke test', function() {
       }]
     };
 
-    console.log('\nPosing usage ...');
+    console.log('\nPosting usage ...');
     const postResponse = yield yieldable(testAppClient.postUsage)(usageBody);
     expect(postResponse.statusCode).to.equal(202, 'usage was not submitted successfully');
 
@@ -116,7 +116,7 @@ describe('Abacus Broker Smoke test', function() {
     console.log('\nWaiting for usage to be processed ...\n');
     yield yieldable(abacusClient.waitUntilUsageIsProcessed)(usageToken, locationHeader, testTimeout);
 
-    console.log('\nGetting report ...\n')
+    console.log('\nGetting report ...\n');
     const getResponse = yield yieldable(abacusClient.getOrganizationUsage)(usageToken, app.orgGuid);
     expect(getResponse.statusCode).to.equal(200, 'usage was not retrieved successfully');
     expect(getResponse.body.resources.length).to.equal(1, 'number of resources was not the expected');
