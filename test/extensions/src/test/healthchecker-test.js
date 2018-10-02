@@ -47,7 +47,7 @@ describe('abacus-extensions-healthchecker-test', () => {
     request.waitFor(`${healthchecker}/v1/healthcheck`, authentication, startTimeout, done)
   );
 
-  const check = (alias, groups, done) => {
+  const check = (alias, groups, checkComponentsStatus, done) => {
     request.get(`${healthchecker}${alias}`, authentication, (err, response) => {
       debug('Healthchecker err %o, response %j', err, response);
 
@@ -55,10 +55,12 @@ describe('abacus-extensions-healthchecker-test', () => {
       expect(response.statusCode).to.equal(200);
       expect(response.body).to.be.an('object').that.has.all.keys(groups);
 
-      for(let appGroup of Object.keys(response.body)) {
-        const appsResponses = Object.values(response.body[appGroup]);
-        appsResponses.every((responseCode) => expect(responseCode, appGroup + ': ' + responseCode).to.equal(200));
-      }
+      if(checkComponentsStatus)
+        for(let appGroup of Object.keys(response.body)) {
+          const appsResponses = Object.values(response.body[appGroup]);
+          appsResponses.every((responseCode) => expect(responseCode, appGroup + ': ' + responseCode).to.equal(200));
+        }
+
       done();
     });
   };
@@ -66,6 +68,7 @@ describe('abacus-extensions-healthchecker-test', () => {
 
   it('reports the health of client facing components', function(done) {
     this.timeout(totalTimeout + 2000);
+    const checkComponentsStatus = true;
     const testGroups = [
       `${prefix}abacus-account-plugin`,
       `${prefix}abacus-broker`,
@@ -74,11 +77,12 @@ describe('abacus-extensions-healthchecker-test', () => {
       `${prefix}abacus-service-dashboard`,
       `${prefix}abacus-usage-reporting`
     ];
-    check('/v1/healthcheck', testGroups, done);
+    check('/v1/healthcheck', testGroups, checkComponentsStatus, done);
   });
 
   it('reports the health of internal components', function(done) {
     this.timeout(totalTimeout + 2000);
+    const checkComponentsStatus = false;
     const testGroups = [
       `${prefix}abacus-usage-meter`,
       `${prefix}abacus-cf-renewer`,
@@ -89,6 +93,6 @@ describe('abacus-extensions-healthchecker-test', () => {
       `${prefix}abacus-applications-bridge`,
       `${prefix}abacus-services-bridge`
     ];
-    check('/v1/healthcheck/internal', testGroups, done);
+    check('/v1/healthcheck/internal', testGroups, checkComponentsStatus, done);
   });
 });
