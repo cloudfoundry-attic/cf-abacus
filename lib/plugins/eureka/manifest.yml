@@ -1,8 +1,8 @@
 applications:
 - name: abacus-eureka-plugin
-  route: abacus-eureka-plugin
+  routes:
+  - route: abacus-eureka-plugin.((CF_SYS_DOMAIN))
   path: .
-  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 512M
   disk_quota: 512M
@@ -13,7 +13,7 @@ applications:
     DEBUG: e-abacus-*
     API: ((AUTH_SERVER))
     AUTH_SERVER: ((AUTH_SERVER))
-    EUREKA: ((ABACUS_PREFIX))((EUREKA_PLUGIN_NAME))
+    EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
     EUREKA_USER: ((HYSTRIX_CLIENT_ID))
     EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
     NODE_MODULES_CACHE: false

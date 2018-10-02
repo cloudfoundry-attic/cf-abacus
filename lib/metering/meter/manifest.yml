@@ -1,8 +1,8 @@
 applications:
 - name: abacus-usage-meter
-  route: abacus-usage-meter
+  routes:
+  - route: abacus-usage-meter.((CF_SYS_DOMAIN))
   path: .
-  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 2048M
   disk_quota: 512M
@@ -15,9 +15,9 @@ applications:
     API: ((AUTH_SERVER))
     AUTH_SERVER: ((AUTH_SERVER))
     ACCUMULATOR: ((ABACUS_PREFIX))abacus-usage-accumulator
-    PROVISIONING: ((ABACUS_PREFIX))((PROVISIONING_PLUGIN_NAME))
-    ACCOUNT: ((ABACUS_PREFIX))((ACCOUNT_PLUGIN_NAME))
-    EUREKA: ((ABACUS_PREFIX))((EUREKA_PLUGIN_NAME))
+    PROVISIONING: ((ABACUS_PREFIX))abacus-provisioning-plugin
+    ACCOUNT: ((ABACUS_PREFIX))abacus-account-plugin
+    EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
     EUREKA_USER: ((HYSTRIX_CLIENT_ID))
     EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
     NODE_MODULES_CACHE: false

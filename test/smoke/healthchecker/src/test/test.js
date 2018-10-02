@@ -47,29 +47,31 @@ describe('abacus-healthchecker-smoke-test', () => {
     request.waitFor(`${testEnv.healthchecker}/v1/healthcheck`, authentication, testEnv.startTimeout, done)
   );
 
-  const check = (alias, groups, done) => {
+  const check = (alias, groups, checkComponentsStatus, done) => {
     request.get(`${testEnv.healthchecker}${alias}`, authentication, (err, response) => {
       debug('Healthchecker err %o, response %j', err, response);
 
       expect(err).to.be.undefined;
       expect(response.statusCode).to.equal(200);
       expect(response.body).to.be.an('object').that.has.all.keys(groups);
-
-      for(let appGroup of Object.keys(response.body)) {
-        const appsResponses = Object.values(response.body[appGroup]);
-        appsResponses.every((responseCode) => expect(responseCode, appGroup + ': ' + responseCode).to.equal(200));
-      }
+      if(checkComponentsStatus)
+        for(let appGroup of Object.keys(response.body)) {
+          const appsResponses = Object.values(response.body[appGroup]);
+          appsResponses.every((responseCode) => expect(responseCode, appGroup + ': ' + responseCode).to.equal(200));
+        }
       done();
     });
   };
 
   it('reports the health of client facing components', function(done) {
     this.timeout(testEnv.totalTimeout + 2000);
-    check('/v1/healthcheck', testEnv.clientFacingComponents, done);
+    const checkComponentsStatus = true;
+    check('/v1/healthcheck', testEnv.clientFacingComponents, checkComponentsStatus, done);
   });
 
   it('reports the health of internal components', function(done) {
     this.timeout(testEnv.totalTimeout + 2000);
-    check('/v1/healthcheck/internal', testEnv.internalComponents, done);
+    const checkComponentsStatus = false;
+    check('/v1/healthcheck/internal', testEnv.internalComponents, checkComponentsStatus, done);
   });
 });

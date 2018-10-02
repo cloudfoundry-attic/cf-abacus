@@ -22,7 +22,7 @@ const testEnv = {
   reportingUrl: process.env.REPORTING_URL,
   serviceName: process.env.SERVICE_NAME,
   servicePlan: process.env.SERVICE_PLAN,
-  totalTimeout: process.env.SMOKE_TOTAL_TIMEOUT || 300000
+  totalTimeout: process.env.SMOKE_TOTAL_TIMEOUT || 600000
 };
 
 let abacusClient;
@@ -111,14 +111,17 @@ describe('Abacus Broker Smoke test', function() {
       }]
     };
 
-
+    console.log('\nPosting usage ...');
     const postResponse = yield yieldable(testAppClient.postUsage)(usageBody);
     expect(postResponse.statusCode).to.equal(202, 'usage was not submitted successfully');
 
     const locationHeader = postResponse.headers.location;
     expect(locationHeader).to.not.equal(undefined);
-    yield yieldable(abacusClient.waitUntilUsageIsProcessed)(usageToken, locationHeader);
 
+    console.log('\nWaiting for usage to be processed ...\n');
+    yield yieldable(abacusClient.waitUntilUsageIsProcessed)(usageToken, locationHeader, testTimeout);
+
+    console.log('\nGetting report ...\n');
     const getResponse = yield yieldable(abacusClient.getOrganizationUsage)(usageToken, app.orgGuid);
     expect(getResponse.statusCode).to.equal(200, 'usage was not retrieved successfully');
     expect(getResponse.body.resources.length).to.equal(1, 'number of resources was not the expected');

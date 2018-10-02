@@ -1,8 +1,8 @@
 applications:
 - name: abacus-service-dashboard
-  route: abacus-service-dashboard
+  routes:
+  - route: abacus-service-dashboard.((CF_SYS_DOMAIN))
   path: .
-  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 512M
   disk_quota: 512M
@@ -14,10 +14,10 @@ applications:
     CF_CLIENT_SECRET: ((METERING_BROKER_DASHBOARD_CLIENT_SECRET))
     CF_COOKIE_SECRET: s3cr3t
     SECURED: true
-    EUREKA: ((ABACUS_PREFIX))((EUREKA_PLUGIN_NAME))
+    EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
     EUREKA_USER: ((HYSTRIX_CLIENT_ID))
     EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
-    PROVISIONING: ((ABACUS_PREFIX))((PROVISIONING_PLUGIN_NAME))
+    PROVISIONING: ((ABACUS_PREFIX))abacus-provisioning-plugin
     PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
     PRE_PROVIDED_DEFAULT_THEME_NAME: Default
     ENABLE_UPLOAD_THEME_FEATURE: false

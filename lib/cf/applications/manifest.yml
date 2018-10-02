@@ -1,8 +1,8 @@
 applications:
 - name: abacus-applications-bridge
-  route: abacus-applications-bridge
+  routes:
+  - route: abacus-applications-bridge.((CF_SYS_DOMAIN))
   path: .
-  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 512M
   disk_quota: 512M
@@ -11,8 +11,8 @@ applications:
     CONF: default
     CLUSTER: false
     DEBUG: e-abacus-*
-    COLLECTOR: ((ABACUS_PREFIX))((COLLECTOR_NAME))
-    EUREKA: ((ABACUS_PREFIX))((EUREKA_PLUGIN_NAME))
+    COLLECTOR: ((ABACUS_PREFIX))abacus-usage-collector
+    EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
     EUREKA_USER: ((HYSTRIX_CLIENT_ID))
     EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
     API: ((AUTH_SERVER))

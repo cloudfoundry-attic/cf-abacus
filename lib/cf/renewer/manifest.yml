@@ -1,8 +1,8 @@
 applications:
 - name: abacus-cf-renewer
-  route: abacus-cf-renewer
+  routes:
+  - route: abacus-cf-renewer.((CF_SYS_DOMAIN))
   path: .
-  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 4G
   disk_quota: 512M
@@ -14,9 +14,9 @@ applications:
     DEBUG: e-abacus-*
     API: ((AUTH_SERVER))
     AUTH_SERVER: ((AUTH_SERVER))
-    COLLECTOR: ((ABACUS_PREFIX))((COLLECTOR_NAME))
-    PROVISIONING: ((ABACUS_PREFIX))((PROVISIONING_PLUGIN_NAME))
-    EUREKA: ((ABACUS_PREFIX))((EUREKA_PLUGIN_NAME))
+    COLLECTOR: ((ABACUS_PREFIX))abacus-usage-collector
+    PROVISIONING: ((ABACUS_PREFIX))abacus-provisioning-plugin
+    EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
     EUREKA_USER: ((HYSTRIX_CLIENT_ID))
     EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
     CF_CLIENT_ID: ((RENEWER_CLIENT_ID))

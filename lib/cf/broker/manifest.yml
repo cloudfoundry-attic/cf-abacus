@@ -1,8 +1,8 @@
 applications:
 - name: abacus-broker
-  route: abacus-broker
+  routes:
+  - route: abacus-broker.((CF_SYS_DOMAIN))
   path: .
-  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 512M
   disk_quota: 512M
@@ -13,14 +13,14 @@ applications:
     CLUSTER: true
     DEBUG: e-abacus-*
     SECURED: true
-    EUREKA: ((ABACUS_PREFIX))((EUREKA_PLUGIN_NAME))
+    EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
     EUREKA_USER: ((HYSTRIX_CLIENT_ID))
     EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
     NODE_MODULES_CACHE: false
     API: ((AUTH_SERVER))
     AUTH_SERVER: ((UAA_URL))
-    PROVISIONING: ((ABACUS_PREFIX))((PROVISIONING_PLUGIN_NAME))
-    COLLECTOR: ((ABACUS_PREFIX))((COLLECTOR_NAME))
+    PROVISIONING: ((ABACUS_PREFIX))abacus-provisioning-plugin
+    COLLECTOR: ((ABACUS_PREFIX))abacus-usage-collector
     BROKER_USER: ((METERING_BROKER_USER))
     BROKER_PASSWORD: ((METERING_BROKER_PASSWORD))
     SERVICE_BROKER_CLIENT_ID: ((METERING_BROKER_CLIENT_ID))

@@ -38,16 +38,7 @@ const remanifest = (props, cb) => {
 
 const createSubstitutionVariables = (props, cb) => {
   const varsFile = path.join(process.cwd(), props.path, cfPushDirname, substitutionVariablesFilename);
-
-  fs.writeFileSync(varsFile, '---\n');
-  for(let key in process.env)
-    try {
-      fs.appendFileSync(varsFile, `${key}: ${process.env[key]}\n`);
-    } catch (err) {
-      cb(err);
-      return;
-    }
-
+  fs.writeFileSync(varsFile, manifest.substitutionVariables(process.env));
   cb();
 };
 

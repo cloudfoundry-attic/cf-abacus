@@ -1,8 +1,8 @@
 applications:
 - name: abacus-usage-aggregator
-  route: abacus-usage-aggregator
+  routes:
+  - route: abacus-usage-aggregator.((CF_SYS_DOMAIN))
   path: .
-  domain: ((CF_SYS_DOMAIN))
   instances: 1
   memory: 2048M
   disk_quota: 512M
@@ -13,9 +13,9 @@ applications:
     DEBUG: e-abacus-*
     API: ((AUTH_SERVER))
     AUTH_SERVER: ((AUTH_SERVER))
-    PROVISIONING: ((ABACUS_PREFIX))((PROVISIONING_PLUGIN_NAME))
-    ACCOUNT: ((ABACUS_PREFIX))((ACCOUNT_PLUGIN_NAME))
-    EUREKA: ((ABACUS_PREFIX))((EUREKA_PLUGIN_NAME))
+    PROVISIONING: ((ABACUS_PREFIX))abacus-provisioning-plugin
+    ACCOUNT: ((ABACUS_PREFIX))abacus-account-plugin
+    EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
     EUREKA_USER: ((HYSTRIX_CLIENT_ID))
     EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
     NODE_MODULES_CACHE: false
