@@ -28,20 +28,18 @@
     "generate-coverage": "true",
     "pub": "publish"
   },
-  "dependencies": {
-    "abacus-test-abacus-util": "file:../../test-utils/abacus-util",
-    "abacus-static-apps-util": "file:../../test-utils/static-apps",
-    "abacus-test-cf-util": "file:../../test-utils/cf-util",
-    "abacus-test-helper": "file:../../test-utils/helper"
-  },
   "devDependencies": {
     "abacus-cf-broker": "file:../../../lib/cf/broker",
     "abacus-cmdline": "file:../../../tools/cmdline",
     "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
     "abacus-moment": "file:../../../lib/utils/moment",
     "abacus-oauth": "file:../../../lib/utils/oauth",
     "abacus-request": "file:../../../lib/utils/request",
-    "abacus-mocha": "file:../../../tools/mocha",
+    "abacus-test-abacus-util": "file:../../test-utils/abacus-util",
+    "abacus-test-cf-util": "file:../../test-utils/cf-util",
+    "abacus-test-helper": "file:../../test-utils/helper",
+    "abacus-static-apps-util": "file:../../test-utils/static-apps",
     "abacus-yieldable": "file:../../../lib/utils/yieldable",
     "eslint-plugin-mocha": "^4.8.0",
     "eslint-plugin-nodate": "file:../../../tools/eslint-plugin-nodate",

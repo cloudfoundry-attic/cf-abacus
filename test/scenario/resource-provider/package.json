@@ -28,9 +28,6 @@
     "lint": "abacus-eslint",
     "pub": "publish"
   },
-  "dependencies": {
-    "abacus-test-helper": "file:../../test-utils/helper"
-  },
   "devDependencies": {
     "abacus-cmdline": "file:../../../tools/cmdline",
     "abacus-eslint": "../../tools/eslint",
@@ -38,6 +35,7 @@
     "abacus-moment": "file:../../../lib/utils/moment",
     "abacus-oauth": "file:../../../lib/utils/oauth",
     "abacus-request": "file:../../../lib/utils/request",
+    "abacus-test-helper": "file:../../test-utils/helper",
     "eslint-plugin-nodate": "file:../../../tools/eslint-plugin-nodate",
     "eslint-plugin-mocha": "^4.8.0",
     "request-debug": "^0.2.0",

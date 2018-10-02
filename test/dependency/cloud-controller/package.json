@@ -27,10 +27,6 @@
     "lint": "abacus-eslint",
     "pub": "publish"
   },
-  "dependencies": {
-    "abacus-test-helper": "file:../../test-utils/helper",
-    "abacus-wait": "file:../../test-utils/wait"
-  },
   "devDependencies": {
     "abacus-cmdline": "file:../../../tools/cmdline",
     "abacus-eslint": "file:../../../tools/eslint",
@@ -38,6 +34,8 @@
     "abacus-oauth": "file:../../../lib/utils/oauth",
     "abacus-paging": "file:../../../lib/utils/paging",
     "abacus-publish": "file:../../../tools/publish",
+    "abacus-test-helper": "file:../../test-utils/helper",
+    "abacus-wait": "file:../../test-utils/wait",
     "nyc": "^11.4.1"
   },
   "nyc": {

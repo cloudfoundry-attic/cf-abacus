@@ -27,15 +27,13 @@
     "lint": "abacus-eslint",
     "pub": "publish"
   },
-  "dependencies": {
-    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager"
-  },
   "devDependencies": {
     "abacus-debug": "file:../../../lib/utils/debug",
     "abacus-eureka": "file:../../../lib/utils/eureka",
     "abacus-eureka-plugin": "file:../../../lib/plugins/eureka",
     "abacus-authserver-plugin": "file:../../../lib/plugins/authserver",
     "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager",
     "abacus-mocha": "file:../../../tools/mocha",
     "nyc": "^11.4.1",
     "abacus-publish": "file:../../../tools/publish",

@@ -27,10 +27,6 @@
     "lint": "abacus-eslint",
     "pub": "publish"
   },
-  "dependencies": {
-    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager",
-    "abacus-wait": "file:../../../test-utils/wait"
-  },
   "devDependencies": {
     "abacus-cf-applications": "file:../../../../lib/cf/applications",
     "abacus-cf-services": "file:../../../../lib/cf/services",
@@ -39,10 +35,12 @@
     "abacus-debug": "file:../../../../lib/utils/debug",
     "abacus-eslint": "file:../../../../tools/eslint",
     "abacus-express": "file:../../../../lib/utils/express",
+    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager",
     "abacus-mocha": "file:../../../../tools/mocha",
     "abacus-moment": "file:../../../../lib/utils/moment",
     "abacus-request": "file:../../../../lib/utils/request",
     "abacus-router": "file:../../../../lib/utils/router",
+    "abacus-wait": "file:../../../test-utils/wait",
     "async": "^2.6.0",
     "http-status-codes": "^1.3.0",
     "jsonwebtoken": "^8.3.0",

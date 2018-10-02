@@ -275,25 +275,12 @@
 
 "abacus-bridges-renewer-integration-test@file:test/integration/cf/bridges-renewer":
   version "1.1.3"
-  dependencies:
-    abacus-lifecycle-manager "file:../../Library/Caches/test-utils/lifecycle-manager"
-    abacus-wait "file:../../Library/Caches/test-utils/wait"
 
 "abacus-broker-scenario-test@file:test/scenario/broker":
   version "1.1.3"
-  dependencies:
-    abacus-static-apps-util "file:../../Library/Caches/Yarn/test-utils/static-apps"
-    abacus-test-abacus-util "file:../../Library/Caches/Yarn/test-utils/abacus-util"
-    abacus-test-cf-util "file:../../Library/Caches/Yarn/test-utils/cf-util"
-    abacus-test-helper "file:../../Library/Caches/Yarn/test-utils/helper"
 
 "abacus-broker-smoke-test@file:test/smoke/broker":
   version "1.1.3"
-  dependencies:
-    abacus-static-apps-util "file:../../Library/Caches/Yarn/test-utils/static-apps"
-    abacus-test-abacus-util "file:../../Library/Caches/Yarn/test-utils/abacus-util"
-    abacus-test-cf-util "file:../../Library/Caches/Yarn/test-utils/cf-util"
-    abacus-test-helper "file:../../Library/Caches/Yarn/test-utils/helper"
 
 "abacus-carryover@file:lib/utils/carryover":
   version "1.1.3"
@@ -350,9 +337,6 @@
 
 "abacus-cf-dependency-test@file:test/dependency/cloud-controller":
   version "1.1.3"
-  dependencies:
-    abacus-test-helper "file:../../Library/Caches/Yarn/test-utils/helper"
-    abacus-wait "file:../../Library/Caches/Yarn/test-utils/wait"
 
 "abacus-cf-renewer@file:lib/cf/renewer":
   version "1.1.3"
@@ -546,8 +530,6 @@
 
 "abacus-eureka-integration-test@file:test/integration/plugins/eureka":
   version "1.1.3"
-  dependencies:
-    abacus-lifecycle-manager "file:../../Library/Caches/test-utils/lifecycle-manager"
 
 "abacus-eureka-plugin@file:lib/plugins/eureka":
   version "1.1.3"
@@ -612,8 +594,6 @@
 
 "abacus-healthchecker-integration-test@file:test/integration/extensions/healthchecker":
   version "1.1.3"
-  dependencies:
-    abacus-lifecycle-manager "file:../../Library/Caches/test-utils/lifecycle-manager"
 
 "abacus-healthchecker-smoke-test@file:test/smoke/healthchecker":
   version "1.1.3"
@@ -850,9 +830,6 @@
     commander "^2.8.1"
     underscore "^1.9.1"
 
-"abacus-rabbitmq-integration-test@file:test/integration/utils/rabbitmq":
-  version "1.1.3"
-
 "abacus-rabbitmq@file:lib/utils/rabbitmq":
   version "1.1.3"
   dependencies:
@@ -899,8 +876,6 @@
 
 "abacus-resource-provider-scenario-test@file:test/scenario/resource-provider":
   version "1.1.3"
-  dependencies:
-    abacus-test-helper "file:../../Library/Caches/Yarn/test-utils/helper"
 
 "abacus-retry@file:lib/utils/retry":
   version "1.1.3"
@@ -1062,9 +1037,6 @@
 
 "abacus-usage-accumulator-integration-test@file:test/integration/aggregation/accumulator":
   version "1.1.3"
-  dependencies:
-    abacus-lifecycle-manager "file:../../Library/Caches/test-utils/lifecycle-manager"
-    abacus-test-helper "file:../../Library/Caches/test-utils/helper"
 
 "abacus-usage-accumulator@file:lib/aggregation/accumulator":
   version "1.1.3"
@@ -1090,9 +1062,6 @@
 
 "abacus-usage-aggregator-integration-test@file:test/integration/aggregation/aggregator":
   version "1.1.3"
-  dependencies:
-    abacus-lifecycle-manager "file:../../Library/Caches/test-utils/lifecycle-manager"
-    abacus-test-helper "file:../../Library/Caches/test-utils/helper"
 
 "abacus-usage-aggregator@file:lib/aggregation/aggregator":
   version "1.1.3"
@@ -1121,9 +1090,6 @@
 
 "abacus-usage-collector-integration-test@file:test/integration/metering/collector":
   version "1.1.3"
-  dependencies:
-    abacus-lifecycle-manager "file:../../Library/Caches/test-utils/lifecycle-manager"
-    abacus-test-helper "file:../../Library/Caches/test-utils/helper"
 
 "abacus-usage-collector@file:lib/metering/collector":
   version "1.1.3"
@@ -1159,9 +1125,6 @@
 
 "abacus-usage-meter-integration-test@file:test/integration/metering/meter":
   version "1.1.3"
-  dependencies:
-    abacus-lifecycle-manager "file:../../Library/Caches/test-utils/lifecycle-manager"
-    abacus-test-helper "file:../../Library/Caches/test-utils/helper"
 
 "abacus-usage-meter@file:lib/metering/meter":
   version "1.1.3"
@@ -1203,9 +1166,6 @@
 
 "abacus-usage-reporting-integration-test@file:test/integration/aggregation/reporting":
   version "1.1.3"
-  dependencies:
-    abacus-lifecycle-manager "file:../../Library/Caches/test-utils/lifecycle-manager"
-    abacus-test-helper "file:../../Library/Caches/test-utils/helper"
 
 "abacus-usage-reporting@file:lib/aggregation/reporting":
   version "1.1.3"

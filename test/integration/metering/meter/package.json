@@ -28,10 +28,6 @@
     "lint": "abacus-eslint",
     "pub": "publish"
   },
-  "dependencies": {
-    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager",
-    "abacus-test-helper": "file:../../../test-utils/helper"
-  },
   "devDependencies": {
     "abacus-account-plugin": "file:../../../../lib/plugins/account",
     "abacus-batch": "file:../../../../lib/utils/batch",
@@ -40,11 +36,13 @@
     "abacus-eslint": "file:../../../../tools/eslint",
     "abacus-express": "file:../../../../lib/utils/express",
     "abacus-mocha": "file:../../../../tools/mocha",
+    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager",
     "abacus-moment": "file:../../../../lib/utils/moment",
     "abacus-provisioning-plugin": "file:../../../../lib/plugins/provisioning",
     "abacus-publish": "file:../../../../tools/publish",
     "abacus-request": "file:../../../../lib/utils/request",
     "abacus-router": "file:../../../../lib/utils/router",
+    "abacus-test-helper": "file:../../../test-utils/helper",
     "abacus-throttle": "file:../../../../lib/utils/throttle",
     "abacus-usage-collector": "file:../../../../lib/metering/collector",
     "abacus-usage-meter": "file:../../../../lib/metering/meter",
