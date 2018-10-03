@@ -7,6 +7,8 @@ const createWait = require('abacus-wait');
 const httpStatus = require('http-status-codes');
 const { extend } = require('underscore');
 
+const debug = require('abacus-debug')('abacus-test-utils-client');
+
 const fiveMinutesInMs = 5 * 60 * 1000;
 
 let provisioningUrl;
@@ -122,15 +124,18 @@ const getTimeBasedKeyProperty = (body, filter) => {
   })[0].resource_instances[0].t;
 };
 
-const waitUntilUsageIsProcessed = (token, documentUrlLocation, callback) => {
+const waitUntilUsageIsProcessed = (token, documentUrlLocation, timeout = fiveMinutesInMs, callback) => {
 
   const checkLocation = (cb) => {
     request.get(documentUrlLocation, {
       headers: getHeaders(token)
     }, (err, res) => {
-      if (err)
+      if (err) {
+        debug('GET endpoint returned error %o', err);
         return cb(err);
+      }
 
+      debug('GET endpoint response status code: ', res.statusCode);
       if (res.statusCode && res.statusCode === httpStatus.OK)
         return cb(undefined, true);
 
@@ -138,7 +143,7 @@ const waitUntilUsageIsProcessed = (token, documentUrlLocation, callback) => {
     });
   };
 
-  return createWait(fiveMinutesInMs).until(checkLocation, callback);
+  return createWait(timeout).until(checkLocation, callback);
 };
 
 
