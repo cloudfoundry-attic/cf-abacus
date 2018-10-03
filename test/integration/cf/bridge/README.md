@@ -1,4 +1,4 @@
-abacus-bridges-renewer-integration-test
+abacus-bridge-integration-test
 ===
 
 :information_source: In order to run the test locally, make sure you run the following commands:
@@ -8,6 +8,6 @@ cd cf-abacus
 docker-compose up -d
 source bin/localdb
 yarn provision
-cd test/integration/cf/bridges-renewer
+cd test/integration/cf/bridge
 yarn run integration
 ```
