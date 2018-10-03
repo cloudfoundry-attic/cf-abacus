@@ -198,7 +198,7 @@
     },
     "async": {
       "version": "2.6.1",
-      "from": "async@>=2.6.0 <3.0.0",
+      "from": "async@^2.6.0",
       "resolved": "https://registry.npmjs.org/async/-/async-2.6.1.tgz"
     },
     "asynckit": {
@@ -251,7 +251,7 @@
     },
     "bson": {
       "version": "1.0.9",
-      "from": "bson@>=1.0.4 <1.1.0",
+      "from": "bson@~1.0.4",
       "resolved": "https://registry.npmjs.org/bson/-/bson-1.0.9.tgz"
     },
     "buffer-equal-constant-time": {
@@ -1099,7 +1099,7 @@
     },
     "uuid": {
       "version": "3.3.2",
-      "from": "uuid@>=3.3.2 <4.0.0",
+      "from": "uuid@^3.3.2",
       "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.3.2.tgz"
     },
     "vary": {
