@@ -31,7 +31,7 @@ The Abacus FAQ can be found in [doc/faq.md](doc/faq.md).
 Building
 ---
 
-Abacus requires Node.js >= 8.9.4, Yarn > 1.3.2, MongoDB 3.x and RabbitMQ >= 3.6
+Abacus requires Node.js >= 8.10.0, Yarn > 1.3.2, MongoDB >= 3.4 and RabbitMQ >= 3.6
 
 ```sh
 cd cf-abacus
