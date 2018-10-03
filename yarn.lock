@@ -250,6 +250,9 @@
     abacus-yieldable "file:../../Library/Caches/Yarn/v2/yieldable"
     underscore "^1.9.1"
 
+"abacus-bridge-integration-test@file:test/integration/cf/bridge":
+  version "1.1.3"
+
 "abacus-bridge@file:lib/utils/bridge":
   version "1.1.3"
   dependencies:
@@ -272,9 +275,6 @@
     abacus-webapp "file:../../Library/Caches/Yarn/utils/webapp"
     abacus-yieldable "file:../../Library/Caches/Yarn/v2/yieldable"
     underscore "^1.9.1"
-
-"abacus-bridges-renewer-integration-test@file:test/integration/cf/bridges-renewer":
-  version "1.1.3"
 
 "abacus-broker-scenario-test@file:test/scenario/broker":
   version "1.1.3"
@@ -730,6 +730,12 @@
     sinon "^6.1.4"
     underscore "^1.9.1"
 
+"abacus-mock-util@file:test/test-utils/mock-util":
+  version "1.1.3"
+  dependencies:
+    abacus-debug "file:../../Library/Caches/lib/utils/debug"
+    underscore "^1.9.1"
+
 "abacus-moment@file:lib/utils/moment":
   version "1.1.3"
   dependencies:
@@ -861,6 +867,9 @@
     rc "^1.1.2"
     strip-json-comments "~2.0.1"
     underscore "^1.9.1"
+
+"abacus-renewer-integration-test@file:test/integration/cf/renewer":
+  version "1.1.3"
 
 "abacus-request@file:lib/utils/request":
   version "1.1.3"
@@ -1001,9 +1010,6 @@
 "abacus-test-helper@file:test/test-utils/helper":
   version "1.1.3"
   dependencies:
-    abacus-cmdline "file:../../Library/Caches/tools/cmdline"
-    abacus-moment "file:../../Library/Caches/lib/utils/moment"
-    abacus-wait "file:../../Library/Caches/Yarn/test-utils/wait"
     underscore "^1.9.1"
 
 "abacus-throttle@file:lib/utils/throttle":

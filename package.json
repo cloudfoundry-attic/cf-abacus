@@ -152,7 +152,7 @@
     "underscore": "^1.9.1"
   },
   "devDependencies": {
-    "abacus-bridges-renewer-integration-test": "file:test/integration/cf/bridges-renewer",
+    "abacus-bridge-integration-test": "file:test/integration/cf/bridge",
     "abacus-broker-scenario-test": "file:test/scenario/broker",
     "abacus-broker-smoke-test": "file:test/smoke/broker",
     "abacus-cf-dependency-test": "file:test/dependency/cloud-controller",
@@ -165,9 +165,11 @@
     "abacus-lifecycle-manager": "file:test//test-utils/lifecycle-manager",
     "abacus-mddoc": "file:tools/mddoc",
     "abacus-mocha": "file:tools/mocha",
+    "abacus-mock-util": "file:test//test-utils/mock-util",
     "abacus-performance-test": "file:test/performance",
     "abacus-process-usage-smoke-test": "file:test/smoke/process-usage",
     "abacus-publish": "file:tools/publish",
+    "abacus-renewer-integration-test": "file:test/integration/cf/renewer",
     "abacus-resource-provider-scenario-test": "file:test/scenario/resource-provider",
     "abacus-services-hours-scenario-test": "file:test/scenario/metering-plans",
     "abacus-static-apps-util": "file:test/test-utils/static-apps",

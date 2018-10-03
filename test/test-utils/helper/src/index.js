@@ -1,24 +1,15 @@
 'use strict';
 
-const { pairs, every } = require('underscore');
-
-const insufficientSetup = (env) => {
-  let unsetProperty;
-  let allPropertiesAreSet = every(pairs(env), (pair) => {
-    unsetProperty = pair[0];
-    return typeof pair[1] !== 'undefined';
-  });
-  return allPropertiesAreSet ? undefined : unsetProperty;
-};
-
-const checkCorrectSetup = (env) => {
-  const insufficientEnvironmentVariable = insufficientSetup(env);
-  if (insufficientEnvironmentVariable)
-    throw new Error(
-      'This test cannot run without correct set up. Please check if all environment variables are set. ' +
-      `Check ${insufficientEnvironmentVariable}.`);
-};
+const checkCorrectSetup = require('./environment-set-up');
+const carryOverDb = require('./carry-over-db');
+const createStatsReader = require('./stats-reader');
+const healthcheckClient = require('./healthcheck-client');
+const createTokenFactory = require('./token-factory');
 
 module.exports = {
-  checkCorrectSetup
+  checkCorrectSetup,
+  carryOverDb,
+  createStatsReader,
+  healthcheckClient,
+  createTokenFactory
 };
