@@ -48,7 +48,7 @@ const createProvisioningServerMock = () => {
     stop: async () => {
       await server.close();
     },
-    port: () => server.address().port,
+    url: () => `http://localhost:${server.address().port}`,
     requests: () => ({
       metering: meteringRequests,
       rating: ratingRequests,
@@ -70,7 +70,7 @@ describe('Receiver integartion test', () => {
     
     await provisioningServerMock.start();
     const env = extend({}, process.env, {
-      PROVISIONING_URL: `http://localhost:${provisioningServerMock.port()}`
+      PROVISIONING_URL: provisioningServerMock.url()
     });
 
     lifecycleManager = createLifecycleManager();
@@ -80,16 +80,13 @@ describe('Receiver integartion test', () => {
   });
 
   after(async () => {
+    lifecycleManager.stopAllStarted();
+    await mongoClient.close();
     await provisioningServerMock.stop();
   });
 
   beforeEach(async () => {
     mongoClient.collection(collectionName).remove();
-  });
-
-  after(async () => {
-    lifecycleManager.stopAllStarted();
-    await mongoClient.close();
   });
 
   describe('#startSampling', () => {
