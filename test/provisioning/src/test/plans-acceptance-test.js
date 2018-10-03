@@ -11,6 +11,8 @@ const debug = require('abacus-debug')('abacus-provisioning-itest');
 const createUaaUtils = require('./utils/uaa-utils.js');
 const testUtils = require('abacus-test-utils');
 
+const waitTimeout = 300000;
+
 const api = process.env.API;
 const authServer = process.env.AUTH_SERVER;
 const adminUser = process.env.CF_ADMIN_USER;
@@ -277,7 +279,7 @@ describe('Create and update plans acceptance test', () => {
         expect(val.statusCode).to.equal(202);
         const locationHeader = val.headers.location;
         expect(locationHeader).to.not.equal(undefined);
-        abacusClient.waitUntilUsageIsProcessed(usageToken, locationHeader, done);
+        abacusClient.waitUntilUsageIsProcessed(usageToken, locationHeader, waitTimeout, done);
       });
     });
 
