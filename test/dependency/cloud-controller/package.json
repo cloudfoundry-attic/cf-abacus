@@ -35,18 +35,7 @@
     "abacus-paging": "file:../../../lib/utils/paging",
     "abacus-publish": "file:../../../tools/publish",
     "abacus-test-helper": "file:../../test-utils/helper",
-    "abacus-wait": "file:../../test-utils/wait",
-    "nyc": "^11.4.1"
-  },
-  "nyc": {
-    "cache": true,
-    "reporter": [
-      "text",
-      "html"
-    ],
-    "exclude": [
-      "src/test/**"
-    ]
+    "abacus-wait": "file:../../test-utils/wait"
   },
   "engines": {
     "node": ">=8.10.0 <9.0.0",

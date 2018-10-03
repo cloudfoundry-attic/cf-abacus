@@ -47,18 +47,7 @@
     "abacus-usage-collector": "file:../../../../lib/metering/collector",
     "abacus-usage-meter": "file:../../../../lib/metering/meter",
     "amqplib": "^0.5.2",
-    "nyc": "^11.4.1",
     "underscore": "^1.9.1"
-  },
-  "nyc": {
-    "cache": true,
-    "reporter": [
-      "text",
-      "html"
-    ],
-    "exclude": [
-      "src/test/**"
-    ]
   },
   "engines": {
     "node": ">=8.10.0 <9.0.0",
