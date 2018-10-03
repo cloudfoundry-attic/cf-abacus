@@ -15,6 +15,8 @@ const { checkCorrectSetup } = require('abacus-test-helper');
 const { findWhere } = require('underscore');
 const util = require('util');
 
+const fiveMinutesInMs = 5 * 60 * 1000;
+
 const testEnv = {
   api: process.env.CF_API_URI,
   user: process.env.CF_USER,
@@ -186,7 +188,7 @@ describe('Abacus Broker Scenario test', function() {
 
       const locationHeader = postResponse.headers.location;
       expect(locationHeader).to.not.equal(undefined);
-      yield yieldable(abacusClient.waitUntilUsageIsProcessed)(usageToken, locationHeader);
+      yield yieldable(abacusClient.waitUntilUsageIsProcessed)(usageToken, locationHeader, fiveMinutesInMs);
 
       const getResponse = yield yieldable(abacusClient.getOrganizationUsage)(usageToken, orgId);
       expect(getResponse.statusCode).to.equal(200);
