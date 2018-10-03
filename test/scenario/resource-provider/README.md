@@ -20,6 +20,7 @@ export UAA_SECRET=<UAA admin secret>
 
 # optional; set if self-signed certificate is used
 export SKIP_SSL_VALIDATION=true
+export WAIT_TIMEOUT=<timeout>
 ```
 
 Then run the following commands:

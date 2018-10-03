@@ -24,7 +24,8 @@ const testEnv = {
   provisioningUrl: process.env.PROVISIONING_URL,
   collectorUrl: process.env.COLLECTOR_URL,
   reportingUrl: process.env.REPORTING_URL,
-  clientSecret: process.env.CLIENT_SECRET || 'test-secret'
+  clientSecret: process.env.CLIENT_SECRET || 'test-secret',
+  waitTimeout: process.env.WAIT_TIMEOUT || 300000
 };
 
 describe('Create and update plans acceptance test', () => {
@@ -288,7 +289,7 @@ describe('Create and update plans acceptance test', () => {
         expect(val.statusCode).to.equal(202);
         const locationHeader = val.headers.location;
         expect(locationHeader).to.not.equal(undefined);
-        abacusClient.waitUntilUsageIsProcessed(usageToken, locationHeader, done);
+        abacusClient.waitUntilUsageIsProcessed(usageToken, locationHeader, testEnv.waitTimeout, done);
       });
     });
 

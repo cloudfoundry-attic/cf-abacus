@@ -9,8 +9,6 @@ const { extend } = require('underscore');
 
 const debug = require('abacus-debug')('abacus-test-utils-client');
 
-const fiveMinutesInMs = 5 * 60 * 1000;
-
 let provisioningUrl;
 let collectorUrl;
 let reportingUrl;
@@ -124,7 +122,7 @@ const getTimeBasedKeyProperty = (body, filter) => {
   })[0].resource_instances[0].t;
 };
 
-const waitUntilUsageIsProcessed = (token, documentUrlLocation, timeout = fiveMinutesInMs, callback) => {
+const waitUntilUsageIsProcessed = (token, documentUrlLocation, timeout, callback) => {
 
   const checkLocation = (cb) => {
     request.get(documentUrlLocation, {
