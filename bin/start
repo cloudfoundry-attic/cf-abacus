@@ -3,10 +3,9 @@
 set -e
 
 # Start all the Abacus services
-export CONF=${1:-default}
 
-for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
-  APPNAME=$(node_modules/abacus-etc/appname $MODULE)
+for MODULE in $(cat node_modules/abacus-etc/localapps); do
+  APPNAME=$(node_modules/abacus-etc/appcfg $MODULE name)
   (cd node_modules/$APPNAME && yarn start)&
 done
 

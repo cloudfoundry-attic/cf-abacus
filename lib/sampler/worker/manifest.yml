@@ -1,5 +1,3 @@
 ---
-# this manifest file is needed because of how cfpush
-# uses the manifest to extract the application name
 applications:
   - name: abacus-sampler-worker

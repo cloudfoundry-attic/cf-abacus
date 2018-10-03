@@ -4,9 +4,6 @@ set -e
 
 case "$CI_TEST" in
   integration)
-    # Based on default limits in throttle and batch processing and
-    # integration test matrix, we would need 2197 (= 13 * 13 * 13)
-    # usage submissions to get above 90 percent regression coverage
     export ORGS=4
     export INSTANCES=4
     export USAGE_DOCS=4
@@ -14,37 +11,15 @@ case "$CI_TEST" in
     ;;
 
   process-usage-smoke)
-    # Run yarn process-usage-smoke test
-    yarn start
-    sleep 3s
-    yarn run process-usage-smoke
-    yarn stop
-
-    # Run demo and yarn process-usage-smoke tests without security
     yarn start
     sleep 3s
     yarn run demo
     yarn run process-usage-smoke
-    yarn stop
-
-    # Run demo test with the smalldb config
-    yarn start smalldb
-    sleep 3s
-    yarn run demo
     yarn stop
     ;;
 
   performance)
-    # Run performance test without security
-    export ORGS=4
-    export INSTANCES=4
-    export USAGE_DOCS=4
-    yarn start
-    sleep 3s
-    yarn run performance
-    yarn stop
-
-    # Run performance test with security
+    # Performance test
     export SECURED=true
     export JWTKEY=encode
     export JWTALGO=HS256
@@ -56,7 +31,7 @@ case "$CI_TEST" in
     yarn run performance
     yarn stop
 
-    # Test for concurrency
+    # Concurrency test
     export SECURED=false
     export ORGS=1
     export INSTANCES=8
@@ -68,7 +43,7 @@ case "$CI_TEST" in
     ;;
 
   *)
-    echo "Unknown test $CI_SUITE"
+    echo "Unknown test $CI_TEST"
     ;;
 
 esac

@@ -3,7 +3,6 @@
 set -e
 
 # Start all the Abacus apps on Cloud Foundry
-export CONF=${1:-default}
 
 MAX_PROCESSES=$(node -e "console.log(require('os').cpus().length)")
 if [ -n "$JOBS" ]; then
@@ -14,9 +13,9 @@ echo "Using $MAX_PROCESSES parallel processes"
 
 APP_NAMES=()
 
-for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
-  APPNAME=$(node_modules/abacus-etc/appname $MODULE)
-  APPS=$(( $(node_modules/abacus-etc/apprc $MODULE/.apprc $CONF APPS) - 1 ))
+for MODULE in $(cat node_modules/abacus-etc/apps); do
+  APPNAME=$(node_modules/abacus-etc/appcfg $MODULE name)
+  APPS=$(( $(node_modules/abacus-etc/appcfg $MODULE env.APPS) - 1 ))
   if [ "$APPS" == "0" ]; then
     APP_NAMES+=("$ABACUS_PREFIX$APPNAME")
   else

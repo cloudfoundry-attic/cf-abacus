@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+'use strict';
+
+// Print an environment variable from a .apprc file
+require('./src/appcfg.js').runCLI();
+
