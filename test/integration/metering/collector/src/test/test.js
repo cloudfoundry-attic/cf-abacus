@@ -19,7 +19,8 @@ const testEnv = {
   tshift: process.env.DAY * 24 * 60 * 60 * 1000 || 0,
   startTimeout: process.env.START_TIMEOUT || 30000,
   totalTimeout: process.env.TOTAL_TIMEOUT || 60000,
-  rabbitUri: process.env.RABBIT_URI
+  rabbitUri: process.env.RABBIT_URI,
+  db: process.env.DB_URI
 };
 
 const consumerConfig = {
@@ -63,7 +64,7 @@ describe('collector integration test', () => {
     ];
 
     // drop all abacus collections except plans and plan-mappings
-    dbclient.drop(process.env.DB_URI, /^abacus-((?!plan).)*$/, () => {
+    dbclient.drop(testEnv.db, /^abacus-((?!plan).)*$/, () => {
       lifecycleManager.startModules(modules);
     });
   });
@@ -161,7 +162,7 @@ describe('collector integration test', () => {
 
     storeDefaults();
     submitUsage(() => {});
-    setInterval(() => verify(testEnv.orgs * testEnv.resourceInstances * testEnv.usage, done), 5000);
+    setTimeout(() => verify(testEnv.orgs * testEnv.resourceInstances * testEnv.usage, done), 5000);
   });
 
 });

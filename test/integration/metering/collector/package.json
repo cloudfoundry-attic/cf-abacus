@@ -39,6 +39,7 @@
     "abacus-moment": "file:../../../../lib/utils/moment",
     "abacus-provisioning-plugin": "file:../../../../lib/plugins/provisioning",
     "abacus-publish": "file:../../../../tools/publish",
+    "abacus-rabbitmq": "file:../../../../lib/utils/rabbitmq",
     "abacus-request": "file:../../../../lib/utils/request",
     "abacus-router": "file:../../../../lib/utils/router",
     "abacus-test-helper": "file:../../../test-utils/helper",
