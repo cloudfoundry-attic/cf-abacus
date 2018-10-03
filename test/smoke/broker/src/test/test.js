@@ -119,7 +119,7 @@ describe('Abacus Broker Smoke test', function() {
     expect(locationHeader).to.not.equal(undefined);
 
     console.log('\nWaiting for usage to be processed ...\n');
-    yield yieldable(abacusClient.waitUntilUsageIsProcessed)(usageToken, locationHeader, testTimeout);
+    yield yieldable(abacusClient.waitUntilUsageIsProcessed)(usageToken, locationHeader, testEnv.totalTimeout);
 
     console.log('\nGetting report ...\n');
     const getResponse = yield yieldable(abacusClient.getOrganizationUsage)(usageToken, app.orgGuid);
