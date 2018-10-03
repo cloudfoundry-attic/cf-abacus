@@ -11,14 +11,10 @@ const insufficientSetup = (env) => {
   return allPropertiesAreSet ? undefined : unsetProperty;
 };
 
-const checkCorrectSetup = (env) => {
+module.exports = (env) => {
   const insufficientEnvironmentVariable = insufficientSetup(env);
   if (insufficientEnvironmentVariable)
     throw new Error(
       'This test cannot run without correct set up. Please check if all environment variables are set. ' +
       `Check ${insufficientEnvironmentVariable}.`);
-};
-
-module.exports = {
-  checkCorrectSetup
 };
