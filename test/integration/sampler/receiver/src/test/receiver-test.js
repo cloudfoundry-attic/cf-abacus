@@ -1,5 +1,6 @@
 'use strict';
 
+const httpStatus = require('http-status-codes');
 const util = require('util');
 const http = require('http');
 const bodyParser = require('body-parser');
@@ -18,6 +19,43 @@ const collectionName = 'spans';
 
 const delta = 10 * 1000;
 const ZERO_GUID = '00000000-0000-0000-0000-000000000000';
+
+const createOAuthServerMock = (responseToken) => {
+  let requests = [];
+  let server;
+
+  const serverMock = {
+    start: async () => {
+      const app = express();
+      app.use(bodyParser.json());
+
+      app.get('/v2/info', (req, res) => {
+        res.send({
+          token_endpoint: serverMock.url()
+        });
+      });
+
+      app.post('/oauth/token', (req, res) => {
+        requests.push(req);
+        res.status(httpStatus.OK).send({
+          access_token: responseToken,
+          expires_in: 5 * 60
+        });
+      });
+
+      server = http.createServer(app);
+      const listen = util.promisify(server.listen).bind(server);
+      await listen(0);
+    },
+    stop: async () => {
+      await server.close();
+    },
+    url: () => `http://localhost:${server.address().port}`,
+    requests: () => requests
+  };
+
+  return serverMock;
+};
 
 
 const createProvisioningServerMock = () => {
@@ -60,13 +98,17 @@ const createProvisioningServerMock = () => {
 };
 
 describe('Receiver integartion test', () => {
+  const token = 'token';
   const samplerOAuthScopes = ['abacus.sampler.usage.write'];
   const jwtSecret = 'secret';
+  const clientId = 'client-id';
+  const clientSecret = 'client-secret';
   let tokenFactory;
   let lifecycleManager;
   let mongoClient;
   let receiverClient;
   let provisioningServerMock;
+  let oauthServerMock;
 
   before(async () => {
     tokenFactory = createTokenFactoy(jwtSecret);
@@ -76,13 +118,19 @@ describe('Receiver integartion test', () => {
     });
     mongoClient = await MongoClient.connect(mongoURI);
     provisioningServerMock = createProvisioningServerMock();
-    
     await provisioningServerMock.start();
+
+    oauthServerMock = createOAuthServerMock(token);
+    await oauthServerMock.start();
+
     const env = extend({}, process.env, {
-      PROVISIONING_URL: provisioningServerMock.url(),
+      AUTH_SERVER: oauthServerMock.url(),
+      PROVISIONING: provisioningServerMock.url(),
       SECURED: 'true',
       JWTKEY: jwtSecret,
-      JWTALGO: 'HS256'
+      JWTALGO: 'HS256',
+      CLIENT_ID: clientId,
+      CLIENT_SECRET: clientSecret
     });
 
     lifecycleManager = createLifecycleManager();
@@ -95,6 +143,7 @@ describe('Receiver integartion test', () => {
     lifecycleManager.stopAllStarted();
     await mongoClient.close();
     await provisioningServerMock.stop();
+    await oauthServerMock.stop();
   });
 
   beforeEach(async () => {
@@ -250,12 +299,34 @@ describe('Receiver integartion test', () => {
         await eventually(async () => await receiverClient.createMappings(mapping));
       });
 
+      const extractCredentials = (authHeader) => {
+        const encodedCredentials = authHeader.split(' ')[1];
+        const decodedCredentials = Buffer.from(encodedCredentials, 'base64').toString();
+        const credentialsArray = decodedCredentials.split(':');
+  
+        return {
+          clientId: credentialsArray[0],
+          clientSecret: credentialsArray[1]
+        };
+      };
+
+      it('oauth server is properly called', () => {
+        expect(oauthServerMock.requests().length).to.equal(1);
+        const [req] = oauthServerMock.requests();
+        expect(extractCredentials(req.headers.authorization)).to.deep.equal({
+          clientId: clientId,
+          clientSecret: clientSecret
+        });
+      });
+
       it('metering mapping is created', () => {
         expect(provisioningServerMock.requests().metering.length).to.equal(1);
         const req = provisioningServerMock.requests().metering[0];
         expect(req.params.resourceId).to.equal(mapping.resource_id);
         expect(req.params.planId).to.equal(mapping.plan_id);
         expect(req.params.meteringPlan).to.equal(mapping.metering_plan);
+
+        expect(req.headers.authorization).to.equal(`Bearer ${token}`);
       });
 
       it('rating mapping is created', () => {
@@ -264,6 +335,8 @@ describe('Receiver integartion test', () => {
         expect(req.params.resourceId).to.equal(mapping.resource_id);
         expect(req.params.planId).to.equal(mapping.plan_id);
         expect(req.params.ratingPlan).to.equal(mapping.rating_plan);
+
+        expect(req.headers.authorization).to.equal(`Bearer ${token}`);
       });
 
       it('pricing mapping is created', () => {
@@ -272,6 +345,8 @@ describe('Receiver integartion test', () => {
         expect(req.params.resourceId).to.equal(mapping.resource_id);
         expect(req.params.planId).to.equal(mapping.plan_id);
         expect(req.params.pricingPlan).to.equal(mapping.pricing_plan);
+
+        expect(req.headers.authorization).to.equal(`Bearer ${token}`);
       });
 
     });
