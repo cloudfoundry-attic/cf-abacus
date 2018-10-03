@@ -112,9 +112,9 @@ describe('Receiver integartion test', () => {
 
   before(async () => {
     tokenFactory = createTokenFactoy(jwtSecret);
-    receiverClient = new ReceiverClient(receiverURI, () => {
-      const token = tokenFactory.create(samplerOAuthScopes);
-      return `Bearer ${token}`;
+    const receiverToken = tokenFactory.create(samplerOAuthScopes);
+    receiverClient = new ReceiverClient(receiverURI, {
+      getHeader: () => `Bearer ${receiverToken}`
     });
     mongoClient = await MongoClient.connect(mongoURI);
     provisioningServerMock = createProvisioningServerMock();
