@@ -12,7 +12,7 @@ const { map, range, omit, extend } = require('underscore');
 
 const debug = require('abacus-debug')('abacus-usage-collector-integration-test');
 
-const tstEnv = {
+const testEnv = {
   orgs: process.env.ORGS || 1,
   resourceInstances: process.env.INSTANCES || 1,
   usage: process.env.USAGE_DOCS || 1,
@@ -54,7 +54,7 @@ const lifecycleManager = createLifecycleManager().useEnv(customEnv);
 
 describe('collector integration test', () => {
   before(() => {
-    checkCorrectSetup(tstEnv);
+    checkCorrectSetup(testEnv);
     const modules = [
       lifecycleManager.modules.eurekaPlugin,
       lifecycleManager.modules.provisioningPlugin,
@@ -73,8 +73,8 @@ describe('collector integration test', () => {
   });
 
   // Initialize usage doc properties with unique values
-  const start = 1435629365220 + tstEnv.tshift;
-  const end = 1435629465220 + tstEnv.tshift;
+  const start = 1435629365220 + testEnv.tshift;
+  const end = 1435629465220 + testEnv.tshift;
 
   const oid = (o) => ['a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27', o + 1].join('-');
   const sid = (o, ri) => ['aaeae239-f3f8-483c-9dd0-de5d41c38b6a', o + 1].join('-');
@@ -121,11 +121,11 @@ describe('collector integration test', () => {
   });
 
   const submit = (cb) =>
-    map(range(tstEnv.usage), (u) => map(range(tstEnv.resourceInstances), (ri) =>
-      map(range(tstEnv.orgs), (o) => post(o, ri, u, cb))));
+    map(range(testEnv.usage), (u) => map(range(testEnv.resourceInstances), (ri) =>
+      map(range(testEnv.orgs), (o) => post(o, ri, u, cb))));
 
   const submitUsage = (cb) => {
-    request.waitFor('http://localhost::p/batch', { p: 9080 }, tstEnv.startTimeout, (err, value) => {
+    request.waitFor('http://localhost::p/batch', { p: 9080 }, testEnv.startTimeout, (err, value) => {
       if (err) throw err;
       submit(cb);
     });
@@ -147,7 +147,7 @@ describe('collector integration test', () => {
       countMessages();
     };
 
-    const connectionManager = new ConnectionManager([tstEnv.rabbitUri]);
+    const connectionManager = new ConnectionManager([testEnv.rabbitUri]);
 
     debug('Creating consumer ...');
     const consumer = new Consumer(connectionManager, amqpMessageParser, consumerConfig);
@@ -156,12 +156,12 @@ describe('collector integration test', () => {
 
   it('collect measured usage submissions', function(done) {
     // Configure the test timeout based on the number of usage docs or predefined timeout
-    const timeout = Math.max(tstEnv.totalTimeout, 100 * tstEnv.orgs * tstEnv.resourceInstances * tstEnv.usage);
+    const timeout = Math.max(testEnv.totalTimeout, 100 * testEnv.orgs * testEnv.resourceInstances * testEnv.usage);
     this.timeout(timeout + 2000);
 
     storeDefaults();
     submitUsage(() => {});
-    setInterval(() => verify(tstEnv.orgs * tstEnv.resourceInstances * tstEnv.usage, done), 5000);
+    setInterval(() => verify(testEnv.orgs * testEnv.resourceInstances * testEnv.usage, done), 5000);
   });
 
 });
