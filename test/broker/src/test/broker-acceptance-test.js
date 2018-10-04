@@ -182,7 +182,7 @@ describe('Abacus Broker Acceptance test', function() {
 
       const locationHeader = postResponse.headers.location;
       expect(locationHeader).to.not.equal(undefined);
-      yield yieldable(abacusClient.waitUntilUsageIsProcessed)(usageToken, locationHeader);
+      yield yieldable(abacusClient.waitUntilUsageIsProcessed)(usageToken, locationHeader, totalTimeout);
 
       const getResponse = yield yieldable(abacusClient.getOrganizationUsage)(usageToken, orgId);
       expect(getResponse.statusCode).to.equal(200);
