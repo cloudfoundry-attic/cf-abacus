@@ -188,7 +188,7 @@ describe('Worker integration tests', () => {
 
       return {
         clientId: credentialsArray[0],
-        secret: credentialsArray[1]
+        clientSecret: credentialsArray[1]
       };
     };
 
@@ -196,7 +196,7 @@ describe('Worker integration tests', () => {
       expect(oauthServerMock.requests().length).to.equal(1);
       expect(extractCredentials(oauthServerMock.requests()[0].headers.authorization)).to.deep.equal({
         clientId: clientId,
-        secret: clientSecret
+        clientSecret: clientSecret
       });
     });
 
