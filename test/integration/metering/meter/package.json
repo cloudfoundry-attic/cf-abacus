@@ -1,0 +1,57 @@
+{
+  "name": "abacus-usage-meter-integration-test",
+  "description": "Meter integration tests",
+  "license": "Apache-2.0",
+  "version": "1.1.3",
+  "private": true,
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/test/integration/metering/meter",
+  "bugs": {
+    "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/cloudfoundry-incubator/cf-abacus.git"
+  },
+  "keywords": [
+    "cf",
+    "abacus"
+  ],
+  "files": [
+    ".npmrc",
+    "src/"
+  ],
+  "scripts": {
+    "integration": "abacus-eslint && abacus-mocha --command",
+    "test": "abacus-eslint",
+    "start-rabbit": "rabbitmq-server start",
+    "generate-coverage": "true",
+    "lint": "abacus-eslint",
+    "pub": "publish"
+  },
+  "devDependencies": {
+    "abacus-account-plugin": "file:../../../../lib/plugins/account",
+    "abacus-batch": "file:../../../../lib/utils/batch",
+    "abacus-dbclient": "file:../../../../lib/utils/dbclient",
+    "abacus-debug": "file:../../../../lib/utils/debug",
+    "abacus-eslint": "file:../../../../tools/eslint",
+    "abacus-express": "file:../../../../lib/utils/express",
+    "abacus-mocha": "file:../../../../tools/mocha",
+    "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager",
+    "abacus-moment": "file:../../../../lib/utils/moment",
+    "abacus-provisioning-plugin": "file:../../../../lib/plugins/provisioning",
+    "abacus-publish": "file:../../../../tools/publish",
+    "abacus-request": "file:../../../../lib/utils/request",
+    "abacus-router": "file:../../../../lib/utils/router",
+    "abacus-test-helper": "file:../../../test-utils/helper",
+    "abacus-throttle": "file:../../../../lib/utils/throttle",
+    "abacus-usage-collector": "file:../../../../lib/metering/collector",
+    "abacus-usage-meter": "file:../../../../lib/metering/meter",
+    "amqplib": "^0.5.2",
+    "underscore": "^1.9.1"
+  },
+  "engines": {
+    "node": ">=8.10.0 <9.0.0",
+    "npm": "<5.0.0",
+    "yarn": ">=1.2.1"
+  }
+}

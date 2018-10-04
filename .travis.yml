@@ -19,15 +19,15 @@ after_script: greenkeeper-lockfile-upload
 env:
   global:
     - CF_TEST=false
-    - START_TIMEOUT=20000
-    - TOTAL_TIMEOUT=120000
 
 matrix:
   fast_finish: true
 
   include:
-    - env:
+    - name: "Unit Tests"
+      env:
       - DESCRIPTION=unit-tests
+      - RABBIT_URI=amqp://localhost:5672
       - DB_URI=mongodb://localhost:27017
       - DB_ACCUMULATOR_URI=mongodb://localhost:27017
       - DB_AGGREGATOR_URI=mongodb://localhost:27017
@@ -35,54 +35,63 @@ matrix:
       node_js: 8.11.3
       services:
         - mongodb
+        - rabbitmq
       script:
         - yarn run build && yarn run generate-coverage && yarn run report-coverage
-    - env:
-      - DESCRIPTION=itests
+    - name: "Integration Tests"
+      env:
+      - DESCRIPTION=integration-tests
       - RABBIT_URI=amqp://localhost:5672
       - DB_URI=mongodb://localhost:27017
       - DB_ACCUMULATOR_URI=mongodb://localhost:27017
       - DB_AGGREGATOR_URI=mongodb://localhost:27017
+      - START_TIMEOUT=20000
+      - TOTAL_TIMEOUT=120000
       - JOBS=1
-      - CI_TEST=itest
-      - DEBUG=abacus-usage-accumulator-itest
+      - CI_TEST=integration
       node_js: 8.11.3
       services:
         - mongodb
         - rabbitmq
       script:
         - yarn run provision
-        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
-    - env:
-      - DESCRIPTION=extended-tests
+        - travis_retry yarn run citest
+    - name: "Process Usage Smoke Test"
+      env:
+      - DESCRIPTION=process-usage-smoke-tests
       - RABBIT_URI=amqp://localhost:5672
       - DB_URI=mongodb://localhost:27017
       - DB_ACCUMULATOR_URI=mongodb://localhost:27017
       - DB_AGGREGATOR_URI=mongodb://localhost:27017
       - JOBS=1
-      - CI_TEST=extended
+      - SMOKE_START_TIMEOUT=20000
+      - SMOKE_TOTAL_TIMEOUT=120000
+      - CI_TEST=process-usage-smoke
       node_js: 8.11.3
       services:
         - mongodb
         - rabbitmq
       script:
         - yarn run provision
-        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
-    - env:
-      - DESCRIPTION=perf-tests
+        - travis_retry yarn run citest
+    - name: "Performance Tests"
+      env:
+      - DESCRIPTION=performance-tests
       - RABBIT_URI=amqp://localhost:5672
       - DB_URI=mongodb://localhost:27017
       - DB_ACCUMULATOR_URI=mongodb://localhost:27017
       - DB_AGGREGATOR_URI=mongodb://localhost:27017
+      - PERFORMANCE_START_TIMEOUT=20000
+      - PERFORMANCE_TOTAL_TIMEOUT=120000
       - JOBS=1
-      - CI_TEST=perf
+      - CI_TEST=performance
       node_js: 8.11.3
       services:
         - mongodb
         - rabbitmq
       script:
         - yarn run provision
-        - travis_retry yarn run citest --start-timeout $START_TIMEOUT --total-timeout $TOTAL_TIMEOUT
+        - travis_retry yarn run citest
 
 notifications:
   irc:
