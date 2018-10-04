@@ -26,7 +26,7 @@ applications:
       PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
       SECURED: true
       SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
-      MAX_INFLIGHT: 400
+      MAX_INFLIGHT: 600
       OPTIMIZE_MEMORY: true
       JWTALGO: ((JWTALGO))
       JWTKEY: |+
