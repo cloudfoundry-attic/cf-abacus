@@ -16,7 +16,7 @@ echo "Using $MAX_PROCESSES parallel processes"
 COMMANDS=()
 
 for MODULE in $(cat node_modules/abacus-etc/apps); do
-  APPNAME=$(node_modules/abacus-etc/appcfg $MODULE)
+  APPNAME=$(node_modules/abacus-etc/appcfg $MODULE name)
   INSTANCES=$(node_modules/abacus-etc/appcfg $MODULE instances)
   APPS=$(( $(node_modules/abacus-etc/appcfg $MODULE env APPS) - 1 ))
 
@@ -40,5 +40,5 @@ for i in "${COMMANDS[@]}"; do
 done
 
 pushd "$CURRENT_DIR"
-  echo $CMD_STRING | xargs -n 1 -P $MAX_PROCESSES /bin/bash -c
+  echo ${CMD_STRING} | xargs -n 1 -P ${MAX_PROCESSES} /bin/bash -c
 popd
