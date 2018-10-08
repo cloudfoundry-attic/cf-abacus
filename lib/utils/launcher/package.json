@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "abacus-debug": "file:../debug",
-    "abacus-rc": "file:../rc",
     "abacus-vcapenv": "file:../vcapenv",
     "commander": "^2.8.1",
     "underscore": "^1.9.1"

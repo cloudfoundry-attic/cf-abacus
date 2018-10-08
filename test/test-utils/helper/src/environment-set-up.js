@@ -14,7 +14,5 @@ const insufficientSetup = (env) => {
 module.exports = (env) => {
   const insufficientEnvironmentVariable = insufficientSetup(env);
   if (insufficientEnvironmentVariable)
-    throw new Error(
-      'This test cannot run without correct set up. Please check if all environment variables are set. ' +
-      `Check ${insufficientEnvironmentVariable}.`);
+    throw new Error(`Incorrect test set up. Check "${insufficientEnvironmentVariable}" environment variable.`);
 };

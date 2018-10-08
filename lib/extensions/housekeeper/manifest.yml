@@ -1,35 +1,36 @@
 applications:
-- name: abacus-housekeeper
-  routes:
-  - route: abacus-housekeeper.((CF_SYS_DOMAIN))
-  path: .
-  instances: 1
-  memory: 512M
-  disk_quota: 512M
-  env:
-    CUSTOM_METRICS: true
-    CONF: default
-    DEBUG: e-abacus-*
-    API: ((AUTH_SERVER))
-    AUTH_SERVER: ((AUTH_SERVER))
-    EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
-    EUREKA_USER: ((HYSTRIX_CLIENT_ID))
-    EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
-    NODE_MODULES_CACHE: false
-    RETENTION_PERIOD: 3
-    SECURED: true
-    SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
-    THROTTLE: 60
-    BATCH_SIZE: 50
-    OPTIMIZE_MEMORY: true
-    PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
-    JWTALGO: ((JWTALGO))
-    JWTKEY: |+
-      ((JWTKEY))
-    DEBUG_STRIPLF: true
-    DB_COLLECTOR_URI: ((DB_COLLECTOR_URI))
-    DB_METER_URI: ((DB_METER_URI))
-    DB_ACCUMULATOR_URI: ((DB_ACCUMULATOR_URI))
-    DB_AGGREGATOR_URI: ((DB_AGGREGATOR_URI))
-    DB_BRIDGE_URI: ((DB_BRIDGE_URI))
-    DB_PLUGINS_URI: ((DB_PLUGINS_URI))
+  - name: abacus-housekeeper
+    routes:
+      - route: abacus-housekeeper.((CF_SYS_DOMAIN))
+    path: .
+    instances: 1
+    memory: 512M
+    disk_quota: 512M
+    env:
+      APPS: 1
+      DB_PARTITIONS: 1
+      CUSTOM_METRICS: true
+      DEBUG: e-abacus-*
+      API: ((AUTH_SERVER))
+      AUTH_SERVER: ((AUTH_SERVER))
+      EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
+      EUREKA_USER: ((HYSTRIX_CLIENT_ID))
+      EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
+      NODE_MODULES_CACHE: false
+      RETENTION_PERIOD: 3
+      SECURED: true
+      SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
+      THROTTLE: 60
+      BATCH_SIZE: 50
+      OPTIMIZE_MEMORY: true
+      PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
+      JWTALGO: ((JWTALGO))
+      JWTKEY: |+
+        ((JWTKEY))
+      DEBUG_STRIPLF: true
+      DB_COLLECTOR_URI: ((DB_COLLECTOR_URI))
+      DB_METER_URI: ((DB_METER_URI))
+      DB_ACCUMULATOR_URI: ((DB_ACCUMULATOR_URI))
+      DB_AGGREGATOR_URI: ((DB_AGGREGATOR_URI))
+      DB_BRIDGE_URI: ((DB_BRIDGE_URI))
+      DB_PLUGINS_URI: ((DB_PLUGINS_URI))

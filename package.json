@@ -120,7 +120,6 @@
     "abacus-provisioning-plugin": "file:lib/plugins/provisioning",
     "abacus-rabbitmq": "file:lib/utils/rabbitmq",
     "abacus-rating-config": "file:lib/config/rating",
-    "abacus-rc": "file:lib/utils/rc",
     "abacus-request": "file:lib/utils/request",
     "abacus-retry": "file:lib/utils/retry",
     "abacus-rewire": "file:lib/utils/rewire",

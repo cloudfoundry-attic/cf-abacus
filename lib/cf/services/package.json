@@ -18,7 +18,6 @@
     "services"
   ],
   "files": [
-    ".apprc",
     ".npmrc",
     "manifest.yml",
     "src/"
@@ -33,6 +32,9 @@
     "pub": "publish",
     "cfpush": "cfpush",
     "store-mappings": "node src/tasks/store-service-mappings.js"
+  },
+  "config": {
+    "port": 9502
   },
   "dependencies": {
     "abacus-bridge": "file:../../utils/bridge",

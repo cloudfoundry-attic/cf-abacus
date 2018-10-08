@@ -7,8 +7,8 @@ applications:
   memory: 512M
   disk_quota: 512M
   env:
+    APPS: 1
     CUSTOM_METRICS: true
-    CONF: default
     DEBUG: e-abacus-*
     API: ((AUTH_SERVER))
     AUTH_SERVER: ((AUTH_SERVER))
