@@ -7,12 +7,13 @@ const fs = require('fs');
 const path = require('path');
 
 // Return the value of an element
-const element = (content, elements) => {
+const element = (content, elements, cfgFile) => {
   let result = content;
   for(let element of elements) {
     result = result[element];
     if (result === undefined) {
-      console.error('Element', element, 'not found in path', elements.join('.'));
+      console.error('Element %s not found in path %s for manifest %s',
+        element, elements.join('.'), cfgFile);
       process.exit(1);
     }
   }
@@ -46,7 +47,7 @@ const runCLI = () => {
     }
 
     const appConfig = config.applications[0];
-    console.log(element(appConfig, elements));
+    console.log(element(appConfig, elements, cfgFile));
   });
 };
 
