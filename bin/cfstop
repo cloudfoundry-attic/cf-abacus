@@ -15,7 +15,8 @@ APP_NAMES=()
 
 for MODULE in $(cat node_modules/abacus-etc/apps); do
   APPNAME=$(node_modules/abacus-etc/appcfg $MODULE name)
-  APPS=$(( $(node_modules/abacus-etc/appcfg $MODULE env.APPS) - 1 ))
+  APPS=$(( $(node_modules/abacus-etc/appcfg $MODULE env APPS) - 1 ))
+
   if [ "$APPS" == "0" ]; then
     APP_NAMES+=("$ABACUS_PREFIX$APPNAME")
   else

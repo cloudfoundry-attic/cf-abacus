@@ -16,7 +16,7 @@ COMMANDS=()
 for MODULE in $(cat node_modules/abacus-etc/apps); do
   APPNAME=$(node_modules/abacus-etc/appcfg $MODULE name)
   INSTANCES=$(node_modules/abacus-etc/appcfg $MODULE instances)
-  APPS=$(( $(node_modules/abacus-etc/appcfg $MODULE env.APPS) - 1 ))
+  APPS=$(( $(node_modules/abacus-etc/appcfg $MODULE env APPS) - 1 ))
 
   pushd $MODULE
     rm -rf node_modules/ yarn.lock package-lock.json
