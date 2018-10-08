@@ -156,7 +156,7 @@ describe('Receiver integartion test', () => {
 
       const usage = {
         id: 'dedup-guid',
-        timestamp: 123,
+        timestamp: moment.utc().valueOf(),
         organization_id: 'organization-guid',
         space_id: 'space-guid',
         consumer_id: 'consumer-guid',
