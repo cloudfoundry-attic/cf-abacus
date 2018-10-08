@@ -2,3 +2,5 @@
 applications:
   - name: abacus-sampler-worker
     instances: 1
+    env:
+      APPS: 1

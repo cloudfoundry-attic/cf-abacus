@@ -2,3 +2,5 @@
 applications:
   - name: abacus-sampler-receiver
     instances: 1
+    env:
+      APPS: 1
