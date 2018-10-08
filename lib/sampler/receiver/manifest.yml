@@ -1,3 +1,4 @@
 ---
 applications:
   - name: abacus-sampler-receiver
+    instances: 1

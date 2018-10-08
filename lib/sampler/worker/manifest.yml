@@ -1,3 +1,4 @@
 ---
 applications:
   - name: abacus-sampler-worker
+    instances: 1
