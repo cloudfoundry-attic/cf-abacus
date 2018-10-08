@@ -23,7 +23,7 @@
     "src/"
   ],
   "scripts": {
-    "itest": "abacus-eslint && abacus-mocha --command",
+    "integration": "abacus-eslint && abacus-mocha --command",
     "test": "abacus-eslint",
     "generate-coverage": "true",
     "lint": "abacus-eslint",

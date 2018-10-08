@@ -127,6 +127,7 @@ describe('Receiver integartion test', () => {
       AUTH_SERVER: oauthServerMock.url(),
       PROVISIONING: provisioningServerMock.url(),
       SECURED: 'true',
+      CLUSTER: 'false',
       JWTKEY: jwtSecret,
       JWTALGO: 'HS256',
       CLIENT_ID: clientId,
