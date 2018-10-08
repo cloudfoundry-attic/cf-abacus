@@ -11,11 +11,17 @@ export SYSTEM_CLIENT_ID=<prefix>abacus-system-client
 export SYSTEM_CLIENT_SECRET=abacus-secret
 export SECURED=true
 # optional
+export COLLECTOR_URL=https://<prefix>abacus-usage-collector.<domain>
+export REPORTING_URL=https://<prefix>abacus-usage-reporting.<domain>
+export AUTH_SERVER=https://api.<system domain>
+export SECURED=true
+export SYSTEM_CLIENT_ID=test-client-id
+export SYSTEM_CLIENT_SECRET=test-client-secret
 export TIME_WINDOWS_SIZES='{ "D" : 6 }' # if set in accumulator environment
 export SLACK=4D # if using non-default slack window
 export SKIP_SSL_VALIDATION=true # if self-signed cert is in use
-epxort SMOKE_START_TIMEOUT=<start-timeout>
-epxort SMOKE_TOTAL_TIMEOUT=<total-timeout>
+export SMOKE_START_TIMEOUT=<start-timeout>
+export SMOKE_TOTAL_TIMEOUT=<total-timeout>
 ```
 
 Then:
