@@ -311,7 +311,8 @@ describe('Receiver integartion test', () => {
       };
 
       it('oauth server is properly called', () => {
-        expect(oauthServerMock.requests().length).to.equal(1);
+        // Expect 2 calls because of CLUSTER=true env var
+        expect(oauthServerMock.requests().length).to.equal(2);
         const [req] = oauthServerMock.requests();
         expect(extractCredentials(req.headers.authorization)).to.deep.equal({
           clientId: clientId,
