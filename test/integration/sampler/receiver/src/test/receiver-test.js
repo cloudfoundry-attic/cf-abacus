@@ -127,6 +127,7 @@ describe('Receiver integartion test', () => {
       AUTH_SERVER: oauthServerMock.url(),
       PROVISIONING: provisioningServerMock.url(),
       SECURED: 'true',
+      CLUSTER: 'false',
       JWTKEY: jwtSecret,
       JWTALGO: 'HS256',
       CLIENT_ID: clientId,
@@ -311,8 +312,7 @@ describe('Receiver integartion test', () => {
       };
 
       it('oauth server is properly called', () => {
-        // Expect 2 calls because of CLUSTER=true env var
-        expect(oauthServerMock.requests().length).to.equal(2);
+        expect(oauthServerMock.requests().length).to.equal(1);
         const [req] = oauthServerMock.requests();
         expect(extractCredentials(req.headers.authorization)).to.deep.equal({
           clientId: clientId,
