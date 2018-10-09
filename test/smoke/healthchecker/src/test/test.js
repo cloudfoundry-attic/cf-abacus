@@ -19,7 +19,6 @@ const testEnv = {
     `${abacusPrefix}abacus-broker`,
     `${abacusPrefix}abacus-provisioning-plugin`,
     `${abacusPrefix}abacus-usage-collector`,
-    `${abacusPrefix}abacus-service-dashboard`,
     `${abacusPrefix}abacus-usage-reporting`
   ],
   internalComponents: process.env.INTERNAL_COMPONENTS || [
@@ -30,6 +29,7 @@ const testEnv = {
     `${abacusPrefix}abacus-eureka-plugin`,
     `${abacusPrefix}abacus-housekeeper`,
     `${abacusPrefix}abacus-applications-bridge`,
+    `${abacusPrefix}abacus-service-dashboard`,
     `${abacusPrefix}abacus-services-bridge`
   ]
 };
