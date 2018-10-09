@@ -31,6 +31,9 @@
     "pub": "publish",
     "cfpush": "cfpush"
   },
+  "config": {
+    "port": 7070
+  },
   "dependencies": {
     "abacus-api": "file:../../utils/api",
     "abacus-launcher": "file:../../utils/launcher",
@@ -47,7 +50,7 @@
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish",
-    "nyc": "^11.4.1"
+    "nyc": "^13.0.1"
   },
   "nyc": {
     "cache": true,

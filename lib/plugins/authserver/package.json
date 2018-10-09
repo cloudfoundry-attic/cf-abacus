@@ -17,7 +17,6 @@
     "abacus"
   ],
   "files": [
-    ".apprc",
     ".npmrc",
     "manifest.yml",
     "src/"
@@ -31,6 +30,9 @@
     "lint": "abacus-eslint",
     "pub": "publish",
     "cfpush": "cfpush"
+  },
+  "config": {
+    "port": 9882
   },
   "dependencies": {
     "abacus-debug": "file:../../utils/debug",

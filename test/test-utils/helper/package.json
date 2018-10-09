@@ -18,7 +18,6 @@
     "broker"
   ],
   "files": [
-    ".apprc",
     ".npmrc",
     "manifest.yml",
     "src/"

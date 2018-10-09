@@ -1,9 +1,5 @@
 #!/bin/bash
 
-export CONF=${1:-cf}
-
-echo "Using profile $CONF"
-
 echo "Updating root level locks ..."
 rm -rf node_modules/ yarn.lock package-lock.json npm-shrinkwrap.json
 
@@ -23,7 +19,7 @@ else
   sed -i'' -e 's/http:\/\//https:\/\//g' yarn.lock
 fi
 
-for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
+for MODULE in $(cat node_modules/abacus-etc/apps); do
   echo "Updating ${MODULE} locks ... "
   pushd $MODULE
     set +e

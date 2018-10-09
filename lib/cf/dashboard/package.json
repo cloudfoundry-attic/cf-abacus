@@ -18,7 +18,6 @@
     "dashboard"
   ],
   "files": [
-    ".apprc",
     "manifest.yml",
     "src/"
   ],

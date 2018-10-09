@@ -127,6 +127,7 @@ describe('Receiver integartion test', () => {
       AUTH_SERVER: oauthServerMock.url(),
       PROVISIONING: provisioningServerMock.url(),
       SECURED: 'true',
+      CLUSTER: 'false',
       JWTKEY: jwtSecret,
       JWTALGO: 'HS256',
       CLIENT_ID: clientId,
@@ -155,7 +156,7 @@ describe('Receiver integartion test', () => {
 
       const usage = {
         id: 'dedup-guid',
-        timestamp: 123,
+        timestamp: moment.utc().valueOf(),
         organization_id: 'organization-guid',
         space_id: 'space-guid',
         consumer_id: 'consumer-guid',

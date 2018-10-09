@@ -18,7 +18,6 @@
     "broker"
   ],
   "files": [
-    ".apprc",
     ".npmrc",
     "manifest.yml",
     "src/"
@@ -32,6 +31,9 @@
     "lint": "abacus-eslint",
     "pub": "publish",
     "cfpush": "cfpush"
+  },
+  "config": {
+    "port": 9503
   },
   "dependencies": {
     "abacus-breaker": "file:../../utils/breaker",

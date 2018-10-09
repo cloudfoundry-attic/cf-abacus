@@ -101,7 +101,8 @@ describe('Worker integration tests', () => {
       AUTH_SERVER: oauthServerMock.url(),
       CLIENT_ID: clientId,
       CLIENT_SECRET: clientSecret,
-      SECURED: 'true'
+      SECURED: 'true',
+      CLUSTER: 'false'
     });
 
     lifecycleManager = createLifecycleManager();

@@ -18,9 +18,8 @@
   ],
   "files": [
     ".npmrc",
-    "appname",
-    "apprc",
-    "apps.rc",
+    "appcfg",
+    "apps",
     "foreach",
     "secgroup.json",
     "versions",
@@ -28,7 +27,7 @@
   ],
   "main": "src/index.js",
   "bin": {
-    "apprc": "./apprc",
+    "appcfg": "appcfg",
     "foreach": "./foreach"
   },
   "scripts": {

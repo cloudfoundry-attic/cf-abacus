@@ -41,7 +41,6 @@
     "abacus-metrics": "file:../metrics",
     "abacus-oauth": "file:../oauth",
     "abacus-perf": "file:../perf",
-    "abacus-rc": "file:../rc",
     "abacus-router": "file:../router",
     "abacus-urienv": "file:../urienv",
     "abacus-vcapenv": "file:../vcapenv",
