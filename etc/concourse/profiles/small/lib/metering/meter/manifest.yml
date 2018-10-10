@@ -3,7 +3,7 @@ applications:
     routes:
       - route: abacus-usage-meter.((CF_SYS_DOMAIN))
     path: .
-    instances: 15
+    instances: 2
     memory: 2048M
     disk_quota: 512M
     zdm: true

@@ -7,15 +7,15 @@ applications:
     memory: 2048M
     disk_quota: 512M
     env:
-      APPS: 20
-      DB_PARTITIONS: 6
+      APPS: 2
+      DB_PARTITIONS: 2
       CUSTOM_METRICS: true
       CLUSTER: false
       DEBUG: e-abacus-*
       API: ((AUTH_SERVER))
       AUTH_SERVER: ((AUTH_SERVER))
       AGGREGATOR: ((ABACUS_PREFIX))abacus-usage-aggregator
-      AGGREGATOR_APPS: 40
+      AGGREGATOR_APPS: 2
       PROVISIONING: ((ABACUS_PREFIX))abacus-provisioning-plugin
       ACCOUNT: ((ABACUS_PREFIX))abacus-account-plugin
       EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
