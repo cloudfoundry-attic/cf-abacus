@@ -37,6 +37,7 @@
   "dependencies": {
     "abacus-api": "file:../../utils/api",
     "abacus-launcher": "file:../../utils/launcher",
+    "abacus-healthmonitor": "file:../../utils/healthmonitor",
     "abacus-oauth": "file:../../utils/oauth",
     "abacus-schema": "file:../../utils/schema",
     "abacus-urienv": "file:../../utils/urienv",
