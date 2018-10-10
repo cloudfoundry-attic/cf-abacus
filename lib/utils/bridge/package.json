@@ -35,6 +35,7 @@
     "abacus-cluster": "file:../../utils/cluster",
     "abacus-dbclient": "file:../dbclient",
     "abacus-debug": "file:../debug",
+    "abacus-healthmonitor": "file:../healthmonitor",
     "abacus-moment": "file:../moment",
     "abacus-oauth": "file:../oauth",
     "abacus-paging": "file:../paging",
