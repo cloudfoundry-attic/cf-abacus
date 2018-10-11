@@ -151,6 +151,17 @@ describe('Receiver integartion test', () => {
     mongoClient.collection(collectionName).remove();
   });
 
+  describe('#healthcheck', () => {
+    context('when healthcheck is requested', () => {
+      it('it responds with healthy status', async () => {
+        const health = await eventually(async () => await receiverClient.getHealth());
+        expect(health).to.deep.equal({
+          healthy: true
+        });
+      });
+    });
+  });
+
   describe('#startSampling', () => {
     context('when start event is received', () => {
 
