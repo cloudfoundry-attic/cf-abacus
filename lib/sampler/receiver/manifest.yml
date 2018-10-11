@@ -15,7 +15,7 @@ applications:
       CONF: default
       CLUSTER: false
       DEBUG: e-abacus-*
-      PROVISIONING_URL: ((ABACUS_PREFIX))abacus-provisioning-plugin
+      PROVISIONING: ((ABACUS_PREFIX))abacus-provisioning-plugin
       EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
       EUREKA_USER: ((HYSTRIX_CLIENT_ID))
       EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
@@ -34,4 +34,3 @@ applications:
         ((JWTKEY))
       DEBUG_STRIPLF: true
       DB_URI: ((DB_SAMPLER_URI))
-      RATE_LIMIT: ((RECEIVER_RATE_LIMIT))
