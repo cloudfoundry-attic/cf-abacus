@@ -314,9 +314,9 @@
       "resolved": "https://registry.npmjs.org/combined-stream/-/combined-stream-1.0.7.tgz"
     },
     "commander": {
-      "version": "2.18.0",
+      "version": "2.19.0",
       "from": "commander@^2.8.1",
-      "resolved": "https://registry.npmjs.org/commander/-/commander-2.18.0.tgz"
+      "resolved": "https://registry.npmjs.org/commander/-/commander-2.19.0.tgz"
     },
     "compressible": {
       "version": "2.0.15",
@@ -371,9 +371,9 @@
       "resolved": "https://registry.npmjs.org/dashdash/-/dashdash-1.14.1.tgz"
     },
     "debug": {
-      "version": "4.0.1",
+      "version": "4.1.0",
       "from": "debug@^4.0.1",
-      "resolved": "https://registry.npmjs.org/debug/-/debug-4.0.1.tgz"
+      "resolved": "https://registry.npmjs.org/debug/-/debug-4.1.0.tgz"
     },
     "defaults": {
       "version": "1.0.3",
@@ -458,9 +458,9 @@
       }
     },
     "express-rate-limit": {
-      "version": "3.2.0",
+      "version": "3.2.1",
       "from": "express-rate-limit@^3.1.1",
-      "resolved": "https://registry.npmjs.org/express-rate-limit/-/express-rate-limit-3.2.0.tgz"
+      "resolved": "https://registry.npmjs.org/express-rate-limit/-/express-rate-limit-3.2.1.tgz"
     },
     "extend": {
       "version": "3.0.2",
