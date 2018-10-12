@@ -7,10 +7,14 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const { extend } = require('underscore');
 const { MongoClient } = require('mongodb');
+const { WorkerClient } = require('abacus-api');
 const moment = require('abacus-moment');
 const createLifecycleManager = require('abacus-lifecycle-manager');
 
+const { createTokenFactory } = require('abacus-test-helper');
+
 const mongoURI = process.env.DB_URI || 'mongodb://localhost:27017';
+const workerURI = 'http://localhost:7071';
 const collectionName = 'spans';
 const ZERO_GUID = '00000000-0000-0000-0000-000000000000';
 
@@ -82,13 +86,22 @@ describe('Worker integration tests', () => {
   const clientId = 'client-id';
   const clientSecret = 'client-secret';
   const token = 'oauth-token';
+  const samplerOAuthScopes = ['abacus.sampler.usage.write'];
+  const jwtSecret = 'secret';
 
   let lifecycleManager;
   let mongoClient;
   let collectorServerMock;
   let oauthServerMock;
+  let workerClient;
+  let tokenFactory;
 
   before(async () => {
+    tokenFactory = createTokenFactory(jwtSecret);
+    const workerToken = tokenFactory.create(samplerOAuthScopes);
+    workerClient = new WorkerClient(workerURI, {
+      getHeader: () => `Bearer ${workerToken}`
+    });
     mongoClient = await MongoClient.connect(mongoURI);
     mongoClient.collection(collectionName).remove();
 
@@ -102,7 +115,9 @@ describe('Worker integration tests', () => {
       CLIENT_ID: clientId,
       CLIENT_SECRET: clientSecret,
       SECURED: 'true',
-      CLUSTER: 'false'
+      CLUSTER: 'false',
+      JWTKEY: jwtSecret,
+      JWTALGO: 'HS256'
     });
 
     lifecycleManager = createLifecycleManager();
@@ -215,6 +230,17 @@ describe('Worker integration tests', () => {
       expect(usage.measured_usage.length).to.equal(2);
 
       expect(request.headers.authorization).to.equal(`Bearer ${token}`);
+    });
+
+  });
+
+  context('when healthcheck is requested', () => {
+
+    it('it responds with healthy status', async () => {
+      const health = await eventually(async () => await workerClient.getHealth());
+      expect(health).to.deep.equal({
+        healthy: true
+      });
     });
 
   });
