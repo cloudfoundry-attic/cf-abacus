@@ -221,6 +221,11 @@
       "from": "basic-auth@~2.0.0",
       "resolved": "https://registry.npmjs.org/basic-auth/-/basic-auth-2.0.1.tgz"
     },
+    "bcrypt-pbkdf": {
+      "version": "1.0.2",
+      "from": "bcrypt-pbkdf@>=1.0.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.2.tgz"
+    },
     "body-parser": {
       "version": "1.18.2",
       "from": "body-parser@1.18.2",
@@ -369,6 +374,11 @@
       "version": "1.0.4",
       "from": "destroy@>=1.0.4 <1.1.0",
       "resolved": "https://registry.npmjs.org/destroy/-/destroy-1.0.4.tgz"
+    },
+    "ecc-jsbn": {
+      "version": "0.1.2",
+      "from": "ecc-jsbn@>=0.1.1 <0.2.0",
+      "resolved": "https://registry.npmjs.org/ecc-jsbn/-/ecc-jsbn-0.1.2.tgz"
     },
     "ecdsa-sig-formatter": {
       "version": "1.0.10",
@@ -572,6 +582,11 @@
       "version": "0.1.2",
       "from": "isstream@>=0.1.2 <0.2.0",
       "resolved": "https://registry.npmjs.org/isstream/-/isstream-0.1.2.tgz"
+    },
+    "jsbn": {
+      "version": "0.1.1",
+      "from": "jsbn@>=0.1.0 <0.2.0",
+      "resolved": "https://registry.npmjs.org/jsbn/-/jsbn-0.1.1.tgz"
     },
     "json-schema": {
       "version": "0.2.3",
@@ -885,9 +900,9 @@
       "resolved": "https://registry.npmjs.org/safer-buffer/-/safer-buffer-2.1.2.tgz"
     },
     "semver": {
-      "version": "5.5.1",
-      "from": "semver@>=5.1.0 <6.0.0",
-      "resolved": "https://registry.npmjs.org/semver/-/semver-5.5.1.tgz"
+      "version": "5.6.0",
+      "from": "semver@^5.1.0",
+      "resolved": "https://registry.npmjs.org/semver/-/semver-5.6.0.tgz"
     },
     "send": {
       "version": "0.16.2",
@@ -927,9 +942,9 @@
       "resolved": "https://registry.npmjs.org/source-map-support/-/source-map-support-0.5.9.tgz"
     },
     "sshpk": {
-      "version": "1.14.2",
-      "from": "sshpk@>=1.7.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/sshpk/-/sshpk-1.14.2.tgz"
+      "version": "1.15.1",
+      "from": "sshpk@^1.7.0",
+      "resolved": "https://registry.npmjs.org/sshpk/-/sshpk-1.15.1.tgz"
     },
     "statuses": {
       "version": "1.4.0",
@@ -960,6 +975,11 @@
       "version": "0.6.0",
       "from": "tunnel-agent@>=0.6.0 <0.7.0",
       "resolved": "https://registry.npmjs.org/tunnel-agent/-/tunnel-agent-0.6.0.tgz"
+    },
+    "tweetnacl": {
+      "version": "0.14.5",
+      "from": "tweetnacl@>=0.14.0 <0.15.0",
+      "resolved": "https://registry.npmjs.org/tweetnacl/-/tweetnacl-0.14.5.tgz"
     },
     "type-is": {
       "version": "1.6.16",
