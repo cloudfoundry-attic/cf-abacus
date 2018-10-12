@@ -289,6 +289,7 @@ describe('Receiver integartion test', () => {
         expect(span.end_dedup_id).to.equal(usage.id);
         expect(span.start).to.equal(preparedDoc.start);
         expect(span.end).to.equal(usage.timestamp);
+        expect(span.end_is_set).to.equal(true);
 
         expect(span.measured_usage).to.deep.equal(preparedDoc.measured_usage);
         expect(span.processing).to.deep.equal(preparedDoc.processing);
@@ -315,7 +316,7 @@ describe('Receiver integartion test', () => {
         const encodedCredentials = authHeader.split(' ')[1];
         const decodedCredentials = Buffer.from(encodedCredentials, 'base64').toString();
         const credentialsArray = decodedCredentials.split(':');
-  
+
         return {
           clientId: credentialsArray[0],
           clientSecret: credentialsArray[1]
