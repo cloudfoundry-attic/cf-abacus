@@ -12,7 +12,7 @@ const testEnv = {
   secured: process.env.SECURED === 'true',
   objectStorageClientId: process.env.OBJECT_STORAGE_CLIENT_ID,
   objectStorageClientSecret: process.env.OBJECT_STORAGE_CLIENT_SECRET,
-  usegeDocumentsCount: process.env.USAGE_DOCUMENTS_COUNT ? parseInt(process.env.USAGE_DOCUMENTS_COUNT) : 3
+  usageDocumentsCount: process.env.USAGE_DOCUMENTS_COUNT ? parseInt(process.env.USAGE_DOCUMENTS_COUNT) : 3
 };
 
 const fixturesCfg = {

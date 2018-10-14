@@ -12,22 +12,19 @@ const util = require('util');
 const { times } = require('underscore');
 
 const { testEnv } = require('./env-config');
-const { buildUsage, initialExpectedReport } = require('./fixtures');
-const { compareReports } = require('./report-comparator');
+const { buildUsage, createExpectedReport } = require('./fixtures');
+const { deltaCompareReports } = require('./report-comparator');
 const { getThousandLightApiCallsQuantity, cleanReport } = require('./parse-report-utils');
 
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
 
-const now = moment.utc().toDate();
-
 const objectStorageToken = testEnv.secured ?
   oauth.cache(testEnv.authServer, testEnv.objectStorageClientId, testEnv.objectStorageClientSecret,
-    'abacus.usage.object-storage.write')
-  : undefined;
-const systemToken = testEnv.secured
-  ? oauth.cache(testEnv.authServer, testEnv.systemClientId, testEnv.systemClientSecret, 'abacus.usage.read')
-  : undefined;
+    'abacus.usage.object-storage.write') : undefined;
+const systemToken = testEnv.secured ? 
+  oauth.cache(testEnv.authServer, testEnv.systemClientId, testEnv.systemClientSecret, 
+    'abacus.usage.read') : undefined;
 
 const authHeader = (token) => token ? { authorization: token() } : {};
 
@@ -78,25 +75,50 @@ describe('process usage smoke test', function() {
   it('submits usage for a sample resource and retrieves an aggregated usage report', async function() {
     // Configure the test timeout
     const timeout = Math.max(testEnv.totalTimeout, 40000);
-    // const processingDeadline = moment.now() + timeout;
+    const now = moment.now();
+    const processingDeadline = now + timeout;
+    const bytesInGigabyte = 1073741824;
+
+    const quantites = {
+      lightApiCalls: 1000,
+      heavyApiCalls: 100,
+      storage: bytesInGigabyte
+    };
+
+    setEventuallyPollingInterval(testEnv.pollInterval);
+    setEventuallyTimeout(timeout);
+
     this.timeout(timeout + 2000);
-    // console.log('Test will run until %s', moment.utc(processingDeadline).toDate());s
+    console.log('Test will run until %s', moment.utc(processingDeadline).toDate());
     
-    console.log('Submitting 10 GB, 1000 light API calls, 100 heavy API calls %d times', testEnv.usegeDocumentsCount);
-    const usages = [];
-    times(testEnv.usegeDocumentsCount, (n) => {
-      sendUsage(buildUsage(testOrgID, now.getTime() + n));
+    console.log('Submitting 10 GB, 1000 light API calls, 100 heavy API calls %d times', testEnv.usageDocumentsCount);
+    const sendUsageTasks = [];
+    times(testEnv.usageDocumentsCount, (n) => {
+      sendUsageTasks.push(sendUsage(buildUsage(testOrgID, now + n, quantites)));
     });
-    await Promise.all(usages);
+    await Promise.all(sendUsageTasks);
     console.log('\n%s: Usage documets have been sent successfully', moment.utc().toDate());
     
     console.log('\n%s: Retrieving usage report', moment.utc().toDate());
     await eventually(async () => { 
       const updatedReport = await retrieveReport(testOrgID);
-      expect(getThousandLightApiCallsQuantity(updatedReport)).to.equal(
-        getThousandLightApiCallsQuantity(currentReport) + testEnv.usegeDocumentsCount);
+      const processedDocs = getThousandLightApiCallsQuantity(currentReport);
       
-      compareReports(currentReport, cleanReport(updatedReport), initialExpectedReport);
+      expect(getThousandLightApiCallsQuantity(updatedReport)).to.equal(processedDocs + testEnv.usageDocumentsCount);
+      
+      // quantity and summary fields have the same values
+      const expectedValues = {
+        lightApiCalls: (testEnv.usageDocumentsCount * quantites.lightApiCalls) / 1000,
+        heavyApiCalls: testEnv.usageDocumentsCount * quantites.heavyApiCalls,
+        // accumulate function is defined as max
+        storage: quantites.storage / bytesInGigabyte
+      };
+      
+      if(!processedDocs) 
+        expect(cleanReport(updatedReport)).to.deep.equal(createExpectedReport(
+          testOrgID, expectedValues, expectedValues));  
+      else 
+        deltaCompareReports(cleanReport(updatedReport), currentReport, expectedValues, expectedValues);
     }); 
   });
 });

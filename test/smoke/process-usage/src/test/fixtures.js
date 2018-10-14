@@ -17,6 +17,7 @@ const slack = () =>
       scale: timewindow.dimension.min,
       width: 10
     };  
+
 const initWindows = (win, dimension) => {
   const windows = [win];
 
@@ -52,8 +53,8 @@ const buildExpectedWindows = (summary, quantity) => {
 };
 
 // Initial expected usage report for the test organization
-const initialExpectedReport = {
-  organization_id: 'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
+const createExpectedReport = (orgID, summaries, quantites) => ({
+  organization_id: orgID,
   account_id: '1234',
   resources: [
     {
@@ -61,15 +62,15 @@ const initialExpectedReport = {
       aggregated_usage: [
         {
           metric: 'storage',
-          windows: buildExpectedWindows(1, 1)
+          windows: buildExpectedWindows(summaries.storage, quantites.storage)
         },
         {
           metric: 'thousand_light_api_calls',
-          windows: buildExpectedWindows(3, 3)
+          windows: buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
         },
         {
           metric: 'heavy_api_calls',
-          windows: buildExpectedWindows(300, 300)
+          windows: buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
         }
       ],
       plans: [
@@ -81,15 +82,15 @@ const initialExpectedReport = {
           aggregated_usage: [
             {
               metric: 'storage',
-              windows: buildExpectedWindows(1, 1)
+              windows: buildExpectedWindows(summaries.storage, quantites.storage)
             },
             {
               metric: 'thousand_light_api_calls',
-              windows: buildExpectedWindows(3, 3)
+              windows: buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
             },
             {
               metric: 'heavy_api_calls',
-              windows: buildExpectedWindows(300, 300)
+              windows: buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
             }
           ]
         }
@@ -105,15 +106,15 @@ const initialExpectedReport = {
           aggregated_usage: [
             {
               metric: 'storage',
-              windows: buildExpectedWindows(1, 1)
+              windows: buildExpectedWindows(summaries.storage, quantites.storage)
             },
             {
               metric: 'thousand_light_api_calls',
-              windows: buildExpectedWindows(3, 3)
+              windows: buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
             },
             {
               metric: 'heavy_api_calls',
-              windows: buildExpectedWindows(300, 300)
+              windows: buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
             }
           ],
           plans: [
@@ -125,15 +126,15 @@ const initialExpectedReport = {
               aggregated_usage: [
                 {
                   metric: 'storage',
-                  windows: buildExpectedWindows(1, 1)
+                  windows: buildExpectedWindows(summaries.storage, quantites.storage)
                 },
                 {
                   metric: 'thousand_light_api_calls',
-                  windows: buildExpectedWindows(3, 3)
+                  windows: buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
                 },
                 {
                   metric: 'heavy_api_calls',
-                  windows: buildExpectedWindows(300, 300)
+                  windows: buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
                 }
               ]
             }
@@ -149,15 +150,15 @@ const initialExpectedReport = {
               aggregated_usage: [
                 {
                   metric: 'storage',
-                  windows: buildExpectedWindows(1, 1)
+                  windows: buildExpectedWindows(summaries.storage, quantites.storage)
                 },
                 {
                   metric: 'thousand_light_api_calls',
-                  windows: buildExpectedWindows(3, 3)
+                  windows: buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
                 },
                 {
                   metric: 'heavy_api_calls',
-                  windows: buildExpectedWindows(300, 300)
+                  windows: buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
                 }
               ],
               plans: [
@@ -174,15 +175,15 @@ const initialExpectedReport = {
                   aggregated_usage: [
                     {
                       metric: 'storage',
-                      windows: buildExpectedWindows(1, 1)
+                      windows: buildExpectedWindows(summaries.storage, quantites.storage)
                     },
                     {
                       metric: 'thousand_light_api_calls',
-                      windows: buildExpectedWindows(3, 3)
+                      windows: buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
                     },
                     {
                       metric: 'heavy_api_calls',
-                      windows: buildExpectedWindows(300, 300)
+                      windows: buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
                     }
                   ]
                 }
@@ -193,13 +194,13 @@ const initialExpectedReport = {
       ]
     }
   ]
-};
+});
 
-const buildUsage = (testOrgID, time) => (
+const buildUsage = (orgID, time, quantites) => (
   {
     start: time,
     end: time,
-    organization_id: testOrgID,
+    organization_id: orgID,
     space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
     consumer_id: 'app:bbeae239-f3f8-483c-9dd0-de6781c38bab',
     resource_id: 'object-storage',
@@ -208,20 +209,20 @@ const buildUsage = (testOrgID, time) => (
     measured_usage: [
       {
         measure: 'storage',
-        quantity: 1073741824
+        quantity: quantites.storage
       },
       {
         measure: 'light_api_calls',
-        quantity: 1000
+        quantity: quantites.lightApiCalls
       },
       {
         measure: 'heavy_api_calls',
-        quantity: 100
+        quantity: quantites.heavyApiCalls
       }
     ]
   });
 
 module.exports = {
   buildUsage,
-  initialExpectedReport
+  createExpectedReport
 };
