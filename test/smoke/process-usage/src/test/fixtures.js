@@ -7,7 +7,7 @@ const { times } = require('underscore');
 const { fixturesCfg } = require('./env-config');
 // The scaling factor of each time window for creating the date string
 // [Second, Minute, Hour, Day, Month]
-const slack = () =>
+const _slack = () =>
   /^[0-9]+[MDhms]$/.test(fixturesCfg.slack)
     ? {
       scale: fixturesCfg.slack.charAt(fixturesCfg.slack.length - 1),
@@ -18,14 +18,14 @@ const slack = () =>
       width: 10
     };  
 
-const initWindows = (win, dimension) => {
+const _initWindows = (win, dimension) => {
   const windows = [win];
 
   if(fixturesCfg.windowsSizes && fixturesCfg.windowsSizes[dimension])
     times(fixturesCfg.windowsSizes[dimension] - 1, () => windows.push(null));
 
   else {
-    const timeWindows = timewindow.timeWindowsSizes(slack(), fixturesCfg.windowsSizes);
+    const timeWindows = timewindow.timeWindowsSizes(_slack(), fixturesCfg.windowsSizes);
     times(timeWindows.getWindows(dimension).length - 1, () => windows.push(null));
   }
 
@@ -47,8 +47,8 @@ const buildExpectedWindows = (summary, quantity) => {
     [null],
     [null],
     [null],
-    initWindows(win, timewindow.dimension.day),
-    initWindows(win, timewindow.dimension.month)
+    _initWindows(win, timewindow.dimension.day),
+    _initWindows(win, timewindow.dimension.month)
   ];
 };
 
