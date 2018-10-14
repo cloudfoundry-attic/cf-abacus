@@ -35,7 +35,7 @@ const initWindows = (win, dimension) => {
 const buildExpectedWindows = (summary, quantity) => {
 
   const addProperty = (key, value, obj) => {
-    if (value !== undefined)
+    if (value)
       obj[key] = value;
   };
 
@@ -53,7 +53,7 @@ const buildExpectedWindows = (summary, quantity) => {
 };
 
 // Initial expected usage report for the test organization
-const createExpectedReport = (orgID, summaries, quantites) => ({
+const createExpectedInitialReport = (orgID, summaries, quantites) => ({
   organization_id: orgID,
   account_id: '1234',
   resources: [
@@ -224,5 +224,5 @@ const buildUsage = (orgID, time, quantites) => (
 
 module.exports = {
   buildUsage,
-  createExpectedReport
+  createExpectedInitialReport
 };

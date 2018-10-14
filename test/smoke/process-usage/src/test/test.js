@@ -12,7 +12,7 @@ const util = require('util');
 const { times } = require('underscore');
 
 const { testEnv } = require('./env-config');
-const { buildUsage, createExpectedReport } = require('./fixtures');
+const { buildUsage, createExpectedInitialReport } = require('./fixtures');
 const { deltaCompareReports } = require('./report-comparator');
 const { getThousandLightApiCallsQuantity, cleanReport } = require('./parse-report-utils');
 
@@ -115,7 +115,7 @@ describe('process usage smoke test', function() {
       };
       
       if(!processedDocs) 
-        expect(cleanReport(updatedReport)).to.deep.equal(createExpectedReport(
+        expect(cleanReport(updatedReport)).to.deep.equal(createExpectedInitialReport(
           testOrgID, expectedValues, expectedValues));  
       else 
         deltaCompareReports(cleanReport(updatedReport), currentReport, expectedValues, expectedValues);
