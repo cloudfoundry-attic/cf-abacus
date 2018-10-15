@@ -5,6 +5,7 @@ const timewindow = require('abacus-timewindow');
 const { times } = require('underscore');
 
 const { fixturesCfg } = require('./env-config');
+
 // The scaling factor of each time window for creating the date string
 // [Second, Minute, Hour, Day, Month]
 const _slack = () =>
@@ -32,7 +33,7 @@ const _initWindows = (win, dimension) => {
   return windows;
 };
 
-const buildExpectedWindows = (summary, quantity) => {
+const _buildExpectedWindows = (summary, quantity) => {
 
   const addProperty = (key, value, obj) => {
     if (value)
@@ -62,15 +63,15 @@ const createExpectedInitialReport = (orgID, summaries, quantites) => ({
       aggregated_usage: [
         {
           metric: 'storage',
-          windows: buildExpectedWindows(summaries.storage, quantites.storage)
+          windows: _buildExpectedWindows(summaries.storage, quantites.storage)
         },
         {
           metric: 'thousand_light_api_calls',
-          windows: buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
+          windows: _buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
         },
         {
           metric: 'heavy_api_calls',
-          windows: buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
+          windows: _buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
         }
       ],
       plans: [
@@ -82,15 +83,15 @@ const createExpectedInitialReport = (orgID, summaries, quantites) => ({
           aggregated_usage: [
             {
               metric: 'storage',
-              windows: buildExpectedWindows(summaries.storage, quantites.storage)
+              windows: _buildExpectedWindows(summaries.storage, quantites.storage)
             },
             {
               metric: 'thousand_light_api_calls',
-              windows: buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
+              windows: _buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
             },
             {
               metric: 'heavy_api_calls',
-              windows: buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
+              windows: _buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
             }
           ]
         }
@@ -106,15 +107,15 @@ const createExpectedInitialReport = (orgID, summaries, quantites) => ({
           aggregated_usage: [
             {
               metric: 'storage',
-              windows: buildExpectedWindows(summaries.storage, quantites.storage)
+              windows: _buildExpectedWindows(summaries.storage, quantites.storage)
             },
             {
               metric: 'thousand_light_api_calls',
-              windows: buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
+              windows: _buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
             },
             {
               metric: 'heavy_api_calls',
-              windows: buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
+              windows: _buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
             }
           ],
           plans: [
@@ -126,15 +127,15 @@ const createExpectedInitialReport = (orgID, summaries, quantites) => ({
               aggregated_usage: [
                 {
                   metric: 'storage',
-                  windows: buildExpectedWindows(summaries.storage, quantites.storage)
+                  windows: _buildExpectedWindows(summaries.storage, quantites.storage)
                 },
                 {
                   metric: 'thousand_light_api_calls',
-                  windows: buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
+                  windows: _buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
                 },
                 {
                   metric: 'heavy_api_calls',
-                  windows: buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
+                  windows: _buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
                 }
               ]
             }
@@ -150,15 +151,15 @@ const createExpectedInitialReport = (orgID, summaries, quantites) => ({
               aggregated_usage: [
                 {
                   metric: 'storage',
-                  windows: buildExpectedWindows(summaries.storage, quantites.storage)
+                  windows: _buildExpectedWindows(summaries.storage, quantites.storage)
                 },
                 {
                   metric: 'thousand_light_api_calls',
-                  windows: buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
+                  windows: _buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
                 },
                 {
                   metric: 'heavy_api_calls',
-                  windows: buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
+                  windows: _buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
                 }
               ],
               plans: [
@@ -175,15 +176,15 @@ const createExpectedInitialReport = (orgID, summaries, quantites) => ({
                   aggregated_usage: [
                     {
                       metric: 'storage',
-                      windows: buildExpectedWindows(summaries.storage, quantites.storage)
+                      windows: _buildExpectedWindows(summaries.storage, quantites.storage)
                     },
                     {
                       metric: 'thousand_light_api_calls',
-                      windows: buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
+                      windows: _buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
                     },
                     {
                       metric: 'heavy_api_calls',
-                      windows: buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
+                      windows: _buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
                     }
                   ]
                 }
