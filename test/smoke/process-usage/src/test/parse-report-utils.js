@@ -16,7 +16,7 @@ const currentMonth = 0;
 
 const _getCurrentMonth = (windows) => windows[monthReport][currentMonth];
 
-const _removeTandP = (report) => {
+const _removeConsumerMetadata = (report) => {
   const testResourceInstanceIndex = 0;
   report.spaces[spaceIndex].consumers[consumerIndex].resources[objectStorageIndex].plans[objectStoragePlanIdIndex]
     .resource_instances[testResourceInstanceIndex] = omit(report.spaces[spaceIndex].consumers[consumerIndex]
@@ -44,7 +44,8 @@ const getConsumerThousandLightApiCallsWindows = (report) => getThousandLightApiC
 const getConsumerHeavyApiCallsWindows = (report) => getHeavyApiCallsWindows(
   report.spaces[spaceIndex].consumers[consumerIndex]);  
   
-const cleanReport = (report) => _removeTandP(clone(omit(report, 'id', 'processed', 'processed_id', 'start', 'end')));  
+const cleanReport = (report) => _removeConsumerMetadata(
+  clone(omit(report, 'id', 'processed', 'processed_id', 'start', 'end')));  
   
 const getThousandLightApiCallsQuantity = (report) => {
   try { 
