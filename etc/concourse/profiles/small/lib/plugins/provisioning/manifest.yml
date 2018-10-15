@@ -1,0 +1,35 @@
+applications:
+- name: abacus-provisioning-plugin
+  routes:
+  - route: abacus-provisioning-plugin.((CF_SYS_DOMAIN))
+  path: .
+  instances: 2
+  memory: 512M
+  disk_quota: 512M
+  zdm: true
+  env:
+    APPS: 1
+    DB_PARTITIONS: 1
+    CUSTOM_METRICS: true
+    CONF: default
+    DEBUG: e-abacus-*
+    CLUSTER: false
+    API: ((AUTH_SERVER))
+    AUTH_SERVER: ((AUTH_SERVER))
+    EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
+    EUREKA_USER: ((HYSTRIX_CLIENT_ID))
+    EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
+    NODE_MODULES_CACHE: false
+    SECURED: true
+    SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
+    THROTTLE: 100
+    BATCH_SIZE: 10
+    MAX_INFLIGHT: 2000
+    OPTIMIZE_MEMORY: true
+    PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
+    VALIDATE_FUNCTIONS: true
+    JWTALGO: ((JWTALGO))
+    JWTKEY: |+
+      ((JWTKEY))
+    DEBUG_STRIPLF: true
+    DB_URI: ((DB_PLUGINS_URI))

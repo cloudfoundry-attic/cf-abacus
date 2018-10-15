@@ -1,6 +1,4 @@
 ---
-# this manifest file is needed because of how cfpush
-# uses the manifest to extract the application name
 applications:
   - name: abacus-sampler-receiver
     routes:
@@ -11,6 +9,7 @@ applications:
     disk_quota: 1024M
     zdm: true
     env:
+      APPS: 1
       CUSTOM_METRICS: true
       CONF: default
       CLUSTER: false

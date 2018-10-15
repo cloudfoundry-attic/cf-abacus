@@ -180,9 +180,15 @@ lib/ - Abacus modules
 
     extensions/ - Extension healthcheck and housekeeper apps
 
-test/ - End to end tests
+test/ - Tests
 
-    perf/ - Performance tests
+    integration/ - Integration tests which may depend on local MongoDB or RabbitMQ
+
+    scenario/ - End-to-end scenarios using a fully deployed system
+
+    performance/ - Load tests, which require a pre-deployed system
+
+    dependency/ - Tests against remote systems (ones that Abacus depends on) and verify that their API contracts have not changed
 
 tools/ - Build tools
 

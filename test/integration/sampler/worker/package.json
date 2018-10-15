@@ -23,7 +23,7 @@
     "src/"
   ],
   "scripts": {
-    "itest": "abacus-eslint && abacus-mocha --command",
+    "integration": "abacus-eslint && abacus-mocha --command",
     "test": "abacus-eslint",
     "generate-coverage": "true",
     "lint": "abacus-eslint",
@@ -34,18 +34,9 @@
     "abacus-sampler-worker": "file:../../../../lib/sampler/worker",
     "abacus-lifecycle-manager": "../../../lib/lifecycle-manager",
     "abacus-moment": "file:../../../../lib/moment",
+    "abacus-test-helper": "../../../test-utils/helper",
     "mongodb": "^2.2.36",
     "underscore": "^1.9.1"
-  },
-  "nyc": {
-    "cache": true,
-    "reporter": [
-      "text",
-      "html"
-    ],
-    "exclude": [
-      "src/test/**"
-    ]
   },
   "engines": {
     "node": ">=8.9.4 <9.0.0",

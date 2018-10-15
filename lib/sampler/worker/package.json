@@ -31,13 +31,18 @@
     "pub": "publish",
     "cfpush": "cfpush"
   },
+  "config": {
+    "port": 7071
+  },
   "dependencies": {
     "abacus-api": "file:../../utils/api",
     "abacus-debug": "file:../../utils/debug",
+    "abacus-healthmonitor": "file:../../utils/healthmonitor",
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-moment": "file:../../utils/moment",
     "abacus-sampler-storage": "file:../storage",
     "abacus-oauth": "file:../../utils/oauth",
+    "abacus-sampler-storage": "file:../storage",
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-webapp": "file:../../utils/webapp",
     "underscore": "^1.9.1",
@@ -48,7 +53,7 @@
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish",
-    "nyc": "^11.4.1"
+    "nyc": "^13.0.1"
   },
   "nyc": {
     "cache": true,

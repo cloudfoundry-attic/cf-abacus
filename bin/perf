@@ -1,7 +1,0 @@
-#!/bin/bash
-
-set -e
-
-# Run the performance tests
-(cd node_modules/abacus-perf-test && yarn run perf $@)
-

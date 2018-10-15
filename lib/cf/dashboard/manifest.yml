@@ -1,30 +1,31 @@
 applications:
-- name: abacus-service-dashboard
-  routes:
-  - route: abacus-service-dashboard.((CF_SYS_DOMAIN))
-  path: .
-  instances: 1
-  memory: 512M
-  disk_quota: 512M
-  zdm: true
-  env:
-    API: ((CF_API_URI))
-    AUTH_SERVER: ((UAA_URL))
-    CF_CLIENT_ID: ((METERING_BROKER_DASHBOARD_CLIENT_ID))
-    CF_CLIENT_SECRET: ((METERING_BROKER_DASHBOARD_CLIENT_SECRET))
-    CF_COOKIE_SECRET: s3cr3t
-    SECURED: true
-    EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
-    EUREKA_USER: ((HYSTRIX_CLIENT_ID))
-    EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
-    PROVISIONING: ((ABACUS_PREFIX))abacus-provisioning-plugin
-    PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
-    PRE_PROVIDED_DEFAULT_THEME_NAME: Default
-    ENABLE_UPLOAD_THEME_FEATURE: false
-    SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
-    JWTALGO: ((JWTALGO))
-    JWTKEY: |+
-      ((JWTKEY))
-    DEBUG_STRIPLF: true
-    DB_URI: ((DASHBOARD_DB_URI))
-    OPTIMIZE_MEMORY: true
+  - name: abacus-service-dashboard
+    routes:
+      - route: abacus-service-dashboard.((CF_SYS_DOMAIN))
+    path: .
+    instances: 1
+    memory: 512M
+    disk_quota: 512M
+    zdm: true
+    env:
+      APPS: 1
+      API: ((CF_API_URI))
+      AUTH_SERVER: ((UAA_URL))
+      CF_CLIENT_ID: ((METERING_BROKER_DASHBOARD_CLIENT_ID))
+      CF_CLIENT_SECRET: ((METERING_BROKER_DASHBOARD_CLIENT_SECRET))
+      CF_COOKIE_SECRET: s3cr3t
+      SECURED: true
+      EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
+      EUREKA_USER: ((HYSTRIX_CLIENT_ID))
+      EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
+      PROVISIONING: ((ABACUS_PREFIX))abacus-provisioning-plugin
+      PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
+      PRE_PROVIDED_DEFAULT_THEME_NAME: Default
+      ENABLE_UPLOAD_THEME_FEATURE: false
+      SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
+      JWTALGO: ((JWTALGO))
+      JWTKEY: |+
+        ((JWTKEY))
+      DEBUG_STRIPLF: true
+      DB_URI: ((DASHBOARD_DB_URI))
+      OPTIMIZE_MEMORY: true

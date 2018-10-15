@@ -3,7 +3,6 @@
 set -e
 
 # Push all the Abacus apps to Cloud Foundry, without starting them
-export CONF=${1:-default}
 
 CURRENT_DIR=$( pwd -P )
 
@@ -16,10 +15,10 @@ echo "Using $MAX_PROCESSES parallel processes"
 
 COMMANDS=()
 
-for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $CONF apps); do
-  APPNAME=$(node_modules/abacus-etc/appname $MODULE)
-  INSTANCES=$(node_modules/abacus-etc/apprc $MODULE/.apprc $CONF INSTANCES)
-  APPS=$(( $(node_modules/abacus-etc/apprc $MODULE/.apprc $CONF APPS) - 1 ))
+for MODULE in $(cat node_modules/abacus-etc/apps); do
+  APPNAME=$(node_modules/abacus-etc/appcfg $MODULE name)
+  INSTANCES=$(node_modules/abacus-etc/appcfg $MODULE instances)
+  APPS=$(( $(node_modules/abacus-etc/appcfg $MODULE env APPS) - 1 ))
 
   pushd $MODULE
     rm -rf node_modules/ yarn.lock package-lock.json
@@ -27,10 +26,10 @@ for MODULE in $(node_modules/abacus-etc/apprc node_modules/abacus-etc/apps.rc $C
   popd
 
   if [ "$APPS" == "0" ]; then
-    COMMANDS+=("(cfpush -n $APPNAME -p $MODULE -i $INSTANCES -c $CONF -r $PUSH_RETRIES)")
+    COMMANDS+=("(cfpush -n $APPNAME -p $MODULE -i $INSTANCES -r $PUSH_RETRIES)")
   else
     for I in $(seq 0 $APPS); do
-      COMMANDS+=("(cfpush -n $APPNAME-$I -p $MODULE -i $INSTANCES -c $CONF -r $PUSH_RETRIES)")
+      COMMANDS+=("(cfpush -n $APPNAME-$I -p $MODULE -i $INSTANCES -r $PUSH_RETRIES)")
     done
   fi
 done
@@ -41,5 +40,5 @@ for i in "${COMMANDS[@]}"; do
 done
 
 pushd "$CURRENT_DIR"
-  echo $CMD_STRING | xargs -n 1 -P $MAX_PROCESSES /bin/bash -c
+  echo ${CMD_STRING} | xargs -n 1 -P ${MAX_PROCESSES} /bin/bash -c
 popd

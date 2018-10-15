@@ -11,7 +11,7 @@ const { ReceiverClient } = require('abacus-api');
 const moment = require('abacus-moment');
 const createLifecycleManager = require('abacus-lifecycle-manager');
 
-const createTokenFactoy = require('./token-factory');
+const { createTokenFactory } = require('abacus-test-helper');
 
 const mongoURI = process.env.DB_URI || 'mongodb://localhost:27017';
 const receiverURI = 'http://localhost:7070';
@@ -111,7 +111,7 @@ describe('Receiver integartion test', () => {
   let oauthServerMock;
 
   before(async () => {
-    tokenFactory = createTokenFactoy(jwtSecret);
+    tokenFactory = createTokenFactory(jwtSecret);
     const receiverToken = tokenFactory.create(samplerOAuthScopes);
     receiverClient = new ReceiverClient(receiverURI, {
       getHeader: () => `Bearer ${receiverToken}`
@@ -127,6 +127,7 @@ describe('Receiver integartion test', () => {
       AUTH_SERVER: oauthServerMock.url(),
       PROVISIONING: provisioningServerMock.url(),
       SECURED: 'true',
+      CLUSTER: 'false',
       JWTKEY: jwtSecret,
       JWTALGO: 'HS256',
       CLIENT_ID: clientId,
@@ -150,12 +151,23 @@ describe('Receiver integartion test', () => {
     mongoClient.collection(collectionName).remove();
   });
 
+  describe('#healthcheck', () => {
+    context('when healthcheck is requested', () => {
+      it('it responds with healthy status', async () => {
+        const health = await eventually(async () => await receiverClient.getHealth());
+        expect(health).to.deep.equal({
+          healthy: true
+        });
+      });
+    });
+  });
+
   describe('#startSampling', () => {
     context('when start event is received', () => {
 
       const usage = {
         id: 'dedup-guid',
-        timestamp: 123,
+        timestamp: moment.utc().valueOf(),
         organization_id: 'organization-guid',
         space_id: 'space-guid',
         consumer_id: 'consumer-guid',

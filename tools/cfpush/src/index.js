@@ -46,7 +46,6 @@ const runCLI = () => {
   commander
     .option('-n, --name <name>', 'app name', require(path.join(process.cwd(), 'package.json')).name)
     .option('-i, --instances <nb>', 'number of instances')
-    .option('-c, --conf [value]', 'configuration name', process.env.CONF)
     .option('-b, --buildpack [value]', 'buildpack name or location', process.env.BUILDPACK)
     .option('-x, --prefix [value]', 'host prefix', process.env.ABACUS_PREFIX)
     .option('-p, --path [value]', 'path to the application', '.')
@@ -60,7 +59,6 @@ const runCLI = () => {
   const commanderProps = {
     name: commander.name,
     instances: commander.instances,
-    conf: commander.conf,
     buildpack: commander.buildpack,
     prefix: commander.prefix,
     path: commander.path,

@@ -1,7 +1,0 @@
-default:
-  PORT: 7071
-  APPS: 1
-  INSTANCES: 1
-  EUREKA: 9990
-  COLLECTOR: 9080
-  SECURED: false
