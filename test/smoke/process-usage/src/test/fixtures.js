@@ -12,7 +12,7 @@ const _slack = () =>
   /^[0-9]+[MDhms]$/.test(fixturesCfg.slack)
     ? {
       scale: fixturesCfg.slack.charAt(fixturesCfg.slack.length - 1),
-      width: fixturesCfg.slack.match(/[0-9]+/)[0]
+      width: fixturesCfg.slack.substring(0, fixturesCfg.slack.length - 1)
     }
     : {
       scale: timewindow.dimension.min,
