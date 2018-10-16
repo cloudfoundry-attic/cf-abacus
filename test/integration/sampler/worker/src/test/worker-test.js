@@ -208,12 +208,14 @@ describe('Worker integration tests', () => {
       };
     };
 
-    it('it send correct clientId and clientSecret to UAA server', async () => {
+    it('UAA server is properly called', async () => {
       expect(oauthServerMock.requests().length).to.equal(1);
-      expect(extractCredentials(oauthServerMock.requests()[0].headers.authorization)).to.deep.equal({
+      const [request] = oauthServerMock.requests();
+      expect(extractCredentials(request.headers.authorization)).to.deep.equal({
         clientId: clientId,
         clientSecret: clientSecret
       });
+      expect(request.query.scope).to.equal('abacus.usage.sampler.write');
     });
 
     it('it should send usage to abacus collector', () => {
