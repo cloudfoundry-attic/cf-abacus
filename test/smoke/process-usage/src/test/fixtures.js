@@ -19,12 +19,11 @@ const _slack = () =>
       width: 10
     };  
 
-const _initWindows = (win, dimension) => {
+const _createWindows = (win, dimension) => {
   const windows = [win];
 
   if(fixturesCfg.windowsSizes && fixturesCfg.windowsSizes[dimension])
     times(fixturesCfg.windowsSizes[dimension] - 1, () => windows.push(null));
-
   else {
     const timeWindows = timewindow.timeWindowsSizes(_slack(), fixturesCfg.windowsSizes);
     times(timeWindows.getWindows(dimension).length - 1, () => windows.push(null));
@@ -34,22 +33,17 @@ const _initWindows = (win, dimension) => {
 };
 
 const _buildExpectedWindows = (summary, quantity) => {
-
-  const addProperty = (key, value, obj) => {
-    if (value)
-      obj[key] = value;
+  const win = {
+    quantity: quantity,
+    summary: summary
   };
-
-  const win = {};
-  addProperty('quantity', quantity, win);
-  addProperty('summary', summary, win);
-
+  
   return [
     [null],
     [null],
     [null],
-    _initWindows(win, timewindow.dimension.day),
-    _initWindows(win, timewindow.dimension.month)
+    _createWindows(win, timewindow.dimension.day),
+    _createWindows(win, timewindow.dimension.month)
   ];
 };
 
@@ -76,7 +70,7 @@ const createExpectedInitialReport = (orgID, summaries, quantites) => ({
       ],
       plans: [
         {
-          plan_id: 'basic/basic-object-storage/' + 'object-rating-plan/object-pricing-basic',
+          plan_id: 'basic/basic-object-storage/object-rating-plan/object-pricing-basic',
           metering_plan_id: 'basic-object-storage',
           rating_plan_id: 'object-rating-plan',
           pricing_plan_id: 'object-pricing-basic',
@@ -120,7 +114,7 @@ const createExpectedInitialReport = (orgID, summaries, quantites) => ({
           ],
           plans: [
             {
-              plan_id: 'basic/basic-object-storage/' + 'object-rating-plan/object-pricing-basic',
+              plan_id: 'basic/basic-object-storage/object-rating-plan/object-pricing-basic',
               metering_plan_id: 'basic-object-storage',
               rating_plan_id: 'object-rating-plan',
               pricing_plan_id: 'object-pricing-basic',
@@ -164,7 +158,7 @@ const createExpectedInitialReport = (orgID, summaries, quantites) => ({
               ],
               plans: [
                 {
-                  plan_id: 'basic/basic-object-storage/' + 'object-rating-plan/object-pricing-basic',
+                  plan_id: 'basic/basic-object-storage/object-rating-plan/object-pricing-basic',
                   metering_plan_id: 'basic-object-storage',
                   rating_plan_id: 'object-rating-plan',
                   pricing_plan_id: 'object-pricing-basic',

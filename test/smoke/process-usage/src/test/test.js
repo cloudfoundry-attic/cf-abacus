@@ -73,7 +73,6 @@ describe('process usage smoke test', function() {
   });
 
   it('submits usage for a sample resource and retrieves an aggregated usage report', async function() {
-    // Configure the test timeout
     const timeout = Math.max(testEnv.totalTimeout, 40000);
     const now = moment.now();
     const processingDeadline = now + timeout;
