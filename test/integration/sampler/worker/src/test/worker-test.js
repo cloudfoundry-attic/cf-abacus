@@ -86,7 +86,7 @@ describe('Worker integration tests', () => {
   const clientId = 'client-id';
   const clientSecret = 'client-secret';
   const token = 'oauth-token';
-  const samplerOAuthScopes = ['abacus.sampler.usage.write'];
+  const samplerOAuthScopes = ['abacus.system.read'];
   const jwtSecret = 'secret';
 
   let lifecycleManager;

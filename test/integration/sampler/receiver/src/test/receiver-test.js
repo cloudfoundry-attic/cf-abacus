@@ -99,7 +99,7 @@ const createProvisioningServerMock = () => {
 
 describe('Receiver integartion test', () => {
   const token = 'token';
-  const samplerOAuthScopes = ['abacus.sampler.usage.write'];
+  const samplerOAuthScopes = ['abacus.system.read', 'abacus.sampler.write'];
   const jwtSecret = 'secret';
   const clientId = 'client-id';
   const clientSecret = 'client-secret';

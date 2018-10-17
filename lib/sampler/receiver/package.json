@@ -39,6 +39,7 @@
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-healthmonitor": "file:../../utils/healthmonitor",
     "abacus-oauth": "file:../../utils/oauth",
+    "abacus-router": "file:../../utils/router",
     "abacus-sampler-storage": "file:../storage",
     "abacus-schema": "file:../../utils/schema",
     "abacus-urienv": "file:../../utils/urienv",
