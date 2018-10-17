@@ -14,3 +14,5 @@ lib/cf/broker
 lib/cf/dashboard
 lib/extensions/housekeeper
 lib/extensions/healthchecker
+lib/sampler/worker
+lib/sampler/receiver
