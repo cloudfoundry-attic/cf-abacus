@@ -1,0 +1,196 @@
+{
+  "organization_id": "us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27",
+  "account_id": "1234",
+  "resources": [
+    {
+      "resource_id": "object-storage",
+      "aggregated_usage": [
+        {
+          "metric": "storage",
+          "windows": {
+            "summary": 1,
+            "quantity": 1
+          }
+        },
+        {
+          "metric": "thousand_light_api_calls",
+          "windows": {
+            "summary": 3,
+            "quantity": 3
+          }
+        },
+        {
+          "metric": "heavy_api_calls",
+          "windows": {
+            "summary": 300,
+            "quantity": 300
+          }
+        }
+      ],
+      "plans": [
+        {
+          "plan_id": "basic/basic-object-storage/object-rating-plan/object-pricing-basic",
+          "metering_plan_id": "basic-object-storage",
+          "rating_plan_id": "object-rating-plan",
+          "pricing_plan_id": "object-pricing-basic",
+          "aggregated_usage": [
+            {
+              "metric": "storage",
+              "windows": {
+                "summary": 1,
+                "quantity": 1
+              }
+            },
+            {
+              "metric": "thousand_light_api_calls",
+              "windows": {
+                "summary": 3,
+                "quantity": 3
+              }
+            },
+            {
+              "metric": "heavy_api_calls",
+              "windows": {
+                "summary": 300,
+                "quantity": 300
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "spaces": [
+    {
+      "space_id": "aaeae239-f3f8-483c-9dd0-de5d41c38b6a",
+      "resources": [
+        {
+          "resource_id": "object-storage",
+          "aggregated_usage": [
+            {
+              "metric": "storage",
+              "windows": {
+                "summary": 1,
+                "quantity": 1
+              }
+            },
+            {
+              "metric": "thousand_light_api_calls",
+              "windows": {
+                "summary": 3,
+                "quantity": 3
+              }
+            },
+            {
+              "metric": "heavy_api_calls",
+              "windows": {
+                "summary": 300,
+                "quantity": 300
+              }
+            }
+          ],
+          "plans": [
+            {
+              "plan_id": "basic/basic-object-storage/object-rating-plan/object-pricing-basic",
+              "metering_plan_id": "basic-object-storage",
+              "rating_plan_id": "object-rating-plan",
+              "pricing_plan_id": "object-pricing-basic",
+              "aggregated_usage": [
+                {
+                  "metric": "storage",
+                  "windows": {
+                    "summary": 1,
+                    "quantity": 1
+                  }
+                },
+                {
+                  "metric": "thousand_light_api_calls",
+                  "windows": {
+                    "summary": 3,
+                    "quantity": 3
+                  }
+                },
+                {
+                  "metric": "heavy_api_calls",
+                  "windows": {
+                    "summary": 300,
+                    "quantity": 300
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "consumers": [
+        {
+          "consumer_id": "app:bbeae239-f3f8-483c-9dd0-de6781c38bab",
+          "resources": [
+            {
+              "resource_id": "object-storage",
+              "aggregated_usage": [
+                {
+                  "metric": "storage",
+                  "windows": {
+                    "summary": 1,
+                    "quantity": 1
+                  }
+                },
+                {
+                  "metric": "thousand_light_api_calls",
+                  "windows": {
+                    "summary": 3,
+                    "quantity": 3
+                  }
+                },
+                {
+                  "metric": "heavy_api_calls",
+                  "windows": {
+                    "summary": 300,
+                    "quantity": 300
+                  }
+                }
+              ],
+              "plans": [
+                {
+                  "plan_id": "basic/basic-object-storage/object-rating-plan/object-pricing-basic",
+                  "metering_plan_id": "basic-object-storage",
+                  "rating_plan_id": "object-rating-plan",
+                  "pricing_plan_id": "object-pricing-basic",
+                  "resource_instances": [
+                    {
+                      "id": "0b39fa70-a65f-4183-bae8-385633ca5c87"
+                    }
+                  ],
+                  "aggregated_usage": [
+                    {
+                      "metric": "storage",
+                      "windows": {
+                        "summary": 1,
+                        "quantity": 1
+                      }
+                    },
+                    {
+                      "metric": "thousand_light_api_calls",
+                      "windows": {
+                        "summary": 3,
+                        "quantity": 3
+                      }
+                    },
+                    {
+                      "metric": "heavy_api_calls",
+                      "windows": {
+                        "summary": 300,
+                        "quantity": 300
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
