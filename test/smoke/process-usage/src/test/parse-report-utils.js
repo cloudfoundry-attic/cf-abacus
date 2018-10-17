@@ -6,8 +6,8 @@ const { omit } = require('underscore');
 
 const objectStorageIndex = 0;
 const objectStoragePlanIdIndex = 0;
-const thousandLightApiCallsIndex = 1;
-const heavyApiCallsIndex = 2;
+const thousandLightAPICallsIndex = 1;
+const heavyAPICallsIndex = 2;
 const spaceIndex = 0;
 const consumerIndex = 0;
 const monthReport = 4;
@@ -27,43 +27,47 @@ const _removeConsumerMetadata = (report) => {
   return report;
 };
 
-const getThousandLightApiCallsWindows = (report) => _getCurrentMonth(report.resources[objectStorageIndex]
-  .plans[objectStoragePlanIdIndex].aggregated_usage[thousandLightApiCallsIndex].windows);
+const _reportReady = (report) => {
+  const resources = report.resources;
+  return resources && resources.length !== 0;
+};
+
+const getThousandLightAPICallsWindows = (report) => _getCurrentMonth(report.resources[objectStorageIndex]
+  .plans[objectStoragePlanIdIndex].aggregated_usage[thousandLightAPICallsIndex].windows);
   
-const getHeavyApiCallsWindows = (report) => _getCurrentMonth(report.resources[objectStorageIndex]
-  .plans[objectStoragePlanIdIndex].aggregated_usage[heavyApiCallsIndex].windows);
+const getHeavyAPICallsWindows = (report) => _getCurrentMonth(report.resources[objectStorageIndex]
+  .plans[objectStoragePlanIdIndex].aggregated_usage[heavyAPICallsIndex].windows);
   
-const getSpaceThousandLightApiCallsWindows = (report) => getThousandLightApiCallsWindows(
+const getSpaceThousandLightAPICallsWindows = (report) => getThousandLightAPICallsWindows(
   report.spaces[spaceIndex]);
   
-const getSpaceHeavyApiCallsWindows = (report) => getHeavyApiCallsWindows(report.spaces[spaceIndex]);
+const getSpaceHeavyAPICallsWindows = (report) => getHeavyAPICallsWindows(report.spaces[spaceIndex]);
 
-const getConsumerThousandLightApiCallsWindows = (report) => getThousandLightApiCallsWindows(
+const getConsumerThousandLightAPICallsWindows = (report) => getThousandLightAPICallsWindows(
   report.spaces[spaceIndex].consumers[consumerIndex]);
   
-const getConsumerHeavyApiCallsWindows = (report) => getHeavyApiCallsWindows(
+const getConsumerHeavyAPICallsWindows = (report) => getHeavyAPICallsWindows(
   report.spaces[spaceIndex].consumers[consumerIndex]);  
   
 const cleanReport = (report) => _removeConsumerMetadata(
   clone(omit(report, 'id', 'processed', 'processed_id', 'start', 'end')));  
   
-const getThousandLightApiCallsQuantity = (report) => {
-  try { 
-    const monthReport = getThousandLightApiCallsWindows(report);
-    return monthReport.quantity;
-  } catch (e) {
-    // The response doesn't contain a valid report
+const getThousandLightAPICallsQuantity = (report) => {
+  if(!_reportReady(report)) 
     return 0;
-  }
+
+  const monthReport = getThousandLightAPICallsWindows(report);
+  return monthReport.quantity;
+
 };
 
 module.exports = {
   cleanReport,
-  getHeavyApiCallsWindows,
-  getThousandLightApiCallsWindows,
-  getThousandLightApiCallsQuantity,
-  getSpaceThousandLightApiCallsWindows,
-  getSpaceHeavyApiCallsWindows,
-  getConsumerThousandLightApiCallsWindows,
-  getConsumerHeavyApiCallsWindows
+  getHeavyAPICallsWindows,
+  getThousandLightAPICallsWindows,
+  getThousandLightAPICallsQuantity,
+  getSpaceThousandLightAPICallsWindows,
+  getSpaceHeavyAPICallsWindows,
+  getConsumerThousandLightAPICallsWindows,
+  getConsumerHeavyAPICallsWindows
 };

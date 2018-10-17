@@ -61,11 +61,11 @@ const createExpectedInitialReport = (orgID, summaries, quantites) => ({
         },
         {
           metric: 'thousand_light_api_calls',
-          windows: _buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
+          windows: _buildExpectedWindows(summaries.lightAPICalls, quantites.lightAPICalls)
         },
         {
           metric: 'heavy_api_calls',
-          windows: _buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
+          windows: _buildExpectedWindows(summaries.heavyAPICalls, quantites.heavyAPICalls)
         }
       ],
       plans: [
@@ -81,11 +81,11 @@ const createExpectedInitialReport = (orgID, summaries, quantites) => ({
             },
             {
               metric: 'thousand_light_api_calls',
-              windows: _buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
+              windows: _buildExpectedWindows(summaries.lightAPICalls, quantites.lightAPICalls)
             },
             {
               metric: 'heavy_api_calls',
-              windows: _buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
+              windows: _buildExpectedWindows(summaries.heavyAPICalls, quantites.heavyAPICalls)
             }
           ]
         }
@@ -105,11 +105,11 @@ const createExpectedInitialReport = (orgID, summaries, quantites) => ({
             },
             {
               metric: 'thousand_light_api_calls',
-              windows: _buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
+              windows: _buildExpectedWindows(summaries.lightAPICalls, quantites.lightAPICalls)
             },
             {
               metric: 'heavy_api_calls',
-              windows: _buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
+              windows: _buildExpectedWindows(summaries.heavyAPICalls, quantites.heavyAPICalls)
             }
           ],
           plans: [
@@ -125,11 +125,11 @@ const createExpectedInitialReport = (orgID, summaries, quantites) => ({
                 },
                 {
                   metric: 'thousand_light_api_calls',
-                  windows: _buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
+                  windows: _buildExpectedWindows(summaries.lightAPICalls, quantites.lightAPICalls)
                 },
                 {
                   metric: 'heavy_api_calls',
-                  windows: _buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
+                  windows: _buildExpectedWindows(summaries.heavyAPICalls, quantites.heavyAPICalls)
                 }
               ]
             }
@@ -149,11 +149,11 @@ const createExpectedInitialReport = (orgID, summaries, quantites) => ({
                 },
                 {
                   metric: 'thousand_light_api_calls',
-                  windows: _buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
+                  windows: _buildExpectedWindows(summaries.lightAPICalls, quantites.lightAPICalls)
                 },
                 {
                   metric: 'heavy_api_calls',
-                  windows: _buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
+                  windows: _buildExpectedWindows(summaries.heavyAPICalls, quantites.heavyAPICalls)
                 }
               ],
               plans: [
@@ -174,11 +174,11 @@ const createExpectedInitialReport = (orgID, summaries, quantites) => ({
                     },
                     {
                       metric: 'thousand_light_api_calls',
-                      windows: _buildExpectedWindows(summaries.lightApiCalls, quantites.lightApiCalls)
+                      windows: _buildExpectedWindows(summaries.lightAPICalls, quantites.lightAPICalls)
                     },
                     {
                       metric: 'heavy_api_calls',
-                      windows: _buildExpectedWindows(summaries.heavyApiCalls, quantites.heavyApiCalls)
+                      windows: _buildExpectedWindows(summaries.heavyAPICalls, quantites.heavyAPICalls)
                     }
                   ]
                 }
@@ -208,11 +208,11 @@ const buildUsage = (orgID, time, quantites) => (
       },
       {
         measure: 'light_api_calls',
-        quantity: quantites.lightApiCalls
+        quantity: quantites.lightAPICalls
       },
       {
         measure: 'heavy_api_calls',
-        quantity: quantites.heavyApiCalls
+        quantity: quantites.heavyAPICalls
       }
     ]
   });

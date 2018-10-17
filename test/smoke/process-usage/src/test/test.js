@@ -14,7 +14,7 @@ const { times } = require('underscore');
 const { testEnv } = require('./env-config');
 const { buildUsage, createExpectedInitialReport } = require('./fixtures');
 const { deltaCompareReports } = require('./report-comparator');
-const { getThousandLightApiCallsQuantity, cleanReport } = require('./parse-report-utils');
+const { getThousandLightAPICallsQuantity, cleanReport } = require('./parse-report-utils');
 
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
@@ -29,8 +29,8 @@ const systemToken = testEnv.secured ?
 const authHeader = (token) => token ? { authorization: token() } : {};
 
 const sendUsage = async (usage) => {
-  const resp = await doPost(':url/v1/metering/collected/usage', {
-    url: testEnv.collectorUrl,
+  const resp = await doPost('/v1/metering/collected/usage', {
+    baseUrl: testEnv.collectorUrl,
     headers: authHeader(systemToken),
     body: usage
   });
@@ -40,8 +40,8 @@ const sendUsage = async (usage) => {
 };
 
 const retrieveReport = async (orgID) => {
-  const resp = await doGet(':url/v1/metering/organizations/:organization_id/aggregated/usage', {
-    url: testEnv.reportingUrl,
+  const resp = await doGet('/v1/metering/organizations/:organization_id/aggregated/usage', {
+    baseUrl: testEnv.reportingUrl,
     headers: authHeader(systemToken),
     organization_id: orgID
   });
@@ -73,21 +73,21 @@ describe('process usage smoke test', function() {
   });
 
   it('submits usage for a sample resource and retrieves an aggregated usage report', async function() {
-    const timeout = Math.max(testEnv.totalTimeout, 40000);
+    const timeout = Math.max(testEnv.totalTimeout, 40000) + 2000;
     const now = moment.now();
     const processingDeadline = now + timeout;
     const bytesInGigabyte = 1073741824;
 
     const quantites = {
-      lightApiCalls: 1000,
-      heavyApiCalls: 100,
+      lightAPICalls: 1000,
+      heavyAPICalls: 100,
       storage: bytesInGigabyte
     };
 
     setEventuallyPollingInterval(testEnv.pollInterval);
     setEventuallyTimeout(timeout);
 
-    this.timeout(timeout + 2000);
+    this.timeout(timeout);
     console.log('Test will run until %s', moment.utc(processingDeadline).toDate());
     
     console.log('Submitting 10 GB, 1000 light API calls, 100 heavy API calls %d times', testEnv.usageDocumentsCount);
@@ -101,14 +101,14 @@ describe('process usage smoke test', function() {
     console.log('\n%s: Retrieving usage report', moment.utc().toDate());
     await eventually(async () => { 
       const updatedReport = await retrieveReport(testOrgID);
-      const processedDocs = getThousandLightApiCallsQuantity(currentReport);
+      const processedDocs = getThousandLightAPICallsQuantity(currentReport);
       
-      expect(getThousandLightApiCallsQuantity(updatedReport)).to.equal(processedDocs + testEnv.usageDocumentsCount);
+      expect(getThousandLightAPICallsQuantity(updatedReport)).to.equal(processedDocs + testEnv.usageDocumentsCount);
       
       // quantity and summary fields have the same values
       const expectedValues = {
-        lightApiCalls: (testEnv.usageDocumentsCount * quantites.lightApiCalls) / 1000,
-        heavyApiCalls: testEnv.usageDocumentsCount * quantites.heavyApiCalls,
+        lightAPICalls: (testEnv.usageDocumentsCount * quantites.lightAPICalls) / 1000,
+        heavyAPICalls: testEnv.usageDocumentsCount * quantites.heavyAPICalls,
         // accumulate function is defined as max
         storage: quantites.storage / bytesInGigabyte
       };

@@ -1,7 +1,7 @@
 'use strict';
 
-const { getThousandLightApiCallsWindows, getHeavyApiCallsWindows, getSpaceThousandLightApiCallsWindows, 
-  getSpaceHeavyApiCallsWindows, getConsumerThousandLightApiCallsWindows, getConsumerHeavyApiCallsWindows 
+const { getThousandLightAPICallsWindows, getHeavyAPICallsWindows, getSpaceThousandLightAPICallsWindows, 
+  getSpaceHeavyAPICallsWindows, getConsumerThousandLightAPICallsWindows, getConsumerHeavyAPICallsWindows 
 } = require('./parse-report-utils');
 
 const util = require('util');
@@ -24,7 +24,7 @@ const _deltaCompare = (currentWindow, previousWindow, s, q) => {
 
     const diff = currentValue - previousValue - updatingStep;
 
-    expect(Math.abs(diff)).to.be.below(0.01, util.format(
+    expect(diff).to.be.closeTo(0, 0.01, util.format(
       '%s=%d, expected increase %d from %d, ∆=%d', key, currentValue, updatingStep, previousValue, diff
     ));
   };
@@ -33,55 +33,55 @@ const _deltaCompare = (currentWindow, previousWindow, s, q) => {
   checkIfNear('quantity', q);
 };
 
-const _deltaCompareLightApiCalls = (updatedReport, previousReport, summuries, quantites) => {
+const _deltaCompareLightAPICalls = (updatedReport, previousReport, summuries, quantites) => {
   _deltaCompare(
-    getThousandLightApiCallsWindows(updatedReport),
-    getThousandLightApiCallsWindows(previousReport),
-    summuries.lightApiCalls,
-    quantites.lightApiCalls
+    getThousandLightAPICallsWindows(updatedReport),
+    getThousandLightAPICallsWindows(previousReport),
+    summuries.lightAPICalls,
+    quantites.lightAPICalls
   );
 
   _deltaCompare(
-    getSpaceThousandLightApiCallsWindows(updatedReport),
-    getSpaceThousandLightApiCallsWindows(previousReport),
-    summuries.lightApiCalls,
-    quantites.lightApiCalls
+    getSpaceThousandLightAPICallsWindows(updatedReport),
+    getSpaceThousandLightAPICallsWindows(previousReport),
+    summuries.lightAPICalls,
+    quantites.lightAPICalls
   );
 
   _deltaCompare(
-    getConsumerThousandLightApiCallsWindows(updatedReport),
-    getConsumerThousandLightApiCallsWindows(previousReport),
-    summuries.lightApiCalls,
-    quantites.lightApiCalls
+    getConsumerThousandLightAPICallsWindows(updatedReport),
+    getConsumerThousandLightAPICallsWindows(previousReport),
+    summuries.lightAPICalls,
+    quantites.lightAPICalls
   );
 };
 
-const _deltaCompareHeavyApiCalls = (updatedReport, previousReport, summuries, quantites) => {
+const _deltaCompareHeavyAPICalls = (updatedReport, previousReport, summuries, quantites) => {
   _deltaCompare(
-    getHeavyApiCallsWindows(updatedReport),
-    getHeavyApiCallsWindows(previousReport),
-    summuries.heavyApiCalls,
-    quantites.heavyApiCalls
+    getHeavyAPICallsWindows(updatedReport),
+    getHeavyAPICallsWindows(previousReport),
+    summuries.heavyAPICalls,
+    quantites.heavyAPICalls
   );
 
   _deltaCompare(
-    getSpaceHeavyApiCallsWindows(updatedReport),
-    getSpaceHeavyApiCallsWindows(previousReport),
-    summuries.heavyApiCalls,
-    quantites.heavyApiCalls
+    getSpaceHeavyAPICallsWindows(updatedReport),
+    getSpaceHeavyAPICallsWindows(previousReport),
+    summuries.heavyAPICalls,
+    quantites.heavyAPICalls
   );
 
   _deltaCompare(
-    getConsumerHeavyApiCallsWindows(updatedReport),
-    getConsumerHeavyApiCallsWindows(previousReport),
-    summuries.heavyApiCalls,
-    quantites.heavyApiCalls
+    getConsumerHeavyAPICallsWindows(updatedReport),
+    getConsumerHeavyAPICallsWindows(previousReport),
+    summuries.heavyAPICalls,
+    quantites.heavyAPICalls
   );
 };
 
 const deltaCompareReports = (updatedReport, previousReport, summuries, quantites) => {
-  _deltaCompareLightApiCalls(updatedReport, previousReport, summuries, quantites);
-  _deltaCompareHeavyApiCalls(updatedReport, previousReport, summuries, quantites);
+  _deltaCompareLightAPICalls(updatedReport, previousReport, summuries, quantites);
+  _deltaCompareHeavyAPICalls(updatedReport, previousReport, summuries, quantites);
 };
 
 module.exports = {
