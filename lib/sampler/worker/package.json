@@ -40,7 +40,6 @@
     "abacus-healthmonitor": "file:../../utils/healthmonitor",
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-moment": "file:../../utils/moment",
-    "abacus-sampler-storage": "file:../storage",
     "abacus-oauth": "file:../../utils/oauth",
     "abacus-sampler-storage": "file:../storage",
     "abacus-urienv": "file:../../utils/urienv",
