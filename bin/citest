@@ -42,6 +42,13 @@ case "$CI_TEST" in
     yarn stop
     ;;
 
+  java)
+    yarn start
+    sleep 3s
+    (cd demo/java-demo-client && ./gradlew bootRun)
+    yarn stop
+    ;;
+
   *)
     echo "Unknown test $CI_TEST"
     ;;

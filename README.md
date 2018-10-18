@@ -37,6 +37,7 @@ Abacus requires Node.js >= 8.10.0, Yarn > 1.3.2, MongoDB >= 3.4 and RabbitMQ >= 
 cd cf-abacus
 
 # Start local mongodb and rabbitmq-server
+docker-compose up
 
 # Use local MongoDB
 . ./bin/localdb

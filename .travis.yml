@@ -5,6 +5,7 @@ git:
   depth: 3
 
 before_install:
+  - nvm install 8.11.3
   - npm install -g npm@latest-4
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.9.4
   - export PATH="$HOME/.yarn/bin:$PATH"
@@ -32,7 +33,6 @@ matrix:
       - DB_ACCUMULATOR_URI=mongodb://localhost:27017
       - DB_AGGREGATOR_URI=mongodb://localhost:27017
       - JOBS=1
-      node_js: 8.11.3
       services:
         - mongodb
         - rabbitmq
@@ -49,7 +49,6 @@ matrix:
       - TOTAL_TIMEOUT=120000
       - JOBS=1
       - CI_TEST=integration
-      node_js: 8.11.3
       services:
         - mongodb
         - rabbitmq
@@ -67,7 +66,6 @@ matrix:
       - SMOKE_START_TIMEOUT=20000
       - SMOKE_TOTAL_TIMEOUT=120000
       - CI_TEST=process-usage-smoke
-      node_js: 8.11.3
       services:
         - mongodb
         - rabbitmq
@@ -85,13 +83,29 @@ matrix:
       - PERFORMANCE_TOTAL_TIMEOUT=120000
       - JOBS=1
       - CI_TEST=performance
-      node_js: 8.11.3
       services:
         - mongodb
         - rabbitmq
       script:
         - yarn run provision
         - travis_retry yarn run citest
+    - name: "Java Demo"
+      language: java
+      jdk: openjdk11
+      env:
+        - DESCRIPTION=java-demo
+        - RABBIT_URI=amqp://localhost:5672
+        - DB_URI=mongodb://localhost:27017
+        - DB_ACCUMULATOR_URI=mongodb://localhost:27017
+        - DB_AGGREGATOR_URI=mongodb://localhost:27017
+        - JOBS=1
+        - CI_TEST=java
+      services:
+        - mongodb
+        - rabbitmq
+      script:
+        - yarn run provision
+        - yarn run citest
 
 notifications:
   irc:
