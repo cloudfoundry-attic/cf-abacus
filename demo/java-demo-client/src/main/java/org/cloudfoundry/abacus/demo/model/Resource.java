@@ -14,7 +14,7 @@ public class Resource {
   private String resourceID;
 
   @JsonProperty("plans")
-  private Plan plans[];
+  private Plan[] plans;
 
   @JsonProperty("aggregated_usage")
   private AggregatedUsage aggregatedUsage[];

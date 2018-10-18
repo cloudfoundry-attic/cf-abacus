@@ -14,10 +14,10 @@ public class Report {
   private String organizationID;
 
   @JsonProperty("resources")
-  private Resource resources[];
+  private Resource[] resources;
 
   @JsonProperty("spaces")
-  private Space spaces[];
+  private Space[] spaces;
 
   @JsonProperty("account_id")
   private String accountID;

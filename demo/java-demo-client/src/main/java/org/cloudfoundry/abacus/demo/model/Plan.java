@@ -13,7 +13,7 @@ public class Plan {
   private String planID;
 
   @JsonProperty("aggregated_usage")
-  private AggregatedUsage aggregatedUsage[];
+  private AggregatedUsage[] aggregatedUsage;
 
   @JsonProperty("metering_plan_id")
   private String meteringPlanID;

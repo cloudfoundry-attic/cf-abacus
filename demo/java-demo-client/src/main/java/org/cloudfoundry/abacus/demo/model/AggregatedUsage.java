@@ -1,15 +1,13 @@
 package org.cloudfoundry.abacus.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 import java.util.StringJoiner;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AggregatedUsage {
-
-  @JsonIgnore
-  public enum WindowName { SECONDS, MINUTES, HOURS, DAYS, MONTH }
 
   @JsonProperty("metric")
   private String metric;
@@ -31,6 +29,10 @@ public class AggregatedUsage {
 
   public void setWindows(List<List<Window>> windows) {
     this.windows = windows;
+  }
+
+  public enum WindowName {
+    SECONDS, MINUTES, HOURS, DAYS, MONTH
   }
 
   public List<Window> getWindow(WindowName name) {
