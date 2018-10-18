@@ -44,6 +44,7 @@
     "abacus-sampler-storage": "file:../storage",
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-webapp": "file:../../utils/webapp",
+    "ajv": "^6.0.0",
     "underscore": "^1.9.1",
     "uuid": "^3.2.1"
   },
