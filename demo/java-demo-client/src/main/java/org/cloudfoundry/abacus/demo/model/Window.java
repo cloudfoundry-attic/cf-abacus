@@ -7,7 +7,10 @@ import java.util.StringJoiner;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Window {
 
+  @JsonProperty("quantity")
   private int quantity;
+
+  @JsonProperty("summary")
   private int summary;
 
   public int getQuantity() {

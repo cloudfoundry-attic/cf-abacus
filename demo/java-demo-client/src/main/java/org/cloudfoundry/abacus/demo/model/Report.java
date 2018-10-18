@@ -13,19 +13,25 @@ public class Report {
   @JsonProperty("organization_id")
   private String organizationID;
 
+  @JsonProperty("resources")
   private Resource resources[];
-  
+
+  @JsonProperty("spaces")
   private Space spaces[];
 
   @JsonProperty("account_id")
   private String accountID;
-  
+
+  @JsonProperty("start")
   private long start;
-  
+
+  @JsonProperty("end")
   private long end;
-  
+
+  @JsonProperty("processed")
   private long processed;
-  
+
+  @JsonProperty("id")
   private String id;
 
   @JsonProperty("processed_id")

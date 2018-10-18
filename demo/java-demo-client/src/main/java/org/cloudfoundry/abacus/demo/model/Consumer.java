@@ -12,6 +12,7 @@ public class Consumer {
   @JsonProperty("consumer_id")
   private String consumerId;
 
+  @JsonProperty("resources")
   private Resource resources[];
 
   public String getConsumerId() {

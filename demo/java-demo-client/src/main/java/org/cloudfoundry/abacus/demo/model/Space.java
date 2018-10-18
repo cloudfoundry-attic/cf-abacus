@@ -13,8 +13,10 @@ public class Space {
   @JsonProperty("space_id")
   private String spaceID;
 
+  @JsonProperty("resources")
   private Resource resources[];
 
+  @JsonProperty("consumers")
   private Consumer consumers[];
 
   public String getSpaceID() {

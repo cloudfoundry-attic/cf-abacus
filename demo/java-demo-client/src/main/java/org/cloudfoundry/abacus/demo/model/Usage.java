@@ -9,7 +9,10 @@ import java.util.StringJoiner;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Usage {
 
+  @JsonProperty("start")
   private long start;
+
+  @JsonProperty("end")
   private long end;
 
   @JsonProperty("organization_id")

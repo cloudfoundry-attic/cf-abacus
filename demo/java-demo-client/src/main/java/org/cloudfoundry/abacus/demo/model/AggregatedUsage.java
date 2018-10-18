@@ -8,10 +8,13 @@ import java.util.StringJoiner;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AggregatedUsage {
 
+  @JsonIgnore
   public enum WindowName { SECONDS, MINUTES, HOURS, DAYS, MONTH }
 
+  @JsonProperty("metric")
   private String metric;
 
+  @JsonProperty("windows")
   private List<List<Window>> windows;
 
   public String getMetric() {

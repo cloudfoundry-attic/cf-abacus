@@ -93,13 +93,11 @@ matrix:
       language: java
       jdk: openjdk11
       env:
-        - DESCRIPTION=performance-tests
+        - DESCRIPTION=java-demo
         - RABBIT_URI=amqp://localhost:5672
         - DB_URI=mongodb://localhost:27017
         - DB_ACCUMULATOR_URI=mongodb://localhost:27017
         - DB_AGGREGATOR_URI=mongodb://localhost:27017
-        - PERFORMANCE_START_TIMEOUT=20000
-        - PERFORMANCE_TOTAL_TIMEOUT=120000
         - JOBS=1
         - CI_TEST=java
       services:

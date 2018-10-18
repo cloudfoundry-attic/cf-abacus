@@ -7,7 +7,10 @@ import java.util.StringJoiner;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Measure {
 
+  @JsonProperty("measure")
   private String measure;
+
+  @JsonProperty("quantity")
   private int quantity;
 
   public Measure(String measure, int quantity) {
