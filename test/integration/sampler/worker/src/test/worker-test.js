@@ -10,7 +10,6 @@ const { MongoClient } = require('mongodb');
 const { WorkerClient } = require('abacus-api');
 const moment = require('abacus-moment');
 const createLifecycleManager = require('abacus-lifecycle-manager');
-
 const { createTokenFactory } = require('abacus-test-helper');
 
 const mongoURI = process.env.DB_URI || 'mongodb://localhost:27017';
@@ -49,7 +48,8 @@ const createOAuthServerMock = (responseToken) => {
       await server.close();
     },
     url: () => `http://localhost:${server.address().port}`,
-    requests: () => requests
+    requests: () => requests,
+    clean: () => requests = []
   };
 
   return serverMock;
@@ -85,33 +85,35 @@ const createCollectorServerMock = () => {
 describe('Worker integration tests', () => {
   const clientId = 'client-id';
   const clientSecret = 'client-secret';
-  const token = 'oauth-token';
-  const samplerOAuthScopes = ['abacus.system.read'];
   const jwtSecret = 'secret';
-
+  const user = 'user';
+  const password = 'password';
+  
   let lifecycleManager;
   let mongoClient;
   let collectorServerMock;
   let oauthServerMock;
   let workerClient;
-  let tokenFactory;
+  let token;
 
   before(async () => {
-    tokenFactory = createTokenFactory(jwtSecret);
-    const workerToken = tokenFactory.create(samplerOAuthScopes);
+    const credentials = Buffer.from(`${user}:${password}`).toString('base64');
     workerClient = new WorkerClient(workerURI, {
-      getHeader: () => `Bearer ${workerToken}`
+      getHeader: () => `Basic ${credentials}`
     });
     mongoClient = await MongoClient.connect(mongoURI);
     mongoClient.collection(collectionName).remove();
 
     collectorServerMock = createCollectorServerMock();
     await collectorServerMock.start();
+    const tokenFactory = createTokenFactory(jwtSecret);
+    token = tokenFactory.create([]);
     oauthServerMock = createOAuthServerMock(token);
     await oauthServerMock.start();
     const env = extend({}, process.env, {
       COLLECTOR: collectorServerMock.url(),
       AUTH_SERVER: oauthServerMock.url(),
+      API: oauthServerMock.url(),
       CLIENT_ID: clientId,
       CLIENT_SECRET: clientSecret,
       SECURED: 'true',
@@ -132,6 +134,17 @@ describe('Worker integration tests', () => {
     await collectorServerMock.stop();
     await oauthServerMock.stop();
   });
+
+  const extractCredentials = (authHeader) => {
+    const encodedCredentials = authHeader.split(' ')[1];
+    const decodedCredentials = Buffer.from(encodedCredentials, 'base64').toString();
+    const credentialsArray = decodedCredentials.split(':');
+
+    return {
+      clientId: credentialsArray[0],
+      clientSecret: credentialsArray[1]
+    };
+  };
 
   context('when new span is created in db', () => {
     const docTimestamp = moment.utc().startOf('day').subtract(1, 'day').valueOf();
@@ -185,6 +198,7 @@ describe('Worker integration tests', () => {
     };
 
     before(async () => {
+      oauthServerMock.clean();
       await mongoClient.collection(collectionName).insertOne(preparedDoc);
       await eventually(spanIsProcessed);
     });
@@ -196,17 +210,6 @@ describe('Worker integration tests', () => {
       // One increase of version is expected when the span is planned, and one, when it's processed
       expect(span.processing.version).to.be.above(2);
     });
-
-    const extractCredentials = (authHeader) => {
-      const encodedCredentials = authHeader.split(' ')[1];
-      const decodedCredentials = Buffer.from(encodedCredentials, 'base64').toString();
-      const credentialsArray = decodedCredentials.split(':');
-
-      return {
-        clientId: credentialsArray[0],
-        clientSecret: credentialsArray[1]
-      };
-    };
 
     it('UAA server is properly called', async () => {
       expect(oauthServerMock.requests().length).to.equal(1);
@@ -238,10 +241,21 @@ describe('Worker integration tests', () => {
 
   context('when healthcheck is requested', () => {
 
+    beforeEach(() => {
+      oauthServerMock.clean();
+    });
+
     it('it responds with healthy status', async () => {
       const health = await eventually(async () => await workerClient.getHealth());
       expect(health).to.deep.equal({
         healthy: true
+      });
+
+      expect(oauthServerMock.requests().length).to.equal(1);
+      const [request] = oauthServerMock.requests();
+      expect(extractCredentials(request.headers.authorization)).to.deep.equal({
+        clientId: user,
+        clientSecret: password
       });
     });
 
