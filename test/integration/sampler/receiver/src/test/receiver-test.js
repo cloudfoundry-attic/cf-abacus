@@ -191,7 +191,7 @@ describe('Receiver integartion test', () => {
         beforeEach(async () => {
           oauthServerMock.clean();
         });
-    
+
         context('when healthcheck is requested', () => {
           it('it responds with healthy status', async () => {
             const health = await eventually(async () => await receiverClient.getHealth());
@@ -204,7 +204,7 @@ describe('Receiver integartion test', () => {
 
       describe('#startSampling', () => {
         context('when start event is received', () => {
-    
+
           const usage = {
             id: 'dedup-guid',
             timestamp: moment.utc().valueOf(),
@@ -221,11 +221,11 @@ describe('Receiver integartion test', () => {
               }
             ]
           };
-    
+
           beforeEach(async () => {
             await eventually(async () => await receiverClient.startSampling(usage));
           });
-    
+
           it('it should write a span to the db', async () => {
             const cursor = mongoClient.collection(collectionName).find({
               'target.organization_id': usage.organization_id,
@@ -236,10 +236,10 @@ describe('Receiver integartion test', () => {
               'target.resource_instance_id': usage.resource_instance_id,
               'target.correlation_id': ZERO_GUID
             });
-    
+
             const docs = await cursor.toArray();
             expect(docs.length).to.be.equal(1);
-    
+
             const span = docs[0];
             expect(span.start_dedup_id).to.equal(usage.id);
             expect(span.measured_usage).to.deep.equal(usage.measured_usage);
@@ -254,7 +254,7 @@ describe('Receiver integartion test', () => {
             expect(span.processing.last_change_at).to.be.closeTo(moment.now(), delta);
             expect(span.processing.version).to.equal(1);
           });
-    
+
         });
       });
 
@@ -272,7 +272,7 @@ describe('Receiver integartion test', () => {
             plan_id: 'plan-guid',
             resource_instance_id: 'resource-instance-guid'
           };
-    
+
           const preparedDoc = {
             target: {
               organization_id: usage.organization_id,
@@ -303,12 +303,12 @@ describe('Receiver integartion test', () => {
             },
             start_dedup_id: usage.id
           };
-    
+
           beforeEach(async () => {
             await mongoClient.collection(collectionName).insertOne(preparedDoc);
             await eventually(async () => await receiverClient.stopSampling(usage));
           });
-    
+
           it('it should update the span', async () => {
             const cursor = mongoClient.collection(collectionName).find({
               'target.organization_id': usage.organization_id,
@@ -318,26 +318,27 @@ describe('Receiver integartion test', () => {
               'target.plan_id': usage.plan_id,
               'target.resource_instance_id': usage.resource_instance_id
             });
-    
+
             const docs = await cursor.toArray();
             expect(docs.length).to.be.equal(1);
-    
+
             const span = docs[0];
-    
+
             expect(span.target.correlation_id).to.not.equal(ZERO_GUID);
             expect(span.start_dedup_id).to.equal(usage.id);
             expect(span.end_dedup_id).to.equal(usage.id);
             expect(span.start).to.equal(preparedDoc.start);
             expect(span.end).to.equal(usage.timestamp);
-    
+            expect(span.end_is_set).to.equal(true);
+
             expect(span.measured_usage).to.deep.equal(preparedDoc.measured_usage);
             expect(span.processing).to.deep.equal(preparedDoc.processing);
           });
         });
       });
-    
+
       describe('#createMappings', () => {
-    
+
         context('when create mappings is called', () => {
           const mapping = {
             resource_id: 'test-resource-id',
@@ -346,41 +347,41 @@ describe('Receiver integartion test', () => {
             rating_plan: 'test-rating-plan',
             pricing_plan: 'test-pricing-plan'
           };
-    
+
           before(async () => {
             await eventually(async () => await receiverClient.createMappings(mapping));
           });
-    
+
           it('metering mapping is created', () => {
             expect(provisioningServerMock.requests().metering.length).to.equal(1);
             const req = provisioningServerMock.requests().metering[0];
             expect(req.params.resourceId).to.equal(mapping.resource_id);
             expect(req.params.planId).to.equal(mapping.plan_id);
             expect(req.params.meteringPlan).to.equal(mapping.metering_plan);
-    
+
             expect(req.headers.authorization).to.equal(`Bearer ${token}`);
           });
-    
+
           it('rating mapping is created', () => {
             expect(provisioningServerMock.requests().rating.length).to.equal(1);
             const req = provisioningServerMock.requests().rating[0];
             expect(req.params.resourceId).to.equal(mapping.resource_id);
             expect(req.params.planId).to.equal(mapping.plan_id);
             expect(req.params.ratingPlan).to.equal(mapping.rating_plan);
-    
+
             expect(req.headers.authorization).to.equal(`Bearer ${token}`);
           });
-    
+
           it('pricing mapping is created', () => {
             expect(provisioningServerMock.requests().pricing.length).to.equal(1);
             const req = provisioningServerMock.requests().pricing[0];
             expect(req.params.resourceId).to.equal(mapping.resource_id);
             expect(req.params.planId).to.equal(mapping.plan_id);
             expect(req.params.pricingPlan).to.equal(mapping.pricing_plan);
-    
+
             expect(req.headers.authorization).to.equal(`Bearer ${token}`);
           });
-    
+
         });
       });
     });
