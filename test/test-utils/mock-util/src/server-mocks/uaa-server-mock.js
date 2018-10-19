@@ -4,7 +4,7 @@ const httpStatus = require('http-status-codes');
 const isEqual = require('underscore').isEqual;
 
 const debug = require('abacus-debug')('uaa-server-mock');
-const express = require('abacus-express');
+const express = require('express');
 
 const createMockServiceData = require('./mock-service-data');
 
@@ -49,10 +49,17 @@ module.exports = () => {
       });
     });
 
-    server = app.listen(randomPort);
-    address = server.address();
+    server = app.listen(randomPort, (err) => {
+      if (err) {
+        cb(err);
+        return;
+      }
 
-    debug('UAA server started on port: %d', address.port);
+      address = server.address();
+      debug('UAA server started on port: %d', address.port);
+      cb();
+    });
+    
   };
 
   const stop = (cb) => {

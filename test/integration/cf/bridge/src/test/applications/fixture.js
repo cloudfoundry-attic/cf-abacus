@@ -6,6 +6,7 @@ const {
   abacusCollectorMock,
   applicationsCloudControllerMock,
   uaaServerMock,
+  // cfServerMock,
   externalSystems
 } = require('abacus-mock-util');
 
@@ -13,6 +14,7 @@ const externalSystemsMocks = externalSystems({
   abacusCollector: abacusCollectorMock,
   cloudController: applicationsCloudControllerMock,
   uaaServer: uaaServerMock
+  // cfServer: cfServerMock
 });
 
 const createEventTimestampGenerator = require('../event-timestamp-generator');

@@ -16,8 +16,8 @@ module.exports = (creators) => {
     }, {});
 
     result = {
-      startAll: () => {
-        Object.keys(serverMocks).forEach((key) => serverMocks[key].start());
+      startAll: (done) => {
+        async.forEach(Object.keys(serverMocks), (key, started) => serverMocks[key].start(started), done);
       },
       stopAll: (done) => {
         async.forEach(Object.keys(serverMocks), (key, stopped) => serverMocks[key].stop(stopped), done);

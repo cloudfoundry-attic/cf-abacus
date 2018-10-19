@@ -24,7 +24,7 @@ module.exports = () => {
   const collectUsageServiceData = createMockServiceData();
   const getUsageServiceData = createMockServiceData();
 
-  const start = () => {
+  const start = (cb) => {
     app = express();
 
     const routes = router();
@@ -74,10 +74,16 @@ module.exports = () => {
 
     app.use(routes);
     app.use(router.batch(routes));
-    server = app.listen(randomPort);
-    debug('Abacus Collector started on port: %d', server.address().port);
 
-    return server.address();
+    server = app.listen(randomPort, (err) => {
+      if (err) {
+        cb(err);
+        return;
+      }
+
+      debug('Abacus Collector started on port: %d', server.address().port);
+      cb();
+    });
   };
 
   const stop = (cb) => {
