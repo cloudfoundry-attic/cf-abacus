@@ -92,7 +92,7 @@ module.exports = () => {
 
   return {
     start,
-    address: () => server.address(),
+    url: () => `http://localhost:${server.address().port}`,
     resourceLocation,
     collectUsageService: collectUsageServiceData,
     getUsageService: getUsageServiceData,

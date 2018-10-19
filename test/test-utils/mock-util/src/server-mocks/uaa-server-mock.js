@@ -68,7 +68,7 @@ module.exports = () => {
 
   return {
     start,
-    address: () => server.address(),
+    url: () => `http://localhost:${server.address().port}`,
     tokenService: {
       clear: serviceData.clear,
       requestsCount: () => serviceData.requests().length,

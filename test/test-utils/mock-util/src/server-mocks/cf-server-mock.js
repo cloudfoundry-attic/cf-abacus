@@ -43,7 +43,7 @@ module.exports = () => {
   return {
     start,
     additionalRoutes: (routes) => additionalRoutes = routes,
-    address: () => server.address(),
+    url: () => `http://localhost:${server.address().port}`,
     infoService: {
       returnUaaAddress: (value) => returnUaaAddress = value
     },
