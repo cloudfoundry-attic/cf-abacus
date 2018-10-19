@@ -102,6 +102,7 @@
     "abacus-events": "file:lib/utils/events",
     "abacus-express": "file:lib/utils/express",
     "abacus-healthchecker": "file:lib/extensions/healthchecker",
+    "abacus-healthmonitor": "file:lib/utils/healthmonitor",
     "abacus-housekeeper": "file:lib/extensions/housekeeper",
     "abacus-hystrix": "file:lib/utils/hystrix",
     "abacus-launcher": "file:lib/utils/launcher",

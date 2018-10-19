@@ -3,14 +3,13 @@
 // Simulate a test service provider that submits usage for a resource and
 // verifies the submission by retrieving a usage report.
 
-const { extend, map, omit } = require('underscore');
+const { map, omit } = require('underscore');
 
 const commander = require('commander');
 const util = require('util');
 
 const request = require('abacus-request');
 const clone = require('abacus-clone');
-const oauth = require('abacus-oauth');
 const moment = require('abacus-moment');
 const dbclient = require('abacus-dbclient');
 
@@ -28,11 +27,6 @@ commander
     'usage reporting URL or domain name [http://localhost:9088]',
     'http://localhost:9088'
   )
-  .option(
-    '-a, --auth-server <uri>',
-    'authentication server URL or domain name [http://localhost:9882]',
-    'http://localhost:9882'
-  )
   .option('-t, --start-timeout <n>', 'external processes start timeout in milliseconds', parseInt)
   .option('-x, --total-timeout <n>', 'test timeout in milliseconds', parseInt)
   .allowUnknownOption(true)
@@ -48,11 +42,6 @@ const reporting = /:/.test(commander.reporting)
   ? commander.reporting
   : 'https://abacus-usage-reporting.' + commander.reporting;
 
-// Auth server URL
-const authServer = /:/.test(commander.authServer)
-  ? commander.authServer
-  : 'https://abacus-authserver-plugin.' + commander.authServer;
-
 // External Abacus processes start timeout
 const startTimeout = commander.startTimeout || 10000;
 
@@ -61,38 +50,6 @@ const totalTimeout = commander.totalTimeout || 60000;
 
 // The current time
 const now = moment.utc().toDate();
-
-// Use secure routes or not
-const secured = () => process.env.SECURED === 'true';
-
-// Token fetchers
-const objectStorageWriteToken = secured()
-  ? oauth.cache(
-    authServer,
-    process.env.OBJECT_STORAGE_CLIENT_ID,
-    process.env.OBJECT_STORAGE_CLIENT_SECRET,
-    'abacus.usage.object-storage.write'
-  )
-  : undefined;
-const objectStorageReadToken = secured()
-  ? oauth.cache(
-    authServer,
-    process.env.SYSTEM_CLIENT_ID,
-    process.env.SYSTEM_CLIENT_SECRET,
-    'abacus.usage.object-storage.read'
-  )
-  : undefined;
-
-// Builds the expected window value based upon the summary & quantity
-const buildWindow = (summary, quantity) => {
-  const addProperty = (k, v, o, z) => {
-    if (typeof v !== 'undefined') o[k] = z ? 0 : v;
-  };
-  const win = {};
-  addProperty('summary', summary, win);
-  addProperty('quantity', quantity, win);
-  return win;
-};
 
 // Prunes all the windows of everything but the monthly summary & quantity
 const prune = (v, k) => {
@@ -108,21 +65,13 @@ const prune = (v, k) => {
   return v;
 };
 
-const authHeader = (token) =>
-  token
-    ? { headers: { authorization: token() } }
-    : {};
-
 describe('abacus-demo-client', function() {
   before((done) => {
-    if (objectStorageWriteToken) objectStorageWriteToken.start();
-    if (objectStorageReadToken) objectStorageReadToken.start();
-
-    // drop all abacus collections except plans and plan-mappings
+    console.log('Dropping all abacus collections except plans and plan-mappings ...');
     dbclient.drop(process.env.DB_URI, /^abacus-((?!plan).)*$/, done);
   });
 
-  it('submits usage for a sample resource and retrieves an aggregated ' + 'usage report', function(done) {
+  it('submits usage for a sample resource and retrieves an aggregated usage report', function(done) {
     // Configure the test timeout
     const timeout = Math.max(totalTimeout, 40000);
     this.timeout(timeout + 2000);
@@ -215,149 +164,7 @@ describe('abacus-demo-client', function() {
       }
     ];
 
-    // Expected usage report for the test organization
-    const report = {
-      organization_id: 'us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27',
-      account_id: '1234',
-      resources: [
-        {
-          resource_id: 'object-storage',
-          aggregated_usage: [
-            {
-              metric: 'storage',
-              windows: buildWindow(1, 1)
-            },
-            {
-              metric: 'thousand_light_api_calls',
-              windows: buildWindow(3, 3)
-            },
-            {
-              metric: 'heavy_api_calls',
-              windows: buildWindow(300, 300)
-            }
-          ],
-          plans: [
-            {
-              plan_id: 'basic/basic-object-storage/' + 'object-rating-plan/object-pricing-basic',
-              metering_plan_id: 'basic-object-storage',
-              rating_plan_id: 'object-rating-plan',
-              pricing_plan_id: 'object-pricing-basic',
-              aggregated_usage: [
-                {
-                  metric: 'storage',
-                  windows: buildWindow(1, 1)
-                },
-                {
-                  metric: 'thousand_light_api_calls',
-                  windows: buildWindow(3, 3)
-                },
-                {
-                  metric: 'heavy_api_calls',
-                  windows: buildWindow(300, 300)
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      spaces: [
-        {
-          space_id: 'aaeae239-f3f8-483c-9dd0-de5d41c38b6a',
-          resources: [
-            {
-              resource_id: 'object-storage',
-              aggregated_usage: [
-                {
-                  metric: 'storage',
-                  windows: buildWindow(1, 1)
-                },
-                {
-                  metric: 'thousand_light_api_calls',
-                  windows: buildWindow(3, 3)
-                },
-                {
-                  metric: 'heavy_api_calls',
-                  windows: buildWindow(300, 300)
-                }
-              ],
-              plans: [
-                {
-                  plan_id: 'basic/basic-object-storage/' + 'object-rating-plan/object-pricing-basic',
-                  metering_plan_id: 'basic-object-storage',
-                  rating_plan_id: 'object-rating-plan',
-                  pricing_plan_id: 'object-pricing-basic',
-                  aggregated_usage: [
-                    {
-                      metric: 'storage',
-                      windows: buildWindow(1, 1)
-                    },
-                    {
-                      metric: 'thousand_light_api_calls',
-                      windows: buildWindow(3, 3)
-                    },
-                    {
-                      metric: 'heavy_api_calls',
-                      windows: buildWindow(300, 300)
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          consumers: [
-            {
-              consumer_id: 'app:bbeae239-f3f8-483c-9dd0-de6781c38bab',
-              resources: [
-                {
-                  resource_id: 'object-storage',
-                  aggregated_usage: [
-                    {
-                      metric: 'storage',
-                      windows: buildWindow(1, 1)
-                    },
-                    {
-                      metric: 'thousand_light_api_calls',
-                      windows: buildWindow(3, 3)
-                    },
-                    {
-                      metric: 'heavy_api_calls',
-                      windows: buildWindow(300, 300)
-                    }
-                  ],
-                  plans: [
-                    {
-                      plan_id: 'basic/basic-object-storage/' + 'object-rating-plan/object-pricing-basic',
-                      metering_plan_id: 'basic-object-storage',
-                      rating_plan_id: 'object-rating-plan',
-                      pricing_plan_id: 'object-pricing-basic',
-                      resource_instances: [
-                        {
-                          id: '0b39fa70-a65f-4183-bae8-385633ca5c87'
-                        }
-                      ],
-                      aggregated_usage: [
-                        {
-                          metric: 'storage',
-                          windows: buildWindow(1, 1)
-                        },
-                        {
-                          metric: 'thousand_light_api_calls',
-                          windows: buildWindow(3, 3)
-                        },
-                        {
-                          metric: 'heavy_api_calls',
-                          windows: buildWindow(300, 300)
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    };
+    const expectedReport = require('./expectedReport.json');
 
     // Submit usage for sample resource with 10 GB, 1000 light API calls,
     // and 100 heavy API calls
@@ -369,18 +176,14 @@ describe('abacus-demo-client', function() {
         if (++posts === usage.length) done();
       };
 
-      request.post(
-        collector + '/v1/metering/collected/usage',
-        extend({ body: u.usage }, authHeader(objectStorageWriteToken)),
-        (err, val) => {
-          expect(err).to.equal(undefined);
+      request.post(`${collector}/v1/metering/collected/usage`, { body: u.usage }, (err, val) => {
+        expect(err).to.equal(undefined);
 
-          // Expect a 202 with the location of the accumulated usage
-          expect(val.statusCode).to.equal(202);
-          expect(val.headers.location).to.not.equal(undefined);
-          cb();
-        }
-      );
+        // Expect a 202 with the location of the accumulated usage
+        expect(val.statusCode).to.equal(202);
+        expect(val.headers.location).to.not.equal(undefined);
+        cb();
+      });
     };
 
     // Print the number of usage docs already processed given a get report
@@ -399,7 +202,7 @@ describe('abacus-demo-client', function() {
     const get = (done) => {
       request.get(
         `${reporting}/v1/metering/organizations/us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/aggregated/usage`,
-        extend({}, authHeader(objectStorageReadToken)),
+        {},
         (err, val) => {
           expect(err).to.equal(undefined);
           expect(val.statusCode).to.equal(200);
@@ -413,7 +216,7 @@ describe('abacus-demo-client', function() {
               't',
               'p'
             );
-            expect(actual).to.deep.equal(report);
+            expect(actual).to.deep.equal(expectedReport);
             console.log(
               '\n',
               util.inspect(val.body, {
@@ -429,7 +232,7 @@ describe('abacus-demo-client', function() {
             // the processing of the submitted usage must have failed
             if (moment.now() >= processingDeadline) {
               console.log('All submitted usage still not processed\n');
-              expect(actual).to.deep.equal(report);
+              expect(actual).to.deep.equal(expectedReport);
             } else setTimeout(() => get(done), 250);
           }
         }
