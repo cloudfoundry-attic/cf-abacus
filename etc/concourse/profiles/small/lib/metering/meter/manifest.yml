@@ -1,0 +1,45 @@
+applications:
+  - name: abacus-usage-meter
+    routes:
+      - route: abacus-usage-meter.((CF_SYS_DOMAIN))
+    path: .
+    instances: 2
+    memory: 2048M
+    disk_quota: 512M
+    zdm: true
+    env:
+      APPS: 1
+      DB_PARTITIONS: 2
+      CUSTOM_METRICS: true
+      CLUSTER: false
+      DEBUG: e-abacus-*
+      API: ((AUTH_SERVER))
+      AUTH_SERVER: ((AUTH_SERVER))
+      ACCUMULATOR: ((ABACUS_PREFIX))abacus-usage-accumulator
+      ACCUMULATOR_APPS: 2
+      PROVISIONING: ((ABACUS_PREFIX))abacus-provisioning-plugin
+      ACCOUNT: ((ABACUS_PREFIX))abacus-account-plugin
+      EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
+      EUREKA_USER: ((HYSTRIX_CLIENT_ID))
+      EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
+      NODE_MODULES_CACHE: false
+      PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
+      SECURED: true
+      SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
+      REPLAY: 1800000
+      THROTTLE: 100
+      BATCH_SIZE: 10
+      PREFETCH_LIMIT: 2
+      MAX_INFLIGHT: 300
+      OPTIMIZE_MEMORY: true
+      IGNORE_ORGANIZATION: true
+      EVAL_VMTYPE: vm2
+      EVAL_TIMEOUT: ((EVAL_TIMEOUT))
+      CLIENT_ID: ((SYSTEM_CLIENT_ID))
+      CLIENT_SECRET: ((SYSTEM_CLIENT_SECRET))
+      JWTALGO: ((JWTALGO))
+      JWTKEY: |+
+        ((JWTKEY))
+      DEBUG_STRIPLF: true
+      RABBIT_URI: ((RABBIT_URI))
+      DB_URI: ((DB_METER_URI))

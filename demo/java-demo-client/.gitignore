@@ -1,10 +1,26 @@
-# Eclipse
-/.settings
-/.project
-/.classpath
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
 
-# Maven
-/target
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
-# MacOS
-.DS_Store
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/

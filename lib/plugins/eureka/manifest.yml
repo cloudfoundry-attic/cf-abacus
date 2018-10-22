@@ -8,8 +8,9 @@ applications:
   disk_quota: 512M
   zdm: true
   env:
+    APPS: 1
+    DB_PARTITIONS: 1
     CUSTOM_METRICS: true
-    CONF: default
     DEBUG: e-abacus-*
     API: ((AUTH_SERVER))
     AUTH_SERVER: ((AUTH_SERVER))

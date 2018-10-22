@@ -15,7 +15,6 @@ const adjustedManifestContent = 'adjusted manifest content';
 const prefix = 'prefix-';
 const adjustedName = 'adjusted-name';
 const adjustedInstances = 3;
-const adjustedConf = 'adjusted-conf';
 const adjustedBuildpack = 'adjusted-buildpack';
 const retryAttepmts = 3;
 
@@ -95,7 +94,6 @@ const stubCommander = () => {
   commander.name = adjustedName;
   commander.instances = adjustedInstances;
   commander.buildpack = adjustedBuildpack;
-  commander.conf = adjustedConf;
   commander.prefix = prefix;
   commander.path = originalManifestRelativePath;
   commander.retries = retryAttepmts;
@@ -130,20 +128,18 @@ describe('Test command line args', () => {
 
   before(() => {
     stub(async, 'series');
-    process.env.CONF = 'conf';
     process.env.BUILDPACK = 'buildpack';
     process.env.ABACUS_PREFIX = 'prefix';
     cfpush.runCLI();
   });
 
   it('verify all arguments parsed', () => {
-    const commandLineArgsCount = 9;
+    const commandLineArgsCount = 8;
     assert.callCount(commander.option, commandLineArgsCount);
     assert.calledOnce(commander.parse);
   });
 
   it('verify optional arguments', () => {
-    assert.calledWith(commander.option, '-c, --conf [value]', sinon.match.any, process.env.CONF);
     assert.calledWith(commander.option, '-b, --buildpack [value]', sinon.match.any, process.env.BUILDPACK);
     assert.calledWith(commander.option, '-x, --prefix [value]', sinon.match.any, process.env.ABACUS_PREFIX);
     assert.calledWith(commander.option, '-p, --path [value]', sinon.match.any, '.');
