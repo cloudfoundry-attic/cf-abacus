@@ -34,6 +34,7 @@
     "abacus-sampler-worker": "file:../../../../lib/sampler/worker",
     "abacus-lifecycle-manager": "../../../lib/lifecycle-manager",
     "abacus-moment": "file:../../../../lib/moment",
+    "abacus-test-helper": "../../../test-utils/helper",
     "mongodb": "^2.2.36",
     "underscore": "^1.9.1"
   },

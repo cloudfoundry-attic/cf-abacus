@@ -43,14 +43,14 @@ const eventually = async (func, options) => {
       return await func();
     } catch (e) {
       lastError = e;
-      edebug('Eventually failed due to: %o', e.message);
+      edebug('Eventually failed due to: %o', e);
     }
     await _sleep(eventuallyConfig.pollingInterval);
 
   } while(moment.now() - start < eventuallyConfig.timeout);
 
-  throw new Error(`Eventually timeout of ${eventuallyConfig.timeout} milliseconds exceeded.
-    Last error occurred: ${lastError}`);
+  edebug(`Eventually timeout of ${eventuallyConfig.timeout} milliseconds exceeded.`);
+  throw lastError;
 };
 
 module.exports = {
