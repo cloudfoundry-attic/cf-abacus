@@ -8,9 +8,9 @@ export CF_API_URI=https://api.<domain>
 export RECEIVER_URL=https://<prefix>abacus-sampler-receiver.<domain>
 export REPORTING_URL=https://<prefix>abacus-usage-reporting.<domain>
 export SAMPLER_CLIENT_ID=<prefix>abacus-sampler
-export SAMPLER_CLIENT_SECRET=s3cret
+export SAMPLER_CLIENT_SECRET=<secret>
 export SYSTEM_CLIENT_ID=<prefix>abacus
-export SYSTEM_CLIENT_SECRET=s3cret
+export SYSTEM_CLIENT_SECRET=<secret>
 export SECURED=true
 # optional
 export SKIP_SSL_VALIDATION=true # if self-signed cert is in use
@@ -24,6 +24,5 @@ Then:
 cd cf-abacus
 yarn provision
 cd test/smoke/sampler
-yarn install
 yarn run smoke
 ```

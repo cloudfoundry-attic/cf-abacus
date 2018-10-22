@@ -6,7 +6,7 @@ const { omit } = require('underscore');
 
 const oauth = require('abacus-oauth');
 
-const { env, spanConfig, samplerConfig } = require('./config');
+const { env, spanConfig } = require('./config');
 
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
@@ -56,12 +56,12 @@ const createSamplerClient = () => {
 
   return {
     stopSampling: async(event) => {
-      return await _postToSampler(samplerConfig.stopEndpoint, event);
+      return await _postToSampler('/v1/events/stop', event);
     },
     startSampling: async(event) => {
-      return await _postToSampler(samplerConfig.startEndpoint, event);
+      return await _postToSampler('/v1/events/start', event);
     },
-    createMapping: async(json) => await _postToSampler(samplerConfig.mappingEndpoint, json)
+    createMapping: async(json) => await _postToSampler('/v1/mappings', json)
   };
 };
 

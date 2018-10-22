@@ -1,27 +1,24 @@
 'use strict';
 
+const httpStatus = require('http-status-codes');
+
 const moment = require('abacus-moment');
 
-const { env } = require('./env-config'); 
-const { createEventBuilder, createSamplerClient, startTokens, reportClient, log } = require('./helper');
+const { env, spanConfig } = require('./config');
+const { createEventBuilder, createSamplerClient, startTokens, reportClient } = require('./helpers');
 
 const samplerClient = createSamplerClient();
 const eventBuilder = createEventBuilder();
 
 const postServicesMappings = async() => {
   const mapping = {
-    'resource_id': 'sampler-postgresql',
-    'plan_id': 'v9.4-large',
-    'metering_plan': 'standard-services-hours',
-    'rating_plan': 'standard-services-hours',
-    'pricing_plan': 'standard-services-hours'
+    'resource_id': spanConfig.resource_id,
+    'plan_id': spanConfig.plan_id,
+    'metering_plan': spanConfig.metering_plan,
+    'rating_plan': spanConfig.rating_plan,
+    'pricing_plan': spanConfig.pricing_plan
   };
   return await samplerClient.createMapping(mapping);
-};
-
-const stopUncleanedEventsBefore = async(orgId, time) => {
-  const stopEvent = eventBuilder.stopEvent(orgId, time);
-  return await samplerClient.stop(stopEvent);
 };
 
 const getMonthlySummaryValue = (report) => {
@@ -31,6 +28,7 @@ const getMonthlySummaryValue = (report) => {
   const currentMonthIndex = 0;
   const parsedReport = JSON.parse(report);
 
+  // when run for the first time, there is no data in report
   if(parsedReport.resources.length < 1)
     return 0;
 
@@ -41,52 +39,54 @@ const getMonthlySummaryValue = (report) => {
     .quantity;
 };
 
-const check = (response) => ({
-  is: (expectations) => {
-    expect(response.statusCode).to.be.oneOf(expectations);
-    return response;
-  }
-});
+const log = (msg) => console.log(`${moment.utc().toDate()}: ${msg}`);
 
 describe('Sampler smoke test', () => {
-  const orgId = '62332d73-d1ce-4da1-8455-64cc0f7e0b21';
-  
-  let stopEvent;
-  let startEvent;
-  let endSpanTime;
-  let startSpanTime;
-  let firstReport;
+  let response;
+  let initialReport;
 
   setEventuallyPollingInterval(env.pollInterval);
   setEventuallyTimeout(env.totalTimeout);
 
   beforeEach(async() => {
-    startSpanTime = moment.utc().subtract(2, 'days').valueOf();
-    endSpanTime = moment.utc().subtract(1, 'day').valueOf();
-
     if(env.secured)
       await startTokens();
 
-    check(log(await postServicesMappings())).is([201, 409]);
-    check(log(await stopUncleanedEventsBefore(orgId, startSpanTime))).is([201, 422]);
+    log('Creating services mappings ...');
+    response = await postServicesMappings();
+    expect(response.statusCode).to.be.oneOf([httpStatus.CREATED, httpStatus.CONFLICT]);
 
-    await eventually(async() => firstReport = check(log(await reportClient.getReport(orgId, startSpanTime))).is([200]));
+    log('Cleaning up in case of previous test error ...');
+    response = await samplerClient.stopSampling(eventBuilder.createStopEvent(moment.now()));
+    expect(response.statusCode).to.be.oneOf([httpStatus.CREATED, httpStatus.UNPROCESSABLE_ENTITY]);
 
-    startEvent = eventBuilder.startEvent(orgId, startSpanTime);
-    stopEvent = eventBuilder.stopEvent(orgId, endSpanTime);
+    log('Getting initial report ...');
+    await eventually(async() => {
+      const response = await reportClient.getReport(spanConfig.organization_id, moment.now());
+      expect(response.statusCode).to.be.equal(httpStatus.OK);
+      initialReport = response.body;
+    });
   });
 
   afterEach(async() => {
-    log(await samplerClient.stop(stopEvent));
+    await samplerClient.stopSampling(eventBuilder.createStopEvent(moment.now()));
   });
 
   it('samples usage to Abacus successfully', async () => {
-    check(log(await samplerClient.start(startEvent))).is([201]);
-    check(log(await samplerClient.stop(stopEvent))).is([201]);
+    log('Sending start event to sampler ...');
+    response = await samplerClient.startSampling(eventBuilder.createStartEvent(moment.now()));
+    expect(response.statusCode).to.be.equal(httpStatus.CREATED);
 
+    log('Sending stop event to sampler ...');
+    response = await samplerClient.stopSampling(eventBuilder.createStopEvent(moment.now()));
+    expect(response.statusCode).to.be.equal(httpStatus.CREATED);
+
+    log('Getting final report ...');
     await eventually(async () => {
-      const currentReport = check(log(await reportClient.getReport(orgId, moment.now()))).is([200]);
-      expect(getMonthlySummaryValue(currentReport.body)).not.to.be.equal(getMonthlySummaryValue(firstReport.body));
+      response = await reportClient.getReport(spanConfig.organization_id, moment.now());
+      expect(response.statusCode).to.be.equal(httpStatus.OK);
+      const currentReport = response.body;
+      expect(getMonthlySummaryValue(currentReport)).not.to.be.equal(getMonthlySummaryValue(initialReport));
     });
   });
 });

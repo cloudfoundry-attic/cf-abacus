@@ -26,14 +26,7 @@ const spanConfig = {
   pricing_plan: 'standard-services-hours'
 };
 
-const samplerConfig = {
-  stopEndpoint: '/v1/events/stop',
-  startEndpoint: '/v1/events/start',
-  mappingEndpoint: '/v1/mappings'
-};
-
 module.exports = {
   env,
-  spanConfig,
-  samplerConfig
+  spanConfig
 };
