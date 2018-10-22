@@ -13,7 +13,7 @@ module.exports = () => {
     responseFor: (key) => {
       return returnMap.get(key);
     },
-    nextResponse: (scopes) => {
+    nextResponse: () => {
       if (returnAlways) return returnAlways;
 
       const requestNumber = serviceRequests.length - 1;

@@ -131,14 +131,15 @@ describe('Receiver integartion test', () => {
     context('when receiver is up and running', () => {
 
       describe('#healthcheck', () => {
-        let health;
-
-        before(async () => {
-          externalSystemsMocks.uaaServer.tokenService.clear();
-          health = await eventually(async () => await receiverClient.getHealth());
-        });
-
+        
         context('when healthcheck is requested', () => {
+          let health;
+  
+          before(async () => {
+            externalSystemsMocks.uaaServer.tokenService.clear();
+            health = await eventually(async () => await receiverClient.getHealth());
+          });
+
           it('it responds with healthy status', async () => {
             expect(health).to.deep.equal({
               healthy: true
@@ -216,7 +217,6 @@ describe('Receiver integartion test', () => {
 
         });
       });
-
 
       describe('#stopSampling', () => {
 
