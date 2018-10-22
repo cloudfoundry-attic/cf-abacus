@@ -18,15 +18,13 @@ const extractOAuthToken = (authHeader) => {
 };
 
 module.exports = () => {
-  let app;
   let server;
 
   const collectUsageServiceData = createMockServiceData();
   const getUsageServiceData = createMockServiceData();
 
   const start = (cb) => {
-    app = express();
-
+    const app = express();
     const routes = router();
 
     routes.post('/v1/metering/collected/usage', (req, res) => {

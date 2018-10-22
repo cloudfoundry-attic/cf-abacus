@@ -5,13 +5,13 @@ module.exports = () => {
 
   let returnAlways;
   let returnSeries = [];
-  let returnKeyValue = {};
+  let returnMap = new Map();
 
   return {
     request: (n) => serviceRequests[n],
     requests: () => serviceRequests,
     responseFor: (key) => {
-      return returnKeyValue[key];
+      return returnMap.get(key);
     },
     nextResponse: (scopes) => {
       if (returnAlways) return returnAlways;
@@ -26,7 +26,7 @@ module.exports = () => {
       series: (values) => returnSeries = values,
       always: (value) => returnAlways = value,
       for: (key) => ({
-        value: (returnValue) => returnKeyValue[key] = returnValue
+        value: (returnValue) => returnMap.set(key, returnValue)
       }),
       nothing: () => returnSeries = []
     },

@@ -1,17 +1,23 @@
 'use strict';
 
-const httpStatus = require('http-status-codes');
-const util = require('util');
-const http = require('http');
-const bodyParser = require('body-parser');
-const express = require('express');
 const { extend } = require('underscore');
+const util = require('util');
+const httpStatus = require('http-status-codes');
 const { MongoClient } = require('mongodb');
+
 const { ReceiverClient } = require('abacus-api');
 const moment = require('abacus-moment');
+
+const { externalSystems, cfServerMock, uaaServerMock, provisioningServerMock } = require('abacus-mock-util');
 const createLifecycleManager = require('abacus-lifecycle-manager');
 
 const { createTokenFactory } = require('abacus-test-helper');
+
+const createExternalSystems = externalSystems({
+  uaaServer: uaaServerMock,
+  cfServer: cfServerMock,
+  provisioningServer: provisioningServerMock
+});
 
 const mongoURI = process.env.DB_URI || 'mongodb://localhost:27017';
 const receiverURI = 'http://localhost:7070';
@@ -20,85 +26,9 @@ const collectionName = 'spans';
 const delta = 10 * 1000;
 const ZERO_GUID = '00000000-0000-0000-0000-000000000000';
 
-const createOAuthServerMock = (responseToken) => {
-  let requests = [];
-  let server;
-
-  const serverMock = {
-    start: async () => {
-      const app = express();
-      app.use(bodyParser.json());
-
-      app.get('/v2/info', (req, res) => {
-        res.send({
-          token_endpoint: serverMock.url()
-        });
-      });
-
-      app.post('/oauth/token', (req, res) => {
-        requests.push(req);
-        res.status(httpStatus.OK).send({
-          access_token: responseToken,
-          expires_in: 5 * 60
-        });
-      });
-
-      server = http.createServer(app);
-      const listen = util.promisify(server.listen).bind(server);
-      await listen(0);
-    },
-    stop: async () => {
-      await server.close();
-    },
-    url: () => `http://localhost:${server.address().port}`,
-    requests: () => requests,
-    clean: () => requests = []
-  };
-
-  return serverMock;
-};
-
-
-const createProvisioningServerMock = () => {
-  let meteringRequests = [];
-  let ratingRequests = [];
-  let pricingRequests = [];
-  let server;
-
-  return {
-    start: async () => {
-      const app = express();
-      app.use(bodyParser.json());
-      app.post('/v1/provisioning/mappings/metering/resources/:resourceId/plans/:planId/:meteringPlan', (req, res) => {
-        meteringRequests.push(req);
-        res.status(200).send();
-      });
-      app.post('/v1/provisioning/mappings/rating/resources/:resourceId/plans/:planId/:ratingPlan', (req, res) => {
-        ratingRequests.push(req);
-        res.status(200).send();
-      });
-      app.post('/v1/provisioning/mappings/pricing/resources/:resourceId/plans/:planId/:pricingPlan', (req, res) => {
-        pricingRequests.push(req);
-        res.status(200).send();
-      });
-
-      server = http.createServer(app);
-      const listen = util.promisify(server.listen).bind(server);
-      await listen(0);
-    },
-    stop: async () => {
-      await server.close();
-    },
-    url: () => `http://localhost:${server.address().port}`,
-    requests: () => ({
-      metering: meteringRequests,
-      rating: ratingRequests,
-      pricing: pricingRequests
-    })
-  };
-};
-
 describe('Receiver integartion test', () => {
+  const provisioningPluginScopes = ['abacus.usage.write'];
+  const healthcheckScopes = ['abacus.system.read'];
   const samplerOAuthScopes = ['abacus.sampler.write'];
   const jwtSecret = 'secret';
   const clientId = 'client-id';
@@ -106,12 +36,13 @@ describe('Receiver integartion test', () => {
   const user = 'user';
   const password = 'password';
 
-  let token;
+  let provisioningPluginToken;
+
   let lifecycleManager;
   let mongoClient;
   let receiverClient;
-  let provisioningServerMock;
-  let oauthServerMock;
+
+  let externalSystemsMocks;
 
   before(async () => {
     const credentials = Buffer.from(`${user}:${password}`).toString('base64');
@@ -122,18 +53,37 @@ describe('Receiver integartion test', () => {
       getSamplingHeader: () => `Bearer ${receiverToken}`,
       getMappingsHeader: () => `Bearer ${receiverToken}`
     });
-    mongoClient = await MongoClient.connect(mongoURI);
-    provisioningServerMock = createProvisioningServerMock();
-    await provisioningServerMock.start();
 
-    token = tokenFactory.create([]);
-    oauthServerMock = createOAuthServerMock(token);
-    await oauthServerMock.start();
+    externalSystemsMocks = createExternalSystems();
+    await util.promisify(externalSystemsMocks.startAll)();
+
+    externalSystemsMocks
+      .cfServer
+      .infoService
+      .returnUaaAddress(externalSystemsMocks.uaaServer.url());
+
+    provisioningPluginToken = tokenFactory.create(provisioningPluginScopes);
+    externalSystemsMocks
+      .uaaServer
+      .tokenService
+      .whenScopesAre(provisioningPluginScopes)
+      .return(provisioningPluginToken);
+
+    const healthcheckToken = tokenFactory.create(healthcheckScopes);
+    externalSystemsMocks
+      .uaaServer
+      .tokenService
+      .whenScopesAre(healthcheckScopes)
+      .return(healthcheckToken);
+
+    externalSystemsMocks.provisioningServer.createMeteringMappingService.return.always(httpStatus.OK);
+    externalSystemsMocks.provisioningServer.createRatingMappingService.return.always(httpStatus.OK);
+    externalSystemsMocks.provisioningServer.createPricingMappingService.return.always(httpStatus.OK);
 
     const env = extend({}, process.env, {
-      API: oauthServerMock.url(),
-      AUTH_SERVER: oauthServerMock.url(),
-      PROVISIONING: provisioningServerMock.url(),
+      API: externalSystemsMocks.cfServer.url(),
+      AUTH_SERVER: externalSystemsMocks.cfServer.url(),
+      PROVISIONING: externalSystemsMocks.provisioningServer.url(),
       SECURED: 'true',
       CLUSTER: 'false',
       JWTKEY: jwtSecret,
@@ -142,6 +92,7 @@ describe('Receiver integartion test', () => {
       CLIENT_SECRET: clientSecret
     });
 
+    mongoClient = await MongoClient.connect(mongoURI);
     lifecycleManager = createLifecycleManager();
     lifecycleManager.useEnv(env).startModules([
       lifecycleManager.modules.sampler.receiver
@@ -150,9 +101,7 @@ describe('Receiver integartion test', () => {
 
   after(async () => {
     lifecycleManager.stopAllStarted();
-    await mongoClient.close();
-    await provisioningServerMock.stop();
-    await oauthServerMock.stop();
+    await util.promisify(externalSystemsMocks.stopAll)();
   });
 
   beforeEach(async () => {
@@ -165,38 +114,48 @@ describe('Receiver integartion test', () => {
       await eventually(async () => await receiverClient.getHealth());
     });
 
-    const extractCredentials = (authHeader) => {
-      const encodedCredentials = authHeader.split(' ')[1];
-      const decodedCredentials = Buffer.from(encodedCredentials, 'base64').toString();
-      const credentialsArray = decodedCredentials.split(':');
+    it('token for communication with the provisioning plugin is aquired', () => {
+      const provisioningPluginTokenRequests = externalSystemsMocks
+        .uaaServer
+        .tokenService
+        .requests
+        .withScopes(provisioningPluginScopes);
 
-      return {
-        clientId: credentialsArray[0],
-        clientSecret: credentialsArray[1]
-      };
-    };
-
-    it('oauth server is properly called', () => {
-      const [req] = oauthServerMock.requests();
-      expect(extractCredentials(req.headers.authorization)).to.deep.equal({
+      expect(provisioningPluginTokenRequests.length).to.equal(1);
+      expect(provisioningPluginTokenRequests[0].credentials).to.deep.equal({
         clientId: clientId,
-        clientSecret: clientSecret
+        secret: clientSecret
       });
     });
 
     context('when receiver is up and running', () => {
 
       describe('#healthcheck', () => {
+        let health;
 
-        beforeEach(async () => {
-          oauthServerMock.clean();
+        before(async () => {
+          externalSystemsMocks.uaaServer.tokenService.clear();
+          health = await eventually(async () => await receiverClient.getHealth());
         });
 
         context('when healthcheck is requested', () => {
           it('it responds with healthy status', async () => {
-            const health = await eventually(async () => await receiverClient.getHealth());
             expect(health).to.deep.equal({
               healthy: true
+            });
+          });
+
+          it('provided credentials are validated via uaa server', async () => {
+            const healthcheckTokenRequests = externalSystemsMocks
+              .uaaServer
+              .tokenService
+              .requests
+              .withScopes(healthcheckScopes);
+
+            expect(healthcheckTokenRequests.length).to.equal(1);
+            expect(healthcheckTokenRequests[0].credentials).to.deep.equal({
+              clientId: user,
+              secret: password
             });
           });
         });
@@ -352,34 +311,28 @@ describe('Receiver integartion test', () => {
             await eventually(async () => await receiverClient.createMappings(mapping));
           });
 
-          it('metering mapping is created', () => {
-            expect(provisioningServerMock.requests().metering.length).to.equal(1);
-            const req = provisioningServerMock.requests().metering[0];
-            expect(req.params.resourceId).to.equal(mapping.resource_id);
-            expect(req.params.planId).to.equal(mapping.plan_id);
-            expect(req.params.meteringPlan).to.equal(mapping.metering_plan);
+          const verifyMappingCreated = (requests, plan) => {
+            expect(requests.length).to.equal(1);
+            expect(requests[0].mapping.resourceId).to.equal(mapping.resource_id);
+            expect(requests[0].mapping.planId).to.equal(mapping.plan_id);
+            expect(requests[0].mapping.plan).to.equal(plan);
 
-            expect(req.headers.authorization).to.equal(`Bearer ${token}`);
+            expect(requests[0].token).to.equal(provisioningPluginToken);
+          };
+
+          it('metering mapping is created', () => {
+            const requests = externalSystemsMocks.provisioningServer.createMeteringMappingService.requests();
+            verifyMappingCreated(requests, mapping.metering_plan);
           });
 
           it('rating mapping is created', () => {
-            expect(provisioningServerMock.requests().rating.length).to.equal(1);
-            const req = provisioningServerMock.requests().rating[0];
-            expect(req.params.resourceId).to.equal(mapping.resource_id);
-            expect(req.params.planId).to.equal(mapping.plan_id);
-            expect(req.params.ratingPlan).to.equal(mapping.rating_plan);
-
-            expect(req.headers.authorization).to.equal(`Bearer ${token}`);
+            const requests = externalSystemsMocks.provisioningServer.createRatingMappingService.requests();
+            verifyMappingCreated(requests, mapping.rating_plan);
           });
 
           it('pricing mapping is created', () => {
-            expect(provisioningServerMock.requests().pricing.length).to.equal(1);
-            const req = provisioningServerMock.requests().pricing[0];
-            expect(req.params.resourceId).to.equal(mapping.resource_id);
-            expect(req.params.planId).to.equal(mapping.plan_id);
-            expect(req.params.pricingPlan).to.equal(mapping.pricing_plan);
-
-            expect(req.headers.authorization).to.equal(`Bearer ${token}`);
+            const requests = externalSystemsMocks.provisioningServer.createPricingMappingService.requests();
+            verifyMappingCreated(requests, mapping.pricing_plan);
           });
 
         });
