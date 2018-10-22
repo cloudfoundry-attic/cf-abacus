@@ -172,6 +172,7 @@
     "abacus-renewer-integration-test": "file:test/integration/cf/renewer",
     "abacus-resource-provider-scenario-test": "file:test/scenario/resource-provider",
     "abacus-sampler-receiver-integration-test": "file:test/integration/sampler/receiver",
+    "abacus-sampler-smoke-test": "file:test/smoke/sampler",
     "abacus-sampler-worker-integration-test": "file:test/integration/sampler/receiver",
     "abacus-services-hours-scenario-test": "file:test/scenario/metering-plans",
     "abacus-static-apps-util": "file:test/test-utils/static-apps",

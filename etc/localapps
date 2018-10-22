@@ -7,3 +7,5 @@ lib/metering/meter
 lib/aggregation/accumulator
 lib/aggregation/aggregator
 lib/aggregation/reporting
+lib/sampler/receiver
+lib/sampler/worker
