@@ -1,49 +1,42 @@
 'use strict';
 
+const uuid = require('uuid');
 const httpStatus = require('http-status-codes');
 
 const moment = require('abacus-moment');
 
-const { env, spanConfig } = require('./config');
-const { createEventBuilder, createSamplerClient, startTokens, reportClient } = require('./helpers');
+const { env } = require('./config');
+const { createEventBuilder, createSamplerClient, startTokens, reportClient, createReportParser } = require('./helpers');
 
 const samplerClient = createSamplerClient();
 const eventBuilder = createEventBuilder();
 
-const postServicesMappings = async() => {
+const postServicesMappings = async(resourceId, planId) => {
   const mapping = {
-    'resource_id': spanConfig.resource_id,
-    'plan_id': spanConfig.plan_id,
-    'metering_plan': spanConfig.metering_plan,
-    'rating_plan': spanConfig.rating_plan,
-    'pricing_plan': spanConfig.pricing_plan
+    'resource_id': resourceId,
+    'plan_id': planId,
+    'metering_plan': 'standard-services-hours',
+    'rating_plan': 'standard-services-hours',
+    'pricing_plan': 'standard-services-hours'
   };
   return await samplerClient.createMapping(mapping);
-};
-
-const getMonthlySummaryValue = (report) => {
-  const resourceIndex = 0;
-  const aggrUsageMetricIndex = 0;
-  const monthWindowIndex = 4;
-  const currentMonthIndex = 0;
-  const parsedReport = JSON.parse(report);
-
-  // when run for the first time, there is no data in report
-  if(parsedReport.resources.length < 1)
-    return 0;
-
-  return parsedReport
-    .resources[resourceIndex]
-    .aggregated_usage[aggrUsageMetricIndex]
-    .windows[monthWindowIndex][currentMonthIndex]
-    .quantity;
 };
 
 const log = (msg) => console.log(`${moment.utc().toDate()}: ${msg}`);
 
 describe('Sampler scenario test', () => {
   let response;
-  let initialReport;
+
+  const resourceId = 'sampler-postgresql';
+  const planId = 'v9.4-large';
+  const target = {
+    organization_id: uuid.v4(),
+    space_id: uuid.v4(),
+    consumer_id: uuid.v4(),
+    resource_id: resourceId,
+    plan_id: planId,
+    resource_instance_id: uuid.v4()
+  };
 
   setEventuallyPollingInterval(env.pollInterval);
   setEventuallyTimeout(env.totalTimeout);
@@ -53,40 +46,35 @@ describe('Sampler scenario test', () => {
       await startTokens();
 
     log('Creating services mappings ...');
-    response = await postServicesMappings();
-    expect(response.statusCode).to.be.oneOf([httpStatus.CREATED, httpStatus.CONFLICT]);
-
-    log('Cleaning up in case of previous test error ...');
-    response = await samplerClient.stopSampling(eventBuilder.createStopEvent(moment.now()));
-    expect(response.statusCode).to.be.oneOf([httpStatus.CREATED, httpStatus.UNPROCESSABLE_ENTITY]);
-
-    log('Getting initial report ...');
-    await eventually(async() => {
-      const response = await reportClient.getReport(spanConfig.organization_id, moment.now());
-      expect(response.statusCode).to.be.equal(httpStatus.OK);
-      initialReport = response.body;
-    });
+    response = await postServicesMappings(resourceId, planId);
+    // expect(response.statusCode).to.be.equal(httpStatus.CREATED);
   });
 
   afterEach(async() => {
-    await samplerClient.stopSampling(eventBuilder.createStopEvent(moment.now()));
+    await samplerClient.stopSampling(eventBuilder.createStopEvent(target, moment.now()));
   });
 
   it('samples usage to Abacus successfully', async () => {
     log('Sending start event to sampler ...');
-    response = await samplerClient.startSampling(eventBuilder.createStartEvent(moment.now()));
+    const startTimestamp = moment.utc().subtract(2, 'days').valueOf();
+    response = await samplerClient.startSampling(eventBuilder.createStartEvent(target, startTimestamp));
     expect(response.statusCode).to.be.equal(httpStatus.CREATED);
 
     log('Sending stop event to sampler ...');
-    response = await samplerClient.stopSampling(eventBuilder.createStopEvent(moment.now()));
+    const endTimestamp = moment.utc(startTimestamp).add(1, 'day').valueOf();
+    response = await samplerClient.stopSampling(eventBuilder.createStopEvent(target, endTimestamp));
     expect(response.statusCode).to.be.equal(httpStatus.CREATED);
 
     log('Getting final report ...');
     await eventually(async () => {
-      response = await reportClient.getReport(spanConfig.organization_id, moment.now());
+      response = await reportClient.getReport(target.organization_id, moment.now());
       expect(response.statusCode).to.be.equal(httpStatus.OK);
-      const currentReport = response.body;
-      expect(getMonthlySummaryValue(currentReport)).not.to.be.equal(getMonthlySummaryValue(initialReport));
+
+      const reportParser = createReportParser(response.body);
+
+      const totalQuantity = reportParser.getCurrentMonthQuantity() + reportParser.getPrevMonthQuantity();
+      const twentyFourUsageHours = 24;
+      expect(totalQuantity).to.be.equal(twentyFourUsageHours);
     });
   });
 });
