@@ -18,15 +18,13 @@ const extractOAuthToken = (authHeader) => {
 };
 
 module.exports = () => {
-  let app;
   let server;
 
   const collectUsageServiceData = createMockServiceData();
   const getUsageServiceData = createMockServiceData();
 
-  const start = () => {
-    app = express();
-
+  const start = (cb) => {
+    const app = express();
     const routes = router();
 
     routes.post('/v1/metering/collected/usage', (req, res) => {
@@ -74,10 +72,16 @@ module.exports = () => {
 
     app.use(routes);
     app.use(router.batch(routes));
-    server = app.listen(randomPort);
-    debug('Abacus Collector started on port: %d', server.address().port);
 
-    return server.address();
+    server = app.listen(randomPort, (err) => {
+      if (err) {
+        cb(err);
+        return;
+      }
+
+      debug('Abacus Collector started on port: %d', server.address().port);
+      cb();
+    });
   };
 
   const stop = (cb) => {
@@ -86,7 +90,7 @@ module.exports = () => {
 
   return {
     start,
-    address: () => server.address(),
+    url: () => `http://localhost:${server.address().port}`,
     resourceLocation,
     collectUsageService: collectUsageServiceData,
     getUsageService: getUsageServiceData,

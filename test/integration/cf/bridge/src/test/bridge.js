@@ -24,9 +24,9 @@ const getEnviornmentVars = (externalSystems) => ({
   CF_CLIENT_ID: env.cfClientId,
   CF_CLIENT_SECRET: env.cfClientSecret,
   SECURED: 'true',
-  AUTH_SERVER: `http://localhost:${externalSystems.cloudController.address().port}`,
-  API: `http://localhost:${externalSystems.cloudController.address().port}`,
-  COLLECTOR: `http://localhost:${externalSystems.abacusCollector.address().port}`,
+  AUTH_SERVER: externalSystems.cloudController.url(),
+  API: externalSystems.cloudController.url(),
+  COLLECTOR: externalSystems.abacusCollector.url(),
   MIN_INTERVAL_TIME: 10,
   JWTKEY: env.tokenSecret,
   JWTALGO: env.tokenAlgorithm,
@@ -45,7 +45,7 @@ module.exports = (config) => ({
     externalSystemsMocks
       .cloudController
       .infoService
-      .returnUaaAddress(`http://localhost:${externalSystemsMocks.uaaServer.address().port}`);
+      .returnUaaAddress(externalSystemsMocks.uaaServer.url());
 
     const bridgeEnv = extend({}, process.env, getEnviornmentVars(externalSystemsMocks), config.customEnv);
 
