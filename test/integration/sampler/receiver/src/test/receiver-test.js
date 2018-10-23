@@ -5,7 +5,7 @@ const util = require('util');
 const httpStatus = require('http-status-codes');
 const { MongoClient } = require('mongodb');
 
-const { ReceiverClient } = require('abacus-api');
+const { ReceiverClient, WebAppClient } = require('abacus-api');
 const moment = require('abacus-moment');
 
 const { externalSystems, cfServerMock, uaaServerMock, provisioningServerMock } = require('abacus-mock-util');
@@ -27,32 +27,35 @@ const delta = 10 * 1000;
 const ZERO_GUID = '00000000-0000-0000-0000-000000000000';
 
 describe('Receiver integartion test', () => {
+  const skipSslValidation = true;
   const provisioningPluginScopes = ['abacus.usage.write'];
   const healthcheckScopes = ['abacus.system.read'];
   const samplerOAuthScopes = ['abacus.sampler.write'];
   const jwtSecret = 'secret';
   const clientId = 'client-id';
   const clientSecret = 'client-secret';
-  const user = 'user';
-  const password = 'password';
+  const credentials = {
+    username: 'user',
+    password: 'pass' 
+  };
 
   let provisioningPluginToken;
 
   let lifecycleManager;
   let mongoClient;
   let receiverClient;
+  let webappClient;
+  
 
   let externalSystemsMocks;
 
   before(async () => {
-    const credentials = Buffer.from(`${user}:${password}`).toString('base64');
     const tokenFactory = createTokenFactory(jwtSecret);
     const receiverToken = tokenFactory.create(samplerOAuthScopes);
     receiverClient = new ReceiverClient(receiverURI, {
-      getHealthcheckHeader: () => `Basic ${credentials}`,
-      getSamplingHeader: () => `Bearer ${receiverToken}`,
-      getMappingsHeader: () => `Bearer ${receiverToken}`
-    });
+      getHeader: () => `Bearer ${receiverToken}`
+    }, skipSslValidation);
+    webappClient = new WebAppClient(receiverURI, skipSslValidation);
 
     externalSystemsMocks = createExternalSystems();
     await util.promisify(externalSystemsMocks.startAll)();
@@ -110,8 +113,10 @@ describe('Receiver integartion test', () => {
 
   context('when receiver is started', () => {
 
+    const recieverIsStarted = async () => await webappClient.getHealth(credentials);
+
     before(async () => {
-      await eventually(async () => await receiverClient.getHealth());
+      await eventually(recieverIsStarted);
     });
 
     it('token for communication with the provisioning plugin is aquired', () => {
@@ -137,7 +142,7 @@ describe('Receiver integartion test', () => {
   
           before(async () => {
             externalSystemsMocks.uaaServer.tokenService.clear();
-            health = await eventually(async () => await receiverClient.getHealth());
+            health = await eventually(async () => await webappClient.getHealth(credentials));
           });
 
           it('it responds with healthy status', async () => {
@@ -155,8 +160,8 @@ describe('Receiver integartion test', () => {
 
             expect(healthcheckTokenRequests.length).to.equal(1);
             expect(healthcheckTokenRequests[0].credentials).to.deep.equal({
-              clientId: user,
-              secret: password
+              clientId: credentials.username,
+              secret: credentials.password
             });
           });
         });
