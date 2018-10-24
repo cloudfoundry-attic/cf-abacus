@@ -36,15 +36,16 @@ const getMonthlySummaryValue = (report) => {
     .resources[resourceIndex]
     .aggregated_usage[aggrUsageMetricIndex]
     .windows[monthWindowIndex][currentMonthIndex]
-    .quantity;
+    .summary;
 };
 
 const log = (msg) => console.log(`${moment.utc().toDate()}: ${msg}`);
 
-describe('Sampler smoke test', () => {
+describe('Sampler smoke test', function() {
   let response;
   let initialReport;
 
+  this.timeout(env.totalTimeout);
   setEventuallyPollingInterval(env.pollInterval);
   setEventuallyTimeout(env.totalTimeout);
 
@@ -83,6 +84,7 @@ describe('Sampler smoke test', () => {
 
     log('Getting final report ...');
     await eventually(async () => {
+      // use moment.now() to get report because aggregation step uses processed time
       response = await reportClient.getReport(spanConfig.organization_id, moment.now());
       expect(response.statusCode).to.be.equal(httpStatus.OK);
       const currentReport = response.body;
