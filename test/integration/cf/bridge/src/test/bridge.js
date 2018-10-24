@@ -1,11 +1,11 @@
 'use strict';
 /* eslint-disable max-len */
 
-const extend = require('underscore').extend;
+const { extend } = require('underscore');
 
+const { WebAppClient } = require('abacus-api');
+const { createStatsReader } = require('abacus-test-helper');
 const lifecycleManager = require('abacus-lifecycle-manager')();
-
-const { createStatsReader, healthcheckClient } = require('abacus-test-helper');
 
 const env = {
   tokenSecret: 'secret',
@@ -40,7 +40,7 @@ module.exports = (config) => ({
     port: config.port,
     tokenSecret: env.tokenSecret
   }),
-  healthcheck: healthcheckClient(config.port),
+  webappClient: new WebAppClient(`http://localhost:${config.port}`),
   start: (externalSystemsMocks) => {
     externalSystemsMocks
       .cloudController

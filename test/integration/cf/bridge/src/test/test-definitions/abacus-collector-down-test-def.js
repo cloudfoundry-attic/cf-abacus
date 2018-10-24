@@ -3,14 +3,8 @@
 const httpStatus = require('http-status-codes');
 const _ = require('underscore');
 
-const yieldable = require('abacus-yieldable');
-
 const { carryOverDb } = require('abacus-test-helper');
 const { serviceMock } = require('abacus-mock-util');
-
-const createWait = require('abacus-wait');
-
-const waitUntil = yieldable(createWait().until);
 
 let fixture;
 
@@ -19,7 +13,7 @@ const build = () => {
     let externalSystemsMocks;
     let usageEventMetadata;
 
-    before(yieldable.functioncb(function*() {
+    before(async () => {
       externalSystemsMocks = fixture.externalSystemsMocks();
       externalSystemsMocks.startAll();
 
@@ -47,11 +41,11 @@ const build = () => {
 
       externalSystemsMocks.abacusCollector.collectUsageService.return.series(responses);
 
-      yield carryOverDb.setup();
+      await carryOverDb.setup();
       fixture.bridge.start(externalSystemsMocks);
 
-      yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(3));
-    }));
+      await eventually(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(3));
+    });
 
     after((done) => {
       fixture.bridge.stop();
@@ -83,8 +77,8 @@ const build = () => {
       expect(externalSystemsMocks.abacusCollector.collectUsageService.requests()).to.deep.equal(expectedRequests);
     });
 
-    it('Exposes correct statistics', yieldable.functioncb(function*() {
-      const response = yield fixture.bridge.readStats.withValidToken();
+    it('Exposes correct statistics', async () => {
+      const response = await fixture.bridge.readStats.withValidToken();
       expect(response.statusCode).to.equal(httpStatus.OK);
       expect(response.body.statistics.usage).to.deep.equal({
         success: {
@@ -95,7 +89,7 @@ const build = () => {
         },
         failures: 1
       });
-    }));
+    });
   });
 };
 

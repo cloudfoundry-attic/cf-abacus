@@ -2,15 +2,10 @@
 
 const httpStatus = require('http-status-codes');
 
-const yieldable = require('abacus-yieldable');
-const createWait = require('abacus-wait');
-
 const { carryOverDb } = require('abacus-test-helper');
 const { serviceMock } = require('abacus-mock-util');
 
 const applicationFixture = require('./fixture');
-
-const waitUntil = yieldable(createWait().until);
 
 describe('applications-bridge not supported events tests', () => {
   const fixture = applicationFixture;
@@ -18,7 +13,7 @@ describe('applications-bridge not supported events tests', () => {
   context('when bridge sends usage documents for orgs part of not supported account licenses', () => {
     let externalSystemsMocks;
 
-    before(yieldable.functioncb(function*() {
+    before(async () => {
       externalSystemsMocks = fixture.externalSystemsMocks();
       externalSystemsMocks.startAll();
 
@@ -35,11 +30,11 @@ describe('applications-bridge not supported events tests', () => {
 
       externalSystemsMocks.abacusCollector.collectUsageService.return.always(451); // Unavailable For Legal Reasons
 
-      yield carryOverDb.setup();
+      await carryOverDb.setup();
       fixture.bridge.start(externalSystemsMocks);
 
-      yield waitUntil(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(2));
-    }));
+      await eventually(serviceMock(externalSystemsMocks.cloudController.usageEvents).received(2));
+    });
 
     after((done) => {
       fixture.bridge.stop();
@@ -51,13 +46,13 @@ describe('applications-bridge not supported events tests', () => {
       expect(externalSystemsMocks.abacusCollector.collectUsageService.requests().length).to.equal(1);
     });
 
-    it('does not write entry in carry-over', yieldable.functioncb(function*() {
-      const docs = yield carryOverDb.readCurrentMonthDocs();
+    it('does not write entry in carry-over', async () => {
+      const docs = await carryOverDb.readCurrentMonthDocs();
       expect(docs).to.deep.equal([]);
-    }));
+    });
 
-    it('exposes correct statistics', yieldable.functioncb(function*() {
-      const response = yield fixture.bridge.readStats.withValidToken();
+    it('exposes correct statistics', async () => {
+      const response = await fixture.bridge.readStats.withValidToken();
       expect(response.statusCode).to.equal(httpStatus.OK);
       expect(response.body.statistics.usage).to.deep.equal({
         success: {
@@ -68,6 +63,6 @@ describe('applications-bridge not supported events tests', () => {
         },
         failures: 0
       });
-    }));
+    });
   });
 });

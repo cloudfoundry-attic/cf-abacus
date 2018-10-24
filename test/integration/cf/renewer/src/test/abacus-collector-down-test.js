@@ -5,15 +5,10 @@ const _ = require('underscore');
 const omit = _.omit;
 
 const moment = require('abacus-moment');
-const yieldable = require('abacus-yieldable');
-const createWait = require('abacus-wait');
-
 const { carryOverDb } = require('abacus-test-helper');
 const { serviceMock } = require('abacus-mock-util');
 
 const fixture = require('./fixture');
-
-const waitUntil = yieldable(createWait().until);
 
 const now = moment.now();
 const endOfLasMonth = moment
@@ -32,7 +27,7 @@ const carryOverDoc = {
 describe('renewer sends usage, but abacus is down', () => {
   let externalSystemsMocks;
 
-  before(yieldable.functioncb(function*() {
+  before(async () => {
     externalSystemsMocks = fixture.externalSystemsMocks();
 
     externalSystemsMocks.uaaServer.tokenService
@@ -53,19 +48,18 @@ describe('renewer sends usage, but abacus is down', () => {
 
     externalSystemsMocks.startAll();
 
-    yield carryOverDb.setup();
-    yield carryOverDb.put(carryOverDoc);
+    await carryOverDb.setup();
+    await carryOverDb.put(carryOverDoc);
     fixture.renewer.start(externalSystemsMocks);
 
     // Event reporter (abacus-client) will retry 'fixture.env.retryCount' + 1
     // times to report usage to abacus. After that it will give up.
-    yield waitUntil(
+    await eventually(
       serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(
         fixture.renewer.env.retryCount + 1
       )
     );
-  })
-  );
+  });
 
   after((done) => {
     fixture.renewer.stop();
@@ -73,32 +67,26 @@ describe('renewer sends usage, but abacus is down', () => {
     externalSystemsMocks.stopAll(done);
   });
 
-  it(
-    'does not record an entry in carry-over',
-    yieldable.functioncb(function*() {
-      const docs = yield carryOverDb.readCurrentMonthDocs();
-      expect(docs).to.deep.equal([]);
-    })
-  );
+  it('does not record an entry in carry-over', async () => {
+    const docs = await carryOverDb.readCurrentMonthDocs();
+    expect(docs).to.deep.equal([]);
+  });
 
-  it(
-    'exposes correct statistics',
-    yieldable.functioncb(function*() {
-      const response = yield fixture.renewer.readStats.withValidToken();
-      expect(response.statusCode).to.equal(httpStatus.OK);
-      const usageStats = response.body.statistics.usage;
-      expect(usageStats.report).to.deep.equal({
-        success: 0,
-        skipped: {
-          conflicts: 0,
-          legal_reasons: 0
-        },
-        failures: 1
-      });
-      expect(omit(usageStats.get, 'missingToken')).to.deep.equal({
-        success: 1,
-        failures: 0
-      });
-    })
-  );
+  it('exposes correct statistics', async () => {
+    const response = await fixture.renewer.readStats.withValidToken();
+    expect(response.statusCode).to.equal(httpStatus.OK);
+    const usageStats = response.body.statistics.usage;
+    expect(usageStats.report).to.deep.equal({
+      success: 0,
+      skipped: {
+        conflicts: 0,
+        legal_reasons: 0
+      },
+      failures: 1
+    });
+    expect(omit(usageStats.get, 'missingToken')).to.deep.equal({
+      success: 1,
+      failures: 0
+    });
+  });
 });

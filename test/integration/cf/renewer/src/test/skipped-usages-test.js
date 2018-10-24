@@ -4,15 +4,11 @@ const httpStatus = require('http-status-codes');
 const { omit } = require('underscore');
 
 const moment = require('abacus-moment');
-const yieldable = require('abacus-yieldable');
-const createWait = require('abacus-wait');
 
 const { carryOverDb } = require('abacus-test-helper');
 const { serviceMock } = require('abacus-mock-util');
 
 const fixture = require('./fixture');
-
-const waitUntil = yieldable(createWait().until);
 
 const now = moment.now();
 const endOfLastMonth = moment
@@ -34,37 +30,37 @@ const numberOfSkippableDocsSent = 2;
 describe('renewer sends skippable documents', () => {
   let externalSystemsMocks;
 
-  before(
-    yieldable.functioncb(function*() {
-      externalSystemsMocks = fixture.externalSystemsMocks();
+  before(async () => {
+    externalSystemsMocks = fixture.externalSystemsMocks();
 
-      externalSystemsMocks.uaaServer.tokenService
-        .whenScopesAre(fixture.abacusCollectorScopes)
-        .return(fixture.abacusCollectorToken);
+    externalSystemsMocks.uaaServer.tokenService
+      .whenScopesAre(fixture.abacusCollectorScopes)
+      .return(fixture.abacusCollectorToken);
 
-      externalSystemsMocks.abacusCollector.getUsageService.return.always({
-        statusCode: 200,
-        body: fixture.usage
-          .create()
-          .withTimestamp(endOfLastMonth)
-          .withCurrentInstances(2)
-          .withPreviousInstances(1)
-          .build()
-      });
+    externalSystemsMocks.abacusCollector.getUsageService.return.always({
+      statusCode: 200,
+      body: fixture.usage
+        .create()
+        .withTimestamp(endOfLastMonth)
+        .withCurrentInstances(2)
+        .withPreviousInstances(1)
+        .build()
+    });
 
-      externalSystemsMocks.abacusCollector.collectUsageService.return.firstTime(httpStatus.CONFLICT);
-      externalSystemsMocks.abacusCollector.collectUsageService.return.secondTime(UNAVAILABLE_FOR_LEGAL_REASONS);
+    externalSystemsMocks.abacusCollector.collectUsageService.return.firstTime(httpStatus.CONFLICT);
+    externalSystemsMocks.abacusCollector.collectUsageService.return.secondTime(UNAVAILABLE_FOR_LEGAL_REASONS);
 
-      externalSystemsMocks.startAll();
+    externalSystemsMocks.startAll();
 
-      yield carryOverDb.setup();
-      yield carryOverDb.put(carryOverDoc(1));
-      yield carryOverDb.put(carryOverDoc(2));
-      fixture.renewer.start(externalSystemsMocks);
+    await carryOverDb.setup();
+    await carryOverDb.put(carryOverDoc(1));
+    await carryOverDb.put(carryOverDoc(2));
+    fixture.renewer.start(externalSystemsMocks);
 
-      yield waitUntil(
-        serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(numberOfSkippableDocsSent));
-    })
+    await eventually(
+      serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(numberOfSkippableDocsSent)
+    );
+  }
   );
 
   after((done) => {
@@ -73,13 +69,13 @@ describe('renewer sends skippable documents', () => {
     externalSystemsMocks.stopAll(done);
   });
 
-  it('does not record an entry in carry-over', yieldable.functioncb(function*() {
-    const docs = yield carryOverDb.readCurrentMonthDocs();
+  it('does not record an entry in carry-over', async () => {
+    const docs = await carryOverDb.readCurrentMonthDocs();
     expect(docs).to.deep.equal([]);
-  }));
+  });
 
-  it('exposes correct statistics', yieldable.functioncb(function*() {
-    const response = yield fixture.renewer.readStats.withValidToken();
+  it('exposes correct statistics', async () => {
+    const response = await fixture.renewer.readStats.withValidToken();
     expect(response.statusCode).to.equal(httpStatus.OK);
     const usageStats = response.body.statistics.usage;
     expect(usageStats.report).to.deep.equal({
@@ -94,5 +90,5 @@ describe('renewer sends skippable documents', () => {
       success: numberOfSkippableDocsSent,
       failures: 0
     });
-  }));
+  });
 });
