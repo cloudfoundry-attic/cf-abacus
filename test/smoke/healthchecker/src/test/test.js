@@ -19,8 +19,7 @@ const testEnv = {
     `${abacusPrefix}abacus-broker`,
     `${abacusPrefix}abacus-provisioning-plugin`,
     `${abacusPrefix}abacus-usage-collector`,
-    `${abacusPrefix}abacus-usage-reporting`,
-    `${abacusPrefix}abacus-sampler-receiver`
+    `${abacusPrefix}abacus-usage-reporting`
   ],
   internalComponents: process.env.INTERNAL_COMPONENTS || [
     `${abacusPrefix}abacus-usage-meter`,
@@ -32,6 +31,7 @@ const testEnv = {
     `${abacusPrefix}abacus-applications-bridge`,
     `${abacusPrefix}abacus-service-dashboard`,
     `${abacusPrefix}abacus-services-bridge`,
+    `${abacusPrefix}abacus-sampler-receiver`,
     `${abacusPrefix}abacus-sampler-worker`
   ]
 };

@@ -22,7 +22,8 @@ applications:
           "((ABACUS_PREFIX))abacus-services-bridge",
           "((ABACUS_PREFIX))abacus-service-dashboard",
           "((ABACUS_PREFIX))abacus-applications-bridge",
-          "((ABACUS_PREFIX))abacus-sampler-worker"
+          "((ABACUS_PREFIX))abacus-sampler-worker",
+          "((ABACUS_PREFIX))abacus-sampler-receiver"
         ]
       DEBUG: e-abacus-*
       CF_API: ((AUTH_SERVER))
