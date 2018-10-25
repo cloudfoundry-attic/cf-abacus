@@ -4,7 +4,7 @@ const env = {
   api: process.env.CF_API_URI,
   receiverUrl: process.env.RECEIVER_URL || 'http://localhost:7070',
   reportingUrl: process.env.REPORTING_URL || 'http://localhost:9088',
-  skipSSL: process.env.SKIP_SSL_VALIDATION || true,
+  skipSSL: process.env.SKIP_SSL_VALIDATION === 'true',
   secured: process.env.SECURED === 'true',
   clientId: process.env.SAMPLER_CLIENT_ID,
   clientSecret: process.env.SAMPLER_CLIENT_SECRET,
