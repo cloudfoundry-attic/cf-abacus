@@ -1,20 +1,14 @@
 'use strict';
 
-/* eslint-disable max-len */
-
 const httpStatus = require('http-status-codes');
 const { omit } = require('underscore');
 
 const moment = require('abacus-moment');
-const createWait = require('abacus-wait');
 
 const { carryOverDb } = require('abacus-test-helper');
 const { serviceMock } = require('abacus-mock-util');
-const { yieldable, functioncb } = require('abacus-yieldable');
 
 const fixture = require('./fixture');
-
-const waitUntil = yieldable(createWait().until);
 
 const now = moment.now();
 
@@ -62,7 +56,7 @@ describe('when carryover contains a document for current month and renewer start
 
   let externalSystemsMocks;
 
-  before(functioncb(function*() {
+  before(async () => {
     externalSystemsMocks = fixture.externalSystemsMocks();
 
     externalSystemsMocks.uaaServer.tokenService
@@ -78,14 +72,14 @@ describe('when carryover contains a document for current month and renewer start
 
     externalSystemsMocks.startAll();
 
-    yield carryOverDb.setup();
-    yield carryOverDb.put(createServiceCarryOverDoc);
-    yield carryOverDb.put(deleteServiceCarryOverDoc);
+    await carryOverDb.setup();
+    await carryOverDb.put(createServiceCarryOverDoc);
+    await carryOverDb.put(deleteServiceCarryOverDoc);
 
     fixture.renewer.start(externalSystemsMocks);
 
-    yield waitUntil(serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(1));
-  }));
+    await eventually(serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(1));
+  });
 
   after((done) => {
     fixture.renewer.stop();
@@ -93,9 +87,9 @@ describe('when carryover contains a document for current month and renewer start
     externalSystemsMocks.stopAll(done);
   });
 
-  it('the document is not overwritten', functioncb(function*() {
-    const currentMonthDocs = yield carryOverDb.readCurrentMonthDocs();
+  it('the document is not overwritten', async () => {
+    const currentMonthDocs = await carryOverDb.readCurrentMonthDocs();
     expect(currentMonthDocs.length).to.equals(1);
-    expect(currentMonthDocs).to.contains(omit(deleteServiceCarryOverDoc, '_id', '_rev'));
-  }));
+    expect(currentMonthDocs[0]).to.deep.equal(omit(deleteServiceCarryOverDoc, '_id', '_rev'));
+  });
 });

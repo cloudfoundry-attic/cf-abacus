@@ -4,8 +4,6 @@ const fs = require('fs');
 const _ = require('underscore');
 const httpStatus = require('http-status-codes');
 
-const yieldable = require('abacus-yieldable');
-
 const { carryOverDb } = require('abacus-test-helper');
 
 describe('services-bridge UPDATED event tests', () => {
@@ -30,8 +28,8 @@ describe('services-bridge UPDATED event tests', () => {
         .whenScopesAre(fixture.oauth.cfAdminScopes)
         .return(fixture.oauth.cfAdminToken);
     },
-    finalizeSetup: function*() {
-      yield carryOverDb.setup();
+    finalizeSetup: async () => {
+      await carryOverDb.setup();
       fixture.bridge.start(fixture.externalSystemsMocks());
     },
     cleanUp: (cb) => {
@@ -76,25 +74,25 @@ describe('services-bridge UPDATED event tests', () => {
   };
 
   const statisticsTest = (expectedStatistics) => {
-    it('Exposes correct statistics', yieldable.functioncb(function*() {
-      const response = yield fixture.bridge.readStats.withValidToken();
+    it('Exposes correct statistics', async () => {
+      const response = await fixture.bridge.readStats.withValidToken();
 
       expect(response.statusCode).to.equal(httpStatus.OK);
       expect(response.body.statistics.usage).to.deep.equal(expectedStatistics);
-    }));
+    });
   };
 
   const carryOverTest = (numEntries, expected) => {
     it(`Writes ${numEntries}${numEntries ? ' correct' : ''} entr${numEntries === 1 ? 'y' : 'ies'} in carry over`,
-      yieldable.functioncb(function*() {
-        const docs = yield carryOverDb.readCurrentMonthDocs();
+      async () => {
+        const docs = await carryOverDb.readCurrentMonthDocs();
         expect(docs.length).to.be.equal(numEntries);
 
         _(numEntries).times((i) => {
           expect(docs[i]).to.have.property('event_guid', expected[i].guid);
           expect(docs[i]).to.have.property('state', expected[i].state);
         });
-      }));
+      });
   };
 
   const tests = {

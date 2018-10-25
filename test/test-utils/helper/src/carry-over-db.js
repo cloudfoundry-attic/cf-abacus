@@ -7,9 +7,7 @@ const lifecycleManager = require('abacus-lifecycle-manager')();
 const partition = require('abacus-partition');
 const seqid = require('abacus-seqid');
 const urienv = require('abacus-urienv');
-const yieldable = require('abacus-yieldable');
-
-const createWait = require('abacus-wait');
+const util = require('util');
 
 const checkKeyPart = partition.partitioner(
   partition.bucket,
@@ -24,12 +22,11 @@ const uris = urienv({
 });
 
 const db = dbClient(checkKeyPart, dbClient.dburi(uris.db_uri, 'abacus-carry-over'));
-const getAllDocs = yieldable(db.allDocs);
-const putDoc = yieldable(db.put);
-const drop = yieldable(dbClient.drop);
-const waitUntil = yieldable(createWait().until);
+const getAllDocs = util.promisify(db.allDocs);
+const putDoc = util.promisify(db.put);
+const drop = util.promisify(dbClient.drop);
 
-const readCurrentMonthDocs = function*(cb) {
+const readCurrentMonthDocs = async () => {
   const monthStart = moment
     .utc(moment.now())
     .startOf('month')
@@ -38,7 +35,7 @@ const readCurrentMonthDocs = function*(cb) {
     .utc(moment.now())
     .endOf('month')
     .valueOf();
-  const result = yield getAllDocs({
+  const result = await getAllDocs({
     startkey: 't/' + seqid.pad16(monthStart),
     endkey: 't/' + seqid.pad16(monthEnd),
     descending: false,
@@ -49,25 +46,20 @@ const readCurrentMonthDocs = function*(cb) {
   return docs;
 };
 
-const put = function*(doc) {
+const put = async (doc) => {
   if (!doc._id)
     doc._id = dbClient.tkuri(doc.event_guid, doc.timestamp);
 
-  yield putDoc(doc);
+  await putDoc(doc);
 };
 
-const isDbAvailable = function*() {
-  try {
-    yield readCurrentMonthDocs();
-    return true;
-  } catch (error) {
-    return false;
-  }
+const isDbAvailable = async () => {
+  await readCurrentMonthDocs();
 };
 
-const setup = function*() {
-  yield drop(process.env.DB_URI, /^abacus-/);
-  yield waitUntil(isDbAvailable);
+const setup = async () => {
+  await drop(process.env.DB_URI, /^abacus-/);
+  await eventually(isDbAvailable);
 };
 
 const teardown = () => {

@@ -4,7 +4,7 @@ const httpStatus = require('http-status-codes');
 const util = require('util');
 const { extend } = require('underscore');
 const { MongoClient } = require('mongodb');
-const { WorkerClient } = require('abacus-api');
+const { WebAppClient, BasicAuthHeaderProvider } = require('abacus-api');
 const moment = require('abacus-moment');
 const { externalSystems, cfServerMock, uaaServerMock, abacusCollectorMock } = require('abacus-mock-util');
 const createLifecycleManager = require('abacus-lifecycle-manager');
@@ -22,28 +22,23 @@ const collectionName = 'spans';
 const ZERO_GUID = '00000000-0000-0000-0000-000000000000';
 
 describe('Worker integration tests', () => {
+  const skipSslValidation = true;
   const samplerResourceScopes = ['abacus.usage.sampler.write'];
   const healthcheckScopes = ['abacus.system.read'];
 
   const clientId = 'client-id';
   const clientSecret = 'client-secret';
   const jwtSecret = 'secret';
-  const user = 'user';
-  const password = 'password';
+ 
 
   let lifecycleManager;
   let mongoClient;
-  let workerClient;
   let samplerResourceToken;
 
   let externalSystemsMocks;
 
   before(async () => {
-    const credentials = Buffer.from(`${user}:${password}`).toString('base64');
     const tokenFactory = createTokenFactory(jwtSecret);
-    workerClient = new WorkerClient(workerURI, {
-      getHeader: () => `Basic ${credentials}`
-    });
     mongoClient = await MongoClient.connect(mongoURI);
     mongoClient.collection(collectionName).remove();
 
@@ -207,10 +202,16 @@ describe('Worker integration tests', () => {
 
     context('when healthcheck is requested', () => {
       let health;
+      const credentials = {
+        username: 'user',
+        password: 'pass'
+      };
 
       before(async () => {
         externalSystemsMocks.uaaServer.tokenService.clear();
-        health = await eventually(async () => await workerClient.getHealth());
+        const authHeaderProvider = new BasicAuthHeaderProvider(credentials);
+        const webappClient = new WebAppClient(workerURI, authHeaderProvider, skipSslValidation);
+        health = await eventually(async () => await webappClient.getHealth(credentials));
       });
       
       it('it responds with healthy status', async () => {
@@ -228,8 +229,8 @@ describe('Worker integration tests', () => {
 
         expect(healthcheckTokenRequests.length).to.equal(1);
         expect(healthcheckTokenRequests[0].credentials).to.deep.equal({
-          clientId: user,
-          secret: password
+          clientId: credentials.username,
+          secret: credentials.password
         });
       });
     });
