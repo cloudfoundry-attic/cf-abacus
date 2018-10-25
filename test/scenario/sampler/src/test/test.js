@@ -27,8 +27,8 @@ const log = (msg) => console.log(`${moment.utc().toDate()}: ${msg}`);
 describe('Sampler scenario test', function() {
   let response;
 
-  const resourceId = 'sampler-postgresql';
-  const planId = 'v9.4-large';
+  const resourceId = 'sample-resource';
+  const planId = 'sample-plan';
   const target = {
     organization_id: uuid.v4(),
     space_id: uuid.v4(),
