@@ -4,7 +4,7 @@ const httpStatus = require('http-status-codes');
 const util = require('util');
 const { extend } = require('underscore');
 const { MongoClient } = require('mongodb');
-const { WebAppClient } = require('abacus-api');
+const { WebAppClient, BasicAuthHeaderProvider } = require('abacus-api');
 const moment = require('abacus-moment');
 const { externalSystems, cfServerMock, uaaServerMock, abacusCollectorMock } = require('abacus-mock-util');
 const createLifecycleManager = require('abacus-lifecycle-manager');
@@ -209,7 +209,8 @@ describe('Worker integration tests', () => {
 
       before(async () => {
         externalSystemsMocks.uaaServer.tokenService.clear();
-        const webappClient = new WebAppClient(workerURI, skipSslValidation);
+        const authHeaderProvider = new BasicAuthHeaderProvider(credentials);
+        const webappClient = new WebAppClient(workerURI, authHeaderProvider, skipSslValidation);
         health = await eventually(async () => await webappClient.getHealth(credentials));
       });
       

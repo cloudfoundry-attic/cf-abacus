@@ -1,7 +1,8 @@
 'use strict';
 
+const { bind } = require('underscore');
 const { carryOverDb, createTokenFactory } = require('abacus-test-helper');
-const { UnauthorizedError } = require('abacus-api');
+const { WebAppClient, BasicAuthHeaderProvider } = require('abacus-api');
 
 const healthcheckScopes = ['abacus.system.read'];
 let fixture;
@@ -11,17 +12,6 @@ const build = () => {
   const healthcheckerToken = () => {
     const tokenFactory = createTokenFactory(fixture.env.tokenSecret);
     return tokenFactory.create(healthcheckScopes);
-  };
-
-  const healthcheckEndpointIsAvailable = async () => {
-    try {
-      return await fixture.bridge.webappClient.getHealth();
-    } catch (e) {
-      if (!(e instanceof UnauthorizedError))
-        throw e;
-
-      return undefined;
-    }
   };
 
   context('when requesting healthcheck', () => {
@@ -45,8 +35,6 @@ const build = () => {
 
       await carryOverDb.setup();
       fixture.bridge.start(externalSystemsMocks);
-
-      await eventually(healthcheckEndpointIsAvailable);
     });
 
     after((done) => {
@@ -56,22 +44,16 @@ const build = () => {
     });
 
     context('when authorization is provided', () => {
-      const user = 'user';
-      const password = 'password';
-      let health;
+      const credentials = {
+        username: 'user',
+        password: 'pass'
+      };
 
-      before(async () => {
-        health = await fixture.bridge.webappClient.getHealth({
-          username: user,
-          password
-        });
-      });
+      it('returns correct response', async () => {
+        const webappClient = new WebAppClient(`http://localhost:${fixture.bridge.port}`,
+          new BasicAuthHeaderProvider(credentials));
 
-      after(() => {
-        externalSystemsMocks.uaaServer.tokenService.clear();
-      });
-
-      it('returns correct response', () => {
+        const health = await eventually(bind(webappClient.getHealth, webappClient));
         expect(health).to.deep.equal({
           healthy: true
         });
@@ -83,8 +65,8 @@ const build = () => {
           .withScopes(healthcheckScopes);
         expect(uaaRequests.length).to.equal(1);
         expect(uaaRequests[0].credentials).to.deep.equal({
-          clientId: user,
-          secret: password
+          clientId: credentials.username,
+          secret: credentials.password
         });
       });
     });

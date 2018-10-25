@@ -1,6 +1,5 @@
 'use strict';
 
-const httpStatus = require('http-status-codes');
 const util = require('util');
 
 const request = require('abacus-request');

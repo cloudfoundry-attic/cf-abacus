@@ -3,7 +3,6 @@
 
 const { extend } = require('underscore');
 
-const { WebAppClient } = require('abacus-api');
 const { createStatsReader } = require('abacus-test-helper');
 const lifecycleManager = require('abacus-lifecycle-manager')();
 
@@ -35,12 +34,12 @@ const getEnviornmentVars = (externalSystems) => ({
 });
 
 module.exports = (config) => ({
+  port: config.port,
   env,
   readStats: createStatsReader({
     port: config.port,
     tokenSecret: env.tokenSecret
   }),
-  webappClient: new WebAppClient(`http://localhost:${config.port}`),
   start: (externalSystemsMocks) => {
     externalSystemsMocks
       .cloudController
