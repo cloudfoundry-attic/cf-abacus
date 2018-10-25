@@ -57,10 +57,12 @@ const build = () => {
       let response;
 
       before(functioncb(function*() {
+        console.log('before start');
         response = yield fixture.bridge.healthcheck.isHealthy({
           user,
           password
         });
+        console.log('before end');
       }));
 
       after(() => {

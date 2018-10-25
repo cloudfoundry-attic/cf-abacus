@@ -31,7 +31,7 @@ const authHeader = (token) => token ? { authorization: token() } : {};
 const sendUsage = async (usage) => {
   const resp = await doPost('/v1/metering/collected/usage', {
     baseUrl: testEnv.collectorUrl,
-    headers: authHeader(systemToken),
+    headers: authHeader(objectStorageToken),
     body: usage
   });
   
