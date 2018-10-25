@@ -6,7 +6,7 @@ const { omit } = require('underscore');
 
 const oauth = require('abacus-oauth');
 
-const { env } = require('./config');
+const { env } = require('./env-config');
 
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
@@ -91,12 +91,12 @@ const createReportParser = (report) => {
       .aggregated_usage[aggrUsageMetricIndex]
       .windows[monthWindowIndex][monthIndex];
 
-    return monthWindow ? monthWindow.quantity : 0;
+    return monthWindow ? monthWindow.summary : 0;
   };
 
   return {
-    getCurrentMonthQuantity: () => _getMonthlySummaryValue(_currentMonthIndex),
-    getPrevMonthQuantity: () => _getMonthlySummaryValue(_prevMonthIndex)
+    getCurrentMonthSummary: () => _getMonthlySummaryValue(_currentMonthIndex),
+    getPrevMonthSummary: () => _getMonthlySummaryValue(_prevMonthIndex)
   };
 };
 

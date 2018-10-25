@@ -5,7 +5,7 @@ const httpStatus = require('http-status-codes');
 
 const moment = require('abacus-moment');
 
-const { env } = require('./config');
+const { env } = require('./env-config');
 const { createEventBuilder, createSamplerClient, startTokens, reportClient, createReportParser } = require('./helpers');
 
 const samplerClient = createSamplerClient();
@@ -24,7 +24,7 @@ const postServicesMappings = async(resourceId, planId) => {
 
 const log = (msg) => console.log(`${moment.utc().toDate()}: ${msg}`);
 
-describe('Sampler scenario test', () => {
+describe('Sampler scenario test', function() {
   let response;
 
   const resourceId = 'sampler-postgresql';
@@ -38,6 +38,7 @@ describe('Sampler scenario test', () => {
     resource_instance_id: uuid.v4()
   };
 
+  this.timeout(env.totalTimeout);
   setEventuallyPollingInterval(env.pollInterval);
   setEventuallyTimeout(env.totalTimeout);
 
@@ -47,7 +48,7 @@ describe('Sampler scenario test', () => {
 
     log('Creating services mappings ...');
     response = await postServicesMappings(resourceId, planId);
-    // expect(response.statusCode).to.be.equal(httpStatus.CREATED);
+    expect(response.statusCode).to.be.equal(httpStatus.CREATED);
   });
 
   afterEach(async() => {
@@ -67,14 +68,15 @@ describe('Sampler scenario test', () => {
 
     log('Getting final report ...');
     await eventually(async () => {
+      // use moment.now() to get report because aggregation step uses processed time
       response = await reportClient.getReport(target.organization_id, moment.now());
       expect(response.statusCode).to.be.equal(httpStatus.OK);
 
       const reportParser = createReportParser(response.body);
 
-      const totalQuantity = reportParser.getCurrentMonthQuantity() + reportParser.getPrevMonthQuantity();
+      const totalSummary = reportParser.getCurrentMonthSummary() + reportParser.getPrevMonthSummary();
       const twentyFourUsageHours = 24;
-      expect(totalQuantity).to.be.equal(twentyFourUsageHours);
+      expect(totalSummary).to.be.equal(twentyFourUsageHours);
     });
   });
 });
