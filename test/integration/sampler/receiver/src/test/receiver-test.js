@@ -205,7 +205,7 @@ describe('Receiver integartion test', () => {
     context('when stop event is received', () => {
       const usage = {
         id: 'dedup-guid',
-        timestamp: 789,
+        timestamp: moment.utc().valueOf(),
         organization_id: 'organization-guid',
         space_id: 'space-guid',
         consumer_id: 'consumer-guid',
