@@ -4,29 +4,9 @@ const util = require('util');
 const request = require('request');
 const { omit } = require('underscore');
 
-const oauth = require('abacus-oauth');
-
 const { env, spanConfig } = require('./config');
 
 const doGet = util.promisify(request.get);
-const doPost = util.promisify(request.post);
-
-const systemToken = env.secured ?
-  oauth.cache(env.api, env.systemClientId, env.systemClientSecret, 'abacus.usage.read abacus.usage.write') :
-  undefined;
-const samplerToken = env.secured ?
-  oauth.cache(env.api, env.clientId, env.clientSecret, 'abacus.sampler.write') :
-  undefined;
-
-const authHeader = (token) => token ? { authorization: token() } : {};
-
-const startTokens = async() => {
-  const startSystemToken = util.promisify(systemToken.start);
-  const startSamplerToken = util.promisify(samplerToken.start);
-
-  await startSystemToken();
-  await startSamplerToken();
-};
 
 const createEventBuilder = () => {
   const _getEvent = (time) => ({
@@ -46,30 +26,13 @@ const createEventBuilder = () => {
   };
 };
 
-const createSamplerClient = () => {
-  const _postToSampler = async(endpoint, payload) => await doPost(endpoint, {
-    baseUrl: env.receiverUrl,
-    json: payload,
-    headers: authHeader(samplerToken),
-    rejectUnauthorized: !env.skipSSL
-  });
-
-  return {
-    stopSampling: async(event) => {
-      return await _postToSampler('/v1/events/stop', event);
-    },
-    startSampling: async(event) => {
-      return await _postToSampler('/v1/events/start', event);
-    },
-    createMapping: async(json) => await _postToSampler('/v1/mappings', json)
-  };
-};
-
 const reportClient = {
-  getReport: async(orgId, time) => {
+  getReport: async(authHeader, orgId, time) => {
     const res = await doGet(`/v1/metering/organizations/${orgId}/aggregated/usage/${time}`, {
       baseUrl: env.reportingUrl,
-      headers: authHeader(systemToken),
+      headers: {
+        authorization: authHeader
+      },
       rejectUnauthorized: !env.skipSSL
     });
     return res;
@@ -77,8 +40,6 @@ const reportClient = {
 };
 
 module.exports = {
-  startTokens,
   reportClient,
-  createEventBuilder,
-  createSamplerClient
+  createEventBuilder
 };
