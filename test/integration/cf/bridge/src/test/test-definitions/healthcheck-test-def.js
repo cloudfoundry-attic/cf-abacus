@@ -1,15 +1,10 @@
 'use strict';
 
-const httpStatus = require('http-status-codes');
-
-const { yieldable, functioncb } = require('abacus-yieldable');
-const createWait = require('abacus-wait');
-
+const { bind } = require('underscore');
 const { carryOverDb, createTokenFactory } = require('abacus-test-helper');
+const { WebAppClient, BasicAuthHeaderProvider } = require('abacus-api');
 
-const waitUntil = yieldable(createWait().until);
 const healthcheckScopes = ['abacus.system.read'];
-
 let fixture;
 
 const build = () => {
@@ -22,7 +17,7 @@ const build = () => {
   context('when requesting healthcheck', () => {
     let externalSystemsMocks;
 
-    before(functioncb(function*() {
+    before(async () => {
       externalSystemsMocks = fixture.externalSystemsMocks();
       externalSystemsMocks.startAll();
 
@@ -38,12 +33,9 @@ const build = () => {
         .whenScopesAre(healthcheckScopes)
         .return(healthcheckerToken());
 
-      yield carryOverDb.setup();
+      await carryOverDb.setup();
       fixture.bridge.start(externalSystemsMocks);
-
-      yield waitUntil(fixture.bridge.healthcheck.isEndpointAvailable);
-    })
-    );
+    });
 
     after((done) => {
       fixture.bridge.stop();
@@ -52,63 +44,33 @@ const build = () => {
     });
 
     context('when authorization is provided', () => {
-      const user = 'user';
-      const password = 'password';
-      let response;
+      const credentials = {
+        username: 'user',
+        password: 'pass'
+      };
 
-      before(functioncb(function*() {
-        response = yield fixture.bridge.healthcheck.isHealthy({
-          user,
-          password
-        });
-      }));
+      it('returns correct response', async () => {
+        const webappClient = new WebAppClient(`http://localhost:${fixture.bridge.port}`,
+          new BasicAuthHeaderProvider(credentials));
 
-      after(() => {
-        externalSystemsMocks.uaaServer.tokenService.clear();
-      });
-
-      it('returns correct response', functioncb(function*() {
-        expect(response.statusCode).to.equal(httpStatus.OK);
-        expect(response.body).to.deep.equal({
+        const health = await eventually(bind(webappClient.getHealth, webappClient));
+        expect(health).to.deep.equal({
           healthy: true
         });
-      }));
+      });
 
-      it('UAA is called properly', functioncb(function*() {
+      it('UAA is called properly', () => {
         const uaaRequests = externalSystemsMocks.uaaServer.tokenService
           .requests
           .withScopes(healthcheckScopes);
         expect(uaaRequests.length).to.equal(1);
         expect(uaaRequests[0].credentials).to.deep.equal({
-          clientId: user,
-          secret: password
+          clientId: credentials.username,
+          secret: credentials.password
         });
-      }));
-    });
-
-    context('when authorization is missing', () => {
-      let response;
-
-      before(functioncb(function*() {
-        response = yield fixture.bridge.healthcheck.isHealthy();
-      }));
-
-      after(() => {
-        externalSystemsMocks.uaaServer.tokenService.clear();
       });
-
-      it('UNAUTHORIZED is returned', yieldable.functioncb(function*() {
-        expect(response.statusCode).to.equal(httpStatus.UNAUTHORIZED);
-        expect(response.body).to.deep.equal(undefined);
-      }));
-
-      it('UAA is not called', yieldable.functioncb(function*() {
-        const uaaRequests = externalSystemsMocks.uaaServer.tokenService
-          .requests
-          .withScopes(['abacus.system.read']);
-        expect(uaaRequests.length).to.equal(0);
-      }));
     });
+
   });
 };
 

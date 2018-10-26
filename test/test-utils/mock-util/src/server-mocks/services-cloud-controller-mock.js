@@ -1,10 +1,11 @@
 'use strict';
 
-const express = require('abacus-express');
+const { extend } = require('underscore');
+const express = require('express');
 const debug = require('abacus-debug')('cloud-controller-mock');
-const randomPort = 0;
 
 const createMockServiceData = require('./mock-service-data');
+const createCfServerMock = require('./cf-server-mock');
 
 const convert = (serviceGuids) => {
   const resources = [];
@@ -43,24 +44,14 @@ const extractServiceGuids = (filter) => {
 };
 
 module.exports = () => {
-  let app;
-  let server;
-
   const serviceUsageEventsData = createMockServiceData();
   const serviceGuidsData = createMockServiceData();
-  let returnUaaAddress;
+  const cfServerMock = createCfServerMock();
 
-  const start = () => {
-    app = express();
+  const start = (cb) => {
+    const routes = express.Router();
 
-    app.get('/v2/info', (req, res) => {
-      debug('Retrieving cf info...');
-      res.send({
-        token_endpoint: returnUaaAddress
-      });
-    });
-
-    app.get('/v2/service_usage_events', (req, res) => {
+    routes.get('/v2/service_usage_events', (req, res) => {
       debug('Retrieved service usage events request. Query: %j', req.query);
 
       serviceUsageEventsData.requests().push({
@@ -77,7 +68,7 @@ module.exports = () => {
       });
     });
 
-    app.get('/v2/services', (req, res) => {
+    routes.get('/v2/services', (req, res) => {
       debug('Retrieved request for services. Headers: %j, Query params: %j', req.headers, req.query);
 
       serviceGuidsData.requests().push({
@@ -89,23 +80,13 @@ module.exports = () => {
       res.send(services);
     });
 
-    server = app.listen(randomPort);
-    debug('Cloud controller started on port: %d', server.address().port);
-    return server.address();
+    cfServerMock.additionalRoutes(routes);
+    cfServerMock.start(cb);
   };
 
-  const stop = (cb) => {
-    server.close(cb);
-  };
-
-  return {
+  return extend({}, cfServerMock, {
     start,
-    address: () => server.address(),
-    infoService: {
-      returnUaaAddress: (value) => returnUaaAddress = value
-    },
     serviceGuids: serviceGuidsData,
-    usageEvents: serviceUsageEventsData,
-    stop
-  };
+    usageEvents: serviceUsageEventsData
+  });
 };

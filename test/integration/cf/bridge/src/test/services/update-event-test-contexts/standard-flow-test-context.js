@@ -3,12 +3,7 @@
 const _ = require('underscore');
 const httpStatus = require('http-status-codes');
 
-const createWait = require('abacus-wait');
-const yieldable = require('abacus-yieldable');
-
 const { serviceMock } = require('abacus-mock-util');
-
-const waitUntil = yieldable(createWait().until);
 
 let arrange;
 
@@ -64,14 +59,14 @@ const run = (test) => {
         return expectedGuids;
       };
 
-      before(yieldable.functioncb(function*() {
+      before(async () => {
         arrange.init();
         setCloudControllerResponse();
-        yield arrange.finalizeSetup();
-        yield waitUntil(
+        await arrange.finalizeSetup();
+        await eventually(
           serviceMock(arrange.fixture.externalSystemsMocks().cloudController.usageEvents)
             .received(expectedCallsToUsageEventsService));
-      }));
+      });
 
       after((done) => {
         arrange.cleanUp(done);
@@ -138,14 +133,14 @@ const run = (test) => {
         return expectedGuids;
       };
 
-      before(yieldable.functioncb(function*() {
+      before(async () => {
         arrange.init();
         setCloudControllerResponse();
         setAbacusCollectorResponse();
-        yield arrange.finalizeSetup();
-        yield waitUntil(serviceMock(arrange.fixture.externalSystemsMocks().cloudController.usageEvents)
+        await arrange.finalizeSetup();
+        await eventually(serviceMock(arrange.fixture.externalSystemsMocks().cloudController.usageEvents)
           .received(expectedCallsToUsageEventsService));
-      }));
+      });
 
       after((done) => {
         arrange.cleanUp(done);
@@ -244,15 +239,15 @@ const run = (test) => {
         failures: 0
       });
 
-      before(yieldable.functioncb(function*() {
+      before(async () => {
         arrange.init();
         setCloudControllerResponse();
         setAbacusCollectorResponse();
-        yield arrange.finalizeSetup();
-        yield waitUntil(serviceMock(arrange.fixture.externalSystemsMocks().cloudController.usageEvents)
+        await arrange.finalizeSetup();
+        await eventually(serviceMock(arrange.fixture.externalSystemsMocks().cloudController.usageEvents)
           .received(expectedCallsToUsageEventsService)
         );
-      }));
+      });
 
       after((done) => {
         arrange.cleanUp(done);

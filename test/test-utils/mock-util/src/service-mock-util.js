@@ -2,7 +2,9 @@
 
 module.exports = (serviceMock) => ({
   received: (numberOfRequests) =>
-    function*() {
-      return serviceMock.requests().length >= numberOfRequests;
+    async () => {
+      const actualRequestsCount = serviceMock.requests().length;
+      if (actualRequestsCount < numberOfRequests)
+        throw new Error(`The number of requests (${actualRequestsCount}) has not reached "${numberOfRequests} yet"`);
     }
 });

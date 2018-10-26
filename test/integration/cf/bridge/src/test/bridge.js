@@ -1,11 +1,10 @@
 'use strict';
 /* eslint-disable max-len */
 
-const extend = require('underscore').extend;
+const { extend } = require('underscore');
 
+const { createStatsReader } = require('abacus-test-helper');
 const lifecycleManager = require('abacus-lifecycle-manager')();
-
-const { createStatsReader, healthcheckClient } = require('abacus-test-helper');
 
 const env = {
   tokenSecret: 'secret',
@@ -24,9 +23,9 @@ const getEnviornmentVars = (externalSystems) => ({
   CF_CLIENT_ID: env.cfClientId,
   CF_CLIENT_SECRET: env.cfClientSecret,
   SECURED: 'true',
-  AUTH_SERVER: `http://localhost:${externalSystems.cloudController.address().port}`,
-  API: `http://localhost:${externalSystems.cloudController.address().port}`,
-  COLLECTOR: `http://localhost:${externalSystems.abacusCollector.address().port}`,
+  AUTH_SERVER: externalSystems.cloudController.url(),
+  API: externalSystems.cloudController.url(),
+  COLLECTOR: externalSystems.abacusCollector.url(),
   MIN_INTERVAL_TIME: 10,
   JWTKEY: env.tokenSecret,
   JWTALGO: env.tokenAlgorithm,
@@ -35,17 +34,17 @@ const getEnviornmentVars = (externalSystems) => ({
 });
 
 module.exports = (config) => ({
+  port: config.port,
   env,
   readStats: createStatsReader({
     port: config.port,
     tokenSecret: env.tokenSecret
   }),
-  healthcheck: healthcheckClient(config.port),
   start: (externalSystemsMocks) => {
     externalSystemsMocks
       .cloudController
       .infoService
-      .returnUaaAddress(`http://localhost:${externalSystemsMocks.uaaServer.address().port}`);
+      .returnUaaAddress(externalSystemsMocks.uaaServer.url());
 
     const bridgeEnv = extend({}, process.env, getEnviornmentVars(externalSystemsMocks), config.customEnv);
 

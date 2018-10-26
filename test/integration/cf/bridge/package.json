@@ -28,6 +28,7 @@
     "pub": "publish"
   },
   "devDependencies": {
+    "abacus-api": "file:../../../../lib/utils/api",
     "abacus-cf-applications": "file:../../../../lib/cf/applications",
     "abacus-cf-services": "file:../../../../lib/cf/services",
     "abacus-cf-renewer": "file:../../../../lib/cf/renewer",
@@ -42,7 +43,6 @@
     "abacus-request": "file:../../../../lib/utils/request",
     "abacus-router": "file:../../../../lib/utils/router",
     "abacus-test-helper": "file:../../../test-utils/helper",
-    "abacus-wait": "file:../../../test-utils/wait",
     "async": "^2.6.0",
     "http-status-codes": "^1.3.0",
     "jsonwebtoken": "^8.3.0",

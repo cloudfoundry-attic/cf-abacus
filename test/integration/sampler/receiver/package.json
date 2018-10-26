@@ -35,6 +35,7 @@
     "abacus-api": "file:../../../../lib/utils/api",
     "abacus-lifecycle-manager": "../../../lib/lifecycle-manager",
     "abacus-test-helper": "../../../test-utils/helper",
+    "abacus-mock-util": "../../../test-utils/mock-util",
     "abacus-moment": "../../../../lib/utils/moment",
     "mongodb": "^2.2.36",
     "underscore": "^1.9.1"
