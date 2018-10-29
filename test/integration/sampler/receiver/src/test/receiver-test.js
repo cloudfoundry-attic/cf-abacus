@@ -88,6 +88,7 @@ describe('Receiver integartion test', () => {
       API: externalSystemsMocks.cfServer.url(),
       AUTH_SERVER: externalSystemsMocks.cfServer.url(),
       PROVISIONING: externalSystemsMocks.provisioningServer.url(),
+      SPANS_COLLECTION_NAME: 'test-spans',
       SECURED: 'true',
       CLUSTER: 'false',
       JWTKEY: jwtSecret,

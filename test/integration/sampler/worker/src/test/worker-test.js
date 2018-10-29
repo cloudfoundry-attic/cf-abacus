@@ -74,6 +74,7 @@ describe('Worker integration tests', () => {
       COLLECTOR: externalSystemsMocks.abacusCollector.url(),
       AUTH_SERVER: externalSystemsMocks.cfServer.url(),
       API: externalSystemsMocks.cfServer.url(),
+      SPANS_COLLECTION_NAME: 'test-spans',
       CLIENT_ID: clientId,
       CLIENT_SECRET: clientSecret,
       SECURED: 'true',
