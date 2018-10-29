@@ -303,7 +303,7 @@ describe('Receiver integartion test', () => {
         expect(requests[0].token).to.equal(provisioningPluginToken);
       };
 
-      it('token for communication with the provisioning plugin is aquired', () => {
+      it('token for communication with the provisioning plugin is acquired', () => {
         const provisioningPluginTokenRequests = externalSystemsMocks
           .uaaServer
           .tokenService

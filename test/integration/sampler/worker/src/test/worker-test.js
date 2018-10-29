@@ -162,7 +162,7 @@ describe('Worker integration tests', () => {
         expect(span.processing.version).to.be.above(2);
       });
 
-      it('it should aquire a token from UAA server', async () => {
+      it('it should acquire a token from UAA server', async () => {
         const samplerResourceTokenRequests = externalSystemsMocks
           .uaaServer
           .tokenService
