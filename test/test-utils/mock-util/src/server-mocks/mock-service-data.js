@@ -4,8 +4,16 @@ module.exports = () => {
   let serviceRequests = [];
 
   let returnAlways;
-  let returnSeries = [];
-  let returnMap = new Map();
+  let returnSeries;
+  let returnMap;
+  
+  const clearReturnValues = () => {
+    returnAlways = undefined;
+    returnSeries = [];
+    returnMap = new Map();
+  };
+
+  clearReturnValues();
 
   return {
     request: (n) => serviceRequests[n],
@@ -30,8 +38,9 @@ module.exports = () => {
       }),
       nothing: () => returnSeries = []
     },
-    clear: () => {
+    clearRequests: () => {
       serviceRequests = [];
-    }
+    },
+    clearReturnValues: clearReturnValues
   };
 };

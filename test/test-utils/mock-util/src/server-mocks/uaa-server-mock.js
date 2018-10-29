@@ -70,7 +70,8 @@ module.exports = () => {
     start,
     url: () => `http://localhost:${server.address().port}`,
     tokenService: {
-      clear: serviceData.clear,
+      clearRequests: serviceData.clearRequests,
+      clearReturnValues: serviceData.clearReturnValues,
       requestsCount: () => serviceData.requests().length,
       requests: {
         withScopes: (scopes) => {

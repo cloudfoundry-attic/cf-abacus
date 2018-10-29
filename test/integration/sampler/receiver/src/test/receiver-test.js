@@ -5,7 +5,12 @@ const util = require('util');
 const httpStatus = require('http-status-codes');
 const { MongoClient } = require('mongodb');
 
-const { ReceiverClient, WebAppClient, BasicAuthHeaderProvider } = require('abacus-api');
+const { ReceiverClient, 
+  WebAppClient, 
+  UnauthorizedError, 
+  ForbiddenError,
+  BasicAuthHeaderProvider,
+  VoidAuthHeaderProvider } = require('abacus-api');
 const moment = require('abacus-moment');
 
 const { externalSystems, cfServerMock, uaaServerMock, provisioningServerMock } = require('abacus-mock-util');
@@ -21,7 +26,7 @@ const createExternalSystems = externalSystems({
 
 const mongoURI = process.env.DB_URI || 'mongodb://localhost:27017';
 const receiverURI = 'http://localhost:7070';
-const collectionName = 'spans';
+const collectionName = 'test-spans';
 
 const delta = 10 * 1000;
 const ZERO_GUID = '00000000-0000-0000-0000-000000000000';
@@ -39,24 +44,25 @@ describe('Receiver integartion test', () => {
     password: 'pass'
   };
 
-  let provisioningPluginToken;
-
+  let tokenFactory;
   let lifecycleManager;
   let mongoClient;
-  let receiverClient;
-  let webappClient;
-
+  let validReceiverClient;
+  let noScopesReceiverClient;
+  let noAuthHeaderReceiverClient;
 
   let externalSystemsMocks;
 
   before(async () => {
-    const tokenFactory = createTokenFactory(jwtSecret);
-    const receiverToken = tokenFactory.create(samplerOAuthScopes);
-    receiverClient = new ReceiverClient(receiverURI, {
-      getHeader: () => `Bearer ${receiverToken}`
+    tokenFactory = createTokenFactory(jwtSecret);
+    validReceiverClient = new ReceiverClient(receiverURI, {
+      getHeader: () => `Bearer ${tokenFactory.create(samplerOAuthScopes)}`
     }, skipSslValidation);
-    const authHeaderProvider = new BasicAuthHeaderProvider(credentials);
-    webappClient = new WebAppClient(receiverURI, authHeaderProvider, skipSslValidation);
+    noScopesReceiverClient = new ReceiverClient(receiverURI, {
+      getHeader: () => `Bearer ${tokenFactory.create([])}`
+    }, skipSslValidation);
+    noAuthHeaderReceiverClient = new ReceiverClient(receiverURI, new VoidAuthHeaderProvider(), skipSslValidation);
+
 
     externalSystemsMocks = createExternalSystems();
     await util.promisify(externalSystemsMocks.startAll)();
@@ -66,20 +72,6 @@ describe('Receiver integartion test', () => {
       .infoService
       .returnUaaAddress(externalSystemsMocks.uaaServer.url());
 
-    provisioningPluginToken = tokenFactory.create(provisioningPluginScopes);
-    externalSystemsMocks
-      .uaaServer
-      .tokenService
-      .whenScopesAre(provisioningPluginScopes)
-      .return(provisioningPluginToken);
-
-    const healthcheckToken = tokenFactory.create(healthcheckScopes);
-    externalSystemsMocks
-      .uaaServer
-      .tokenService
-      .whenScopesAre(healthcheckScopes)
-      .return(healthcheckToken);
-
     externalSystemsMocks.provisioningServer.createMeteringMappingService.return.always(httpStatus.OK);
     externalSystemsMocks.provisioningServer.createRatingMappingService.return.always(httpStatus.OK);
     externalSystemsMocks.provisioningServer.createPricingMappingService.return.always(httpStatus.OK);
@@ -88,7 +80,7 @@ describe('Receiver integartion test', () => {
       API: externalSystemsMocks.cfServer.url(),
       AUTH_SERVER: externalSystemsMocks.cfServer.url(),
       PROVISIONING: externalSystemsMocks.provisioningServer.url(),
-      SPANS_COLLECTION_NAME: 'test-spans',
+      SPANS_COLLECTION_NAME: collectionName,
       SECURED: 'true',
       CLUSTER: 'false',
       JWTKEY: jwtSecret,
@@ -114,12 +106,24 @@ describe('Receiver integartion test', () => {
   });
 
   describe('#healthcheck', () => {
+    let webappClient;
 
-    context('when healthcheck is requested', () => {
+    before(async () => {
+      const authHeaderProvider = new BasicAuthHeaderProvider(credentials);
+      webappClient = new WebAppClient(receiverURI, authHeaderProvider, skipSslValidation);
+    });
+
+    context('when uaa server successfully validates passed credentials', () => {
       let health;
 
       before(async () => {
-        externalSystemsMocks.uaaServer.tokenService.clear();
+        externalSystemsMocks.uaaServer.tokenService.clearRequests();
+        const healthcheckToken = tokenFactory.create(healthcheckScopes);
+        externalSystemsMocks
+          .uaaServer
+          .tokenService
+          .whenScopesAre(healthcheckScopes)
+          .return(healthcheckToken);
         health = await eventually(async () => await webappClient.getHealth());
       });
 
@@ -129,44 +133,58 @@ describe('Receiver integartion test', () => {
         });
       });
 
-      it('provided credentials are validated via uaa server', async () => {
-        const healthcheckTokenRequests = externalSystemsMocks
-          .uaaServer
-          .tokenService
-          .requests
-          .withScopes(healthcheckScopes);
+    });
 
-        expect(healthcheckTokenRequests.length).to.equal(1);
-        expect(healthcheckTokenRequests[0].credentials).to.deep.equal({
-          clientId: credentials.username,
-          secret: credentials.password
-        });
+    context('when uaa server rejects passed credentials', () => {
+      before(async () => {
+        externalSystemsMocks.uaaServer.tokenService.clearReturnValues();
+      });
+
+      it('it responds with "unauthorized" status', async () => {
+        await eventually(async () => await expect(webappClient.getHealth()).to.be.rejectedWith(UnauthorizedError));
       });
     });
   });
 
-  describe('#startSampling', () => {
-    context('when start event is received', () => {
+  const itNoNeededScopes = (invokeEndpoint) => 
+    context('when token with no needed scopes is used', () => {
+      it('it should reject the request with "forbidden" status code', async () => {
+        await eventually(async () => await expect(invokeEndpoint()).to.be.rejectedWith(ForbiddenError));
+      });
+    });
 
-      const usage = {
-        id: 'dedup-guid',
-        timestamp: moment.utc().valueOf(),
-        organization_id: 'organization-guid',
-        space_id: 'space-guid',
-        consumer_id: 'consumer-guid',
-        resource_id: 'resource-guid',
-        plan_id: 'plan-guid',
-        resource_instance_id: 'resource-instance-guid',
-        measured_usage: [
-          {
-            measure: 'example',
-            quantity: 10
-          }
-        ]
-      };
+  const itNoAuthHeader = (invokeEndpoint) =>
+    context('when no authorization header is sent', () => {
+      it('it should reject the request with "unauthorized" status code', async () => {
+        await eventually(async () => await expect(invokeEndpoint()).to.be.rejectedWith(UnauthorizedError));
+      });
+    });
+
+  describe('#startSampling', () => {
+    const usage = {
+      id: 'dedup-guid',
+      timestamp: moment.utc().valueOf(),
+      organization_id: 'organization-guid',
+      space_id: 'space-guid',
+      consumer_id: 'consumer-guid',
+      resource_id: 'resource-guid',
+      plan_id: 'plan-guid',
+      resource_instance_id: 'resource-instance-guid',
+      measured_usage: [
+        {
+          measure: 'example',
+          quantity: 10
+        }
+      ]
+    };
+
+    itNoAuthHeader(() => noAuthHeaderReceiverClient.startSampling(usage));
+    itNoNeededScopes(() => noScopesReceiverClient.startSampling(usage));
+
+    context('when start event is processed', () => {
 
       beforeEach(async () => {
-        await eventually(async () => await receiverClient.startSampling(usage));
+        await eventually(async () => await validReceiverClient.startSampling(usage));
       });
 
       it('it should write a span to the db', async () => {
@@ -202,19 +220,21 @@ describe('Receiver integartion test', () => {
   });
 
   describe('#stopSampling', () => {
+    const usage = {
+      id: 'dedup-guid',
+      timestamp: moment.utc().valueOf(),
+      organization_id: 'organization-guid',
+      space_id: 'space-guid',
+      consumer_id: 'consumer-guid',
+      resource_id: 'resource-guid',
+      plan_id: 'plan-guid',
+      resource_instance_id: 'resource-instance-guid'
+    };
 
-    context('when stop event is received', () => {
-      const usage = {
-        id: 'dedup-guid',
-        timestamp: moment.utc().valueOf(),
-        organization_id: 'organization-guid',
-        space_id: 'space-guid',
-        consumer_id: 'consumer-guid',
-        resource_id: 'resource-guid',
-        plan_id: 'plan-guid',
-        resource_instance_id: 'resource-instance-guid'
-      };
+    itNoAuthHeader(() => noAuthHeaderReceiverClient.stopSampling(usage));
+    itNoNeededScopes(() => noScopesReceiverClient.stopSampling(usage));
 
+    context('when stop event is processed', () => {
       const preparedDoc = {
         target: {
           organization_id: usage.organization_id,
@@ -248,7 +268,7 @@ describe('Receiver integartion test', () => {
 
       beforeEach(async () => {
         await mongoClient.collection(collectionName).insertOne(preparedDoc);
-        await eventually(async () => await receiverClient.stopSampling(usage));
+        await eventually(async () => await validReceiverClient.stopSampling(usage));
       });
 
       it('it should update the span', async () => {
@@ -280,18 +300,28 @@ describe('Receiver integartion test', () => {
   });
 
   describe('#createMappings', () => {
+    const mapping = {
+      resource_id: 'test-resource-id',
+      plan_id: 'test-plan-id',
+      metering_plan: 'test-metering-plan',
+      rating_plan: 'test-rating-plan',
+      pricing_plan: 'test-pricing-plan'
+    };
+
+    itNoAuthHeader(() => noAuthHeaderReceiverClient.createMappings(mapping));
+    itNoNeededScopes(() => noScopesReceiverClient.createMappings(mapping));
 
     context('when create mappings is called', () => {
-      const mapping = {
-        resource_id: 'test-resource-id',
-        plan_id: 'test-plan-id',
-        metering_plan: 'test-metering-plan',
-        rating_plan: 'test-rating-plan',
-        pricing_plan: 'test-pricing-plan'
-      };
+      let provisioningPluginToken;
 
       before(async () => {
-        await eventually(async () => await receiverClient.createMappings(mapping));
+        provisioningPluginToken = tokenFactory.create(provisioningPluginScopes);
+        externalSystemsMocks
+          .uaaServer
+          .tokenService
+          .whenScopesAre(provisioningPluginScopes)
+          .return(provisioningPluginToken);
+        await eventually(async () => await validReceiverClient.createMappings(mapping));
       });
 
       const verifyMappingCreated = (requests, plan) => {
