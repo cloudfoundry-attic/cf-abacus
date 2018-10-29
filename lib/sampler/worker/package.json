@@ -42,7 +42,6 @@
     "abacus-moment": "file:../../utils/moment",
     "abacus-oauth": "file:../../utils/oauth",
     "abacus-sampler-storage": "file:../storage",
-    "abacus-urienv": "file:../../utils/urienv",
     "abacus-webapp": "file:../../utils/webapp",
     "underscore": "^1.9.1",
     "uuid": "^3.2.1"
