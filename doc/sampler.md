@@ -11,7 +11,7 @@ The solution is designed to be highly available, scalable, consistent, and align
 
 ## 1. Introduction
 
-Abacus enables service providers, also known as *resource providers*, to report and aggregate usage data through the usage of two types of usages:
+Abacus enables service providers, also known as *resource providers*, to report and aggregate usage data by employing two types of usages:
 
 **Discrete:** These usages deal with independent consumption events, occuring at a specific point in time.
 
@@ -296,7 +296,8 @@ The purpose and lifecycle of each field is summarized in table 6.2.
 | processing.planned_interval | no | yes | An object describing the interval that is planned for sampling. |
 | processing.last_change_at | no | no | The timestamp in milliseconds since epoch of the last modification done to the *processing* section. Used for debugging purposes. |
 | processing.version | no | no | An integer used for optimistic concurrency control when modifying the *processing* section. |
-<br>**Table 6.2: Span fields**
+
+**Table 6.2: Span fields**
 
 There are a few MongoDB indices that optimize searches over span documents and impose restrictions on the fields. These are summarized in table 6.3.
 
@@ -306,7 +307,8 @@ There are a few MongoDB indices that optimize searches over span documents and i
 | unique_start_dedup_id | *start_dedup_id* | yes | yes | Ensures that two documents with the same *start_dedup_id*, if specified, cannot be stored in MongoDB. |
 | unique_end_dedup_id | *end_dedup_id* | yes | yes | Ensures that two documents with the same *end_dedup_id*, if specified, cannot be stored in MongoDB. |
 | search_processing | *processing.complete*<br>*processing.last_interval.end* | no | no | Allows for fast searches when looking up spans that need to be sampled. |
-<br>**Table 6.3: Span indices**
+
+**Table 6.3: Span indices**
 
 There are a number of key execution flows that components in Sampler follow to modify the state of the span documents.
 
@@ -377,7 +379,7 @@ This flow is executed whenever an existing continuous usage is stopped via the s
 
 This is achieved via the *findAndModify* operation in MongoDB. The condition for the update is that there is a document in MongoDB that has a zero *target.correlation_id*, the same *target* fields as those in the stop event, and an *end* field that is *null*. The update operation sets the *end* field to the *timestamp* field of the stop event, the *end_dedup_id* field to the *id* fiield of the stop event, if one is present, and modifies the *target.correlation_id* to a random GUID.
 
-The resulting span then looks as shown in digure 6.5.
+The resulting span then looks as shown in figure 6.5.
 
 ```json
 {
