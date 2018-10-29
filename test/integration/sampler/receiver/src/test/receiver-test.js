@@ -39,10 +39,6 @@ describe('Receiver integartion test', () => {
   const jwtSecret = 'secret';
   const clientId = 'client-id';
   const clientSecret = 'client-secret';
-  const credentials = {
-    username: 'user',
-    password: 'pass'
-  };
 
   let tokenFactory;
   let lifecycleManager;
@@ -106,6 +102,10 @@ describe('Receiver integartion test', () => {
   });
 
   describe('#healthcheck', () => {
+    const credentials = {
+      username: 'user',
+      password: 'pass'
+    };
     let webappClient;
 
     before(async () => {
@@ -114,8 +114,6 @@ describe('Receiver integartion test', () => {
     });
 
     context('when uaa server successfully validates passed credentials', () => {
-      let health;
-
       before(async () => {
         externalSystemsMocks.uaaServer.tokenService.clearRequests();
         const healthcheckToken = tokenFactory.create(healthcheckScopes);
@@ -124,15 +122,13 @@ describe('Receiver integartion test', () => {
           .tokenService
           .whenScopesAre(healthcheckScopes)
           .return(healthcheckToken);
-        health = await eventually(async () => await webappClient.getHealth());
       });
 
       it('it responds with healthy status', async () => {
-        expect(health).to.deep.equal({
+        expect(await eventually(async () => await webappClient.getHealth())).to.deep.equal({
           healthy: true
         });
       });
-
     });
 
     context('when uaa server rejects passed credentials', () => {

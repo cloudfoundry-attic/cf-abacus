@@ -4,7 +4,7 @@ const httpStatus = require('http-status-codes');
 const util = require('util');
 const { extend } = require('underscore');
 const { MongoClient } = require('mongodb');
-const { WebAppClient, BasicAuthHeaderProvider } = require('abacus-api');
+const { WebAppClient, BasicAuthHeaderProvider, UnauthorizedError } = require('abacus-api');
 const moment = require('abacus-moment');
 const { externalSystems, cfServerMock, uaaServerMock, abacusCollectorMock } = require('abacus-mock-util');
 const createLifecycleManager = require('abacus-lifecycle-manager');
@@ -29,16 +29,14 @@ describe('Worker integration tests', () => {
   const clientId = 'client-id';
   const clientSecret = 'client-secret';
   const jwtSecret = 'secret';
- 
 
+  let tokenFactory;
   let lifecycleManager;
   let mongoClient;
-  let samplerResourceToken;
-
   let externalSystemsMocks;
 
   before(async () => {
-    const tokenFactory = createTokenFactory(jwtSecret);
+    tokenFactory = createTokenFactory(jwtSecret);
     mongoClient = await MongoClient.connect(mongoURI);
     mongoClient.collection(collectionName).remove();
 
@@ -50,20 +48,6 @@ describe('Worker integration tests', () => {
       .infoService
       .returnUaaAddress(externalSystemsMocks.uaaServer.url());
 
-    samplerResourceToken = tokenFactory.create(samplerResourceToken);
-    externalSystemsMocks
-      .uaaServer
-      .tokenService
-      .whenScopesAre(samplerResourceScopes)
-      .return(samplerResourceToken);
-
-    const healthcheckToken = tokenFactory.create(healthcheckScopes);
-    externalSystemsMocks
-      .uaaServer
-      .tokenService
-      .whenScopesAre(healthcheckScopes)
-      .return(healthcheckToken);
-
     externalSystemsMocks
       .abacusCollector
       .collectUsageService
@@ -74,7 +58,7 @@ describe('Worker integration tests', () => {
       COLLECTOR: externalSystemsMocks.abacusCollector.url(),
       AUTH_SERVER: externalSystemsMocks.cfServer.url(),
       API: externalSystemsMocks.cfServer.url(),
-      SPANS_COLLECTION_NAME: 'test-spans',
+      SPANS_COLLECTION_NAME: collectionName,
       CLIENT_ID: clientId,
       CLIENT_SECRET: clientSecret,
       SECURED: 'true',
@@ -93,6 +77,47 @@ describe('Worker integration tests', () => {
     lifecycleManager.stopAllStarted();
     await mongoClient.close();
     await util.promisify(externalSystemsMocks.stopAll)();
+  });
+
+  describe('#healthcheck', () => {
+    const credentials = {
+      username: 'user',
+      password: 'pass'
+    };
+    let webappClient;
+
+    before(async () => {
+      const authHeaderProvider = new BasicAuthHeaderProvider(credentials);
+      webappClient = new WebAppClient(workerURI, authHeaderProvider, skipSslValidation);
+    });
+
+    context('when uaa server successfully validates passed credentials', () => {
+      before(async () => {
+        externalSystemsMocks.uaaServer.tokenService.clearRequests();
+        const healthcheckToken = tokenFactory.create(healthcheckScopes);
+        externalSystemsMocks
+          .uaaServer
+          .tokenService
+          .whenScopesAre(healthcheckScopes)
+          .return(healthcheckToken);
+      });
+
+      it('it responds with healthy status', async () => {
+        expect(await eventually(async () => await webappClient.getHealth())).to.deep.equal({
+          healthy: true
+        });
+      });
+    });
+
+    context('when uaa server rejects passed credentials', () => {
+      before(async () => {
+        externalSystemsMocks.uaaServer.tokenService.clearReturnValues();
+      });
+
+      it('it responds with "unauthorized" status', async () => {
+        await eventually(async () => await expect(webappClient.getHealth()).to.be.rejectedWith(UnauthorizedError));
+      });
+    });
   });
 
   describe('#span-processing', () => {
@@ -130,6 +155,8 @@ describe('Worker integration tests', () => {
         start_dedup_id: 'test-start-dedup-id'
       };
 
+      let samplerResourceToken;
+
       const findSpan = async (target) => {
         return await mongoClient.collection(collectionName).findOne({
           'target.organization_id': target.organization_id,
@@ -149,7 +176,13 @@ describe('Worker integration tests', () => {
       };
 
       before(async () => {
-        externalSystemsMocks.uaaServer.tokenService.clear();
+        externalSystemsMocks.uaaServer.tokenService.clearRequests();
+        samplerResourceToken = tokenFactory.create(samplerResourceToken);
+        externalSystemsMocks
+          .uaaServer
+          .tokenService
+          .whenScopesAre(samplerResourceScopes)
+          .return(samplerResourceToken);
         await mongoClient.collection(collectionName).insertOne(preparedDoc);
         await eventually(spanIsProcessed);
       });
@@ -197,45 +230,6 @@ describe('Worker integration tests', () => {
       });
 
     });
-  });
-
-  describe('#healthcheck', () => {
-
-    context('when healthcheck is requested', () => {
-      let health;
-      const credentials = {
-        username: 'user',
-        password: 'pass'
-      };
-
-      before(async () => {
-        externalSystemsMocks.uaaServer.tokenService.clear();
-        const authHeaderProvider = new BasicAuthHeaderProvider(credentials);
-        const webappClient = new WebAppClient(workerURI, authHeaderProvider, skipSslValidation);
-        health = await eventually(async () => await webappClient.getHealth(credentials));
-      });
-      
-      it('it responds with healthy status', async () => {
-        expect(health).to.deep.equal({
-          healthy: true
-        });
-      });
-
-      it('provided credentials are validated via uaa server', async () => {
-        const healthcheckTokenRequests = externalSystemsMocks
-          .uaaServer
-          .tokenService
-          .requests
-          .withScopes(healthcheckScopes);
-
-        expect(healthcheckTokenRequests.length).to.equal(1);
-        expect(healthcheckTokenRequests[0].credentials).to.deep.equal({
-          clientId: credentials.username,
-          secret: credentials.password
-        });
-      });
-    });
-
   });
 });
 
