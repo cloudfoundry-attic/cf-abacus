@@ -77,6 +77,7 @@ module.exports = () => {
           return serviceData.requests().filter((request) => isEqual(request.scopes, scopes));
         }
       },
+      returnNothing: serviceData.return.nothing,
       whenScopesAre: (scopes) => {
         const serializedScopes = scopes.join(' ');
         return {
