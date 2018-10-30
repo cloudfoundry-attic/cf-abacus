@@ -7,13 +7,13 @@ module.exports = () => {
   let returnSeries;
   let returnMap;
   
-  const clearReturnValues = () => {
+  const resetReturnValues = () => {
     returnAlways = undefined;
     returnSeries = [];
     returnMap = new Map();
   };
 
-  clearReturnValues();
+  resetReturnValues();
 
   return {
     request: (n) => serviceRequests[n],
@@ -36,11 +36,10 @@ module.exports = () => {
       for: (key) => ({
         value: (returnValue) => returnMap.set(key, returnValue)
       }),
-      nothing: () => returnSeries = []
+      nothing: resetReturnValues
     },
-    clearRequests: () => {
+    clear: () => {
       serviceRequests = [];
-    },
-    clearReturnValues: clearReturnValues
+    }
   };
 };

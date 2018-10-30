@@ -55,9 +55,9 @@ describe('Worker integration tests', () => {
       .always(httpStatus.ACCEPTED);
 
     const env = extend({}, process.env, {
-      COLLECTOR: externalSystemsMocks.abacusCollector.url(),
       AUTH_SERVER: externalSystemsMocks.cfServer.url(),
       API: externalSystemsMocks.cfServer.url(),
+      COLLECTOR_URL: externalSystemsMocks.abacusCollector.url(),
       SPANS_COLLECTION_NAME: collectionName,
       CLIENT_ID: clientId,
       CLIENT_SECRET: clientSecret,
@@ -93,7 +93,7 @@ describe('Worker integration tests', () => {
 
     context('when uaa server successfully validates passed credentials', () => {
       before(async () => {
-        externalSystemsMocks.uaaServer.tokenService.clearRequests();
+        externalSystemsMocks.uaaServer.tokenService.clear();
         const healthcheckToken = tokenFactory.create(healthcheckScopes);
         externalSystemsMocks
           .uaaServer
@@ -111,7 +111,7 @@ describe('Worker integration tests', () => {
 
     context('when uaa server rejects passed credentials', () => {
       before(async () => {
-        externalSystemsMocks.uaaServer.tokenService.clearReturnValues();
+        externalSystemsMocks.uaaServer.tokenService.returnNothing();
       });
 
       it('it responds with "unauthorized" status', async () => {
@@ -176,7 +176,7 @@ describe('Worker integration tests', () => {
       };
 
       before(async () => {
-        externalSystemsMocks.uaaServer.tokenService.clearRequests();
+        externalSystemsMocks.uaaServer.tokenService.clear();
         samplerResourceToken = tokenFactory.create(samplerResourceToken);
         externalSystemsMocks
           .uaaServer

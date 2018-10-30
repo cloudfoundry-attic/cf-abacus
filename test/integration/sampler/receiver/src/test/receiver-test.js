@@ -75,7 +75,7 @@ describe('Receiver integartion test', () => {
     const env = extend({}, process.env, {
       API: externalSystemsMocks.cfServer.url(),
       AUTH_SERVER: externalSystemsMocks.cfServer.url(),
-      PROVISIONING: externalSystemsMocks.provisioningServer.url(),
+      PROVISIONING_URL: externalSystemsMocks.provisioningServer.url(),
       SPANS_COLLECTION_NAME: collectionName,
       SECURED: 'true',
       CLUSTER: 'false',
@@ -115,7 +115,7 @@ describe('Receiver integartion test', () => {
 
     context('when uaa server successfully validates passed credentials', () => {
       before(async () => {
-        externalSystemsMocks.uaaServer.tokenService.clearRequests();
+        externalSystemsMocks.uaaServer.tokenService.clear();
         const healthcheckToken = tokenFactory.create(healthcheckScopes);
         externalSystemsMocks
           .uaaServer
@@ -133,7 +133,7 @@ describe('Receiver integartion test', () => {
 
     context('when uaa server rejects passed credentials', () => {
       before(async () => {
-        externalSystemsMocks.uaaServer.tokenService.clearReturnValues();
+        externalSystemsMocks.uaaServer.tokenService.returnNothing();
       });
 
       it('it responds with "unauthorized" status', async () => {
