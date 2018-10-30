@@ -35,8 +35,6 @@
     "abacus-moment": "file:../../../lib/utils/moment",
     "abacus-oauth": "file:../../../lib/utils/oauth",
     "abacus-publish": "file:../../../tools/publish",
-    "http-status-codes": "^1.3.0",
-    "request": "^2.79.0",
     "underscore": "^1.9.1"
   },
   "engines": {

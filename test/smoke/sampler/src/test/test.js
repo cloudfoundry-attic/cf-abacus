@@ -1,16 +1,13 @@
 'use strict';
 
-const httpStatus = require('http-status-codes');
 const util = require('util');
+const { omit } = require('underscore');
 
-const { ReceiverClient, ConflictError, UnprocessableEntityError } = require('abacus-api');
+const { ReceiverClient, ReportingClient, ConflictError, UnprocessableEntityError } = require('abacus-api');
 const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');
 
 const { env, spanConfig } = require('./config');
-const { createEventBuilder, reportClient } = require('./helpers');
-
-const eventBuilder = createEventBuilder();
 
 const systemToken = env.secured ?
   oauth.cache(env.api, env.systemClientId, env.systemClientSecret, 'abacus.usage.read abacus.usage.write') :
@@ -18,6 +15,33 @@ const systemToken = env.secured ?
 const samplerToken = env.secured ?
   oauth.cache(env.api, env.clientId, env.clientSecret, 'abacus.sampler.write') :
   undefined;
+
+const mapping = {
+  'resource_id': spanConfig.resource_id,
+  'plan_id': spanConfig.plan_id,
+  'metering_plan': spanConfig.metering_plan,
+  'rating_plan': spanConfig.rating_plan,
+  'pricing_plan': spanConfig.pricing_plan
+};
+
+const createEventBuilder = () => {
+  const _getEvent = (time) => ({
+    timestamp: time,
+    organization_id: spanConfig.organization_id,
+    space_id: spanConfig.space_id,
+    consumer_id: spanConfig.consumer_id,
+    resource_id: spanConfig.resource_id,
+    plan_id: spanConfig.plan_id,
+    resource_instance_id: spanConfig.resource_instance_id,
+    measured_usage: []
+  });
+
+  return {
+    createStartEvent: (time) => _getEvent(time),
+    createStopEvent: (time) => omit(_getEvent(time), 'measured_usage')
+  };
+};
+
 
 const getMonthlySummaryValue = (report) => {
   const resourceIndex = 0;
@@ -47,59 +71,58 @@ const startTokens = async() => {
   await startSamplerToken();
 };
 
+const getToken = (token) => env.secured ? token() : undefined;
+
 describe('Sampler smoke test', function() {
   let receiverClient;
+  let reportingClient;
+  let eventBuilder;
 
   this.timeout(env.totalTimeout);
   setEventuallyPollingInterval(env.pollInterval);
   setEventuallyTimeout(env.totalTimeout);
 
+  const createMappingGracefully = async (receiverClient, mapping) => {
+    try {
+      await receiverClient.createMappings(mapping);
+    } catch(e) {
+      expect(e.message).to.equal(new ConflictError().message);
+    }
+  };
+
+  const stopSamplingGracefully = async (receiverClient, event) => {
+    try {
+      await receiverClient.stopSampling(event);
+    } catch(e) {
+      expect(e.message).to.equal(new UnprocessableEntityError().message);
+    }
+  };
+
   before(async() => {
     if(env.secured)
       await startTokens();
 
-    receiverClient = new ReceiverClient(env.receiverUrl, { getHeader: () => samplerToken() }, env.skipSSL);
-
-    log('Creating services mappings ...');
-    const mapping = {
-      'resource_id': spanConfig.resource_id,
-      'plan_id': spanConfig.plan_id,
-      'metering_plan': spanConfig.metering_plan,
-      'rating_plan': spanConfig.rating_plan,
-      'pricing_plan': spanConfig.pricing_plan
-    };
-
-    try {
-      await receiverClient.createMappings(mapping);
-    } catch(e) {
-      expect(e.message).to.deep.equal(new ConflictError().message);
-    }
-
-    log('Cleaning up in case of previous test error ...');
-    try {
-      await receiverClient.stopSampling(eventBuilder.createStopEvent(moment.now()));
-    } catch(e) {
-      expect(e.message).to.deep.equal(new UnprocessableEntityError().message);
-    }
+    receiverClient = new ReceiverClient(env.receiverUrl, { getHeader: () => getToken(samplerToken) }, env.skipSSL);
+    reportingClient = new ReportingClient(env.reportingUrl, { getHeader: () => getToken(systemToken) }, env.skipSSL);
+    eventBuilder = createEventBuilder();
   });
 
-  afterEach(async() => {
+  after(async() => {
     log('Stopping sampling in case of test error ...');
-    try {
-      await receiverClient.stopSampling(eventBuilder.createStopEvent(moment.now()));
-    } catch(e) {
-      expect(e.message).to.deep.equal(new UnprocessableEntityError().message);
-    }
+    await stopSamplingGracefully(receiverClient, eventBuilder.createStopEvent(moment.now()));
   });
 
   it('samples usage to Abacus successfully', async () => {
+    log('Creating services mappings ...');
+    await createMappingGracefully(receiverClient, mapping);
+
+    log('Cleaning up in case of previous test error ...');
+    await stopSamplingGracefully(receiverClient, eventBuilder.createStopEvent(moment.now()));
 
     log('Getting initial report ...');
     let initialReport;
     await eventually(async() => {
-      const response = await reportClient.getReport(systemToken(), spanConfig.organization_id, moment.now());
-      expect(response.statusCode).to.be.equal(httpStatus.OK);
-      initialReport = response.body;
+      initialReport = await reportingClient.getReport(spanConfig.organization_id, moment.now());
     });
 
     log('Sending start event to sampler ...');
@@ -113,10 +136,7 @@ describe('Sampler smoke test', function() {
     log('Getting final report ...');
     await eventually(async () => {
       // use moment.now() to get report because aggregation step uses processed time
-      let response = await reportClient.getReport(systemToken(), spanConfig.organization_id, moment.now());
-      expect(response.statusCode).to.be.equal(httpStatus.OK);
-
-      const currentReport = response.body;
+      const currentReport = await reportingClient.getReport(spanConfig.organization_id, moment.now());
       expect(getMonthlySummaryValue(currentReport)).not.to.be.equal(getMonthlySummaryValue(initialReport));
     });
   });
