@@ -13,7 +13,7 @@ applications:
       CONF: default
       CLUSTER: false
       DEBUG: e-abacus-*
-      COLLECTOR: ((ABACUS_PREFIX))abacus-usage-collector
+      COLLECTOR_URL: ((ABACUS_PREFIX))abacus-usage-collector.((CF_SYS_DOMAIN))
       EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
       EUREKA_USER: ((HYSTRIX_CLIENT_ID))
       EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))

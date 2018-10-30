@@ -14,7 +14,7 @@ applications:
       CONF: default
       CLUSTER: false
       DEBUG: e-abacus-*
-      PROVISIONING: ((ABACUS_PREFIX))abacus-provisioning-plugin
+      PROVISIONING_URL: ((ABACUS_PREFIX))abacus-provisioning-plugin.((CF_SYS_DOMAIN))
       EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
       EUREKA_USER: ((HYSTRIX_CLIENT_ID))
       EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))

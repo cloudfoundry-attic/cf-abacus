@@ -3,7 +3,7 @@ applications:
     routes:
       - route: abacus-healthchecker.((CF_SYS_DOMAIN))
     path: .
-    instances: 1
+    instances: 2
     memory: 512M
     disk_quota: 512M
     zdm: true
@@ -21,9 +21,7 @@ applications:
           "((ABACUS_PREFIX))abacus-eureka-plugin",
           "((ABACUS_PREFIX))abacus-services-bridge",
           "((ABACUS_PREFIX))abacus-service-dashboard",
-          "((ABACUS_PREFIX))abacus-applications-bridge",
-          "((ABACUS_PREFIX))abacus-sampler-worker",
-          "((ABACUS_PREFIX))abacus-sampler-receiver"
+          "((ABACUS_PREFIX))abacus-applications-bridge"
         ]
       DEBUG: e-abacus-*
       CF_API: ((AUTH_SERVER))

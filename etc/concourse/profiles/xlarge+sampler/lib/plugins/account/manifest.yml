@@ -1,0 +1,38 @@
+applications:
+  - name: abacus-account-plugin
+    routes:
+      - route: abacus-account-plugin.((CF_SYS_DOMAIN))
+    path: .
+    instances: 10
+    memory: 512M
+    disk_quota: 512M
+    zdm: true
+    env:
+      APPS: 1
+      DB_PARTITIONS: 1
+      CUSTOM_METRICS: true
+      DEBUG: e-abacus-*
+      CLUSTER: false
+      API: ((AUTH_SERVER))
+      AUTH_SERVER: ((AUTH_SERVER))
+      EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
+      EUREKA_USER: ((HYSTRIX_CLIENT_ID))
+      EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
+      NODE_MODULES_CACHE: false
+      SECURED: true
+      SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
+      THROTTLE: 100
+      BATCH_SIZE: 10
+      MAX_INFLIGHT: 2000
+      OPTIMIZE_MEMORY: true
+      PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
+      JWTALGO: ((JWTALGO))
+      JWTKEY: |+
+        ((JWTKEY))
+      DEBUG_STRIPLF: true
+      ACCOUNT_TOKEN_URI: ((XSUAA_URL))
+      ACCOUNT_BACKEND: ((XSUAA_TENANT_BACKEND))
+      ACCOUNT_IGNORE_PATTERN: '^idz:'
+      CLIENT_ID: ((XSUAA_CLIENT_ID))
+      CLIENT_SECRET: ((XSUAA_CLIENT_SECRET))
+      DB_URI: ((DB_PLUGINS_URI))

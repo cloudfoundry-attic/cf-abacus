@@ -30,9 +30,7 @@ const testEnv = {
     `${abacusPrefix}abacus-housekeeper`,
     `${abacusPrefix}abacus-applications-bridge`,
     `${abacusPrefix}abacus-service-dashboard`,
-    `${abacusPrefix}abacus-services-bridge`,
-    `${abacusPrefix}abacus-sampler-receiver`,
-    `${abacusPrefix}abacus-sampler-worker`
+    `${abacusPrefix}abacus-services-bridge`
   ]
 };
 
