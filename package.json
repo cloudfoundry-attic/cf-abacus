@@ -63,6 +63,7 @@
     "restart": "yarn stop && yarn start",
     "update-dependencies": "bin/update-dependencies",
     "report-coverage": "lcov-result-merger 'node_modules/**/coverage/lcov.info' coverage.out && codecov",
+    "sampler-smoke": "export JOBS=1 && foreach sampler-smoke-test node_modules/:name yarn run sampler-smoke --",
     "scenario": "export JOBS=1 && foreach scenario node_modules/:name yarn run scenario --",
     "smoke": "export JOBS=1 && foreach smoke node_modules/:name yarn run smoke --",
     "start": "bin/start && yarn run store-defaults",
