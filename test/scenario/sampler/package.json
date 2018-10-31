@@ -28,13 +28,12 @@
     "pub": "publish"
   },
   "devDependencies": {
+    "abacus-api": "file:../../../lib/utils/api",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-moment": "file:../../../lib/utils/moment",
     "abacus-oauth": "file:../../../lib/utils/oauth",
     "abacus-publish": "file:../../../tools/publish",
-    "http-status-codes": "^1.3.0",
-    "request": "^2.79.0",
     "underscore": "^1.9.1",
     "uuid": "^3.2.1"
   },
