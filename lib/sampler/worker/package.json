@@ -43,6 +43,7 @@
     "abacus-oauth": "file:../../utils/oauth",
     "abacus-sampler-storage": "file:../storage",
     "abacus-webapp": "file:../../utils/webapp",
+    "ajv": "^6.0.0",
     "underscore": "^1.9.1",
     "uuid": "^3.2.1"
   },

@@ -1,26 +1,27 @@
 ---
 applications:
-  - name: abacus-sampler-worker
+  - name: abacus-sampler-receiver
     routes:
-    - route: abacus-sampler-worker.((CF_SYS_DOMAIN))
+    - route: abacus-sampler-receiver.((CF_SYS_DOMAIN))
     path: .
-    instances: 1
+    instances: 16 # large: 8, medium: 4, small: 1
     memory: 512M
     disk_quota: 1024M
+    zdm: true
     env:
       APPS: 1
       CUSTOM_METRICS: true
       CONF: default
       CLUSTER: false
       DEBUG: e-abacus-*
-      COLLECTOR_URL: ((ABACUS_PREFIX))abacus-usage-collector.((CF_SYS_DOMAIN))
+      PROVISIONING_URL: ((ABACUS_PREFIX))abacus-provisioning-plugin.((CF_SYS_DOMAIN))
       EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
       EUREKA_USER: ((HYSTRIX_CLIENT_ID))
       EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
       API: ((AUTH_SERVER))
       AUTH_SERVER: ((AUTH_SERVER))
-      CLIENT_ID: ((INTERNAL_RESOURCE_CLIENT_ID))
-      CLIENT_SECRET: ((INTERNAL_RESOURCE_CLIENT_SECRET))
+      CLIENT_ID: ((SYSTEM_CLIENT_ID))
+      CLIENT_SECRET: ((SYSTEM_CLIENT_SECRET))
       NODE_MODULES_CACHE: false
       PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
       SECURED: true

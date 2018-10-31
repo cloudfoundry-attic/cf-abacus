@@ -45,6 +45,7 @@
     "abacus-sampler-storage": "file:../storage",
     "abacus-schema": "file:../../utils/schema",
     "abacus-webapp": "file:../../utils/webapp",
+    "ajv": "^6.0.0",
     "http-status-codes": "^1.3.0",
     "is-my-json-valid": "^2.12.0",
     "uuid": "^3.2.1"
