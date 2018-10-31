@@ -61,12 +61,7 @@ const getMonthlySummaryValue = (report) => {
     .summary;
 };
 
-const log = (msg, ...args) => {
-  if (args.length !== 0)
-    console.log(`${moment.utc().toDate()}: ${msg}`, args);
-  else
-    console.log(`${moment.utc().toDate()}: ${msg}`);
-};
+const log = (msg, ...args) => console.log(`%s: ${msg}`, moment.utc().toDate(), ...args);
 
 const startTokens = async() => {
   const startSystemToken = util.promisify(systemToken.start);
