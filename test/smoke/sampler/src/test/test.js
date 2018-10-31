@@ -61,7 +61,12 @@ const getMonthlySummaryValue = (report) => {
     .summary;
 };
 
-const log = (msg) => console.log(`${moment.utc().toDate()}: ${msg}`);
+const log = (msg, ...args) => {
+  if (args.length !== 0)
+    console.log(`${moment.utc().toDate()}: ${msg}`, args);
+  else
+    console.log(`${moment.utc().toDate()}: ${msg}`);
+};
 
 const startTokens = async() => {
   const startSystemToken = util.promisify(systemToken.start);
@@ -107,37 +112,48 @@ describe('Sampler smoke test', function() {
     eventBuilder = createEventBuilder();
   });
 
-  after(async() => {
-    log('Stopping sampling in case of test error ...');
-    await stopSamplingGracefully(receiverClient, eventBuilder.createStopEvent(moment.now()));
-  });
-
-  it('samples usage to Abacus successfully', async () => {
+  beforeEach(async() => {
     log('Creating services mappings ...');
     await createMappingGracefully(receiverClient, mapping);
 
     log('Cleaning up in case of previous test error ...');
     await stopSamplingGracefully(receiverClient, eventBuilder.createStopEvent(moment.now()));
+  });
 
-    log('Getting initial report ...');
+  afterEach(async() => {
+    log('Stopping sampling ...');
+    await stopSamplingGracefully(receiverClient, eventBuilder.createStopEvent(moment.now()));
+  });
+
+  context('when sampling usage', () => {
     let initialReport;
-    await eventually(async() => {
-      initialReport = await reportingClient.getReport(spanConfig.organization_id, moment.now());
+
+    beforeEach(async() => {
+      log('Getting initial report ...');
+      await eventually(async() => {
+        initialReport = await reportingClient.getReport(spanConfig.organization_id, moment.now());
+      });
+
+      log('Sending start event to sampler ...');
+      const startTimestamp = moment.now();
+      await receiverClient.startSampling(eventBuilder.createStartEvent(startTimestamp));
+
+      log('Sending stop event to sampler ...');
+      const stopTimestamp = moment.utc(startTimestamp).add(1, 'millisecond').valueOf();
+      await receiverClient.stopSampling(eventBuilder.createStopEvent(stopTimestamp));
     });
 
-    log('Sending start event to sampler ...');
-    const startTimestamp = moment.now();
-    await receiverClient.startSampling(eventBuilder.createStartEvent(startTimestamp));
+    it('reports discrete usage to Abacus', async () => {
+      await eventually(async () => {
+        // To get report we use moment.now(), because it is increasing for each eventually iteration.
+        // We do that, because aggregation step uses processed (seqid) time instead of document end time.
+        const reportTimestamp = moment.now();
 
-    log('Sending stop event to sampler ...');
-    const stopTimestamp = moment.utc(startTimestamp).add(1, 'millisecond').valueOf();
-    await receiverClient.stopSampling(eventBuilder.createStopEvent(stopTimestamp));
+        log('Getting final report for timestamp %d ...', reportTimestamp);
 
-    log('Getting final report ...');
-    await eventually(async () => {
-      // use moment.now() to get report because aggregation step uses processed time
-      const currentReport = await reportingClient.getReport(spanConfig.organization_id, moment.now());
-      expect(getMonthlySummaryValue(currentReport)).not.to.be.equal(getMonthlySummaryValue(initialReport));
+        const currentReport = await reportingClient.getReport(spanConfig.organization_id, reportTimestamp);
+        expect(getMonthlySummaryValue(currentReport)).not.to.equal(getMonthlySummaryValue(initialReport));
+      });
     });
   });
 });
