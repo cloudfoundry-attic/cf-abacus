@@ -116,7 +116,7 @@ describe('Sampler smoke test', function() {
   });
 
   afterEach(async() => {
-    log('Stopping sampling ...');
+    log('Ensure sampling is stopped ...');
     await stopSamplingGracefully(receiverClient, eventBuilder.createStopEvent(moment.now()));
   });
 
