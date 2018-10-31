@@ -4,8 +4,16 @@ module.exports = () => {
   let serviceRequests = [];
 
   let returnAlways;
-  let returnSeries = [];
-  let returnMap = new Map();
+  let returnSeries;
+  let returnMap;
+  
+  const resetReturnValues = () => {
+    returnAlways = undefined;
+    returnSeries = [];
+    returnMap = new Map();
+  };
+
+  resetReturnValues();
 
   return {
     request: (n) => serviceRequests[n],
@@ -28,7 +36,7 @@ module.exports = () => {
       for: (key) => ({
         value: (returnValue) => returnMap.set(key, returnValue)
       }),
-      nothing: () => returnSeries = []
+      nothing: resetReturnValues
     },
     clear: () => {
       serviceRequests = [];
