@@ -4,7 +4,7 @@ applications:
     routes:
     - route: abacus-sampler-receiver.((CF_SYS_DOMAIN))
     path: .
-    instances: 16
+    instances: 16 # large: 8, medium: 4, small: 1
     memory: 512M
     disk_quota: 1024M
     zdm: true
