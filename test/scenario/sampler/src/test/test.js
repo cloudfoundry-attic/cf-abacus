@@ -46,7 +46,6 @@ const createEventBuilder = () => {
 
 const createReportParser = (report) => {
   const _currentMonthIndex = 0;
-  const _prevMonthIndex = 1;
 
   const _getMonthlySummaryValue = (monthIndex) => {
     const resourceIndex = 0;
@@ -63,12 +62,11 @@ const createReportParser = (report) => {
   };
 
   return {
-    getCurrentMonthSummary: () => _getMonthlySummaryValue(_currentMonthIndex),
-    getPrevMonthSummary: () => _getMonthlySummaryValue(_prevMonthIndex)
+    getCurrentMonthSummary: () => _getMonthlySummaryValue(_currentMonthIndex)
   };
 };
 
-const log = (msg) => console.log(`${moment.utc().toDate()}: ${msg}`);
+const log = (msg, ...args) => console.log(`%s: ${msg}`, moment.utc().toDate(), ...args);
 
 describe('Sampler scenario test', function() {
   let receiverClient;
@@ -115,25 +113,33 @@ describe('Sampler scenario test', function() {
     }
   });
 
-  it('samples usage to Abacus successfully', async () => {
-    log('Creating services mappings ...');
-    await receiverClient.createMappings(mapping);
+  context('when sampling usage', () => {
+    beforeEach(async() => {
+      log('Creating services mappings ...');
+      await receiverClient.createMappings(mapping);
 
-    log('Sending start event to sampler ...');
-    const startTimestamp = moment.utc().subtract(2, 'days').valueOf();
-    await receiverClient.startSampling(eventBuilder.createStartEvent(target, startTimestamp));
+      log('Sending start event to sampler ...');
+      const startTimestamp = moment.utc().startOf('month').add(2, 'days').valueOf();
+      await receiverClient.startSampling(eventBuilder.createStartEvent(target, startTimestamp));
 
-    log('Sending stop event to sampler ...');
-    const stopTimestamp = moment.utc(startTimestamp).add(1, 'day').valueOf();
-    await receiverClient.stopSampling(eventBuilder.createStopEvent(target, stopTimestamp));
+      log('Sending stop event to sampler ...');
+      const stopTimestamp = moment.utc(startTimestamp).add(1, 'days').valueOf();
+      await receiverClient.stopSampling(eventBuilder.createStopEvent(target, stopTimestamp));
+    });
 
-    log('Getting final report ...');
-    await eventually(async () => {
-      // use moment.now() to get report because aggregation step uses processed time
-      const currentReport = await reportingClient.getReport(target.organization_id, moment.now());
-      const reportParser = createReportParser(currentReport);
-      const totalSummary = reportParser.getCurrentMonthSummary() + reportParser.getPrevMonthSummary();
-      expect(totalSummary).to.be.equal(twentyFourUsageHours);
+    it('reports discrete usage to Abacus', async () => {
+      await eventually(async () => {
+        // To get report we use moment.now(), because it is increasing for each eventually iteration.
+        // We do that, because aggregation step uses processed (seqid) time instead of document end time.
+        const reportTimestamp = moment.now();
+
+        log('Getting final report for timestamp %d ...', reportTimestamp);
+
+        const currentReport = await reportingClient.getReport(target.organization_id, reportTimestamp);
+        const reportParser = createReportParser(currentReport);
+        const totalSummary = reportParser.getCurrentMonthSummary();
+        expect(totalSummary).to.be.equal(twentyFourUsageHours);
+      });
     });
   });
 });
