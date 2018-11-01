@@ -15,6 +15,7 @@ case "$CI_TEST" in
     sleep 3s
     yarn run demo
     yarn run process-usage-smoke
+    yarn run sampler-smoke
     yarn stop
     ;;
 

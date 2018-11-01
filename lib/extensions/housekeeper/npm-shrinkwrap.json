@@ -186,7 +186,7 @@
       "dependencies": {
         "fast-deep-equal": {
           "version": "2.0.1",
-          "from": "fast-deep-equal@>=2.0.1 <3.0.0",
+          "from": "fast-deep-equal@^2.0.1",
           "resolved": "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz"
         },
         "json-schema-traverse": {
@@ -453,9 +453,9 @@
       }
     },
     "express-rate-limit": {
-      "version": "3.2.1",
+      "version": "3.3.0",
       "from": "express-rate-limit@^3.1.1",
-      "resolved": "https://registry.npmjs.org/express-rate-limit/-/express-rate-limit-3.2.1.tgz"
+      "resolved": "https://registry.npmjs.org/express-rate-limit/-/express-rate-limit-3.3.0.tgz"
     },
     "extend": {
       "version": "3.0.2",
@@ -469,7 +469,7 @@
     },
     "fast-deep-equal": {
       "version": "1.1.0",
-      "from": "fast-deep-equal@>=1.0.0 <2.0.0",
+      "from": "fast-deep-equal@^1.0.0",
       "resolved": "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-1.1.0.tgz"
     },
     "fast-json-stable-stringify": {
@@ -500,16 +500,9 @@
       "resolved": "https://registry.npmjs.org/forever-agent/-/forever-agent-0.6.1.tgz"
     },
     "form-data": {
-      "version": "2.3.2",
-      "from": "form-data@>=2.3.2 <2.4.0",
-      "resolved": "https://registry.npmjs.org/form-data/-/form-data-2.3.2.tgz",
-      "dependencies": {
-        "combined-stream": {
-          "version": "1.0.6",
-          "from": "combined-stream@1.0.6",
-          "resolved": "https://registry.npmjs.org/combined-stream/-/combined-stream-1.0.6.tgz"
-        }
-      }
+      "version": "2.3.3",
+      "from": "form-data@~2.3.2",
+      "resolved": "https://registry.npmjs.org/form-data/-/form-data-2.3.3.tgz"
     },
     "forwarded": {
       "version": "0.1.2",
@@ -721,14 +714,14 @@
       "resolved": "https://registry.npmjs.org/mime/-/mime-1.4.1.tgz"
     },
     "mime-db": {
-      "version": "1.36.0",
-      "from": "mime-db@>=1.36.0 <1.37.0",
-      "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.36.0.tgz"
+      "version": "1.37.0",
+      "from": "mime-db@~1.37.0",
+      "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.37.0.tgz"
     },
     "mime-types": {
-      "version": "2.1.20",
-      "from": "mime-types@>=2.1.19 <2.2.0",
-      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.20.tgz"
+      "version": "2.1.21",
+      "from": "mime-types@~2.1.19",
+      "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.21.tgz"
     },
     "moment": {
       "version": "2.22.2",
@@ -952,9 +945,9 @@
       "resolved": "https://registry.npmjs.org/source-map-support/-/source-map-support-0.5.9.tgz"
     },
     "sshpk": {
-      "version": "1.15.1",
+      "version": "1.15.2",
       "from": "sshpk@^1.7.0",
-      "resolved": "https://registry.npmjs.org/sshpk/-/sshpk-1.15.1.tgz"
+      "resolved": "https://registry.npmjs.org/sshpk/-/sshpk-1.15.2.tgz"
     },
     "statuses": {
       "version": "1.4.0",
