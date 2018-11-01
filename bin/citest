@@ -10,7 +10,7 @@ case "$CI_TEST" in
     yarn run integration
     ;;
 
-  process-usage-smoke)
+  smoke)
     yarn start
     sleep 3s
     yarn run demo
