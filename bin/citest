@@ -23,7 +23,7 @@ case "$CI_TEST" in
     yarn start
     sleep 3s
     (cd test/scenario/dedup-id && yarn run dedup-id-scenario)
-    (cd test/scenario/metering-plans-id && yarn run metering-plans-scenario)
+    (cd test/scenario/metering-plans && yarn run metering-plans-scenario)
     (cd test/scenario/sampler && yarn run sampler-scenario)
     yarn stop
     ;;
