@@ -7,7 +7,7 @@ const uuid = require('uuid');
 const debug = require('abacus-debug')('abacus-sampler-scenario-test');
 const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');
-const { ReceiverClient, ReportingClient, UnprocessableEntityError } = require('abacus-api');
+const { ReceiverClient, ReportingClient, UnprocessableEntityError, ConflictError } = require('abacus-api');
 
 const { env } = require('./env-config');
 
@@ -96,6 +96,22 @@ describe('Sampler scenario test', function() {
   setEventuallyPollingInterval(env.pollInterval);
   setEventuallyTimeout(env.totalTimeout);
 
+  const createMappingGracefully = async (receiverClient, mapping) => {
+    try {
+      await receiverClient.createMappings(mapping);
+    } catch(e) {
+      expect(e.message).to.equal(new ConflictError().message);
+    }
+  };
+
+  const stopSamplingGracefully = async (receiverClient, event) => {
+    try {
+      await receiverClient.stopSampling(event);
+    } catch(e) {
+      expect(e.message).to.equal(new UnprocessableEntityError().message);
+    }
+  };
+
   beforeEach(async() => {
     if(env.secured)
       await startTokens();
@@ -106,17 +122,13 @@ describe('Sampler scenario test', function() {
   });
 
   afterEach(async() => {
-    try {
-      await receiverClient.stopSampling(eventBuilder.createStopEvent(target, moment.now()));
-    } catch (e) {
-      expect(e.message).to.equal(new UnprocessableEntityError().message);
-    }
+    await stopSamplingGracefully(receiverClient, eventBuilder.createStopEvent(target, moment.now()));
   });
 
   context('when sampling usage', () => {
     beforeEach(async() => {
       debug('Creating services mappings ...');
-      await receiverClient.createMappings(mapping);
+      await createMappingGracefully(receiverClient, mapping);
 
       debug('Sending start event to sampler ...');
       const startTimestamp = moment.utc().startOf('month').add(2, 'days').valueOf();
