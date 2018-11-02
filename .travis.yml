@@ -55,9 +55,9 @@ matrix:
       script:
         - yarn run provision
         - travis_retry yarn run citest
-    - name: "Process Usage Smoke Test"
+    - name: "Smoke Tests"
       env:
-      - DESCRIPTION=process-usage-smoke-tests
+      - DESCRIPTION=smoke-tests
       - RABBIT_URI=amqp://localhost:5672
       - DB_URI=mongodb://localhost:27017
       - DB_ACCUMULATOR_URI=mongodb://localhost:27017
@@ -65,7 +65,24 @@ matrix:
       - JOBS=1
       - SMOKE_START_TIMEOUT=20000
       - SMOKE_TOTAL_TIMEOUT=120000
-      - CI_TEST=process-usage-smoke
+      - CI_TEST=smoke
+      services:
+        - mongodb
+        - rabbitmq
+      script:
+        - yarn run provision
+        - travis_retry yarn run citest
+    - name: "Scenario Tests"
+      env:
+        - DESCRIPTION=scenario-tests
+        - RABBIT_URI=amqp://localhost:5672
+        - DB_URI=mongodb://localhost:27017
+        - DB_ACCUMULATOR_URI=mongodb://localhost:27017
+        - DB_AGGREGATOR_URI=mongodb://localhost:27017
+        - JOBS=1
+        - SMOKE_START_TIMEOUT=20000
+        - SMOKE_TOTAL_TIMEOUT=120000
+        - CI_TEST=scenario
       services:
         - mongodb
         - rabbitmq

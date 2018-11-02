@@ -4,6 +4,7 @@ const util = require('util');
 const { omit } = require('underscore');
 
 const { ReceiverClient, ReportingClient, ConflictError, UnprocessableEntityError } = require('abacus-api');
+const debug = require('abacus-debug')('abacus-sampler-smoke-test');
 const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');
 
@@ -61,8 +62,6 @@ const getMonthlySummaryValue = (report) => {
     .summary;
 };
 
-const log = (msg, ...args) => console.log(`%s: ${msg}`, moment.utc().toDate(), ...args);
-
 const startTokens = async() => {
   const startSystemToken = util.promisify(systemToken.start);
   const startSamplerToken = util.promisify(samplerToken.start);
@@ -108,15 +107,15 @@ describe('Sampler smoke test', function() {
   });
 
   beforeEach(async() => {
-    log('Creating services mappings ...');
+    debug('Creating services mappings ...');
     await createMappingGracefully(receiverClient, mapping);
 
-    log('Cleaning up in case of previous test error ...');
+    debug('Cleaning up in case of previous test error ...');
     await stopSamplingGracefully(receiverClient, eventBuilder.createStopEvent(moment.now()));
   });
 
   afterEach(async() => {
-    log('Ensure sampling is stopped ...');
+    debug('Ensure sampling is stopped ...');
     await stopSamplingGracefully(receiverClient, eventBuilder.createStopEvent(moment.now()));
   });
 
@@ -124,16 +123,16 @@ describe('Sampler smoke test', function() {
     let initialReport;
 
     beforeEach(async() => {
-      log('Getting initial report ...');
+      debug('Getting initial report ...');
       await eventually(async() => {
         initialReport = await reportingClient.getReport(spanConfig.organization_id, moment.now());
       });
 
-      log('Sending start event to sampler ...');
+      debug('Sending start event to sampler ...');
       const startTimestamp = moment.now();
       await receiverClient.startSampling(eventBuilder.createStartEvent(startTimestamp));
 
-      log('Sending stop event to sampler ...');
+      debug('Sending stop event to sampler ...');
       const stopTimestamp = moment.utc(startTimestamp).add(1, 'millisecond').valueOf();
       await receiverClient.stopSampling(eventBuilder.createStopEvent(stopTimestamp));
     });
@@ -144,7 +143,7 @@ describe('Sampler smoke test', function() {
         // We do that, because aggregation step uses processed (seqid) time instead of document end time.
         const reportTimestamp = moment.now();
 
-        log('Getting final report for timestamp %d ...', reportTimestamp);
+        debug('Getting final report for timestamp %d ...', reportTimestamp);
 
         const currentReport = await reportingClient.getReport(spanConfig.organization_id, reportTimestamp);
         expect(getMonthlySummaryValue(currentReport)).not.to.equal(getMonthlySummaryValue(initialReport));
