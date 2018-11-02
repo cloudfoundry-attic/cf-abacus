@@ -22,7 +22,6 @@ case "$CI_TEST" in
   scenario)
     yarn start
     sleep 3s
-    yarn run demo
     yarn run dedup-id-scenario
     yarn run metering-plans-scenario
     yarn run sampler-scenario
