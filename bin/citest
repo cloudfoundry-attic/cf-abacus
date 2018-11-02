@@ -15,16 +15,16 @@ case "$CI_TEST" in
     sleep 3s
     yarn run demo
     yarn run process-usage-smoke
-    yarn run sampler-smoke
+    (cd test/smoke/sampler && yarn run sampler-smoke)
     yarn stop
     ;;
 
   scenario)
     yarn start
     sleep 3s
-    yarn run dedup-id-scenario
-    yarn run metering-plans-scenario
-    yarn run sampler-scenario
+    (cd test/scenario/dedup-id && yarn run dedup-id-scenario)
+    (cd test/scenario/metering-plans-id && yarn run metering-plans-scenario)
+    (cd test/scenario/sampler && yarn run sampler-scenario)
     yarn stop
     ;;
 
