@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "abacus-api": "file:../../../lib/utils/api",
+    "abacus-debug" : "file:../../../lib/utils/debug",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-moment": "file:../../../lib/utils/moment",

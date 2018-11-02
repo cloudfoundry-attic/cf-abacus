@@ -1,8 +1,10 @@
 'use strict';
 
-const uuid = require('uuid');
-const util = require('util');
 const { omit } = require('underscore');
+const util = require('util');
+const uuid = require('uuid');
+
+const debug = require('abacus-debug')('abacus-sampler-scenario-test');
 const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');
 const { ReceiverClient, ReportingClient, UnprocessableEntityError } = require('abacus-api');
@@ -66,8 +68,6 @@ const createReportParser = (report) => {
   };
 };
 
-const log = (msg, ...args) => console.log(`%s: ${msg}`, moment.utc().toDate(), ...args);
-
 describe('Sampler scenario test', function() {
   let receiverClient;
   let reportingClient;
@@ -115,14 +115,14 @@ describe('Sampler scenario test', function() {
 
   context('when sampling usage', () => {
     beforeEach(async() => {
-      log('Creating services mappings ...');
+      debug('Creating services mappings ...');
       await receiverClient.createMappings(mapping);
 
-      log('Sending start event to sampler ...');
+      debug('Sending start event to sampler ...');
       const startTimestamp = moment.utc().startOf('month').add(2, 'days').valueOf();
       await receiverClient.startSampling(eventBuilder.createStartEvent(target, startTimestamp));
 
-      log('Sending stop event to sampler ...');
+      debug('Sending stop event to sampler ...');
       const stopTimestamp = moment.utc(startTimestamp).add(1, 'days').valueOf();
       await receiverClient.stopSampling(eventBuilder.createStopEvent(target, stopTimestamp));
     });
@@ -133,7 +133,7 @@ describe('Sampler scenario test', function() {
         // We do that, because aggregation step uses processed (seqid) time instead of document end time.
         const reportTimestamp = moment.now();
 
-        log('Getting final report for timestamp %d ...', reportTimestamp);
+        debug('Getting final report for timestamp %d ...', reportTimestamp);
 
         const currentReport = await reportingClient.getReport(target.organization_id, reportTimestamp);
         const reportParser = createReportParser(currentReport);
