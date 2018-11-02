@@ -19,6 +19,16 @@ case "$CI_TEST" in
     yarn stop
     ;;
 
+  scenario)
+    yarn start
+    sleep 3s
+    yarn run demo
+    yarn run dedup-id-scenario
+    yarn run metering-plans-scenario
+    yarn run sampler-scenario
+    yarn stop
+    ;;
+
   performance)
     # Performance test
     export SECURED=true
