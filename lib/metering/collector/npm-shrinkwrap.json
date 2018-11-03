@@ -899,9 +899,9 @@
       "resolved": "https://registry.npmjs.org/globby/-/globby-5.0.0.tgz"
     },
     "graceful-fs": {
-      "version": "4.1.11",
-      "from": "graceful-fs@>=4.1.2 <5.0.0",
-      "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.1.11.tgz"
+      "version": "4.1.14",
+      "from": "graceful-fs@^4.1.2",
+      "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.1.14.tgz"
     },
     "graphql": {
       "version": "0.4.18",
