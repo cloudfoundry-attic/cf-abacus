@@ -24,7 +24,7 @@
   "scripts": {
     "scenario": "abacus-eslint && abacus-mocha --command",
     "lint": "abacus-eslint",
-    "test": "abacus-eslint",
+    "test": "abacus-eslint && true",
     "generate-coverage": "true",
     "pub": "publish"
   },

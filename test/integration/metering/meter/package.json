@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "integration": "abacus-eslint && abacus-mocha --command",
-    "test": "abacus-eslint",
+    "test": "abacus-eslint && true",
     "start-rabbit": "rabbitmq-server start",
     "generate-coverage": "true",
     "lint": "abacus-eslint",
