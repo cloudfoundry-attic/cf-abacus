@@ -72,7 +72,7 @@ const startTokens = async() => {
 
 const getToken = (token) => env.secured ? token() : undefined;
 
-describe('Sampler smoke test', function() {
+describe('@sampler smoke test', function() {
   let receiverClient;
   let reportingClient;
   let eventBuilder;

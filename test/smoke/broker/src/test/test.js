@@ -27,7 +27,7 @@ const testEnv = {
 
 let abacusClient;
 
-describe('Abacus Broker Smoke test', function() {
+describe('Abacus Broker Smoke test @cfonly', function() {
   this.timeout(testEnv.totalTimeout);
   let app;
   let serviceInstance;
