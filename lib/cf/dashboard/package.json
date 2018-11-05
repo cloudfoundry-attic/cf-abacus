@@ -34,8 +34,8 @@
     "jshint-ci": "jshint --exclude coverage,docs,jsdoc,node_modules,public,tmp --reporter=checkstyle .",
     "watch": "mocha src/test/backend --watch",
     "jsformat": "js-beautify -r *.js -r src/*.js -r src/lib/*.js -r src/lib/**/*.js -r src/test/*.js -r src/test/**/*.js",
-    "test": "yarn postinstall && mocha --exit src/test/*-test.js && karma start src/test/frontend/karma.conf.js && if [ -d ./.coverage ] ; then yarn run combinecoverage; fi ",
-    "generate-coverage": "true",
+    "test": "yarn postinstall && mocha --exit src/test/*-test.js && karma start src/test/frontend/karma.conf.js && true",
+    "generate-coverage": "if [ -d ./.coverage ] ; then yarn run combinecoverage; fi",
     "combinecoverage": "cat src/test/frontend/coverage/lcov.info >> ./.coverage/lcov.info && node --harmony src/test/combineJson.js",
     "backend-coverage": "node ./node_modules/istanbul-harmony/lib/cli.js cover  --hook-run-in-context ./node_modules/mocha/bin/_mocha -- --ui bdd -R spec -t 5000 src/test/backend/ && node --harmony ./node_modules/istanbul-harmony/lib/cli.js report --dir src/test/backend/coverage --root coverage html",
     "coverage": "karma start src/test/frontend/karma.conf.js && node ./node_modules/istanbul-harmony/lib/cli.js cover  --hook-run-in-context ./node_modules/mocha/bin/_mocha -- --ui bdd -R spec -t 5000 src/test/*-test.js && node --harmony ./node_modules/istanbul-harmony/lib/cli.js report --dir src/test/backend/coverage --root coverage html"

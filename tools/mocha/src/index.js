@@ -8,17 +8,16 @@ const recursiveReadSync = require('recursive-readdir-sync');
 
 if (process.env.LONGJOHN) require('longjohn');
 
-const _ = require('underscore');
-const contains = _.contains;
-const memoize = _.memoize;
+const { contains, memoize } = require('underscore');
 
 const path = require('path');
 const util = require('util');
 const fs = require('fs');
 const tty = require('tty');
+
+const async = require('async');
 const commander = require('commander');
 const childProcess = require('child_process');
-const async = require('async');
 
 /* eslint no-process-exit: 0 */
 /* jshint evil: true */
@@ -46,8 +45,11 @@ const runCLI = () => {
     commander.file = 'test.js';
   } else
     commander
-      .option('-f, --file <suffix>', 'test file should end with the suffix' + ' provided [test.js]', 'test.js')
+      .option('-f, --file <suffix>', 'test file should end with the suffix provided [test.js]', 'test.js')
       .option('--no-color', 'do not colorify output')
+      .option('--grep <pattern>', 'only run tests matching <pattern>')
+      .option('--fgrep <string>', 'only run tests containing <string>')
+      .option('--invert', 'inverts --grep and --fgrep matches')
       .option('-t, --timeout <number>', 'timeout [60000]', 60000)
       .parse(process.argv);
 
@@ -58,23 +60,29 @@ const runCLI = () => {
   const testDir = path.join(target(), 'test');
   const files = recursiveReadSync(testDir).filter((file) => file.endsWith(commander.file));
 
+  const argumentsStartIndex = 2;
+
   // Execute all test files in child processes sequentially
   async.forEachSeries(
     files,
     (file, callback) => {
       // Collect child process arguments
+
       let args;
       if (contains(process.argv, '--command')) {
         args = ['--file', path.join(file)];
         const index = process.argv.indexOf('--command');
         args = args.concat(process.argv.slice(index + 1));
-      } else
+      } else {
         args = [
           '--file',
           path.join(file),
           '--timeout',
           commander.timeout
         ];
+        args = args.concat(process.argv.slice(argumentsStartIndex));
+      }
+
       if (!colorify(commander)) args.push('--no-color');
 
       // Spawn child process

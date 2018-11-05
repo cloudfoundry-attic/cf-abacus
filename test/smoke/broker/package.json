@@ -24,7 +24,7 @@
   "scripts": {
     "smoke": "abacus-eslint && abacus-mocha",
     "lint": "abacus-eslint",
-    "test": "abacus-eslint",
+    "test": "abacus-eslint && true",
     "generate-coverage": "true",
     "pub": "publish"
   },
