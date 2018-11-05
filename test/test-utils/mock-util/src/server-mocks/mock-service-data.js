@@ -4,16 +4,24 @@ module.exports = () => {
   let serviceRequests = [];
 
   let returnAlways;
-  let returnSeries = [];
-  let returnKeyValue = {};
+  let returnSeries;
+  let returnMap;
+  
+  const resetReturnValues = () => {
+    returnAlways = undefined;
+    returnSeries = [];
+    returnMap = new Map();
+  };
+
+  resetReturnValues();
 
   return {
     request: (n) => serviceRequests[n],
     requests: () => serviceRequests,
     responseFor: (key) => {
-      return returnKeyValue[key];
+      return returnMap.get(key);
     },
-    nextResponse: (scopes) => {
+    nextResponse: () => {
       if (returnAlways) return returnAlways;
 
       const requestNumber = serviceRequests.length - 1;
@@ -26,9 +34,9 @@ module.exports = () => {
       series: (values) => returnSeries = values,
       always: (value) => returnAlways = value,
       for: (key) => ({
-        value: (returnValue) => returnKeyValue[key] = returnValue
+        value: (returnValue) => returnMap.set(key, returnValue)
       }),
-      nothing: () => returnSeries = []
+      nothing: resetReturnValues
     },
     clear: () => {
       serviceRequests = [];

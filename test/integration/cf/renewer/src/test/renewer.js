@@ -45,13 +45,13 @@ const isLastHourOfCurrentMonth = () =>
 // is before "start of month + slack")
 const slack = '32D';
 
-const getEnviornmentVars = (externalSystemsMocks) => ({
+const getEnviornmentVars = (externalSystems) => ({
   ABACUS_CLIENT_ID: env.abacusClientId,
   ABACUS_CLIENT_SECRET: env.abacusClientSecret,
   SECURED: 'true',
-  AUTH_SERVER: `http://localhost:${externalSystemsMocks.cloudController.address().port}`,
-  API: `http://localhost:${externalSystemsMocks.cloudController.address().port}`,
-  COLLECTOR: `http://localhost:${externalSystemsMocks.abacusCollector.address().port}`,
+  AUTH_SERVER: externalSystems.cloudController.url(),
+  API: externalSystems.cloudController.url(),
+  COLLECTOR: externalSystems.abacusCollector.url(),
   JWTKEY: env.tokenSecret,
   JWTALGO: env.tokenAlgorithm,
   RETRIES: env.retryCount,
@@ -69,7 +69,7 @@ module.exports = (customEnv) => ({
     externalSystemsMocks
       .cloudController
       .infoService
-      .returnUaaAddress(`http://localhost:${externalSystemsMocks.uaaServer.address().port}`);
+      .returnUaaAddress(externalSystemsMocks.uaaServer.url());
     const renewerEnv = extend({}, process.env, getEnviornmentVars(externalSystemsMocks), customEnv);
     lifecycleManager.useEnv(renewerEnv).startModules([lifecycleManager.modules.renewer]);
   },

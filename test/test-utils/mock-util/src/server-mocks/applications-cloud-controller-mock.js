@@ -1,10 +1,11 @@
 'use strict';
 
-const express = require('abacus-express');
+const { extend } = require('underscore');
+const express = require('express');
 const debug = require('abacus-debug')('cloud-controller-mock');
-const randomPort = 0;
 
 const createMockServiceData = require('./mock-service-data');
+const createCfServerMock = require('./cf-server-mock');
 
 // OAuth Authorization header format: "Bearer <token-value>"
 const extractOAuthToken = (authHeader) => {
@@ -14,23 +15,13 @@ const extractOAuthToken = (authHeader) => {
 };
 
 module.exports = () => {
-  let app;
-  let server;
-
   const applicationUsageEventsData = createMockServiceData();
-  let returnUaaAddress;
+  const cfServerMock = createCfServerMock();
 
-  const start = () => {
-    app = express();
+  const start = (cb) => {
+    const route = express.Router();
 
-    app.get('/v2/info', (req, res) => {
-      debug('Retrieving cf info...');
-      res.send({
-        token_endpoint: returnUaaAddress
-      });
-    });
-
-    app.get('/v2/app_usage_events', (req, res) => {
+    route.get('/v2/app_usage_events', (req, res) => {
       debug('Retrieved app usage events request. Query: %j', req.query);
       applicationUsageEventsData.requests().push({
         token: extractOAuthToken(req.header('Authorization')),
@@ -44,22 +35,12 @@ module.exports = () => {
       });
     });
 
-    server = app.listen(randomPort);
-    debug('Cloud controller started on port: %d', server.address().port);
-    return server.address();
+    cfServerMock.additionalRoutes(route);
+    cfServerMock.start(cb);
   };
 
-  const stop = (cb) => {
-    server.close(cb);
-  };
-
-  return {
+  return extend({}, cfServerMock, {
     start,
-    address: () => server.address(),
-    infoService: {
-      returnUaaAddress: (value) => returnUaaAddress = value
-    },
-    usageEvents: applicationUsageEventsData,
-    stop
-  };
+    usageEvents: applicationUsageEventsData
+  });
 };

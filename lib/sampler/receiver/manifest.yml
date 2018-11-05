@@ -1,6 +1,35 @@
 ---
 applications:
   - name: abacus-sampler-receiver
+    routes:
+    - route: abacus-sampler-receiver.((CF_SYS_DOMAIN))
+    path: .
     instances: 1
+    memory: 512M
+    disk_quota: 1024M
+    zdm: true
     env:
       APPS: 1
+      CUSTOM_METRICS: true
+      CONF: default
+      CLUSTER: false
+      DEBUG: e-abacus-*
+      PROVISIONING_URL: ((ABACUS_PREFIX))abacus-provisioning-plugin.((CF_SYS_DOMAIN))
+      EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
+      EUREKA_USER: ((HYSTRIX_CLIENT_ID))
+      EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
+      API: ((AUTH_SERVER))
+      AUTH_SERVER: ((AUTH_SERVER))
+      CLIENT_ID: ((SYSTEM_CLIENT_ID))
+      CLIENT_SECRET: ((SYSTEM_CLIENT_SECRET))
+      NODE_MODULES_CACHE: false
+      PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
+      SECURED: true
+      SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
+      MAX_INFLIGHT: 600
+      OPTIMIZE_MEMORY: true
+      JWTALGO: ((JWTALGO))
+      JWTKEY: |+
+        ((JWTKEY))
+      DEBUG_STRIPLF: true
+      DB_URI: ((DB_SAMPLER_URI))

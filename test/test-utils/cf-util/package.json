@@ -33,7 +33,6 @@
   "dependencies": {
     "abacus-cmdline": "file:../../../tools/cmdline",
     "abacus-moment": "file:../../../lib/utils/moment",
-    "abacus-wait": "file:../../test-utils/wait",
     "underscore": "^1.9.1"
   },
   "engines": {

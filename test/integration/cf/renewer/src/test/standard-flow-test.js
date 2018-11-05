@@ -5,16 +5,12 @@
 const httpStatus = require('http-status-codes');
 const { omit } = require('underscore');
 
-const yieldable = require('abacus-yieldable');
 const moment = require('abacus-moment');
-const createWait = require('abacus-wait');
 
 const { carryOverDb } = require('abacus-test-helper');
-const { serviceMock } = require('abacus-mock-util');
+// const { serviceMock } = require('abacus-mock-util');
 
 const fixture = require('./fixture');
-
-const waitUntil = yieldable(createWait().until);
 
 const now = moment.now();
 const startOfCurrentMonth = moment
@@ -92,44 +88,47 @@ const endOfLastMonthAbacusUsage = fixture.usage
 describe('renewer standard flow', () => {
   let externalSystemsMocks;
 
-  before(
-    yieldable.functioncb(function*() {
-      externalSystemsMocks = fixture.externalSystemsMocks();
+  before(async () => {
+    externalSystemsMocks = fixture.externalSystemsMocks();
 
-      externalSystemsMocks.uaaServer.tokenService
-        .whenScopesAre(fixture.abacusCollectorScopes)
-        .return(fixture.abacusCollectorToken);
+    externalSystemsMocks.uaaServer.tokenService
+      .whenScopesAre(fixture.abacusCollectorScopes)
+      .return(fixture.abacusCollectorToken);
 
-      externalSystemsMocks.abacusCollector.getUsageService.return.series([
-        {
-          statusCode: 200,
-          body: startOfLastMonthAbacusUsage
-        },
-        {
-          statusCode: 200,
-          body: middleOfLastMonthAbacusUsage
-        },
-        {
-          statusCode: 200,
-          body: endOfLastMonthAbacusUsage
-        }
-      ]);
+    externalSystemsMocks.abacusCollector.getUsageService.return.series([
+      {
+        statusCode: 200,
+        body: startOfLastMonthAbacusUsage
+      },
+      {
+        statusCode: 200,
+        body: middleOfLastMonthAbacusUsage
+      },
+      {
+        statusCode: 200,
+        body: endOfLastMonthAbacusUsage
+      }
+    ]);
 
-      externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.ACCEPTED);
+    externalSystemsMocks.abacusCollector.collectUsageService.return.always(httpStatus.ACCEPTED);
 
-      externalSystemsMocks.startAll();
+    externalSystemsMocks.startAll();
 
-      yield carryOverDb.setup();
-      yield carryOverDb.put(outOfSlackCarryOverDoc);
-      yield carryOverDb.put(unsupportedCarryOverDoc);
-      yield carryOverDb.put(startOfLastMonthCarryOverDoc);
-      yield carryOverDb.put(middleOfLastMonthCarryOverDoc);
-      yield carryOverDb.put(endOfLastMonthCarryOverDoc);
-      fixture.renewer.start(externalSystemsMocks);
+    await carryOverDb.setup();
+    await carryOverDb.put(outOfSlackCarryOverDoc);
+    await carryOverDb.put(unsupportedCarryOverDoc);
+    await carryOverDb.put(startOfLastMonthCarryOverDoc);
+    await carryOverDb.put(middleOfLastMonthCarryOverDoc);
+    await carryOverDb.put(endOfLastMonthCarryOverDoc);
+    fixture.renewer.start(externalSystemsMocks);
 
-      yield waitUntil(serviceMock(externalSystemsMocks.abacusCollector.collectUsageService).received(3));
-    })
-  );
+    const documentsInCarryOver = (expectedCount) => async () => {
+      const docs = await carryOverDb.readCurrentMonthDocs();
+      if (docs.length < expectedCount)
+        throw new Error(`Count of documents in carry-over is "${docs.length}". Waiting for "${expectedCount}" docs`);
+    };
+    await eventually(documentsInCarryOver(3));
+  });
 
   after((done) => {
     fixture.renewer.stop();
@@ -170,53 +169,47 @@ describe('renewer standard flow', () => {
     expect(abacusCollectorMock.collectUsageService.request(2).token).to.equal(expectedToken);
   });
 
-  it(
-    'records entries in carry-over',
-    yieldable.functioncb(function*() {
-      const abacusCollectorMock = externalSystemsMocks.abacusCollector;
-      const docs = yield carryOverDb.readCurrentMonthDocs();
-      const expectedNewDocuments = [
-        {
-          collector_id: abacusCollectorMock.resourceLocation,
-          event_guid: startOfLastMonthCarryOverDoc.event_guid,
-          state: startOfLastMonthCarryOverDoc.state,
-          timestamp: startOfCurrentMonth
-        },
-        {
-          collector_id: abacusCollectorMock.resourceLocation,
-          event_guid: middleOfLastMonthCarryOverDoc.event_guid,
-          state: middleOfLastMonthCarryOverDoc.state,
-          timestamp: startOfCurrentMonth
-        },
-        {
-          collector_id: abacusCollectorMock.resourceLocation,
-          event_guid: endOfLastMonthCarryOverDoc.event_guid,
-          state: endOfLastMonthCarryOverDoc.state,
-          timestamp: startOfCurrentMonth
-        }
-      ];
-      expect(docs).to.deep.equal(expectedNewDocuments);
-    })
-  );
+  it('records entries in carry-over', async () => {
+    const abacusCollectorMock = externalSystemsMocks.abacusCollector;
+    const docs = await carryOverDb.readCurrentMonthDocs();
+    const expectedNewDocuments = [
+      {
+        collector_id: abacusCollectorMock.resourceLocation,
+        event_guid: startOfLastMonthCarryOverDoc.event_guid,
+        state: startOfLastMonthCarryOverDoc.state,
+        timestamp: startOfCurrentMonth
+      },
+      {
+        collector_id: abacusCollectorMock.resourceLocation,
+        event_guid: middleOfLastMonthCarryOverDoc.event_guid,
+        state: middleOfLastMonthCarryOverDoc.state,
+        timestamp: startOfCurrentMonth
+      },
+      {
+        collector_id: abacusCollectorMock.resourceLocation,
+        event_guid: endOfLastMonthCarryOverDoc.event_guid,
+        state: endOfLastMonthCarryOverDoc.state,
+        timestamp: startOfCurrentMonth
+      }
+    ];
+    expect(docs).to.deep.equal(expectedNewDocuments);
+  });
 
-  it(
-    'exposes correct statistics',
-    yieldable.functioncb(function*() {
-      const response = yield fixture.renewer.readStats.withValidToken();
-      expect(response.statusCode).to.equal(httpStatus.OK);
-      const usageStats = response.body.statistics.usage;
-      expect(usageStats.report).to.deep.equal({
-        success: 3,
-        skipped: {
-          conflicts: 0,
-          legal_reasons: 0
-        },
-        failures: 0
-      });
-      expect(omit(usageStats.get, 'missingToken')).to.deep.equal({
-        success: 3,
-        failures: 0
-      });
-    })
-  );
+  it('exposes correct statistics', async () => {
+    const response = await fixture.renewer.readStats.withValidToken();
+    expect(response.statusCode).to.equal(httpStatus.OK);
+    const usageStats = response.body.statistics.usage;
+    expect(usageStats.report).to.deep.equal({
+      success: 3,
+      skipped: {
+        conflicts: 0,
+        legal_reasons: 0
+      },
+      failures: 0
+    });
+    expect(omit(usageStats.get, 'missingToken')).to.deep.equal({
+      success: 3,
+      failures: 0
+    });
+  });
 });
