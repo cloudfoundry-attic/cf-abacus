@@ -74,8 +74,7 @@ describe('process usage smoke test', function() {
 
   it('submits usage for a sample resource and retrieves an aggregated usage report', async function() {
     const timeout = Math.max(testEnv.totalTimeout, 40000) + 2000;
-    const startTime = moment.utc().startOf('month').valueOf() - 123;
-    // const startTime = moment.now();
+    const startTime = moment.now();
     const processingDeadline = startTime + timeout;
     const bytesInGigabyte = 1073741824;
 
