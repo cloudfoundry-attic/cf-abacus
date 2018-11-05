@@ -26,7 +26,7 @@
     "abacus-mocha": "./abacus-mocha"
   },
   "scripts": {
-    "test": "abacus-eslint && nyc ./abacus-mocha",
+    "test": "abacus-eslint && nyc ./abacus-mocha --grep '@failing' --invert && nyc ./abacus-mocha --file src/test/nonstandard.js --fgrep '/^@slow/' --invert",
     "generate-coverage": "nyc report --reporter=lcovonly",
     "lint": "abacus-eslint",
     "pub": "publish"

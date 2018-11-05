@@ -31,7 +31,7 @@
     "foreach": "./foreach"
   },
   "scripts": {
-    "test": "abacus-eslint",
+    "test": "abacus-eslint && true",
     "generate-coverage": "true",
     "lint": "abacus-eslint",
     "pub": "publish"

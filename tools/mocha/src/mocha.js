@@ -18,6 +18,9 @@ const runCLI = () => {
   commander
     .option('-f, --file <regex>', 'test file [test.js]', 'test.js')
     .option('--no-color', 'do not colorify output')
+    .option('--grep <pattern>', 'only run tests matching <pattern>')
+    .option('--fgrep <string>', 'only run tests containing <string>')
+    .option('--invert', 'inverts --grep and --fgrep matches')
     .option('-t, --timeout <number>', 'timeout [60000]', 60000)
     .allowUnknownOption(true)
     .parse(process.argv);
@@ -25,7 +28,10 @@ const runCLI = () => {
   // Configure Mocha
   const mocha = new Mocha({
     timeout: commander.timeout,
-    useColors: commander.color
+    useColors: commander.color,
+    grep: commander.grep,
+    fgrep: commander.fgrep,
+    invert: commander.invert
   });
 
   // Install Chai expect and Sinon spy and stub as globals

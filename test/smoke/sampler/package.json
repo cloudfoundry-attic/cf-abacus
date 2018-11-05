@@ -24,7 +24,7 @@
   "scripts": {
     "smoke": "true",
     "sampler-smoke": "abacus-mocha --command",
-    "test": "abacus-eslint",
+    "test": "abacus-eslint && true",
     "generate-coverage": "true",
     "lint": "abacus-eslint",
     "pub": "publish"
