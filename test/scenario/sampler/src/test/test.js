@@ -68,7 +68,7 @@ const createReportParser = (report) => {
   };
 };
 
-describe('Sampler scenario test', function() {
+describe('@sampler scenario test', function() {
   let receiverClient;
   let reportingClient;
   let eventBuilder;
