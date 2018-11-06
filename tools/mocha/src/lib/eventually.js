@@ -49,8 +49,8 @@ const eventually = async (func, options) => {
 
   } while(moment.now() - start < eventuallyConfig.timeout);
 
-  edebug(`Eventually timeout of ${eventuallyConfig.timeout} milliseconds exceeded.`);
-  throw lastError;
+  throw new Error(`Eventually timeout of ${eventuallyConfig.timeout} milliseconds exceeded.` +
+    `Last error occurred: ${lastError}`);
 };
 
 module.exports = {

@@ -98,7 +98,7 @@ const complexMeteringPlan = {
   ]
 };
 
-describe('Abacus Broker Scenario test', function() {
+describe('Abacus Broker Scenario test @cfonly', function() {
   this.timeout(testEnv.totalTimeout);
 
   let app;

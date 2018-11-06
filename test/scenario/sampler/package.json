@@ -21,10 +21,9 @@
     "src/"
   ],
   "scripts": {
-    "scenario": "true",
-    "sampler-scenario": "abacus-eslint && abacus-mocha --command",
+    "scenario": "abacus-eslint && abacus-mocha --command",
     "generate-coverage": "true",
-    "test": "abacus-eslint",
+    "test": "abacus-eslint && true",
     "lint": "abacus-eslint",
     "pub": "publish"
   },
