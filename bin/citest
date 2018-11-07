@@ -14,17 +14,14 @@ case "$CI_TEST" in
     yarn start
     sleep 3s
     yarn run demo
-    yarn run process-usage-smoke
-    (cd test/smoke/sampler && yarn run sampler-smoke)
+    yarn run smoke --fgrep '@cfonly' --invert
     yarn stop
     ;;
 
   scenario)
     yarn start
     sleep 3s
-    (cd test/scenario/dedup-id && yarn run dedup-id-scenario)
-    (cd test/scenario/metering-plans && yarn run metering-plans-scenario)
-    (cd test/scenario/sampler && yarn run sampler-scenario)
+    yarn run scenario --fgrep '@cfonly' --invert
     yarn stop
     ;;
 

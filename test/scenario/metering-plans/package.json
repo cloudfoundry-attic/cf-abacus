@@ -25,7 +25,7 @@
     "scenario": "abacus-eslint && abacus-mocha --command",
     "metering-plans-scenario": "abacus-eslint && abacus-mocha --command",
     "generate-coverage": "true",
-    "test": "abacus-eslint",
+    "test": "abacus-eslint && true",
     "lint": "abacus-eslint",
     "pub": "publish"
   },
