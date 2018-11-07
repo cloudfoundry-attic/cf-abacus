@@ -49,7 +49,7 @@
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-vcapenv": "file:../../utils/vcapenv",
     "abacus-webapp": "file:../../utils/webapp",
-    "bluebird": "3.5.2",
+    "bluebird": "3.5.3",
     "body-parser": "1.18.3",
     "cfenv": "1.1.0",
     "connect-mongo": "2.0.1",
