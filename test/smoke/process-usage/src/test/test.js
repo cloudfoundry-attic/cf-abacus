@@ -15,6 +15,7 @@ const { testEnv } = require('./env-config');
 const { buildUsage, createExpectedInitialReport } = require('./fixtures');
 const { deltaCompareReports } = require('./report-comparator');
 const { getThousandLightAPICallsQuantity, cleanReport } = require('./parse-report-utils');
+const { subtractReports } = require('./report-utils2');
 
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
@@ -112,7 +113,37 @@ describe('process usage smoke test', function() {
         // accumulate function is defined as max
         storage: quantites.storage / bytesInGigabyte
       };
-      
+      try {
+        console.log('Subtracted: %j', subtractReports(cleanReport(updatedReport), currentReport));
+        console.log('%j', createExpectedInitialReport(
+          testOrgID, 
+          {
+            lightAPICalls: 3,
+            heavyAPICalls: 300,
+            // accumulate function is defined as max
+            storage: 1
+          }, {
+            lightAPICalls: 3,
+            heavyAPICalls: 300,
+            // accumulate function is defined as max
+            storage: 1
+          }));
+        expect(subtractReports(cleanReport(updatedReport), currentReport)).to.deep.equal(createExpectedInitialReport(
+          testOrgID, 
+          {
+            lightAPICalls: 3,
+            heavyAPICalls: 300,
+            // accumulate function is defined as max
+            storage: 1
+          }, {
+            lightAPICalls: 3,
+            heavyAPICalls: 300,
+            // accumulate function is defined as max
+            storage: 1
+          }));
+      } catch(err) {
+        console.log('Error:', err);
+      }
       if(!processedDocs) 
         expect(cleanReport(updatedReport)).to.deep.equal(createExpectedInitialReport(
           testOrgID, expectedValues, expectedValues));  
