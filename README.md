@@ -39,9 +39,6 @@ cd cf-abacus
 # Start local MongoDB and RabbitMQ
 docker-compose up
 
-# Use local MongoDB
-. ./bin/localdb
-
 # Bootstrap the build environment
 # install the Node.js module dependencies and run the tests
 yarn run build
@@ -57,9 +54,6 @@ cd cf-abacus
 
 # Start local MongoDB and RabbitMQ
 docker-compose up
-
-# Use local MongoDB
-. ./bin/localdb
 
 # Start the Abacus apps
 yarn start
@@ -119,9 +113,6 @@ cd cf-abacus
 
 # Start local MongoDB and RabbitMQ
 docker-compose up
-
-# Use local MongoDB
-. ./bin/localdb
 
 # Run eslint on the Abacus modules
 yarn run lint
