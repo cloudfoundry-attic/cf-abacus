@@ -23,9 +23,9 @@
       "resolved": "https://registry.npmjs.org/@types/form-data/-/form-data-2.2.1.tgz"
     },
     "@types/node": {
-      "version": "10.12.2",
+      "version": "10.12.3",
       "from": "@types/node@*",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.12.2.tgz"
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.12.3.tgz"
     },
     "@types/request": {
       "version": "2.48.1",
@@ -736,9 +736,9 @@
       "resolved": "https://registry.npmjs.org/fast-json-stable-stringify/-/fast-json-stable-stringify-2.0.0.tgz"
     },
     "feature-policy": {
-      "version": "0.1.0",
-      "from": "feature-policy@0.1.0",
-      "resolved": "https://registry.npmjs.org/feature-policy/-/feature-policy-0.1.0.tgz"
+      "version": "0.2.0",
+      "from": "feature-policy@0.2.0",
+      "resolved": "https://registry.npmjs.org/feature-policy/-/feature-policy-0.2.0.tgz"
     },
     "finalhandler": {
       "version": "1.1.1",
@@ -818,9 +818,9 @@
       "resolved": "https://registry.npmjs.org/has/-/has-1.0.3.tgz"
     },
     "helmet": {
-      "version": "3.14.0",
-      "from": "helmet@3.14.0",
-      "resolved": "https://registry.npmjs.org/helmet/-/helmet-3.14.0.tgz"
+      "version": "3.15.0",
+      "from": "helmet@3.15.0",
+      "resolved": "https://registry.npmjs.org/helmet/-/helmet-3.15.0.tgz"
     },
     "helmet-crossdomain": {
       "version": "0.3.0",
