@@ -70,7 +70,6 @@ To select the DB:
 * start Abacus
 
 ```bash
-. ./bin/localdb
 yarn run build
 yarn start
 yarn run demo

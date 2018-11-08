@@ -6,7 +6,6 @@ abacus-eureka-integration-test
 ```bash
 cd cf-abacus
 docker-compose up -d
-source bin/localdb
 yarn provision
 cd test/integration/plugins/eureka
 yarn run integration
