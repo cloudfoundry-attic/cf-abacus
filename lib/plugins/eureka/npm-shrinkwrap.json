@@ -170,21 +170,9 @@
       "resolved": "https://registry.npmjs.org/accepts/-/accepts-1.3.5.tgz"
     },
     "ajv": {
-      "version": "6.5.4",
+      "version": "6.5.5",
       "from": "ajv@^6.0.0",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.5.4.tgz",
-      "dependencies": {
-        "fast-deep-equal": {
-          "version": "2.0.1",
-          "from": "fast-deep-equal@^2.0.1",
-          "resolved": "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz"
-        },
-        "json-schema-traverse": {
-          "version": "0.4.1",
-          "from": "json-schema-traverse@>=0.4.1 <0.5.0",
-          "resolved": "https://registry.npmjs.org/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz"
-        }
-      }
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.5.5.tgz"
     },
     "array-flatten": {
       "version": "1.1.1",
@@ -458,9 +446,9 @@
       "resolved": "https://registry.npmjs.org/extsprintf/-/extsprintf-1.3.0.tgz"
     },
     "fast-deep-equal": {
-      "version": "1.1.0",
-      "from": "fast-deep-equal@^1.0.0",
-      "resolved": "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-1.1.0.tgz"
+      "version": "2.0.1",
+      "from": "fast-deep-equal@^2.0.1",
+      "resolved": "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz"
     },
     "fast-json-stable-stringify": {
       "version": "2.0.0",
@@ -515,21 +503,9 @@
       "resolved": "https://registry.npmjs.org/har-schema/-/har-schema-2.0.0.tgz"
     },
     "har-validator": {
-      "version": "5.1.0",
-      "from": "har-validator@>=5.1.0 <5.2.0",
-      "resolved": "https://registry.npmjs.org/har-validator/-/har-validator-5.1.0.tgz",
-      "dependencies": {
-        "ajv": {
-          "version": "5.5.2",
-          "from": "ajv@>=5.3.0 <6.0.0",
-          "resolved": "https://registry.npmjs.org/ajv/-/ajv-5.5.2.tgz"
-        },
-        "co": {
-          "version": "4.6.0",
-          "from": "co@>=4.6.0 <5.0.0",
-          "resolved": "https://registry.npmjs.org/co/-/co-4.6.0.tgz"
-        }
-      }
+      "version": "5.1.2",
+      "from": "har-validator@~5.1.0",
+      "resolved": "https://registry.npmjs.org/har-validator/-/har-validator-5.1.2.tgz"
     },
     "http-errors": {
       "version": "1.6.3",
@@ -587,9 +563,9 @@
       "resolved": "https://registry.npmjs.org/json-schema/-/json-schema-0.2.3.tgz"
     },
     "json-schema-traverse": {
-      "version": "0.3.1",
-      "from": "json-schema-traverse@>=0.3.0 <0.4.0",
-      "resolved": "https://registry.npmjs.org/json-schema-traverse/-/json-schema-traverse-0.3.1.tgz"
+      "version": "0.4.1",
+      "from": "json-schema-traverse@>=0.4.1 <0.5.0",
+      "resolved": "https://registry.npmjs.org/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz"
     },
     "json-stringify-safe": {
       "version": "5.0.1",
@@ -816,9 +792,9 @@
       "resolved": "https://registry.npmjs.org/psl/-/psl-1.1.29.tgz"
     },
     "punycode": {
-      "version": "1.4.1",
-      "from": "punycode@>=1.4.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/punycode/-/punycode-1.4.1.tgz"
+      "version": "2.1.1",
+      "from": "punycode@>=2.1.0 <3.0.0",
+      "resolved": "https://registry.npmjs.org/punycode/-/punycode-2.1.1.tgz"
     },
     "qs": {
       "version": "6.5.2",
@@ -962,7 +938,14 @@
     "tough-cookie": {
       "version": "2.4.3",
       "from": "tough-cookie@>=2.4.3 <2.5.0",
-      "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.4.3.tgz"
+      "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.4.3.tgz",
+      "dependencies": {
+        "punycode": {
+          "version": "1.4.1",
+          "from": "punycode@>=1.4.1 <2.0.0",
+          "resolved": "https://registry.npmjs.org/punycode/-/punycode-1.4.1.tgz"
+        }
+      }
     },
     "tunnel-agent": {
       "version": "0.6.0",
@@ -992,14 +975,7 @@
     "uri-js": {
       "version": "4.2.2",
       "from": "uri-js@>=4.2.2 <5.0.0",
-      "resolved": "https://registry.npmjs.org/uri-js/-/uri-js-4.2.2.tgz",
-      "dependencies": {
-        "punycode": {
-          "version": "2.1.1",
-          "from": "punycode@>=2.1.0 <3.0.0",
-          "resolved": "https://registry.npmjs.org/punycode/-/punycode-2.1.1.tgz"
-        }
-      }
+      "resolved": "https://registry.npmjs.org/uri-js/-/uri-js-4.2.2.tgz"
     },
     "util-deprecate": {
       "version": "1.0.2",

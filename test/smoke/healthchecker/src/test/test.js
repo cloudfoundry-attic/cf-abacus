@@ -42,7 +42,7 @@ const authentication = {
   }
 };
 
-describe('abacus-healthchecker-smoke-test', () => {
+describe('abacus-healthchecker-smoke-test @cfonly', () => {
   before((done) =>
     request.waitFor(`${testEnv.healthchecker}/v1/healthcheck`, authentication, testEnv.startTimeout, done)
   );

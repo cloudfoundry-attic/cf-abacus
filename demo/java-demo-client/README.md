@@ -12,7 +12,6 @@ docker-compose up
 
 # In a new terminal start Abacus
 cd cf-abacus
-. bin/localdb
 yarn start
 
 # Start demo

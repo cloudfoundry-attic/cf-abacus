@@ -43,7 +43,7 @@ const eventually = async (func, options) => {
       return await func();
     } catch (e) {
       lastError = e;
-      edebug('Eventually failed due to: %o', e.message);
+      edebug('Eventually failed due to: %o', e);
     }
     await _sleep(eventuallyConfig.pollingInterval);
 

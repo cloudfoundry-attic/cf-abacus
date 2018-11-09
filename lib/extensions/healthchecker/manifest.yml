@@ -25,7 +25,6 @@ applications:
         ]
       DEBUG: e-abacus-*
       CF_API: ((AUTH_SERVER))
-      AUTH_SERVER: ((AUTH_SERVER))
       BREAKER_TIMEOUT: 90000
       SECURED: true
       SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))

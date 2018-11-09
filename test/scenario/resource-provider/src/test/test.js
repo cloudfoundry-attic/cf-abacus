@@ -28,7 +28,7 @@ const testEnv = {
   waitTimeout: process.env.WAIT_TIMEOUT || 300000
 };
 
-describe('Create and update plans acceptance test', () => {
+describe('Create and update plans acceptance test @cfonly', () => {
 
   const prefix = moment.utc().valueOf();
   const resourceId = `${prefix}-test-resource-id`;
