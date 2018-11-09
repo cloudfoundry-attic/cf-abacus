@@ -31,7 +31,7 @@ const db = require('abacus-dataflow').db('abacus-aggregator-aggregated-usage');
 db.allDocs = yieldable.functioncb(db.allDocs);
 
 const testEnv = {
-  db: process.env.DB_URI,
+  db: process.env.DB_URI || 'mongodb://localhost:27017',
   orgs: process.env.ORGS || 1,
   resourceInstances: process.env.INSTANCES || 1,
   usage: process.env.USAGE_DOCS || 1,
