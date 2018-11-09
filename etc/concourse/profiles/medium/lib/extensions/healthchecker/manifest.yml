@@ -1,0 +1,46 @@
+applications:
+  - name: abacus-healthchecker
+    routes:
+      - route: abacus-healthchecker.((CF_SYS_DOMAIN))
+    path: .
+    instances: 1
+    memory: 512M
+    disk_quota: 512M
+    zdm: true
+    env:
+      APPS: 1
+      CUSTOM_METRICS: true
+      APPLICATION_GROUPS: ((APPLICATION_GROUPS))
+      INTERNAL_APPLICATIONS: >
+        [
+          "((ABACUS_PREFIX))abacus-usage-meter",
+          "((ABACUS_PREFIX))abacus-usage-accumulator",
+          "((ABACUS_PREFIX))abacus-usage-aggregator",
+          "((ABACUS_PREFIX))abacus-cf-renewer",
+          "((ABACUS_PREFIX))abacus-housekeeper",
+          "((ABACUS_PREFIX))abacus-eureka-plugin",
+          "((ABACUS_PREFIX))abacus-services-bridge",
+          "((ABACUS_PREFIX))abacus-service-dashboard",
+          "((ABACUS_PREFIX))abacus-applications-bridge"
+        ]
+      DEBUG: e-abacus-*
+      CF_API: ((AUTH_SERVER))
+      BREAKER_TIMEOUT: 90000
+      SECURED: true
+      SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
+      CLIENT_ID: ((HYSTRIX_CLIENT_ID))
+      CLIENT_SECRET: ((HYSTRIX_CLIENT_SECRET))
+      CLIENT_SCOPES: abacus.system.read
+      EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
+      EUREKA_USER: ((HYSTRIX_CLIENT_ID))
+      EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
+      BATCH_SIZE: 50
+      THROTTLE: 60
+      CLUSTER: false
+      OPTIMIZE_MEMORY: true
+      NODE_MODULES_CACHE: false
+      PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
+      JWTALGO: ((JWTALGO))
+      JWTKEY: |+
+        ((JWTKEY))
+      DEBUG_STRIPLF: true
