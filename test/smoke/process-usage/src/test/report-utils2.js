@@ -6,22 +6,19 @@ const { findResourceById, findMetricByName, findPlanById, findSpaceById, findCon
 
 // const _subtractWindowValues = (valueA, valueB) => valueA - valueB === 0 ? valueA : valueA - valueB;
 
-const _subtractWindows = (windowsA, windowsB) => {
+const _subtractWindows = (updatedWindows, initilaWindows) => {
   const resultWindows = [];
-  each(windowsA, (window, windowIndex) => {
-    if(!windowsB[windowIndex])
+  each(updatedWindows, (window, windowIndex) => {
+    if(!initilaWindows[windowIndex])
       throw new Error('Invalid report');
-    // check size
-    // if(window.length !== windowsB[windowIndex].length)  
-    //   throw new Error('Missing aggregated usage demension');
     
     const resultWindow = [];
       
     each(window, (element, index) => {
       if(element) 
         resultWindow.push({
-          summary: element.summary - windowsB[windowIndex][index].summary,
-          quantity: element.quantity - windowsB[windowIndex][index].quantity
+          summary: element.summary - initilaWindows[windowIndex][index].summary,
+          quantity: element.quantity - initilaWindows[windowIndex][index].quantity
         });
       else
         resultWindow.push(null);
@@ -31,86 +28,82 @@ const _subtractWindows = (windowsA, windowsB) => {
   return resultWindows;
 };
 
-const _subtractAggregatedUsages = (aggregatedUsageA, aggregatedUsageB) => {
+const _subtractAggregatedUsages = (updatedAggregatedUsage, initialAggregatedUsage) => {
   const resultAggregatedUsage = [];
-  each(aggregatedUsageA, (au) => {
+  each(updatedAggregatedUsage, (au) => {
 
     resultAggregatedUsage.push({
       metric: au.metric,
-      windows: _subtractWindows(au.windows, findMetricByName(au.metric, aggregatedUsageB).windows)
+      windows: _subtractWindows(au.windows, findMetricByName(au.metric, initialAggregatedUsage).windows)
     });
     
   });
   return resultAggregatedUsage;
 };
 
-const _subtractPlans = (plansA, plansB) => {
+const _subtractPlans = (updatedPlans, initialPlans) => {
   const resultPlans = [];
-  each(plansA, (planA) => {
-    resultPlans.push(extend(clone(omit(planA, 'aggregated_usage')), { 
-      aggregated_usage: _subtractAggregatedUsages(planA.aggregated_usage, 
-        findPlanById(planA.plan_id, plansB).aggregated_usage)}));
+  each(updatedPlans, (updatedPlan) => {
+    resultPlans.push(extend(clone(omit(updatedPlan, 'aggregated_usage')), { 
+      aggregated_usage: _subtractAggregatedUsages(updatedPlan.aggregated_usage, 
+        findPlanById(updatedPlan.plan_id, initialPlans).aggregated_usage)}));
   });
   return resultPlans;
 };
 
-const _subtractResources = (resourcesA, resourcesB) => {
-  if(!resourcesB || resourcesB.length === 0)
-    return resourcesA;
+const _subtractResources = (updatedResources, initialResources) => {
+  if(!initialResources || initialResources.length === 0)
+    return updatedResources;
 
   const resultResources = [];
   
-  each(resourcesA, (resourceA) => {
-    const resourceB = findResourceById(resourceA.resource_id, resourcesB);
+  each(updatedResources, (updatedResource) => {
+    const initialResource = findResourceById(updatedResource.resource_id, initialResources);
     resultResources.push({
-      resource_id: resourceA.resource_id,
-      plans: _subtractPlans(resourceA.plans, resourceB.plans),
-      aggregated_usage: _subtractAggregatedUsages(resourceA.aggregated_usage, resourceB.aggregated_usage)
+      resource_id: updatedResource.resource_id,
+      plans: _subtractPlans(updatedResource.plans, initialResource.plans),
+      aggregated_usage: _subtractAggregatedUsages(updatedResource.aggregated_usage, initialResource.aggregated_usage)
     });
   });
   return resultResources;
 };
 
-const _subtractConsumers = (consumersA, consumersB) => {
+const _subtractConsumers = (updatedConsumers, initialConsumers) => {
   const resultConsumers = [];
   
-  each(consumersA, (consumerA) => {
+  each(updatedConsumers, (initialConsumer) => {
     resultConsumers.push({
-      consumer_id: consumerA.consumer_id,
-      resources: _subtractResources(consumerA.resources, findConsumerById(consumerA.consumer_id, consumersB).resources)
+      consumer_id: initialConsumer.consumer_id,
+      resources: _subtractResources(initialConsumer.resources, 
+        findConsumerById(initialConsumer.consumer_id, initialConsumers).resources)
     });
   });
   return resultConsumers;
 };
 
-const _subtractSpaces = (spacesA, spacesB) => {
-  if(!spacesB || spacesB.length === 0)
-    return spacesA;
+const _subtractSpaces = (updatedSpaces, initialSpaces) => {
+  if(!initialSpaces || initialSpaces.length === 0)
+    return updatedSpaces;
   
   const resultSpaces = [];
   
-  each(spacesA, (spaceA) => {
-    const spaceB = findSpaceById(spaceA.space_id, spacesB);
+  each(updatedSpaces, (updatedSpace) => {
+    const initialSpace = findSpaceById(updatedSpace.space_id, initialSpaces);
     resultSpaces.push({
-      space_id: spaceA.space_id,
-      resources: _subtractResources(spaceA.resources, spaceB.resources),
-      consumers: _subtractConsumers(spaceA.consumers, spaceB.consumers)
+      space_id: updatedSpace.space_id,
+      resources: _subtractResources(updatedSpace.resources, initialSpace.resources),
+      consumers: _subtractConsumers(updatedSpace.consumers, initialSpace.consumers)
     });
   });  
   return resultSpaces;
 }; 
 
-const subtractReports = (reportA, reportB) => {
-  const subtractedResources = _subtractResources(reportA.resources, reportB.resources);
-  const subtractedSpaces = _subtractSpaces(reportA.spaces, reportB.spaces); 
-  
-  return {
-    organization_id: reportA.organization_id,
-    resources: subtractedResources,
-    spaces: subtractedSpaces,
-    account_id: reportA.account_id
-  };
-};
+const subtractReports = (updated, initial) => ({
+  organization_id: updated.organization_id,
+  resources: _subtractResources(updated.resources, initial.resources),
+  spaces: _subtractSpaces(updated.spaces, initial.spaces),
+  account_id: updated.account_id
+});
 
 const monthReport = 4;
 const currentMonth = 0;

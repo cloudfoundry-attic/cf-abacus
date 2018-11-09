@@ -113,12 +113,10 @@ describe('process usage smoke test', function() {
         // accumulate function is defined as max
         storage: (quantites.storage / bytesInGigabyte) - getStorageUsage(currentReport)
       };
-      try {
-        expect(subtractReports(cleanReport(updatedReport), currentReport)).to.deep.equal(createExpectedInitialReport(
-          testOrgID, expectedValues, expectedValues));
-      } catch(err) {
-        console.log('Error:', err);
-      }
+
+      expect(subtractReports(cleanReport(updatedReport), currentReport)).to.deep.equal(createExpectedInitialReport(
+        testOrgID, expectedValues, expectedValues));
+
       if(!processedDocs) 
         expect(cleanReport(updatedReport)).to.deep.equal(createExpectedInitialReport(
           testOrgID, expectedValues, expectedValues));  
