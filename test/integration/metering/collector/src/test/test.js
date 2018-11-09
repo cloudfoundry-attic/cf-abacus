@@ -19,8 +19,8 @@ const testEnv = {
   tshift: process.env.DAY * 24 * 60 * 60 * 1000 || 0,
   startTimeout: process.env.START_TIMEOUT || 30000,
   totalTimeout: process.env.TOTAL_TIMEOUT || 60000,
-  rabbitUri: process.env.RABBIT_URI,
-  db: process.env.DB_URI
+  rabbitUri: process.env.RABBIT_URI || 'amqp://localhost:5672',
+  db: process.env.DB_URI || 'mongodb://localhost:27017'
 };
 
 const consumerConfig = {

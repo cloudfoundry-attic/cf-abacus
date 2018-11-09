@@ -8,6 +8,8 @@ const testEnv = {
   startTimeout: process.env.START_TIMEOUT || 5000
 };
 
+const dbEnv = process.env.DB_URI || 'mongodb://localhost:27017';
+
 describe('eureka', function() {
   let lifecycleManager;
   this.timeout(testEnv.startTimeout);
@@ -36,7 +38,7 @@ describe('eureka', function() {
       request.waitFor('http://localhost::p', { p: 9990 }, testEnv.startTimeout, done);
     };
 
-    dbclient.drop(process.env.DB_URI, /^abacus-/, startModules);
+    dbclient.drop(dbEnv, /^abacus-/, startModules);
   });
 
   after(() => {

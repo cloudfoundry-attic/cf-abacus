@@ -18,7 +18,7 @@ const checkKeyPart = partition.partitioner(
 );
 
 const uris = urienv({
-  db_uri: 5984
+  db_uri: 'mongodb://localhost:27017'
 });
 
 const db = dbClient(checkKeyPart, dbClient.dburi(uris.db_uri, 'abacus-carry-over'));
@@ -57,8 +57,10 @@ const isDbAvailable = async () => {
   await readCurrentMonthDocs();
 };
 
+const dbEnv = process.env.DB_URI || 'mongodb://localhost:27017';
+
 const setup = async () => {
-  await drop(process.env.DB_URI, /^abacus-/);
+  await drop(dbEnv, /^abacus-/);
   await eventually(isDbAvailable);
 };
 

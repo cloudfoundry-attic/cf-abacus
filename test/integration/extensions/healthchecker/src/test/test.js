@@ -5,7 +5,7 @@ const lifecycleManager = require('abacus-lifecycle-manager')();
 const request = require('abacus-request');
 
 const testEnv = {
-  db: process.env.DB_URI,
+  db: process.env.DB_URI || 'mongodb://localhost:27017',
   startTimeout: process.env.START_TIMEOUT || 5000
 };
 
