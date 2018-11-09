@@ -3,7 +3,7 @@ abacus-process-usage-smoke-test
 
 :information_source: To run the process usage smoke test export the following environment variables:
 
-```bash
+```sh
 export OBJECT_STORAGE_CLIENT_ID=<prefix>
 abacus-object-storage-client
 export OBJECT_STORAGE_CLIENT_SECRET=abacus-object-storage-secret
@@ -26,10 +26,16 @@ export SMOKE_TOTAL_TIMEOUT=<total-timeout>
 
 Then:
 
-```bash
+```sh
 cd cf-abacus
 yarn provision
 cd test/smoke/process-usage
 yarn install
 yarn run smoke
+```
+
+:information_source: To get a report about the submitted usage locally use:
+
+```sh
+curl http://localhost:9088/v1/metering/organizations/us-south:a3d7fe4d-3cb1-4cc3-a831-ffe98e20cf27/aggregated/usage | jq .
 ```
