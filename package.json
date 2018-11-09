@@ -65,7 +65,7 @@
     "start": "bin/start && yarn run store-defaults",
     "stop": "bin/stop",
     "store-defaults": "store-default-plans && store-default-mappings",
-    "test": "foreach abacus node_modules/:name yarn test --"
+    "test": "export JOBS=1 && foreach abacus node_modules/:name yarn test --"
   },
   "dependencies": {
     "abacus-account-plugin": "file:lib/plugins/account",
