@@ -65,10 +65,12 @@ const prune = (v, k) => {
   return v;
 };
 
+const dbEnv = process.env.DB_URI || 'mongodb://localhost:27017';
+
 describe('abacus-demo-client', function() {
   before((done) => {
     console.log('Dropping all abacus collections except plans and plan-mappings ...');
-    dbclient.drop(process.env.DB_URI, /^abacus-((?!plan).)*$/, done);
+    dbclient.drop(dbEnv, /^abacus-((?!plan).)*$/, done);
   });
 
   it('submits usage for a sample resource and retrieves an aggregated usage report', function(done) {

@@ -13,7 +13,7 @@ const yieldable = require('abacus-yieldable');
 const debug = require('abacus-debug')('abacus-usage-reporting-itest');
 
 const testEnv = {
-  db: process.env.DB_URI,
+  db: process.env.DB_URI || 'mongodb://localhost:27017',
   offset: () => process.env.ABACUS_TIME_OFFSET ? parseInt(process.env.ABACUS_TIME_OFFSET) : 0,
   startTimeout: process.env.START_TIMEOUT || 30000,
   totalTimeout: process.env.TOTAL_TIMEOUT || 60000
