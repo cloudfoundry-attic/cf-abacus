@@ -15,7 +15,7 @@ const { testEnv } = require('./env-config');
 const { buildUsage, createExpectedInitialReport } = require('./fixtures');
 const { deltaCompareReports } = require('./report-comparator');
 const { getThousandLightAPICallsQuantity, cleanReport } = require('./parse-report-utils');
-const { subtractReports } = require('./report-utils2');
+const { subtractReports, getStorageUsage } = require('./report-utils2');
 
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
@@ -82,7 +82,7 @@ describe('process usage smoke test', function() {
     const quantites = {
       lightAPICalls: 1000,
       heavyAPICalls: 100,
-      storage: bytesInGigabyte
+      storage: (getStorageUsage(currentReport) + 1) * bytesInGigabyte
     };
 
     setEventuallyPollingInterval(testEnv.pollInterval);
@@ -111,36 +111,11 @@ describe('process usage smoke test', function() {
         lightAPICalls: (testEnv.usageDocumentsCount * quantites.lightAPICalls) / 1000,
         heavyAPICalls: testEnv.usageDocumentsCount * quantites.heavyAPICalls,
         // accumulate function is defined as max
-        storage: quantites.storage / bytesInGigabyte
+        storage: (quantites.storage / bytesInGigabyte) - getStorageUsage(currentReport)
       };
       try {
-        console.log('Subtracted: %j', subtractReports(cleanReport(updatedReport), currentReport));
-        console.log('%j', createExpectedInitialReport(
-          testOrgID, 
-          {
-            lightAPICalls: 3,
-            heavyAPICalls: 300,
-            // accumulate function is defined as max
-            storage: 1
-          }, {
-            lightAPICalls: 3,
-            heavyAPICalls: 300,
-            // accumulate function is defined as max
-            storage: 1
-          }));
         expect(subtractReports(cleanReport(updatedReport), currentReport)).to.deep.equal(createExpectedInitialReport(
-          testOrgID, 
-          {
-            lightAPICalls: 3,
-            heavyAPICalls: 300,
-            // accumulate function is defined as max
-            storage: 1
-          }, {
-            lightAPICalls: 3,
-            heavyAPICalls: 300,
-            // accumulate function is defined as max
-            storage: 1
-          }));
+          testOrgID, expectedValues, expectedValues));
       } catch(err) {
         console.log('Error:', err);
       }

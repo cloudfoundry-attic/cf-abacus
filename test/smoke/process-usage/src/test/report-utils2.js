@@ -1,53 +1,10 @@
 'use strict';
 
-const { each, find, clone, omit, extend } = require('underscore');
+const { each, clone, omit, extend } = require('underscore');
 
-const _findResourceById = (resourceId, resources) => {
-  const resource = find(resources, (resource) => resource.resource_id === resourceId);
+const { findResourceById, findMetricByName, findPlanById, findSpaceById, findConsumerById } = require('./finder');
 
-  if(!resource) 
-    throw new Error('Missing resource with id %s', resourceId);
-
-  return resource;
-}; 
-
-const _findMetricByName = (metricName, aggregatedUsage) => {
-  const metric = find(aggregatedUsage, (metric) => metric.metric === metricName);  
-
-  if(!metric) 
-    throw new Error('Missing metric %s', metric.metric);
-
-  return metric;
-};
-
-const _findPlanById = (planID, plans) => {
-  const plan = find(plans, (plan) => plan.plan_id === planID); 
-
-  if(!plan)
-    throw new Error('Missing plan with planID %s', planID);
-
-  return plan;  
-};
-
-const _findSpaceById = (spaceID, spaces) => {
-  const space = find(spaces, (space) => space.space_id === spaceID); 
-
-  if(!space)
-    throw new Error('Missing space with spaceID %s', spaceID);
-
-  return space;
-}; 
-
-const _findConsumerById = (consumerID, consumers) => {
-  const consumer = find(consumers, (consumer) => consumer.consumer_id === consumerID); 
-
-  if(!consumer)
-    throw new Error('Missing consumer with consumerID %s', consumerID);
-
-  return consumer;  
-};
-
-const _subtractWindowValues = (valueA, valueB) => valueA - valueB === 0 ? valueA : valueA - valueB;
+// const _subtractWindowValues = (valueA, valueB) => valueA - valueB === 0 ? valueA : valueA - valueB;
 
 const _subtractWindows = (windowsA, windowsB) => {
   const resultWindows = [];
@@ -55,16 +12,16 @@ const _subtractWindows = (windowsA, windowsB) => {
     if(!windowsB[windowIndex])
       throw new Error('Invalid report');
     // check size
-    if(window.length !== windowsB[windowIndex].length)  
-      throw new Error('Missing aggregated usage demension');
+    // if(window.length !== windowsB[windowIndex].length)  
+    //   throw new Error('Missing aggregated usage demension');
     
     const resultWindow = [];
       
     each(window, (element, index) => {
       if(element) 
         resultWindow.push({
-          summary: _subtractWindowValues(element.summary, windowsB[windowIndex][index].summary),
-          quantity: _subtractWindowValues(element.quantity, windowsB[windowIndex][index].quantity)
+          summary: element.summary - windowsB[windowIndex][index].summary,
+          quantity: element.quantity - windowsB[windowIndex][index].quantity
         });
       else
         resultWindow.push(null);
@@ -80,7 +37,7 @@ const _subtractAggregatedUsages = (aggregatedUsageA, aggregatedUsageB) => {
 
     resultAggregatedUsage.push({
       metric: au.metric,
-      windows: _subtractWindows(au.windows, _findMetricByName(au.metric, aggregatedUsageB).windows)
+      windows: _subtractWindows(au.windows, findMetricByName(au.metric, aggregatedUsageB).windows)
     });
     
   });
@@ -92,7 +49,7 @@ const _subtractPlans = (plansA, plansB) => {
   each(plansA, (planA) => {
     resultPlans.push(extend(clone(omit(planA, 'aggregated_usage')), { 
       aggregated_usage: _subtractAggregatedUsages(planA.aggregated_usage, 
-        _findPlanById(planA.plan_id, plansB).aggregated_usage)}));
+        findPlanById(planA.plan_id, plansB).aggregated_usage)}));
   });
   return resultPlans;
 };
@@ -104,7 +61,7 @@ const _subtractResources = (resourcesA, resourcesB) => {
   const resultResources = [];
   
   each(resourcesA, (resourceA) => {
-    const resourceB = _findResourceById(resourceA.resource_id, resourcesB);
+    const resourceB = findResourceById(resourceA.resource_id, resourcesB);
     resultResources.push({
       resource_id: resourceA.resource_id,
       plans: _subtractPlans(resourceA.plans, resourceB.plans),
@@ -120,7 +77,7 @@ const _subtractConsumers = (consumersA, consumersB) => {
   each(consumersA, (consumerA) => {
     resultConsumers.push({
       consumer_id: consumerA.consumer_id,
-      resources: _subtractResources(consumerA.resources, _findConsumerById(consumerA.consumer_id, consumersB).resources)
+      resources: _subtractResources(consumerA.resources, findConsumerById(consumerA.consumer_id, consumersB).resources)
     });
   });
   return resultConsumers;
@@ -133,7 +90,7 @@ const _subtractSpaces = (spacesA, spacesB) => {
   const resultSpaces = [];
   
   each(spacesA, (spaceA) => {
-    const spaceB = _findSpaceById(spaceA.space_id, spacesB);
+    const spaceB = findSpaceById(spaceA.space_id, spacesB);
     resultSpaces.push({
       space_id: spaceA.space_id,
       resources: _subtractResources(spaceA.resources, spaceB.resources),
@@ -155,6 +112,29 @@ const subtractReports = (reportA, reportB) => {
   };
 };
 
+const monthReport = 4;
+const currentMonth = 0;
+const objectStorageIndex = 0;
+const objectStoragePlanIdIndex = 0;
+
+const _getCurrentMonth = (windows) => windows[monthReport][currentMonth];
+
+const _getStorageWindows = (report) => _getCurrentMonth(report.resources[objectStorageIndex]
+  .plans[objectStoragePlanIdIndex].aggregated_usage[0].windows);
+
+const _reportReady = (report) => {
+  const resources = report.resources;
+  return resources && resources.length !== 0;
+};
+
+const getStorageUsage = (report) => {
+  if(!_reportReady(report))
+    return 0;
+
+  return _getStorageWindows(report).quantity;
+};
+
 module.exports = {
+  getStorageUsage,
   subtractReports
 };
