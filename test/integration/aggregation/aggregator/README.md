@@ -6,7 +6,6 @@ abacus-usage-aggregator-integration-test
 ```bash
 cd cf-abacus
 docker-compose up -d
-source bin/localdb
 yarn provision
 cd test/integration/aggregation/aggregator
 yarn run integration

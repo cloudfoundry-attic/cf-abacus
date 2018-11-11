@@ -18,7 +18,7 @@ const secondDlExchange = 'meter-itest-second-exchange';
 const { checkCorrectSetup } = require('abacus-test-helper');
 
 const testEnv = {
-  db: process.env.DB_URI
+  db: process.env.DB_URI || 'mongodb://localhost:27017'
 };
 
 describe('meter integration test', () => {

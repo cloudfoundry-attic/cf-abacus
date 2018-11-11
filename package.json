@@ -33,10 +33,8 @@
     "tools/"
   ],
   "scripts": {
-    "acceptance": "export JOBS=1 && foreach acceptance node_modules/:name yarn run acceptance --",
     "bootstrap": "yarn add check-node-version && check-node-version --package",
     "build": "yarn run provision && yarn test",
-    "broker-itest": "export JOBS=1 && foreach provisioning-int-test node_modules/:name yarn run broker-itest --",
     "citest": "bin/citest",
     "cftest": "bin/cftest",
     "cibuild": "yarn run build && yarn run citest && yarn run cftest",
@@ -50,7 +48,6 @@
     "dependency": "export JOBS=1 && foreach dependency node_modules/:name yarn run dependency --",
     "doc": "cat README.md | mddoc >README.html && cat CHANGES.md | mddoc >CHANGES.html",
     "dupcode": "jsinspect",
-    "extensions-itest": "export JOBS=1 && foreach extensions-itest node_modules/:name yarn run extensions-itest --",
     "generate-coverage": "foreach abacus node_modules/:name yarn run generate-coverage --",
     "hint": "foreach abacus :path jshint src",
     "integration": "export JOBS=1 && foreach integration-test node_modules/:name yarn run integration --",
@@ -68,7 +65,7 @@
     "start": "bin/start && yarn run store-defaults",
     "stop": "bin/stop",
     "store-defaults": "store-default-plans && store-default-mappings",
-    "test": "foreach abacus node_modules/:name yarn test --"
+    "test": "export JOBS=1 && foreach abacus node_modules/:name yarn test --"
   },
   "dependencies": {
     "abacus-account-plugin": "file:lib/plugins/account",

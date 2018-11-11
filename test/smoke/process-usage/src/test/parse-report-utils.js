@@ -34,31 +34,30 @@ const _reportReady = (report) => {
 
 const getThousandLightAPICallsWindows = (report) => _getCurrentMonth(report.resources[objectStorageIndex]
   .plans[objectStoragePlanIdIndex].aggregated_usage[thousandLightAPICallsIndex].windows);
-  
+
 const getHeavyAPICallsWindows = (report) => _getCurrentMonth(report.resources[objectStorageIndex]
   .plans[objectStoragePlanIdIndex].aggregated_usage[heavyAPICallsIndex].windows);
-  
+
 const getSpaceThousandLightAPICallsWindows = (report) => getThousandLightAPICallsWindows(
   report.spaces[spaceIndex]);
-  
+
 const getSpaceHeavyAPICallsWindows = (report) => getHeavyAPICallsWindows(report.spaces[spaceIndex]);
 
 const getConsumerThousandLightAPICallsWindows = (report) => getThousandLightAPICallsWindows(
   report.spaces[spaceIndex].consumers[consumerIndex]);
-  
+
 const getConsumerHeavyAPICallsWindows = (report) => getHeavyAPICallsWindows(
-  report.spaces[spaceIndex].consumers[consumerIndex]);  
-  
+  report.spaces[spaceIndex].consumers[consumerIndex]);
+
 const cleanReport = (report) => _removeConsumerMetadata(
-  clone(omit(report, 'id', 'processed', 'processed_id', 'start', 'end')));  
-  
+  clone(omit(report, 'id', 'processed', 'processed_id', 'start', 'end')));
+
 const getThousandLightAPICallsQuantity = (report) => {
-  if(!_reportReady(report)) 
+  if(!_reportReady(report))
     return 0;
 
   const monthReport = getThousandLightAPICallsWindows(report);
   return monthReport.quantity;
-
 };
 
 module.exports = {
