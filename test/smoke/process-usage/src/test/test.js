@@ -111,7 +111,7 @@ describe('process usage smoke test', function() {
         lightAPICalls: (testEnv.usageDocumentsCount * quantites.lightAPICalls) / 1000,
         heavyAPICalls: testEnv.usageDocumentsCount * quantites.heavyAPICalls,
         // accumulate function is defined as max
-        storage: (quantites.storage / bytesInGigabyte) - getStorageUsage(currentReport)
+        storage: 1
       };
 
       expect(subtractReports(cleanReport(updatedReport), currentReport)).to.deep.equal(createExpectedInitialReport(
