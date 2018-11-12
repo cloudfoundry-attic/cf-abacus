@@ -1,16 +1,16 @@
 applications:
-  - name: abacus-usage-reporting
+  - name: abacus-usage-aggregator
     routes:
-      - route: abacus-usage-reporting.((CF_SYS_DOMAIN))
+      - route: abacus-usage-aggregator.((CF_SYS_DOMAIN))
     path: .
     instances: 1
-    memory: 2048M
+    memory: 1024M
     disk_quota: 512M
-    zdm: true
     env:
-      APPS: 1
+      APPS: 2
       DB_PARTITIONS: 2
       CUSTOM_METRICS: true
+      CLUSTER: false
       DEBUG: e-abacus-*
       API: ((AUTH_SERVER))
       AUTH_SERVER: ((AUTH_SERVER))
@@ -21,24 +21,24 @@ applications:
       EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
       NODE_MODULES_CACHE: false
       PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
+      SLACK: 3D
+      REPLAY: 1800000
       SECURED: true
       SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
-      REPLAY: 1800000
-      CONNECTION_TIMEOUT: 360000
+      SAMPLING: 1h
       THROTTLE: 100
       BATCH_SIZE: 10
-      BREAKER_TIMEOUT: 120000
-      CLUSTER: false
-      IGNORE_ORGANIZATION: true
+      MAX_INFLIGHT: 100
+      MAX_PAYLOAD: 2mb
       OPTIMIZE_MEMORY: true
-      COMPRESS_RESPONSES: true
-      EVAL_VMTYPE: ((REPORTING_EVAL_VMTYPE))
+      IGNORE_ORGANIZATION: true
+      EVAL_VMTYPE: vm2
       EVAL_TIMEOUT: ((EVAL_TIMEOUT))
+      VALIDATE_FUNCTIONS: true
       CLIENT_ID: ((SYSTEM_CLIENT_ID))
       CLIENT_SECRET: ((SYSTEM_CLIENT_SECRET))
       JWTALGO: ((JWTALGO))
       JWTKEY: |+
         ((JWTKEY))
       DEBUG_STRIPLF: true
-      DB_ACCUMULATOR_URI: ((DB_ACCUMULATOR_URI))
-      DB_AGGREGATOR_URI: ((DB_AGGREGATOR_URI))
+      DB_URI: ((DB_AGGREGATOR_URI))

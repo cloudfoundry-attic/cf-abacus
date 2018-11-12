@@ -4,10 +4,10 @@ applications:
       - route: abacus-usage-accumulator.((CF_SYS_DOMAIN))
     path: .
     instances: 1
-    memory: 2048M
+    memory: 1024M
     disk_quota: 512M
     env:
-      APPS: 2
+      APPS: 1
       DB_PARTITIONS: 2
       CUSTOM_METRICS: true
       CLUSTER: false
@@ -15,7 +15,7 @@ applications:
       API: ((AUTH_SERVER))
       AUTH_SERVER: ((AUTH_SERVER))
       AGGREGATOR: ((ABACUS_PREFIX))abacus-usage-aggregator
-      AGGREGATOR_APPS: 2
+      AGGREGATOR_APPS: 1
       PROVISIONING: ((ABACUS_PREFIX))abacus-provisioning-plugin
       ACCOUNT: ((ABACUS_PREFIX))abacus-account-plugin
       EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin

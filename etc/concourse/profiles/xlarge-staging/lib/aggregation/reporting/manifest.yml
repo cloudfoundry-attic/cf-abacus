@@ -3,13 +3,13 @@ applications:
     routes:
       - route: abacus-usage-reporting.((CF_SYS_DOMAIN))
     path: .
-    instances: 1
-    memory: 2048M
+    instances: 10
+    memory: 1024M
     disk_quota: 512M
     zdm: true
     env:
       APPS: 1
-      DB_PARTITIONS: 2
+      DB_PARTITIONS: 6
       CUSTOM_METRICS: true
       DEBUG: e-abacus-*
       API: ((AUTH_SERVER))

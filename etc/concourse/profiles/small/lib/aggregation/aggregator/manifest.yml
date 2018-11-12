@@ -4,10 +4,10 @@ applications:
       - route: abacus-usage-aggregator.((CF_SYS_DOMAIN))
     path: .
     instances: 1
-    memory: 2048M
+    memory: 1024M
     disk_quota: 512M
     env:
-      APPS: 2
+      APPS: 1
       DB_PARTITIONS: 2
       CUSTOM_METRICS: true
       CLUSTER: false
