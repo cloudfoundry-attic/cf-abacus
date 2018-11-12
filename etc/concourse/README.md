@@ -10,14 +10,14 @@ docker-compose up
 
 ## Profiles
 
-The size of the Abacus installation is configured using predefined installation profiles. Several flavors exist depeneding on the target use case as follows:
+The size of the Abacus installation is configured using predefined installation profiles. Several flavors exist depending on the target use case as follows:
 
 - small - basic profile intended for development purposes. Non HA setup with minimal amount of nodes.
 
 - medium - defined as minimal productive installation this profile is HA but has small memory footprint. It is best used on staging and integration environments.
 
-- large - intended for production deployments on enviroments with low or moderate loads.
+- large - intended for production deployments on environments with low or moderate loads.
 
 - xlarge - for productive deployments with high load that need to scale  (e.g. providing a service on public cloud platform). 
 
-- xlarge-staging - the same as xlarge but uses less resources. It is designed to be used for pre-productiion (staging) environments.
+- xlarge-staging - the same as xlarge but uses less resources. It is designed to be used for pre-production (validation) environments.

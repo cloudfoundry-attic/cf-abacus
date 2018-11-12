@@ -26,9 +26,9 @@ applications:
       SECURED: true
       SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
       SAMPLING: 1h
-      THROTTLE: 100
+      THROTTLE: 50
       BATCH_SIZE: 10
-      MAX_INFLIGHT: 100
+      MAX_INFLIGHT: 50
       MAX_PAYLOAD: 2mb
       OPTIMIZE_MEMORY: true
       IGNORE_ORGANIZATION: true
