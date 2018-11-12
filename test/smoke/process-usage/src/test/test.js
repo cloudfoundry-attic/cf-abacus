@@ -110,7 +110,6 @@ describe('process usage smoke test', function() {
       };
       expect(subtractReports(cleanReport(updatedReport), currentReport)).to.deep.equal(createExpectedInitialReport(
         testOrgID, expectedValues, expectedValues));
-
     });
   });
 });

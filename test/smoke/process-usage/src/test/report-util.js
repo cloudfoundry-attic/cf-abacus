@@ -27,12 +27,11 @@ const _removeConsumerMetadata = (report) => {
   const consumerIndex = 0;
   const spaceIndex = 0;
 
-  report.spaces[spaceIndex].consumers[consumerIndex].resources[objectStorageIndex].plans[objectStoragePlanIdIndex]
-    .resource_instances[testResourceInstanceIndex] = omit(report.spaces[spaceIndex].consumers[consumerIndex]
-      .resources[objectStorageIndex].plans[objectStoragePlanIdIndex].resource_instances[testResourceInstanceIndex],
-    't',
-    'p'
-    );
+  const resourceInstancens = report.spaces[spaceIndex].consumers[consumerIndex].resources[objectStorageIndex]
+    .plans[objectStoragePlanIdIndex].resource_instances;
+  
+  resourceInstancens[testResourceInstanceIndex] = omit(resourceInstancens[testResourceInstanceIndex], 't', 'p');
+  
   return report;
 };
 
