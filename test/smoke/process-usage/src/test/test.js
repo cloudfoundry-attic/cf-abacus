@@ -108,9 +108,6 @@ describe('process usage smoke test', function() {
         // accumulate function is defined as max
         storage: 1
       };
-      console.log('Subtracted: %j', subtractReports(cleanReport(updatedReport), currentReport));
-      console.log('initial: %j', createExpectedInitialReport(
-        testOrgID, expectedValues, expectedValues));
       expect(subtractReports(cleanReport(updatedReport), currentReport)).to.deep.equal(createExpectedInitialReport(
         testOrgID, expectedValues, expectedValues));
 
