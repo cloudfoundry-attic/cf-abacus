@@ -1,6 +1,6 @@
 'use strict';
 
-const { each, clone, omit, extend } = require('underscore');
+const { each, omit, clone, extend } = require('underscore');
 
 const { findResourceById, findMetricByName, findPlanById, findSpaceById, findConsumerById } = require('./finder');
 
@@ -103,29 +103,8 @@ const subtractReports = (reportA, reportB) => ({
   account_id: reportA.account_id
 });
 
-const monthReport = 4;
-const currentMonth = 0;
-const objectStorageIndex = 0;
-const objectStoragePlanIdIndex = 0;
 
-const _getCurrentMonth = (windows) => windows[monthReport][currentMonth];
-
-const _getStorageWindows = (report) => _getCurrentMonth(report.resources[objectStorageIndex]
-  .plans[objectStoragePlanIdIndex].aggregated_usage[0].windows);
-
-const _reportReady = (report) => {
-  const resources = report.resources;
-  return resources && resources.length !== 0;
-};
-
-const getStorageUsage = (report) => {
-  if(!_reportReady(report))
-    return 0;
-
-  return _getStorageWindows(report).quantity;
-};
 
 module.exports = {
-  getStorageUsage,
   subtractReports
 };
