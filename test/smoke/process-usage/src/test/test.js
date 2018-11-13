@@ -13,8 +13,8 @@ const { times } = require('underscore');
 
 const { testEnv } = require('./env-config');
 const { buildUsage, createExpectedInitialReport } = require('./fixtures');
-const { getStorageUsage, cleanReport } = require('./report-util');
-const { subtractReports } = require('./subtract-reports');
+const { deltaCompareReports } = require('./report-comparator');
+const { getThousandLightAPICallsQuantity, cleanReport } = require('./parse-report-utils');
 
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
@@ -81,7 +81,7 @@ describe('process usage smoke test', function() {
     const quantities = {
       lightAPICalls: 1000,
       heavyAPICalls: 100,
-      storage: (getStorageUsage(currentReport) + 1) * bytesInGigabyte
+      storage: bytesInGigabyte
     };
 
     this.timeout(timeout);
@@ -100,16 +100,23 @@ describe('process usage smoke test', function() {
     setEventuallyTimeout(processingDeadline - moment.now() - 1000);
     await eventually(async () => {
       const updatedReport = await retrieveReport(testOrgID);
+      const processedDocs = getThousandLightAPICallsQuantity(currentReport);
+
+      expect(getThousandLightAPICallsQuantity(updatedReport)).to.equal(processedDocs + testEnv.usageDocumentsCount);
 
       // quantity and summary fields have the same values
       const expectedValues = {
         lightAPICalls: (testEnv.usageDocumentsCount * quantities.lightAPICalls) / 1000,
         heavyAPICalls: testEnv.usageDocumentsCount * quantities.heavyAPICalls,
         // accumulate function is defined as max
-        storage: 1
+        storage: quantities.storage / bytesInGigabyte
       };
-      expect(subtractReports(cleanReport(updatedReport), currentReport)).to.deep.equal(createExpectedInitialReport(
-        testOrgID, expectedValues, expectedValues));
+
+      if(!processedDocs)
+        expect(cleanReport(updatedReport)).to.deep.equal(createExpectedInitialReport(
+          testOrgID, expectedValues, expectedValues));
+      else
+        deltaCompareReports(cleanReport(updatedReport), currentReport, expectedValues, expectedValues);
     });
   });
 });
