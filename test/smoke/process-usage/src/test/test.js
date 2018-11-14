@@ -39,11 +39,12 @@ const sendUsage = async (usage) => {
   return resp.headers.location;
 };
 
-const retrieveReport = async (orgID) => {
-  const resp = await doGet('/v1/metering/organizations/:organization_id/aggregated/usage', {
+const retrieveReport = async (orgID, timestamp = moment.now()) => {
+  const resp = await doGet('/v1/metering/organizations/:organization_id/aggregated/usage/:timestamp', {
     baseUrl: testEnv.reportingUrl,
     headers: authHeader(systemToken),
-    organization_id: orgID
+    organization_id: orgID,
+    timestamp: timestamp
   });
 
   expect(resp.statusCode).to.equal(httpStatus.OK);
@@ -75,6 +76,7 @@ describe('process usage smoke test', function() {
   it('submits usage for a sample resource and retrieves an aggregated usage report', async function() {
     const timeout = Math.max(testEnv.totalTimeout, 40000) + 2000;
     const startTime = moment.now();
+    const endOfDay = moment.utc(startTime).endOf('day').valueOf();
     const processingDeadline = startTime + timeout;
     const bytesInGigabyte = 1073741824;
 
@@ -99,7 +101,7 @@ describe('process usage smoke test', function() {
     setEventuallyPollingInterval(testEnv.pollInterval);
     setEventuallyTimeout(processingDeadline - moment.now() - 1000);
     await eventually(async () => {
-      const updatedReport = await retrieveReport(testOrgID);
+      const updatedReport = await retrieveReport(testOrgID, endOfDay);
 
       // quantity and summary fields have the same values
       const expectedValues = {
