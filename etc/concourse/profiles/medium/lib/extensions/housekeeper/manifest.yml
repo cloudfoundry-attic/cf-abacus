@@ -1,38 +1,36 @@
 applications:
-  - name: abacus-account-plugin
+  - name: abacus-housekeeper
     routes:
-      - route: abacus-account-plugin.((CF_SYS_DOMAIN))
+      - route: abacus-housekeeper.((CF_SYS_DOMAIN))
     path: .
     instances: 1
-    memory: 512M
+    memory: 256M
     disk_quota: 512M
-    zdm: true
     env:
       APPS: 1
       DB_PARTITIONS: 1
       CUSTOM_METRICS: true
       DEBUG: e-abacus-*
-      CLUSTER: false
       API: ((AUTH_SERVER))
       AUTH_SERVER: ((AUTH_SERVER))
       EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
       EUREKA_USER: ((HYSTRIX_CLIENT_ID))
       EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
       NODE_MODULES_CACHE: false
+      RETENTION_PERIOD: 3
       SECURED: true
       SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
-      THROTTLE: 100
-      BATCH_SIZE: 10
-      MAX_INFLIGHT: 2000
+      THROTTLE: 60
+      BATCH_SIZE: 50
       OPTIMIZE_MEMORY: true
       PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
       JWTALGO: ((JWTALGO))
       JWTKEY: |+
         ((JWTKEY))
       DEBUG_STRIPLF: true
-      ACCOUNT_TOKEN_URI: ((XSUAA_URL))
-      ACCOUNT_BACKEND: ((XSUAA_TENANT_BACKEND))
-      ACCOUNT_IGNORE_PATTERN: '^idz:'
-      CLIENT_ID: ((XSUAA_CLIENT_ID))
-      CLIENT_SECRET: ((XSUAA_CLIENT_SECRET))
-      DB_URI: ((DB_PLUGINS_URI))
+      DB_COLLECTOR_URI: ((DB_COLLECTOR_URI))
+      DB_METER_URI: ((DB_METER_URI))
+      DB_ACCUMULATOR_URI: ((DB_ACCUMULATOR_URI))
+      DB_AGGREGATOR_URI: ((DB_AGGREGATOR_URI))
+      DB_BRIDGE_URI: ((DB_BRIDGE_URI))
+      DB_PLUGINS_URI: ((DB_PLUGINS_URI))

@@ -1,44 +1,40 @@
 applications:
-  - name: abacus-usage-reporting
+  - name: abacus-cf-renewer
     routes:
-      - route: abacus-usage-reporting.((CF_SYS_DOMAIN))
+      - route: abacus-cf-renewer.((CF_SYS_DOMAIN))
     path: .
     instances: 1
-    memory: 2048M
+    memory: 1G
     disk_quota: 512M
     zdm: true
     env:
       APPS: 1
-      DB_PARTITIONS: 2
+      DB_PARTITIONS: 6
       CUSTOM_METRICS: true
+      CLUSTER: true
       DEBUG: e-abacus-*
       API: ((AUTH_SERVER))
       AUTH_SERVER: ((AUTH_SERVER))
+      COLLECTOR: ((ABACUS_PREFIX))abacus-usage-collector
       PROVISIONING: ((ABACUS_PREFIX))abacus-provisioning-plugin
-      ACCOUNT: ((ABACUS_PREFIX))abacus-account-plugin
       EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
       EUREKA_USER: ((HYSTRIX_CLIENT_ID))
       EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
+      CF_CLIENT_ID: ((RENEWER_CLIENT_ID))
+      CF_CLIENT_SECRET: ((RENEWER_CLIENT_SECRET))
       NODE_MODULES_CACHE: false
       PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
       SECURED: true
       SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
-      REPLAY: 1800000
-      CONNECTION_TIMEOUT: 360000
       THROTTLE: 100
-      BATCH_SIZE: 10
-      BREAKER_TIMEOUT: 120000
-      CLUSTER: false
-      IGNORE_ORGANIZATION: true
-      OPTIMIZE_MEMORY: true
-      COMPRESS_RESPONSES: true
-      EVAL_VMTYPE: ((REPORTING_EVAL_VMTYPE))
-      EVAL_TIMEOUT: ((EVAL_TIMEOUT))
-      CLIENT_ID: ((SYSTEM_CLIENT_ID))
-      CLIENT_SECRET: ((SYSTEM_CLIENT_SECRET))
+      BATCH_SIZE: 50
+      VALIDATE_FUNCTIONS: true
+      SLACK: 3D
+      ABACUS_CLIENT_ID: ((SYSTEM_CLIENT_ID))
+      ABACUS_CLIENT_SECRET: ((SYSTEM_CLIENT_SECRET))
       JWTALGO: ((JWTALGO))
       JWTKEY: |+
         ((JWTKEY))
       DEBUG_STRIPLF: true
-      DB_ACCUMULATOR_URI: ((DB_ACCUMULATOR_URI))
-      DB_AGGREGATOR_URI: ((DB_AGGREGATOR_URI))
+      DB_URI: ((DB_BRIDGE_URI))
+      OPTIMIZE_MEMORY: true

@@ -1,19 +1,20 @@
 applications:
-  - name: abacus-usage-reporting
+  - name: abacus-usage-collector
     routes:
-      - route: abacus-usage-reporting.((CF_SYS_DOMAIN))
+      - route: abacus-usage-collector.((CF_SYS_DOMAIN))
     path: .
-    instances: 1
-    memory: 2048M
+    instances: 2
+    memory: 1024M
     disk_quota: 512M
     zdm: true
     env:
       APPS: 1
-      DB_PARTITIONS: 2
       CUSTOM_METRICS: true
+      DB_PARTITIONS: 1
       DEBUG: e-abacus-*
       API: ((AUTH_SERVER))
       AUTH_SERVER: ((AUTH_SERVER))
+      METER: ((ABACUS_PREFIX))abacus-usage-meter
       PROVISIONING: ((ABACUS_PREFIX))abacus-provisioning-plugin
       ACCOUNT: ((ABACUS_PREFIX))abacus-account-plugin
       EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
@@ -23,22 +24,25 @@ applications:
       PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))
       SECURED: true
       SKIP_SSL_VALIDATION: ((SKIP_SSL_VALIDATION))
-      REPLAY: 1800000
-      CONNECTION_TIMEOUT: 360000
-      THROTTLE: 100
-      BATCH_SIZE: 10
-      BREAKER_TIMEOUT: 120000
       CLUSTER: false
-      IGNORE_ORGANIZATION: true
+      REPLAY: 1800000
+      THROTTLE: 50
+      BATCH_SIZE: 10
+      MAX_INFLIGHT: 150
+      SYSTEM_INFLIGHT_ENABLED: true
+      MAX_SYSTEM_INFLIGHT: 6
       OPTIMIZE_MEMORY: true
-      COMPRESS_RESPONSES: true
-      EVAL_VMTYPE: ((REPORTING_EVAL_VMTYPE))
+      IGNORE_ORGANIZATION: true
+      EVAL_VMTYPE: vm2
       EVAL_TIMEOUT: ((EVAL_TIMEOUT))
+      VALIDATE_FUNCTIONS: true
       CLIENT_ID: ((SYSTEM_CLIENT_ID))
       CLIENT_SECRET: ((SYSTEM_CLIENT_SECRET))
       JWTALGO: ((JWTALGO))
       JWTKEY: |+
         ((JWTKEY))
       DEBUG_STRIPLF: true
-      DB_ACCUMULATOR_URI: ((DB_ACCUMULATOR_URI))
-      DB_AGGREGATOR_URI: ((DB_AGGREGATOR_URI))
+      RATE_LIMIT: ((COLLECTOR_RATE_LIMIT))
+      UNSUPPORTED_LICENSES: TRIAL
+      RABBIT_URI: ((RABBIT_URI))
+      DB_URI: ((DB_COLLECTOR_URI))

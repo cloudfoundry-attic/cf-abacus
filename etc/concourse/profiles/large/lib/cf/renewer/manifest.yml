@@ -3,7 +3,7 @@ applications:
     routes:
       - route: abacus-cf-renewer.((CF_SYS_DOMAIN))
     path: .
-    instances: 2
+    instances: 1
     memory: 4G
     disk_quota: 512M
     zdm: true
