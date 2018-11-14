@@ -13,8 +13,8 @@ const { times } = require('underscore');
 
 const { testEnv } = require('./env-config');
 const { buildUsage, createExpectedInitialReport } = require('./fixtures');
-const { deltaCompareReports } = require('./report-comparator');
-const { getThousandLightAPICallsQuantity, cleanReport } = require('./parse-report-utils');
+const { getStorageUsage, cleanReport } = require('./report-util');
+const { subtractReports } = require('./subtract-reports');
 
 const doGet = util.promisify(request.get);
 const doPost = util.promisify(request.post);
@@ -39,11 +39,12 @@ const sendUsage = async (usage) => {
   return resp.headers.location;
 };
 
-const retrieveReport = async (orgID) => {
-  const resp = await doGet('/v1/metering/organizations/:organization_id/aggregated/usage', {
+const retrieveReport = async (orgID, timestamp = moment.now()) => {
+  const resp = await doGet('/v1/metering/organizations/:organization_id/aggregated/usage/:timestamp', {
     baseUrl: testEnv.reportingUrl,
     headers: authHeader(systemToken),
-    organization_id: orgID
+    organization_id: orgID,
+    timestamp: timestamp
   });
 
   expect(resp.statusCode).to.equal(httpStatus.OK);
@@ -75,13 +76,14 @@ describe('process usage smoke test', function() {
   it('submits usage for a sample resource and retrieves an aggregated usage report', async function() {
     const timeout = Math.max(testEnv.totalTimeout, 40000) + 2000;
     const startTime = moment.now();
+    const endOfDay = moment.utc(startTime).endOf('day').valueOf();
     const processingDeadline = startTime + timeout;
     const bytesInGigabyte = 1073741824;
 
     const quantities = {
       lightAPICalls: 1000,
       heavyAPICalls: 100,
-      storage: bytesInGigabyte
+      storage: (getStorageUsage(currentReport) + 1) * bytesInGigabyte
     };
 
     this.timeout(timeout);
@@ -99,24 +101,18 @@ describe('process usage smoke test', function() {
     setEventuallyPollingInterval(testEnv.pollInterval);
     setEventuallyTimeout(processingDeadline - moment.now() - 1000);
     await eventually(async () => {
-      const updatedReport = await retrieveReport(testOrgID);
-      const processedDocs = getThousandLightAPICallsQuantity(currentReport);
-
-      expect(getThousandLightAPICallsQuantity(updatedReport)).to.equal(processedDocs + testEnv.usageDocumentsCount);
+      const updatedReport = await retrieveReport(testOrgID, endOfDay);
 
       // quantity and summary fields have the same values
       const expectedValues = {
         lightAPICalls: (testEnv.usageDocumentsCount * quantities.lightAPICalls) / 1000,
         heavyAPICalls: testEnv.usageDocumentsCount * quantities.heavyAPICalls,
         // accumulate function is defined as max
-        storage: quantities.storage / bytesInGigabyte
+        storage: 1
       };
 
-      if(!processedDocs)
-        expect(cleanReport(updatedReport)).to.deep.equal(createExpectedInitialReport(
-          testOrgID, expectedValues, expectedValues));
-      else
-        deltaCompareReports(cleanReport(updatedReport), currentReport, expectedValues, expectedValues);
+      expect(subtractReports(cleanReport(updatedReport), currentReport)).to.deep.equal(createExpectedInitialReport(
+        testOrgID, expectedValues, expectedValues));
     });
   });
 });

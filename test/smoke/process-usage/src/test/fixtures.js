@@ -1,37 +1,5 @@
 'use strict';
 
-const timewindow = require('abacus-timewindow');
-
-const { times } = require('underscore');
-
-const { fixturesCfg } = require('./env-config');
-
-// The scaling factor of each time window for creating the date string
-// [Second, Minute, Hour, Day, Month]
-const _slack = () =>
-  /^[0-9]+[MDhms]$/.test(fixturesCfg.slack)
-    ? {
-      scale: fixturesCfg.slack.charAt(fixturesCfg.slack.length - 1),
-      width: fixturesCfg.slack.substring(0, fixturesCfg.slack.length - 1)
-    }
-    : {
-      scale: timewindow.dimension.min,
-      width: 10
-    };  
-
-const _createWindows = (win, dimension) => {
-  const windows = [win];
-
-  if(fixturesCfg.windowsSizes && fixturesCfg.windowsSizes[dimension])
-    times(fixturesCfg.windowsSizes[dimension] - 1, () => windows.push(null));
-  else {
-    const timeWindows = timewindow.timeWindowsSizes(_slack(), fixturesCfg.windowsSizes);
-    times(timeWindows.getWindows(dimension).length - 1, () => windows.push(null));
-  }
-
-  return windows;
-};
-
 const _buildExpectedWindows = (summary, quantity) => {
   const win = {
     quantity: quantity,
@@ -42,8 +10,8 @@ const _buildExpectedWindows = (summary, quantity) => {
     [null],
     [null],
     [null],
-    _createWindows(win, timewindow.dimension.day),
-    _createWindows(win, timewindow.dimension.month)
+    [win],
+    [win]
   ];
 };
 
