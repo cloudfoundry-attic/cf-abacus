@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "abacus-bridge": "file:../../utils/bridge",
+    "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-debug": "file:../../utils/debug",
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-moment": "file:../../utils/moment",
@@ -45,6 +46,8 @@
     "abacus-perf": "file:../../utils/perf",
     "abacus-plan-mappings": "file:../../config/mappings",
     "abacus-retry": "file:../../utils/retry",
+    "abacus-urienv": "file:../../utils/urienv",
+    "abacus-yieldable": "file:../../utils/yieldable",
     "underscore": "^1.9.1",
     "ajv": "^6.0.0"
   },
