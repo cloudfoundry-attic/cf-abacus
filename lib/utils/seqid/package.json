@@ -28,7 +28,6 @@
     "pub": "publish"
   },
   "dependencies": {
-    "abacus-cluster": "file:../cluster",
     "abacus-moment": "file:../moment",
     "abacus-vcapenv": "file:../vcapenv"
   },

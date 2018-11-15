@@ -1,7 +1,6 @@
 'use strict';
 
 const httpStatus = require('http-status-codes');
-const _ = require('underscore');
 
 const { carryOverDb } = require('abacus-test-helper');
 const { serviceMock } = require('abacus-mock-util');
@@ -105,35 +104,30 @@ const build = () => {
 
       it('Get OAuth Token Service is called with correct arguments', () => {
         const uaaServerMock = externalSystemsMocks.uaaServer;
-        // Expect 2 calls for every token (abacus and cfadmin)
-        // per Worker and Master processes
-        expect(uaaServerMock.tokenService.requestsCount()).to.equal(4);
+        // Expect 1 call for every token (abacus and cfadmin)
+        expect(uaaServerMock.tokenService.requestsCount()).to.equal(2);
 
         const abacusCollectorTokenRequests = uaaServerMock.tokenService.requests.withScopes(
           fixture.oauth.abacusCollectorScopes
         );
 
-        expect(abacusCollectorTokenRequests).to.deep.equal(
-          _(2).times(() => ({
-            credentials: {
-              clientId: fixture.env.abacusClientId,
-              secret: fixture.env.abacusClientSecret
-            },
-            scopes: fixture.oauth.abacusCollectorScopes
-          }))
-        );
+        expect(abacusCollectorTokenRequests).to.deep.equal([{
+          credentials: {
+            clientId: fixture.env.abacusClientId,
+            secret: fixture.env.abacusClientSecret
+          },
+          scopes: fixture.oauth.abacusCollectorScopes
+        }]);
 
         const cfAdminTokenRequests = uaaServerMock.tokenService.requests.withScopes(fixture.oauth.cfAdminScopes);
 
-        expect(cfAdminTokenRequests).to.deep.equal(
-          _(2).times(() => ({
-            credentials: {
-              clientId: fixture.env.cfClientId,
-              secret: fixture.env.cfClientSecret
-            },
-            scopes: fixture.oauth.cfAdminScopes
-          }))
-        );
+        expect(cfAdminTokenRequests).to.deep.equal([{
+          credentials: {
+            clientId: fixture.env.cfClientId,
+            secret: fixture.env.cfClientSecret
+          },
+          scopes: fixture.oauth.cfAdminScopes
+        }]);
       });
 
       it('Writes an entry in carry-over', async () => {

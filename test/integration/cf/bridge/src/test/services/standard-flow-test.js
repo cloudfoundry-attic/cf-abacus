@@ -20,11 +20,10 @@ const tests = (fixture) => {
     it('Services service received correct parameters', () => {
       const cloudControllerMock = fixture.externalSystemsMocks().cloudController;
 
-      // Expect 2 calls as configuration is load by both Master and Worker process
-      const expectedRequests = _(2).times(() => ({
+      const expectedRequests = [{
         token: fixture.oauth.cfAdminToken,
         serviceLabels: [fixture.defaultUsageEvent.serviceLabel]
-      }));
+      }];
       expect(cloudControllerMock.serviceGuids.requests()).to.deep.equal(expectedRequests);
     });
   });

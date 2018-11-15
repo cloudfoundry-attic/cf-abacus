@@ -62,7 +62,6 @@ describe('Worker integration tests', () => {
       CLIENT_ID: clientId,
       CLIENT_SECRET: clientSecret,
       SECURED: 'true',
-      CLUSTER: 'false',
       JWTKEY: jwtSecret,
       JWTALGO: 'HS256'
     });

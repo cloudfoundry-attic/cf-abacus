@@ -44,7 +44,6 @@
     "ajv": "^6.0.0"
   },
   "devDependencies": {
-    "abacus-cluster": "file:../../utils/cluster",
     "abacus-cfpush": "file:../../../tools/cfpush",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",

@@ -36,7 +36,6 @@
   },
   "dependencies": {
     "abacus-oauth": "file:../../utils/oauth",
-    "abacus-cluster": "file:../../utils/cluster",
     "abacus-dataflow": "file:../../utils/dataflow",
     "abacus-debug": "file:../../utils/debug",
     "abacus-launcher": "file:../../utils/launcher",
