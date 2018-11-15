@@ -33,9 +33,8 @@ matrix:
         - yarn run build && yarn run generate-coverage && yarn run report-coverage
     - name: "Integration Tests"
       env:
-      - JOBS=1
       - START_TIMEOUT=20000
-      - TOTAL_TIMEOUT=360000
+      - TOTAL_TIMEOUT=120000
       - CI_TEST=integration
       services:
         - mongodb
