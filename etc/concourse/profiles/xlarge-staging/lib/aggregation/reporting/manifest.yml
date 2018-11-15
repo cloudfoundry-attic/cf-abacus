@@ -28,7 +28,6 @@ applications:
       THROTTLE: 100
       BATCH_SIZE: 10
       BREAKER_TIMEOUT: 120000
-      CLUSTER: false
       IGNORE_ORGANIZATION: true
       OPTIMIZE_MEMORY: true
       COMPRESS_RESPONSES: true

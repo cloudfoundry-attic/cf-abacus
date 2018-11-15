@@ -35,7 +35,6 @@
     "port": 9300
   },
   "dependencies": {
-    "abacus-cluster": "file:../../utils/cluster",
     "abacus-dataflow": "file:../../utils/dataflow",
     "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-debug": "file:../../utils/debug",

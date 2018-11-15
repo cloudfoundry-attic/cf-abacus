@@ -37,7 +37,6 @@
   },
   "dependencies": {
     "abacus-breaker": "file:../../utils/breaker",
-    "abacus-cluster": "file:../../utils/cluster",
     "abacus-debug": "file:../../utils/debug",
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-moment": "file:../../utils/moment",
