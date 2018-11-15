@@ -2,7 +2,7 @@ abacus-plan-tester
 ===
 
 Prerequisites:
-* Node.js >= 8.9.4
+* Node.js >= 8.10.0
 * Yarn >= 1.3.2
 
 ```bash
