@@ -15,12 +15,6 @@ const testEnv = {
   usageDocumentsCount: process.env.USAGE_DOCUMENTS_COUNT ? parseInt(process.env.USAGE_DOCUMENTS_COUNT) : 3
 };
 
-const fixturesCfg = {
-  slack: process.env.SLACK,
-  windowsSizes: process.env.TIME_WINDOWS_SIZES ? JSON.parse(process.env.TIME_WINDOWS_SIZES) : undefined
-};
-
 module.exports = {
-  testEnv,
-  fixturesCfg
+  testEnv
 };
