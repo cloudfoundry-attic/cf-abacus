@@ -538,7 +538,7 @@ describe('aggregator integration test', () => {
           expect(val.statusCode).to.equal(201);
           expect(val.headers.location).to.not.equal(undefined);
 
-          debug('Accumulated usage for org%d instance%d' + ' usage%d, verifying it...', o + 1, ri + 1, u + 1);
+          debug('Accumulated usage for org%d instance%d usage%d, verifying it...', o + 1, ri + 1, u + 1);
 
           brequest.get(val.headers.location, undefined, (err, val) => {
             debug('Verify accumulated usage for org%d instance%d usage%d', o + 1, ri + 1, u + 1);
@@ -580,7 +580,7 @@ describe('aggregator integration test', () => {
         .startOf('month')
         .valueOf();
 
-      const sid = dbclient.kturi(expected.organization_id, seqid.pad16(startDate));
+      const sid = dbclient.kturi(expected.organization_id, seqid.pad16(startDate)) + 'ZZZ';
       const eid = dbclient.kturi(expected.organization_id, seqid.pad16(endDate));
       debug('comparing latest record within %s and %s', sid, eid);
       db.allDocs(
@@ -613,7 +613,7 @@ describe('aggregator integration test', () => {
             done();
           } catch (e) {
             // If the test cannot verify the actual data with the expected
-            // data within the giveup time, forward the exception
+            // data within the give-up time, forward the exception
             if (moment.now() >= processingDeadline) {
               debug('Unable to properly verify the last record');
               expect(
@@ -662,7 +662,7 @@ describe('aggregator integration test', () => {
         seqid.pad16(endDate)
       );
       debug('%o', expectedConsumer);
-      debug('comparing latest consumer record within %s and %s', sid, eid);
+      debug('Comparing latest consumer record within %s and %s', sid, eid);
       db.allDocs(
         {
           limit: 1,
@@ -700,7 +700,7 @@ describe('aggregator integration test', () => {
             done();
           } catch (e) {
             // If the test cannot verify the actual data with the expected
-            // data within the giveup time, forward the exception
+            // data within the give-up time, forward the exception
             if (moment.now() >= processingDeadline) {
               debug('Unable to properly verify the last record');
               expect(
