@@ -28,7 +28,6 @@ describe('meter integration test', () => {
     checkCorrectSetup(testEnv);
     const modules = [lifecycleManager.modules.meter];
     const customEnv = extend({}, process.env, {
-      CLUSTER: false,
       ABACUS_COLLECT_QUEUE: queueName,
       MAIN_EXCHANGE: mainExchange,
       FIRST_DL_NAME: firstDlName,

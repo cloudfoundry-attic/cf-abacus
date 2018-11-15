@@ -12,7 +12,6 @@ applications:
       DB_PARTITIONS: 1
       CUSTOM_METRICS: true
       DEBUG: e-abacus-*
-      CLUSTER: false
       API: ((AUTH_SERVER))
       AUTH_SERVER: ((AUTH_SERVER))
       EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin

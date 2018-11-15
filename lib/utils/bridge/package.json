@@ -32,7 +32,6 @@
     "abacus-breaker": "file:../breaker",
     "abacus-carryover": "file:../../utils/carryover",
     "abacus-client": "file:../../utils/client",
-    "abacus-cluster": "file:../../utils/cluster",
     "abacus-dbclient": "file:../dbclient",
     "abacus-debug": "file:../debug",
     "abacus-healthmonitor": "file:../healthmonitor",

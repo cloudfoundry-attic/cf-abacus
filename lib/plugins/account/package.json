@@ -59,7 +59,6 @@
   },
   "devDependencies": {
     "abacus-cfpush": "file:../../../tools/cfpush",
-    "abacus-cluster": "file:../../utils/cluster",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "nyc": "^13.0.1",

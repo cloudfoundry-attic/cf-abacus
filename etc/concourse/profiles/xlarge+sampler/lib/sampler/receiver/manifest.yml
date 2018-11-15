@@ -12,7 +12,6 @@ applications:
       APPS: 1
       CUSTOM_METRICS: true
       CONF: default
-      CLUSTER: false
       DEBUG: e-abacus-*
       PROVISIONING_URL: ((ABACUS_PREFIX))abacus-provisioning-plugin.((CF_SYS_DOMAIN))
       EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin

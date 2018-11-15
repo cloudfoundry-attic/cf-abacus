@@ -78,7 +78,6 @@ describe('Receiver integartion test', () => {
       PROVISIONING_URL: externalSystemsMocks.provisioningServer.url(),
       SPANS_COLLECTION_NAME: collectionName,
       SECURED: 'true',
-      CLUSTER: 'false',
       JWTKEY: jwtSecret,
       JWTALGO: 'HS256',
       CLIENT_ID: clientId,
