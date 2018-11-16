@@ -24,8 +24,8 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "start": "launch webapp start",
-    "stop": "webapp stop",
+    "start": "node src/index.js &",
+    "stop": "pkill -f 'node abacus-cf-broker-[0-9]+-[0-9]+ express' || true",
     "test": "abacus-eslint && nyc abacus-mocha",
     "generate-coverage": "nyc report --reporter=lcovonly",
     "lint": "abacus-eslint",
@@ -38,7 +38,6 @@
   "dependencies": {
     "abacus-breaker": "file:../../utils/breaker",
     "abacus-debug": "file:../../utils/debug",
-    "abacus-launcher": "file:../../utils/launcher",
     "abacus-moment": "file:../../utils/moment",
     "abacus-oauth": "file:../../utils/oauth",
     "abacus-perf": "file:../../utils/perf",

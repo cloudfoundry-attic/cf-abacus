@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 'use strict';
 
+process.env.NON_INTERACTIVE = true;
+
 const debug = require('abacus-debug')('abacus-provisioning-plugin');
 const provisioning = require('./src/index');
 

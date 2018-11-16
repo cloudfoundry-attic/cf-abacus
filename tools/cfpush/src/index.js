@@ -82,3 +82,5 @@ const runCLI = () => {
 };
 
 module.exports.runCLI = runCLI;
+
+runCLI();

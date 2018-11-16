@@ -101,7 +101,6 @@
     "abacus-healthmonitor": "file:lib/utils/healthmonitor",
     "abacus-housekeeper": "file:lib/extensions/housekeeper",
     "abacus-hystrix": "file:lib/utils/hystrix",
-    "abacus-launcher": "file:lib/utils/launcher",
     "abacus-lock": "file:lib/utils/lock",
     "abacus-lrucache": "file:lib/utils/lrucache",
     "abacus-metering-config": "file:lib/config/metering",
