@@ -24,7 +24,7 @@
   "main": "src/index.js",
   "scripts": {
     "postinstall": "cd src/webapp; yarn install; cd ../..;",
-    "start": "node src/index.js &",
+    "start": "launch &",
     "stop": "pkill -f 'node abacus-service-dashboard-[0-9]+ express' || true",
     "lint": "abacus-eslint",
     "pub": "publish",
@@ -43,6 +43,7 @@
   "dependencies": {
     "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-debug": "file:../../utils/debug",
+    "abacus-launcher": "file:../../utils/launcher",
     "abacus-moment": "file:../../utils/moment",
     "abacus-urienv": "file:../../utils/urienv",
     "abacus-vcapenv": "file:../../utils/vcapenv",

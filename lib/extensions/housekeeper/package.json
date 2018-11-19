@@ -24,7 +24,7 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js &",
+    "start": "launch &",
     "stop": "pkill -f 'node abacus-housekeeper-[0-9]+ express' || true",
     "test": "abacus-eslint && nyc abacus-mocha",
     "generate-coverage": "nyc report --reporter=lcovonly",
@@ -38,6 +38,7 @@
   "dependencies": {
     "abacus-client": "file:../../utils/client",
     "abacus-debug": "file:../../utils/debug",
+    "abacus-launcher": "file:../../utils/launcher",
     "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-oauth": "file:../../utils/oauth",
     "abacus-request": "file:../../utils/request",

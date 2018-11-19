@@ -23,7 +23,7 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js &",
+    "start": "launch &",
     "stop": "pkill -f 'node abacus-usage-accumulator-[0-9]+ express' || true",
     "test": "abacus-eslint && nyc abacus-mocha",
     "generate-coverage": "nyc report --reporter=lcovonly",
@@ -38,6 +38,7 @@
     "abacus-oauth": "file:../../utils/oauth",
     "abacus-dataflow": "file:../../utils/dataflow",
     "abacus-debug": "file:../../utils/debug",
+    "abacus-launcher": "file:../../utils/launcher",
     "abacus-metering-config": "file:../../config/metering",
     "abacus-moment": "file:../../utils/moment",
     "abacus-rating-config": "file:../../config/rating",

@@ -23,7 +23,7 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js &",
+    "start": "launch &",
     "stop": "pkill -f 'node abacus-sampler-worker-[0-9]+ express' || true",
     "test": "abacus-eslint && nyc abacus-mocha",
     "generate-coverage": "nyc report --reporter=lcovonly",
@@ -37,6 +37,7 @@
   "dependencies": {
     "abacus-api": "file:../../utils/api",
     "abacus-debug": "file:../../utils/debug",
+    "abacus-launcher": "file:../../utils/launcher",
     "abacus-healthmonitor": "file:../../utils/healthmonitor",
     "abacus-moment": "file:../../utils/moment",
     "abacus-oauth": "file:../../utils/oauth",
