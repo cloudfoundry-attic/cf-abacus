@@ -65,5 +65,4 @@ const runCLI = () => {
 };
 
 // Export our CLI
-
-runCLI();
+module.exports.runCLI = runCLI;

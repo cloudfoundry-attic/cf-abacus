@@ -90,4 +90,4 @@ const runCLI = (stdin, stdout) => {
   });
 };
 
-runCLI();
+module.exports.runCLI = runCLI;

@@ -25,7 +25,6 @@
     "versions",
     "src/"
   ],
-  "main": "src/index.js",
   "bin": {
     "appcfg": "appcfg",
     "foreach": "./foreach"

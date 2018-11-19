@@ -24,7 +24,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js &",
-    "stop": "pkill -f 'node abacus-usage-aggregator-[0-9]+-[0-9]+ express' || true",
+    "stop": "pkill -f 'node abacus-usage-aggregator-[0-9]+ express' || true",
     "test": "abacus-eslint && nyc abacus-mocha",
     "generate-coverage": "nyc report --reporter=lcovonly",
     "lint": "abacus-eslint",
