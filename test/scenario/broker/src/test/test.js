@@ -19,6 +19,7 @@ const testEnv = {
   api: process.env.CF_API_URI,
   user: process.env.CF_USER,
   password: process.env.CF_PASSWORD,
+  origin: process.env.CF_AUTH_ORIGIN,
   org: process.env.CF_ORG,
   space: process.env.CF_BROKER_SCENARIO_SPACE,
   collectorUrl: process.env.COLLECTOR_URL,
@@ -116,7 +117,8 @@ describe('Abacus Broker Scenario test @cfonly', function() {
     const testUtils = cfUtil({
       api: testEnv.api,
       user: testEnv.user,
-      password: testEnv.password
+      password: testEnv.password,
+      origin: testEnv.origin
     });
 
     App = testUtils.App;

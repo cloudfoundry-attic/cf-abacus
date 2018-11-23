@@ -15,6 +15,7 @@ const testEnv = {
   api: process.env.CF_API_URI,
   user: process.env.CF_ADMIN_USER,
   password: process.env.CF_ADMIN_PASSWORD,
+  origin: process.env.CF_AUTH_ORIGIN,
   org: process.env.CF_BROKER_SMOKE_ORG,
   space: process.env.CF_BROKER_SMOKE_SPACE,
   appsDomain: process.env.APPS_DOMAIN,
@@ -44,7 +45,8 @@ describe('Abacus Broker Smoke test @cfonly', function() {
     const cf = cfUtil({
       api: testEnv.api,
       user: testEnv.user,
-      password: testEnv.password
+      password: testEnv.password,
+      origin: testEnv.origin
     });
 
     app = cf.App.deploy({
