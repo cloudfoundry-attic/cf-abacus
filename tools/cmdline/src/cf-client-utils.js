@@ -4,9 +4,10 @@
 
 const execute = require('./cmdline.js').execute;
 
-const login = (apiEndpoint, user, password) => {
+const login = (apiEndpoint, user, password, origin) => {
+  const authOrigin = origin ? `--origin ${origin}` : '';
   execute(`cf api ${apiEndpoint} --skip-ssl-validation`);
-  execute(`cf auth ${user} ${password}`, false);
+  execute(`cf auth ${authOrigin} ${user} ${password}`, false);
 
   return {
     org: require('./cf/organization'),
