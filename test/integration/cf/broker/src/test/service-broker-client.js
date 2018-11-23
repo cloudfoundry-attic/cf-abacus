@@ -6,6 +6,7 @@ const httpStatus = require('http-status-codes');
 const { APIError } = require('abacus-api');
 
 const doPut = util.promisify(request.put);
+const doPatch = util.promisify(request.patch);
 
 class ServiceBrokerClient {
 
@@ -15,14 +16,7 @@ class ServiceBrokerClient {
   }
 
   async createServiceInstance(instanceId, serviceInstanceRequest) {
-    const res = await doPut(`/v2/service_instances/${instanceId}`, {
-      baseUrl: this.url,
-      headers: {
-        authorization: await this.authHeaderProvider.getHeader()
-      },
-      json: true,
-      body: serviceInstanceRequest
-    });
+    const res = await this._executeHttpOperation(doPut, instanceId, serviceInstanceRequest);
 
     switch (res.statusCode) {
       case httpStatus.CREATED:
@@ -30,6 +24,28 @@ class ServiceBrokerClient {
       default:
         throw new APIError(res.statusCode);
     }
+  };
+
+  async updateServiceInstance(instanceId, serviceInstanceRequest) {
+    const res = await this._executeHttpOperation(doPatch, instanceId, serviceInstanceRequest);
+
+    switch (res.statusCode) {
+      case httpStatus.OK:
+        return;
+      default:
+        throw new APIError(res.statusCode);
+    }
+  };
+
+  async _executeHttpOperation(httpOperation, instanceId, serviceInstanceRequest) {
+    return await httpOperation(`/v2/service_instances/${instanceId}`, {
+      baseUrl: this.url,
+      headers: {
+        authorization: await this.authHeaderProvider.getHeader()
+      },
+      json: true,
+      body: serviceInstanceRequest
+    });
   };
 };
 

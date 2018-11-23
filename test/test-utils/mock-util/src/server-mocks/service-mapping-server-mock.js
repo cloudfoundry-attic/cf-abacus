@@ -29,6 +29,7 @@ module.exports = () => {
   let server;
 
   const createServiceMappingServiceData = createMockServiceData();
+  const updateServiceMappingServiceData = createMockServiceData();
 
   const start = (cb) => {
     const app = express();
@@ -38,6 +39,14 @@ module.exports = () => {
       storeServiceMappingRequest(createServiceMappingServiceData, req);
 
       const responseCode = createServiceMappingServiceData.nextResponse();
+      res.status(responseCode).send();
+    });
+
+    app.put('/v1/provisioning/mappings/services/resource/:resource/plan/:plan', (req, res) => {
+      debug('Update service mapping called. Params: %j', req.params);
+      storeServiceMappingRequest(updateServiceMappingServiceData, req);
+
+      const responseCode = updateServiceMappingServiceData.nextResponse();
       res.status(responseCode).send();
     });
 
@@ -60,6 +69,7 @@ module.exports = () => {
     start,
     url: () => `http://localhost:${server.address().port}`,
     createServiceMappingService: createServiceMappingServiceData,
+    updateServiceMappingService: updateServiceMappingServiceData,
     stop
   };
 };

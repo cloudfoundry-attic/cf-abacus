@@ -39,6 +39,10 @@ module.exports = () => {
   const createRatingPlanServiceData = createMockServiceData();
   const createPricingPlanServiceData = createMockServiceData();
 
+  const updateMeteringPlanServiceData = createMockServiceData();
+  const updateRatingPlanServiceData = createMockServiceData();
+  const updatePricingPlanServiceData = createMockServiceData();
+
   const createMeteringMappingServiceData = createMockServiceData();
   const createRatingMappingServiceData = createMockServiceData();
   const createPricingMappingServiceData = createMockServiceData();
@@ -66,6 +70,30 @@ module.exports = () => {
       storePlanRequest(createPricingPlanServiceData, req);
 
       const responseCode = createPricingPlanServiceData.nextResponse();
+      res.status(responseCode).send();
+    });
+
+    app.put('/v1/metering/plans', (req, res) => {
+      debug('Update metering plan called. Plan: %j', req.body);
+      storePlanRequest(updateMeteringPlanServiceData, req);
+
+      const responseCode = updateMeteringPlanServiceData.nextResponse();
+      res.status(responseCode).send();
+    });
+
+    app.put('/v1/rating/plans', (req, res) => {
+      debug('Update rating plan called. Plan: %j', req.body);
+      storePlanRequest(updateRatingPlanServiceData, req);
+
+      const responseCode = updateRatingPlanServiceData.nextResponse();
+      res.status(responseCode).send();
+    });
+
+    app.put('/v1/pricing/plans', (req, res) => {
+      debug('Update pricing plan called. Plan: %j', req.body);
+      storePlanRequest(updatePricingPlanServiceData, req);
+
+      const responseCode = updatePricingPlanServiceData.nextResponse();
       res.status(responseCode).send();
     });
 
@@ -112,6 +140,9 @@ module.exports = () => {
     createMeteringPlanService: createMeteringPlanServiceData,
     createRatingPlanService: createRatingPlanServiceData,
     createPricingPlanService: createPricingPlanServiceData,
+    updateMeteringPlanService: updateMeteringPlanServiceData,
+    updateRatingPlanService: updateRatingPlanServiceData,
+    updatePricingPlanService: updatePricingPlanServiceData,
     createMeteringMappingService: createMeteringMappingServiceData,
     createRatingMappingService: createRatingMappingServiceData,
     createPricingMappingService: createPricingMappingServiceData,
