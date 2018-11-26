@@ -23,8 +23,8 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "start": "launch webapp start",
-    "stop": "webapp stop",
+    "start": "launch &",
+    "stop": "pkill -f 'node abacus-usage-collector-[0-9]+ express' || true",
     "test": "abacus-eslint && nyc abacus-mocha",
     "generate-coverage": "nyc report --reporter=lcovonly",
     "lint": "abacus-eslint",

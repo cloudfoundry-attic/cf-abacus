@@ -24,8 +24,8 @@
   "main": "src/index.js",
   "scripts": {
     "postinstall": "cd src/webapp; yarn install; cd ../..;",
-    "start": "launch webapp start",
-    "stop": "webapp stop",
+    "start": "launch &",
+    "stop": "pkill -f 'node abacus-service-dashboard-[0-9]+ express' || true",
     "lint": "abacus-eslint",
     "pub": "publish",
     "cfpush": "cfpush",

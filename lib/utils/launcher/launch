@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-require('./src/index.js').runCLI();
+const cwd = process.cwd();
+
+require(`${cwd}/src/index.js`).runCLI();
 

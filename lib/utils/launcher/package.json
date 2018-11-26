@@ -1,6 +1,6 @@
 {
   "name": "abacus-launcher",
-  "description": "Launch multiple instances of an application",
+  "description": "Launch Abacus application",
   "license": "Apache-2.0",
   "version": "1.1.3",
   "private": true,
@@ -18,40 +18,16 @@
   ],
   "files": [
     ".npmrc",
-    "launch",
-    "src/"
+    "launch"
   ],
-  "main": "src/index.js",
   "bin": {
     "launch": "./launch"
   },
   "scripts": {
-    "test": "abacus-eslint && nyc abacus-mocha",
-    "generate-coverage": "nyc report --reporter=lcovonly",
-    "lint": "abacus-eslint",
+    "test": "true",
+    "generate-coverage": "true",
+    "lint": "true",
     "pub": "publish"
-  },
-  "dependencies": {
-    "abacus-debug": "file:../debug",
-    "abacus-vcapenv": "file:../vcapenv",
-    "commander": "^2.8.1",
-    "underscore": "^1.9.1"
-  },
-  "devDependencies": {
-    "abacus-eslint": "file:../../../tools/eslint",
-    "abacus-mocha": "file:../../../tools/mocha",
-    "nyc": "^13.0.1",
-    "abacus-publish": "file:../../../tools/publish"
-  },
-  "nyc": {
-    "cache": true,
-    "reporter": [
-      "text",
-      "html"
-    ],
-    "exclude": [
-      "src/test/**"
-    ]
   },
   "engines": {
     "node": ">=8.10.0 <9.0.0",

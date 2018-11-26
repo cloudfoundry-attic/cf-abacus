@@ -485,7 +485,7 @@
     },
     "color-convert": {
       "version": "1.9.3",
-      "from": "color-convert@>=1.9.0 <2.0.0",
+      "from": "color-convert@^1.9.0",
       "resolved": "https://registry.npmjs.org/color-convert/-/color-convert-1.9.3.tgz"
     },
     "color-name": {
@@ -1347,7 +1347,7 @@
     },
     "qs": {
       "version": "6.5.2",
-      "from": "qs@>=6.5.2 <6.6.0",
+      "from": "qs@~6.5.2",
       "resolved": "https://registry.npmjs.org/qs/-/qs-6.5.2.tgz"
     },
     "range-parser": {
