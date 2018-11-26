@@ -73,7 +73,7 @@ module.exports = () => {
       res.status(responseCode).send();
     });
 
-    app.put('/v1/metering/plans', (req, res) => {
+    app.put('/v1/metering/plans/:planId', (req, res) => {
       debug('Update metering plan called. Plan: %j', req.body);
       storePlanRequest(updateMeteringPlanServiceData, req);
 
@@ -81,7 +81,7 @@ module.exports = () => {
       res.status(responseCode).send();
     });
 
-    app.put('/v1/rating/plans', (req, res) => {
+    app.put('/v1/rating/plans/:planId', (req, res) => {
       debug('Update rating plan called. Plan: %j', req.body);
       storePlanRequest(updateRatingPlanServiceData, req);
 
@@ -89,7 +89,7 @@ module.exports = () => {
       res.status(responseCode).send();
     });
 
-    app.put('/v1/pricing/plans', (req, res) => {
+    app.put('/v1/pricing/plans/:planId', (req, res) => {
       debug('Update pricing plan called. Plan: %j', req.body);
       storePlanRequest(updatePricingPlanServiceData, req);
 
