@@ -109,7 +109,7 @@ describe('adjusting manifest', () => {
     });
 
     it('should adjust manifest buildpack', () => {
-      veryfyOptionalProperty(properties('buildpack', 'test-buildpack'), 'buildpack', 'test-buildpack');
+      veryfyOptionalProperty(properties('buildpack', 'test-buildpack'), 'buildpacks', [ 'test-buildpack' ]);
     });
   });
 });
