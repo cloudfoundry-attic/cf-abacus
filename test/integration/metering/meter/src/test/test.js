@@ -183,7 +183,6 @@ describe('meter integration test', () => {
           .withDefaultParam(timestamp))).to.equal(2);
       });
     });
-
   });
 
   context('when account fails', () => {
@@ -235,7 +234,6 @@ describe('meter integration test', () => {
       it('retries the calls', () => {
         expect(stubs.account.getCallCount(fixture.account.url.withDefaultParams(timestamp))).to.equal(2);
       });
-
     });
 
     context('when getting metering plan id fails', () => {
@@ -385,10 +383,39 @@ describe('meter integration test', () => {
         expect(stubs.account.getCallCount(fixture.account.accountPluginGetPlanIdUrl
           .withDefaultParams(timestamp, 'pricing'))).to.equal(2);
       });
-
     });
-
   });
 
+  context('when consuming duplicate message', () => {
+    let timestamp;
+    beforeEach(async() => {
+      timestamp = moment.now();
+      const config = {
+        provisioning: fixture.provisioning.successfulResponses(timestamp),
+        account: fixture.account.successfulResponses(timestamp),
+        accumulator: fixture.accumulator.successfulResponses()
+      };
+      const usage = fixture.usageDoc({ time: timestamp });
 
+      stubs = fixture.buildStubs(config);
+      startApps(stubs);
+
+      await postUsage(usage);
+      await stubs.accumulator.waitUntil.alias(fixture.accumulator.url).isCalled(1);
+      await postUsage(usage);
+    });
+
+    it('does not retry', () => {
+      expect(stubs.provisioning.getCallCount(fixture.provisioning.resourceTypeUrl.withDefaultParam(timestamp)))
+        .to.equal(1);
+      expect(stubs.account.getCallCount(fixture.account.url.withDefaultParams(timestamp))).to.equal(1);
+      expect(stubs.account.getCallCount(fixture.account.accountPluginGetPlanIdUrl
+        .withDefaultParams(timestamp, 'metering'))).to.equal(1);
+      expect(stubs.account.getCallCount(fixture.account.accountPluginGetPlanIdUrl
+        .withDefaultParams(timestamp, 'pricing'))).to.equal(1);
+      expect(stubs.account.getCallCount(fixture.account.accountPluginGetPlanIdUrl
+        .withDefaultParams(timestamp, 'rating'))).to.equal(1);
+      expect(stubs.accumulator.getCallCount(fixture.accumulator.url)).to.equal(1);
+    });
+  });
 });
