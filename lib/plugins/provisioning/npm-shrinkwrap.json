@@ -1476,7 +1476,7 @@
     },
     "tough-cookie": {
       "version": "2.4.3",
-      "from": "tough-cookie@>=2.4.3 <2.5.0",
+      "from": "tough-cookie@~2.4.3",
       "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.4.3.tgz",
       "dependencies": {
         "punycode": {
