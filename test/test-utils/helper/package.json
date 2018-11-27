@@ -30,6 +30,8 @@
     "pub": "publish"
   },
   "dependencies": {
+    "abacus-dbclient": "file:../../../lib/utils/dbclient",
+    "abacus-seqid": "file:../../../lib/utils/seqid",
     "underscore": "^1.9.1"
   },
   "engines": {
