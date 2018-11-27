@@ -5,9 +5,9 @@ const util = require('util');
 const httpStatus = require('http-status-codes');
 const { MongoClient } = require('mongodb');
 
-const { ReceiverClient, 
-  WebAppClient, 
-  UnauthorizedError, 
+const { ReceiverClient,
+  WebAppClient,
+  UnauthorizedError,
   ForbiddenError,
   BasicAuthHeaderProvider,
   VoidAuthHeaderProvider } = require('abacus-api');
@@ -141,7 +141,7 @@ describe('Receiver integartion test', () => {
     });
   });
 
-  const itNoNeededScopes = (invokeEndpoint) => 
+  const itNoNeededScopes = (invokeEndpoint) =>
     context('when token with no needed scopes is used', () => {
       it('it should reject the request with "forbidden" status code', async () => {
         await eventually(async () => await expect(invokeEndpoint()).to.be.rejectedWith(ForbiddenError));
