@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "version": "1.1.3",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/bridge",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/bridge",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -32,7 +32,6 @@
     "abacus-breaker": "file:../breaker",
     "abacus-carryover": "file:../../utils/carryover",
     "abacus-client": "file:../../utils/client",
-    "abacus-cluster": "file:../../utils/cluster",
     "abacus-dbclient": "file:../dbclient",
     "abacus-debug": "file:../debug",
     "abacus-healthmonitor": "file:../healthmonitor",

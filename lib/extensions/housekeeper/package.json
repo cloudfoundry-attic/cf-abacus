@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "version": "1.1.3",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/extensions/housekeeper",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/extensions/housekeeper",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -24,8 +24,8 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "start": "launch webapp start",
-    "stop": "webapp stop",
+    "start": "launch &",
+    "stop": "pkill -f 'node abacus-housekeeper-[0-9]+ express' || true",
     "test": "abacus-eslint && nyc abacus-mocha",
     "generate-coverage": "nyc report --reporter=lcovonly",
     "lint": "abacus-eslint",
@@ -37,10 +37,9 @@
   },
   "dependencies": {
     "abacus-client": "file:../../utils/client",
-    "abacus-cluster": "file:../../utils/cluster",
     "abacus-debug": "file:../../utils/debug",
-    "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-launcher": "file:../../utils/launcher",
+    "abacus-dbclient": "file:../../utils/dbclient",
     "abacus-oauth": "file:../../utils/oauth",
     "abacus-request": "file:../../utils/request",
     "abacus-router": "file:../../utils/router",

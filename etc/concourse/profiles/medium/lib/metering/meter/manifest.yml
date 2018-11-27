@@ -11,7 +11,6 @@ applications:
       APPS: 1
       DB_PARTITIONS: 2
       CUSTOM_METRICS: true
-      CLUSTER: false
       DEBUG: e-abacus-*
       API: ((AUTH_SERVER))
       AUTH_SERVER: ((AUTH_SERVER))

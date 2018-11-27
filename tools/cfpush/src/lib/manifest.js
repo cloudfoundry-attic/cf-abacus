@@ -26,7 +26,7 @@ const verifyManifest = (manifest) => {
 
 const adjustOptionalProperties = (application, properties) => {
   if (properties.instances) application.instances = parseInt(properties.instances);
-  if (properties.buildpack) application.buildpack = properties.buildpack;
+  if (properties.buildpack) application.buildpacks = [ properties.buildpack ];
 };
 
 const adjustManifest = (manifest, properties) => {

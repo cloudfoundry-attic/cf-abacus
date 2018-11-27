@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "version": "1.1.3",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/rewire",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/rewire",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },

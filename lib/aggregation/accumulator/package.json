@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "version": "1.1.3",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/aggregation/accumulator",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/aggregation/accumulator",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -23,8 +23,8 @@
   ],
   "main": "src/index.js",
   "scripts": {
-    "start": "launch webapp start",
-    "stop": "webapp stop",
+    "start": "launch &",
+    "stop": "pkill -f 'node abacus-usage-accumulator-[0-9]+ express' || true",
     "test": "abacus-eslint && nyc abacus-mocha",
     "generate-coverage": "nyc report --reporter=lcovonly",
     "lint": "abacus-eslint",
@@ -36,7 +36,6 @@
   },
   "dependencies": {
     "abacus-oauth": "file:../../utils/oauth",
-    "abacus-cluster": "file:../../utils/cluster",
     "abacus-dataflow": "file:../../utils/dataflow",
     "abacus-debug": "file:../../utils/debug",
     "abacus-launcher": "file:../../utils/launcher",

@@ -43,7 +43,7 @@ case "$CI_TEST" in
     export ORGS=1
     export INSTANCES=8
     export USAGE_DOCS=8
-    yarn start small
+    yarn start
     sleep 10s
     yarn run performance
     yarn stop

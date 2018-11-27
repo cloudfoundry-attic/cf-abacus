@@ -36,7 +36,6 @@ applications:
       EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
       BATCH_SIZE: 50
       THROTTLE: 60
-      CLUSTER: false
       OPTIMIZE_MEMORY: true
       NODE_MODULES_CACHE: false
       PRIMARY_DOMAIN: ((CF_SYS_DOMAIN))

@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "version": "1.1.3",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/lib/utils/webapp",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/webapp",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },
@@ -18,13 +18,9 @@
   ],
   "files": [
     ".npmrc",
-    "webapp",
     "src/"
   ],
   "main": "src/index.js",
-  "bin": {
-    "webapp": "./webapp"
-  },
   "scripts": {
     "test": "abacus-eslint && nyc abacus-mocha",
     "generate-coverage": "nyc report --reporter=lcovonly",
@@ -33,7 +29,6 @@
   },
   "dependencies": {
     "abacus-basic": "file:../basic",
-    "abacus-cluster": "file:../cluster",
     "abacus-debug": "file:../debug",
     "abacus-eureka": "file:../eureka",
     "abacus-express": "file:../express",
