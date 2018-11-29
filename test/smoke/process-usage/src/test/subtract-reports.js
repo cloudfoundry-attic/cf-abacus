@@ -44,7 +44,8 @@ const _subtractPlans = (plansA, plansB) => {
   each(plansA, (plan) => {
     resultPlans.push(extend(clone(omit(plan, 'aggregated_usage')), { 
       aggregated_usage: _subtractAggregatedUsages(plan.aggregated_usage, 
-        findPlanById(plan.plan_id, plansB).aggregated_usage)}));
+        findPlanById(plan.plan_id, plansB).aggregated_usage)
+    }));
   });
   return resultPlans;
 };
@@ -72,7 +73,7 @@ const _subtractConsumers = (consumersA, consumersB) => {
   each(consumersA, (consumerA) => {
     resultConsumers.push({
       consumer_id: consumerA.consumer_id,
-      resources: _subtractResources(consumerA.resources, 
+      resources: _subtractResources([findResourceById('object-storage',consumerA.resources)], 
         findConsumerById(consumerA.consumer_id, consumersB).resources)
     });
   });
@@ -84,12 +85,11 @@ const _subtractSpaces = (spacesA, spacesB) => {
     return spacesA;
   
   const resultSpaces = [];
-  
   each(spacesA, (spaceA) => {
     const spaceB = findSpaceById(spaceA.space_id, spacesB);
     resultSpaces.push({
       space_id: spaceA.space_id,
-      resources: _subtractResources(spaceA.resources, spaceB.resources),
+      resources: _subtractResources([findResourceById('object-storage', spaceA.resources)], spaceB.resources),
       consumers: _subtractConsumers(spaceA.consumers, spaceB.consumers)
     });
   });  
@@ -98,11 +98,10 @@ const _subtractSpaces = (spacesA, spacesB) => {
 
 const subtractReports = (reportA, reportB) => ({
   organization_id: reportA.organization_id,
-  resources: _subtractResources(reportA.resources, reportB.resources),
+  resources: _subtractResources([findResourceById('object-storage', reportA.resources)], reportB.resources),
   spaces: _subtractSpaces(reportA.spaces, reportB.spaces),
   account_id: reportA.account_id
 });
-
 
 
 module.exports = {
