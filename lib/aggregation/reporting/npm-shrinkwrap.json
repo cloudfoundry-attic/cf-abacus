@@ -240,9 +240,9 @@
       "resolved": "https://registry.npmjs.org/acorn-jsx/-/acorn-jsx-5.0.1.tgz"
     },
     "ajv": {
-      "version": "6.5.5",
+      "version": "6.6.1",
       "from": "ajv@^6.0.0",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.5.5.tgz"
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.6.1.tgz"
     },
     "ajv-keywords": {
       "version": "3.2.0",
@@ -870,9 +870,21 @@
       "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.3.tgz"
     },
     "inquirer": {
-      "version": "6.2.0",
+      "version": "6.2.1",
       "from": "inquirer@^6.1.0",
-      "resolved": "https://registry.npmjs.org/inquirer/-/inquirer-6.2.0.tgz"
+      "resolved": "https://registry.npmjs.org/inquirer/-/inquirer-6.2.1.tgz",
+      "dependencies": {
+        "ansi-regex": {
+          "version": "4.0.0",
+          "from": "ansi-regex@^4.0.0",
+          "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-4.0.0.tgz"
+        },
+        "strip-ansi": {
+          "version": "5.0.0",
+          "from": "strip-ansi@^5.0.0",
+          "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-5.0.0.tgz"
+        }
+      }
     },
     "ipaddr.js": {
       "version": "1.8.0",
@@ -1269,9 +1281,9 @@
       "resolved": "https://registry.npmjs.org/process-nextick-args/-/process-nextick-args-1.0.7.tgz"
     },
     "progress": {
-      "version": "2.0.1",
+      "version": "2.0.2",
       "from": "progress@^2.0.0",
-      "resolved": "https://registry.npmjs.org/progress/-/progress-2.0.1.tgz"
+      "resolved": "https://registry.npmjs.org/progress/-/progress-2.0.2.tgz"
     },
     "proxy-addr": {
       "version": "2.0.4",

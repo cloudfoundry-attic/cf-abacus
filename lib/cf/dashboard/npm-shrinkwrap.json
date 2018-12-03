@@ -23,9 +23,9 @@
       "resolved": "https://registry.npmjs.org/@types/form-data/-/form-data-2.2.1.tgz"
     },
     "@types/node": {
-      "version": "10.12.10",
+      "version": "10.12.11",
       "from": "@types/node@*",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.12.10.tgz"
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.12.11.tgz"
     },
     "@types/request": {
       "version": "2.48.1",
@@ -185,9 +185,9 @@
       "resolved": "https://registry.npmjs.org/agent-base/-/agent-base-4.2.1.tgz"
     },
     "ajv": {
-      "version": "6.5.5",
+      "version": "6.6.1",
       "from": "ajv@^6.0.0",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.5.5.tgz"
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.6.1.tgz"
     },
     "align-text": {
       "version": "0.1.4",
@@ -421,9 +421,9 @@
       }
     },
     "connect-mongo": {
-      "version": "2.0.2",
-      "from": "connect-mongo@2.0.2",
-      "resolved": "https://registry.npmjs.org/connect-mongo/-/connect-mongo-2.0.2.tgz"
+      "version": "2.0.3",
+      "from": "connect-mongo@2.0.3",
+      "resolved": "https://registry.npmjs.org/connect-mongo/-/connect-mongo-2.0.3.tgz"
     },
     "constantinople": {
       "version": "3.1.2",
