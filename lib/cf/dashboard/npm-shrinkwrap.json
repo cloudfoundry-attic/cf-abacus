@@ -23,9 +23,9 @@
       "resolved": "https://registry.npmjs.org/@types/form-data/-/form-data-2.2.1.tgz"
     },
     "@types/node": {
-      "version": "10.12.11",
+      "version": "10.12.12",
       "from": "@types/node@*",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.12.11.tgz"
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.12.12.tgz"
     },
     "@types/request": {
       "version": "2.48.1",
