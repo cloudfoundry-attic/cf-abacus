@@ -8,6 +8,7 @@ const cmdlineModule = require('abacus-cmdline');
 
 const testEnv = {
   api: process.env.CF_API_URI,
+  origin: process.env.CF_AUTH_ORIGIN,
   user: process.env.CF_ADMIN_USER,
   password: process.env.CF_ADMIN_PASSWORD,
   cloudControllerClientId: process.env.CLOUD_CONTROLLER_CLIENT_ID,
@@ -30,7 +31,14 @@ describe('usage events tests', () => {
 
   before(functioncb(function*() {
     checkCorrectSetup(testEnv);
-    cmdline = cmdlineModule.cfutils(testEnv.api, testEnv.user, testEnv.password);
+
+    cmdline = cmdlineModule.cfutils(
+      testEnv.api,
+      testEnv.user,
+      testEnv.password,
+      testEnv.origin
+    );
+
     const createdOrg = cmdline.org.create(testOrg);
     orgGuid = createdOrg.metadata.guid;
     const createdSpace = cmdline.space.create(orgGuid, testSpace);
@@ -47,7 +55,7 @@ describe('usage events tests', () => {
     } catch(e) {
       // If test is executed on a cloud foundry that uses self signed certificate
       // you should export SKIP_SSL_VALIDATION="true" in order oauth.cache() to work properly.
-      if (e.message == 'self signed certificate')
+      if (e.message === 'self signed certificate')
         throw new Error('Self signed certificate used. If this is intended export SKIP_SSL_VALIDATION="true" ');
     }
   }));
