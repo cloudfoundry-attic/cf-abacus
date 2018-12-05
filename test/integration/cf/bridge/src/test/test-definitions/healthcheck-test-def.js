@@ -50,8 +50,9 @@ const build = () => {
       };
 
       it('returns correct response', async () => {
-        const webappClient = new WebAppClient(`http://localhost:${fixture.bridge.port}`,
-          new BasicAuthHeaderProvider(credentials));
+        const webappClient = new WebAppClient(`http://localhost:${fixture.bridge.port}`, {
+          authHeaderProvider: new BasicAuthHeaderProvider(credentials)
+        });
 
         const health = await eventually(bind(webappClient.getHealth, webappClient));
         expect(health).to.deep.equal({

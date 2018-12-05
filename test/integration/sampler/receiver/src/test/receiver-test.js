@@ -51,13 +51,21 @@ describe('Receiver integartion test', () => {
 
   before(async () => {
     tokenFactory = createTokenFactory(jwtSecret);
+    const bearerAuthHeaderProvider = (token) => ({
+      getHeader: () => `Bearer ${token}`
+    });
     validReceiverClient = new ReceiverClient(receiverURI, {
-      getHeader: () => `Bearer ${tokenFactory.create(samplerOAuthScopes)}`
-    }, skipSslValidation);
+      authHeaderProvider: bearerAuthHeaderProvider(tokenFactory.create(samplerOAuthScopes)),
+      skipSslValidation
+    });
     noScopesReceiverClient = new ReceiverClient(receiverURI, {
-      getHeader: () => `Bearer ${tokenFactory.create([])}`
-    }, skipSslValidation);
-    noAuthHeaderReceiverClient = new ReceiverClient(receiverURI, new VoidAuthHeaderProvider(), skipSslValidation);
+      authHeaderProvider: bearerAuthHeaderProvider(tokenFactory.create([])),
+      skipSslValidation
+    });
+    noAuthHeaderReceiverClient = new ReceiverClient(receiverURI, {
+      authHeaderProvider: new VoidAuthHeaderProvider(),
+      skipSslValidation
+    });
 
 
     externalSystemsMocks = createExternalSystems();
@@ -109,7 +117,10 @@ describe('Receiver integartion test', () => {
 
     before(async () => {
       const authHeaderProvider = new BasicAuthHeaderProvider(credentials);
-      webappClient = new WebAppClient(receiverURI, authHeaderProvider, skipSslValidation);
+      webappClient = new WebAppClient(receiverURI, {
+        authHeaderProvider,
+        skipSslValidation
+      });
     });
 
     context('when uaa server successfully validates passed credentials', () => {
