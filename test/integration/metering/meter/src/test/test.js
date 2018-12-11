@@ -6,8 +6,9 @@ const lifecycleManager = require('abacus-lifecycle-manager')();
 
 const fixture = require('./fixture');
 const rabbitClient = require('./rabbit-client');
+const createMeterDbClient = require('./meter-db-client');
 
-const { extend } = require('underscore');
+const { extend, omit } = require('underscore');
 
 const queueName = 'meter-itest-queue';
 const mainExchange = 'meter-itest-main-exchange';
@@ -18,7 +19,8 @@ const secondDlExchange = 'meter-itest-second-exchange';
 const { checkCorrectSetup } = require('abacus-test-helper');
 
 const testEnv = {
-  db: process.env.DB_URI || 'mongodb://localhost:27017'
+  db: process.env.DB_URI || 'mongodb://localhost:27017',
+  dbPartitions: 6
 };
 
 describe('meter integration test', () => {
@@ -28,12 +30,15 @@ describe('meter integration test', () => {
     checkCorrectSetup(testEnv);
     const modules = [lifecycleManager.modules.meter];
     const customEnv = extend({}, process.env, {
+      DB_PARTITIONS: testEnv.dbPartitions,
       ABACUS_COLLECT_QUEUE: queueName,
       MAIN_EXCHANGE: mainExchange,
       FIRST_DL_NAME: firstDlName,
       FIRST_DL_EXCHANGE: firstDlExchange,
+      FIRST_DL_TTL: 1,
       SECOND_DL_NAME: secondDlName,
-      SECOND_DL_EXCHANGE: secondDlExchange
+      SECOND_DL_EXCHANGE: secondDlExchange,
+      SECOND_DL_TTL: 2
     });
 
     // drop all abacus collections except plans and plan-mappings
@@ -416,6 +421,52 @@ describe('meter integration test', () => {
       expect(stubs.account.getCallCount(fixture.account.accountPluginGetPlanIdUrl
         .withDefaultParams(timestamp, 'rating'))).to.equal(1);
       expect(stubs.accumulator.getCallCount(fixture.accumulator.url)).to.equal(1);
+    });
+  });
+
+  context('when consuming future message', () => {
+    let usage;
+    let nextDayTimestamp;
+    let errorDbDoc;
+    before(async() => {
+      const meterDbClient = createMeterDbClient(testEnv.dbPartitions);
+
+      nextDayTimestamp = moment.utc().add(1, 'day').valueOf();
+      const config = {
+        provisioning: fixture.provisioning.successfulResponses(nextDayTimestamp),
+        account: fixture.account.successfulResponses(nextDayTimestamp),
+        accumulator: fixture.accumulator.successfulResponses()
+      };
+      usage = fixture.usageDoc({ time: nextDayTimestamp });
+
+      stubs = fixture.buildStubs(config);
+      startApps(stubs);
+
+      await postUsage(usage);
+
+      await eventually(async () => {
+        errorDbDoc = await meterDbClient.error.get(usage.usageDoc);
+        if(!errorDbDoc)
+          throw new Error();
+      });
+    });
+
+    it('stores message in error db', () => {
+      const expectedErrorDoc = extend({}, usage, { error: { isFutureUsageError: true } })
+      expect(omit(errorDbDoc, '_id', '_rev')).to.deep.equal(expectedErrorDoc);
+    });
+
+    it('does not process the message', () => {
+      expect(stubs.provisioning.getCallCount(fixture.provisioning.resourceTypeUrl.withDefaultParam(nextDayTimestamp)))
+        .to.equal(0);
+      expect(stubs.account.getCallCount(fixture.account.url.withDefaultParams(nextDayTimestamp))).to.equal(0);
+      expect(stubs.account.getCallCount(fixture.account.accountPluginGetPlanIdUrl
+        .withDefaultParams(nextDayTimestamp, 'metering'))).to.equal(0);
+      expect(stubs.account.getCallCount(fixture.account.accountPluginGetPlanIdUrl
+        .withDefaultParams(nextDayTimestamp, 'pricing'))).to.equal(0);
+      expect(stubs.account.getCallCount(fixture.account.accountPluginGetPlanIdUrl
+        .withDefaultParams(nextDayTimestamp, 'rating'))).to.equal(0);
+      expect(stubs.accumulator.getCallCount(fixture.accumulator.url)).to.equal(0);
     });
   });
 });
