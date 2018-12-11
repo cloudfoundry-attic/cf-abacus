@@ -21,3 +21,16 @@ module.exports.sendToQueue = async(queueName, message) => {
     console.log(e);
   }
 };
+
+module.exports.messagesCount = async(...queueNames) => {
+  const connection = await amqp.connect(process.env.RABBIT_URL);
+  const channel = await connection.createConfirmChannel();
+  let messagesCount = 0;
+  for(let queueName of queueNames) {
+    const res = await channel.checkQueue(queueName);
+    messagesCount += res.messageCount;
+  }
+  return messagesCount;
+};
+
+
