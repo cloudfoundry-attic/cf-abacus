@@ -1231,9 +1231,9 @@
       "resolved": "https://registry.npmjs.org/process-nextick-args/-/process-nextick-args-1.0.7.tgz"
     },
     "progress": {
-      "version": "2.0.2",
+      "version": "2.0.3",
       "from": "progress@^2.0.0",
-      "resolved": "https://registry.npmjs.org/progress/-/progress-2.0.2.tgz"
+      "resolved": "https://registry.npmjs.org/progress/-/progress-2.0.3.tgz"
     },
     "proxy-addr": {
       "version": "2.0.4",
@@ -1241,9 +1241,9 @@
       "resolved": "https://registry.npmjs.org/proxy-addr/-/proxy-addr-2.0.4.tgz"
     },
     "psl": {
-      "version": "1.1.29",
-      "from": "psl@>=1.1.24 <2.0.0",
-      "resolved": "https://registry.npmjs.org/psl/-/psl-1.1.29.tgz"
+      "version": "1.1.31",
+      "from": "psl@^1.1.24",
+      "resolved": "https://registry.npmjs.org/psl/-/psl-1.1.31.tgz"
     },
     "punycode": {
       "version": "2.1.1",
@@ -1525,7 +1525,7 @@
     },
     "underscore": {
       "version": "1.9.1",
-      "from": "underscore@>=1.9.1 <2.0.0",
+      "from": "underscore@^1.9.1",
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.9.1.tgz"
     },
     "unpipe": {
