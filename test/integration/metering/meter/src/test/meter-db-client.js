@@ -4,26 +4,7 @@ const util = require('util');
 
 const dbClient = require('abacus-dbclient');
 const partition = require('abacus-partition');
-
-// TODO package
-const buildKeyFn = (usageDoc) => {
-  const keyFields = [
-    't',
-    dbClient.pad16(usageDoc.end),
-    'k',
-    usageDoc.organization_id,
-    usageDoc.space_id,
-    usageDoc.consumer_id,
-    usageDoc.resource_id,
-    usageDoc.plan_id,
-    usageDoc.resource_instance_id
-  ];
-
-  if(usageDoc.dedup_id)
-    keyFields.push(usageDoc.dedup_id);
-
-  return keyFields.join('/');
-};
+const keyBuilder = require('abacus-keybuilder');
 
 module.exports = (dbPartitions) => {
   const partitioner = partition.partitioner(
@@ -41,10 +22,10 @@ module.exports = (dbPartitions) => {
 
   return {
     error: {
-      get: (usageDoc) => errorGet(buildKeyFn(usageDoc))
+      get: (usageDoc) => errorGet(keyBuilder.createMeterDocId(usageDoc))
     },
     output: {
-      get: (usageDoc) => outputGet(buildKeyFn(usageDoc))
+      get: (usageDoc) => outputGet(keyBuilder.createMeterDocId(usageDoc))
     }
   };
 };

@@ -35,6 +35,7 @@
     "abacus-debug": "file:../../../../lib/utils/debug",
     "abacus-eslint": "file:../../../../tools/eslint",
     "abacus-express": "file:../../../../lib/utils/express",
+    "abacus-keybuilder": "file:../../../../lib/utils/keybuilder",
     "abacus-mocha": "file:../../../../tools/mocha",
     "abacus-lifecycle-manager": "file:../../../test-utils/lifecycle-manager",
     "abacus-moment": "file:../../../../lib/utils/moment",
