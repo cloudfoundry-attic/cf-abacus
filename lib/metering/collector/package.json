@@ -43,6 +43,7 @@
     "abacus-oauth": "file:../../utils/oauth",
     "abacus-dataflow": "file:../../utils/dataflow",
     "abacus-debug": "file:../../utils/debug",
+    "abacus-docid": "file:../../utils/docid",
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-lrucache": "file:../../utils/lrucache",
     "abacus-metrics": "file:../../utils/metrics",

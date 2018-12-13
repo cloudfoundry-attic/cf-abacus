@@ -67,6 +67,11 @@
       "from": "../../utils/dedupe",
       "resolved": "file:../../utils/dedupe"
     },
+    "abacus-docid": {
+      "version": "1.1.3",
+      "from": "../../utils/docid",
+      "resolved": "file:../../utils/docid"
+    },
     "abacus-eureka": {
       "version": "1.1.3",
       "from": "../../utils/eureka",
@@ -1193,9 +1198,9 @@
       "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.1.tgz"
     },
     "moment": {
-      "version": "2.22.2",
+      "version": "2.23.0",
       "from": "moment@^2.17.1",
-      "resolved": "https://registry.npmjs.org/moment/-/moment-2.22.2.tgz"
+      "resolved": "https://registry.npmjs.org/moment/-/moment-2.23.0.tgz"
     },
     "mongodb": {
       "version": "2.2.36",

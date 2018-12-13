@@ -23,9 +23,9 @@
       "resolved": "https://registry.npmjs.org/@types/form-data/-/form-data-2.2.1.tgz"
     },
     "@types/node": {
-      "version": "10.12.12",
+      "version": "10.12.14",
       "from": "@types/node@*",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.12.12.tgz"
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.12.14.tgz"
     },
     "@types/request": {
       "version": "2.48.1",
@@ -1102,9 +1102,9 @@
       "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.21.tgz"
     },
     "moment": {
-      "version": "2.22.2",
+      "version": "2.23.0",
       "from": "moment@^2.17.1",
-      "resolved": "https://registry.npmjs.org/moment/-/moment-2.22.2.tgz"
+      "resolved": "https://registry.npmjs.org/moment/-/moment-2.23.0.tgz"
     },
     "mongodb": {
       "version": "2.2.36",

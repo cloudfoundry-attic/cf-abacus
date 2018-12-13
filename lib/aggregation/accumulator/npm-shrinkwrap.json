@@ -735,9 +735,9 @@
       "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.21.tgz"
     },
     "moment": {
-      "version": "2.22.2",
+      "version": "2.23.0",
       "from": "moment@^2.17.1",
-      "resolved": "https://registry.npmjs.org/moment/-/moment-2.22.2.tgz"
+      "resolved": "https://registry.npmjs.org/moment/-/moment-2.23.0.tgz"
     },
     "mongodb": {
       "version": "2.2.36",
