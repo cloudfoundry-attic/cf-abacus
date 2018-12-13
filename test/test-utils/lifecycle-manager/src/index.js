@@ -47,7 +47,8 @@ const modules = {
   sampler: {
     receiver: 'abacus-sampler-receiver',
     worker: 'abacus-sampler-worker'
-  }
+  },
+  broker: 'abacus-cf-broker'
 };
 
 const getModuleDir = (module) => {

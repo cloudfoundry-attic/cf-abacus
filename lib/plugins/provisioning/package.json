@@ -76,7 +76,8 @@
       "html"
     ],
     "exclude": [
-      "src/test/**"
+      "src/test/**",
+      "src/plans/**"
     ]
   },
   "engines": {

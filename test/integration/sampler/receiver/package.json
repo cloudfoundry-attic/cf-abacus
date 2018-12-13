@@ -33,7 +33,7 @@
   "devDependencies": {
     "abacus-sampler-receiver": "file:../../../../lib/sampler/receiver",
     "abacus-api": "file:../../../../lib/utils/api",
-    "abacus-lifecycle-manager": "../../../lib/lifecycle-manager",
+    "abacus-lifecycle-manager": "../../../test-utils/lifecycle-manager",
     "abacus-test-helper": "../../../test-utils/helper",
     "abacus-mock-util": "../../../test-utils/mock-util",
     "abacus-moment": "../../../../lib/utils/moment",

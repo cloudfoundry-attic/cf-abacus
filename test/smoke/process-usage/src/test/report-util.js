@@ -46,7 +46,8 @@ const _removePreviousWindowsFromWindows = (windows) => [
 const _removePreviousWindowsFromAggregatedUsage = (aggregatedUsage) => {
   const result = [];
   each(aggregatedUsage, (metric) => {
-    result.push(extend({}, metric, { windows: _removePreviousWindowsFromWindows(metric.windows)}));
+    result.push(extend({}, metric, { windows: _removePreviousWindowsFromWindows(metric.windows)
+    }));
   });
 
   return result;

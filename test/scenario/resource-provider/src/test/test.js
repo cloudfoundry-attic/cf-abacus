@@ -14,6 +14,7 @@ const { checkCorrectSetup } = require('abacus-test-helper');
 const testEnv = {
   api: process.env.CF_API_URI,
   authServer: process.env.AUTH_SERVER_URL,
+  origin: process.env.CF_AUTH_ORIGIN,
   adminUser: process.env.CF_ADMIN_USER,
   adminUserPassword: process.env.CF_ADMIN_PASSWORD,
   uaaAdminSecret: process.env.UAA_SECRET,
@@ -50,7 +51,13 @@ describe('Create and update plans acceptance test @cfonly', () => {
   before((done) => {
     checkCorrectSetup(testEnv);
 
-    cfUtils = cmdline.cfutils(testEnv.api, testEnv.adminUser, testEnv.adminUserPassword);
+    cfUtils = cmdline.cfutils(
+      testEnv.api,
+      testEnv.adminUser,
+      testEnv.adminUserPassword,
+      testEnv.origin
+    );
+
     uaaUtils = createUaaUtils(testEnv.authServer, testEnv.uaaAdminSecret);
     abacusClient = abacusUtil(testEnv.provisioningUrl, testEnv.collectorUrl, testEnv.reportingUrl);
 

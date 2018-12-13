@@ -22,9 +22,9 @@ const _spaceIdPredicate = (id) => (space) => space.space_id === id;
 const _consumerIdPredicate = (id) => (consumer) => consumer.consumer_id === id;
 
 module.exports = {
-  findResourceById: _createFinder(_resourceIdPredicate, (id) => new Error('Missing resource with id %s', id)),
-  findMetricByName: _createFinder(_metricNamePredicate, (id) => new Error('Missing resource with id %s', id)),
-  findConsumerById: _createFinder(_consumerIdPredicate, (id) => new Error('Missing consumer with id %s', id)),
-  findSpaceById: _createFinder(_spaceIdPredicate, (id) => new Error('Missing space with id %s', id)),
-  findPlanById: _createFinder(_planIdPredicate, (id) => new Error('Missing plan with id %s', id))
+  findResourceById: _createFinder(_resourceIdPredicate, (id) => new Error(`Missing resource with id ${id}`)),
+  findMetricByName: _createFinder(_metricNamePredicate, (id) => new Error(`Missing metric with id ${id}`)),
+  findConsumerById: _createFinder(_consumerIdPredicate, (id) => new Error(`Missing consumer with id ${id}`)),
+  findSpaceById: _createFinder(_spaceIdPredicate, (id) => new Error(`Missing space with id ${id}`)),
+  findPlanById: _createFinder(_planIdPredicate, (id) => new Error(`Missing plan with id ${id}`))
 };

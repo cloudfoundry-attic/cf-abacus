@@ -230,9 +230,9 @@
       "resolved": "https://registry.npmjs.org/acorn-jsx/-/acorn-jsx-5.0.1.tgz"
     },
     "ajv": {
-      "version": "6.5.5",
+      "version": "6.6.1",
       "from": "ajv@^6.0.0",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.5.5.tgz"
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.6.1.tgz"
     },
     "ajv-keywords": {
       "version": "3.2.0",
@@ -855,9 +855,21 @@
       "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.3.tgz"
     },
     "inquirer": {
-      "version": "6.2.0",
+      "version": "6.2.1",
       "from": "inquirer@^6.1.0",
-      "resolved": "https://registry.npmjs.org/inquirer/-/inquirer-6.2.0.tgz"
+      "resolved": "https://registry.npmjs.org/inquirer/-/inquirer-6.2.1.tgz",
+      "dependencies": {
+        "ansi-regex": {
+          "version": "4.0.0",
+          "from": "ansi-regex@^4.0.0",
+          "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-4.0.0.tgz"
+        },
+        "strip-ansi": {
+          "version": "5.0.0",
+          "from": "strip-ansi@^5.0.0",
+          "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-5.0.0.tgz"
+        }
+      }
     },
     "ipaddr.js": {
       "version": "1.8.0",
@@ -1102,9 +1114,9 @@
       "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.1.tgz"
     },
     "moment": {
-      "version": "2.22.2",
+      "version": "2.23.0",
       "from": "moment@^2.17.1",
-      "resolved": "https://registry.npmjs.org/moment/-/moment-2.22.2.tgz"
+      "resolved": "https://registry.npmjs.org/moment/-/moment-2.23.0.tgz"
     },
     "mongodb": {
       "version": "2.2.36",
@@ -1254,9 +1266,9 @@
       "resolved": "https://registry.npmjs.org/process-nextick-args/-/process-nextick-args-1.0.7.tgz"
     },
     "progress": {
-      "version": "2.0.1",
+      "version": "2.0.3",
       "from": "progress@^2.0.0",
-      "resolved": "https://registry.npmjs.org/progress/-/progress-2.0.1.tgz"
+      "resolved": "https://registry.npmjs.org/progress/-/progress-2.0.3.tgz"
     },
     "proxy-addr": {
       "version": "2.0.4",
@@ -1264,9 +1276,9 @@
       "resolved": "https://registry.npmjs.org/proxy-addr/-/proxy-addr-2.0.4.tgz"
     },
     "psl": {
-      "version": "1.1.29",
-      "from": "psl@>=1.1.24 <2.0.0",
-      "resolved": "https://registry.npmjs.org/psl/-/psl-1.1.29.tgz"
+      "version": "1.1.31",
+      "from": "psl@^1.1.24",
+      "resolved": "https://registry.npmjs.org/psl/-/psl-1.1.31.tgz"
     },
     "punycode": {
       "version": "2.1.1",
@@ -1511,7 +1523,7 @@
     },
     "tough-cookie": {
       "version": "2.4.3",
-      "from": "tough-cookie@>=2.4.3 <2.5.0",
+      "from": "tough-cookie@~2.4.3",
       "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.4.3.tgz",
       "dependencies": {
         "punycode": {
@@ -1548,7 +1560,7 @@
     },
     "underscore": {
       "version": "1.9.1",
-      "from": "underscore@>=1.9.1 <2.0.0",
+      "from": "underscore@^1.9.1",
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.9.1.tgz"
     },
     "unpipe": {
