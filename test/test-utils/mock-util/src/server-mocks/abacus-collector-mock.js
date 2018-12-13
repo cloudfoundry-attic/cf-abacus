@@ -11,7 +11,7 @@ const randomPort = 0;
 const resourceLocation = 'http://location.com';
 
 const extractOAuthToken = (authHeader) => {
-  if (authHeader) 
+  if (authHeader)
     return authHeader.split(' ')[1];
 
   return undefined;
@@ -24,7 +24,6 @@ module.exports = () => {
   const getUsageServiceData = createMockServiceData();
 
   const start = (cb) => {
-    const app = express();
     const routes = router();
 
     routes.post('/v1/metering/collected/usage', (req, res) => {
@@ -70,6 +69,7 @@ module.exports = () => {
       res.status(response.statusCode).send(response.body);
     });
 
+    const app = express();
     app.use(routes);
     app.use(router.batch(routes));
 

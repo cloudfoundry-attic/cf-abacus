@@ -8,6 +8,7 @@ const uaaServerMock = require('./server-mocks/uaa-server-mock');
 const cfServerMock = require('./server-mocks/cf-server-mock');
 const provisioningServerMock = require('./server-mocks/provisioning-server-mock');
 const serviceMappingServerMock = require('./server-mocks/service-mapping-server-mock');
+const accountServerMock = require('./server-mocks/account-server-mock');
 const externalSystems = require('./external-systems');
 const serviceMock = require('./service-mock-util');
 
@@ -20,6 +21,7 @@ module.exports = {
   cfServerMock,
   provisioningServerMock,
   serviceMappingServerMock,
+  accountServerMock,
   externalSystems,
   serviceMock
 };

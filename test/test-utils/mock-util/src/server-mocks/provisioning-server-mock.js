@@ -2,6 +2,7 @@
 
 const debug = require('abacus-debug')('abacus-provisioning-server-mock');
 const express = require('abacus-express');
+const router = require('abacus-router');
 
 const createMockServiceData = require('./mock-service-data');
 
@@ -47,9 +48,12 @@ module.exports = () => {
   const createRatingMappingServiceData = createMockServiceData();
   const createPricingMappingServiceData = createMockServiceData();
 
+  const validateResourceInstanceServiceData = createMockServiceData();
+
   const start = (cb) => {
-    const app = express();
-    app.post('/v1/metering/plans', (req, res) => {
+    const routes = router();
+
+    routes.post('/v1/metering/plans', (req, res) => {
       debug('Create metering plan called. Plan: %j', req.body);
       storePlanRequest(createMeteringPlanServiceData, req);
 
@@ -57,7 +61,7 @@ module.exports = () => {
       res.status(responseCode).send();
     });
 
-    app.post('/v1/rating/plans', (req, res) => {
+    routes.post('/v1/rating/plans', (req, res) => {
       debug('Create rating plan called. Plan: %j', req.body);
       storePlanRequest(createRatingPlanServiceData, req);
 
@@ -65,7 +69,7 @@ module.exports = () => {
       res.status(responseCode).send();
     });
 
-    app.post('/v1/pricing/plans', (req, res) => {
+    routes.post('/v1/pricing/plans', (req, res) => {
       debug('Create pricing plan called. Plan: %j', req.body);
       storePlanRequest(createPricingPlanServiceData, req);
 
@@ -73,7 +77,7 @@ module.exports = () => {
       res.status(responseCode).send();
     });
 
-    app.put('/v1/metering/plan/:planId', (req, res) => {
+    routes.put('/v1/metering/plan/:planId', (req, res) => {
       debug('Update metering plan called. Plan: %j', req.body);
       storePlanRequest(updateMeteringPlanServiceData, req);
 
@@ -81,7 +85,7 @@ module.exports = () => {
       res.status(responseCode).send();
     });
 
-    app.put('/v1/rating/plan/:planId', (req, res) => {
+    routes.put('/v1/rating/plan/:planId', (req, res) => {
       debug('Update rating plan called. Plan: %j', req.body);
       storePlanRequest(updateRatingPlanServiceData, req);
 
@@ -89,7 +93,7 @@ module.exports = () => {
       res.status(responseCode).send();
     });
 
-    app.put('/v1/pricing/plan/:planId', (req, res) => {
+    routes.put('/v1/pricing/plan/:planId', (req, res) => {
       debug('Update pricing plan called. Plan: %j', req.body);
       storePlanRequest(updatePricingPlanServiceData, req);
 
@@ -97,21 +101,23 @@ module.exports = () => {
       res.status(responseCode).send();
     });
 
-    app.post('/v1/provisioning/mappings/metering/resources/:resourceId/plans/:planId/:plan', (req, res) => {
+    routes.post('/v1/provisioning/mappings/metering/resources/:resourceId/plans/:planId/:plan', (req, res) => {
       debug('Create metering mapping called. Params: %j', req.params);
       storeMappingRequest(createMeteringMappingServiceData, req);
 
       const responseCode = createMeteringMappingServiceData.nextResponse();
       res.status(responseCode).send();
     });
-    app.post('/v1/provisioning/mappings/rating/resources/:resourceId/plans/:planId/:plan', (req, res) => {
+
+    routes.post('/v1/provisioning/mappings/rating/resources/:resourceId/plans/:planId/:plan', (req, res) => {
       debug('Create rating mapping called. Params: %j', req.params);
       storeMappingRequest(createRatingMappingServiceData, req);
 
       const responseCode = createRatingMappingServiceData.nextResponse();
       res.status(responseCode).send();
     });
-    app.post('/v1/provisioning/mappings/pricing/resources/:resourceId/plans/:planId/:plan', (req, res) => {
+
+    routes.post('/v1/provisioning/mappings/pricing/resources/:resourceId/plans/:planId/:plan', (req, res) => {
       debug('Create pricing mapping called. Params: %j', req.params);
       storeMappingRequest(createPricingMappingServiceData, req);
 
@@ -119,6 +125,28 @@ module.exports = () => {
       res.status(responseCode).send();
     });
 
+    routes.get('/v1/provisioning/organizations/:org_id/spaces/:space_id/consumers/'
+  + ':consumer_id/resources/:resource_id/plans/:plan_id/instances/:resource_instance_id/:time', (req, res) => {
+      debug('Validate resource instance service called. Params: %j', req.params);
+      validateResourceInstanceServiceData.requests().push({
+        resourceInstance: {
+          organizationId: req.params.org_id,
+          spaceId: req.params.space_id,
+          consumerId: req.params.consumer_id,
+          planId: req.params.plan_id,
+          resourceInstanceId: req.params.resource_instance_id,
+          time: req.params.time
+        },
+        token: extractOAuthToken(req.header('Authorization'))
+      });
+
+      const responseCode = validateResourceInstanceServiceData.nextResponse();
+      res.status(responseCode).send();
+    });
+
+    const app = express();
+    app.use(routes);
+    app.use(router.batch(routes));
     server = app.listen(randomPort, (err) => {
       if (err) {
         cb(err);
@@ -146,6 +174,7 @@ module.exports = () => {
     createMeteringMappingService: createMeteringMappingServiceData,
     createRatingMappingService: createRatingMappingServiceData,
     createPricingMappingService: createPricingMappingServiceData,
+    validateResourceInstanceService: validateResourceInstanceServiceData,
     stop
   };
 };
