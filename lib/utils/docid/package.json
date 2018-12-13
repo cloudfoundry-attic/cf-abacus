@@ -1,10 +1,10 @@
 {
-  "name": "abacus-keybuilder",
+  "name": "abacus-docid",
   "description": "Build metering document id",
   "license": "Apache-2.0",
   "version": "1.1.3",
   "private": true,
-  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/keybuilder",
+  "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/docid",
   "bugs": {
     "url": "https://github.com/cloudfoundry-incubator/cf-abacus/issues"
   },

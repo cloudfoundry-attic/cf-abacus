@@ -1,4 +1,4 @@
-abacus-keybuilder
+abacus-docid
 ===
 
 Build metering document id;

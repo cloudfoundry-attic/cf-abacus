@@ -4,7 +4,7 @@ const util = require('util');
 
 const dbClient = require('abacus-dbclient');
 const partition = require('abacus-partition');
-const keyBuilder = require('abacus-keybuilder');
+const docid = require('abacus-docid');
 
 module.exports = (dbPartitions) => {
   const partitioner = partition.partitioner(
@@ -22,10 +22,10 @@ module.exports = (dbPartitions) => {
 
   return {
     error: {
-      get: (usageDoc) => errorGet(keyBuilder.createMeterDocId(usageDoc))
+      get: (usageDoc) => errorGet(docid.createMeterId(usageDoc))
     },
     output: {
-      get: (usageDoc) => outputGet(keyBuilder.createMeterDocId(usageDoc))
+      get: (usageDoc) => outputGet(docid.createMeterId(usageDoc))
     }
   };
 };
