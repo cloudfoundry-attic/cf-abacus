@@ -1,10 +1,11 @@
 'use strict';
 
-const { extend } = require('underscore');
+const { extend, omit } = require('underscore');
 const httpStatus = require('http-status-codes');
 const util = require('util');
 const createLifecycleManager = require('abacus-lifecycle-manager');
 const { CollectorClient, APIError, VoidAuthHeaderProvider } = require('abacus-api');
+const { ConnectionManager, Consumer, amqpMessageParser } = require('abacus-rabbitmq');
 
 const {
   externalSystems,
@@ -22,6 +23,34 @@ const createExternalSystems = externalSystems({
   provisioningServer: provisioningServerMock,
   accountServer: accountServerMock
 });
+
+const rabbitUri = process.env.RABBIT_URI || 'amqp://localhost:5672';
+const consumerConfig = {
+  mainQueue: {
+    name: 'collector-itest-queue',
+    exchange: 'collector-itest-main-exchange',
+    routingKey: '#',
+    prefetchLimit: 100
+  },
+  deadLetterQueues: [
+    {
+      name: 'collector-itest-first-dl',
+      exchange: 'collector-itest-first-dl-exchange',
+      mainExchange: 'collector-itest-main-exchange',
+      routingKey: '#',
+      ttl: 180000,
+      retryAttempts: 100
+    },
+    {
+      name: 'collector-itest-second-dl',
+      exchange: 'collector-itest-second-dl-exchange',
+      mainExchange: 'collector-itest-main-exchange',
+      routingKey: '#',
+      ttl: 1620000,
+      retryAttempts: 100
+    }
+  ]
+};
 
 describe('Collector tests', () => {
   const resourceId = 'resource-id';
@@ -58,17 +87,9 @@ describe('Collector tests', () => {
 
     tokenFactory = createTokenFactory(jwtSecret);
     token = tokenFactory.create(systemScopes);
-    externalSystemsMocks
-      .uaaServer
-      .tokenService
-      .whenScopesAre(systemScopes)
-      .return(token);
 
-    externalSystemsMocks
-      .cfServer
-      .infoService
-      .returnUaaAddress(externalSystemsMocks.uaaServer.url());
-
+    externalSystemsMocks.uaaServer.tokenService.whenScopesAre(systemScopes).return(token);
+    externalSystemsMocks.cfServer.infoService.returnUaaAddress(externalSystemsMocks.uaaServer.url());
     externalSystemsMocks.provisioningServer.validateResourceInstanceService.return.always(httpStatus.OK);
     externalSystemsMocks.accountServer.getAccountService.return.always(httpStatus.OK);
 
@@ -81,7 +102,8 @@ describe('Collector tests', () => {
       ACCOUNT: externalSystemsMocks.accountServer.url(),
       JWTKEY: jwtSecret,
       JWTALGO: 'HS256',
-      SECURED: true
+      SECURED: true,
+      ABACUS_COLLECT_QUEUE: consumerConfig.mainQueue.name
     });
 
     lifecycleManager.useEnv(env).startModules([
@@ -98,7 +120,6 @@ describe('Collector tests', () => {
         getHeader: () => `Bearer ${tokenFactory.create([`abacus.usage.${resourceId}.write`])}`
       }
     });
-
     internalResourceCollectorClient = new CollectorClient(collectorUrl, {
       authHeaderProvider: {
         getHeader: () => `Bearer ${tokenFactory.create(['abacus.usage.sampler.write'])}`
@@ -112,14 +133,19 @@ describe('Collector tests', () => {
     await util.promisify(externalSystemsMocks.stopAll)();
   });
 
-
-  const contextSuccessfulUsagePost = (name, postUsage) =>
+  const contextSuccessfulUsagePost = (name, client, usage) =>
     context(name, () => {
+      let connectionManager;
 
       before(async() => {
+        connectionManager = new ConnectionManager([rabbitUri]);
         externalSystemsMocks.provisioningServer.validateResourceInstanceService.clear();
         externalSystemsMocks.accountServer.getAccountService.clear();
-        await eventually(postUsage);
+        await eventually(async () => await client().postUsage(usage));
+      });
+
+      after(async () => {
+        await connectionManager.disconnect();
       });
 
       const itTokenPropagated = (name, serviceMock) =>
@@ -134,18 +160,41 @@ describe('Collector tests', () => {
 
       itTokenPropagated('should propagate oauth token to account plugin',
         () => externalSystemsMocks.accountServer.getAccountService);
+
+
+      it('it should write the usage in rabbitMQ', (done) => {
+        const consumer = new Consumer(connectionManager, amqpMessageParser, consumerConfig);
+        const handleMessage = (message) => {
+          const receivedUsage = message.usageDoc;
+          try {
+            expect(omit(receivedUsage, 'processed_id')).to.deep.equal(usage);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        };
+        consumer.process({ handle: handleMessage });
+      });
     });
 
 
-  contextSuccessfulUsagePost('when a system client posts the usage',
-    async () => await systemCollectorClient.postUsage(usage('organization-id-system')));
+  contextSuccessfulUsagePost(
+    'when a system client posts the usage',
+    () => systemCollectorClient,
+    usage('organization-id-system')
+  );
 
-  contextSuccessfulUsagePost('when a internal resource client posts the usage',
-    async () => await internalResourceCollectorClient.postUsage(usage('organization-id-internal')));
+  contextSuccessfulUsagePost(
+    'when an internal resource client posts the usage',
+    () => internalResourceCollectorClient,
+    usage('organization-id-internal')
+  );
 
-  contextSuccessfulUsagePost('when resource client posts the usage',
-    async () => await resourceCollectorClient.postUsage(usage('organization-id-resource')));
-
+  contextSuccessfulUsagePost(
+    'when a resource client posts the usage',
+    () => resourceCollectorClient,
+    usage('organization-id-resource')
+  );
 
   context('when no authorization header is sent', () => {
     const noAuthHeaderCollectorClient = new CollectorClient(collectorUrl, {
@@ -166,7 +215,7 @@ describe('Collector tests', () => {
       authHeaderProvider: {
         getHeader: () => `Bearer ${tokenFactory.create([])}`
       }
-    });;
+    });
 
     it('it should reject the usage with "forbidden" status code', async () => {
       await eventually(
