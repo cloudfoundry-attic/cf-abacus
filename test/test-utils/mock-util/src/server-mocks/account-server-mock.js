@@ -30,8 +30,8 @@ module.exports = () => {
         organizationId: req.param.org_id,
         time: req.params.time
       });
-      const responseCode = accountServiceData.nextResponse();
-      res.status(responseCode).send();
+      const response = accountServiceData.nextResponse();
+      res.status(response.statusCode).send(response.body);
     });
 
     const app = express();

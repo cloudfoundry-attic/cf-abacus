@@ -4,7 +4,7 @@ const { extend, omit } = require('underscore');
 const httpStatus = require('http-status-codes');
 const util = require('util');
 const createLifecycleManager = require('abacus-lifecycle-manager');
-const { CollectorClient, APIError, VoidAuthHeaderProvider } = require('abacus-api');
+const { CollectorClient, APIError, BadRequestError, VoidAuthHeaderProvider } = require('abacus-api');
 const { ConnectionManager, Consumer, amqpMessageParser } = require('abacus-rabbitmq');
 
 const {
@@ -90,8 +90,6 @@ describe('Collector tests', () => {
 
     externalSystemsMocks.uaaServer.tokenService.whenScopesAre(systemScopes).return(token);
     externalSystemsMocks.cfServer.infoService.returnUaaAddress(externalSystemsMocks.uaaServer.url());
-    externalSystemsMocks.provisioningServer.validateResourceInstanceService.return.always(httpStatus.OK);
-    externalSystemsMocks.accountServer.getAccountService.return.always(httpStatus.OK);
 
     lifecycleManager = createLifecycleManager();
 
@@ -139,8 +137,16 @@ describe('Collector tests', () => {
 
       before(async() => {
         connectionManager = new ConnectionManager([rabbitUri]);
+
         externalSystemsMocks.provisioningServer.validateResourceInstanceService.clear();
         externalSystemsMocks.accountServer.getAccountService.clear();
+        externalSystemsMocks.provisioningServer.validateResourceInstanceService.return.always({
+          statusCode: httpStatus.OK
+        });
+        externalSystemsMocks.accountServer.getAccountService.return.always({
+          statusCode: httpStatus.OK
+        });
+
         await eventually(async () => await client().postUsage(usage));
       });
 
@@ -155,10 +161,10 @@ describe('Collector tests', () => {
           expect(requests[0].token).to.equal(token);
         });
 
-      itTokenPropagated('should propagate oauth token to provisioning plugin',
+      itTokenPropagated('it should propagate oauth token to provisioning plugin',
         () => externalSystemsMocks.provisioningServer.validateResourceInstanceService);
 
-      itTokenPropagated('should propagate oauth token to account plugin',
+      itTokenPropagated('it should propagate oauth token to account plugin',
         () => externalSystemsMocks.accountServer.getAccountService);
 
 
@@ -177,24 +183,133 @@ describe('Collector tests', () => {
       });
     });
 
+  context('when usage is successfully posted to collector', () => {
 
-  contextSuccessfulUsagePost(
-    'when a system client posts the usage',
-    () => systemCollectorClient,
-    usage('organization-id-system')
-  );
+    contextSuccessfulUsagePost(
+      'when a system client posts the usage',
+      () => systemCollectorClient,
+      usage('organization-id-system')
+    );
 
-  contextSuccessfulUsagePost(
-    'when an internal resource client posts the usage',
-    () => internalResourceCollectorClient,
-    usage('organization-id-internal')
-  );
+    contextSuccessfulUsagePost(
+      'when an internal resource client posts the usage',
+      () => internalResourceCollectorClient,
+      usage('organization-id-internal')
+    );
 
-  contextSuccessfulUsagePost(
-    'when a resource client posts the usage',
-    () => resourceCollectorClient,
-    usage('organization-id-resource')
-  );
+    contextSuccessfulUsagePost(
+      'when a resource client posts the usage',
+      () => resourceCollectorClient,
+      usage('organization-id-resource')
+    );
+
+  });
+
+  context('when usage has invalid schema', () => {
+
+    it('it should reject the usage with "bad request" status code and proper description', async () => {
+      const badRequestError = await eventually(
+        async () => await expect(systemCollectorClient.postUsage({})).to.be.eventually.rejectedWith(BadRequestError)
+      );
+
+      expect(badRequestError.statusCode).to.equals(httpStatus.BAD_REQUEST);
+      expect(badRequestError.message).to.equals('Invalid usage: invalid schema');
+    });
+  });
+
+  context('when usage refers invalid resource instance', () => {
+
+    before(async() => {
+      externalSystemsMocks.provisioningServer.validateResourceInstanceService.return.always({
+        statusCode: httpStatus.NOT_FOUND,
+        body: {
+          error: 'resource instance not found'
+        }
+      });
+      externalSystemsMocks.accountServer.getAccountService.return.always({
+        statusCode: httpStatus.OK
+      });
+    });
+
+    it('it should reject the usage with "bad request" status code and proper description', async () => {
+      const badRequestError = await eventually(
+        async () => await expect(systemCollectorClient.postUsage(usage('organization-id-invalid-resource-instance')))
+          .to.be.eventually.rejectedWith(BadRequestError)
+      );
+
+      expect(badRequestError.statusCode).to.equals(httpStatus.BAD_REQUEST);
+      expect(badRequestError.message).to.equals('Invalid usage: invalid resource instance');
+    });
+  });
+
+  context('when usage refers invalid account', () => {
+
+    before(async() => {
+      externalSystemsMocks.provisioningServer.validateResourceInstanceService.return.always({
+        statusCode: httpStatus.OK
+      });
+      externalSystemsMocks.accountServer.getAccountService.return.always({
+        statusCode: httpStatus.NOT_FOUND,
+        body: {
+          error: 'account not found'
+        }
+      });
+    });
+
+    it('it should reject the usage with "bad request" status code and proper description', async () => {
+      const badRequestError = await eventually(
+        async () => await expect(systemCollectorClient.postUsage(usage('organization-id-invalid-account')))
+          .to.be.eventually.rejectedWith(BadRequestError)
+      );
+
+      expect(badRequestError.statusCode).to.equals(httpStatus.BAD_REQUEST);
+      expect(badRequestError.message).to.equals('Invalid usage: not existing account');
+    });
+  });
+
+  context('when account plugin is down', () => {
+
+    before(async() => {
+      externalSystemsMocks.provisioningServer.validateResourceInstanceService.return.always({
+        statusCode: httpStatus.OK
+      });
+      externalSystemsMocks.accountServer.getAccountService.return.always({
+        statusCode: httpStatus.NOT_FOUND
+      });
+    });
+
+    it('it should reject the usage with "internal server error" status code', async () => {
+      const badRequestError = await eventually(
+        async () => await expect(systemCollectorClient.postUsage(usage('organization-id-account-down')))
+          .to.be.eventually.rejectedWith(APIError)
+      );
+
+      expect(badRequestError.statusCode).to.equals(httpStatus.INTERNAL_SERVER_ERROR);
+    });
+
+  });
+
+  context('when provisioning plugin is down', () => {
+
+    before(async() => {
+      externalSystemsMocks.provisioningServer.validateResourceInstanceService.return.always({
+        statusCode: httpStatus.NOT_FOUND
+      });
+      externalSystemsMocks.accountServer.getAccountService.return.always({
+        statusCode: httpStatus.OK
+      });
+    });
+
+    it('it should reject the usage with "internal server error" status code', async () => {
+      const badRequestError = await eventually(
+        async () => await expect(systemCollectorClient.postUsage(usage('organization-id-provisioning-down')))
+          .to.be.eventually.rejectedWith(APIError)
+      );
+
+      expect(badRequestError.statusCode).to.equals(httpStatus.INTERNAL_SERVER_ERROR);
+    });
+
+  });
 
   context('when no authorization header is sent', () => {
     const noAuthHeaderCollectorClient = new CollectorClient(collectorUrl, {

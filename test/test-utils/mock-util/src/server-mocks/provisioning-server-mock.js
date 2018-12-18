@@ -140,8 +140,8 @@ module.exports = () => {
         token: extractOAuthToken(req.header('Authorization'))
       });
 
-      const responseCode = validateResourceInstanceServiceData.nextResponse();
-      res.status(responseCode).send();
+      const response = validateResourceInstanceServiceData.nextResponse();
+      res.status(response.statusCode).send(response.body);
     });
 
     const app = express();
