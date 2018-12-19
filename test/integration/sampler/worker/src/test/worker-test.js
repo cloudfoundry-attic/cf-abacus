@@ -87,7 +87,10 @@ describe('Worker integration tests', () => {
 
     before(async () => {
       const authHeaderProvider = new BasicAuthHeaderProvider(credentials);
-      webappClient = new WebAppClient(workerURI, authHeaderProvider, skipSslValidation);
+      webappClient = new WebAppClient(workerURI, {
+        authHeaderProvider,
+        skipSslValidation
+      });
     });
 
     context('when uaa server successfully validates passed credentials', () => {

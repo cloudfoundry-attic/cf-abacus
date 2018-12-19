@@ -101,8 +101,18 @@ describe('@sampler smoke test', function() {
     if(env.secured)
       await startTokens();
 
-    receiverClient = new ReceiverClient(env.receiverUrl, { getHeader: () => getToken(samplerToken) }, env.skipSSL);
-    reportingClient = new ReportingClient(env.reportingUrl, { getHeader: () => getToken(systemToken) }, env.skipSSL);
+    receiverClient = new ReceiverClient(env.receiverUrl, {
+      authHeaderProvider: {
+        getHeader: () => getToken(samplerToken)
+      },
+      skipSslValidation: env.skipSSL
+    });
+    reportingClient = new ReportingClient(env.reportingUrl, {
+      authHeaderProvider: {
+        getHeader: () => getToken(systemToken)
+      },
+      skipSslValidation: env.skipSSL
+    });
     eventBuilder = createEventBuilder();
   });
 
