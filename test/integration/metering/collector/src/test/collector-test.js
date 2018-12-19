@@ -131,59 +131,59 @@ describe('Collector tests', () => {
     await util.promisify(externalSystemsMocks.stopAll)();
   });
 
-  const contextSuccessfulUsagePost = (name, client, usage) =>
-    context(name, () => {
-      let connectionManager;
-
-      before(async() => {
-        connectionManager = new ConnectionManager([rabbitUri]);
-
-        externalSystemsMocks.provisioningServer.validateResourceInstanceService.clear();
-        externalSystemsMocks.accountServer.getAccountService.clear();
-        externalSystemsMocks.provisioningServer.validateResourceInstanceService.return.always({
-          statusCode: httpStatus.OK
-        });
-        externalSystemsMocks.accountServer.getAccountService.return.always({
-          statusCode: httpStatus.OK
-        });
-
-        await eventually(async () => await client().postUsage(usage));
-      });
-
-      after(async () => {
-        await connectionManager.disconnect();
-      });
-
-      const itTokenPropagated = (name, serviceMock) =>
-        it(name, async () => {
-          const requests = serviceMock().requests();
-          expect(requests.length).to.equal(1);
-          expect(requests[0].token).to.equal(token);
-        });
-
-      itTokenPropagated('it should propagate oauth token to provisioning plugin',
-        () => externalSystemsMocks.provisioningServer.validateResourceInstanceService);
-
-      itTokenPropagated('it should propagate oauth token to account plugin',
-        () => externalSystemsMocks.accountServer.getAccountService);
-
-
-      it('it should write the usage in rabbitMQ', (done) => {
-        const consumer = new Consumer(connectionManager, amqpMessageParser, consumerConfig);
-        const handleMessage = (message) => {
-          const receivedUsage = message.usageDoc;
-          try {
-            expect(omit(receivedUsage, 'processed_id')).to.deep.equal(usage);
-            done();
-          } catch (e) {
-            done(e);
-          }
-        };
-        consumer.process({ handle: handleMessage });
-      });
-    });
-
   context('when usage is successfully posted to collector', () => {
+
+    const contextSuccessfulUsagePost = (name, client, usage) =>
+      context(name, () => {
+        let connectionManager;
+
+        before(async() => {
+          connectionManager = new ConnectionManager([rabbitUri]);
+
+          externalSystemsMocks.provisioningServer.validateResourceInstanceService.clear();
+          externalSystemsMocks.accountServer.getAccountService.clear();
+          externalSystemsMocks.provisioningServer.validateResourceInstanceService.return.always({
+            statusCode: httpStatus.OK
+          });
+          externalSystemsMocks.accountServer.getAccountService.return.always({
+            statusCode: httpStatus.OK
+          });
+
+          await eventually(async () => await client().postUsage(usage));
+        });
+
+        after(async () => {
+          await connectionManager.disconnect();
+        });
+
+        const itTokenPropagated = (name, serviceMock) =>
+          it(name, async () => {
+            const requests = serviceMock().requests();
+            expect(requests.length).to.equal(1);
+            expect(requests[0].token).to.equal(token);
+          });
+
+        itTokenPropagated('it should propagate oauth token to provisioning plugin',
+          () => externalSystemsMocks.provisioningServer.validateResourceInstanceService);
+
+        itTokenPropagated('it should propagate oauth token to account plugin',
+          () => externalSystemsMocks.accountServer.getAccountService);
+
+
+        it('it should write the usage in rabbitMQ', (done) => {
+          const consumer = new Consumer(connectionManager, amqpMessageParser, consumerConfig);
+          const handleMessage = (message) => {
+            const receivedUsage = message.usageDoc;
+            try {
+              expect(omit(receivedUsage, 'processed_id')).to.deep.equal(usage);
+              done();
+            } catch (e) {
+              done(e);
+            }
+          };
+          consumer.process({ handle: handleMessage });
+        });
+      });
 
     contextSuccessfulUsagePost(
       'when a system client posts the usage',
@@ -267,6 +267,16 @@ describe('Collector tests', () => {
     });
   });
 
+  const itDependencyDown = () =>
+    it('it should reject the usage with "internal server error" status code', async () => {
+      const error = await eventually(
+        async () => await expect(systemCollectorClient.postUsage(usage('organization-id-down')))
+          .to.be.eventually.rejectedWith(APIError)
+      );
+
+      expect(error.statusCode).to.equals(httpStatus.INTERNAL_SERVER_ERROR);
+    });
+
   context('when account plugin is down', () => {
 
     before(async() => {
@@ -278,15 +288,7 @@ describe('Collector tests', () => {
       });
     });
 
-    it('it should reject the usage with "internal server error" status code', async () => {
-      const badRequestError = await eventually(
-        async () => await expect(systemCollectorClient.postUsage(usage('organization-id-account-down')))
-          .to.be.eventually.rejectedWith(APIError)
-      );
-
-      expect(badRequestError.statusCode).to.equals(httpStatus.INTERNAL_SERVER_ERROR);
-    });
-
+    itDependencyDown();
   });
 
   context('when provisioning plugin is down', () => {
@@ -300,15 +302,7 @@ describe('Collector tests', () => {
       });
     });
 
-    it('it should reject the usage with "internal server error" status code', async () => {
-      const badRequestError = await eventually(
-        async () => await expect(systemCollectorClient.postUsage(usage('organization-id-provisioning-down')))
-          .to.be.eventually.rejectedWith(APIError)
-      );
-
-      expect(badRequestError.statusCode).to.equals(httpStatus.INTERNAL_SERVER_ERROR);
-    });
-
+    itDependencyDown();
   });
 
   context('when no authorization header is sent', () => {
