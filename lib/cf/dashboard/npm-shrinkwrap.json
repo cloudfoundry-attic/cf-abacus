@@ -23,9 +23,9 @@
       "resolved": "https://registry.npmjs.org/@types/form-data/-/form-data-2.2.1.tgz"
     },
     "@types/node": {
-      "version": "10.12.14",
+      "version": "10.12.18",
       "from": "@types/node@*",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.12.14.tgz"
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.12.18.tgz"
     },
     "@types/request": {
       "version": "2.48.1",
@@ -185,9 +185,9 @@
       "resolved": "https://registry.npmjs.org/agent-base/-/agent-base-4.2.1.tgz"
     },
     "ajv": {
-      "version": "6.6.1",
+      "version": "6.6.2",
       "from": "ajv@^6.0.0",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.6.1.tgz"
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.6.2.tgz"
     },
     "align-text": {
       "version": "0.1.4",
@@ -456,9 +456,9 @@
       "resolved": "https://registry.npmjs.org/cookie-signature/-/cookie-signature-1.0.6.tgz"
     },
     "core-js": {
-      "version": "2.6.0",
+      "version": "2.6.1",
       "from": "core-js@^2.4.0",
-      "resolved": "https://registry.npmjs.org/core-js/-/core-js-2.6.0.tgz"
+      "resolved": "https://registry.npmjs.org/core-js/-/core-js-2.6.1.tgz"
     },
     "core-util-is": {
       "version": "1.0.2",
@@ -1222,7 +1222,7 @@
     },
     "path-parse": {
       "version": "1.0.6",
-      "from": "path-parse@>=1.0.5 <2.0.0",
+      "from": "path-parse@>=1.0.6 <2.0.0",
       "resolved": "https://registry.npmjs.org/path-parse/-/path-parse-1.0.6.tgz"
     },
     "path-to-regexp": {
@@ -1386,9 +1386,9 @@
       "resolved": "https://registry.npmjs.org/require_optional/-/require_optional-1.0.1.tgz"
     },
     "resolve": {
-      "version": "1.8.1",
+      "version": "1.9.0",
       "from": "resolve@^1.1.6",
-      "resolved": "https://registry.npmjs.org/resolve/-/resolve-1.8.1.tgz"
+      "resolved": "https://registry.npmjs.org/resolve/-/resolve-1.9.0.tgz"
     },
     "resolve-from": {
       "version": "2.0.0",
