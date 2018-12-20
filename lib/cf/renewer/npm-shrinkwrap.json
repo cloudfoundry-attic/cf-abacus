@@ -230,9 +230,9 @@
       "resolved": "https://registry.npmjs.org/acorn-jsx/-/acorn-jsx-5.0.1.tgz"
     },
     "ajv": {
-      "version": "6.6.1",
+      "version": "6.6.2",
       "from": "ajv@^6.0.0",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.6.1.tgz"
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.6.2.tgz"
     },
     "ajv-keywords": {
       "version": "3.2.0",
