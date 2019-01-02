@@ -199,7 +199,7 @@
     "karma-phantomjs-launcher": "1.0.4",
     "karma-read-json": "1.1.0",
     "lcov-result-merger": "^3.1.0",
-    "nock": "10.0.5",
+    "nock": "10.0.6",
     "nyc": "^13.0.1",
     "proxyquire": "2.1.0",
     "sinon-chai": "^3.2.0",
