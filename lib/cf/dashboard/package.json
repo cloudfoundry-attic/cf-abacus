@@ -76,7 +76,7 @@
     "abacus-publish": "file:../../../tools/publish",
     "istanbul-harmony": "^0.3.16",
     "chai": "^4.1.2",
-    "chai-http": "4.2.0",
+    "chai-http": "4.2.1",
     "js-beautify": "^1.7.5",
     "jsdoc": "^3.5.5",
     "jshint": "^2.9.6",
