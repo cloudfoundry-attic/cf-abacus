@@ -184,7 +184,7 @@
     "abacus-wait": "file:test/test-utils/wait",
     "angular": "1.5.10",
     "chai-as-promised": "^7.1.1",
-    "chai-http": "4.2.0",
+    "chai-http": "4.2.1",
     "check-node-version": "^3.2.0",
     "codecov": "^3.0.0",
     "eslint-plugin-mocha": "^5.2.0",
