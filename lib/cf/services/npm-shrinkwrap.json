@@ -369,9 +369,9 @@
       "resolved": "https://registry.npmjs.org/dashdash/-/dashdash-1.14.1.tgz"
     },
     "debug": {
-      "version": "4.1.0",
+      "version": "4.1.1",
       "from": "debug@^4.0.1",
-      "resolved": "https://registry.npmjs.org/debug/-/debug-4.1.0.tgz"
+      "resolved": "https://registry.npmjs.org/debug/-/debug-4.1.1.tgz"
     },
     "defaults": {
       "version": "1.0.3",
@@ -936,9 +936,9 @@
       "resolved": "https://registry.npmjs.org/source-map-support/-/source-map-support-0.5.9.tgz"
     },
     "sshpk": {
-      "version": "1.15.2",
+      "version": "1.16.0",
       "from": "sshpk@^1.7.0",
-      "resolved": "https://registry.npmjs.org/sshpk/-/sshpk-1.15.2.tgz"
+      "resolved": "https://registry.npmjs.org/sshpk/-/sshpk-1.16.0.tgz"
     },
     "statuses": {
       "version": "1.4.0",
