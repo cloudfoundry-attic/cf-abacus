@@ -491,9 +491,9 @@
       "resolved": "https://registry.npmjs.org/dasherize/-/dasherize-2.0.0.tgz"
     },
     "debug": {
-      "version": "4.1.0",
+      "version": "4.1.1",
       "from": "debug@^4.0.1",
-      "resolved": "https://registry.npmjs.org/debug/-/debug-4.1.0.tgz"
+      "resolved": "https://registry.npmjs.org/debug/-/debug-4.1.1.tgz"
     },
     "decamelize": {
       "version": "1.2.0",
@@ -1488,9 +1488,9 @@
       "resolved": "https://registry.npmjs.org/sprintf-js/-/sprintf-js-1.0.3.tgz"
     },
     "sshpk": {
-      "version": "1.15.2",
+      "version": "1.16.0",
       "from": "sshpk@^1.7.0",
-      "resolved": "https://registry.npmjs.org/sshpk/-/sshpk-1.15.2.tgz"
+      "resolved": "https://registry.npmjs.org/sshpk/-/sshpk-1.16.0.tgz"
     },
     "stack-trace": {
       "version": "0.0.10",
