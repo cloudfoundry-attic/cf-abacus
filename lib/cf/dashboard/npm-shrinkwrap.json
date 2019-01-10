@@ -405,7 +405,7 @@
     },
     "compression": {
       "version": "1.7.3",
-      "from": "compression@>=1.7.2 <2.0.0",
+      "from": "compression@^1.7.2",
       "resolved": "https://registry.npmjs.org/compression/-/compression-1.7.3.tgz",
       "dependencies": {
         "debug": {
@@ -456,9 +456,9 @@
       "resolved": "https://registry.npmjs.org/cookie-signature/-/cookie-signature-1.0.6.tgz"
     },
     "core-js": {
-      "version": "2.6.1",
+      "version": "2.6.2",
       "from": "core-js@^2.4.0",
-      "resolved": "https://registry.npmjs.org/core-js/-/core-js-2.6.1.tgz"
+      "resolved": "https://registry.npmjs.org/core-js/-/core-js-2.6.2.tgz"
     },
     "core-util-is": {
       "version": "1.0.2",
@@ -931,7 +931,7 @@
     },
     "js-yaml": {
       "version": "3.11.0",
-      "from": "js-yaml@>=3.11.0 <3.12.0",
+      "from": "js-yaml@3.11.x",
       "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.11.0.tgz"
     },
     "jsbn": {
@@ -1144,9 +1144,9 @@
       "resolved": "https://registry.npmjs.org/murmurhash/-/murmurhash-0.0.2.tgz"
     },
     "nano": {
-      "version": "7.1.1",
-      "from": "nano@7.1.1",
-      "resolved": "https://registry.npmjs.org/nano/-/nano-7.1.1.tgz",
+      "version": "8.0.0",
+      "from": "nano@8.0.0",
+      "resolved": "https://registry.npmjs.org/nano/-/nano-8.0.0.tgz",
       "dependencies": {
         "debug": {
           "version": "2.6.9",
@@ -1417,7 +1417,7 @@
     },
     "safe-buffer": {
       "version": "5.1.2",
-      "from": "safe-buffer@>=5.1.2 <6.0.0",
+      "from": "safe-buffer@^5.1.2",
       "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.2.tgz"
     },
     "safer-buffer": {
@@ -1499,7 +1499,7 @@
     },
     "statuses": {
       "version": "1.5.0",
-      "from": "statuses@>=1.4.0 <2.0.0",
+      "from": "statuses@>= 1.4.0 < 2",
       "resolved": "https://registry.npmjs.org/statuses/-/statuses-1.5.0.tgz"
     },
     "string_decoder": {
@@ -1594,7 +1594,7 @@
     },
     "uri-js": {
       "version": "4.2.2",
-      "from": "uri-js@>=4.2.2 <5.0.0",
+      "from": "uri-js@^4.2.2",
       "resolved": "https://registry.npmjs.org/uri-js/-/uri-js-4.2.2.tgz"
     },
     "urix": {
