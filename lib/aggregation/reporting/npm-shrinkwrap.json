@@ -240,9 +240,9 @@
       "resolved": "https://registry.npmjs.org/acorn-jsx/-/acorn-jsx-5.0.1.tgz"
     },
     "ajv": {
-      "version": "6.6.2",
+      "version": "6.7.0",
       "from": "ajv@^6.0.0",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.6.2.tgz"
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.7.0.tgz"
     },
     "ajv-keywords": {
       "version": "3.2.0",
@@ -1467,9 +1467,9 @@
       "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.6.1.tgz"
     },
     "source-map-support": {
-      "version": "0.5.9",
-      "from": "source-map-support@>=0.3.2 <=1.0.0",
-      "resolved": "https://registry.npmjs.org/source-map-support/-/source-map-support-0.5.9.tgz"
+      "version": "0.5.10",
+      "from": "source-map-support@0.3.2 - 1.0.0",
+      "resolved": "https://registry.npmjs.org/source-map-support/-/source-map-support-0.5.10.tgz"
     },
     "sprintf-js": {
       "version": "1.0.3",

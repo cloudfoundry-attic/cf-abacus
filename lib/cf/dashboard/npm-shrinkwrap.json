@@ -185,9 +185,9 @@
       "resolved": "https://registry.npmjs.org/agent-base/-/agent-base-4.2.1.tgz"
     },
     "ajv": {
-      "version": "6.6.2",
+      "version": "6.7.0",
       "from": "ajv@^6.0.0",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.6.2.tgz"
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.7.0.tgz"
     },
     "align-text": {
       "version": "0.1.4",
@@ -1454,7 +1454,7 @@
     },
     "serve-static": {
       "version": "1.13.2",
-      "from": "serve-static@>=1.13.2 <2.0.0",
+      "from": "serve-static@^1.13.2",
       "resolved": "https://registry.npmjs.org/serve-static/-/serve-static-1.13.2.tgz"
     },
     "setprototypeof": {
@@ -1473,9 +1473,9 @@
       "resolved": "https://registry.npmjs.org/source-map-resolve/-/source-map-resolve-0.5.2.tgz"
     },
     "source-map-support": {
-      "version": "0.5.9",
-      "from": "source-map-support@>=0.3.2 <=1.0.0",
-      "resolved": "https://registry.npmjs.org/source-map-support/-/source-map-support-0.5.9.tgz"
+      "version": "0.5.10",
+      "from": "source-map-support@0.3.2 - 1.0.0",
+      "resolved": "https://registry.npmjs.org/source-map-support/-/source-map-support-0.5.10.tgz"
     },
     "source-map-url": {
       "version": "0.4.0",

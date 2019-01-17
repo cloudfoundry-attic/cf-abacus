@@ -39,7 +39,6 @@
     "abacus-dedupe": "file:../dedupe",
     "abacus-eureka": "file:../eureka",
     "abacus-lock": "file:../lock",
-    "abacus-lrucache": "file:../lrucache",
     "abacus-moment": "file:../moment",
     "abacus-partition": "file:../partition",
     "abacus-request": "file:../request",
