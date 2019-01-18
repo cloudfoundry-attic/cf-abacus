@@ -76,7 +76,7 @@
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
     "abacus-publish": "file:../../../tools/publish",
-    "eslint": "~4.13.0",
+    "eslint": "~5.12.1",
     "jsonwebtoken": "^8.3.0",
     "nyc": "^13.0.1"
   },
