@@ -41,7 +41,7 @@
     "longjohn": "^0.2.12",
     "mocha": "^5.2.0",
     "recursive-readdir-sync": "1.0.6",
-    "sinon": "^6.1.4",
+    "sinon": "^7.2.3",
     "underscore": "^1.9.1"
   },
   "devDependencies": {
