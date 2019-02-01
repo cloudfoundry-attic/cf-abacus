@@ -73,7 +73,7 @@ describe('@sampler scenario test', function() {
   let reportingClient;
   let eventBuilder;
 
-  const twentyFourUsageHours = 24;
+  const sixUsageHours = 6;
   const resourceId = 'sample-resource';
   const planId = 'sample-plan';
   const target = {
@@ -141,11 +141,11 @@ describe('@sampler scenario test', function() {
       await createMappingGracefully(receiverClient, mapping);
 
       debug('Sending start event to sampler ...');
-      const startTimestamp = moment.utc().startOf('month').add(2, 'days').valueOf();
+      const startTimestamp = moment.utc().startOf('month').add(12, 'hours').valueOf();
       await receiverClient.startSampling(eventBuilder.createStartEvent(target, startTimestamp));
 
       debug('Sending stop event to sampler ...');
-      const stopTimestamp = moment.utc(startTimestamp).add(1, 'days').valueOf();
+      const stopTimestamp = moment.utc(startTimestamp).add(6, 'hours').valueOf();
       await receiverClient.stopSampling(eventBuilder.createStopEvent(target, stopTimestamp));
     });
 
@@ -160,7 +160,7 @@ describe('@sampler scenario test', function() {
         const currentReport = await reportingClient.getReport(target.organization_id, reportTimestamp);
         const reportParser = createReportParser(currentReport);
         const totalSummary = reportParser.getCurrentMonthSummary();
-        expect(totalSummary).to.be.equal(twentyFourUsageHours);
+        expect(totalSummary).to.be.equal(sixUsageHours);
       });
     });
   });
