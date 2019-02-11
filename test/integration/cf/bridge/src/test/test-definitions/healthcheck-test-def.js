@@ -2,7 +2,7 @@
 
 const { bind } = require('underscore');
 const { carryOverDb, createTokenFactory } = require('abacus-test-helper');
-const { WebAppClient, BasicAuthHeaderProvider } = require('abacus-api');
+const { WebAppClient, BasicAuthHeaderProvider } = require('abacus-api-clients');
 
 const healthcheckScopes = ['abacus.system.read'];
 let fixture;

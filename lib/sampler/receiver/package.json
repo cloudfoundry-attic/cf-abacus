@@ -35,7 +35,7 @@
     "port": 7070
   },
   "dependencies": {
-    "abacus-api": "file:../../utils/api",
+    "abacus-api-clients": "file:../../utils/api",
     "abacus-debug": "file:../../utils/debug",
     "abacus-launcher": "file:../../utils/launcher",
     "abacus-healthmonitor": "file:../../utils/healthmonitor",

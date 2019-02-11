@@ -28,7 +28,7 @@
     "pub": "publish"
   },
   "devDependencies": {
-    "abacus-api": "file:../../../../lib/utils/api",
+    "abacus-api-clients": "file:../../../../lib/utils/api",
     "abacus-cf-applications": "file:../../../../lib/cf/applications",
     "abacus-cf-services": "file:../../../../lib/cf/services",
     "abacus-cf-renewer": "file:../../../../lib/cf/renewer",

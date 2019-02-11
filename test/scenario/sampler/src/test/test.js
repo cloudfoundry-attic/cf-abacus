@@ -7,7 +7,7 @@ const uuid = require('uuid');
 const debug = require('abacus-debug')('abacus-sampler-scenario-test');
 const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');
-const { ReceiverClient, ReportingClient, UnprocessableEntityError, ConflictError } = require('abacus-api');
+const { ReceiverClient, ReportingClient, UnprocessableEntityError, ConflictError } = require('abacus-api-clients');
 
 const { env } = require('./env-config');
 

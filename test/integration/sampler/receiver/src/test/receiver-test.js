@@ -10,7 +10,7 @@ const { ReceiverClient,
   UnauthorizedError,
   ForbiddenError,
   BasicAuthHeaderProvider,
-  VoidAuthHeaderProvider } = require('abacus-api');
+  VoidAuthHeaderProvider } = require('abacus-api-clients');
 const moment = require('abacus-moment');
 
 const { externalSystems, cfServerMock, uaaServerMock, provisioningServerMock } = require('abacus-mock-util');

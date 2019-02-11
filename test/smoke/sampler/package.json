@@ -29,7 +29,7 @@
     "pub": "publish"
   },
   "devDependencies": {
-    "abacus-api": "file:../../../lib/utils/api",
+    "abacus-api-clients": "file:../../../lib/utils/api",
     "abacus-debug" : "file:../../../lib/utils/debug",
     "abacus-eslint": "file:../../../tools/eslint",
     "abacus-mocha": "file:../../../tools/mocha",
