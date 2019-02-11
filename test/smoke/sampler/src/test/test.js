@@ -3,7 +3,7 @@
 const util = require('util');
 const { omit } = require('underscore');
 
-const { ReceiverClient, ReportingClient, ConflictError, UnprocessableEntityError } = require('abacus-api');
+const { ReceiverClient, ReportingClient, ConflictError, UnprocessableEntityError } = require('abacus-api-clients');
 const debug = require('abacus-debug')('abacus-sampler-smoke-test');
 const moment = require('abacus-moment');
 const oauth = require('abacus-oauth');

@@ -4,7 +4,7 @@ const { extend, omit } = require('underscore');
 const httpStatus = require('http-status-codes');
 const util = require('util');
 const createLifecycleManager = require('abacus-lifecycle-manager');
-const { CollectorClient, APIError, BadRequestError, VoidAuthHeaderProvider } = require('abacus-api');
+const { CollectorClient, APIError, BadRequestError, VoidAuthHeaderProvider } = require('abacus-api-clients');
 const { ConnectionManager, Consumer, amqpMessageParser } = require('abacus-rabbitmq');
 
 const {

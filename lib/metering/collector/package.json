@@ -35,7 +35,7 @@
     "port": 9080
   },
   "dependencies": {
-    "abacus-api": "file:../../utils/api",
+    "abacus-api-clients": "file:../../utils/api",
     "abacus-config": "file:../../utils/config",
     "abacus-rabbitmq": "file:../../utils/rabbitmq",
     "abacus-accountclient": "file:../../utils/accountclient",

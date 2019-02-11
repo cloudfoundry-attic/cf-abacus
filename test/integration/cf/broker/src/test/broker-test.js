@@ -3,7 +3,7 @@
 const { extend } = require('underscore');
 const httpStatus = require('http-status-codes');
 const util = require('util');
-const { BasicAuthHeaderProvider } = require('abacus-api');
+const { BasicAuthHeaderProvider } = require('abacus-api-clients');
 const createLifecycleManager = require('abacus-lifecycle-manager');
 const { ServiceBrokerClient } = require('./service-broker-client');
 

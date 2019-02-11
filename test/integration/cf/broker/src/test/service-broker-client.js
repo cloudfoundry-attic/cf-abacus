@@ -3,7 +3,7 @@
 const util = require('util');
 const request = require('request');
 const httpStatus = require('http-status-codes');
-const { APIError } = require('abacus-api');
+const { APIError } = require('abacus-api-clients');
 
 const doPut = util.promisify(request.put);
 const doPatch = util.promisify(request.patch);
