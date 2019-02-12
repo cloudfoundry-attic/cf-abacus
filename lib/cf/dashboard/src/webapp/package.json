@@ -1,7 +1,7 @@
 {
   "name": "abacus-service-dashboard",
   "description": "",
-  "version": "1.1.4-rc.2",
+  "version": "1.1.4-rc.3",
   "private": true,
   "dependencies": {
     "jquery": "3.2.1",
