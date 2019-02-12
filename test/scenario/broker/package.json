@@ -31,8 +31,8 @@
   "devDependencies": {
     "abacus-cf-broker": "file:../../../lib/cf/broker",
     "abacus-cmdline": "file:../../../tools/cmdline",
-    "abacus-eslint": "file:../../../../tools/eslint",
-    "abacus-mocha": "file:../../../../tools/mocha",
+    "abacus-eslint": "file:../../../tools/eslint",
+    "abacus-mocha": "file:../../../tools/mocha",
     "abacus-moment": "file:../../../lib/utils/moment",
     "abacus-oauth": "file:../../../lib/utils/oauth",
     "abacus-request": "file:../../../lib/utils/request",
@@ -40,9 +40,9 @@
     "abacus-test-abacus-util": "file:../../test-utils/abacus-util",
     "abacus-test-cf-util": "file:../../test-utils/cf-util",
     "abacus-test-helper": "file:../../test-utils/helper",
-    "abacus-yieldable": "file:../../../../lib/utils/yieldable",
+    "abacus-yieldable": "file:../../../lib/utils/yieldable",
     "eslint-plugin-mocha": "^4.8.0",
-    "eslint-plugin-nodate": "file:../../../../tools/eslint-plugin-nodate",
+    "eslint-plugin-nodate": "file:../../../tools/eslint-plugin-nodate",
     "underscore": "^1.9.1"
   },
   "engines": {

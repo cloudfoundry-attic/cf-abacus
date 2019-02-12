@@ -8,8 +8,10 @@ const cp = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const localDependencyVersion = (file) =>
-  JSON.parse(fs.readFileSync(path.resolve(process.cwd(), file.substr(5), 'package.json')).toString()).version;
+const localDependencyVersion = (file) => {
+  const dependencyFile = path.resolve(process.cwd(), file.substr(5), 'package.json');
+  return JSON.parse(fs.readFileSync(dependencyFile).toString()).version;
+};
 
 const publicizeDependency = (deps) =>
   object(map(pairs(deps), (dep) => /^file:/.test(dep[1]) ? [dep[0], '^' + localDependencyVersion(dep[1])] : dep));
