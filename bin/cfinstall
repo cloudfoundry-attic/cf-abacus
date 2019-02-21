@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -e
+
+for MODULE in $(cat node_modules/abacus-etc/apps); do
+  pushd $MODULE
+    rm -rf node_modules/ yarn.lock package-lock.json
+    npm install --production --depth -1
+  popd
+done

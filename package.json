@@ -41,6 +41,7 @@
     "clean": "git clean -df",
     "cfpush": "bin/cfpush",
     "cfstage": "bin/cfstage",
+    "cfinstall": "bin/cfinstall",
     "cfdelete": "bin/cfdelete",
     "cfstart": "bin/cfstart",
     "cfstop": "bin/cfstop",
