@@ -20,6 +20,11 @@ for MODULE in $(cat node_modules/abacus-etc/apps); do
   INSTANCES=$(node_modules/abacus-etc/appcfg $MODULE instances)
   APPS=$(( $(node_modules/abacus-etc/appcfg $MODULE env APPS) - 1 ))
 
+  pushd $MODULE
+    rm -rf node_modules/ yarn.lock package-lock.json
+    npm install --production --depth -1
+  popd
+
   if [ "$APPS" == "0" ]; then
     COMMANDS+=("(cfpush -n $APPNAME -p $MODULE -i $INSTANCES -r $PUSH_RETRIES)")
   else
