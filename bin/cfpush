@@ -3,6 +3,7 @@
 set -e
 
 CURRENT_DIR=$( pwd -P )
+CF_STACK_OPTION=""
 
 MAX_PROCESSES=$(node -e "console.log(require('os').cpus().length)")
 if [ -n "$JOBS" ]; then
@@ -10,6 +11,13 @@ if [ -n "$JOBS" ]; then
   MAX_PROCESSES=$JOBS
 fi
 echo "Using $MAX_PROCESSES parallel processes"
+
+if [ -n "$CF_STACK"]; then
+  echo "Pushing app with $CF_STACK stack"
+  CF_STACK_OPTION="-s $CF_STACK"
+else
+  echo "Pushing app with default stack"
+fi
 
 COMMANDS=()
 
@@ -24,10 +32,10 @@ for MODULE in $(cat node_modules/abacus-etc/apps); do
   popd
 
   if [ "$APPS" == "0" ]; then
-    COMMANDS+=("(cfpush -n $APPNAME -p $MODULE -i $INSTANCES -s -r $PUSH_RETRIES)")
+    COMMANDS+=("(cfpush -n $APPNAME -p $MODULE -i $INSTANCES -s -r $PUSH_RETRIES $CF_STACK_OPTION)")
   else
     for I in $(seq 0 $APPS); do
-      COMMANDS+=("(cfpush -n $APPNAME-$I -p $MODULE -i $INSTANCES -s -r $PUSH_RETRIES)")
+      COMMANDS+=("(cfpush -n $APPNAME-$I -p $MODULE -i $INSTANCES -s -r $PUSH_RETRIES $CF_STACK_OPTION)")
     done
   fi
 done
