@@ -12,9 +12,9 @@ if [ -n "$JOBS" ]; then
 fi
 echo "Using $MAX_PROCESSES parallel processes"
 
-if [ -n "$CF_STACK"]; then
+if [ -n "$CF_STACK" ]; then
   echo "Pushing app with $CF_STACK stack"
-  CF_STACK_OPTION="-s $CF_STACK"
+  CF_STACK_OPTION="-c $CF_STACK"
 else
   echo "Pushing app with default stack"
 fi
