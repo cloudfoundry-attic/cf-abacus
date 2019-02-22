@@ -17,6 +17,7 @@ const adjustedName = 'adjusted-name';
 const adjustedInstances = 3;
 const adjustedBuildpack = 'adjusted-buildpack';
 const retryAttepmts = 3;
+const cfStack = 'cflinuxfs2';
 
 const originalManifestRelativePath = 'path';
 const unexistingManifestPath = 'error';
@@ -98,6 +99,7 @@ const stubCommander = () => {
   commander.path = originalManifestRelativePath;
   commander.retries = retryAttepmts;
   commander.prepareZdm = true;
+  commander.cfStack = cfStack;
 };
 
 const stubManifest = () => {
@@ -134,7 +136,7 @@ describe('Test command line args', () => {
   });
 
   it('verify all arguments parsed', () => {
-    const commandLineArgsCount = 8;
+    const commandLineArgsCount = 9;
     assert.callCount(commander.option, commandLineArgsCount);
     assert.calledOnce(commander.parse);
   });
@@ -146,6 +148,7 @@ describe('Test command line args', () => {
     assert.calledWith(commander.option, '-s, --start');
     assert.calledWith(commander.option, '-r, --retries [value]', sinon.match.any, defaultRetriesAttempts);
     assert.calledWith(commander.option, '-z, --prepare-zdm [boolean]');
+    assert.calledWith(commander.option, '-c, --cf-stack [value]', sinon.match.any);
   });
 
   it('verify mandatory arguments', () => {
@@ -228,7 +231,8 @@ describe('Test abacus cfpush', () => {
         'cf push --no-start ' +
           `-p ${originalManifestRelativePath} ` +
           `-f ${adjustedManifestRelativePath} ` +
-          `--vars-file ${substitutionVariablesPath}`,
+          `--vars-file ${substitutionVariablesPath} ` +
+          `-s ${cfStack}`,
         sinon.match.has('env', expectedEnvironment)
       );
     });
@@ -237,6 +241,7 @@ describe('Test abacus cfpush', () => {
   context('when application push fails', () => {
     before(() => {
       commander.prepareZdm = false;
+      commander.cfStack = '';
     });
 
     const verifyPushRetryAttempts = (expectedAttempts) => {

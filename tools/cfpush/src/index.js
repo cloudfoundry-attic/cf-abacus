@@ -52,6 +52,7 @@ const runCLI = () => {
     .option('-s, --start', 'starts an app after pushing')
     .option('-r, --retries [value]', 'number of retries if app push fails', defaultPushRetries)
     .option('-z, --prepare-zdm [boolean]', 'perform zero downtime (blue-green) deployment')
+    .option('-c, --cf-stack [value]', 'cf stack (e.g. cflinuxfs3)')
     .parse(process.argv);
 
   const requestZdm = commander.prepareZdm ? commander.prepareZdm : manifest.blueGreen(commander.path);
@@ -64,7 +65,8 @@ const runCLI = () => {
     path: commander.path,
     start: commander.start,
     retries: commander.retries,
-    prepareZdm: requestZdm
+    prepareZdm: requestZdm,
+    cfStack: commander.cfStack
   };
 
   async.series([

@@ -74,7 +74,8 @@ const push = (props, cb) => {
   const startParam = props.start ? '' : '--no-start';
   const manifestPath = `${props.path}/.cfpush/${props.name}-${originalManifestFilename}`;
   const varsFile = `${props.path}/.cfpush/${substitutionVariablesFilename}`;
-  const command = `cf push ${startParam} -p ${props.path} -f ${manifestPath} --vars-file ${varsFile}`;
+  const cfStackOption = props.cfStack ? ` -s ${props.cfStack}` : '';
+  const command = `cf push ${startParam} -p ${props.path} -f ${manifestPath} --vars-file ${varsFile}${cfStackOption}`;
 
   executeCommand(command, cb);
 };
