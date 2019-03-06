@@ -52,7 +52,7 @@ matrix:
         - rabbitmq
       script:
         - yarn run provision
-        - travis_retry yarn run citest
+        - yarn run citest
     - name: "Scenario Tests"
       env:
         - SMOKE_START_TIMEOUT=20000
@@ -74,7 +74,7 @@ matrix:
         - rabbitmq
       script:
         - yarn run provision
-        - travis_retry yarn run citest
+        - yarn run citest
     - name: "Java Demo"
       language: java
       jdk: openjdk11
