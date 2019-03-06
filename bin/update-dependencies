@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set +e
+
 echo "Updating root level locks ..."
 rm -rf node_modules/ yarn.lock package-lock.json npm-shrinkwrap.json
 
