@@ -11,6 +11,7 @@ case "$CI_TEST" in
     ;;
 
   smoke)
+    export RABBIT_URI=amqp://localhost:5671,amqp://localhost:5672
     yarn start
     sleep 3s
     yarn run demo
