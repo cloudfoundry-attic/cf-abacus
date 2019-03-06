@@ -34,7 +34,7 @@
     "pub": "publish"
   },
   "dependencies": {
-    "bootstrap": "4.2.1",
+    "bootstrap": "4.3.1",
     "commander": "^2.8.1",
     "event-stream": "3.3.4",
     "highlight.js": "^9.12.0",
