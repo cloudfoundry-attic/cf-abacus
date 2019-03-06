@@ -2,7 +2,7 @@
   "name": "abacus-static-apps-util",
   "description": "Abacus Static Apps Util",
   "license": "Apache-2.0",
-  "version": "1.1.5-rc.0",
+  "version": "1.1.5-rc.1",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/test/test-utils/static-apps",
   "bugs": {
