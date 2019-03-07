@@ -107,8 +107,8 @@ const runCLI = () => {
   // module
   const mod = require(path.join(process.cwd(), 'package.json'));
   const dependencies = filter(
-      pairs(mod.dependencies).concat(pairs(mod.devDependencies)),
-      (dep) => rx.test(dep[0]) && /^file:/.test(dep[1])
+    pairs(mod.dependencies).concat(pairs(mod.devDependencies)),
+    (dep) => rx.test(dep[0]) && /^file:/.test(dep[1])
   );
 
   each(dependencies,(dependency) => {
