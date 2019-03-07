@@ -2,7 +2,7 @@
 
 // Run a build command on a selection of modules
 
-const {each, filter, initial, last, pairs } = require('underscore');
+const {each, extend, filter, initial, last, map, pairs } = require('underscore');
 
 const path = require('path');
 const util = require('util');
@@ -13,7 +13,7 @@ const commander = require('commander');
 /* eslint no-process-exit: 1 */
 
 // The env of the build commands
-const buildenv = _.extend(process.env, {
+const buildenv = extend(process.env, {
   TERM: 'color',
   DEBUG_COLORS: 'true',
   COVERAGE_COLORS: 'true',
@@ -77,7 +77,7 @@ const exec = throttle((cmd, cwd, cb) => {
   });
   ex.on('close', (code) => {
     process.stdout.write(util.format('< %s: %s\n', cwd, cmd));
-    _.map(ex.data, (d) => {
+    map(ex.data, (d) => {
       d.s.write(d.data);
     });
     process.stdout.write('\n');
