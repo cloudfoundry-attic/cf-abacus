@@ -2,7 +2,7 @@
   "name": "abacus-healthchecker-integration-test",
   "description": "Healthchecker integration tests",
   "license": "Apache-2.0",
-  "version": "1.1.5-rc.1",
+  "version": "1.1.5-rc.2",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/test/integration/extensions/healthchecker",
   "bugs": {
