@@ -33,7 +33,7 @@
   "devDependencies": {
     "abacus-sampler-worker": "file:../../../../lib/sampler/worker",
     "abacus-lifecycle-manager": "../../../lib/lifecycle-manager",
-    "abacus-moment": "file:../../../../lib/moment",
+    "abacus-moment": "file:../../../../lib/utils/moment",
     "abacus-mock-util": "../../../test-utils/mock-util",
     "abacus-test-helper": "../../../test-utils/helper",
     "mongodb": "^2.2.36",
