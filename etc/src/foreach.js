@@ -2,12 +2,7 @@
 
 // Run a build command on a selection of modules
 
-const _ = require('underscore');
-const map = _.map;
-const filter = _.filter;
-const initial = _.initial;
-const last = _.last;
-const pairs = _.pairs;
+const {each, filter, initial, last, pairs } = require('underscore');
 
 const path = require('path');
 const util = require('util');
@@ -111,22 +106,21 @@ const runCLI = () => {
   // Look for modules in the dependencies and devDependencies of the current
   // module
   const mod = require(path.join(process.cwd(), 'package.json'));
-  map(
-    filter(
+  const dependencies = filter(
       pairs(mod.dependencies).concat(pairs(mod.devDependencies)),
       (dep) => rx.test(dep[0]) && /^file:/.test(dep[1])
-    ),
-    (dependency) => {
-      const resolve = (s) => s.replace(/:name/, dependency[0]).replace(/:path/, dependency[1].split(':')[1]);
-
-      // Run the given command on each module
-      const command = resolve([commander.cmd].concat(commander.args).join(' '));
-      const workDir = resolve(commander.dir);
-      exec(command, workDir, (err, val) => {
-        if (err) process.exit(err);
-      });
-    }
   );
+
+  each(dependencies,(dependency) => {
+    const resolve = (s) => s.replace(/:name/, dependency[0]).replace(/:path/, dependency[1].split(':')[1]);
+
+    // Run the given command on each module
+    const command = resolve([commander.cmd].concat(commander.args).join(' '));
+    const workDir = resolve(commander.dir);
+    exec(command, workDir, (err, val) => {
+      if (err) process.exit(err);
+    });
+  });
 };
 
 // Export our CLI

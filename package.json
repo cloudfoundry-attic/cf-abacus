@@ -171,7 +171,7 @@
     "abacus-sampler-receiver-integration-test": "file:test/integration/sampler/receiver",
     "abacus-sampler-scenario-test": "file:test/scenario/sampler",
     "abacus-sampler-smoke-test": "file:test/smoke/sampler",
-    "abacus-sampler-worker-integration-test": "file:test/integration/sampler/receiver",
+    "abacus-sampler-worker-integration-test": "file:test/integration/sampler/worker",
     "abacus-services-hours-scenario-test": "file:test/scenario/metering-plans",
     "abacus-static-apps-util": "file:test/test-utils/static-apps",
     "abacus-test-abacus-util": "file:test/test-utils/abacus-util",
