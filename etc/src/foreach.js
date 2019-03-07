@@ -2,7 +2,7 @@
 
 // Run a build command on a selection of modules
 
-const {each, extend, filter, initial, last, map, pairs } = require('underscore');
+const {each, extend, filter, initial, last, pairs } = require('underscore');
 
 const path = require('path');
 const util = require('util');
@@ -77,7 +77,7 @@ const exec = throttle((cmd, cwd, cb) => {
   });
   ex.on('close', (code) => {
     process.stdout.write(util.format('< %s: %s\n', cwd, cmd));
-    map(ex.data, (d) => {
+    each(ex.data, (d) => {
       d.s.write(d.data);
     });
     process.stdout.write('\n');
