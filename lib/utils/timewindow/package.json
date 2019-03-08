@@ -2,7 +2,7 @@
   "name": "abacus-timewindow",
   "description": "Utilities for time and window operations",
   "license": "Apache-2.0",
-  "version": "1.1.5-rc.3",
+  "version": "1.1.5",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/lib/utils/timewindow",
   "bugs": {

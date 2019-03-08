@@ -1,64 +1,64 @@
 {
   "name": "abacus-cf-services",
-  "version": "1.1.5-rc.3",
+  "version": "1.1.5",
   "dependencies": {
     "abacus-basic": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/basic",
       "resolved": "file:../../utils/basic"
     },
     "abacus-batch": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/batch",
       "resolved": "file:../../utils/batch"
     },
     "abacus-breaker": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/breaker",
       "resolved": "file:../../utils/breaker"
     },
     "abacus-bridge": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/bridge",
       "resolved": "file:../../utils/bridge"
     },
     "abacus-carryover": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/carryover",
       "resolved": "file:../../utils/carryover"
     },
     "abacus-client": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/client",
       "resolved": "file:../../utils/client"
     },
     "abacus-dbclient": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/dbclient",
       "resolved": "file:../../utils/dbclient"
     },
     "abacus-dbcommons": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/dbcommons",
       "resolved": "file:../../utils/dbcommons"
     },
     "abacus-debug": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/debug",
       "resolved": "file:../../utils/debug"
     },
     "abacus-eureka": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/eureka",
       "resolved": "file:../../utils/eureka"
     },
     "abacus-events": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/events",
       "resolved": "file:../../utils/events"
     },
     "abacus-express": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/express",
       "resolved": "file:../../utils/express",
       "dependencies": {
@@ -90,107 +90,107 @@
       }
     },
     "abacus-healthmonitor": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/healthmonitor",
       "resolved": "file:../../utils/healthmonitor"
     },
     "abacus-hystrix": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/hystrix",
       "resolved": "file:../../utils/hystrix"
     },
     "abacus-launcher": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/launcher",
       "resolved": "file:../../utils/launcher"
     },
     "abacus-lock": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/lock",
       "resolved": "file:../../utils/lock"
     },
     "abacus-lrucache": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/lrucache",
       "resolved": "file:../../utils/lrucache"
     },
     "abacus-metrics": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/metrics",
       "resolved": "file:../../utils/metrics"
     },
     "abacus-moment": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/moment",
       "resolved": "file:../../utils/moment"
     },
     "abacus-oauth": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/oauth",
       "resolved": "file:../../utils/oauth"
     },
     "abacus-paging": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/paging",
       "resolved": "file:../../utils/paging"
     },
     "abacus-partition": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/partition",
       "resolved": "file:../../utils/partition"
     },
     "abacus-perf": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/perf",
       "resolved": "file:../../utils/perf"
     },
     "abacus-plan-mappings": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../config/mappings",
       "resolved": "file:../../config/mappings"
     },
     "abacus-request": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/request",
       "resolved": "file:../../utils/request"
     },
     "abacus-retry": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/retry",
       "resolved": "file:../../utils/retry"
     },
     "abacus-router": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/router",
       "resolved": "file:../../utils/router"
     },
     "abacus-throttle": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/throttle",
       "resolved": "file:../../utils/throttle"
     },
     "abacus-transform": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/transform",
       "resolved": "file:../../utils/transform"
     },
     "abacus-urienv": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/urienv",
       "resolved": "file:../../utils/urienv"
     },
     "abacus-vcapenv": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/vcapenv",
       "resolved": "file:../../utils/vcapenv"
     },
     "abacus-webapp": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/webapp",
       "resolved": "file:../../utils/webapp"
     },
     "abacus-yieldable": {
-      "version": "1.1.5-rc.3",
+      "version": "1.1.5",
       "from": "../../utils/yieldable",
       "resolved": "file:../../utils/yieldable"
     },
