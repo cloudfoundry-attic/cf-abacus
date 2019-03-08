@@ -1,6 +1,6 @@
 {
   "name": "abacus-usage-collector",
-  "version": "1.1.5-rc.2",
+  "version": "1.1.5-rc.3",
   "dependencies": {
     "@babel/code-frame": {
       "version": "7.0.0",
@@ -13,87 +13,87 @@
       "resolved": "https://registry.npmjs.org/@babel/highlight/-/highlight-7.0.0.tgz"
     },
     "abacus-accountclient": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/accountclient",
       "resolved": "file:../../utils/accountclient"
     },
     "abacus-api-clients": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/api",
       "resolved": "file:../../utils/api"
     },
     "abacus-audit": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/audit",
       "resolved": "file:../../utils/audit"
     },
     "abacus-basic": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/basic",
       "resolved": "file:../../utils/basic"
     },
     "abacus-batch": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/batch",
       "resolved": "file:../../utils/batch"
     },
     "abacus-breaker": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/breaker",
       "resolved": "file:../../utils/breaker"
     },
     "abacus-config": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/config",
       "resolved": "file:../../utils/config"
     },
     "abacus-dataflow": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/dataflow",
       "resolved": "file:../../utils/dataflow"
     },
     "abacus-dbclient": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/dbclient",
       "resolved": "file:../../utils/dbclient"
     },
     "abacus-dbcommons": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/dbcommons",
       "resolved": "file:../../utils/dbcommons"
     },
     "abacus-debug": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/debug",
       "resolved": "file:../../utils/debug"
     },
     "abacus-dedupe": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/dedupe",
       "resolved": "file:../../utils/dedupe"
     },
     "abacus-docid": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/docid",
       "resolved": "file:../../utils/docid"
     },
     "abacus-eureka": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/eureka",
       "resolved": "file:../../utils/eureka"
     },
     "abacus-eval": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/eval",
       "resolved": "file:../../utils/eval"
     },
     "abacus-events": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/events",
       "resolved": "file:../../utils/events"
     },
     "abacus-express": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/express",
       "resolved": "file:../../utils/express",
       "dependencies": {
@@ -125,127 +125,127 @@
       }
     },
     "abacus-hystrix": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/hystrix",
       "resolved": "file:../../utils/hystrix"
     },
     "abacus-launcher": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/launcher",
       "resolved": "file:../../utils/launcher"
     },
     "abacus-lock": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/lock",
       "resolved": "file:../../utils/lock"
     },
     "abacus-lrucache": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/lrucache",
       "resolved": "file:../../utils/lrucache"
     },
     "abacus-metering-config": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../config/metering",
       "resolved": "file:../../config/metering"
     },
     "abacus-metrics": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/metrics",
       "resolved": "file:../../utils/metrics"
     },
     "abacus-moment": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/moment",
       "resolved": "file:../../utils/moment"
     },
     "abacus-oauth": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/oauth",
       "resolved": "file:../../utils/oauth"
     },
     "abacus-partition": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/partition",
       "resolved": "file:../../utils/partition"
     },
     "abacus-perf": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/perf",
       "resolved": "file:../../utils/perf"
     },
     "abacus-pricing-config": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../config/pricing",
       "resolved": "file:../../config/pricing"
     },
     "abacus-rabbitmq": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/rabbitmq",
       "resolved": "file:../../utils/rabbitmq"
     },
     "abacus-rating-config": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../config/rating",
       "resolved": "file:../../config/rating"
     },
     "abacus-request": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/request",
       "resolved": "file:../../utils/request"
     },
     "abacus-retry": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/retry",
       "resolved": "file:../../utils/retry"
     },
     "abacus-router": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/router",
       "resolved": "file:../../utils/router"
     },
     "abacus-schema": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/schema",
       "resolved": "file:../../utils/schema"
     },
     "abacus-seqid": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/seqid",
       "resolved": "file:../../utils/seqid"
     },
     "abacus-throttle": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/throttle",
       "resolved": "file:../../utils/throttle"
     },
     "abacus-transform": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/transform",
       "resolved": "file:../../utils/transform"
     },
     "abacus-urienv": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/urienv",
       "resolved": "file:../../utils/urienv"
     },
     "abacus-usage-schemas": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../config/schemas",
       "resolved": "file:../../config/schemas"
     },
     "abacus-vcapenv": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/vcapenv",
       "resolved": "file:../../utils/vcapenv"
     },
     "abacus-webapp": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/webapp",
       "resolved": "file:../../utils/webapp"
     },
     "abacus-yieldable": {
-      "version": "1.1.5-rc.2",
+      "version": "1.1.5-rc.3",
       "from": "../../utils/yieldable",
       "resolved": "file:../../utils/yieldable"
     },
@@ -949,9 +949,9 @@
       "resolved": "https://registry.npmjs.org/inquirer/-/inquirer-6.2.2.tgz",
       "dependencies": {
         "ansi-regex": {
-          "version": "4.0.0",
+          "version": "4.1.0",
           "from": "ansi-regex@^4.0.0",
-          "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-4.0.0.tgz"
+          "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-4.1.0.tgz"
         },
         "strip-ansi": {
           "version": "5.0.0",

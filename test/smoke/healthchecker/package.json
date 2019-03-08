@@ -2,7 +2,7 @@
   "name": "abacus-helthchecker-smoke-test",
   "description": "Healtchecker smoke tests",
   "license": "Apache-2.0",
-  "version": "1.1.5-rc.2",
+  "version": "1.1.5-rc.3",
   "private": true,
   "homepage": "https://github.com/cloudfoundry-incubator/cf-abacus/tree/master/test/smoke/healthchecker",
   "bugs": {
