@@ -7,6 +7,12 @@ const debug = require('abacus-debug')('abacus-healthchecker-smoke-test');
 
 const abacusPrefix = process.env.ABACUS_PREFIX || '';
 
+const getComponents = (environmentVariable, defaultValue) => {
+  if (environmentVariable) 
+    return environmentVariable.toString().split(',');
+  return defaultValue;
+};
+
 const testEnv = {
   healthchecker: process.env.HEALTHCHECKER_URL || 'http://localhost:9884',
   startTimeout: process.env.SMOKE_START_TIMEOUT || 10000,
@@ -14,14 +20,14 @@ const testEnv = {
   clientId: process.env.HYSTRIX_CLIENT_ID,
   clientSecret: process.env.HYSTRIX_CLIENT_SECRET,
   prefix: abacusPrefix,
-  clientFacingComponents: process.env.CLIENT_FACING_COMPONENTS || [
+  clientFacingComponents: getComponents(process.env.CLIENT_FACING_COMPONENTS || [
     `${abacusPrefix}abacus-account-plugin`,
     `${abacusPrefix}abacus-broker`,
     `${abacusPrefix}abacus-provisioning-plugin`,
     `${abacusPrefix}abacus-usage-collector`,
     `${abacusPrefix}abacus-usage-reporting`
-  ],
-  internalComponents: process.env.INTERNAL_COMPONENTS || [
+  ]),
+  internalComponents: getComponents(process.env.INTERNAL_COMPONENTS || [
     `${abacusPrefix}abacus-usage-meter`,
     `${abacusPrefix}abacus-cf-renewer`,
     `${abacusPrefix}abacus-usage-accumulator`,
@@ -31,8 +37,9 @@ const testEnv = {
     `${abacusPrefix}abacus-applications-bridge`,
     `${abacusPrefix}abacus-service-dashboard`,
     `${abacusPrefix}abacus-services-bridge`
-  ]
+  ])
 };
+
 
 const authentication = {
   auth: {
