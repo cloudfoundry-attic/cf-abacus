@@ -18,10 +18,7 @@ applications:
           "((ABACUS_PREFIX))abacus-usage-aggregator",
           "((ABACUS_PREFIX))abacus-cf-renewer",
           "((ABACUS_PREFIX))abacus-housekeeper",
-          "((ABACUS_PREFIX))abacus-eureka-plugin",
-          "((ABACUS_PREFIX))abacus-services-bridge",
-          "((ABACUS_PREFIX))abacus-service-dashboard",
-          "((ABACUS_PREFIX))abacus-applications-bridge"
+          "((ABACUS_PREFIX))abacus-eureka-plugin"
         ]
       DEBUG: e-abacus-*
       CF_API: ((AUTH_SERVER))
