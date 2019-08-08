@@ -13,9 +13,6 @@ applications:
       DEBUG: e-abacus-*
       API: ((AUTH_SERVER))
       AUTH_SERVER: ((AUTH_SERVER))
-      EUREKA: ((ABACUS_PREFIX))abacus-eureka-plugin
-      EUREKA_USER: ((HYSTRIX_CLIENT_ID))
-      EUREKA_PASSWORD: ((HYSTRIX_CLIENT_SECRET))
       NODE_MODULES_CACHE: false
       RETENTION_PERIOD: 3
       SECURED: true
